@@ -18,8 +18,9 @@ package controllers
 
 import controllers.actions._
 import forms.IntendsToBringGoodsToUkFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.Navigator
 import pages.IntendsToBringGoodsToUkPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -36,7 +37,6 @@ class IntendsToBringGoodsToUkController @Inject()(
                                          navigator: Navigator,
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
                                          formProvider: IntendsToBringGoodsToUkFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: IntendsToBringGoodsToUkView
@@ -44,10 +44,10 @@ class IntendsToBringGoodsToUkController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(IntendsToBringGoodsToUkPage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(IntendsToBringGoodsToUkPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -55,7 +55,7 @@ class IntendsToBringGoodsToUkController @Inject()(
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -64,7 +64,7 @@ class IntendsToBringGoodsToUkController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(IntendsToBringGoodsToUkPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(IntendsToBringGoodsToUkPage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(IntendsToBringGoodsToUkPage, mode, updatedAnswers))
       )
