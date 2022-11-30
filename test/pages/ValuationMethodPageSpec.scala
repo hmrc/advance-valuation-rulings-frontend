@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import models.ValuationMethod
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators {
+class ValuationMethodSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryValuationMethod: Arbitrary[ValuationMethod] =
-    Arbitrary {
-      Gen.oneOf(ValuationMethod.values.toSeq)
-    }
+  "ValuationMethodPage" - {
+
+    beRetrievable[ValuationMethod](ValuationMethodPage)
+
+    beSettable[ValuationMethod](ValuationMethodPage)
+
+    beRemovable[ValuationMethod](ValuationMethodPage)
+  }
 }

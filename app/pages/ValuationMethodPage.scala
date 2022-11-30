@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+import models.ValuationMethod
+import play.api.libs.json.JsPath
 
-trait ModelGenerators {
+case object ValuationMethodPage extends QuestionPage[ValuationMethod] {
 
-  implicit lazy val arbitraryValuationMethod: Arbitrary[ValuationMethod] =
-    Arbitrary {
-      Gen.oneOf(ValuationMethod.values.toSeq)
-    }
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "valuationMethod"
 }

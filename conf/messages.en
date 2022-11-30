@@ -61,3 +61,20 @@ intendsToBringGoodsToUk.heading = intendsToBringGoodsToUk
 intendsToBringGoodsToUk.checkYourAnswersLabel = intendsToBringGoodsToUk
 intendsToBringGoodsToUk.error.required = Select yes if intendsToBringGoodsToUk
 intendsToBringGoodsToUk.change.hidden = IntendsToBringGoodsToUk
+
+howWeContactYou.title = howWeContactYou
+howWeContactYou.heading = howWeContactYou
+
+informationMayBePublished.title = informationMayBePublished
+informationMayBePublished.heading = informationMayBePublished
+
+shouldBeImporting.title = shouldBeImporting
+shouldBeImporting.heading = shouldBeImporting
+
+valuationMethod.title = Which method do you want to use?
+valuationMethod.heading = Which method do you want to use?
+valuationMethod.transactionValue = Method 1: Transaction value
+valuationMethod.transactionValueOfIdenticalGoods = Method 2: Transaction value of identical goods
+valuationMethod.checkYourAnswersLabel = Which method do you want to use?
+valuationMethod.error.required = Select valuationMethod
+valuationMethod.change.hidden = ValuationMethod

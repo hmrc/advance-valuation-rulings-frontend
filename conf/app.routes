@@ -24,3 +24,14 @@ GET        /intendsToBringGoodsToUk                        controllers.IntendsTo
 POST       /intendsToBringGoodsToUk                        controllers.IntendsToBringGoodsToUkController.onSubmit(mode: Mode = NormalMode)
 GET        /changeIntendsToBringGoodsToUk                  controllers.IntendsToBringGoodsToUkController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeIntendsToBringGoodsToUk                  controllers.IntendsToBringGoodsToUkController.onSubmit(mode: Mode = CheckMode)
+
+GET        /howWeContactYou                       controllers.HowWeContactYouController.onPageLoad()
+
+GET        /informationMayBePublished                       controllers.InformationMayBePublishedController.onPageLoad()
+
+GET        /shouldBeImporting                       controllers.ShouldBeImportingController.onPageLoad()
+
+GET        /valuationMethod                        controllers.ValuationMethodController.onPageLoad(mode: Mode = NormalMode)
+POST       /valuationMethod                        controllers.ValuationMethodController.onSubmit(mode: Mode = NormalMode)
+GET        /changeValuationMethod                  controllers.ValuationMethodController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeValuationMethod                  controllers.ValuationMethodController.onSubmit(mode: Mode = CheckMode)
