@@ -27,8 +27,15 @@ import models._
 class Navigator @Inject()() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case _ => _ => routes.IndexController.onPageLoad
+    case IntendsToBringGoodsToUkPage => intendsToBringGoodsToUkRoute
+    case _                           => _ => routes.IndexController.onPageLoad
   }
+
+  private def intendsToBringGoodsToUkRoute(answers: UserAnswers): Call =
+    answers.get(IntendsToBringGoodsToUkPage).map {
+      case true => routes.InformationMayBePublishedController.onPageLoad()
+      case false => routes.ShouldBeImportingController.onPageLoad()
+    }.getOrElse(routes.JourneyRecoveryController.onPageLoad())
 
   private val checkRouteMap: Page => UserAnswers => Call = {
     case _ => _ => routes.CheckYourAnswersController.onPageLoad

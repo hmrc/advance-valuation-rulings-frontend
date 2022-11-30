@@ -34,6 +34,21 @@ class NavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
       }
+
+      "must go from Intends to Bring Goods to UK" - {
+
+        "to Information May Be Published when the answer is yes" in {
+
+          val answers = emptyUserAnswers.set(IntendsToBringGoodsToUkPage, true).success.value
+          navigator.nextPage(IntendsToBringGoodsToUkPage, NormalMode, answers) mustEqual routes.InformationMayBePublishedController.onPageLoad()
+        }
+
+        "to Should Be Importing when the answer is no" in {
+
+          val answers = emptyUserAnswers.set(IntendsToBringGoodsToUkPage, false).success.value
+          navigator.nextPage(IntendsToBringGoodsToUkPage, NormalMode, answers) mustEqual routes.ShouldBeImportingController.onPageLoad()
+        }
+      }
     }
 
     "in Check mode" - {
