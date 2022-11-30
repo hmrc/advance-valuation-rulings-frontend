@@ -55,3 +55,9 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+intendsToBringGoodsToUk.title = intendsToBringGoodsToUk
+intendsToBringGoodsToUk.heading = intendsToBringGoodsToUk
+intendsToBringGoodsToUk.checkYourAnswersLabel = intendsToBringGoodsToUk
+intendsToBringGoodsToUk.error.required = Select yes if intendsToBringGoodsToUk
+intendsToBringGoodsToUk.change.hidden = IntendsToBringGoodsToUk

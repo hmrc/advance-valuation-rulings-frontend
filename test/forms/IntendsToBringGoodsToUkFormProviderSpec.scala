@@ -14,21 +14,32 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.mvc.JavascriptLiteral
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-sealed trait Mode
+class IntendsToBringGoodsToUkFormProviderSpec extends BooleanFieldBehaviours {
 
-case object CheckMode extends Mode
-case object NormalMode extends Mode
+  val requiredKey = "intendsToBringGoodsToUk.error.required"
+  val invalidKey = "error.boolean"
 
-object Mode {
+  val form = new IntendsToBringGoodsToUkFormProvider()()
 
-  implicit val jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
-    override def to(value: Mode): String = value match {
-      case NormalMode => "NormalMode"
-      case CheckMode => "CheckMode"
-    }
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

@@ -19,3 +19,8 @@ GET         /account/sign-out                            controllers.auth.AuthCo
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
+
+GET        /intendsToBringGoodsToUk                        controllers.IntendsToBringGoodsToUkController.onPageLoad(mode: Mode = NormalMode)
+POST       /intendsToBringGoodsToUk                        controllers.IntendsToBringGoodsToUkController.onSubmit(mode: Mode = NormalMode)
+GET        /changeIntendsToBringGoodsToUk                  controllers.IntendsToBringGoodsToUkController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeIntendsToBringGoodsToUk                  controllers.IntendsToBringGoodsToUkController.onSubmit(mode: Mode = CheckMode)

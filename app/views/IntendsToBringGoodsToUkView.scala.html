@@ -16,21 +16,31 @@
 
 @this(
     layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
     govukButton: GovukButton
 )
 
-@(continueUrl: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.continue.title"))) {
+@layout(pageTitle = title(form, messages("intendsToBringGoodsToUk.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("journeyRecovery.continue.heading")</h1>
+    @formHelper(action = routes.IntendsToBringGoodsToUkController.onSubmit(mode), 'autoComplete -> "off") {
 
-    <p class="govuk-body">@messages("journeyRecovery.continue.guidance")</p>
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-    <p class="govuk-body">
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(messages("intendsToBringGoodsToUk.heading")).asPageHeading()
+            )
+        )
+
         @govukButton(
             ButtonViewModel(messages("site.continue"))
-                .asLink(continueUrl)
         )
-    </p>
+    }
 }

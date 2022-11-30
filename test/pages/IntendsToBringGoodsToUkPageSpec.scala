@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package viewmodels
+package pages
 
-abstract class WithCssClass(className: String) {
-  override val toString: String = className
+import pages.behaviours.PageBehaviours
+
+class IntendsToBringGoodsToUkPageSpec extends PageBehaviours {
+
+  "IntendsToBringGoodsToUkPage" - {
+
+    beRetrievable[Boolean](IntendsToBringGoodsToUkPage)
+
+    beSettable[Boolean](IntendsToBringGoodsToUkPage)
+
+    beRemovable[Boolean](IntendsToBringGoodsToUkPage)
+  }
 }

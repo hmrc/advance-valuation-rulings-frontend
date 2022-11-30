@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package viewmodels
+package forms
 
-abstract class WithCssClass(className: String) {
-  override val toString: String = className
+import javax.inject.Inject
+
+import forms.mappings.Mappings
+import play.api.data.Form
+
+class IntendsToBringGoodsToUkFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("intendsToBringGoodsToUk.error.required")
+    )
 }

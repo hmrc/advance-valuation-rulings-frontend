@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package viewmodels
+package pages
 
-abstract class WithCssClass(className: String) {
-  override val toString: String = className
+import play.api.libs.json.JsPath
+
+case object IntendsToBringGoodsToUkPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "intendsToBringGoodsToUk"
 }
