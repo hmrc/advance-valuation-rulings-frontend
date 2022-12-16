@@ -22,13 +22,46 @@ import play.api.mvc.Call
 import controllers.routes
 import pages._
 import models._
+import models.ValuationMethod.Method1
+import models.ValuationMethod.Method2
+import routes.{CommodityCodeController, HasCommodityCodeController, NameOfGoodsController, ValuationMethodController}
 
 @Singleton
 class Navigator @Inject()() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case ValuationMethodPage => valuationMethodPage
+    case NameOfGoodsPage => nameOfGoodsPage
+    case HasCommodityCodePage => hasCommodityCodePage
+    case CommodityCodePage => _ => routes.IndexController.onPageLoad
     case _ => _ => routes.IndexController.onPageLoad
   }
+
+  private def valuationMethodPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(ValuationMethodPage) match {
+      case None => ValuationMethodController.onPageLoad(models.NormalMode)
+      case Some(valuationMethod) => valuationMethod match {
+        case Method1 => NameOfGoodsController.onPageLoad(models.NormalMode)
+        case Method2 => NameOfGoodsController.onPageLoad(models.NormalMode)
+      }
+    }
+  }
+
+  private def nameOfGoodsPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(NameOfGoodsPage) match {
+      case None => NameOfGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)
+    }
+  }
+
+  private def hasCommodityCodePage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(HasCommodityCodePage) match {
+      case None => HasCommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(true) => CommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(false) => routes.IndexController.onPageLoad
+    }
+  }
+
 
   private val checkRouteMap: Page => UserAnswers => Call = {
     case _ => _ => routes.CheckYourAnswersController.onPageLoad

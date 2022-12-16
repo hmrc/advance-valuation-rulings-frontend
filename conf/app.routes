@@ -19,3 +19,23 @@ GET         /account/sign-out                            controllers.auth.AuthCo
 GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
+
+GET        /nameOfGoods                        controllers.NameOfGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /nameOfGoods                        controllers.NameOfGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeNameOfGoods                  controllers.NameOfGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeNameOfGoods                  controllers.NameOfGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /valuationMethod                        controllers.ValuationMethodController.onPageLoad(mode: Mode = NormalMode)
+POST       /valuationMethod                        controllers.ValuationMethodController.onSubmit(mode: Mode = NormalMode)
+GET        /changeValuationMethod                  controllers.ValuationMethodController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeValuationMethod                  controllers.ValuationMethodController.onSubmit(mode: Mode = CheckMode)
+
+GET        /commodityCode                        controllers.CommodityCodeController.onPageLoad(mode: Mode = NormalMode)
+POST       /commodityCode                        controllers.CommodityCodeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeCommodityCode                  controllers.CommodityCodeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeCommodityCode                  controllers.CommodityCodeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /hasCommodityCode                        controllers.HasCommodityCodeController.onPageLoad(mode: Mode = NormalMode)
+POST       /hasCommodityCode                        controllers.HasCommodityCodeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHasCommodityCode                  controllers.HasCommodityCodeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHasCommodityCode                  controllers.HasCommodityCodeController.onSubmit(mode: Mode = CheckMode)

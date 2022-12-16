@@ -55,3 +55,31 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+nameOfGoods.title = About the goods
+nameOfGoods.heading = What is the name of the goods?
+nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, 'silicone smartphone case'.
+nameOfGoods.error.required = Please enter the name of the goods
+nameOfGoods.error.length = Name must be 100 characters or less
+nameOfGoods.change.hidden = NameOfGoods
+
+valuationMethod.title = Select the method you will use to value your goods
+valuationMethod.heading = Select the method you will use to value your goods
+valuationMethod.method1 = Method 1: Transaction value
+valuationMethod.method2 = Method 2: Transaction value of identical goods
+valuationMethod.checkYourAnswersLabel = Select the method you will use to value your goods
+valuationMethod.error.required = Select valuationMethod
+valuationMethod.change.hidden = ValuationMethod
+
+commodityCode.title = What is the commodity code for the
+commodityCode.heading = What is the commodity code for the
+commodityCode.checkYourAnswersLabel = commodityCode
+commodityCode.error.required = Enter commodityCode
+commodityCode.error.length = CommodityCode must be 100 characters or less
+commodityCode.change.hidden = CommodityCode
+
+hasCommodityCode.title = Have you found the commodity code for the
+hasCommodityCode.heading = Have you found the commodity code for the
+hasCommodityCode.checkYourAnswersLabel = hasCommodityCode
+hasCommodityCode.error.required = Select yes if hasCommodityCode
+hasCommodityCode.change.hidden = HasCommodityCode
