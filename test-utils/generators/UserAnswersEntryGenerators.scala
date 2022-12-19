@@ -8,6 +8,46 @@ import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryPriceOfGoodsUserAnswersEntry: Arbitrary[(PriceOfGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[PriceOfGoodsPage.type]
+        value <- arbitrary[Int].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryHowAreTheGoodsMadeUserAnswersEntry: Arbitrary[(HowAreTheGoodsMadePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[HowAreTheGoodsMadePage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryHasConfidentialInformationUserAnswersEntry: Arbitrary[(HasConfidentialInformationPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[HasConfidentialInformationPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryDescribeTheGoodsUserAnswersEntry: Arbitrary[(DescribeTheGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[DescribeTheGoodsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryConfidentialInformationUserAnswersEntry: Arbitrary[(ConfidentialInformationPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ConfidentialInformationPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryRequiredInformationUserAnswersEntry: Arbitrary[(RequiredInformationPage.type, JsValue)] =
     Arbitrary {
       for {

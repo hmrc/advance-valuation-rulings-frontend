@@ -53,3 +53,28 @@ GET        /requiredInformation                        controllers.RequiredInfor
 POST       /requiredInformation                        controllers.RequiredInformationController.onSubmit(mode: Mode = NormalMode)
 GET        /changeRequiredInformation                  controllers.RequiredInformationController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeRequiredInformation                  controllers.RequiredInformationController.onSubmit(mode: Mode = CheckMode)
+
+GET        /confidentialInformation                        controllers.ConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
+POST       /confidentialInformation                        controllers.ConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
+GET        /changeConfidentialInformation                  controllers.ConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeConfidentialInformation                  controllers.ConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
+
+GET        /describeTheGoods                        controllers.DescribeTheGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /describeTheGoods                        controllers.DescribeTheGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
+POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
+
+GET        /howAreTheGoodsMade                        controllers.HowAreTheGoodsMadeController.onPageLoad(mode: Mode = NormalMode)
+POST       /howAreTheGoodsMade                        controllers.HowAreTheGoodsMadeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /priceOfGoods                  controllers.PriceOfGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /priceOfGoods                  controllers.PriceOfGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changePriceOfGoods                        controllers.PriceOfGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changePriceOfGoods                        controllers.PriceOfGoodsController.onSubmit(mode: Mode = CheckMode)

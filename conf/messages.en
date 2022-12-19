@@ -103,3 +103,39 @@ requiredInformation.option2 = I know the commodity code of the goods.
 requiredInformation.checkYourAnswersLabel = Information you need to continue your application
 requiredInformation.error.required = Select requiredInformation
 requiredInformation.change.hidden = RequiredInformation
+
+confidentialInformation.title = confidentialInformation
+confidentialInformation.heading = confidentialInformation
+confidentialInformation.checkYourAnswersLabel = confidentialInformation
+confidentialInformation.error.required = Enter confidentialInformation
+confidentialInformation.error.length = ConfidentialInformation must be 1000 characters or less
+confidentialInformation.change.hidden = ConfidentialInformation
+
+describeTheGoods.title = describeTheGoods
+describeTheGoods.heading = describeTheGoods
+describeTheGoods.checkYourAnswersLabel = describeTheGoods
+describeTheGoods.error.required = Enter describeTheGoods
+describeTheGoods.error.length = DescribeTheGoods must be 1000 characters or less
+describeTheGoods.change.hidden = DescribeTheGoods
+
+hasConfidentialInformation.title = hasConfidentialInformation
+hasConfidentialInformation.heading = hasConfidentialInformation
+hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
+hasConfidentialInformation.error.required = Select yes if hasConfidentialInformation
+hasConfidentialInformation.change.hidden = HasConfidentialInformation
+
+howAreTheGoodsMade.title = howAreTheGoodsMade
+howAreTheGoodsMade.heading = howAreTheGoodsMade
+howAreTheGoodsMade.checkYourAnswersLabel = howAreTheGoodsMade
+howAreTheGoodsMade.error.required = Enter howAreTheGoodsMade
+howAreTheGoodsMade.error.length = HowAreTheGoodsMade must be 1000 characters or less
+howAreTheGoodsMade.change.hidden = HowAreTheGoodsMade
+
+priceOfGoods.title = PriceOfGoods
+priceOfGoods.heading = PriceOfGoods
+priceOfGoods.checkYourAnswersLabel = PriceOfGoods
+priceOfGoods.error.nonNumeric = Enter your priceOfGoods using numbers
+priceOfGoods.error.required = Enter your priceOfGoods
+priceOfGoods.error.wholeNumber = Enter your priceOfGoods using whole numbers
+priceOfGoods.error.outOfRange = PriceOfGoods must be between {0} and {1}
+priceOfGoods.change.hidden = PriceOfGoods

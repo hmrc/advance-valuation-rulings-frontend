@@ -33,7 +33,12 @@ class Navigator @Inject()() {
     case ValuationMethodPage => valuationMethodPage
     case NameOfGoodsPage => nameOfGoodsPage
     case HasCommodityCodePage => hasCommodityCodePage
-    case CommodityCodePage => _ => routes.IndexController.onPageLoad
+    case CommodityCodePage => commodityCodePage
+    case PriceOfGoodsPage => priceOfGoodsPage
+    case DescribeTheGoodsPage => describeTheGoodsPage
+    case HowAreTheGoodsMadePage => howAreTheGoodsMadePage
+    case HasConfidentialInformationPage => hasConfidentialInformationPage
+    case ConfidentialInformationPage => confidentialInformationPage
     case ImportGoodsPage => importGoodsPage
     case RequiredInformationPage => requiredInformationPage
     case _ => _ => routes.IndexController.onPageLoad
@@ -56,11 +61,54 @@ class Navigator @Inject()() {
     }
   }
 
+  private def priceOfGoodsPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(PriceOfGoodsPage) match {
+      case None => PriceOfGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
+    }
+  }
+
+  private def describeTheGoodsPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(DescribeTheGoodsPage) match {
+      case None => DescribeTheGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
+    }
+  }
+
+  private def howAreTheGoodsMadePage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(DescribeTheGoodsPage) match {
+      case None => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
+      case Some(_) => HasConfidentialInformationController.onPageLoad(models.NormalMode)
+    }
+  }
+
   private def hasCommodityCodePage(userAnswers: UserAnswers): Call = {
     userAnswers.get(HasCommodityCodePage) match {
       case None => HasCommodityCodeController.onPageLoad(models.NormalMode)
       case Some(true) => CommodityCodeController.onPageLoad(models.NormalMode)
       case Some(false) => routes.IndexController.onPageLoad
+    }
+  }
+
+  private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(HasConfidentialInformationPage) match {
+      case None => HasConfidentialInformationController.onPageLoad(models.NormalMode)
+      case Some(true) => ConfidentialInformationController.onPageLoad(models.NormalMode)
+      case Some(false) => routes.IndexController.onPageLoad
+    }
+  }
+
+  private def confidentialInformationPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(ConfidentialInformationPage) match {
+      case None => ConfidentialInformationController.onPageLoad(models.NormalMode)
+      case Some(_) => routes.IndexController.onPageLoad
+    }
+  }
+
+  private def commodityCodePage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(HasCommodityCodePage) match {
+      case None => CommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(_) => PriceOfGoodsController.onPageLoad(models.NormalMode)
     }
   }
 
