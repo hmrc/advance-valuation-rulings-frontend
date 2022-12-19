@@ -5,6 +5,12 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryRequiredInformationPage: Arbitrary[RequiredInformationPage.type] =
+    Arbitrary(RequiredInformationPage)
+
+  implicit lazy val arbitraryImportGoodsPage: Arbitrary[ImportGoodsPage.type] =
+    Arbitrary(ImportGoodsPage)
+
   implicit lazy val arbitraryHasCommodityCodePage: Arbitrary[HasCommodityCodePage.type] =
     Arbitrary(HasCommodityCodePage)
 

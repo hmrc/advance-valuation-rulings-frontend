@@ -24,7 +24,7 @@ import pages._
 import models._
 import models.ValuationMethod.Method1
 import models.ValuationMethod.Method2
-import routes.{CommodityCodeController, HasCommodityCodeController, NameOfGoodsController, ValuationMethodController}
+import routes._
 
 @Singleton
 class Navigator @Inject()() {
@@ -34,6 +34,8 @@ class Navigator @Inject()() {
     case NameOfGoodsPage => nameOfGoodsPage
     case HasCommodityCodePage => hasCommodityCodePage
     case CommodityCodePage => _ => routes.IndexController.onPageLoad
+    case ImportGoodsPage => importGoodsPage
+    case RequiredInformationPage => requiredInformationPage
     case _ => _ => routes.IndexController.onPageLoad
   }
 
@@ -62,6 +64,20 @@ class Navigator @Inject()() {
     }
   }
 
+  private def importGoodsPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(ImportGoodsPage) match {
+      case None => ImportGoodsController.onPageLoad(models.NormalMode)
+      case Some(true) => PublicInformationNoticeController.onPageLoad
+      case Some(false) => IndexController.onPageLoad
+    }
+  }
+
+  private def requiredInformationPage(userAnswers: UserAnswers): Call = {
+    userAnswers.get(RequiredInformationPage) match {
+      case None => RequiredInformationController.onPageLoad(models.NormalMode)
+      case Some(_) => ImportGoodsController.onPageLoad(models.NormalMode)
+    }
+  }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
     case _ => _ => routes.CheckYourAnswersController.onPageLoad

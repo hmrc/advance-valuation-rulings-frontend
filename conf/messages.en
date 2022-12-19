@@ -83,3 +83,23 @@ hasCommodityCode.heading = Have you found the commodity code for the
 hasCommodityCode.checkYourAnswersLabel = hasCommodityCode
 hasCommodityCode.error.required = Select yes if hasCommodityCode
 hasCommodityCode.change.hidden = HasCommodityCode
+
+contactPage.title = How we contact you about your application
+contactPage.heading = How we contact you about your application
+
+importGoods.title = Are you planning to import goods into Great Britain?
+importGoods.heading = Are you planning to import goods into Great Britain?
+importGoods.checkYourAnswersLabel = importGoods
+importGoods.error.required = Select yes if importGoods
+importGoods.change.hidden = ImportGoods
+
+publicInformationNotice.title = Some of the information you provide in this application may appear on a public website
+publicInformationNotice.heading = Some of the information you provide in this application may appear on a public website
+
+requiredInformation.title = Information you need to continue your application
+requiredInformation.heading = Information you need to continue your application
+requiredInformation.option1 = I have subscribed to the Customs Declaration Service.
+requiredInformation.option2 = I know the commodity code of the goods.
+requiredInformation.checkYourAnswersLabel = Information you need to continue your application
+requiredInformation.error.required = Select requiredInformation
+requiredInformation.change.hidden = RequiredInformation

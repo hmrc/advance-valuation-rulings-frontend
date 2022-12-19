@@ -39,3 +39,17 @@ GET        /hasCommodityCode                        controllers.HasCommodityCode
 POST       /hasCommodityCode                        controllers.HasCommodityCodeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeHasCommodityCode                  controllers.HasCommodityCodeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeHasCommodityCode                  controllers.HasCommodityCodeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /contactPage                       controllers.ContactPageController.onPageLoad()
+
+GET        /importGoods                        controllers.ImportGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /importGoods                        controllers.ImportGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeImportGoods                  controllers.ImportGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeImportGoods                  controllers.ImportGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /publicInformationNotice                       controllers.PublicInformationNoticeController.onPageLoad()
+
+GET        /requiredInformation                        controllers.RequiredInformationController.onPageLoad(mode: Mode = NormalMode)
+POST       /requiredInformation                        controllers.RequiredInformationController.onSubmit(mode: Mode = NormalMode)
+GET        /changeRequiredInformation                  controllers.RequiredInformationController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeRequiredInformation                  controllers.RequiredInformationController.onSubmit(mode: Mode = CheckMode)
