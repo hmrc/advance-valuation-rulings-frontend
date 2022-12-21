@@ -32,7 +32,6 @@ import navigation.Navigator
 import pages.ImportGoodsPage
 import repositories.SessionRepository
 import views.html.ImportGoodsView
-// import pages.NameOfGoodsPage
 
 class ImportGoodsController @Inject() (
   override val messagesApi: MessagesApi,

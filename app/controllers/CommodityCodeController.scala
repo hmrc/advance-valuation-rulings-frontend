@@ -51,7 +51,7 @@ class CommodityCodeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val nameOfGoods = request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
+      val nameOfGoods = request.userAnswers.get(NameOfGoodsPage).getOrElse("No commodity code found")
 
       val preparedForm = request.userAnswers.get(CommodityCodePage) match {
         case None        => form
@@ -65,7 +65,7 @@ class CommodityCodeController @Inject() (
     (identify andThen getData andThen requireData).async {
       implicit request =>
         val nameOfGoods =
-          request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
+          request.userAnswers.get(NameOfGoodsPage).getOrElse("No commodity code found")
 
         form
           .bindFromRequest()
