@@ -37,12 +37,12 @@ trait ButtonFluency {
     def asLink(href: String): Button =
       button copy (
         element = Some("a"),
-        href    = Some(href)
+        href = Some(href)
       )
 
     def asInput(inputType: String): Button =
       button copy (
-        element   = Some("input"),
+        element = Some("input"),
         inputType = Some(inputType)
       )
 

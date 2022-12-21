@@ -55,3 +55,87 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+nameOfGoods.title = About the goods
+nameOfGoods.heading = What is the name of the goods?
+nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, 'silicone smartphone case'.
+nameOfGoods.error.required = Please enter the name of the goods
+nameOfGoods.error.length = Name must be 100 characters or less
+nameOfGoods.change.hidden = NameOfGoods
+
+valuationMethod.title = Select the method you will use to value your goods
+valuationMethod.heading = Select the method you will use to value your goods
+valuationMethod.method1 = Method 1: Transaction value
+valuationMethod.method2 = Method 2: Transaction value of identical goods
+valuationMethod.checkYourAnswersLabel = Select the method you will use to value your goods
+valuationMethod.error.required = Select valuationMethod
+valuationMethod.change.hidden = ValuationMethod
+
+commodityCode.title = What is the commodity code for the
+commodityCode.heading = What is the commodity code for the
+commodityCode.checkYourAnswersLabel = commodityCode
+commodityCode.error.required = Enter commodityCode
+commodityCode.error.length = CommodityCode must be 100 characters or less
+commodityCode.change.hidden = CommodityCode
+
+hasCommodityCode.title = Have you found the commodity code for the
+hasCommodityCode.heading = Have you found the commodity code for the
+hasCommodityCode.checkYourAnswersLabel = hasCommodityCode
+hasCommodityCode.error.required = Select yes if hasCommodityCode
+hasCommodityCode.change.hidden = HasCommodityCode
+
+contactPage.title = How we contact you about your application
+contactPage.heading = How we contact you about your application
+
+importGoods.title = Are you planning to import goods into Great Britain?
+importGoods.heading = Are you planning to import goods into Great Britain?
+importGoods.checkYourAnswersLabel = importGoods
+importGoods.error.required = Select yes if importGoods
+importGoods.change.hidden = ImportGoods
+
+publicInformationNotice.title = Some of the information you provide in this application may appear on a public website
+publicInformationNotice.heading = Some of the information you provide in this application may appear on a public website
+
+requiredInformation.title = Information you need to continue your application
+requiredInformation.heading = Information you need to continue your application
+requiredInformation.option1 = I have subscribed to the Customs Declaration Service.
+requiredInformation.option2 = I know the commodity code of the goods.
+requiredInformation.checkYourAnswersLabel = Information you need to continue your application
+requiredInformation.error.required = Select requiredInformation
+requiredInformation.change.hidden = RequiredInformation
+
+confidentialInformation.title = confidentialInformation
+confidentialInformation.heading = confidentialInformation
+confidentialInformation.checkYourAnswersLabel = confidentialInformation
+confidentialInformation.error.required = Enter confidentialInformation
+confidentialInformation.error.length = ConfidentialInformation must be 1000 characters or less
+confidentialInformation.change.hidden = ConfidentialInformation
+
+describeTheGoods.title = describeTheGoods
+describeTheGoods.heading = describeTheGoods
+describeTheGoods.checkYourAnswersLabel = describeTheGoods
+describeTheGoods.error.required = Enter describeTheGoods
+describeTheGoods.error.length = DescribeTheGoods must be 1000 characters or less
+describeTheGoods.change.hidden = DescribeTheGoods
+
+hasConfidentialInformation.title = hasConfidentialInformation
+hasConfidentialInformation.heading = hasConfidentialInformation
+hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
+hasConfidentialInformation.error.required = Select yes if hasConfidentialInformation
+hasConfidentialInformation.change.hidden = HasConfidentialInformation
+
+howAreTheGoodsMade.title = howAreTheGoodsMade
+howAreTheGoodsMade.heading = howAreTheGoodsMade
+howAreTheGoodsMade.checkYourAnswersLabel = howAreTheGoodsMade
+howAreTheGoodsMade.error.required = Enter howAreTheGoodsMade
+howAreTheGoodsMade.error.length = HowAreTheGoodsMade must be 1000 characters or less
+howAreTheGoodsMade.change.hidden = HowAreTheGoodsMade
+
+priceOfGoods.title = PriceOfGoods
+priceOfGoods.heading = PriceOfGoods
+priceOfGoods.checkYourAnswersLabel = PriceOfGoods
+priceOfGoods.error.nonNumeric = Enter your priceOfGoods using numbers
+priceOfGoods.error.required = Enter your priceOfGoods
+priceOfGoods.error.wholeNumber = Enter your priceOfGoods using whole numbers
+priceOfGoods.error.outOfRange = PriceOfGoods must be between {0} and {1}
+priceOfGoods.change.hidden = PriceOfGoods
