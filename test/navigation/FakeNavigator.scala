@@ -1,8 +1,9 @@
 package navigation
 
 import play.api.mvc.Call
-import pages._
+
 import models.{Mode, UserAnswers}
+import pages._
 
 class FakeNavigator(desiredRoute: Call) extends Navigator {
 

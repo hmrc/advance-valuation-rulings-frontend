@@ -1,13 +1,14 @@
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class NameOfGoodsFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "nameOfGoods.error.required"
-  val lengthKey = "nameOfGoods.error.length"
-  val maxLength = 100
+  val lengthKey   = "nameOfGoods.error.length"
+  val maxLength   = 100
 
   val form = new NameOfGoodsFormProvider()()
 

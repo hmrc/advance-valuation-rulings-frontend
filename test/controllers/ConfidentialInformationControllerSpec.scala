@@ -1,5 +1,12 @@
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.ConfidentialInformationFormProvider
 import models.{NormalMode, UserAnswers}
@@ -8,23 +15,18 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ConfidentialInformationPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.ConfidentialInformationView
-
-import scala.concurrent.Future
 
 class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ConfidentialInformationFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val confidentialInformationRoute = routes.ConfidentialInformationController.onPageLoad(NormalMode).url
+  lazy val confidentialInformationRoute =
+    routes.ConfidentialInformationController.onPageLoad(NormalMode).url
 
   "ConfidentialInformation Controller" - {
 
@@ -40,13 +42,17 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ConfidentialInformationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ConfidentialInformationPage, "answer").success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(ConfidentialInformationPage, "answer").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -58,7 +64,10 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -104,7 +113,10 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

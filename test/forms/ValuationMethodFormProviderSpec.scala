@@ -1,8 +1,9 @@
 package forms
 
+import play.api.data.FormError
+
 import forms.behaviours.OptionFieldBehaviours
 import models.ValuationMethod
-import play.api.data.FormError
 
 class ValuationMethodFormProviderSpec extends OptionFieldBehaviours {
 
@@ -10,13 +11,13 @@ class ValuationMethodFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "valuationMethod.error.required"
 
     behave like optionsField[ValuationMethod](
       form,
       fieldName,
-      validValues  = ValuationMethod.values,
+      validValues = ValuationMethod.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

@@ -16,22 +16,22 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.ValuationMethodPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, UserAnswers}
+import pages.ValuationMethodPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ValuationMethodSummary  {
+object ValuationMethodSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ValuationMethodPage).map {
       answer =>
-
         val value = ValueViewModel(
           HtmlContent(
             HtmlFormat.escape(messages(s"valuationMethod.$answer"))
@@ -39,10 +39,13 @@ object ValuationMethodSummary  {
         )
 
         SummaryListRowViewModel(
-          key     = "valuationMethod.checkYourAnswersLabel",
-          value   = value,
+          key = "valuationMethod.checkYourAnswersLabel",
+          value = value,
           actions = Seq(
-            ActionItemViewModel("site.change", routes.ValuationMethodController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.ValuationMethodController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("valuationMethod.change.hidden"))
           )
         )

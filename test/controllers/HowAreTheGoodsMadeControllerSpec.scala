@@ -1,5 +1,12 @@
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.HowAreTheGoodsMadeFormProvider
 import models.{NormalMode, UserAnswers}
@@ -8,21 +15,15 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.HowAreTheGoodsMadePage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.HowAreTheGoodsMadeView
-
-import scala.concurrent.Future
 
 class HowAreTheGoodsMadeControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new HowAreTheGoodsMadeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val howAreTheGoodsMadeRoute = routes.HowAreTheGoodsMadeController.onPageLoad(NormalMode).url
 
@@ -40,13 +41,17 @@ class HowAreTheGoodsMadeControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[HowAreTheGoodsMadeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(HowAreTheGoodsMadePage, "answer").success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(HowAreTheGoodsMadePage, "answer").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -58,7 +63,10 @@ class HowAreTheGoodsMadeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -104,7 +112,10 @@ class HowAreTheGoodsMadeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

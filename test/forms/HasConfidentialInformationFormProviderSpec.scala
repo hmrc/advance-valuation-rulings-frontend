@@ -1,12 +1,13 @@
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.BooleanFieldBehaviours
 
 class HasConfidentialInformationFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "hasConfidentialInformation.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new HasConfidentialInformationFormProvider()()
 

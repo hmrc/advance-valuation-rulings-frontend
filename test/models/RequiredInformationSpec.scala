@@ -1,14 +1,20 @@
 package models
 
+import play.api.libs.json.{JsError, Json, JsString}
+
 import generators.ModelGenerators
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.OptionValues
-import play.api.libs.json.{JsError, JsString, Json}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class RequiredInformationSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues with ModelGenerators {
+class RequiredInformationSpec
+    extends AnyFreeSpec
+    with Matchers
+    with ScalaCheckPropertyChecks
+    with OptionValues
+    with ModelGenerators {
 
   "RequiredInformation" - {
 
@@ -18,8 +24,10 @@ class RequiredInformationSpec extends AnyFreeSpec with Matchers with ScalaCheckP
 
       forAll(gen) {
         requiredInformation =>
-
-          JsString(requiredInformation.toString).validate[RequiredInformation].asOpt.value mustEqual requiredInformation
+          JsString(requiredInformation.toString)
+            .validate[RequiredInformation]
+            .asOpt
+            .value mustEqual requiredInformation
       }
     }
 
@@ -29,7 +37,6 @@ class RequiredInformationSpec extends AnyFreeSpec with Matchers with ScalaCheckP
 
       forAll(gen) {
         invalidValue =>
-
           JsString(invalidValue).validate[RequiredInformation] mustEqual JsError("error.invalid")
       }
     }
@@ -40,7 +47,6 @@ class RequiredInformationSpec extends AnyFreeSpec with Matchers with ScalaCheckP
 
       forAll(gen) {
         requiredInformation =>
-
           Json.toJson(requiredInformation) mustEqual JsString(requiredInformation.toString)
       }
     }

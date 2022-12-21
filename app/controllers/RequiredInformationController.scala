@@ -16,40 +16,45 @@
 
 package controllers
 
-import controllers.actions._
-import forms.RequiredInformationFormProvider
 import javax.inject.Inject
-import models.Mode
-import navigation.Navigator
-import pages.RequiredInformationPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.RequiredInformationView
 
 import scala.concurrent.{ExecutionContext, Future}
-import models.UserAnswers
 
-class RequiredInformationController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: RequiredInformationFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: RequiredInformationView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import controllers.actions._
+import forms.RequiredInformationFormProvider
+import models.Mode
+import models.UserAnswers
+import navigation.Navigator
+import pages.RequiredInformationPage
+import repositories.SessionRepository
+import views.html.RequiredInformationView
+
+class RequiredInformationController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: RequiredInformationFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: RequiredInformationView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(RequiredInformationPage) match {
-        case None => form
+      val preparedForm = request.userAnswers
+        .getOrElse(UserAnswers(request.userId))
+        .get(RequiredInformationPage) match {
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
@@ -58,16 +63,19 @@ class RequiredInformationController @Inject()(
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(RequiredInformationPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(RequiredInformationPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(
+                                  request.userAnswers
+                                    .getOrElse(UserAnswers(request.userId))
+                                    .set(RequiredInformationPage, value)
+                                )
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(RequiredInformationPage, mode, updatedAnswers))
+        )
   }
 }

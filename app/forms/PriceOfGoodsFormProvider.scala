@@ -16,9 +16,11 @@
 
 package forms
 
-import forms.mappings.Mappings
 import javax.inject.Inject
+
 import play.api.data.Form
+
+import forms.mappings.Mappings
 
 class PriceOfGoodsFormProvider @Inject() extends Mappings {
 
@@ -27,7 +29,8 @@ class PriceOfGoodsFormProvider @Inject() extends Mappings {
       "value" -> int(
         "priceOfGoods.error.required",
         "priceOfGoods.error.wholeNumber",
-        "priceOfGoods.error.nonNumeric")
-          .verifying(inRange(0, 100000000, "priceOfGoods.error.outOfRange"))
+        "priceOfGoods.error.nonNumeric"
+      )
+        .verifying(inRange(0, 100000000, "priceOfGoods.error.outOfRange"))
     )
 }

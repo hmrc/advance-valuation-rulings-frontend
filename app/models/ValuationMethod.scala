@@ -28,15 +28,16 @@ object ValuationMethod extends Enumerable.Implicits {
   case object Method2 extends WithName("method2") with ValuationMethod
 
   val values: Seq[ValuationMethod] = Seq(
-    Method1, Method2
+    Method1,
+    Method2
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>
       RadioItem(
         content = Text(messages(s"valuationMethod.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
+        value = Some(value.toString),
+        id = Some(s"value_$index")
       )
   }
 

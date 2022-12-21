@@ -1,12 +1,13 @@
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.BooleanFieldBehaviours
 
 class ImportGoodsFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "importGoods.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new ImportGoodsFormProvider()()
 

@@ -1,9 +1,10 @@
 package models
 
+import play.api.libs.json._
+
 import org.scalatest.{EitherValues, OptionValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import play.api.libs.json._
 
 object EnumerableSpec {
 
@@ -20,7 +21,12 @@ object EnumerableSpec {
   }
 }
 
-class EnumerableSpec extends AnyFreeSpec with Matchers with EitherValues with OptionValues with Enumerable.Implicits {
+class EnumerableSpec
+    extends AnyFreeSpec
+    with Matchers
+    with EitherValues
+    with OptionValues
+    with Enumerable.Implicits {
 
   import EnumerableSpec._
 
@@ -38,7 +44,9 @@ class EnumerableSpec extends AnyFreeSpec with Matchers with EitherValues with Op
     }
 
     "must fail to bind for invalid values" in {
-      Json.fromJson[Foo](JsString("invalid")).asEither.left.value must contain(JsPath -> Seq(JsonValidationError("error.invalid")))
+      Json.fromJson[Foo](JsString("invalid")).asEither.left.value must contain(
+        JsPath -> Seq(JsonValidationError("error.invalid"))
+      )
     }
   }
 

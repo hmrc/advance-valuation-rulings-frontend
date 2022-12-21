@@ -2,8 +2,8 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import pages._
 import models._
+import pages._
 
 class NavigatorSpec extends SpecBase {
 
@@ -16,7 +16,11 @@ class NavigatorSpec extends SpecBase {
       "must go from a page that doesn't exist in the route map to Index" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
+        navigator.nextPage(
+          UnknownPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.IndexController.onPageLoad
       }
     }
 
@@ -25,7 +29,11 @@ class NavigatorSpec extends SpecBase {
       "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController.onPageLoad
+        navigator.nextPage(
+          UnknownPage,
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.CheckYourAnswersController.onPageLoad
       }
     }
   }

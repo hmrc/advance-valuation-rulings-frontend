@@ -1,14 +1,19 @@
 package models
 
+import play.api.libs.json.{JsError, Json, JsString}
+
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.OptionValues
-import play.api.libs.json.{JsError, JsString, Json}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class ValuationMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class ValuationMethodSpec
+    extends AnyFreeSpec
+    with Matchers
+    with ScalaCheckPropertyChecks
+    with OptionValues {
 
   "ValuationMethod" - {
 
@@ -18,8 +23,10 @@ class ValuationMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
 
       forAll(gen) {
         valuationMethod =>
-
-          JsString(valuationMethod.toString).validate[ValuationMethod].asOpt.value mustEqual valuationMethod
+          JsString(valuationMethod.toString)
+            .validate[ValuationMethod]
+            .asOpt
+            .value mustEqual valuationMethod
       }
     }
 
@@ -29,7 +36,6 @@ class ValuationMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
 
       forAll(gen) {
         invalidValue =>
-
           JsString(invalidValue).validate[ValuationMethod] mustEqual JsError("error.invalid")
       }
     }
@@ -39,9 +45,7 @@ class ValuationMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
       val gen = Gen.oneOf(ValuationMethod.values.toSeq)
 
       forAll(gen) {
-        valuationMethod =>
-
-          Json.toJson(valuationMethod) mustEqual JsString(valuationMethod.toString)
+        valuationMethod => Json.toJson(valuationMethod) mustEqual JsString(valuationMethod.toString)
       }
     }
   }

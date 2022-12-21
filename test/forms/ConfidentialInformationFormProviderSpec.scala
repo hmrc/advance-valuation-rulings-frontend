@@ -1,13 +1,14 @@
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class ConfidentialInformationFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "confidentialInformation.error.required"
-  val lengthKey = "confidentialInformation.error.length"
-  val maxLength = 1000
+  val lengthKey   = "confidentialInformation.error.length"
+  val maxLength   = 1000
 
   val form = new ConfidentialInformationFormProvider()()
 

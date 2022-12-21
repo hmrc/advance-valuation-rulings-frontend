@@ -2,7 +2,6 @@ package pages
 
 import pages.behaviours.PageBehaviours
 
-
 class CommodityCodePageSpec extends PageBehaviours {
 
   "CommodityCodePage" - {

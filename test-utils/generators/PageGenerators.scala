@@ -11,13 +11,15 @@ trait PageGenerators {
   implicit lazy val arbitraryHowAreTheGoodsMadePage: Arbitrary[HowAreTheGoodsMadePage.type] =
     Arbitrary(HowAreTheGoodsMadePage)
 
-  implicit lazy val arbitraryHasConfidentialInformationPage: Arbitrary[HasConfidentialInformationPage.type] =
+  implicit lazy val arbitraryHasConfidentialInformationPage
+    : Arbitrary[HasConfidentialInformationPage.type] =
     Arbitrary(HasConfidentialInformationPage)
 
   implicit lazy val arbitraryDescribeTheGoodsPage: Arbitrary[DescribeTheGoodsPage.type] =
     Arbitrary(DescribeTheGoodsPage)
 
-  implicit lazy val arbitraryConfidentialInformationPage: Arbitrary[ConfidentialInformationPage.type] =
+  implicit lazy val arbitraryConfidentialInformationPage
+    : Arbitrary[ConfidentialInformationPage.type] =
     Arbitrary(ConfidentialInformationPage)
 
   implicit lazy val arbitraryRequiredInformationPage: Arbitrary[RequiredInformationPage.type] =

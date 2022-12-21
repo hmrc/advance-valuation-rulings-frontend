@@ -1,5 +1,12 @@
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.NameOfGoodsFormProvider
 import models.{NormalMode, UserAnswers}
@@ -8,21 +15,15 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.NameOfGoodsPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.NameOfGoodsView
-
-import scala.concurrent.Future
 
 class NameOfGoodsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new NameOfGoodsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val nameOfGoodsRoute = routes.NameOfGoodsController.onPageLoad(NormalMode).url
 
@@ -40,7 +41,10 @@ class NameOfGoodsControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[NameOfGoodsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -58,7 +62,10 @@ class NameOfGoodsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -104,7 +111,10 @@ class NameOfGoodsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

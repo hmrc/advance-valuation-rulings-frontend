@@ -16,8 +16,9 @@
 
 package pages
 
-import models.ValuationMethod
 import play.api.libs.json.JsPath
+
+import models.ValuationMethod
 
 case object ValuationMethodPage extends QuestionPage[ValuationMethod] {
 

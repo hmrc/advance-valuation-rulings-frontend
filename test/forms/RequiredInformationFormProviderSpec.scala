@@ -1,8 +1,9 @@
 package forms
 
+import play.api.data.FormError
+
 import forms.behaviours.CheckboxFieldBehaviours
 import models.RequiredInformation
-import play.api.data.FormError
 
 class RequiredInformationFormProviderSpec extends CheckboxFieldBehaviours {
 
@@ -10,13 +11,13 @@ class RequiredInformationFormProviderSpec extends CheckboxFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "requiredInformation.error.required"
 
     behave like checkboxField[RequiredInformation](
       form,
       fieldName,
-      validValues  = RequiredInformation.values,
+      validValues = RequiredInformation.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 

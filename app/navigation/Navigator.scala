@@ -19,113 +19,104 @@ package navigation
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc.Call
+
 import controllers.routes
-import pages._
 import models._
 import models.ValuationMethod.Method1
 import models.ValuationMethod.Method2
+import pages._
 import routes._
 
 @Singleton
-class Navigator @Inject()() {
+class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ValuationMethodPage => valuationMethodPage
-    case NameOfGoodsPage => nameOfGoodsPage
-    case HasCommodityCodePage => hasCommodityCodePage
-    case CommodityCodePage => commodityCodePage
-    case PriceOfGoodsPage => priceOfGoodsPage
-    case DescribeTheGoodsPage => describeTheGoodsPage
-    case HowAreTheGoodsMadePage => howAreTheGoodsMadePage
+    case ValuationMethodPage            => valuationMethodPage
+    case NameOfGoodsPage                => nameOfGoodsPage
+    case HasCommodityCodePage           => hasCommodityCodePage
+    case CommodityCodePage              => commodityCodePage
+    case PriceOfGoodsPage               => priceOfGoodsPage
+    case DescribeTheGoodsPage           => describeTheGoodsPage
+    case HowAreTheGoodsMadePage         => howAreTheGoodsMadePage
     case HasConfidentialInformationPage => hasConfidentialInformationPage
-    case ConfidentialInformationPage => confidentialInformationPage
-    case ImportGoodsPage => importGoodsPage
-    case RequiredInformationPage => requiredInformationPage
-    case _ => _ => routes.IndexController.onPageLoad
+    case ConfidentialInformationPage    => confidentialInformationPage
+    case ImportGoodsPage                => importGoodsPage
+    case RequiredInformationPage        => requiredInformationPage
+    case _                              => _ => routes.IndexController.onPageLoad
   }
 
-  private def valuationMethodPage(userAnswers: UserAnswers): Call = {
+  private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
-      case None => ValuationMethodController.onPageLoad(models.NormalMode)
-      case Some(valuationMethod) => valuationMethod match {
-        case Method1 => NameOfGoodsController.onPageLoad(models.NormalMode)
-        case Method2 => NameOfGoodsController.onPageLoad(models.NormalMode)
-      }
+      case None                  => ValuationMethodController.onPageLoad(models.NormalMode)
+      case Some(valuationMethod) =>
+        valuationMethod match {
+          case Method1 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method2 => NameOfGoodsController.onPageLoad(models.NormalMode)
+        }
     }
-  }
 
-  private def nameOfGoodsPage(userAnswers: UserAnswers): Call = {
+  private def nameOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(NameOfGoodsPage) match {
-      case None => NameOfGoodsController.onPageLoad(models.NormalMode)
+      case None    => NameOfGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)
     }
-  }
 
-  private def priceOfGoodsPage(userAnswers: UserAnswers): Call = {
+  private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(PriceOfGoodsPage) match {
-      case None => PriceOfGoodsController.onPageLoad(models.NormalMode)
+      case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
     }
-  }
 
-  private def describeTheGoodsPage(userAnswers: UserAnswers): Call = {
+  private def describeTheGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheGoodsPage) match {
-      case None => DescribeTheGoodsController.onPageLoad(models.NormalMode)
+      case None    => DescribeTheGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
     }
-  }
 
-  private def howAreTheGoodsMadePage(userAnswers: UserAnswers): Call = {
+  private def howAreTheGoodsMadePage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheGoodsPage) match {
-      case None => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
+      case None    => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
       case Some(_) => HasConfidentialInformationController.onPageLoad(models.NormalMode)
     }
-  }
 
-  private def hasCommodityCodePage(userAnswers: UserAnswers): Call = {
+  private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
-      case None => HasCommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(true) => CommodityCodeController.onPageLoad(models.NormalMode)
+      case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
       case Some(false) => routes.IndexController.onPageLoad
     }
-  }
 
-  private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call = {
+  private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasConfidentialInformationPage) match {
-      case None => HasConfidentialInformationController.onPageLoad(models.NormalMode)
-      case Some(true) => ConfidentialInformationController.onPageLoad(models.NormalMode)
+      case None        => HasConfidentialInformationController.onPageLoad(models.NormalMode)
+      case Some(true)  => ConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(false) => routes.IndexController.onPageLoad
     }
-  }
 
-  private def confidentialInformationPage(userAnswers: UserAnswers): Call = {
+  private def confidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ConfidentialInformationPage) match {
-      case None => ConfidentialInformationController.onPageLoad(models.NormalMode)
+      case None    => ConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(_) => routes.IndexController.onPageLoad
     }
-  }
 
-  private def commodityCodePage(userAnswers: UserAnswers): Call = {
+  private def commodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
-      case None => CommodityCodeController.onPageLoad(models.NormalMode)
+      case None    => CommodityCodeController.onPageLoad(models.NormalMode)
       case Some(_) => PriceOfGoodsController.onPageLoad(models.NormalMode)
     }
-  }
 
-  private def importGoodsPage(userAnswers: UserAnswers): Call = {
+  private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {
-      case None => ImportGoodsController.onPageLoad(models.NormalMode)
-      case Some(true) => PublicInformationNoticeController.onPageLoad
+      case None        => ImportGoodsController.onPageLoad(models.NormalMode)
+      case Some(true)  => PublicInformationNoticeController.onPageLoad
       case Some(false) => IndexController.onPageLoad
     }
-  }
 
-  private def requiredInformationPage(userAnswers: UserAnswers): Call = {
+  private def requiredInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(RequiredInformationPage) match {
-      case None => RequiredInformationController.onPageLoad(models.NormalMode)
+      case None    => RequiredInformationController.onPageLoad(models.NormalMode)
       case Some(_) => ImportGoodsController.onPageLoad(models.NormalMode)
     }
-  }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
     case _ => _ => routes.CheckYourAnswersController.onPageLoad
@@ -134,7 +125,7 @@ class Navigator @Inject()() {
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
-    case CheckMode =>
+    case CheckMode  =>
       checkRouteMap(page)(userAnswers)
   }
 }

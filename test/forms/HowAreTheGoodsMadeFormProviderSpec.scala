@@ -1,13 +1,14 @@
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class HowAreTheGoodsMadeFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "howAreTheGoodsMade.error.required"
-  val lengthKey = "howAreTheGoodsMade.error.length"
-  val maxLength = 1000
+  val lengthKey   = "howAreTheGoodsMade.error.length"
+  val maxLength   = 1000
 
   val form = new HowAreTheGoodsMadeFormProvider()()
 

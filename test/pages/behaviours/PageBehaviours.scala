@@ -1,21 +1,29 @@
 package pages.behaviours
 
+import play.api.libs.json._
+
 import generators.Generators
 import models.UserAnswers
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.QuestionPage
-import play.api.libs.json._
 
-trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues with TryValues {
+trait PageBehaviours
+    extends AnyFreeSpec
+    with Matchers
+    with ScalaCheckPropertyChecks
+    with Generators
+    with OptionValues
+    with TryValues {
 
   class BeRetrievable[A] {
-    def apply[P <: QuestionPage[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {
-
+    def apply[P <: QuestionPage[A]](
+      genP: Gen[P]
+    )(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit =
       "when being retrieved from UserAnswers" - {
 
         "and the question has not been answered" - {
@@ -29,7 +37,6 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
             forAll(gen) {
               case (page, userAnswers) =>
-
                 userAnswers.get(page) must be(empty)
             }
           }
@@ -47,18 +54,17 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
             forAll(gen) {
               case (page, savedValue, userAnswers) =>
-
                 userAnswers.get(page).value mustEqual savedValue
             }
           }
         }
       }
-    }
   }
 
   class BeSettable[A] {
-    def apply[P <: QuestionPage[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {
-
+    def apply[P <: QuestionPage[A]](
+      genP: Gen[P]
+    )(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit =
       "must be able to be set on UserAnswers" in {
 
         val gen = for {
@@ -69,17 +75,16 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
         forAll(gen) {
           case (page, newValue, userAnswers) =>
-
             val updatedAnswers = userAnswers.set(page, newValue).success.value
             updatedAnswers.get(page).value mustEqual newValue
         }
       }
-    }
   }
 
   class BeRemovable[A] {
-    def apply[P <: QuestionPage[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {
-
+    def apply[P <: QuestionPage[A]](
+      genP: Gen[P]
+    )(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit =
       "must be able to be removed from UserAnswers" in {
 
         val gen = for {
@@ -90,12 +95,10 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
         forAll(gen) {
           case (page, userAnswers) =>
-
             val updatedAnswers = userAnswers.remove(page).success.value
             updatedAnswers.get(page) must be(empty)
         }
       }
-    }
   }
 
   def beRetrievable[A]: BeRetrievable[A] = new BeRetrievable[A]

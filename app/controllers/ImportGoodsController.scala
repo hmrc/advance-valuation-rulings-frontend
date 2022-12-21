@@ -16,59 +16,65 @@
 
 package controllers
 
-import controllers.actions._
-import forms.ImportGoodsFormProvider
 import javax.inject.Inject
-import models.Mode
-import navigation.Navigator
-import pages.ImportGoodsPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ImportGoodsView
 
 import scala.concurrent.{ExecutionContext, Future}
-import models.UserAnswers
-import pages.NameOfGoodsPage
 
-class ImportGoodsController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
-                                         navigator: Navigator,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: ImportGoodsFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: ImportGoodsView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import controllers.actions._
+import forms.ImportGoodsFormProvider
+import models.Mode
+import models.UserAnswers
+import navigation.Navigator
+import pages.ImportGoodsPage
+import repositories.SessionRepository
+import views.html.ImportGoodsView
+// import pages.NameOfGoodsPage
+
+class ImportGoodsController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: ImportGoodsFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: ImportGoodsView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(ImportGoodsPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
+      val preparedForm =
+        request.userAnswers.getOrElse(UserAnswers(request.userId)).get(ImportGoodsPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
       Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(ImportGoodsPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ImportGoodsPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(
+                                  request.userAnswers
+                                    .getOrElse(UserAnswers(request.userId))
+                                    .set(ImportGoodsPage, value)
+                                )
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(ImportGoodsPage, mode, updatedAnswers))
+        )
   }
 }

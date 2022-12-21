@@ -1,7 +1,8 @@
 package forms
 
-import forms.behaviours.IntFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.IntFieldBehaviours
 
 class PriceOfGoodsFormProviderSpec extends IntFieldBehaviours {
 
@@ -25,15 +26,15 @@ class PriceOfGoodsFormProviderSpec extends IntFieldBehaviours {
     behave like intField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "priceOfGoods.error.nonNumeric"),
+      nonNumericError = FormError(fieldName, "priceOfGoods.error.nonNumeric"),
       wholeNumberError = FormError(fieldName, "priceOfGoods.error.wholeNumber")
     )
 
     behave like intFieldWithRange(
       form,
       fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
+      minimum = minimum,
+      maximum = maximum,
       expectedError = FormError(fieldName, "priceOfGoods.error.outOfRange", Seq(minimum, maximum))
     )
 

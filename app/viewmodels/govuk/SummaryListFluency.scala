@@ -44,22 +44,22 @@ trait SummaryListFluency {
   object SummaryListRowViewModel {
 
     def apply(
-               key: Key,
-               value: Value
-             ): SummaryListRow =
+      key: Key,
+      value: Value
+    ): SummaryListRow =
       SummaryListRow(
-        key   = key,
+        key = key,
         value = value
       )
 
     def apply(
-               key: Key,
-               value: Value,
-               actions: Seq[ActionItem]
-             ): SummaryListRow =
+      key: Key,
+      value: Value,
+      actions: Seq[ActionItem]
+    ): SummaryListRow =
       SummaryListRow(
-        key     = key,
-        value   = value,
+        key = key,
+        value = value,
         actions = Some(Actions(items = actions))
       )
   }
@@ -73,12 +73,12 @@ trait SummaryListFluency {
   object ActionItemViewModel {
 
     def apply(
-               content: Content,
-               href: String
-             ): ActionItem =
+      content: Content,
+      href: String
+    ): ActionItem =
       ActionItem(
         content = content,
-        href    = href
+        href = href
       )
   }
 

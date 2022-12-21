@@ -16,57 +16,65 @@
 
 package controllers
 
-import controllers.actions._
-import forms.NameOfGoodsFormProvider
 import javax.inject.Inject
-import models.{Mode, UserAnswers}
-import navigation.Navigator
-import pages.NameOfGoodsPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.NameOfGoodsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NameOfGoodsController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: NameOfGoodsFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: NameOfGoodsView
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import controllers.actions._
+import forms.NameOfGoodsFormProvider
+import models.{Mode, UserAnswers}
+import navigation.Navigator
+import pages.NameOfGoodsPage
+import repositories.SessionRepository
+import views.html.NameOfGoodsView
+
+class NameOfGoodsController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: NameOfGoodsFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: NameOfGoodsView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NameOfGoodsPage) match {
-        case None => 
-          form
-        case Some(value) => form.fill(value)
-      }
+      val preparedForm =
+        request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NameOfGoodsPage) match {
+          case None        =>
+            form
+          case Some(value) => form.fill(value)
+        }
 
       Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(NameOfGoodsPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(NameOfGoodsPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(
+                                  request.userAnswers
+                                    .getOrElse(UserAnswers(request.userId))
+                                    .set(NameOfGoodsPage, value)
+                                )
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(NameOfGoodsPage, mode, updatedAnswers))
+        )
   }
 }

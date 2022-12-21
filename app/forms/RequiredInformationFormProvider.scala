@@ -18,15 +18,17 @@ package forms
 
 import javax.inject.Inject
 
-import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms.set
+
+import forms.mappings.Mappings
 import models.RequiredInformation
 
 class RequiredInformationFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Set[RequiredInformation]] =
     Form(
-      "value" -> set(enumerable[RequiredInformation]("requiredInformation.error.required")).verifying(nonEmptySet("requiredInformation.error.required"))
+      "value" -> set(enumerable[RequiredInformation]("requiredInformation.error.required"))
+        .verifying(nonEmptySet("requiredInformation.error.required"))
     )
 }

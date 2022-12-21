@@ -16,36 +16,40 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.RequiredInformationPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, UserAnswers}
+import pages.RequiredInformationPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object RequiredInformationSummary  {
+object RequiredInformationSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(RequiredInformationPage).map {
       answers =>
-
         val value = ValueViewModel(
           HtmlContent(
-            answers.map {
-              answer => HtmlFormat.escape(messages(s"requiredInformation.$answer")).toString
-            }
-            .mkString(",<br>")
+            answers
+              .map {
+                answer => HtmlFormat.escape(messages(s"requiredInformation.$answer")).toString
+              }
+              .mkString(",<br>")
           )
         )
 
         SummaryListRowViewModel(
-          key     = "requiredInformation.checkYourAnswersLabel",
-          value   = value,
+          key = "requiredInformation.checkYourAnswersLabel",
+          value = value,
           actions = Seq(
-            ActionItemViewModel("site.change", routes.RequiredInformationController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.RequiredInformationController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("requiredInformation.change.hidden"))
           )
         )

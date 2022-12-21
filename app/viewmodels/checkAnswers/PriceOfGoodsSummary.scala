@@ -16,25 +16,28 @@
 
 package viewmodels.checkAnswers
 
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
 import controllers.routes
 import models.{CheckMode, UserAnswers}
 import pages.PriceOfGoodsPage
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object PriceOfGoodsSummary  {
+object PriceOfGoodsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(PriceOfGoodsPage).map {
       answer =>
-
         SummaryListRowViewModel(
-          key     = "priceOfGoods.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
+          key = "priceOfGoods.checkYourAnswersLabel",
+          value = ValueViewModel(answer.toString),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.PriceOfGoodsController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.PriceOfGoodsController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("priceOfGoods.change.hidden"))
           )
         )
