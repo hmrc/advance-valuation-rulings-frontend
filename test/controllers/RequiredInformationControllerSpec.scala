@@ -107,12 +107,57 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, requiredInformationRoute)
-            .withFormUrlEncodedBody(("value[0]", RequiredInformation.values.head.toString))
+            .withFormUrlEncodedBody(
+              "value[0]" -> RequiredInformation.Option1.toString,
+              "value[1]" -> RequiredInformation.Option2.toString,
+              "value[2]" -> RequiredInformation.Option3.toString,
+              "value[3]" -> RequiredInformation.Option4.toString,
+              "value[4]" -> RequiredInformation.Option5.toString,
+              "value[5]" -> RequiredInformation.Option6.toString,
+              "value[6]" -> RequiredInformation.Option7.toString,
+              "value[7]" -> RequiredInformation.Option8.toString
+            )
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+    "must display an error on the page when not all checkbox are submitted" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, requiredInformationRoute)
+            .withFormUrlEncodedBody(("value[0]", RequiredInformation.values.head.toString))
+
+//        val boundForm = form.bind(Map("value" -> Array(RequiredInformation.values.head.toString)))
+//        val boundForm = form.bind(Map("value" -> "invalid value"))
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[RequiredInformationView]
+
+        val boundForm =
+          form.bind(Map("value" -> Set(RequiredInformation.values.head).mkString(",")))
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

@@ -68,14 +68,18 @@ class RequiredInformationController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
-            for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers
-                                    .getOrElse(UserAnswers(request.userId))
-                                    .set(RequiredInformationPage, value)
-                                )
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(RequiredInformationPage, mode, updatedAnswers))
+            if (value.size == 8) {
+              for {
+                updatedAnswers <- Future.fromTry(
+                                    request.userAnswers
+                                      .getOrElse(UserAnswers(request.userId))
+                                      .set(RequiredInformationPage, value)
+                                  )
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(RequiredInformationPage, mode, updatedAnswers))
+            } else {
+              Future.successful(BadRequest(view(form, mode)))
+            }
         )
   }
 }
