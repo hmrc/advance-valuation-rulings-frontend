@@ -34,3 +34,6 @@ bin
 /.classpath
 *.iws
 .bsp
+.bloop
+.metals
+.vs
