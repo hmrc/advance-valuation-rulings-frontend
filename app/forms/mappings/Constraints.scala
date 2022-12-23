@@ -115,4 +115,7 @@ trait Constraints {
 
   protected def length[A](expected: Int, errorKey: String): Constraint[Set[_]] =
     Constraint(set => if (set.size == expected) Valid else Invalid(errorKey))
+
+  protected def setEquals[A](expected: Set[_], errorKey: String): Constraint[Set[_]] =
+    Constraint(set => if(set == expected) Valid else Invalid(errorKey))
 }

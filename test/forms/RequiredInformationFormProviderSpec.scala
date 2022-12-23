@@ -22,14 +22,11 @@ import forms.behaviours.CheckboxFieldBehaviours
 import models.RequiredInformation
 
 class RequiredInformationFormProviderSpec extends CheckboxFieldBehaviours {
+  import RequiredInformationFormProviderSpec._
 
   val form = new RequiredInformationFormProvider()()
 
   ".value" - {
-
-    val fieldName   = "value"
-    val requiredKey = "requiredInformation.error.required"
-
 
     behave like mandatoryCheckboxField(
       form,
@@ -37,33 +34,39 @@ class RequiredInformationFormProviderSpec extends CheckboxFieldBehaviours {
       requiredKey
     )
 
+    "successfully bind when all 8 answers are selected" in {
+      val data = allValues
+      form.bind(data).errors mustBe empty
+    }
+
     "fail to bind when less than 8 answers are selected" in {
-      val data = Map(
-        s"$fieldName[0]" -> RequiredInformation.values.head.toString,
-        s"$fieldName[1]" -> RequiredInformation.values(1).toString,
-        s"$fieldName[2]" -> RequiredInformation.values(2).toString,
-        s"$fieldName[3]" -> RequiredInformation.values(3).toString,
-        s"$fieldName[4]" -> RequiredInformation.values(4).toString,
-        s"$fieldName[5]" -> RequiredInformation.values(5).toString,
-        s"$fieldName[6]" -> RequiredInformation.values(6).toString
-      )
+      val data = allValues - s"$fieldName[7]"
       form.bind(data).errors must contain(
         FormError(s"$fieldName", "requiredInformation.error.selectAll")
       )
     }
 
-    "successfully binds when all 8 answers are selected" in {
-      val data = Map(
-        s"$fieldName[0]" -> RequiredInformation.values.head.toString,
-        s"$fieldName[1]" -> RequiredInformation.values(1).toString,
-        s"$fieldName[2]" -> RequiredInformation.values(2).toString,
-        s"$fieldName[3]" -> RequiredInformation.values(3).toString,
-        s"$fieldName[4]" -> RequiredInformation.values(4).toString,
-        s"$fieldName[5]" -> RequiredInformation.values(5).toString,
-        s"$fieldName[6]" -> RequiredInformation.values(6).toString,
-        s"$fieldName[7]" -> RequiredInformation.values(7).toString
+    "fail to bind when invalid data is provided" in {
+      val data = allValues + (s"$fieldName[8]" -> "banana")
+      form.bind(data).errors must contain(
+        FormError(s"$fieldName[8]", "error.invalid")
       )
-      form.bind(data).errors mustBe empty
     }
   }
+}
+
+object RequiredInformationFormProviderSpec {
+  val fieldName   = "value"
+  val requiredKey = "requiredInformation.error.required"
+
+  val allValues = Map(
+    s"$fieldName[0]" -> RequiredInformation.values.head.toString,
+    s"$fieldName[1]" -> RequiredInformation.values(1).toString,
+    s"$fieldName[2]" -> RequiredInformation.values(2).toString,
+    s"$fieldName[3]" -> RequiredInformation.values(3).toString,
+    s"$fieldName[4]" -> RequiredInformation.values(4).toString,
+    s"$fieldName[5]" -> RequiredInformation.values(5).toString,
+    s"$fieldName[6]" -> RequiredInformation.values(6).toString,
+    s"$fieldName[7]" -> RequiredInformation.values(7).toString
+  )
 }

@@ -30,6 +30,8 @@ class RequiredInformationFormProvider @Inject() extends Mappings {
     Form(
       "value" -> set(enumerable[RequiredInformation]("requiredInformation.error.required"))
         .verifying(nonEmptySet("requiredInformation.error.required"))
-        .verifying(length(8, "requiredInformation.error.selectAll"))
+        .verifying(
+          setEquals(RequiredInformation.values.toSet, "requiredInformation.error.selectAll")
+        )
     )
 }

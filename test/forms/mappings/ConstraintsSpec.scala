@@ -193,4 +193,42 @@ class ConstraintsSpec
       }
     }
   }
+
+  "length" - {
+    val threeElementSet = Set(1, 2, 3)
+
+    "must return Valid for a set with length equal threshold" in {
+      val result = length(3, "error.max").apply(threeElementSet)
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a set with more elements than the threshold" in {
+      val result = length(2, "error.length").apply(threeElementSet)
+      result mustEqual Invalid("error.length")
+    }
+
+    "must return Invalid for a set with fewer elements than the threshold" in {
+      val result = length(5, "error.length").apply(threeElementSet)
+      result mustEqual Invalid("error.length")
+    }
+  }
+
+  "setEquals" - {
+    val threeElementSet = Set("hello", "world", "!")
+
+    "must return Valid for a set equal to the expected set" in {
+      val result = setEquals(Set("hello", "!", "world"), "error.mismatch").apply(threeElementSet)
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a set without all the expected elements" in {
+      val result = setEquals(Set("hello", "world"), "error.mismatch").apply(threeElementSet)
+      result mustEqual Invalid("error.mismatch")
+    }
+
+    "must return Invalid for a set with additional elements then expected" in {
+      val result = setEquals(Set("hello", "!", "world", "?"), "error.mismatch").apply(threeElementSet)
+      result mustEqual Invalid("error.mismatch")
+    }
+  }
 }
