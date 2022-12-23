@@ -108,6 +108,7 @@ requiredInformation.option7 = The name and address registered to my EORI number 
 requiredInformation.option8 = I am aware that it can take up to 90 days from the date my application was accepted to receive an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Information you need to continue your application
 requiredInformation.error.required = Select requiredInformation
+requiredInformation.error.selectAll = Check all the boxes to continue
 requiredInformation.change.hidden = RequiredInformation
 
 confidentialInformation.title = confidentialInformation

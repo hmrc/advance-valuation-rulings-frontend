@@ -34,7 +34,6 @@ object RequiredInformation extends Enumerable.Implicits {
   case object Option6 extends WithName("option6") with RequiredInformation
   case object Option7 extends WithName("option7") with RequiredInformation
   case object Option8 extends WithName("option8") with RequiredInformation
-  
 
   val values: Seq[RequiredInformation] = Seq(
     Option1,

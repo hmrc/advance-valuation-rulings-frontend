@@ -143,15 +143,12 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, requiredInformationRoute)
             .withFormUrlEncodedBody(("value[0]", RequiredInformation.values.head.toString))
 
-//        val boundForm = form.bind(Map("value" -> Array(RequiredInformation.values.head.toString)))
-//        val boundForm = form.bind(Map("value" -> "invalid value"))
-
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[RequiredInformationView]
 
         val boundForm =
-          form.bind(Map("value" -> Set(RequiredInformation.values.head).mkString(",")))
+          form.bind(Map("value[0]" -> RequiredInformation.values.head.toString))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode)(

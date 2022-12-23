@@ -112,4 +112,7 @@ trait Constraints {
       case _                   =>
         Invalid(errorKey)
     }
+
+  protected def length[A](expected: Int, errorKey: String): Constraint[Set[_]] =
+    Constraint(set => if (set.size == expected) Valid else Invalid(errorKey))
 }

@@ -30,17 +30,40 @@ class RequiredInformationFormProviderSpec extends CheckboxFieldBehaviours {
     val fieldName   = "value"
     val requiredKey = "requiredInformation.error.required"
 
-    behave like checkboxField[RequiredInformation](
-      form,
-      fieldName,
-      validValues = RequiredInformation.values,
-      invalidError = FormError(s"$fieldName[0]", "error.invalid")
-    )
 
     behave like mandatoryCheckboxField(
       form,
       fieldName,
       requiredKey
     )
+
+    "fail to bind when less than 8 answers are selected" in {
+      val data = Map(
+        s"$fieldName[0]" -> RequiredInformation.values.head.toString,
+        s"$fieldName[1]" -> RequiredInformation.values(1).toString,
+        s"$fieldName[2]" -> RequiredInformation.values(2).toString,
+        s"$fieldName[3]" -> RequiredInformation.values(3).toString,
+        s"$fieldName[4]" -> RequiredInformation.values(4).toString,
+        s"$fieldName[5]" -> RequiredInformation.values(5).toString,
+        s"$fieldName[6]" -> RequiredInformation.values(6).toString
+      )
+      form.bind(data).errors must contain(
+        FormError(s"$fieldName", "requiredInformation.error.selectAll")
+      )
+    }
+
+    "successfully binds when all 8 answers are selected" in {
+      val data = Map(
+        s"$fieldName[0]" -> RequiredInformation.values.head.toString,
+        s"$fieldName[1]" -> RequiredInformation.values(1).toString,
+        s"$fieldName[2]" -> RequiredInformation.values(2).toString,
+        s"$fieldName[3]" -> RequiredInformation.values(3).toString,
+        s"$fieldName[4]" -> RequiredInformation.values(4).toString,
+        s"$fieldName[5]" -> RequiredInformation.values(5).toString,
+        s"$fieldName[6]" -> RequiredInformation.values(6).toString,
+        s"$fieldName[7]" -> RequiredInformation.values(7).toString
+      )
+      form.bind(data).errors mustBe empty
+    }
   }
 }

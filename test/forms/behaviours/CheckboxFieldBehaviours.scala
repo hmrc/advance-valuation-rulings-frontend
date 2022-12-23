@@ -76,6 +76,5 @@ trait CheckboxFieldBehaviours extends FormSpec {
       form.bind(data).errors must contain(FormError(s"$fieldName[0]", requiredKey))
     }
 
-
   }
 }
