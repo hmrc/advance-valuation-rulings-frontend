@@ -36,3 +36,4 @@ bin
 .bsp
 .bloop
 **/.bloop
+.metals
