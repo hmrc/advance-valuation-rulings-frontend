@@ -48,9 +48,12 @@ class RequiredInformationController @Inject() (
     with I18nSupport {
 
   val form = formProvider()
+  private val logger = play.api.Logger(getClass)
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
+      logger.info("RequiredInformationController onPageLoad")
+      
       val preparedForm = request.userAnswers
         .getOrElse(UserAnswers(request.userId))
         .get(RequiredInformationPage) match {
