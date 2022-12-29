@@ -34,3 +34,5 @@ bin
 /.classpath
 *.iws
 .bsp
+.bloop
+**/.bloop
