@@ -1,7 +1,7 @@
 
 # advance-valuation-rulings-frontend
 
-This is a placeholder README.md for a new repository
+This is the frontend for the [Advance Valuation Rulings](https://github.com/hmrc/advance-valuation-rulings) service
 
 ### License
 
