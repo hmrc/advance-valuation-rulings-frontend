@@ -227,7 +227,8 @@ class ConstraintsSpec
     }
 
     "must return Invalid for a set with additional elements then expected" in {
-      val result = setEquals(Set("hello", "!", "world", "?"), "error.mismatch").apply(threeElementSet)
+      val result =
+        setEquals(Set("hello", "!", "world", "?"), "error.mismatch").apply(threeElementSet)
       result mustEqual Invalid("error.mismatch")
     }
   }
