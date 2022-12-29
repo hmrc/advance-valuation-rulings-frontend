@@ -78,7 +78,11 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, "No commodity code found")(
+        contentAsString(result) mustEqual view(
+          form.fill("answer"),
+          NormalMode,
+          "No commodity code found"
+        )(
           request,
           messages(application)
         ).toString

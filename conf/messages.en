@@ -100,9 +100,17 @@ requiredInformation.title = Information you need to continue your application
 requiredInformation.heading = Information you need to continue your application
 requiredInformation.option1 = I have subscribed to the Customs Declaration Service.
 requiredInformation.option2 = I know the commodity code of the goods.
+requiredInformation.option3 = I have brochures, manuals, photographs and samples to send to HMRC if required.
+requiredInformation.option4 = I have reference numbers of previous or similar rulings.
+requiredInformation.option5 = I will supply HMRC with my contact email and phone number as part of this application.
+requiredInformation.option6 = I have an EORI number starting with GB.
+requiredInformation.option7 = The name and address registered to my EORI number is up to date.
+requiredInformation.option8 = I am aware that it can take up to 90 days from the date my application was accepted to receive an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Information you need to continue your application
 requiredInformation.error.required = Select requiredInformation
+requiredInformation.error.selectAll = Check all the boxes to continue
 requiredInformation.change.hidden = RequiredInformation
+requiredInformation.caption = Starter checklist
 
 confidentialInformation.title = confidentialInformation
 confidentialInformation.heading = confidentialInformation
