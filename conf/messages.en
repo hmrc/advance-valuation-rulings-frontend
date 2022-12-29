@@ -110,6 +110,7 @@ requiredInformation.checkYourAnswersLabel = Information you need to continue you
 requiredInformation.error.required = Select requiredInformation
 requiredInformation.error.selectAll = Check all the boxes to continue
 requiredInformation.change.hidden = RequiredInformation
+requiredInformation.caption = Starter checklist
 
 confidentialInformation.title = confidentialInformation
 confidentialInformation.heading = confidentialInformation
