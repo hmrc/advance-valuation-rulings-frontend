@@ -1,0 +1,90 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components.{bulletList, paragraph, Link}
+@import config.FrontendAppConfig
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        bulletList: bulletList,
+        paragraph: paragraph,
+        link: Link,
+        config: FrontendAppConfig
+)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@advanceTariffRulingsLink = {
+    @link(
+            id = "advance_tariff_rulings_link",
+            text = messages("importingGoods.point.1.link"),
+            call = Call("GET", config.advanceTariffRulingUrl)
+        )
+    }
+
+@advanceOriginRulingsLink = {
+    @link(
+            id = "advance_origin_rulings_link",
+            text = messages("importingGoods.point.2.link"),
+            call = Call("GET", config.advanceOriginRulingUrl)
+        )
+    }
+
+@guideLink = {
+    @link(
+            id = "step_by_step_guide_link",
+            text = messages("importingGoods.point.3.link"),
+            call = Call("GET", config.stepByStepGuideUrl)
+        )
+    }
+
+@generalInformationLink = {
+    @link(
+            id = "general_information_link",
+            text = messages("importingGoods.point.4.link"),
+            call = Call("GET", config.generalInformationUrl)
+        )
+    }
+
+@helpLink = {
+    @link(
+            id = "help_and_support_link",
+            text = messages("importingGoods.point.5.link"),
+            call = Call("GET", config.helpAndSupportUrl)
+        )
+    }
+
+@layout(pageTitle = titleNoForm(messages("importingGoods.title"))) {
+
+    <p class="govuk-caption-xl hmrc-caption-x"><span class="govuk-visually-hidden">
+        This section is </span>@messages("importingGoods.caption")</p>
+
+    <h1 class="govuk-heading-xl">@messages("importingGoods.heading")</h1>
+
+    @paragraph(content = Html(messages("importingGoods.paragraph.1")))
+
+    @bulletList(
+            Seq(
+                Html(messages("importingGoods.point.1", advanceTariffRulingsLink)),
+                Html(messages("importingGoods.point.2", advanceOriginRulingsLink)),
+                Html(messages("importingGoods.point.3", guideLink)),
+                Html(messages("importingGoods.point.4", generalInformationLink)),
+                Html(messages("importingGoods.point.5", helpLink))
+            ),
+            "govuk-list govuk-list--bullet govuk-list--spaced",
+        )
+}

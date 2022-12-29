@@ -109,7 +109,7 @@ class Navigator @Inject() () {
     userAnswers.get(ImportGoodsPage) match {
       case None        => ImportGoodsController.onPageLoad(models.NormalMode)
       case Some(true)  => PublicInformationNoticeController.onPageLoad
-      case Some(false) => IndexController.onPageLoad
+      case Some(false) => ImportingGoodsController.onPageLoad
     }
 
   private def requiredInformationPage(userAnswers: UserAnswers): Call =

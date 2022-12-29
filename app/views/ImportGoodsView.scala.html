@@ -28,6 +28,9 @@
 
     @formHelper(action = routes.ImportGoodsController.onSubmit(mode), 'autoComplete -> "off") {
 
+         <p class="govuk-caption-xl hmrc-caption-x"><span class="govuk-visually-hidden">
+            This section is </span>@messages("importGoods.caption")</p>
+
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }

@@ -78,3 +78,5 @@ GET        /priceOfGoods                  controllers.PriceOfGoodsController.onP
 POST       /priceOfGoods                  controllers.PriceOfGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changePriceOfGoods                        controllers.PriceOfGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changePriceOfGoods                        controllers.PriceOfGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /importingGoods                       controllers.ImportingGoodsController.onPageLoad()

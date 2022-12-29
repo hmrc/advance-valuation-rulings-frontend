@@ -14,18 +14,48 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+@import components.{bulletList, paragraph, Link}
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
-        formHelper: FormWithCSRF
+        formHelper: FormWithCSRF,
+        paragraph: paragraph,
+        bulletList: bulletList,
+        link: Link,
+        config: FrontendAppConfig
 )
 
 @()(implicit request: Request[_], messages: Messages)
+
+@emailLink = {
+    @link(
+            id = "how_should_we_contact_you_email",
+            text = config.contactEmail,
+            call = Call("GET", "mailto:" + config.contactEmail)
+        )
+    }
 
 @layout(pageTitle = titleNoForm(messages("contactPage.title"))) {
     <h1 class="govuk-heading-xl">@messages("contactPage.heading")</h1>
 
     @formHelper(action = routes.ValuationMethodController.onPageLoad(models.NormalMode)) {
+
+        @paragraph(content = Html(messages("contactPage.paragraph.1")))
+
+        @paragraph(content = Html(messages("contactPage.paragraph.2")))
+
+        @bulletList(
+            Seq(Html(messages("contactPage.paragraph.2.point.1")), 
+            Html(messages("contactPage.paragraph.2.point.2")))
+            )
+
+        @paragraph(content = Html(messages("contactPage.paragraph.3", emailLink)))
+        
+        @paragraph(content = Html(messages("contactPage.paragraph.4")))
+        
+        @paragraph(content = Html(messages("contactPage.paragraph.5")))
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
