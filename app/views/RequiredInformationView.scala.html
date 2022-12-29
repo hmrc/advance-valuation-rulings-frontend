@@ -28,6 +28,9 @@
 
     @formHelper(action = routes.RequiredInformationController.onSubmit(mode), 'autoComplete -> "off") {
 
+        <p class="govuk-caption-xl hmrc-caption-x"><span class="govuk-visually-hidden">
+            This section is </span>@messages("requiredInformation.caption")</p>
+
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }

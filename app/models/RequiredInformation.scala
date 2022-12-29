@@ -28,10 +28,22 @@ object RequiredInformation extends Enumerable.Implicits {
 
   case object Option1 extends WithName("option1") with RequiredInformation
   case object Option2 extends WithName("option2") with RequiredInformation
+  case object Option3 extends WithName("option3") with RequiredInformation
+  case object Option4 extends WithName("option4") with RequiredInformation
+  case object Option5 extends WithName("option5") with RequiredInformation
+  case object Option6 extends WithName("option6") with RequiredInformation
+  case object Option7 extends WithName("option7") with RequiredInformation
+  case object Option8 extends WithName("option8") with RequiredInformation
 
   val values: Seq[RequiredInformation] = Seq(
     Option1,
-    Option2
+    Option2,
+    Option3,
+    Option4,
+    Option5,
+    Option6,
+    Option7,
+    Option8
   )
 
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
