@@ -38,6 +38,14 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val loginUrl: String         = configuration.get[String]("urls.login")
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   val signOutUrl: String       = configuration.get[String]("urls.signOut")
+  val searchUrl: String        = configuration.get[String]("urls.search")
+  val contactEmail: String     = configuration.get[String]("urls.contactAddress")
+
+  val advanceTariffRulingUrl: String = configuration.get[String]("urls.advanceTariffRuling")
+  val advanceOriginRulingUrl: String = configuration.get[String]("urls.advanceOriginRuling")
+  val stepByStepGuideUrl: String     = configuration.get[String]("urls.stepByStepGuide")
+  val generalInformationUrl: String  = configuration.get[String]("urls.generalInformation")
+  val helpAndSupportUrl: String      = configuration.get[String]("urls.helpAndSupport")
 
   private val exitSurveyBaseUrl: String =
     configuration.get[Service]("microservice.services.feedback-frontend").baseUrl

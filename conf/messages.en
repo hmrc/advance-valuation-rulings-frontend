@@ -1,4 +1,4 @@
-service.name = advance-valuation-rulings-frontend
+service.name = Advance Ruling Service
 
 site.back = Back
 site.remove = Remove
@@ -38,6 +38,8 @@ error.summary.title = There is a problem
 index.title = advance-valuation-rulings-frontend
 index.heading = advance-valuation-rulings-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
+
+caption.prefix = This section is
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
@@ -87,16 +89,30 @@ hasCommodityCode.change.hidden = HasCommodityCode
 contactPage.title = How we contact you about your application
 contactPage.heading = How we contact you about your application
 
-importGoods.title = Are you planning to import goods into Great Britain?
+contactPage.paragraph.1 = We may need to contact you to ask for further information or to let you know the status of your application.
+contactPage.paragraph.2 = We would like to contact you by email. However there are some risks with emails including that they:
+contactPage.paragraph.2.point.1 = Are not secure
+contactPage.paragraph.2.point.2 = Could be changed or read by someone else before they reach you
+contactPage.paragraph.3 = If you do not want us to contact you by email, tell us how we should contact you by emailing us at {0}
+contactPage.paragraph.4 = If you choose to opt out of emails, we will only send automated emails. For example, when you complete this application we will send you an automated confirmation email.
+contactPage.paragraph.5 = If we do not hear from you, we will assume you have accepted the risks.
+
+importGoods.title = To use this service, you must intend to bring goods into Great Britain
 importGoods.heading = Are you planning to import goods into Great Britain?
+importGoods.caption = About the goods
 importGoods.checkYourAnswersLabel = importGoods
-importGoods.error.required = Select yes if importGoods
+importGoods.error.required = Select Yes if you have intention to move goods
 importGoods.change.hidden = ImportGoods
 
 publicInformationNotice.title = Some of the information you provide in this application may appear on a public website
 publicInformationNotice.heading = Some of the information you provide in this application may appear on a public website
+publicInformationNotice.paragraph.1 = If you are granted a ruling for your goods it will be published on the {0} This information is available for other traders to view so that they can find a ruling if they are trading with similar goods.
+publicInformationNotice.paragraph.1.link = Search for Advance Valuation Rulings website.
+publicInformationNotice.paragraph.2 = You will be told throughout the application which information may appear on the Advance Valuation Rulings website.
+publicInformationNotice.paragraph.3 = You will be able to mark information and files as confidential in your application. We will not publish confidential information or files on the Advance Valuation Rulings website.
+publicInformationNotice.button.continue = Agree and continue
 
-requiredInformation.title = Information you need to continue your application
+requiredInformation.title = Information you need to complete an application
 requiredInformation.heading = Information you need to continue your application
 requiredInformation.option1 = I have subscribed to the Customs Declaration Service.
 requiredInformation.option2 = I know the commodity code of the goods.
@@ -147,3 +163,18 @@ priceOfGoods.error.required = Enter your priceOfGoods
 priceOfGoods.error.wholeNumber = Enter your priceOfGoods using whole numbers
 priceOfGoods.error.outOfRange = PriceOfGoods must be between {0} and {1}
 priceOfGoods.change.hidden = PriceOfGoods
+
+importingGoods.title = This service is designed for those who are importing goods into Great Britain
+importingGoods.heading = This service is designed for those who are importing goods into Great Britain
+importingGoods.caption = About the goods
+importingGoods.paragraph.1 = Other services you might be interested in:
+importingGoods.point.1 = {0} - for legally binding decisions on the commodity code used to import into or export from Great Britain
+importingGoods.point.1.link = Advance Tariff Rulings
+importingGoods.point.2 = {0} - for legally binding decisions on the origin of the goods being imported into or exported from Great Britain
+importingGoods.point.2.link = Advance Origin Rulings
+importingGoods.point.3 = {0} to importing goods into the UK
+importingGoods.point.3.link = Step-by-step guide
+importingGoods.point.4 = {0} on importing, exporting and customs for businesses
+importingGoods.point.4.link = General information
+importingGoods.point.5 = {0} - HMRC email alerts, videos and webinars about importing and exporting
+importingGoods.point.5.link = Help and support

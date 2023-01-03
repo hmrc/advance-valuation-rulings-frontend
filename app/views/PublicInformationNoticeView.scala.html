@@ -14,21 +14,41 @@
  * limitations under the License.
  *@
 
+@import components._
+@import config.FrontendAppConfig
+
 @this(
     layout: templates.Layout,
     govukButton: GovukButton,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    paragraph: Paragraph,
+    link: Link,
+    config: FrontendAppConfig
 )
 
 @()(implicit request: Request[_], messages: Messages)
+
+@searchLink = {
+    @link(
+            id = "search_for_advance_rulings",
+            text = messages("publicInformationNotice.paragraph.1.link"),
+            call = Call("GET", config.searchUrl)
+        )
+    }
 
 @layout(pageTitle = titleNoForm(messages("publicInformationNotice.title"))) {
     <h1 class="govuk-heading-xl">@messages("publicInformationNotice.heading")</h1>
 
     @formHelper(action = routes.ContactPageController.onPageLoad()) {
 
+        @paragraph(content = Html(messages("publicInformationNotice.paragraph.1", searchLink)))
+
+        @paragraph(content = Html(messages("publicInformationNotice.paragraph.2")))
+
+        @paragraph(content = Html(messages("publicInformationNotice.paragraph.3")))
+
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel(messages("publicInformationNotice.button.continue"))
         )
     }
 }
