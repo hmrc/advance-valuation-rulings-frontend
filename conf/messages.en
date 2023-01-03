@@ -39,6 +39,8 @@ index.title = advance-valuation-rulings-frontend
 index.heading = advance-valuation-rulings-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
+caption.prefix = This section is
+
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 

@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  * limitations under the License.
  *@
 
-@import components.{bulletList, paragraph, Link}
+@import components._
 @import config.FrontendAppConfig
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
-        bulletList: bulletList,
-        paragraph: paragraph,
+        bulletList: BulletList,
+        paragraph: Paragraph,
         link: Link,
+        caption: Caption,
         config: FrontendAppConfig
 )
 
@@ -70,8 +71,7 @@
 
 @layout(pageTitle = titleNoForm(messages("importingGoods.title"))) {
 
-    <p class="govuk-caption-xl hmrc-caption-x"><span class="govuk-visually-hidden">
-        This section is </span>@messages("importingGoods.caption")</p>
+    @caption(messages("importingGoods.caption"))
 
     <h1 class="govuk-heading-xl">@messages("importingGoods.heading")</h1>
 

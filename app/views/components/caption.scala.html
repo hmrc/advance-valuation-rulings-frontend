@@ -16,12 +16,6 @@
 
 @this()
 
-@(elements: Seq[Html], classes: String = "govuk-list govuk-list--bullet", id: Option[String] = None)
-
-<ul class="@classes" @id.map{id => id="@id"}>
-    @elements.map { element =>
-        <li class="dashed-list-item">
-            @element
-        </li>
-    }
-</ul>
+@(message: String, captionPrefix: String="caption.prefix")(implicit messages: Messages)
+<p class="govuk-caption-xl hmrc-caption-x"><span class="govuk-visually-hidden">
+    @messages(captionPrefix)</span>@message</p>

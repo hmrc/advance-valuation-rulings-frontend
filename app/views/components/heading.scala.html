@@ -16,12 +16,6 @@
 
 @this()
 
-@(elements: Seq[Html], classes: String = "govuk-list govuk-list--bullet", id: Option[String] = None)
+@(message: String)
 
-<ul class="@classes" @id.map{id => id="@id"}>
-    @elements.map { element =>
-        <li class="dashed-list-item">
-            @element
-        </li>
-    }
-</ul>
+<h1 class="govuk-heading-xl">@message</h1>

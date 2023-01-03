@@ -14,12 +14,15 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -28,8 +31,7 @@
 
     @formHelper(action = routes.RequiredInformationController.onSubmit(mode), 'autoComplete -> "off") {
 
-        <p class="govuk-caption-xl hmrc-caption-x"><span class="govuk-visually-hidden">
-            This section is </span>@messages("requiredInformation.caption")</p>
+        @caption(messages("requiredInformation.caption"))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
