@@ -14,35 +14,29 @@
  * limitations under the License.
  *@
 
-@import components._
-
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukCheckboxes: GovukCheckboxes,
-    govukButton: GovukButton,
-    caption: Caption
+    govukRadios: GovukRadios,
+    govukButton: GovukButton
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("requiredInformation.title"))) {
+@layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
 
-    @formHelper(action = routes.RequiredInformationController.onSubmit(), 'autoComplete -> "off") {
-
-        @caption(messages("requiredInformation.caption"))
+    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @govukCheckboxes(
-            CheckboxesViewModel(
-                form   = form,
-                name   = "value",
-                legend = LegendViewModel(messages("requiredInformation.heading")).asPageHeading(),
-                items  = RequiredInformation.checkboxItems
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(messages("checkRegisteredDetails.subheading")),
+                items  = CheckRegisteredDetails.options
             )
         )
 

@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package generators
+package forms
 
-import models._
-import org.scalacheck.{Arbitrary, Gen}
+import javax.inject.Inject
 
-trait ModelGenerators {
+import forms.mappings.Mappings
+import play.api.data.Form
+import models.CheckRegisteredDetails
 
-  implicit lazy val arbitraryCheckRegisteredDetails: Arbitrary[CheckRegisteredDetails] =
-    Arbitrary {
-      Gen.oneOf(CheckRegisteredDetails.values.toSeq)
-    }
+class CheckRegisteredDetailsFormProvider @Inject() extends Mappings {
 
-  implicit lazy val arbitraryRequiredInformation: Arbitrary[RequiredInformation] =
-    Arbitrary {
-      Gen.oneOf(RequiredInformation.values)
-    }
-
-  implicit lazy val arbitraryValuationMethod: Arbitrary[ValuationMethod] =
-    Arbitrary {
-      Gen.oneOf(ValuationMethod.values.toSeq)
-    }
+  def apply(): Form[CheckRegisteredDetails] =
+    Form(
+      "value" -> enumerable[CheckRegisteredDetails]("checkRegisteredDetails.error.required")
+    )
 }

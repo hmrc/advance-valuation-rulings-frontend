@@ -16,30 +16,29 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.RequiredInformationFormProvider
-import models.{NormalMode, RequiredInformation, UserAnswers}
+import models.{RequiredInformation, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.RequiredInformationPage
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.RequiredInformationView
+
+import scala.concurrent.Future
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val requiredInformationRoute =
-    routes.RequiredInformationController.onPageLoad(NormalMode).url
+    routes.RequiredInformationController.onPageLoad().url
 
   val formProvider = new RequiredInformationFormProvider()
   val form         = formProvider()
@@ -59,7 +58,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form)(
           request,
           messages(application)
         ).toString
@@ -84,8 +83,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(RequiredInformation.values.toSet),
-          NormalMode
+          form.fill(RequiredInformation.values.toSet)
         )(request, messages(application)).toString
       }
     }
@@ -151,7 +149,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
           form.bind(Map("value[0]" -> RequiredInformation.values.head.toString))
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm)(
           request,
           messages(application)
         ).toString
@@ -174,7 +172,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm)(
           request,
           messages(application)
         ).toString

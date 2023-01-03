@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package generators
+package pages
 
-import models._
-import org.scalacheck.{Arbitrary, Gen}
+import models.CheckRegisteredDetails
+import pages.behaviours.PageBehaviours
 
-trait ModelGenerators {
+class CheckRegisteredDetailsSpec extends PageBehaviours {
 
-  implicit lazy val arbitraryCheckRegisteredDetails: Arbitrary[CheckRegisteredDetails] =
-    Arbitrary {
-      Gen.oneOf(CheckRegisteredDetails.values.toSeq)
-    }
+  "CheckRegisteredDetailsPage" - {
 
-  implicit lazy val arbitraryRequiredInformation: Arbitrary[RequiredInformation] =
-    Arbitrary {
-      Gen.oneOf(RequiredInformation.values)
-    }
+    beRetrievable[CheckRegisteredDetails](CheckRegisteredDetailsPage)
 
-  implicit lazy val arbitraryValuationMethod: Arbitrary[ValuationMethod] =
-    Arbitrary {
-      Gen.oneOf(ValuationMethod.values.toSeq)
-    }
+    beSettable[CheckRegisteredDetails](CheckRegisteredDetailsPage)
+
+    beRemovable[CheckRegisteredDetails](CheckRegisteredDetailsPage)
+  }
 }
