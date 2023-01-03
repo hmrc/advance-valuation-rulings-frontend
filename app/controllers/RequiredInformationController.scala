@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,13 +47,13 @@ class RequiredInformationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       logger.info("RequiredInformationController onPageLoad")
-      
+
       val preparedForm = request.userAnswers
         .getOrElse(UserAnswers(request.userId))
         .get(RequiredInformationPage) match {
