@@ -40,7 +40,7 @@
 @layout(pageTitle = titleNoForm(messages("contactPage.title"))) {
     <h1 class="govuk-heading-xl">@messages("contactPage.heading")</h1>
 
-    @formHelper(action = routes.ValuationMethodController.onPageLoad(models.NormalMode)) {
+    @formHelper(action = routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode)) {
 
         @paragraph(content = Html(messages("contactPage.paragraph.1")))
 

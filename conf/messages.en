@@ -186,7 +186,9 @@ accountHome.button.text = Start new application
 
 
 checkRegisteredDetails.title = Check the name and address for EORI number
+checkRegisteredDetails.heading = Check the name and address for EORI number {0}
 checkRegisteredDetails.subheading = Are these details correct?
+checkRegisteredDetails.caption = About the applicant
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
 checkRegisteredDetails.error.required = Select checkRegisteredDetails
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
