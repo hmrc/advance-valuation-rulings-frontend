@@ -16,19 +16,21 @@
 
 package controllers
 
+import javax.inject.Inject
+
+import scala.concurrent.{ExecutionContext, Future}
+
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
 import controllers.actions._
 import forms.RequiredInformationFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.RequiredInformationPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RequiredInformationView
-
-import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
@@ -44,7 +46,7 @@ class RequiredInformationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
@@ -54,7 +56,7 @@ class RequiredInformationController @Inject() (
       val preparedForm = request.userAnswers
         .getOrElse(UserAnswers(request.userId))
         .get(RequiredInformationPage) match {
-        case None => form
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
@@ -70,13 +72,15 @@ class RequiredInformationController @Inject() (
           value =>
             for {
               updatedAnswers <- Future.fromTry(
-                request.userAnswers
-                  .getOrElse(UserAnswers(request.userId))
-                  .set(RequiredInformationPage, value)
-              )
-              _ <- sessionRepository.set(updatedAnswers)
-              //todo: update navigator
-            } yield Redirect(navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers))
+                                  request.userAnswers
+                                    .getOrElse(UserAnswers(request.userId))
+                                    .set(RequiredInformationPage, value)
+                                )
+              _              <- sessionRepository.set(updatedAnswers)
+              // todo: update navigator
+            } yield Redirect(
+              navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
+            )
         )
   }
 }

@@ -16,8 +16,9 @@
 
 package pages
 
-import models.CheckRegisteredDetails
 import play.api.libs.json.JsPath
+
+import models.CheckRegisteredDetails
 
 case object CheckRegisteredDetailsPage extends QuestionPage[CheckRegisteredDetails] {
 

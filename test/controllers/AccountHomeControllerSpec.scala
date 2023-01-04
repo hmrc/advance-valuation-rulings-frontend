@@ -16,9 +16,10 @@
 
 package controllers
 
-import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
+import base.SpecBase
 import views.html.AccountHomeView
 
 class AccountHomeControllerSpec extends SpecBase {

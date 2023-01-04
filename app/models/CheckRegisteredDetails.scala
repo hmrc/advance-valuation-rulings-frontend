@@ -28,15 +28,16 @@ object CheckRegisteredDetails extends Enumerable.Implicits {
   case object No extends WithName("no") with CheckRegisteredDetails
 
   val values: Seq[CheckRegisteredDetails] = Seq(
-    Yes, No
+    Yes,
+    No
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>
       RadioItem(
         content = Text(messages(s"checkRegisteredDetails.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
+        value = Some(value.toString),
+        id = Some(s"value_$index")
       )
   }
 

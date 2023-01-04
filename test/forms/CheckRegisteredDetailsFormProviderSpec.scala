@@ -16,9 +16,10 @@
 
 package forms
 
+import play.api.data.FormError
+
 import forms.behaviours.OptionFieldBehaviours
 import models.CheckRegisteredDetails
-import play.api.data.FormError
 
 class CheckRegisteredDetailsFormProviderSpec extends OptionFieldBehaviours {
 
@@ -26,13 +27,13 @@ class CheckRegisteredDetailsFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "checkRegisteredDetails.error.required"
 
     behave like optionsField[CheckRegisteredDetails](
       form,
       fieldName,
-      validValues  = CheckRegisteredDetails.values,
+      validValues = CheckRegisteredDetails.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

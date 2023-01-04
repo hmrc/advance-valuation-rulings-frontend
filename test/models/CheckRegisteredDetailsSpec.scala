@@ -16,15 +16,20 @@
 
 package models
 
+import play.api.libs.json.{JsError, Json, JsString}
+
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.OptionValues
-import play.api.libs.json.{JsError, JsString, Json}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class CheckRegisteredDetailsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class CheckRegisteredDetailsSpec
+    extends AnyFreeSpec
+    with Matchers
+    with ScalaCheckPropertyChecks
+    with OptionValues {
 
   "CheckRegisteredDetails" - {
 
@@ -34,18 +39,20 @@ class CheckRegisteredDetailsSpec extends AnyFreeSpec with Matchers with ScalaChe
 
       forAll(gen) {
         checkRegisteredDetails =>
-
-          JsString(checkRegisteredDetails.toString).validate[CheckRegisteredDetails].asOpt.value mustEqual checkRegisteredDetails
+          JsString(checkRegisteredDetails.toString)
+            .validate[CheckRegisteredDetails]
+            .asOpt
+            .value mustEqual checkRegisteredDetails
       }
     }
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!CheckRegisteredDetails.values.map(_.toString).contains(_))
+      val gen =
+        arbitrary[String] suchThat (!CheckRegisteredDetails.values.map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
-
           JsString(invalidValue).validate[CheckRegisteredDetails] mustEqual JsError("error.invalid")
       }
     }
@@ -56,7 +63,6 @@ class CheckRegisteredDetailsSpec extends AnyFreeSpec with Matchers with ScalaChe
 
       forAll(gen) {
         checkRegisteredDetails =>
-
           Json.toJson(checkRegisteredDetails) mustEqual JsString(checkRegisteredDetails.toString)
       }
     }

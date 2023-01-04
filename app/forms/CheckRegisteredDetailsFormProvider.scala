@@ -18,8 +18,9 @@ package forms
 
 import javax.inject.Inject
 
-import forms.mappings.Mappings
 import play.api.data.Form
+
+import forms.mappings.Mappings
 import models.CheckRegisteredDetails
 
 class CheckRegisteredDetailsFormProvider @Inject() extends Mappings {
