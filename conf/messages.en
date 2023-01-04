@@ -61,8 +61,8 @@ unauthorised.heading = You can’t access this service with this account
 nameOfGoods.title = About the goods
 nameOfGoods.heading = What is the name of the goods?
 nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, 'silicone smartphone case'.
-nameOfGoods.error.required = Please enter the name of the goods
-nameOfGoods.error.length = Name must be 100 characters or less
+nameOfGoods.error.required = Enter a short name to describe the goods
+nameOfGoods.error.length = Name for the goods must be 100 characters or less
 nameOfGoods.change.hidden = NameOfGoods
 
 valuationMethod.title = Select the method you will use to value your goods
@@ -124,7 +124,7 @@ requiredInformation.option7 = The name and address registered to my EORI number 
 requiredInformation.option8 = I am aware that it can take up to 90 days from the date my application was accepted to receive an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Information you need to continue your application
 requiredInformation.error.required = Select requiredInformation
-requiredInformation.error.selectAll = Check all the boxes to continue
+requiredInformation.error.selectAll = Check all check boxes to continue
 requiredInformation.change.hidden = RequiredInformation
 requiredInformation.caption = Starter checklist
 
