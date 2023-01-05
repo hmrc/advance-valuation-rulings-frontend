@@ -60,6 +60,8 @@ unauthorised.heading = You can’t access this service with this account
 
 nameOfGoods.title = About the goods
 nameOfGoods.heading = What is the name of the goods?
+nameOfGoods.caption = About the goods
+nameOfGoods.hint = This could be a short description, for example, 'silicone smartphone case'.
 nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, 'silicone smartphone case'.
 nameOfGoods.error.required = Please enter the name of the goods
 nameOfGoods.error.length = Name must be 100 characters or less

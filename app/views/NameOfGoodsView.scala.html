@@ -15,30 +15,38 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    heading: Heading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("nameOfGoods.title"))) {
 
-    @formHelper(action = routes.NameOfGoodsController.onSubmit(mode)) {
+    @caption(messages("nameOfGoods.caption"))
 
+    @heading(messages("nameOfGoods.heading"))
+
+    @formHelper(action = routes.NameOfGoodsController.onSubmit(mode)) {
+        
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
         @govukInput(
             InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("nameOfGoods.heading")).asPageHeading()
+                field = form("value"), 
+                label = Label(None)
             )
+            .withHint(Hint(content = Text(messages("nameOfGoods.hint"))))
             .withWidth(Full)
         )
 
