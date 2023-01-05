@@ -178,3 +178,17 @@ importingGoods.point.4 = {0} on importing, exporting and customs for businesses
 importingGoods.point.4.link = General information
 importingGoods.point.5 = {0} - HMRC email alerts, videos and webinars about importing and exporting
 importingGoods.point.5.link = Help and support
+
+accountHome.title = Your applications and rulings
+accountHome.heading = Your applications and rulings
+accountHome.para = You have not started any applications.
+accountHome.button.text = Start new application
+
+
+checkRegisteredDetails.title = Check the name and address for EORI number
+checkRegisteredDetails.heading = Check the name and address for EORI number {0}
+checkRegisteredDetails.subheading = Are these details correct?
+checkRegisteredDetails.caption = About the applicant
+checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
+checkRegisteredDetails.error.required = Select checkRegisteredDetails
+checkRegisteredDetails.change.hidden = CheckRegisteredDetails

@@ -26,8 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.RequiredInformationFormProvider
-import models.Mode
-import models.UserAnswers
+import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.RequiredInformationPage
 import repositories.SessionRepository
@@ -50,7 +49,7 @@ class RequiredInformationController @Inject() (
   val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
       logger.info("RequiredInformationController onPageLoad")
 
@@ -61,15 +60,15 @@ class RequiredInformationController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(
@@ -78,7 +77,10 @@ class RequiredInformationController @Inject() (
                                     .set(RequiredInformationPage, value)
                                 )
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(RequiredInformationPage, mode, updatedAnswers))
+              // todo: update navigator
+            } yield Redirect(
+              navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
+            )
         )
   }
 }
