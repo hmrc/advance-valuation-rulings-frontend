@@ -10,6 +10,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.cancel = Cancel the application
 
 date.day = Day
 date.month = Month
