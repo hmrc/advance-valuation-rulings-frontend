@@ -87,7 +87,7 @@ trait RadiosFluency {
         field = field,
         fieldset = fieldset,
         items = items
-      ).inline()
+      )
     }
   }
 
@@ -109,6 +109,6 @@ trait RadiosFluency {
       radios copy (attributes = radios.attributes + attribute)
 
     def inline(): Radios =
-      radios
+      radios.withCssClass("govuk-radios--inline")
   }
 }
