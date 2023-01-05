@@ -10,6 +10,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.cancel = Cancel application
 
 date.day = Day
 date.month = Month
@@ -61,8 +62,8 @@ unauthorised.heading = You can’t access this service with this account
 nameOfGoods.title = About the goods
 nameOfGoods.heading = What is the name of the goods?
 nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, 'silicone smartphone case'.
-nameOfGoods.error.required = Please enter the name of the goods
-nameOfGoods.error.length = Name must be 100 characters or less
+nameOfGoods.error.required = Enter a short name to describe the goods
+nameOfGoods.error.length = Name for the goods must be 100 characters or less
 nameOfGoods.change.hidden = NameOfGoods
 
 valuationMethod.title = Select the method you will use to value your goods
@@ -75,6 +76,7 @@ valuationMethod.change.hidden = ValuationMethod
 
 commodityCode.title = What is the commodity code for the
 commodityCode.heading = What is the commodity code for the
+commodityCode.caption = About the goods
 commodityCode.checkYourAnswersLabel = commodityCode
 commodityCode.error.required = Enter commodityCode
 commodityCode.error.length = CommodityCode must be 100 characters or less
@@ -82,9 +84,12 @@ commodityCode.change.hidden = CommodityCode
 
 hasCommodityCode.title = Have you found the commodity code for the
 hasCommodityCode.heading = Have you found the commodity code for the
+hasCommodityCode.caption = About the goods
 hasCommodityCode.checkYourAnswersLabel = hasCommodityCode
 hasCommodityCode.error.required = Select yes if hasCommodityCode
 hasCommodityCode.change.hidden = HasCommodityCode
+hasCommodityCode.paragraph.1 = If you do not know your commodity code, {0} now before continuing this application
+hasCommodityCode.paragraph.1.link = search for one
 
 contactPage.title = How we contact you about your application
 contactPage.heading = How we contact you about your application

@@ -109,6 +109,6 @@ trait RadiosFluency {
       radios copy (attributes = radios.attributes + attribute)
 
     def inline(): Radios =
-      radios.withCssClass("govuk-radios--inline")
+      radios
   }
 }
