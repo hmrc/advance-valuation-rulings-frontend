@@ -10,6 +10,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.cancel = Cancel the application
 
 date.day = Day
 date.month = Month
@@ -60,9 +61,11 @@ unauthorised.heading = You can’t access this service with this account
 
 nameOfGoods.title = About the goods
 nameOfGoods.heading = What is the name of the goods?
-nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, 'silicone smartphone case'.
-nameOfGoods.error.required = Please enter the name of the goods
-nameOfGoods.error.length = Name must be 100 characters or less
+nameOfGoods.caption = About the goods
+nameOfGoods.hint = This could be a short description, for example, ‘silicone smartphone case’. 
+nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, ‘silicone smartphone case’.
+nameOfGoods.error.required = Enter a short name to describe the goods
+nameOfGoods.error.length = Name for the goods must be 100 characters or less
 nameOfGoods.change.hidden = NameOfGoods
 
 valuationMethod.title = Select the method you will use to value your goods
