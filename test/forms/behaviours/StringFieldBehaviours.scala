@@ -34,4 +34,34 @@ trait StringFieldBehaviours extends FieldBehaviours {
           result.errors must contain only lengthError
       }
     }
+
+  def numericStringWithMaxLength(
+    form: Form[_],
+    fieldName: String,
+    maxLength: Int,
+    lengthError: FormError
+  ): Unit =
+    s"not bind strings longer than $maxLength characters" in {
+
+      forAll(numericStringsBetweenRange(maxLength +1, Int.MaxValue) -> "aString") {
+        string =>
+          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+          result.errors must contain only lengthError
+      }
+    }
+
+  def fieldWithRange(
+    form: Form[_],
+    fieldName: String,
+    minLength: Int,
+    maxLength: Int,
+  ): Unit =
+    s"not bind strings less than $minLength and more than $maxLength characters" in {
+
+      forAll(numericStringsBetweenRange(minLength,maxLength) -> "aString") {
+        string =>
+          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+          result.errors mustBe empty
+      }
+    }
 }

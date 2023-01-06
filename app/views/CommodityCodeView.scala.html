@@ -15,13 +15,18 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
@@ -30,6 +35,12 @@
 
     @formHelper(action = routes.CommodityCodeController.onSubmit(mode)) {
 
+        @caption(messages("commodityCode.caption"))
+
+        @heading(messages("commodityCode.heading", nameOfGoods))
+
+        @paragraph(Html(messages("commodityCode.para")))
+
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
@@ -37,8 +48,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(s"${messages("commodityCode.heading")} ${nameOfGoods}?").asPageHeading()
-
+                label = Label(None)
                 )
             .withWidth(Full)
         )
@@ -47,4 +57,6 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+
+    @cancelApplicationLink()
 }

@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package forms
+@import components._
 
-import javax.inject.Inject
-import play.api.data.Form
-import forms.mappings.Mappings
+@this(link: Link)
 
-class CommodityCodeFormProvider @Inject() extends Mappings {
+@()(implicit messages: Messages)
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("commodityCode.error.required")
-        .verifying(numericString("commodityCode.error.nonNumeric"))
-        .verifying(minLength(4, "commodityCode.error.length.min"))
-        .verifying(maxLength(10, "commodityCode.error.length.max"))
+    @link(
+        id = "cancel_application",
+        text = messages("site.cancel"),
+        newTab = false,
+        call = Call("GET", "accountHome")
     )
-}
