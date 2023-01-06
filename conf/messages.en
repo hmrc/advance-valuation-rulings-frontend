@@ -202,3 +202,7 @@ checkRegisteredDetails.caption = About the applicant
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
 checkRegisteredDetails.error.required = Select checkRegisteredDetails
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
+
+mustHaveCommodityCode.title = You must have a commodity code in order to carry on with your application
+mustHaveCommodityCode.heading = You must have a commodity code in order to carry on with your application
+mustHaveCommodityCode.caption = About the goods

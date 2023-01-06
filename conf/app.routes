@@ -85,3 +85,5 @@ GET        /checkRegisteredDetails                        controllers.CheckRegis
 POST       /checkRegisteredDetails                        controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeCheckRegisteredDetails                  controllers.CheckRegisteredDetailsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeCheckRegisteredDetails                  controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /mustHaveCommodityCode                       controllers.MustHaveCommodityCodeController.onPageLoad()
