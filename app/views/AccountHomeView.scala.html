@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,27 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package generators
+@import components._
 
-import models._
-import org.scalacheck.{Arbitrary, Gen}
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        formHelper: FormWithCSRF,
+        para: Paragraph
+)
 
-trait ModelGenerators {
+@()(implicit request: Request[_], messages: Messages)
 
-  implicit lazy val arbitraryCheckRegisteredDetails: Arbitrary[CheckRegisteredDetails] =
-    Arbitrary {
-      Gen.oneOf(CheckRegisteredDetails.values.toSeq)
-    }
+@layout(pageTitle = titleNoForm(messages("accountHome.title"))) {
 
-  implicit lazy val arbitraryRequiredInformation: Arbitrary[RequiredInformation] =
-    Arbitrary {
-      Gen.oneOf(RequiredInformation.values)
-    }
+    <h1 class="govuk-heading-xl">@messages("accountHome.heading")</h1>
 
-  implicit lazy val arbitraryValuationMethod: Arbitrary[ValuationMethod] =
-    Arbitrary {
-      Gen.oneOf(ValuationMethod.values.toSeq)
+    @para(Html(messages("accountHome.para")))
+
+    @formHelper(action = routes.RequiredInformationController.onPageLoad()) {
+        @govukButton(
+             ButtonViewModel(messages("accountHome.button.text"))
+        )
     }
 }

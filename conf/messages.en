@@ -10,6 +10,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.cancel = Cancel application
 
 date.day = Day
 date.month = Month
@@ -60,7 +61,9 @@ unauthorised.heading = You can’t access this service with this account
 
 nameOfGoods.title = About the goods
 nameOfGoods.heading = What is the name of the goods?
-nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, 'silicone smartphone case'.
+nameOfGoods.caption = About the goods
+nameOfGoods.hint = This could be a short description, for example, ‘silicone smartphone case’. 
+nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, ‘silicone smartphone case’.
 nameOfGoods.error.required = Enter a short name to describe the goods
 nameOfGoods.error.length = Name for the goods must be 100 characters or less
 nameOfGoods.change.hidden = NameOfGoods
@@ -75,6 +78,7 @@ valuationMethod.change.hidden = ValuationMethod
 
 commodityCode.title = What is the commodity code for the
 commodityCode.heading = What is the commodity code for the
+commodityCode.caption = About the goods
 commodityCode.checkYourAnswersLabel = commodityCode
 commodityCode.error.required = Enter commodityCode
 commodityCode.error.length = CommodityCode must be 100 characters or less
@@ -82,9 +86,12 @@ commodityCode.change.hidden = CommodityCode
 
 hasCommodityCode.title = Have you found the commodity code for the
 hasCommodityCode.heading = Have you found the commodity code for the
+hasCommodityCode.caption = About the goods
 hasCommodityCode.checkYourAnswersLabel = hasCommodityCode
 hasCommodityCode.error.required = Select yes if hasCommodityCode
 hasCommodityCode.change.hidden = HasCommodityCode
+hasCommodityCode.paragraph.1 = If you do not know your commodity code, {0} now before continuing this application
+hasCommodityCode.paragraph.1.link = search for one
 
 contactPage.title = How we contact you about your application
 contactPage.heading = How we contact you about your application
@@ -124,7 +131,7 @@ requiredInformation.option7 = The name and address registered to my EORI number 
 requiredInformation.option8 = I am aware that it can take up to 90 days from the date my application was accepted to receive an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Information you need to continue your application
 requiredInformation.error.required = Select requiredInformation
-requiredInformation.error.selectAll = Check all check boxes to continue
+requiredInformation.error.selectAll = Check all the boxes to continue
 requiredInformation.change.hidden = RequiredInformation
 requiredInformation.caption = Starter checklist
 
@@ -178,3 +185,17 @@ importingGoods.point.4 = {0} on importing, exporting and customs for businesses
 importingGoods.point.4.link = General information
 importingGoods.point.5 = {0} - HMRC email alerts, videos and webinars about importing and exporting
 importingGoods.point.5.link = Help and support
+
+accountHome.title = Your applications and rulings
+accountHome.heading = Your applications and rulings
+accountHome.para = You have not started any applications.
+accountHome.button.text = Start new application
+
+
+checkRegisteredDetails.title = Check the name and address for EORI number
+checkRegisteredDetails.heading = Check the name and address for EORI number {0}
+checkRegisteredDetails.subheading = Are these details correct?
+checkRegisteredDetails.caption = About the applicant
+checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
+checkRegisteredDetails.error.required = Select checkRegisteredDetails
+checkRegisteredDetails.change.hidden = CheckRegisteredDetails

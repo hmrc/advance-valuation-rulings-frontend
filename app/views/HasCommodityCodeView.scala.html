@@ -14,17 +14,37 @@
  * limitations under the License.
  *@
 
+@import components._
+@import config.FrontendAppConfig
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    heading: Heading,
+    link: Link,
+    paragraph: Paragraph,
+    config: FrontendAppConfig
 )
 
 @(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
 
+@searchLink = {
+    @link(
+            id = "search_for_commodity_code",
+            text = messages("hasCommodityCode.paragraph.1.link"),
+            call = Call("GET", config.findCommodityCodeUrl)
+        )
+    }
+
 @layout(pageTitle = title(form, messages("hasCommodityCode.title"))) {
+
+    @caption(messages("hasCommodityCode.caption"))
+
+    @heading(s"${messages("hasCommodityCode.heading")} ${nameOfGoods} ?")
 
     @formHelper(action = routes.HasCommodityCodeController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -35,12 +55,23 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(s"${messages("hasCommodityCode.heading")} ${nameOfGoods} ?").asPageHeading()
+                legend = Legend(
+                    content=HtmlContent(
+                        messages("hasCommodityCode.paragraph.1", searchLink)
+                        )
+                    )
+                )
             )
-        )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+
+    @link(
+        id = "cancel_application",
+        text = messages("site.cancel"),
+        newTab = false,
+        call = Call("GET", "accountHome")
+    )
 }

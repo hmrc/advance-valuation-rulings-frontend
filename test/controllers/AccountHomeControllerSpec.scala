@@ -20,22 +20,22 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import views.html.ImportingGoodsView
+import views.html.AccountHomeView
 
-class ImportingGoodsControllerSpec extends SpecBase {
+class AccountHomeControllerSpec extends SpecBase {
 
-  "ImportingGoods Controller" - {
+  "AccountHome Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ImportingGoodsController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ImportingGoodsView]
+        val view = application.injector.instanceOf[AccountHomeView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
