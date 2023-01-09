@@ -43,7 +43,7 @@ trait StringFieldBehaviours extends FieldBehaviours {
   ): Unit =
     s"not bind strings longer than $maxLength characters" in {
 
-      forAll(numericStringsBetweenRange(maxLength +1, Int.MaxValue) -> "aString") {
+      forAll(numericStringsBetweenRange(maxLength + 1, Int.MaxValue) -> "aString") {
         string =>
           val result = form.bind(Map(fieldName -> string)).apply(fieldName)
           result.errors must contain only lengthError
@@ -54,11 +54,11 @@ trait StringFieldBehaviours extends FieldBehaviours {
     form: Form[_],
     fieldName: String,
     minLength: Int,
-    maxLength: Int,
+    maxLength: Int
   ): Unit =
     s"not bind strings less than $minLength and more than $maxLength characters" in {
 
-      forAll(numericStringsBetweenRange(minLength,maxLength) -> "aString") {
+      forAll(numericStringsBetweenRange(minLength, maxLength) -> "aString") {
         string =>
           val result = form.bind(Map(fieldName -> string)).apply(fieldName)
           result.errors mustBe empty
