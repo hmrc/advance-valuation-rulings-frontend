@@ -83,7 +83,7 @@ class Navigator @Inject() () {
     userAnswers.get(HasCommodityCodePage) match {
       case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
       case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(false) => routes.IndexController.onPageLoad
+      case Some(false) => MustHaveCommodityCodeController.onPageLoad()
     }
 
   private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =
