@@ -16,11 +16,11 @@
 
 package generators
 
+import java.time.{Instant, LocalDate, ZoneOffset}
+
+import org.scalacheck.{Gen, Shrink}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
-import org.scalacheck.{Gen, Shrink}
-
-import java.time.{Instant, LocalDate, ZoneOffset}
 
 trait Generators
     extends UserAnswersGenerator
@@ -105,8 +105,8 @@ trait Generators
   } yield chars.mkString
 
   def numericStringsBetweenRange(minLength: Int, maxLength: Int): Gen[String] = for {
-    numericString    <- numericStrings(minLength)
-    nums     = numericString.slice(0,maxLength)
+    numericString <- numericStrings(minLength)
+    nums           = numericString.slice(0, maxLength)
   } yield nums.mkString
 
   def stringsExceptSpecificValues(excluded: Seq[String]): Gen[String] =

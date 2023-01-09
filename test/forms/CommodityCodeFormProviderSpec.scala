@@ -16,16 +16,17 @@
 
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class CommodityCodeFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "commodityCode.error.required"
+  val requiredKey  = "commodityCode.error.required"
   val minLengthKey = "commodityCode.error.length.min"
   val maxLengthKey = "commodityCode.error.length.max"
-  val minLength = 4
-  val maxLength = 10
+  val minLength    = 4
+  val maxLength    = 10
 
   val form = new CommodityCodeFormProvider()()
 
@@ -50,7 +51,7 @@ class CommodityCodeFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       minLength = minLength,
-      maxLength = maxLength,
+      maxLength = maxLength
     )
 
     behave like mandatoryField(
