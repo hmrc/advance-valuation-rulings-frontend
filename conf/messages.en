@@ -76,12 +76,15 @@ valuationMethod.checkYourAnswersLabel = Select the method you will use to value 
 valuationMethod.error.required = Select valuationMethod
 valuationMethod.change.hidden = ValuationMethod
 
-commodityCode.title = What is the commodity code for the
-commodityCode.heading = What is the commodity code for the
+commodityCode.title = What is the commodity code for the {0}?
+commodityCode.heading = What is the commodity code for the {0}?
 commodityCode.caption = About the goods
+commodityCode.para = Enter a minimum of four digits from your commodity code to continue using this service.
 commodityCode.checkYourAnswersLabel = commodityCode
 commodityCode.error.required = Enter commodityCode
-commodityCode.error.length = CommodityCode must be 100 characters or less
+commodityCode.error.nonNumeric = Commodity codes must only include numbers
+commodityCode.error.length.max = Commodity code cannot exceed 10 digits
+commodityCode.error.length.min = Commodity code must include minimum 4 digit numbers
 commodityCode.change.hidden = CommodityCode
 
 hasCommodityCode.title = Have you found the commodity code for the

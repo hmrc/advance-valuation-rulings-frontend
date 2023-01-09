@@ -72,14 +72,14 @@ POST       /howAreTheGoodsMade                        controllers.HowAreTheGoods
 GET        /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onSubmit(mode: Mode = CheckMode)
 
-GET        /priceOfGoods                  controllers.PriceOfGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /priceOfGoods                  controllers.PriceOfGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /priceOfGoods                              controllers.PriceOfGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /priceOfGoods                              controllers.PriceOfGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changePriceOfGoods                        controllers.PriceOfGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changePriceOfGoods                        controllers.PriceOfGoodsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /importingGoods                       controllers.ImportingGoodsController.onPageLoad()
+GET        /importingGoods                            controllers.ImportingGoodsController.onPageLoad()
 
-GET        /accountHome                       controllers.AccountHomeController.onPageLoad()
+GET        /accountHome                               controllers.AccountHomeController.onPageLoad()
 
 GET        /checkRegisteredDetails                        controllers.CheckRegisteredDetailsController.onPageLoad(mode: Mode = NormalMode)
 POST       /checkRegisteredDetails                        controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = NormalMode)

@@ -65,6 +65,9 @@ trait Generators
   def nonNumerics: Gen[String] =
     alphaStr suchThat (_.size > 0)
 
+  def numericStrings(minLength: Int = 0): Gen[String] =
+    numStr suchThat (_.size > minLength)
+
   def decimals: Gen[String] =
     arbitrary[BigDecimal]
       .suchThat(_.abs < Int.MaxValue)
@@ -100,6 +103,11 @@ trait Generators
     length    <- Gen.chooseNum(minLength + 1, maxLength)
     chars     <- listOfN(length, arbitrary[Char])
   } yield chars.mkString
+
+  def numericStringsBetweenRange(minLength: Int, maxLength: Int): Gen[String] = for {
+    numericString <- numericStrings(minLength)
+    nums           = numericString.slice(0, maxLength)
+  } yield nums.mkString
 
   def stringsExceptSpecificValues(excluded: Seq[String]): Gen[String] =
     nonEmptyString suchThat (!excluded.contains(_))
