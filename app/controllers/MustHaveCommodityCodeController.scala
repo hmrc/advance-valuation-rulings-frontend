@@ -16,24 +16,24 @@
 
 package controllers
 
-import controllers.actions._
 import javax.inject.Inject
+
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import controllers.actions._
 import views.html.MustHaveCommodityCodeView
 
-class MustHaveCommodityCodeController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: MustHaveCommodityCodeView
-                                     ) extends FrontendBaseController with I18nSupport {
+class MustHaveCommodityCodeController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  view: MustHaveCommodityCodeView
+) extends FrontendBaseController
+    with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify) {
-    implicit request =>
-      Ok(view())
-  }
+  def onPageLoad: Action[AnyContent] = (identify)(implicit request => Ok(view()))
 }

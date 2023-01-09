@@ -25,6 +25,7 @@
         heading: Heading,
         link: Link,
         bulletList: BulletList,
+        cancelApplicationLink: CancelApplicationLink,
         config: FrontendAppConfig
 )
 
@@ -33,7 +34,7 @@
 @commodityCodeLinkOne = {
   @link(
           id = "commodity_code_link_one",
-          text = messages("commodityCodeBulletPointOne.point.1.link"),
+          text = messages("mustHaveCommodityCode.bulletPoint.1.link"),
           call = Call("GET", config.importingGoodsGuideUrl)
         )
 }
@@ -41,7 +42,7 @@
 @commodityCodeLinkTwo = {
   @link(
          id = "commodity_code_link_two",
-         text = messages("commodityCodeBulletPointTwo.point.2.link"),
+         text = messages("mustHaveCommodityCode.bulletPoint.2.link"),
          call = Call("GET", config.importedGoodsValueGuideUrl)
         )
 }
@@ -49,7 +50,7 @@
 @commodityCodeLinkThree = {
   @link(
          id = "commodity_code_link_one",
-         text = messages("commodityCodeBulletPointThree.point.3.link"),
+         text = messages("mustHaveCommodityCode.bulletPoint.3.link"),
          call = Call("GET", config.applyForATRGuideUrl)
         )
 }
@@ -70,13 +71,13 @@
 
 @bulletList(
        Seq(
-            Html(messages("commodityCodeBulletPointOne.point.1", commodityCodeLinkOne)),
-            Html(messages("commodityCodeBulletPointTwo.point.2", commodityCodeLinkTwo)),
-            Html(messages("commodityCodeBulletPointThree.point.3", commodityCodeLinkThree))
+            Html(messages("mustHaveCommodityCode.bulletPoint.1", commodityCodeLinkOne)),
+            Html(messages("mustHaveCommodityCode.bulletPoint.2", commodityCodeLinkTwo)),
+            Html(messages("mustHaveCommodityCode.bulletPoint.3", commodityCodeLinkThree))
        ),
-        "govuk-list govuk-list--bullet govuk-list--spaced",
+        "govuk-list govuk-list--bullet",
 )
 
-
+@cancelApplicationLink()
 
 }

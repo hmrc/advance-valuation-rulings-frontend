@@ -206,3 +206,12 @@ checkRegisteredDetails.change.hidden = CheckRegisteredDetails
 mustHaveCommodityCode.title = You must have a commodity code in order to carry on with your application
 mustHaveCommodityCode.heading = You must have a commodity code in order to carry on with your application
 mustHaveCommodityCode.caption = About the goods
+mustHaveCommodityCode.subHeading = Other services you might be interested in:
+mustHaveCommodityCode.bulletPoint.1.link = importing goods into the UK
+mustHaveCommodityCode.bulletPoint.1 = Step-by-step guide to {0}
+
+mustHaveCommodityCode.bulletPoint.2.link = customs value of your imported goods
+mustHaveCommodityCode.bulletPoint.2 = Work out the {0}
+
+mustHaveCommodityCode.bulletPoint.3.link = Get a legally binding decision
+mustHaveCommodityCode.bulletPoint.3 = {0} on the commodity code to use when importing into or exporting from Great Britain

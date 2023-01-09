@@ -1,8 +1,9 @@
 package controllers
 
-import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
+import base.SpecBase
 import views.html.MustHaveCommodityCodeView
 
 class MustHaveCommodityCodeControllerSpec extends SpecBase {
