@@ -23,26 +23,34 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     caption: Caption,
-    heading: Heading
+    heading: Heading,
+    warning: Warning,
+    paragraph: Paragraph,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
 
-    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @caption(messages("checkRegisteredDetails.caption"))
+    @heading(messages("checkRegisteredDetails.heading", "GB123456789000"))
 
-        @caption(messages("checkRegisteredDetails.caption"))
-        @heading(messages("checkRegisteredDetails.heading", "GB123456789000"))
+    @warning(content=Html(messages("checkRegisteredDetails.warning")))
+
+    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @paragraph(content=Html("Smart case Ltd<br>1 Somewhere<br>London<br>NW11<br>United Kingdom"))
+
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("checkRegisteredDetails.subheading")),
+                legend = LegendViewModel(messages("checkRegisteredDetails.subheading"))
+                    .asPageHeading(size = viewmodels.LegendSize.Medium),
                 items  = CheckRegisteredDetails.options
             )
         )
@@ -51,4 +59,6 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+
+    @cancelApplicationLink()
 }
