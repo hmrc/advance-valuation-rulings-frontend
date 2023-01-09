@@ -200,5 +200,6 @@ checkRegisteredDetails.heading = Check the name and address for EORI number {0}
 checkRegisteredDetails.subheading = Are these details correct?
 checkRegisteredDetails.caption = About the applicant
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
-checkRegisteredDetails.error.required = Select checkRegisteredDetails
+checkRegisteredDetails.error.required = Select Yes shown if the address is correct
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
+checkRegisteredDetails.warning = These are the details we currently have on record. They should reflect the office, headquarters or permanent business establishment used to register your EORI number.
