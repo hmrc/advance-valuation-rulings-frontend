@@ -51,6 +51,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val importingGoodsGuideUrl: String     = configuration.get[String]("urls.importingGoodsGuide")
   val importedGoodsValueGuideUrl: String = configuration.get[String]("urls.importedGoodsValueGuide")
   val applyForATRGuideUrl: String        = configuration.get[String]("urls.applyForATRGuide")
+  val bindingValueInformationUrl: String        = configuration.get[String]("urls.applyForATRGuide")
 
   private val exitSurveyBaseUrl: String =
     configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
