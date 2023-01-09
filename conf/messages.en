@@ -91,7 +91,7 @@ hasCommodityCode.title = Have you found the commodity code for the
 hasCommodityCode.heading = Have you found the commodity code for the
 hasCommodityCode.caption = About the goods
 hasCommodityCode.checkYourAnswersLabel = hasCommodityCode
-hasCommodityCode.error.required = Select yes if hasCommodityCode
+hasCommodityCode.error.required = Select Yes if you know the commodity code
 hasCommodityCode.change.hidden = HasCommodityCode
 hasCommodityCode.paragraph.1 = If you do not know your commodity code, {0} now before continuing this application
 hasCommodityCode.paragraph.1.link = search for one
@@ -134,7 +134,7 @@ requiredInformation.option7 = The name and address registered to my EORI number 
 requiredInformation.option8 = I am aware that it can take up to 90 days from the date my application was accepted to receive an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Information you need to continue your application
 requiredInformation.error.required = Select requiredInformation
-requiredInformation.error.selectAll = Check all the boxes to continue
+requiredInformation.error.selectAll = Check all check boxes to continue
 requiredInformation.change.hidden = RequiredInformation
 requiredInformation.caption = Starter checklist
 
