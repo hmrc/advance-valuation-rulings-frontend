@@ -106,7 +106,7 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, commodityCodeRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(("value", "1234"))
 
         val result = route(application, request).value
 
