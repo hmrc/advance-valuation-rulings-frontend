@@ -16,14 +16,15 @@
 
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "applicationContactDetails.error.required"
-  val lengthKey = "applicationContactDetails.error.length"
-  val maxLength = 100
+  val lengthKey   = "applicationContactDetails.error.length"
+  val maxLength   = 100
 
   val form = new ApplicationContactDetailsFormProvider()()
 
