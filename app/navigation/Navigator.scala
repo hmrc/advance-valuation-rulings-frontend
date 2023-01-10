@@ -122,8 +122,8 @@ class Navigator @Inject() () {
   private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {
       case None        => ImportGoodsController.onPageLoad(models.NormalMode)
-      case Some(true)  => PublicInformationNoticeController.onPageLoad
-      case Some(false) => ImportingGoodsController.onPageLoad
+      case Some(true)  => PublicInformationNoticeController.onPageLoad()
+      case Some(false) => ImportingGoodsController.onPageLoad()
     }
 
   private def requiredInformationPage(userAnswers: UserAnswers): Call =
@@ -135,7 +135,8 @@ class Navigator @Inject() () {
   private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
       case None                             => CheckRegisteredDetailsController.onPageLoad(models.NormalMode)
-      case Some(CheckRegisteredDetails.Yes) => routes.IndexController.onPageLoad
+      case Some(CheckRegisteredDetails.Yes) =>
+        ApplicationContactDetailsController.onPageLoad(models.NormalMode)
       case Some(CheckRegisteredDetails.No)  => EORIBeUpToDateController.onPageLoad()
     }
 

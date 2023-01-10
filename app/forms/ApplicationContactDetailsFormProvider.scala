@@ -18,15 +18,28 @@ package forms
 
 import javax.inject.Inject
 
+import play.api.data._
 import play.api.data.Form
+import play.api.data.Forms._
 
 import forms.mappings.Mappings
+import models.ApplicationContactDetails
 
 class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  def apply(): Form[ApplicationContactDetails] =
     Form(
-      "value" -> text("applicationContactDetails.error.required")
-        .verifying(maxLength(100, "applicationContactDetails.error.length"))
+      mapping(
+        "name"  -> text("applicationContactDetails.fullName.error.required"),
+        "phone" -> text("applicationContactDetails.telephoneNumber.error.required"),
+        "email" -> text("applicationContactDetails.email.error.required")
+      )((a, b, c) => ApplicationContactDetails(a, b, c))(
+        (applicationContactDetails: ApplicationContactDetails) =>
+          Some(
+            applicationContactDetails.name,
+            applicationContactDetails.phone,
+            applicationContactDetails.email
+          )
+      )
     )
 }

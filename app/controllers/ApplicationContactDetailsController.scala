@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ApplicationContactDetailsFormProvider
+import models.ApplicationContactDetails.writes
 import models.Mode
 import navigation.Navigator
 import pages.ApplicationContactDetailsPage
