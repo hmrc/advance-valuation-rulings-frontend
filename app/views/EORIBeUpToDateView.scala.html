@@ -32,7 +32,7 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@eoriBeUpToDateLinkOne = {
+@fillInAnEnquiryLink = {
   @link(
           id = "eori_be_up_to_date_link_one",
           text = messages("eoriBeUpToDate.bulletPoint.1.link"),
@@ -40,7 +40,7 @@
         )
 }
 
-@eoriBeUpToDateLinkTwo = {
+@importAndExportEnquiriesLink = {
   @link(
           id = "eori_be_up_to_date_link_two",
           text = messages("eoriBeUpToDate.bulletPoint.2.link"),
@@ -60,8 +60,8 @@
 
 @bulletList(
        Seq(
-            Html(messages("eoriBeUpToDate.bulletPoint.1", eoriBeUpToDateLinkOne)),
-            Html(messages("eoriBeUpToDate.bulletPoint.2", eoriBeUpToDateLinkTwo)),
+            Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
+            Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
        ),
         "govuk-list govuk-list--bullet govuk-list--spaced",
 )
