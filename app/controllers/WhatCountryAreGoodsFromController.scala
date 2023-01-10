@@ -16,20 +16,21 @@
 
 package controllers
 
+import javax.inject.Inject
+
+import scala.concurrent.{ExecutionContext, Future}
+
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
 import controllers.actions._
 import forms.WhatCountryAreGoodsFromFormProvider
-
-import javax.inject.Inject
 import models.{Mode, UserAnswers}
 import navigation.Navigator
 import pages.WhatCountryAreGoodsFromPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhatCountryAreGoodsFromView
-
-import scala.concurrent.{ExecutionContext, Future}
 
 class WhatCountryAreGoodsFromController @Inject() (
   override val messagesApi: MessagesApi,
@@ -41,36 +42,40 @@ class WhatCountryAreGoodsFromController @Inject() (
   formProvider: WhatCountryAreGoodsFromFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: WhatCountryAreGoodsFromView
-)(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-
       val preparedForm =
-        request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhatCountryAreGoodsFromPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+        request.userAnswers
+          .getOrElse(UserAnswers(request.userId))
+          .get(WhatCountryAreGoodsFromPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
       Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers
-              .getOrElse(UserAnswers(request.userId))
-              .set(WhatCountryAreGoodsFromPage, value))
-            _ <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(WhatCountryAreGoodsFromPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(
+                                  request.userAnswers
+                                    .getOrElse(UserAnswers(request.userId))
+                                    .set(WhatCountryAreGoodsFromPage, value)
+                                )
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(WhatCountryAreGoodsFromPage, mode, updatedAnswers))
+        )
   }
 }

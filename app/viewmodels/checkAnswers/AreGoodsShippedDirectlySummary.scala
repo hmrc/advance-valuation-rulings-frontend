@@ -16,27 +16,30 @@
 
 package viewmodels.checkAnswers
 
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
 import controllers.routes
 import models.{CheckMode, UserAnswers}
 import pages.AreGoodsShippedDirectlyPage
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AreGoodsShippedDirectlySummary  {
+object AreGoodsShippedDirectlySummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(AreGoodsShippedDirectlyPage).map {
       answer =>
-
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "areGoodsShippedDirectly.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key = "areGoodsShippedDirectly.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.AreGoodsShippedDirectlyController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.AreGoodsShippedDirectlyController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("areGoodsShippedDirectly.change.hidden"))
           )
         )
