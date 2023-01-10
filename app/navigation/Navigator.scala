@@ -36,6 +36,8 @@ class Navigator @Inject() () {
     case HasCommodityCodePage           => hasCommodityCodePage
     case CommodityCodePage              => commodityCodePage
     case PriceOfGoodsPage               => priceOfGoodsPage
+    case WhatCountryAreGoodsFromPage    => whatCountryAreGoodsFromPage
+    case AreGoodsShippedDirectlyPage    => areGoodsShippedDirectlyPage
     case DescribeTheGoodsPage           => describeTheGoodsPage
     case HowAreTheGoodsMadePage         => howAreTheGoodsMadePage
     case HasConfidentialInformationPage => hasConfidentialInformationPage
@@ -64,6 +66,17 @@ class Navigator @Inject() () {
   private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(PriceOfGoodsPage) match {
       case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
+    }
+
+  private def whatCountryAreGoodsFromPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhatCountryAreGoodsFromPage) match {
+      case None    => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
+      case Some(_) => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
+    }
+  private def areGoodsShippedDirectlyPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(AreGoodsShippedDirectlyPage) match {
+      case None    => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
       case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
     }
 
