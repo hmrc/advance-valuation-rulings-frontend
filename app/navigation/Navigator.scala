@@ -44,6 +44,7 @@ class Navigator @Inject() () {
     case ConfidentialInformationPage    => confidentialInformationPage
     case ImportGoodsPage                => importGoodsPage
     case RequiredInformationPage        => requiredInformationPage
+    case CheckRegisteredDetailsPage     => checkRegisteredDetailsPage
     case _                              => _ => routes.IndexController.onPageLoad
   }
 
@@ -129,6 +130,13 @@ class Navigator @Inject() () {
     userAnswers.get(RequiredInformationPage) match {
       case None    => RequiredInformationController.onPageLoad()
       case Some(_) => ImportGoodsController.onPageLoad(models.NormalMode)
+    }
+
+  private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(CheckRegisteredDetailsPage) match {
+      case None                             => CheckRegisteredDetailsController.onPageLoad(models.NormalMode)
+      case Some(CheckRegisteredDetails.Yes) => routes.IndexController.onPageLoad
+      case Some(CheckRegisteredDetails.No)  => EORIBeUpToDateController.onPageLoad()
     }
 
   private val checkRouteMap: Page => UserAnswers => Call = {

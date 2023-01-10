@@ -235,5 +235,12 @@ applicationContactDetails.error.required = Enter applicationContactDetails
 applicationContactDetails.error.length = ApplicationContactDetails must be 100 characters or less
 applicationContactDetails.change.hidden = ApplicationContactDetails
 
-eORIBeUpToDate.title = eORIBeUpToDate
-eORIBeUpToDate.heading = eORIBeUpToDate
+eoriBeUpToDate.title = Your EORI details must be up to date to use this service
+eoriBeUpToDate.heading = Your EORI details must be up to date to use this service
+eoriBeUpToDate.caption = About the applicant
+eoriBeUpToDate.paragraph.1 = To update the name or address we have on record, you will need to report a change of circumstances.
+eoriBeUpToDate.paragraph.2 = For EORI numbers that start with <strong>GB</strong>, you can either:
+eoriBeUpToDate.bulletPoint.1.link = Fill in an enquiry form
+eoriBeUpToDate.bulletPoint.1 = {0}
+eoriBeUpToDate.bulletPoint.2.link = import and export: general enquiries
+eoriBeUpToDate.bulletPoint.2 = Contacts {0}
