@@ -227,3 +227,13 @@ whatCountryAreGoodsFrom.checkYourAnswersLabel = whatCountryAreGoodsFrom
 whatCountryAreGoodsFrom.error.required = Enter whatCountryAreGoodsFrom
 whatCountryAreGoodsFrom.error.length = WhatCountryAreGoodsFrom must be 50 characters or less
 whatCountryAreGoodsFrom.change.hidden = WhatCountryAreGoodsFrom
+
+applicationContactDetails.title = applicationContactDetails
+applicationContactDetails.heading = applicationContactDetails
+applicationContactDetails.checkYourAnswersLabel = applicationContactDetails
+applicationContactDetails.error.required = Enter applicationContactDetails
+applicationContactDetails.error.length = ApplicationContactDetails must be 100 characters or less
+applicationContactDetails.change.hidden = ApplicationContactDetails
+
+eORIBeUpToDate.title = eORIBeUpToDate
+eORIBeUpToDate.heading = eORIBeUpToDate

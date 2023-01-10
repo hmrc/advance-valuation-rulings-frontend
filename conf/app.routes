@@ -97,3 +97,10 @@ GET        /changeCheckRegisteredDetails                  controllers.CheckRegis
 POST       /changeCheckRegisteredDetails                  controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /mustHaveCommodityCode                       controllers.MustHaveCommodityCodeController.onPageLoad()
+
+GET        /applicationContactDetails                        controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /applicationContactDetails                        controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeApplicationContactDetails                  controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeApplicationContactDetails                  controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /eORIBeUpToDate                       controllers.EORIBeUpToDateController.onPageLoad()
