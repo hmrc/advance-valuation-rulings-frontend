@@ -103,4 +103,4 @@ POST       /applicationContactDetails                        controllers.Applica
 GET        /changeApplicationContactDetails                  controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeApplicationContactDetails                  controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /eORIBeUpToDate                       controllers.EORIBeUpToDateController.onPageLoad()
+GET        /eoriBeUpToDate                       controllers.EORIBeUpToDateController.onPageLoad()
