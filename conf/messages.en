@@ -194,7 +194,6 @@ accountHome.heading = Your applications and rulings
 accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
 
-
 checkRegisteredDetails.title = Check the name and address for EORI number
 checkRegisteredDetails.heading = Check the name and address for EORI number {0}
 checkRegisteredDetails.subheading = Are these details correct?
@@ -215,10 +214,11 @@ mustHaveCommodityCode.bulletPoint.2 = Work out the {0}
 mustHaveCommodityCode.bulletPoint.3.link = Get a legally binding decision
 mustHaveCommodityCode.bulletPoint.3 = {0} on the commodity code to use when importing into or exporting from Great Britain
 
-areGoodsShippedDirectly.title = areGoodsShippedDirectly
-areGoodsShippedDirectly.heading = areGoodsShippedDirectly
+areGoodsShippedDirectly.title = Are the {0} being shipped directly from their country of origin to Great Britain?
+areGoodsShippedDirectly.heading = Are the {0} being shipped directly from their country of origin to Great Britain?
+areGoodsShippedDirectly.caption = About the goods
 areGoodsShippedDirectly.checkYourAnswersLabel = areGoodsShippedDirectly
-areGoodsShippedDirectly.error.required = Select yes if areGoodsShippedDirectly
+areGoodsShippedDirectly.error.required = Select Yes if the goods are shipped directly
 areGoodsShippedDirectly.change.hidden = AreGoodsShippedDirectly
 
 whatCountryAreGoodsFrom.title = whatCountryAreGoodsFrom
