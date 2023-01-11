@@ -25,7 +25,7 @@
     caption: Caption,
     heading: Heading,
     bulletList: BulletList,
-    inset: InsetText
+    inset: InsetPara
 )
 
 @(nameOfGoods: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -39,7 +39,7 @@
         @heading(messages("describeTheGoods.heading", nameOfGoods))
 
         @paragraph(Html(messages("describeTheGoods.para.1")))
-        @inset(@messages("describeTheGoods.insetText"))
+        @inset(Html(messages("describeTheGoods.insetText")))
         @paragraph(Html(messages("describeTheGoods.para.2")))
         @paragraph(Html(messages("describeTheGoods.para.3")))
 
