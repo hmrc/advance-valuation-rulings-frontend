@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import components._
 @import viewmodels.InputWidth._
 
 @this(
@@ -21,26 +22,44 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    paragraph: Paragraph,
+    caption: Caption,
+    heading: Heading,
+    bulletList: BulletList
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(nameOfGoods: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("howAreTheGoodsMade.title"))) {
+@layout(pageTitle = title(form, messages("howAreTheGoodsMade.title", nameOfGoods))) {
 
     @formHelper(action = routes.HowAreTheGoodsMadeController.onSubmit(mode)) {
+
+        @caption(messages("howAreTheGoodsMade.caption"))
+
+        @heading(messages("howAreTheGoodsMade.heading", nameOfGoods))
+
+        @paragraph(Html(messages("howAreTheGoodsMade.para.1")))
+
+        <div class="govuk-inset-text">
+            @messages("howAreTheGoodsMade.insetText")
+        </div>
+
+        @paragraph(Html(messages("howAreTheGoodsMade.para.2")))
+        @paragraph(Html(messages("howAreTheGoodsMade.para.3")))
+
+        @bulletList(Seq(
+            Html(messages("howAreTheGoodsMade.list.1")),
+            Html(messages("howAreTheGoodsMade.list.2")),
+            Html(messages("howAreTheGoodsMade.list.3"))
+        ))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("howAreTheGoodsMade.heading")).asPageHeading()
-            )
-            .withWidth(Full)
-        )
+        <textarea class="govuk-textarea" id="value" name="more-detail" rows="15" aria-describedby="desciption-box"></textarea>
+
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

@@ -17,18 +17,15 @@
 package controllers
 
 import javax.inject.Inject
-
 import scala.concurrent.{ExecutionContext, Future}
-
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.HowAreTheGoodsMadeFormProvider
 import models.Mode
 import navigation.Navigator
-import pages.HowAreTheGoodsMadePage
+import pages.{HowAreTheGoodsMadePage, NameOfGoodsPage}
 import repositories.SessionRepository
 import views.html.HowAreTheGoodsMadeView
 
@@ -50,21 +47,25 @@ class HowAreTheGoodsMadeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      val nameOfGoods =
+        request.userAnswers.get(NameOfGoodsPage).getOrElse("No commodity code found")
       val preparedForm = request.userAnswers.get(HowAreTheGoodsMadePage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(nameOfGoods, preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
+        val nameOfGoods =
+          request.userAnswers.get(NameOfGoodsPage).getOrElse("No commodity code found")
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(nameOfGoods, formWithErrors, mode))),
             value =>
               for {
                 updatedAnswers <-
