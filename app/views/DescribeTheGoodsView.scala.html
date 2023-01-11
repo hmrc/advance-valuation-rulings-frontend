@@ -15,19 +15,17 @@
  *@
 
 @import components._
-@import viewmodels.textarea
-
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukTextarea: GovukTextarea,
     govukButton: GovukButton,
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
-    bulletList: BulletList
+    bulletList: BulletList,
+    inset: InsetText
 )
 
 @(nameOfGoods: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -41,11 +39,7 @@
         @heading(messages("describeTheGoods.heading", nameOfGoods))
 
         @paragraph(Html(messages("describeTheGoods.para.1")))
-
-        <div class="govuk-inset-text">
-            You will be able to add confidential information and upload files later in the application.
-        </div>
-
+        @inset(@messages("describeTheGoods.insetText"))
         @paragraph(Html(messages("describeTheGoods.para.2")))
         @paragraph(Html(messages("describeTheGoods.para.3")))
 
@@ -60,13 +54,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukTextarea(
-            TextareaViewModel(
-                field = form("value"),
-                label = Label(None)
-            )
-
-        )
+        <textarea class="govuk-textarea" id="value" name="description-box" rows="15" aria-describedby="description-of-goods"></textarea>
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

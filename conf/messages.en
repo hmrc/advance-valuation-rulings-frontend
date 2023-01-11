@@ -155,10 +155,10 @@ describeTheGoods.list.1 = what it is
 describeTheGoods.list.2 = what it is used for
 describeTheGoods.list.3 = how it works
 describeTheGoods.list.4 = how it is packaged
-describeTheGoods.inset.text= You will be able to add confidential information and upload files later in the application.
-describeTheGoods.checkYourAnswersLabel = describeTheGoods
-describeTheGoods.error.required = Enter describeTheGoods
+describeTheGoods.insetText = You will be able to add confidential information and upload files later in the application.
+describeTheGoods.error.required = Provide detailed description of goods
 describeTheGoods.error.length = DescribeTheGoods must be 1000 characters or less
+describeTheGoods.checkYourAnswersLabel = describeTheGoods
 describeTheGoods.change.hidden = DescribeTheGoods
 
 hasConfidentialInformation.title = hasConfidentialInformation
