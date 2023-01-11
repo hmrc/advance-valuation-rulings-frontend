@@ -25,7 +25,9 @@
     caption: Caption,
     heading: Heading,
     bulletList: BulletList,
-    inset: InsetPara
+    inset: InsetPara,
+    cancelLink: CancelApplicationLink
+
 )
 
 @(nameOfGoods: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -60,4 +62,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }
