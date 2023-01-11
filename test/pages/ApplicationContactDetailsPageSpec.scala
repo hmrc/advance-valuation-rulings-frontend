@@ -24,7 +24,7 @@ class ApplicationContactDetailsPageSpec extends PageBehaviours {
 
   "ApplicationContactDetailsPage" - {
 
-    def shortString = (string: String) => string.nonEmpty && string.length <= 35
+    def shortString = (string: String) => string.nonEmpty && string.length <= 100
 
     implicit val applicationContactDetailsGen = Arbitrary(for {
       name  <- Arbitrary.arbitrary[String].suchThat(shortString)

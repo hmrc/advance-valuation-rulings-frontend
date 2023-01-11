@@ -113,7 +113,11 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
       running(application) {
         val request =
           FakeRequest(POST, applicationContactDetailsRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(
+              ("name", "my name"),
+              ("email", "my email"),
+              ("phone", "my phone number")
+            )
 
         val result = route(application, request).value
 
