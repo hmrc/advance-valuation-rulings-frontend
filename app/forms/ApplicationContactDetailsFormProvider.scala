@@ -31,15 +31,15 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         "name"  -> text("applicationContactDetails.fullName.error.required"),
-        "phone" -> text("applicationContactDetails.telephoneNumber.error.required"),
-        "email" -> text("applicationContactDetails.email.error.required")
+        "email" -> text("applicationContactDetails.email.error.required"),
+        "phone" -> text("applicationContactDetails.telephoneNumber.error.required")
       )(ApplicationContactDetails.apply)(
         (applicationContactDetails: ApplicationContactDetails) =>
           Some(
             (
               applicationContactDetails.name,
-              applicationContactDetails.phone,
-              applicationContactDetails.email
+              applicationContactDetails.email,
+              applicationContactDetails.phone
             )
           )
       )

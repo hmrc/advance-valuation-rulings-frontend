@@ -73,8 +73,8 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
         Json.obj(
           ApplicationContactDetailsPage.toString -> Json.obj(
             "name"  -> "value 1",
-            "phone" -> "value 2",
-            "email" -> "value 3"
+            "email" -> "value 2",
+            "phone" -> "value 3"
           )
         )
       )
