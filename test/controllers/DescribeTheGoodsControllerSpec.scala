@@ -40,9 +40,8 @@ class DescribeTheGoodsControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DescribeTheGoodsFormProvider()
   val form         = formProvider()
-  val nameOfGoods = "No name of goods found"
+  val nameOfGoods  = "No name of goods found"
   val validAnswer  = "Some description"
-
 
   lazy val describeTheGoodsRoute = routes.DescribeTheGoodsController.onPageLoad(NormalMode).url
 

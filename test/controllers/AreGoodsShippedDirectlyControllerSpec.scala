@@ -40,7 +40,7 @@ class AreGoodsShippedDirectlyControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new AreGoodsShippedDirectlyFormProvider()
   val form         = formProvider()
-  val nameOfGoods = "No name of goods found"
+  val nameOfGoods  = "No name of goods found"
 
   lazy val areGoodsShippedDirectlyRoute =
     routes.AreGoodsShippedDirectlyController.onPageLoad(NormalMode).url
