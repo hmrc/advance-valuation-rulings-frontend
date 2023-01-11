@@ -14,36 +14,59 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
+    paragraph: Paragraph,
+    caption: Caption,
+    heading: Heading,
+    bulletList: BulletList,
+    inset: InsetPara,
+    cancelLink: CancelApplicationLink
+
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(nameOfGoods: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("describeTheGoods.title"))) {
+@layout(pageTitle = title(form, messages("describeTheGoods.title", nameOfGoods))) {
 
     @formHelper(action = routes.DescribeTheGoodsController.onSubmit(mode)) {
+
+        @caption(messages("describeTheGoods.caption"))
+
+        @heading(messages("describeTheGoods.heading", nameOfGoods))
+
+        @paragraph(Html(messages("describeTheGoods.para.1")))
+        @inset(Html(messages("describeTheGoods.insetText")))
+        @paragraph(Html(messages("describeTheGoods.para.2")))
+        @paragraph(Html(messages("describeTheGoods.para.3")))
+
+        @bulletList(Seq(
+            Html(messages("describeTheGoods.list.1")),
+            Html(messages("describeTheGoods.list.2")),
+            Html(messages("describeTheGoods.list.3")),
+            Html(messages("describeTheGoods.list.4")),
+        ))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
+        @govukTextarea(
+            TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("describeTheGoods.heading")).asPageHeading()
-            )
-            .withWidth(Full)
+                label = Label(None)
+                )
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }
