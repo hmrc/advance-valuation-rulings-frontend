@@ -28,9 +28,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
   val form = new ApplicationContactDetailsFormProvider()()
 
   ".nameField" - {
-    val nameField   = "name"
-    val _phoneField = "phone"
-    val _emailField = "email"
+    val nameField = "name"
 
     behave like fieldThatBindsValidData(
       form,
@@ -42,6 +40,38 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
       form,
       nameField,
       requiredError = FormError(nameField, requiredKey)
+    )
+  }
+
+  ".emailField" - {
+    val emailField = "email"
+
+    behave like fieldThatBindsValidData(
+      form,
+      emailField,
+      stringsExceptSpecificValues(Seq(""))
+    )
+
+    behave like mandatoryField(
+      form,
+      emailField,
+      requiredError = FormError(emailField, requiredKey)
+    )
+  }
+
+  ".phoneField" - {
+    val phoneField = "phone"
+
+    behave like fieldThatBindsValidData(
+      form,
+      phoneField,
+      stringsExceptSpecificValues(Seq(""))
+    )
+
+    behave like mandatoryField(
+      form,
+      phoneField,
+      requiredError = FormError(phoneField, requiredKey)
     )
   }
 }
