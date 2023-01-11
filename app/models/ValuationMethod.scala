@@ -17,34 +17,15 @@
 package models
 
 import play.api.i18n.Messages
-import play.api.libs.json.JsError
-import play.api.libs.json.JsString
-import play.api.libs.json.JsSuccess
-import play.api.libs.json.Reads
-import play.api.libs.json.Writes
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed abstract class ValuationMethod(val name: String)
+sealed trait ValuationMethod
 
-object ValuationMethod {
+object ValuationMethod extends Enumerable.Implicits {
 
-  case object Method1 extends ValuationMethod("method1")
-  case object Method2 extends ValuationMethod("method2")
-
-  implicit def reads: Reads[ValuationMethod] =
-    Reads {
-      case JsString(str) =>
-        str match {
-          case "method1" => JsSuccess(Method1)
-          case "method2" => JsSuccess(Method2)
-          case _         => JsError("error.invalid")
-        }
-      case _             => JsError("error.invalid")
-    }
-
-  implicit def writes: Writes[ValuationMethod] =
-    Writes(value => JsString(value.name))
+  case object Method1 extends WithName("method1") with ValuationMethod
+  case object Method2 extends WithName("method2") with ValuationMethod
 
   val values: Seq[ValuationMethod] = Seq(
     Method1,
@@ -54,8 +35,8 @@ object ValuationMethod {
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>
       RadioItem(
-        content = Text(messages(s"valuationMethod.${value.name}")),
-        value = Some(value.name),
+        content = Text(messages(s"valuationMethod.${value.toString}")),
+        value = Some(value.toString),
         id = Some(s"value_$index")
       )
   }

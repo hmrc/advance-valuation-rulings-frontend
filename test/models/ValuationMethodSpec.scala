@@ -39,7 +39,7 @@ class ValuationMethodSpec
 
       forAll(gen) {
         valuationMethod =>
-          JsString(valuationMethod.name)
+          JsString(valuationMethod.toString)
             .validate[ValuationMethod]
             .asOpt
             .value mustEqual valuationMethod
@@ -48,7 +48,7 @@ class ValuationMethodSpec
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!ValuationMethod.values.map(_.name).contains(_))
+      val gen = arbitrary[String] suchThat (!ValuationMethod.values.map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
@@ -61,7 +61,7 @@ class ValuationMethodSpec
       val gen = Gen.oneOf(ValuationMethod.values.toSeq)
 
       forAll(gen) {
-        valuationMethod => Json.toJson(valuationMethod) mustEqual JsString(valuationMethod.name)
+        valuationMethod => Json.toJson(valuationMethod) mustEqual JsString(valuationMethod.toString)
       }
     }
   }
