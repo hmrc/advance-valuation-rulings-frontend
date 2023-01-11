@@ -22,8 +22,9 @@ import forms.behaviours.StringFieldBehaviours
 
 class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "applicationContactDetails.fullName.error.required"
-  val lengthKey   = "applicationContactDetails.fullName.length"
+  val nameRequiredKey = "applicationContactDetails.fullName.error.required"
+  val emailRequiredKey = "applicationContactDetails.email.error.required"
+  val phoneRequiredKey = "applicationContactDetails.telephoneNumber.error.required"
 
   val form = new ApplicationContactDetailsFormProvider()()
 
@@ -39,7 +40,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like mandatoryField(
       form,
       nameField,
-      requiredError = FormError(nameField, requiredKey)
+      requiredError = FormError(nameField, nameRequiredKey)
     )
   }
 
@@ -55,7 +56,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like mandatoryField(
       form,
       emailField,
-      requiredError = FormError(emailField, requiredKey)
+      requiredError = FormError(emailField, emailRequiredKey)
     )
   }
 
@@ -71,7 +72,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like mandatoryField(
       form,
       phoneField,
-      requiredError = FormError(phoneField, requiredKey)
+      requiredError = FormError(phoneField, phoneRequiredKey)
     )
   }
 }
