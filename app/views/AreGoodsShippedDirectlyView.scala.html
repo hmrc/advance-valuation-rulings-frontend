@@ -19,8 +19,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    cancelLink: CancelApplicationLink
+    govukButton: GovukButton
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -43,6 +42,5 @@
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
-        @cancelLink()
     }
 }
