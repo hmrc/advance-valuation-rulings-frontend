@@ -58,10 +58,10 @@ class Navigator @Inject() () {
     }
 
   private def nameOfGoodsPage(userAnswers: UserAnswers): Call =
-  userAnswers.get(NameOfGoodsPage) match {
-    case None    => NameOfGoodsController.onPageLoad(models.NormalMode)
-    case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)
-  }
+    userAnswers.get(NameOfGoodsPage) match {
+      case None    => NameOfGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)
+    }
 
   private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
@@ -76,46 +76,45 @@ class Navigator @Inject() () {
       case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
     }
 
-  //todo: page removed from prototype
+  // todo: page removed from prototype
   private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
-  userAnswers.get(PriceOfGoodsPage) match {
-    case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
+    userAnswers.get(PriceOfGoodsPage) match {
+      case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
-  }
+    }
 
   private def whatCountryAreGoodsFromPage(userAnswers: UserAnswers): Call =
-  userAnswers.get(WhatCountryAreGoodsFromPage) match {
-    case None    => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
+    userAnswers.get(WhatCountryAreGoodsFromPage) match {
+      case None    => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
       case Some(_) => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
-  }
+    }
   private def areGoodsShippedDirectlyPage(userAnswers: UserAnswers): Call =
-  userAnswers.get(AreGoodsShippedDirectlyPage) match {
-    case None    => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
+    userAnswers.get(AreGoodsShippedDirectlyPage) match {
+      case None    => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
       case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
-  }
+    }
 
   private def describeTheGoodsPage(userAnswers: UserAnswers): Call =
-  userAnswers.get(DescribeTheGoodsPage) match {
-    case None    => DescribeTheGoodsController.onPageLoad(models.NormalMode)
+    userAnswers.get(DescribeTheGoodsPage) match {
+      case None    => DescribeTheGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
-  }
+    }
 
   private def howAreTheGoodsMadePage(userAnswers: UserAnswers): Call =
-  userAnswers.get(DescribeTheGoodsPage) match {
-    case None    => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
+    userAnswers.get(DescribeTheGoodsPage) match {
+      case None    => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
       case Some(_) => HasConfidentialInformationController.onPageLoad(models.NormalMode)
-  }
-
+    }
 
   private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =
-  userAnswers.get(HasConfidentialInformationPage) match {
+    userAnswers.get(HasConfidentialInformationPage) match {
       case None        => HasConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(true)  => ConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(false) => routes.IndexController.onPageLoad
     }
 
   private def confidentialInformationPage(userAnswers: UserAnswers): Call =
-  userAnswers.get(ConfidentialInformationPage) match {
+    userAnswers.get(ConfidentialInformationPage) match {
       case None    => ConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(_) => routes.IndexController.onPageLoad
     }
