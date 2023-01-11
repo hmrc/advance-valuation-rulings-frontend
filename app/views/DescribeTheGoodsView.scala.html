@@ -14,32 +14,58 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
+@import components._
+@import viewmodels.textarea
+
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukTextarea: GovukTextarea,
+    govukButton: GovukButton,
+    paragraph: Paragraph,
+    caption: Caption,
+    heading: Heading,
+    bulletList: BulletList
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(nameOfGoods: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("describeTheGoods.title"))) {
+@layout(pageTitle = title(form, messages("describeTheGoods.title", nameOfGoods))) {
 
     @formHelper(action = routes.DescribeTheGoodsController.onSubmit(mode)) {
+
+        @caption(messages("describeTheGoods.caption"))
+
+        @heading(messages("describeTheGoods.heading", nameOfGoods))
+
+        @paragraph(Html(messages("describeTheGoods.para.1")))
+
+        <div class="govuk-inset-text">
+            You will be able to add confidential information and upload files later in the application.
+        </div>
+
+        @paragraph(Html(messages("describeTheGoods.para.2")))
+        @paragraph(Html(messages("describeTheGoods.para.3")))
+
+        @bulletList(Seq(
+            Html(messages("describeTheGoods.list.1")),
+            Html(messages("describeTheGoods.list.2")),
+            Html(messages("describeTheGoods.list.3")),
+            Html(messages("describeTheGoods.list.4")),
+        ))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
+        @govukTextarea(
+            TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("describeTheGoods.heading")).asPageHeading()
+                label = Label(None)
             )
-            .withWidth(Full)
+
         )
 
         @govukButton(
