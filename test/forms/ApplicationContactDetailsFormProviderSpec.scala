@@ -22,33 +22,26 @@ import forms.behaviours.StringFieldBehaviours
 
 class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "applicationContactDetails.error.required"
-  val lengthKey   = "applicationContactDetails.error.length"
-  val maxLength   = 100
+  val requiredKey = "applicationContactDetails.fullName.error.required"
+  val lengthKey   = "applicationContactDetails.fullName.length"
 
   val form = new ApplicationContactDetailsFormProvider()()
 
-  ".value" - {
-
-    val fieldName = "value"
+  ".nameField" - {
+    val nameField   = "name"
+    val _phoneField = "phone"
+    val _emailField = "email"
 
     behave like fieldThatBindsValidData(
       form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nameField,
+      stringsExceptSpecificValues(Seq(""))
     )
 
     behave like mandatoryField(
       form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      nameField,
+      requiredError = FormError(nameField, requiredKey)
     )
   }
 }
