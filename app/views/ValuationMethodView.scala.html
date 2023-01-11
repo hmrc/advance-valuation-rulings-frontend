@@ -14,12 +14,15 @@
  * limitations under the License.
  *@
 
+@import components.CancelApplicationLink
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -44,4 +47,6 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+
+    @cancelApplicationLink()
 }
