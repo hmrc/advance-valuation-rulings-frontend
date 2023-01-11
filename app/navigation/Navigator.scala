@@ -64,10 +64,24 @@ class Navigator @Inject() () {
       case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)
     }
 
+  private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
+    userAnswers.get(HasCommodityCodePage) match {
+      case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(false) => MustHaveCommodityCodeController.onPageLoad()
+    }
+
+  private def commodityCodePage(userAnswers: UserAnswers): Call =
+    userAnswers.get(HasCommodityCodePage) match {
+      case None    => CommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
+    }
+
+  // todo: page removed from prototype
   private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(PriceOfGoodsPage) match {
       case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
-      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
     }
 
   private def whatCountryAreGoodsFromPage(userAnswers: UserAnswers): Call =
@@ -93,13 +107,6 @@ class Navigator @Inject() () {
       case Some(_) => HasConfidentialInformationController.onPageLoad(models.NormalMode)
     }
 
-  private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
-    userAnswers.get(HasCommodityCodePage) match {
-      case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(false) => MustHaveCommodityCodeController.onPageLoad()
-    }
-
   private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasConfidentialInformationPage) match {
       case None        => HasConfidentialInformationController.onPageLoad(models.NormalMode)
@@ -111,12 +118,6 @@ class Navigator @Inject() () {
     userAnswers.get(ConfidentialInformationPage) match {
       case None    => ConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(_) => routes.IndexController.onPageLoad
-    }
-
-  private def commodityCodePage(userAnswers: UserAnswers): Call =
-    userAnswers.get(HasCommodityCodePage) match {
-      case None    => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(_) => PriceOfGoodsController.onPageLoad(models.NormalMode)
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
