@@ -21,6 +21,7 @@
     layout: templates.Layout,
     govukButton: GovukButton,
     formHelper: FormWithCSRF,
+    cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
     link: Link,
     config: FrontendAppConfig
@@ -51,4 +52,7 @@
             ButtonViewModel(messages("publicInformationNotice.button.continue"))
         )
     }
+
+    @cancelApplicationLink()
+    
 }
