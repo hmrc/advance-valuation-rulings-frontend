@@ -21,6 +21,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
@@ -54,8 +55,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <textarea class="govuk-textarea" id="value" name="more-detail" rows="15" aria-describedby="desciption-box"></textarea>
 
+    @govukTextarea(
+            TextareaViewModel(
+                field = form("value"),
+                label = Label(None)
+                )
+        )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
