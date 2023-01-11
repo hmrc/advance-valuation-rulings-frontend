@@ -21,8 +21,9 @@
         layout: templates.Layout,
         govukButton: GovukButton,
         formHelper: FormWithCSRF,
-        paragraph: Paragraph,
         bulletList: BulletList,
+        cancelApplicationLink: CancelApplicationLink,
+        paragraph: Paragraph,
         link: Link,
         config: FrontendAppConfig
 )
@@ -61,4 +62,6 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+
+    @cancelApplicationLink()
 }
