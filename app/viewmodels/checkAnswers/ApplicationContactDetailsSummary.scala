@@ -33,8 +33,8 @@ object ApplicationContactDetailsSummary {
     answers.get(ApplicationContactDetailsPage).map {
       answer =>
         val value = HtmlFormat.escape(answer.name).toString + "<br/>" +
-          HtmlFormat.escape(answer.phone).toString + "<br/>" +
-          HtmlFormat.escape(answer.email).toString
+          HtmlFormat.escape(answer.email).toString + "<br/>" +
+          HtmlFormat.escape(answer.phone).toString
         SummaryListRowViewModel(
           key = "applicationContactDetails.checkYourAnswersLabel",
           value = ValueViewModel(HtmlContent(value)),
