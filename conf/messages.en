@@ -237,8 +237,8 @@ applicationContactDetails.fullName.label = Full name
 applicationContactDetails.email.label = Email
 applicationContactDetails.telephoneNumber.label = Telephone number
 applicationContactDetails.fullName.error.required = Enter a full name
-applicationContactDetails.telephoneNumber.error.required = Enter an email address
-applicationContactDetails.email.error.required = Enter a telephone number
+applicationContactDetails.telephoneNumber.error.required = Enter a telephone number
+applicationContactDetails.email.error.required = Enter an email address
 
 applicationContactDetails.error.required = Enter applicationContactDetails
 applicationContactDetails.error.length = ApplicationContactDetails must be 100 characters or less
