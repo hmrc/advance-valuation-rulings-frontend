@@ -22,7 +22,7 @@ import forms.behaviours.StringFieldBehaviours
 
 class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val nameRequiredKey = "applicationContactDetails.fullName.error.required"
+  val nameRequiredKey  = "applicationContactDetails.fullName.error.required"
   val emailRequiredKey = "applicationContactDetails.email.error.required"
   val phoneRequiredKey = "applicationContactDetails.telephoneNumber.error.required"
 
