@@ -34,6 +34,9 @@ final case class UserAnswers(
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
 
+  def getOrElse[A](page: Gettable[A], default: => A)(implicit rds: Reads[A]): A =
+    get(page).getOrElse(default)
+
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {

@@ -104,3 +104,8 @@ GET        /changeApplicationContactDetails                  controllers.Applica
 POST       /changeApplicationContactDetails                  controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /eoriBeUpToDate                       controllers.EORIBeUpToDateController.onPageLoad()
+
+GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
+POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
