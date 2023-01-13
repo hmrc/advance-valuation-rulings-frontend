@@ -16,13 +16,27 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
+import repositories.SessionRepository
 import views.html.EORIBeUpToDateView
 
-class EORIBeUpToDateControllerSpec extends SpecBase {
+class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
+
+  def onwardRoute = Call("GET", "/foo")
+
+  lazy val checkRegisteredDetailRoute =
+    routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode).url
 
   "EORIBeUpToDate Controller" - {
 
@@ -39,6 +53,58 @@ class EORIBeUpToDateControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
+      }
+    }
+
+    "must redirect to the next page when yes is submitted" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, checkRegisteredDetailRoute)
+            .withFormUrlEncodedBody(("value", "yes"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must redirect to the next page when 'no' is submitted" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, checkRegisteredDetailRoute)
+            .withFormUrlEncodedBody(("value", "no"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
   }

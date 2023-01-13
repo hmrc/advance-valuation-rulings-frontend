@@ -18,6 +18,7 @@ package viewmodels.checkAnswers
 
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
@@ -31,9 +32,12 @@ object ApplicationContactDetailsSummary {
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ApplicationContactDetailsPage).map {
       answer =>
+        val value = HtmlFormat.escape(answer.name).toString + "<br/>" +
+          HtmlFormat.escape(answer.email).toString + "<br/>" +
+          HtmlFormat.escape(answer.phone).toString
         SummaryListRowViewModel(
           key = "applicationContactDetails.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
             ActionItemViewModel(
               "site.change",

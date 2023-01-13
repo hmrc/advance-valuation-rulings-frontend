@@ -44,6 +44,8 @@ class Navigator @Inject() () {
     case ConfidentialInformationPage    => confidentialInformationPage
     case ImportGoodsPage                => importGoodsPage
     case RequiredInformationPage        => requiredInformationPage
+    case CheckRegisteredDetailsPage     => checkRegisteredDetailsPage
+    case ApplicationContactDetailsPage  => applicationContactDetailsPage
     case _                              => _ => routes.IndexController.onPageLoad
   }
 
@@ -122,14 +124,28 @@ class Navigator @Inject() () {
   private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {
       case None        => ImportGoodsController.onPageLoad(models.NormalMode)
-      case Some(true)  => PublicInformationNoticeController.onPageLoad
-      case Some(false) => ImportingGoodsController.onPageLoad
+      case Some(true)  => PublicInformationNoticeController.onPageLoad()
+      case Some(false) => ImportingGoodsController.onPageLoad()
     }
 
   private def requiredInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(RequiredInformationPage) match {
       case None    => RequiredInformationController.onPageLoad()
       case Some(_) => ImportGoodsController.onPageLoad(models.NormalMode)
+    }
+
+  private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(CheckRegisteredDetailsPage) match {
+      case None                             => CheckRegisteredDetailsController.onPageLoad(models.NormalMode)
+      case Some(CheckRegisteredDetails.Yes) =>
+        ApplicationContactDetailsController.onPageLoad(models.NormalMode)
+      case Some(CheckRegisteredDetails.No)  => EORIBeUpToDateController.onPageLoad()
+    }
+
+  private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ApplicationContactDetailsPage) match {
+      case None    => ApplicationContactDetailsController.onPageLoad(models.NormalMode)
+      case Some(_) => ValuationMethodController.onPageLoad(models.NormalMode)
     }
 
   private val checkRouteMap: Page => UserAnswers => Call = {

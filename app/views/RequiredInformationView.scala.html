@@ -22,6 +22,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
     govukButton: GovukButton,
+    cancelApplicationLink: CancelApplicationLink,
     caption: Caption
 )
 
@@ -50,4 +51,6 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+
+    @cancelApplicationLink()
 }

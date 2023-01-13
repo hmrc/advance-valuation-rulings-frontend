@@ -16,16 +16,26 @@
 
 package pages
 
+import models.ApplicationContactDetails
+import org.scalacheck.Arbitrary
 import pages.behaviours.PageBehaviours
 
 class ApplicationContactDetailsPageSpec extends PageBehaviours {
 
   "ApplicationContactDetailsPage" - {
 
-    beRetrievable[String](ApplicationContactDetailsPage)
+    def shortString = (string: String) => string.nonEmpty && string.length <= 100
 
-    beSettable[String](ApplicationContactDetailsPage)
+    implicit val applicationContactDetailsGen = Arbitrary(for {
+      name  <- Arbitrary.arbitrary[String].suchThat(shortString)
+      phone <- Arbitrary.arbitrary[String].suchThat(shortString)
+      email <- Arbitrary.arbitrary[String].suchThat(shortString)
+    } yield ApplicationContactDetails(name, phone, email))
 
-    beRemovable[String](ApplicationContactDetailsPage)
+    beRetrievable[ApplicationContactDetails](ApplicationContactDetailsPage)
+
+    beSettable[ApplicationContactDetails](ApplicationContactDetailsPage)
+
+    beRemovable[ApplicationContactDetails](ApplicationContactDetailsPage)
   }
 }

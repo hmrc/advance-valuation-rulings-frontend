@@ -19,6 +19,7 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -26,6 +27,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import forms.ApplicationContactDetailsFormProvider
 import models.{NormalMode, UserAnswers}
+import models.ApplicationContactDetails
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -66,9 +68,16 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers =
-        UserAnswers(userAnswersId).set(ApplicationContactDetailsPage, "answer").success.value
+      val userAnswers = UserAnswers(
+        userAnswersId,
+        Json.obj(
+          ApplicationContactDetailsPage.toString -> Json.obj(
+            "name"  -> "value 1",
+            "email" -> "value 2",
+            "phone" -> "value 3"
+          )
+        )
+      )
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -80,10 +89,10 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(
+          form.fill(ApplicationContactDetails("value 1", "value 2", "value 3")),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -104,7 +113,11 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
       running(application) {
         val request =
           FakeRequest(POST, applicationContactDetailsRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+            .withFormUrlEncodedBody(
+              ("name", "my name"),
+              ("email", "my email"),
+              ("phone", "my phone number")
+            )
 
         val result = route(application, request).value
 

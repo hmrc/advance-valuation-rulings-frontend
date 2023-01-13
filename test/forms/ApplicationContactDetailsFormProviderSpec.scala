@@ -22,33 +22,57 @@ import forms.behaviours.StringFieldBehaviours
 
 class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "applicationContactDetails.error.required"
-  val lengthKey   = "applicationContactDetails.error.length"
-  val maxLength   = 100
+  val nameRequiredKey  = "applicationContactDetails.fullName.error.required"
+  val emailRequiredKey = "applicationContactDetails.email.error.required"
+  val phoneRequiredKey = "applicationContactDetails.telephoneNumber.error.required"
 
   val form = new ApplicationContactDetailsFormProvider()()
 
-  ".value" - {
-
-    val fieldName = "value"
+  ".nameField" - {
+    val nameField = "name"
 
     behave like fieldThatBindsValidData(
       form,
-      fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nameField,
+      stringsExceptSpecificValues(Seq(""))
     )
 
     behave like mandatoryField(
       form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      nameField,
+      requiredError = FormError(nameField, nameRequiredKey)
+    )
+  }
+
+  ".emailField" - {
+    val emailField = "email"
+
+    behave like fieldThatBindsValidData(
+      form,
+      emailField,
+      stringsExceptSpecificValues(Seq(""))
+    )
+
+    behave like mandatoryField(
+      form,
+      emailField,
+      requiredError = FormError(emailField, emailRequiredKey)
+    )
+  }
+
+  ".phoneField" - {
+    val phoneField = "phone"
+
+    behave like fieldThatBindsValidData(
+      form,
+      phoneField,
+      stringsExceptSpecificValues(Seq(""))
+    )
+
+    behave like mandatoryField(
+      form,
+      phoneField,
+      requiredError = FormError(phoneField, phoneRequiredKey)
     )
   }
 }

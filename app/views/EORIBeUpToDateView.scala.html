@@ -14,14 +14,57 @@
  * limitations under the License.
  *@
 
+@import components._
+@import config.FrontendAppConfig
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        formHelper: FormWithCSRF,
+        caption: Caption,
+        heading: Heading,
+        paragraph: Paragraph,
+        link: Link,
+        bulletList: BulletList,
+        cancelApplicationLink: CancelApplicationLink,
+        config: FrontendAppConfig
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("eORIBeUpToDate.title"))) {
+@fillInAnEnquiryLink = {
+  @link(
+          id = "eori_be_up_to_date_link_one",
+          text = messages("eoriBeUpToDate.bulletPoint.1.link"),
+          call = Call("GET", config.fillInAnEnquiryFormUrl)
+        )
+}
 
-    <h1 class="govuk-heading-xl">@messages("eORIBeUpToDate.heading")</h1>
+@importAndExportEnquiriesLink = {
+  @link(
+          id = "eori_be_up_to_date_link_two",
+          text = messages("eoriBeUpToDate.bulletPoint.2.link"),
+          call = Call("GET", config.importAndExportEnquiriesUrl)
+        )
+}
+
+@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title"))) {
+
+@caption(messages("eoriBeUpToDate.caption"))
+
+@heading(messages("eoriBeUpToDate.heading"))
+
+@paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
+
+@paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
+
+@bulletList(
+       Seq(
+            Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
+            Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
+       ),
+        "govuk-list govuk-list--bullet govuk-list--spaced",
+)
+
+@cancelApplicationLink()
 }
