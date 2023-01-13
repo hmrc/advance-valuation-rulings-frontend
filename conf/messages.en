@@ -228,9 +228,18 @@ whatCountryAreGoodsFrom.error.required = Enter whatCountryAreGoodsFrom
 whatCountryAreGoodsFrom.error.length = WhatCountryAreGoodsFrom must be 50 characters or less
 whatCountryAreGoodsFrom.change.hidden = WhatCountryAreGoodsFrom
 
-applicationContactDetails.title = applicationContactDetails
-applicationContactDetails.heading = applicationContactDetails
+applicationContactDetails.title = Provide the contact details for this application
+applicationContactDetails.heading = Provide the contact details for this application
+applicationContactDetails.caption = About the applicant
+applicationContactDetails.paragraph = These details <strong>will only</strong> be used to contact you with questions relating to this application.
 applicationContactDetails.checkYourAnswersLabel = applicationContactDetails
+applicationContactDetails.fullName.label = Full name
+applicationContactDetails.email.label = Email
+applicationContactDetails.telephoneNumber.label = Telephone number
+applicationContactDetails.fullName.error.required = Enter a full name
+applicationContactDetails.telephoneNumber.error.required = Enter a telephone number
+applicationContactDetails.email.error.required = Enter an email address
+
 applicationContactDetails.error.required = Enter applicationContactDetails
 applicationContactDetails.error.length = ApplicationContactDetails must be 100 characters or less
 applicationContactDetails.change.hidden = ApplicationContactDetails
