@@ -46,13 +46,14 @@ class HasConfidentialInformationController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
-
+  
+  private val noNameOfGoodsFound = "No name of goods found"
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val nameOfGoods  =
-        request.userAnswers.getOrElse(NameOfGoodsPage, "No name of goods found")
+        request.userAnswers.getOrElse(NameOfGoodsPage, noNameOfGoodsFound)
       val preparedForm = request.userAnswers.get(HasConfidentialInformationPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -65,7 +66,7 @@ class HasConfidentialInformationController @Inject() (
     (identify andThen getData andThen requireData).async {
       implicit request =>
         val nameOfGoods =
-          request.userAnswers.getOrElse(NameOfGoodsPage, "No name of goods found")
+          request.userAnswers.getOrElse(NameOfGoodsPage, noNameOfGoodsFound)
 
         form
           .bindFromRequest()
