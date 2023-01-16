@@ -30,7 +30,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.HasConfidentialInformationPage
+import pages.{HasConfidentialInformationPage, NameOfGoodsPage}
 import repositories.SessionRepository
 import views.html.HasConfidentialInformationView
 
@@ -50,7 +50,13 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers =
+        UserAnswers(userAnswersId)
+          .set(NameOfGoodsPage, nameOfGoods)
+          .success
+          .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, hasConfidentialInformationRoute)
@@ -70,7 +76,11 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(HasConfidentialInformationPage, true).success.value
+        UserAnswers(userAnswersId)
+          .set(HasConfidentialInformationPage, true)
+          .flatMap(_.set(NameOfGoodsPage, nameOfGoods))
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -122,12 +132,11 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, hasConfidentialInformationRoute)
-            .withFormUrlEncodedBody(("value", "false"))
+            .withFormUrlEncodedBody(("value", "invalid"))
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        status(result) mustEqual BAD_REQUEST
       }
     }
 
