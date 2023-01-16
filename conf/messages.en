@@ -256,3 +256,32 @@ eoriBeUpToDate.bulletPoint.1.link = Fill in an enquiry form
 eoriBeUpToDate.bulletPoint.1 = {0}
 eoriBeUpToDate.bulletPoint.2.link = import and export: general enquiries
 eoriBeUpToDate.bulletPoint.2 = Contacts {0}
+
+doYouWantToUploadDocuments.title = Do you want to upload any supporting documents?
+doYouWantToUploadDocuments.heading = Do you want to upload any supporting documents?
+doYouWantToUploadDocuments.caption = About the goods
+doYouWantToUploadDocuments.para = You can provide us with the following documents to support your application:
+doYouWantToUploadDocuments.bulletPoint.1 = ingredients lists for food and drink goods
+doYouWantToUploadDocuments.bulletPoint.2 = technical specifications
+doYouWantToUploadDocuments.bulletPoint.3 = lists of materials
+doYouWantToUploadDocuments.bulletPoint.4 = images of the goods
+doYouWantToUploadDocuments.bulletPoint.5 = images of packaging
+doYouWantToUploadDocuments.checkYourAnswersLabel = doYouWantToUploadDocuments
+doYouWantToUploadDocuments.error.required = Select yes if doYouWantToUploadDocuments
+doYouWantToUploadDocuments.change.hidden = DoYouWantToUploadDocuments
+
+isThisFileConfidential.title = isThisFileConfidential
+isThisFileConfidential.heading = isThisFileConfidential
+isThisFileConfidential.caption = About the goods
+isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
+isThisFileConfidential.error.required = Select yes if isThisFileConfidential
+isThisFileConfidential.change.hidden = IsThisFileConfidential
+
+uploadAnotherSupportingDocument.title = uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.heading = uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.error.required = Select yes if uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
+
+uploadSupportingDocuments.title = uploadSupportingDocuments
+uploadSupportingDocuments.heading = uploadSupportingDocuments

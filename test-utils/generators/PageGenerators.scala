@@ -21,6 +21,15 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryUploadAnotherSupportingDocumentPage: Arbitrary[UploadAnotherSupportingDocumentPage.type] =
+    Arbitrary(UploadAnotherSupportingDocumentPage)
+
+  implicit lazy val arbitraryIsThisFileConfidentialPage: Arbitrary[IsThisFileConfidentialPage.type] =
+    Arbitrary(IsThisFileConfidentialPage)
+
+  implicit lazy val arbitraryDoYouWantToUploadDocumentsPage: Arbitrary[DoYouWantToUploadDocumentsPage.type] =
+    Arbitrary(DoYouWantToUploadDocumentsPage)
+
   implicit lazy val arbitraryApplicationContactDetailsPage
     : Arbitrary[ApplicationContactDetailsPage.type] =
     Arbitrary(ApplicationContactDetailsPage)
