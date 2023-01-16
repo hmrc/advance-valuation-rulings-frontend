@@ -152,10 +152,13 @@ describeTheGoods.error.required = Enter describeTheGoods
 describeTheGoods.error.length = DescribeTheGoods must be 1000 characters or less
 describeTheGoods.change.hidden = DescribeTheGoods
 
-hasConfidentialInformation.title = hasConfidentialInformation
-hasConfidentialInformation.heading = hasConfidentialInformation
+hasConfidentialInformation.title = Do you want to add any confidential information about the {0}?
+hasConfidentialInformation.heading = Do you want to add any confidential information about the {0}?
+hasConfidentialInformation.caption = About the goods
+hasConfidentialInformation.paragraph.1 = You could mark the file as confidential if it includes business-sensitive information, for example model numbers or patent details.
+hasConfidentialInformation.paragraph.2 = Files marked as confidential will not appear on the Advance Valuation Rulings website.
 hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
-hasConfidentialInformation.error.required = Select yes if hasConfidentialInformation
+hasConfidentialInformation.error.required = Select Yes if you like to provide any confidential information
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
 
 howAreTheGoodsMade.title = howAreTheGoodsMade

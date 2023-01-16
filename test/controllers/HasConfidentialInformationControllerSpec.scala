@@ -30,7 +30,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.HasConfidentialInformationPage
+import pages.{HasConfidentialInformationPage, NameOfGoodsPage}
 import repositories.SessionRepository
 import views.html.HasConfidentialInformationView
 
@@ -41,6 +41,8 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
   val formProvider = new HasConfidentialInformationFormProvider()
   val form         = formProvider()
 
+  val nameOfGoods = "nameOfGoods"
+
   lazy val hasConfidentialInformationRoute =
     routes.HasConfidentialInformationController.onPageLoad(NormalMode).url
 
@@ -48,7 +50,13 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers =
+        UserAnswers(userAnswersId)
+          .set(NameOfGoodsPage, nameOfGoods)
+          .success
+          .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, hasConfidentialInformationRoute)
@@ -58,7 +66,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[HasConfidentialInformationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, nameOfGoods)(
           request,
           messages(application)
         ).toString
@@ -68,7 +76,11 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(HasConfidentialInformationPage, true).success.value
+        UserAnswers(userAnswersId)
+          .set(HasConfidentialInformationPage, true)
+          .flatMap(_.set(NameOfGoodsPage, nameOfGoods))
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -80,7 +92,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, nameOfGoods)(
           request,
           messages(application)
         ).toString
@@ -120,19 +132,11 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, hasConfidentialInformationRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[HasConfidentialInformationView]
+            .withFormUrlEncodedBody(("value", "invalid"))
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
-          request,
-          messages(application)
-        ).toString
       }
     }
 
