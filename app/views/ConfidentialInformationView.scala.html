@@ -14,19 +14,37 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
+    bulletList: BulletList,
+    cancelApplicationLink: CancelApplicationLink,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    insetPara: InsetPara
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("confidentialInformation.title"))) {
+@layout(pageTitle = title(form, messages("confidentialInformation.title", nameOfGoods))) {
+
+    @caption(messages("confidentialInformation.caption"))
+    @heading(messages("confidentialInformation.heading", nameOfGoods))
+
+    @paragraph(Html(messages("confidentialInformation.paragraph.1")))
+    @paragraph(Html(messages("confidentialInformation.paragraph.2")))
+    @insetPara(Html(messages("confidentialInformation.paragraph.3")))
+
+    @bulletList(Seq(
+        Html(messages("confidentialInformation.bulletPoint.1")),
+        Html(messages("confidentialInformation.bulletPoint.2"))
+    ))
 
     @formHelper(action = routes.ConfidentialInformationController.onSubmit(mode)) {
 
@@ -34,12 +52,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
+        @govukTextarea(
+            TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("confidentialInformation.heading")).asPageHeading()
+                label = Label()
             )
-            .withWidth(Full)
         )
 
         @govukButton(

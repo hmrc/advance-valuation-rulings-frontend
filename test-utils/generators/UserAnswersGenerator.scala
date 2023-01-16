@@ -29,9 +29,9 @@ trait UserAnswersGenerator extends TryValues {
 
   val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
     arbitrary[(UploadAnotherSupportingDocumentPage.type, JsValue)] ::
-    arbitrary[(IsThisFileConfidentialPage.type, JsValue)] ::
-    arbitrary[(DoYouWantToUploadDocumentsPage.type, JsValue)] ::
-    arbitrary[(ApplicationContactDetailsPage.type, JsValue)] ::
+      arbitrary[(IsThisFileConfidentialPage.type, JsValue)] ::
+      arbitrary[(DoYouWantToUploadDocumentsPage.type, JsValue)] ::
+      arbitrary[(ApplicationContactDetailsPage.type, JsValue)] ::
       arbitrary[(WhatCountryAreGoodsFromPage.type, JsValue)] ::
       arbitrary[(AreGoodsShippedDirectlyPage.type, JsValue)] ::
       arbitrary[(CheckRegisteredDetailsPage.type, JsValue)] ::

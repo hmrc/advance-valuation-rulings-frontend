@@ -16,13 +16,14 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.BooleanFieldBehaviours
 
 class IsThisFileConfidentialFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "isThisFileConfidential.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new IsThisFileConfidentialFormProvider()()
 

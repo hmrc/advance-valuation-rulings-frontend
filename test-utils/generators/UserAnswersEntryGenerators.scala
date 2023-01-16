@@ -25,7 +25,8 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryUploadAnotherSupportingDocumentUserAnswersEntry: Arbitrary[(UploadAnotherSupportingDocumentPage.type, JsValue)] =
+  implicit lazy val arbitraryUploadAnotherSupportingDocumentUserAnswersEntry
+    : Arbitrary[(UploadAnotherSupportingDocumentPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[UploadAnotherSupportingDocumentPage.type]
@@ -33,7 +34,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryIsThisFileConfidentialUserAnswersEntry: Arbitrary[(IsThisFileConfidentialPage.type, JsValue)] =
+  implicit lazy val arbitraryIsThisFileConfidentialUserAnswersEntry
+    : Arbitrary[(IsThisFileConfidentialPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[IsThisFileConfidentialPage.type]
@@ -41,7 +43,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryDoYouWantToUploadDocumentsUserAnswersEntry: Arbitrary[(DoYouWantToUploadDocumentsPage.type, JsValue)] =
+  implicit lazy val arbitraryDoYouWantToUploadDocumentsUserAnswersEntry
+    : Arbitrary[(DoYouWantToUploadDocumentsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[DoYouWantToUploadDocumentsPage.type]

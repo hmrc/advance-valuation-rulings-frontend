@@ -16,27 +16,30 @@
 
 package viewmodels.checkAnswers
 
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
 import controllers.routes
 import models.{CheckMode, UserAnswers}
 import pages.IsThisFileConfidentialPage
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object IsThisFileConfidentialSummary  {
+object IsThisFileConfidentialSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(IsThisFileConfidentialPage).map {
       answer =>
-
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "isThisFileConfidential.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key = "isThisFileConfidential.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.IsThisFileConfidentialController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.IsThisFileConfidentialController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("isThisFileConfidential.change.hidden"))
           )
         )
