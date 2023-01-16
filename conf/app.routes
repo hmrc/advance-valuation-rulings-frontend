@@ -104,3 +104,10 @@ GET        /changeApplicationContactDetails                  controllers.Applica
 POST       /changeApplicationContactDetails                  controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /eoriBeUpToDate                       controllers.EORIBeUpToDateController.onPageLoad()
+
+GET        /hasSupportingDocuments                        controllers.HasSupportingDocumentsController.onPageLoad(mode: Mode = NormalMode)
+POST       /hasSupportingDocuments                        controllers.HasSupportingDocumentsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHasSupportingDocuments                  controllers.HasSupportingDocumentsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHasSupportingDocuments                  controllers.HasSupportingDocumentsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /uploadSupportingDocuments                       controllers.UploadSupportingDocumentsController.onPageLoad()

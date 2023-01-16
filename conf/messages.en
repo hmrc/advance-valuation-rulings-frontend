@@ -253,3 +253,11 @@ eoriBeUpToDate.bulletPoint.1.link = Fill in an enquiry form
 eoriBeUpToDate.bulletPoint.1 = {0}
 eoriBeUpToDate.bulletPoint.2.link = import and export: general enquiries
 eoriBeUpToDate.bulletPoint.2 = Contacts {0}
+hasSupportingDocuments.title = hasSupportingDocuments
+hasSupportingDocuments.heading = hasSupportingDocuments
+hasSupportingDocuments.checkYourAnswersLabel = hasSupportingDocuments
+hasSupportingDocuments.error.required = Select yes if hasSupportingDocuments
+hasSupportingDocuments.change.hidden = HasSupportingDocuments
+
+uploadSupportingDocuments.title = uploadSupportingDocuments
+uploadSupportingDocuments.heading = uploadSupportingDocuments
