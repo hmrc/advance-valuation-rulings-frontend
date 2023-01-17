@@ -271,11 +271,13 @@ doYouWantToUploadDocuments.checkYourAnswersLabel = doYouWantToUploadDocuments
 doYouWantToUploadDocuments.error.required = Select yes if doYouWantToUploadDocuments
 doYouWantToUploadDocuments.change.hidden = DoYouWantToUploadDocuments
 
-isThisFileConfidential.title = isThisFileConfidential
-isThisFileConfidential.heading = isThisFileConfidential
+isThisFileConfidential.title = Do you want this file to be marked as confidential?
+isThisFileConfidential.heading = Do you want this file to be marked as confidential?
 isThisFileConfidential.caption = About the goods
-isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
+isThisFileConfidential.para.1 = You could mark the file as confidential if it includes business-sensitive information, for example model numbers or patent details.
+isThisFileConfidential.para.2 = Files marked as confidential will not appear on the Advance Valuation Rulings website.
 isThisFileConfidential.error.required = Select yes if isThisFileConfidential
+isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
 isThisFileConfidential.change.hidden = IsThisFileConfidential
 
 uploadAnotherSupportingDocument.title = uploadAnotherSupportingDocument

@@ -14,17 +14,30 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    heading: Heading,
+    cancelApplicationLink: CancelApplicationLink,
+    paragraph: Paragraph,
+    list: BulletList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("isThisFileConfidential.title"))) {
+
+    @caption(messages("isThisFileConfidential.caption"))
+    @heading(messages("isThisFileConfidential.heading"))
+
+    @paragraph(Html(messages("isThisFileConfidential.para.1")))
+    @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
     @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -35,7 +48,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("isThisFileConfidential.heading")).asPageHeading()
+                legend = Legend()
             )
         )
 
@@ -43,4 +56,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelApplicationLink()
 }
