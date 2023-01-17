@@ -25,12 +25,12 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ConfidentialInformationFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ConfidentialInformationPage
+import pages.{ConfidentialInformationPage, NameOfGoodsPage}
 import repositories.SessionRepository
 import views.html.ConfidentialInformationView
 
@@ -38,8 +38,10 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new ConfidentialInformationFormProvider()
-  val form         = formProvider()
+  val formProvider  = new ConfidentialInformationFormProvider()
+  val form          = formProvider()
+  val nameOfGoods   = "My goods for testing"
+  val noNameOfGoods = "No name of goods found"
 
   lazy val confidentialInformationRoute =
     routes.ConfidentialInformationController.onPageLoad(NormalMode).url
@@ -58,7 +60,7 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ConfidentialInformationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, "No name of goods found")(
           request,
           messages(application)
         ).toString
@@ -67,8 +69,10 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers =
-        UserAnswers(userAnswersId).set(ConfidentialInformationPage, "answer").success.value
+      val userAnswers = (for {
+        withNameOfGoods <- emptyUserAnswers.set(NameOfGoodsPage, nameOfGoods)
+        withInformation <- withNameOfGoods.set(ConfidentialInformationPage, "top secret")
+      } yield withInformation).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -80,7 +84,7 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("top secret"), NormalMode, nameOfGoods)(
           request,
           messages(application)
         ).toString
@@ -88,13 +92,17 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must redirect to the next page when valid data is submitted" in {
+      val userAnswers = (for {
+        withNameOfGoods <- emptyUserAnswers.set(NameOfGoodsPage, nameOfGoods)
+        withInformation <- withNameOfGoods.set(ConfidentialInformationPage, "top secret")
+      } yield withInformation).success.value
 
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -129,7 +137,7 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, noNameOfGoods)(
           request,
           messages(application)
         ).toString

@@ -139,12 +139,19 @@ requiredInformation.error.selectAll = Check all check boxes to continue
 requiredInformation.change.hidden = RequiredInformation
 requiredInformation.caption = Starter checklist
 
-confidentialInformation.title = confidentialInformation
-confidentialInformation.heading = confidentialInformation
+confidentialInformation.title = What confidential information would you like to add about the {0}?
+confidentialInformation.heading = What confidential information would you like to add about the {0}?
+confidentialInformation.caption = About the goods
 confidentialInformation.checkYourAnswersLabel = confidentialInformation
-confidentialInformation.error.required = Enter confidentialInformation
+confidentialInformation.error.required = Enter the confidential information for your goods
 confidentialInformation.error.length = ConfidentialInformation must be 1000 characters or less
 confidentialInformation.change.hidden = ConfidentialInformation
+confidentialInformation.paragraph.1 = This information will not appear on the Advance Valuation Rulings website.
+confidentialInformation.paragraph.2 = You will be able to upload files later in the application.
+confidentialInformation.paragraph.3 = This may include:
+confidentialInformation.bulletPoint.1 = model numbers
+confidentialInformation.bulletPoint.2 = patent information
+
 
 describeTheGoods.title = describeTheGoods
 describeTheGoods.heading = describeTheGoods
