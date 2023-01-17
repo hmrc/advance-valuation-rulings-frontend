@@ -60,7 +60,7 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-nameOfGoods.title = About the goods
+nameOfGoods.title = What is the name of the goods?
 nameOfGoods.heading = What is the name of the goods?
 nameOfGoods.caption = About the goods
 nameOfGoods.hint = This could be a short description, for example, ‘silicone smartphone case’. 
@@ -280,8 +280,10 @@ isThisFileConfidential.error.required = Select yes if isThisFileConfidential
 isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
 isThisFileConfidential.change.hidden = IsThisFileConfidential
 
-uploadAnotherSupportingDocument.title = uploadAnotherSupportingDocument
-uploadAnotherSupportingDocument.heading = uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.title = You have uploaded {0} supporting document for the {1}
+uploadAnotherSupportingDocument.heading = You have uploaded {0} supporting document for the {1}
+uploadAnotherSupportingDocument.subHeading = Do you want to upload another supporting document?
+uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.error.required = Select yes if uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument

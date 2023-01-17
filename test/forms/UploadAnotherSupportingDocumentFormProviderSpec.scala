@@ -16,13 +16,14 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.BooleanFieldBehaviours
 
 class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "uploadAnotherSupportingDocument.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new UploadAnotherSupportingDocumentFormProvider()()
 

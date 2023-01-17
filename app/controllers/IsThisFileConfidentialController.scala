@@ -16,57 +16,61 @@
 
 package controllers
 
-import controllers.actions._
-import forms.IsThisFileConfidentialFormProvider
 import javax.inject.Inject
-import models.Mode
-import navigation.Navigator
-import pages.IsThisFileConfidentialPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IsThisFileConfidentialView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IsThisFileConfidentialController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
-                                         navigator: Navigator,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: IsThisFileConfidentialFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: IsThisFileConfidentialView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import controllers.actions._
+import forms.IsThisFileConfidentialFormProvider
+import models.Mode
+import navigation.Navigator
+import pages.IsThisFileConfidentialPage
+import repositories.SessionRepository
+import views.html.IsThisFileConfidentialView
+
+class IsThisFileConfidentialController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: IsThisFileConfidentialFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: IsThisFileConfidentialView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-
       val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
-        case None => form
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(IsThisFileConfidentialPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
-      )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <-
+                  Future.fromTry(request.userAnswers.set(IsThisFileConfidentialPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
+          )
+    }
 }

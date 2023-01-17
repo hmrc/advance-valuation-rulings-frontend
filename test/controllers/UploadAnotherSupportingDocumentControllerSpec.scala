@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models.{NormalMode, UserAnswers}
@@ -24,23 +31,21 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadAnotherSupportingDocumentPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.UploadAnotherSupportingDocumentView
-
-import scala.concurrent.Future
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new UploadAnotherSupportingDocumentFormProvider()
-  val form = formProvider()
+  val nameOfGoods = "No name of goods found"
+  val numOfDocs   = "one"
 
-  lazy val uploadAnotherSupportingDocumentRoute = routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode).url
+  val formProvider = new UploadAnotherSupportingDocumentFormProvider()
+  val form         = formProvider()
+
+  lazy val uploadAnotherSupportingDocumentRoute =
+    routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode).url
 
   "UploadAnotherSupportingDocument Controller" - {
 
@@ -56,13 +61,17 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(nameOfGoods, numOfDocs, form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(UploadAnotherSupportingDocumentPage, true).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(UploadAnotherSupportingDocumentPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +83,10 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(nameOfGoods, numOfDocs, form.fill(true), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +132,10 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(nameOfGoods, numOfDocs, boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

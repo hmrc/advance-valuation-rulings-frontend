@@ -16,27 +16,30 @@
 
 package viewmodels.checkAnswers
 
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
 import controllers.routes
 import models.{CheckMode, UserAnswers}
 import pages.UploadAnotherSupportingDocumentPage
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object UploadAnotherSupportingDocumentSummary  {
+object UploadAnotherSupportingDocumentSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(UploadAnotherSupportingDocumentPage).map {
       answer =>
-
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "uploadAnotherSupportingDocument.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key = "uploadAnotherSupportingDocument.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("uploadAnotherSupportingDocument.change.hidden"))
           )
         )

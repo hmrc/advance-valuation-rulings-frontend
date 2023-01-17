@@ -14,17 +14,50 @@
  * limitations under the License.
  *@
 
+@import components._
+@import models.NormalMode
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukSummaryList: GovukSummaryList,
+    caption: Caption,
+    heading: Heading,
+    cancelApplicationLink: CancelApplicationLink,
+    paragraph: Paragraph,
+    link: Link
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(nameOfGoods: String, numOfDocs: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("uploadAnotherSupportingDocument.title"))) {
+@removeLink = {
+    @link(
+            id = "remove-file",
+            text = "remove",
+            call = Call("GET", routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode).url)
+        )
+    }
+
+@layout(pageTitle = title(form, messages("uploadAnotherSupportingDocument.title", numOfDocs, nameOfGoods))) {
+
+    @caption(messages("uploadAnotherSupportingDocument.caption"))
+    @heading(messages("uploadAnotherSupportingDocument.heading", numOfDocs, nameOfGoods))
+
+    <table class="govuk-table">
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <td scope="row" class="govuk-table__cell">Filename</td>
+          <td class="govuk-table__cell">
+              @removeLink
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
 
     @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -35,7 +68,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("uploadAnotherSupportingDocument.heading")).asPageHeading()
+                legend = LegendViewModel(messages("uploadAnotherSupportingDocument.subHeading"))
             )
         )
 

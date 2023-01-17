@@ -46,9 +46,9 @@ class HasConfidentialInformationController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
-  
+
   private val noNameOfGoodsFound = "No name of goods found"
-  val form = formProvider()
+  val form                       = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>

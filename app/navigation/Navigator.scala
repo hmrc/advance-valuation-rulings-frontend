@@ -49,7 +49,7 @@ class Navigator @Inject() () {
     case DoYouWantToUploadDocumentsPage => doYouWantToUploadDocumentsPage
     case IsThisFileConfidentialPage     => isThisFileConfidentialPage
 
-    case _                              => _ => routes.IndexController.onPageLoad
+    case _ => _ => routes.IndexController.onPageLoad
   }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
@@ -119,14 +119,14 @@ class Navigator @Inject() () {
 
   private def doYouWantToUploadDocumentsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
-      case None    => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
+      case None        => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
       case Some(true)  => UploadSupportingDocumentsController.onPageLoad()
       case Some(false) => routes.IndexController.onPageLoad
     }
-  private def isThisFileConfidentialPage(userAnswers: UserAnswers): Call =
+  private def isThisFileConfidentialPage(userAnswers: UserAnswers): Call     =
     userAnswers.get(IsThisFileConfidentialPage) match {
       case None    => IsThisFileConfidentialController.onPageLoad(models.NormalMode)
-      case Some(_)  => UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
+      case Some(_) => UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
     }
 
   private def commodityCodePage(userAnswers: UserAnswers): Call =
