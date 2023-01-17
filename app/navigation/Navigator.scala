@@ -106,7 +106,7 @@ class Navigator @Inject() () {
     userAnswers.get(HasConfidentialInformationPage) match {
       case None        => HasConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(true)  => ConfidentialInformationController.onPageLoad(models.NormalMode)
-      case Some(false) => routes.IndexController.onPageLoad
+      case Some(false) => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
     }
 
   private def confidentialInformationPage(userAnswers: UserAnswers): Call =
