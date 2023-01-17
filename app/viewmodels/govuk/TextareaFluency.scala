@@ -16,60 +16,60 @@
 
 package viewmodels.govuk
 
- import play.api.data.Field
- import play.api.i18n.Messages
- import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
- import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
- import uk.gov.hmrc.govukfrontend.views.viewmodels.textarea.Textarea
+import play.api.data.Field
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
+import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
+import uk.gov.hmrc.govukfrontend.views.viewmodels.textarea.Textarea
 
- import viewmodels.ErrorMessageAwareness
+import viewmodels.ErrorMessageAwareness
 
- object textarea extends TextareaFluency
+object textarea extends TextareaFluency
 
- trait TextareaFluency {
+trait TextareaFluency {
 
-   object TextareaViewModel extends ErrorMessageAwareness {
+  object TextareaViewModel extends ErrorMessageAwareness {
 
-     def apply(
-       field: Field,
-       label: Label
-     )(implicit messages: Messages): Textarea =
-       Textarea(
-         id = field.id,
-         name = field.name,
-         value = field.value,
-         label = label,
-         errorMessage = errorMessage(field)
-       )
-   }
+    def apply(
+      field: Field,
+      label: Label
+    )(implicit messages: Messages): Textarea =
+      Textarea(
+        id = field.id,
+        name = field.name,
+        value = field.value,
+        label = label,
+        errorMessage = errorMessage(field)
+      )
+  }
 
-   implicit class FluentTextarea(textarea: Textarea) {
+  implicit class FluentTextarea(textarea: Textarea) {
 
-     def withId(id: String): Textarea =
-       textarea copy (id = id)
+    def withId(id: String): Textarea =
+      textarea copy (id = id)
 
-     def describedBy(value: String): Textarea =
-       textarea copy (describedBy = Some(value))
+    def describedBy(value: String): Textarea =
+      textarea copy (describedBy = Some(value))
 
-     def withHint(hint: Hint): Textarea =
-       textarea copy (hint = Some(hint))
+    def withHint(hint: Hint): Textarea =
+      textarea copy (hint = Some(hint))
 
-     def withFormGroupClasses(classes: String): Textarea =
-       textarea copy (formGroupClasses = classes)
+    def withFormGroupClasses(classes: String): Textarea =
+      textarea copy (formGroupClasses = classes)
 
-     def withCssClass(newClass: String): Textarea =
-       textarea copy (classes = s"${textarea.classes} $newClass")
+    def withCssClass(newClass: String): Textarea =
+      textarea copy (classes = s"${textarea.classes} $newClass")
 
-     def withAutocomplete(value: String): Textarea =
-       textarea copy (autocomplete = Some(value))
+    def withAutocomplete(value: String): Textarea =
+      textarea copy (autocomplete = Some(value))
 
-     def withAttribute(attribute: (String, String)): Textarea =
-       textarea copy (attributes = textarea.attributes + attribute)
+    def withAttribute(attribute: (String, String)): Textarea =
+      textarea copy (attributes = textarea.attributes + attribute)
 
-     def withSpellcheck(on: Boolean = true): Textarea =
-       textarea copy (spellcheck = Some(on))
+    def withSpellcheck(on: Boolean = true): Textarea =
+      textarea copy (spellcheck = Some(on))
 
-     def withSize(size: String): Textarea =
-       textarea.withCssClass(size)
-   }
- }
+    def withSize(size: String): Textarea =
+      textarea.withCssClass(size)
+  }
+}
