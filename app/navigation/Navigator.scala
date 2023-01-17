@@ -117,7 +117,7 @@ class Navigator @Inject() () {
 
   private def doYouWantToUploadDocumentsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
-      case None    => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
+      case None        => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
       case Some(true)  => routes.IndexController.onPageLoad
       case Some(false) => routes.IndexController.onPageLoad
     }

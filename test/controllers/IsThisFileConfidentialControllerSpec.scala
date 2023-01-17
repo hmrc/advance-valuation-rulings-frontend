@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
 import models.{NormalMode, UserAnswers}
@@ -24,23 +31,18 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.IsThisFileConfidentialPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.IsThisFileConfidentialView
-
-import scala.concurrent.Future
 
 class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new IsThisFileConfidentialFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val isThisFileConfidentialRoute = routes.IsThisFileConfidentialController.onPageLoad(NormalMode).url
+  lazy val isThisFileConfidentialRoute =
+    routes.IsThisFileConfidentialController.onPageLoad(NormalMode).url
 
   "IsThisFileConfidential Controller" - {
 
@@ -56,13 +58,17 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[IsThisFileConfidentialView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(IsThisFileConfidentialPage, true).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(IsThisFileConfidentialPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +80,10 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +129,10 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
