@@ -125,7 +125,7 @@ class Navigator @Inject() () {
   private def commodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
       case None    => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(_) => PriceOfGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
