@@ -50,7 +50,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val nameOfGoods = request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
+      val nameOfGoods = request.userAnswers.getOrElse(NameOfGoodsPage, "No name of goods found")
 
       val preparedForm = request.userAnswers.get(UploadAnotherSupportingDocumentPage) match {
         case None        => form
