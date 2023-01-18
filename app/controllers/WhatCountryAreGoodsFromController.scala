@@ -19,8 +19,10 @@ package controllers
 import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.io.Source
 
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -58,7 +60,7 @@ class WhatCountryAreGoodsFromController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode, WhatCountryAreGoodsFromController.countries))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
@@ -66,7 +68,10 @@ class WhatCountryAreGoodsFromController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors =>
+            Future.successful(
+              BadRequest(view(formWithErrors, mode, WhatCountryAreGoodsFromController.countries))
+            ),
           value =>
             for {
               updatedAnswers <- Future.fromTry(
@@ -78,4 +83,29 @@ class WhatCountryAreGoodsFromController @Inject() (
             } yield Redirect(navigator.nextPage(WhatCountryAreGoodsFromPage, mode, updatedAnswers))
         )
   }
+}
+
+object WhatCountryAreGoodsFromController {
+  lazy val countriesString = Source
+    .fromURL(getClass.getResource("/location-canonical-list.json"))
+    .mkString
+    .replaceAll("\n", "")
+
+  // println("#####")
+  // println(countriesString)
+  // println("#####")
+
+  lazy val countries       = Json
+    .parse(countriesString)
+    .as[Seq[Seq[String]]]
+    .map { v => 
+      println(s"v: $v")
+      v match {
+      case Seq(first, second) => 
+        Some(first -> second)
+      case _                  => 
+        None
+    }
+    }
+    .flatten
 }

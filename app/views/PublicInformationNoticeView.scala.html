@@ -18,7 +18,7 @@
 @import config.FrontendAppConfig
 
 @this(
-    layout: templates.Layout,
+    layout: templates.NewLayout,
     govukButton: GovukButton,
     formHelper: FormWithCSRF,
     cancelApplicationLink: CancelApplicationLink,
@@ -37,7 +37,9 @@
         )
     }
 
-@layout(pageTitle = titleNoForm(messages("publicInformationNotice.title"))) {
+@layout(
+    pageTitle = titleNoForm(messages("publicInformationNotice.title"))
+    ) {
     <h1 class="govuk-heading-xl">@messages("publicInformationNotice.heading")</h1>
 
     @formHelper(action = routes.ContactPageController.onPageLoad()) {

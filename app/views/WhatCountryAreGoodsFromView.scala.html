@@ -22,31 +22,21 @@
 @import views.html.helper.CSPNonce
 
 @this(
-    layout: HmrcLayout,
+    layout: templates.NewLayout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
     autoComplete: AutoComplete,
-    govukSelect: GovukSelect,
-    autocompleteCss : HmrcAccessibleAutocompleteCss,
-    autocompleteJavascript : HmrcAccessibleAutocompleteJavascript
+    govukSelect: GovukSelect
 )
 
-@(form: Form[_], mode: Mode, countries: Seq[(String, String)] = Seq("United Kingdom" -> "country:GB"))(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, countries: Seq[(String, String)])(implicit request: Request[_], messages: Messages)
 
-@scriptElems = {
-    @autocompleteJavascript(CSPNonce.get)
-
-}
-
-
-
-@ourLayout = {@layout(pageTitle = title(form, messages("whatCountryAreGoodsFrom.title"),
-stylesheetsBlock= Some(autocompleteCss(CSPNonce.get)),
-scriptsBlock = Some(scriptElems))}
-
-@HmrcLayout(ourLayout){
+@layout(
+    pageTitle = title(form, messages("whatCountryAreGoodsFrom.title")), 
+    autoCompleteEnabled=true
+    ){
 
 
     @formHelper(action = routes.WhatCountryAreGoodsFromController.onSubmit(mode)) {
@@ -61,15 +51,16 @@ scriptsBlock = Some(scriptElems))}
             id = "countryId",
             name = "countryId",
             errorMessage = form("countryId").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
-            items = Seq(SelectItem(text="", attributes=Map("label" -> messages("country.select")))) ++ countries.map{ c =>
-                    SelectItem(
-                        value = Some(c._2),
-                        text = c._1,
-                        selected = false
+            items = {
+                countries.map {
+                    case (name, code) => SelectItem(
+                        value = Some(code),
+                        text = name
                     )
-                },
+                }
+            },
             label = Label(
-                content = Text(messages("incomeFromOverseasPensions.pensionOverseasIncomeCountry.subheading")),
+                content = Text(messages("whatCountryAreGoodsFrom.heading")),
                 classes = "govuk-label govuk-label--m"
             )
             //TODO: County Code is not to prefilled on returning to the page due to GDS autocomplete bug which forces a change to the defaulted prefill value
@@ -77,7 +68,7 @@ scriptsBlock = Some(scriptElems))}
             AccessibleAutocomplete(
                 showAllValues = false,
                 autoSelect = true)
-        )
+            )
         ))
 
         @govukButton(
