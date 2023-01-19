@@ -18,32 +18,25 @@
 
 @()
 
-<script src='@controllers.routes.Assets.versioned("javascripts/jquery-3.6.0.min.js")'></script>
-<script src='@controllers.routes.Assets.versioned("javascripts/location-autocomplete.min.js")'></script>
-<script src='@controllers.routes.Assets.versioned("javascripts/autocomplete.js")'></script>
-
 @*
 Taken from address-lookup-frontend.
 Kept the comment about override the onConfirm function because it is still relevant.
 Comments are not rendered in browser.
 *@
+<script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/location-autocomplete.min.js")'></script>
 <script>
         openregisterLocationPicker({
             additionalSynonyms: [
                 { name: 'NI', code: 'country:GB' }
             ],
-            selectElement: document.getElementById("countryCode"),
+            selectElement: document.getElementById('location-autocomplete'),
             name: 'countryAutocomplete',
             defaultValue: '',
             url: '@controllers.routes.Assets.versioned("/json/location-autocomplete-graph.json")',
-            @*
-              TF-640: Had to override the onConfirm function to include custom validation for countries because null / undefined values are not handled by the Autocomplete form:
-              https://github.com/alphagov/accessible-autocomplete/issues/260
-              When this is fixed the custom validation / onConfirm bypass can be removed
-            *@
+
             onConfirm: () => {
                 const matchingOption = Array.from(document.querySelectorAll("#countryCode-select > option")).find(function (c) {
-                    return c.text === document.getElementById("countryCode").value;
+                    return c.text === document.getElementById("countryId").value;
                 });
                 const countryCode = matchingOption ? matchingOption.value : undefined;
                 document.getElementById("countryCode-select").value = countryCode;

@@ -14,12 +14,7 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components._
-@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcAccessibleAutocompleteCss, HmrcAccessibleAutocompleteJavascript}
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
-@import views.html.helper.CSPNonce
 
 @this(
     layout: templates.NewLayout,
@@ -27,11 +22,11 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
-    autoComplete: AutoComplete,
-    govukSelect: GovukSelect
+    govukSelect: GovukSelect,
+    countrySelect: CountrySelect
 )
 
-@(form: Form[_], mode: Mode, countries: Seq[(String, String)])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("whatCountryAreGoodsFrom.title")), 
@@ -45,31 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-
- @govukSelect(
-        Select(
-            id = "countryId",
-            name = "countryId",
-            errorMessage = form("countryId").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
-            items = {
-                countries.map {
-                    case (name, code) => SelectItem(
-                        value = Some(code),
-                        text = name
-                    )
-                }
-            },
-            label = Label(
-                content = Text(messages("whatCountryAreGoodsFrom.heading")),
-                classes = "govuk-label govuk-label--m"
-            )
-            //TODO: County Code is not to prefilled on returning to the page due to GDS autocomplete bug which forces a change to the defaulted prefill value
-        ).asAccessibleAutocomplete(Some(
-            AccessibleAutocomplete(
-                showAllValues = false,
-                autoSelect = true)
-            )
-        ))
+        @countrySelect(form)
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

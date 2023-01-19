@@ -16,18 +16,15 @@
 
  @import uk.gov.hmrc.hmrcfrontend.views.config.StandardAlphaBanner
  @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
- @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteCss
- @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteJavascript
  @import views.html.helper.CSPNonce
  @import config.FrontendAppConfig
  @import controllers.routes
+  @import views.html.components._
  
  @this(
     appConfig: FrontendAppConfig,
     hmrcLayout: HmrcLayout, 
-    standardAlphaBanner: StandardAlphaBanner, 
-    autocompleteCss: HmrcAccessibleAutocompleteCss, 
-    autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
+    standardAlphaBanner: StandardAlphaBanner
 )
  
  @(
@@ -36,13 +33,9 @@
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
  
 @additionalScripts = {
-    <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
-
-    @if(autoCompleteEnabled) {
-        @autocompleteJavascript(CSPNonce.get)
+      @if(autoCompleteEnabled) {
     }
 }
-
 
  @hmrcLayout(
    pageTitle = Some(pageTitle),
@@ -53,6 +46,6 @@
    nonce = CSPNonce.get,
    backLinkUrl = Some("#"),
    additionalScriptsBlock = Some(additionalScripts),
-   additionalHeadBlock = {if(autoCompleteEnabled) { Some(autocompleteCss(CSPNonce.get)) } else None},
+   additionalHeadBlock = None,
  )(contentBlock)
  
