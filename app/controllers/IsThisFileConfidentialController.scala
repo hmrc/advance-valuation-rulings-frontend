@@ -25,23 +25,23 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import forms.ConfidentialInformationFormProvider
+import forms.IsThisFileConfidentialFormProvider
 import models.Mode
 import navigation.Navigator
-import pages.{ConfidentialInformationPage, NameOfGoodsPage}
+import pages.IsThisFileConfidentialPage
 import repositories.SessionRepository
-import views.html.ConfidentialInformationView
+import views.html.IsThisFileConfidentialView
 
-class ConfidentialInformationController @Inject() (
+class IsThisFileConfidentialController @Inject() (
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: ConfidentialInformationFormProvider,
+  formProvider: IsThisFileConfidentialFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: ConfidentialInformationView
+  view: IsThisFileConfidentialView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -50,33 +50,27 @@ class ConfidentialInformationController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val nameOfGoods  = request.userAnswers.getOrElse(NameOfGoodsPage, "No name of goods found")
-      val preparedForm = request.userAnswers.get(ConfidentialInformationPage) match {
+      val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, nameOfGoods))
+      Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        val nameOfGoods = request.userAnswers.getOrElse(NameOfGoodsPage, "No name of goods found")
-
         form
           .bindFromRequest()
           .fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, mode, nameOfGoods))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
                 updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(ConfidentialInformationPage, value))
+                  Future.fromTry(request.userAnswers.set(IsThisFileConfidentialPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers)
-              )
+              } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
           )
     }
 }

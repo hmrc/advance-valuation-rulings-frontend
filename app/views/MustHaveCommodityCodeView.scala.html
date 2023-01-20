@@ -61,11 +61,11 @@
 
    @heading(messages("mustHaveCommodityCode.heading"))
 
-@formHelper(action = Call("GET", "https://www.gov.uk/trade-tariff")) {
-@govukButton(
-            ButtonViewModel(messages("Find your commodity code"))
-        )
-}
+    <a href="https://www.gov.uk/trade-tariff" target="_blank">
+        <button class="govuk-button" data-module="govuk-button" >
+            Find your commodity code
+        </button>
+    </a>
 
     <h2 class="govuk-heading-m">@messages("mustHaveCommodityCode.subHeading")</h2>
 

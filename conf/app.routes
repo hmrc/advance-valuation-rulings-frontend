@@ -104,3 +104,25 @@ GET        /changeApplicationContactDetails                  controllers.Applica
 POST       /changeApplicationContactDetails                  controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /eoriBeUpToDate                       controllers.EORIBeUpToDateController.onPageLoad()
+
+GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
+POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
+
+GET        /doYouWantToUploadDocuments                        controllers.DoYouWantToUploadDocumentsController.onPageLoad(mode: Mode = NormalMode)
+POST       /doYouWantToUploadDocuments                        controllers.DoYouWantToUploadDocumentsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDoYouWantToUploadDocuments                  controllers.DoYouWantToUploadDocumentsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDoYouWantToUploadDocuments                  controllers.DoYouWantToUploadDocumentsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /isThisFileConfidential                        controllers.IsThisFileConfidentialController.onPageLoad(mode: Mode = NormalMode)
+POST       /isThisFileConfidential                        controllers.IsThisFileConfidentialController.onSubmit(mode: Mode = NormalMode)
+GET        /changeIsThisFileConfidential                  controllers.IsThisFileConfidentialController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeIsThisFileConfidential                  controllers.IsThisFileConfidentialController.onSubmit(mode: Mode = CheckMode)
+
+GET        /uploadAnotherSupportingDocument                        controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = NormalMode)
+POST       /uploadAnotherSupportingDocument                        controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = NormalMode)
+GET        /changeUploadAnotherSupportingDocument                  controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeUploadAnotherSupportingDocument                  controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = CheckMode)
+
+GET        /uploadSupportingDocuments                       controllers.UploadSupportingDocumentsController.onPageLoad()

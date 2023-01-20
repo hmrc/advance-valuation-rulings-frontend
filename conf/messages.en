@@ -138,12 +138,19 @@ requiredInformation.error.selectAll = Check all check boxes to continue
 requiredInformation.change.hidden = RequiredInformation
 requiredInformation.caption = Starter checklist
 
-confidentialInformation.title = confidentialInformation
-confidentialInformation.heading = confidentialInformation
+confidentialInformation.title = What confidential information would you like to add about the {0}?
+confidentialInformation.heading = What confidential information would you like to add about the {0}?
+confidentialInformation.caption = About the goods
 confidentialInformation.checkYourAnswersLabel = confidentialInformation
-confidentialInformation.error.required = Enter confidentialInformation
+confidentialInformation.error.required = Enter the confidential information for your goods
 confidentialInformation.error.length = ConfidentialInformation must be 1000 characters or less
 confidentialInformation.change.hidden = ConfidentialInformation
+confidentialInformation.paragraph.1 = This information will not appear on the Advance Valuation Rulings website.
+confidentialInformation.paragraph.2 = You will be able to upload files later in the application.
+confidentialInformation.paragraph.3 = This may include:
+confidentialInformation.bulletPoint.1 = model numbers
+confidentialInformation.bulletPoint.2 = patent information
+
 
 describeTheGoods.title = How would you describe the {0}?
 describeTheGoods.heading = How would you describe the {0}?
@@ -161,10 +168,13 @@ describeTheGoods.error.length = DescribeTheGoods must be 1000 characters or less
 describeTheGoods.checkYourAnswersLabel = describeTheGoods
 describeTheGoods.change.hidden = DescribeTheGoods
 
-hasConfidentialInformation.title = hasConfidentialInformation
-hasConfidentialInformation.heading = hasConfidentialInformation
+hasConfidentialInformation.title = Do you want to add any confidential information about the {0}?
+hasConfidentialInformation.heading = Do you want to add any confidential information about the {0}?
+hasConfidentialInformation.caption = About the goods
+hasConfidentialInformation.paragraph.1 = You could mark the file as confidential if it includes business-sensitive information, for example model numbers or patent details.
+hasConfidentialInformation.paragraph.2 = Files marked as confidential will not appear on the Advance Valuation Rulings website.
 hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
-hasConfidentialInformation.error.required = Select yes if hasConfidentialInformation
+hasConfidentialInformation.error.required = Select Yes if you like to provide any confidential information
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
 
 howAreTheGoodsMade.title = How are the {0} made?
@@ -270,3 +280,32 @@ eoriBeUpToDate.bulletPoint.1.link = Fill in an enquiry form
 eoriBeUpToDate.bulletPoint.1 = {0}
 eoriBeUpToDate.bulletPoint.2.link = import and export: general enquiries
 eoriBeUpToDate.bulletPoint.2 = Contacts {0}
+
+doYouWantToUploadDocuments.title = Do you want to upload any supporting documents?
+doYouWantToUploadDocuments.heading = Do you want to upload any supporting documents?
+doYouWantToUploadDocuments.caption = About the goods
+doYouWantToUploadDocuments.para = You can provide us with the following documents to support your application:
+doYouWantToUploadDocuments.bulletPoint.1 = ingredients lists for food and drink goods
+doYouWantToUploadDocuments.bulletPoint.2 = technical specifications
+doYouWantToUploadDocuments.bulletPoint.3 = lists of materials
+doYouWantToUploadDocuments.bulletPoint.4 = images of the goods
+doYouWantToUploadDocuments.bulletPoint.5 = images of packaging
+doYouWantToUploadDocuments.checkYourAnswersLabel = doYouWantToUploadDocuments
+doYouWantToUploadDocuments.error.required = Select yes if doYouWantToUploadDocuments
+doYouWantToUploadDocuments.change.hidden = DoYouWantToUploadDocuments
+
+isThisFileConfidential.title = isThisFileConfidential
+isThisFileConfidential.heading = isThisFileConfidential
+isThisFileConfidential.caption = About the goods
+isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
+isThisFileConfidential.error.required = Select yes if isThisFileConfidential
+isThisFileConfidential.change.hidden = IsThisFileConfidential
+
+uploadAnotherSupportingDocument.title = uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.heading = uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.error.required = Select yes if uploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
+
+uploadSupportingDocuments.title = uploadSupportingDocuments
+uploadSupportingDocuments.heading = uploadSupportingDocuments

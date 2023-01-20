@@ -14,11 +14,14 @@
  * limitations under the License.
  *@
 
-@this()
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton
+)
 
- @(content: Html, classes: String = "govuk-inset-text", id: Option[String] = None)
+@()(implicit request: Request[_], messages: Messages)
 
+@layout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title"))) {
 
-<div class="@classes" @id.map{id=> id="@id"}>
-    @content
-</div>
+    <h1 class="govuk-heading-xl">@messages("uploadSupportingDocuments.heading")</h1>
+}

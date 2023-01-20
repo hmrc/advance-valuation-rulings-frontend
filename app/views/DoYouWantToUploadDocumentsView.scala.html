@@ -23,22 +23,31 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     caption: Caption,
+    list: BulletList,
+    para: Paragraph,
     heading: Heading,
-    cancelApplicationLink: CancelApplicationLink,
-    paragraph: Paragraph
+    cancelLink: CancelApplicationLink
 )
 
-@(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("hasConfidentialInformation.title", nameOfGoods))) {
+@layout(pageTitle = title(form, messages("doYouWantToUploadDocuments.title"))) {
 
-    @caption(messages("hasConfidentialInformation.caption"))
-    @heading(messages("hasConfidentialInformation.heading", nameOfGoods))
+    @formHelper(action = routes.DoYouWantToUploadDocumentsController.onSubmit(mode), 'autoComplete -> "off") {
 
-    @paragraph(Html(messages("hasConfidentialInformation.paragraph.1")))
-    @paragraph(Html(messages("hasConfidentialInformation.paragraph.2")))
-
-    @formHelper(action = routes.HasConfidentialInformationController.onSubmit(mode), 'autoComplete -> "off") {
+        @caption(messages("doYouWantToUploadDocuments.caption"))
+        @heading(messages("doYouWantToUploadDocuments.heading"))
+        @para(Html(messages("doYouWantToUploadDocuments.para")))
+        @list(
+            Seq(
+                Html(messages("doYouWantToUploadDocuments.bulletPoint.1")),
+                Html(messages("doYouWantToUploadDocuments.bulletPoint.2")),
+                Html(messages("doYouWantToUploadDocuments.bulletPoint.3")),
+                Html(messages("doYouWantToUploadDocuments.bulletPoint.4")),
+                Html(messages("doYouWantToUploadDocuments.bulletPoint.5"))
+            ),
+        "govuk-list govuk-list--bullet",
+)
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -55,6 +64,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
-
-    @cancelApplicationLink()
+    @cancelLink()
 }

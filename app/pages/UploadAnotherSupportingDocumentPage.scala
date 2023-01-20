@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package pages
 
- @(content: Html, classes: String = "govuk-inset-text", id: Option[String] = None)
+import play.api.libs.json.JsPath
 
+case object UploadAnotherSupportingDocumentPage extends QuestionPage[Boolean] {
 
-<div class="@classes" @id.map{id=> id="@id"}>
-    @content
-</div>
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "uploadAnotherSupportingDocument"
+}

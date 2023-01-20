@@ -46,6 +46,7 @@ class Navigator @Inject() () {
     case RequiredInformationPage        => requiredInformationPage
     case CheckRegisteredDetailsPage     => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage  => applicationContactDetailsPage
+    case DoYouWantToUploadDocumentsPage => doYouWantToUploadDocumentsPage
     case _                              => _ => routes.IndexController.onPageLoad
   }
 
@@ -73,7 +74,7 @@ class Navigator @Inject() () {
     }
 
   private def commodityCodePage(userAnswers: UserAnswers): Call =
-    userAnswers.get(HasCommodityCodePage) match {
+    userAnswers.get(CommodityCodePage) match {
       case None    => CommodityCodeController.onPageLoad(models.NormalMode)
       case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
     }
@@ -82,7 +83,7 @@ class Navigator @Inject() () {
   private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(PriceOfGoodsPage) match {
       case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
-      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
+      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
     }
 
   private def whatCountryAreGoodsFromPage(userAnswers: UserAnswers): Call =
@@ -112,13 +113,20 @@ class Navigator @Inject() () {
     userAnswers.get(HasConfidentialInformationPage) match {
       case None        => HasConfidentialInformationController.onPageLoad(models.NormalMode)
       case Some(true)  => ConfidentialInformationController.onPageLoad(models.NormalMode)
-      case Some(false) => routes.IndexController.onPageLoad
+      case Some(false) => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
     }
 
   private def confidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ConfidentialInformationPage) match {
       case None    => ConfidentialInformationController.onPageLoad(models.NormalMode)
-      case Some(_) => routes.IndexController.onPageLoad
+      case Some(_) => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
+    }
+
+  private def doYouWantToUploadDocumentsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(DoYouWantToUploadDocumentsPage) match {
+      case None        => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
+      case Some(true)  => routes.IndexController.onPageLoad
+      case Some(false) => routes.IndexController.onPageLoad
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =

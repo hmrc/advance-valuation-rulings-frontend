@@ -25,6 +25,33 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryUploadAnotherSupportingDocumentUserAnswersEntry
+    : Arbitrary[(UploadAnotherSupportingDocumentPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[UploadAnotherSupportingDocumentPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryIsThisFileConfidentialUserAnswersEntry
+    : Arbitrary[(IsThisFileConfidentialPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[IsThisFileConfidentialPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryDoYouWantToUploadDocumentsUserAnswersEntry
+    : Arbitrary[(DoYouWantToUploadDocumentsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[DoYouWantToUploadDocumentsPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryApplicationContactDetailsUserAnswersEntry
     : Arbitrary[(ApplicationContactDetailsPage.type, JsValue)] =
     Arbitrary {
