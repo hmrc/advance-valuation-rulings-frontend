@@ -30,7 +30,7 @@ class WhatCountryAreGoodsFromFormProviderSpec extends StringFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName = "answer"
 
     behave like fieldThatBindsValidData(
       form,

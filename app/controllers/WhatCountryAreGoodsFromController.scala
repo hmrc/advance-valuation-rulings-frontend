@@ -55,7 +55,7 @@ class WhatCountryAreGoodsFromController @Inject() (
           .getOrElse(UserAnswers(request.userId))
           .get(WhatCountryAreGoodsFromPage) match {
           case None        => form
-          case Some(value) => form.fill(value)
+          case Some(answer) => form.fill(answer)
         }
 
       Ok(view(preparedForm, mode))
@@ -70,12 +70,12 @@ class WhatCountryAreGoodsFromController @Inject() (
             Future.successful(
               BadRequest(view(formWithErrors, mode))
             ),
-          value =>
+          answer =>
             for {
               updatedAnswers <- Future.fromTry(
                                   request.userAnswers
                                     .getOrElse(UserAnswers(request.userId))
-                                    .set(WhatCountryAreGoodsFromPage, value)
+                                    .set(WhatCountryAreGoodsFromPage, answer)
                                 )
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(WhatCountryAreGoodsFromPage, mode, updatedAnswers))

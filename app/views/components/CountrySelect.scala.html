@@ -22,7 +22,7 @@
  @govukSelect(
   Select(
       id = "countryId",
-      name = "countryId",
+      name = "answer",
       errorMessage = form("countryId").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
       items = {
         SelectItem(
