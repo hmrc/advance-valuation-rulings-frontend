@@ -14,36 +14,66 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
+@import components._
+@import config.FrontendAppConfig
+@import views.html.helper.CSPNonce
 
 @this(
-    layout: templates.Layout,
+    layout: templates.NewLayout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukSelect: GovukSelect,
+    countrySelect: CountrySelect,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    link: Link,
+    cancelApplicationLink: CancelApplicationLink,
+    config: FrontendAppConfig
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whatCountryAreGoodsFrom.title"))) {
+@additionalHeadBlock = {
+    <link href='@routes.Assets.versioned("stylesheets/location-autocomplete.min.css")' media="all" rel="stylesheet" type="text/css"@CSPNonce.get.map {n=> nonce="@n"} />
+  }
+
+@tradeSanctionsInformationLink = {
+    @link(
+            id = "trade_sanctions_information_link",
+            text = messages("whatCountryAreGoodsFrom.link"),
+            call = Call("GET", config.tradeSanctionsInformationUrl)
+        )
+}
+  
+@layout(
+    pageTitle = title(form, messages("whatCountryAreGoodsFrom.title")), 
+    autoCompleteEnabled=true,
+    additionalHeadBlock=Some(additionalHeadBlock)
+    ){
+
+    @caption(messages("whatCountryAreGoodsFrom.caption"))
+
+    @heading(messages("whatCountryAreGoodsFrom.heading", nameOfGoods))
+
+    @if(form.errors.nonEmpty) {
+    @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
+    @paragraph(content = Html(messages("whatCountryAreGoodsFrom.paragraph", tradeSanctionsInformationLink)))
 
     @formHelper(action = routes.WhatCountryAreGoodsFromController.onSubmit(mode)) {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
-
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("whatCountryAreGoodsFrom.heading")).asPageHeading()
-            )
-            .withWidth(Full)
-        )
+        @countrySelect(form)
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
+
     }
+    @cancelApplicationLink()
 }
+
+

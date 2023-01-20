@@ -26,9 +26,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.AreGoodsShippedDirectlyFormProvider
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
-import pages.AreGoodsShippedDirectlyPage
+import pages.{AreGoodsShippedDirectlyPage, NameOfGoodsPage}
 import repositories.SessionRepository
 import views.html.AreGoodsShippedDirectlyView
 
@@ -48,34 +48,39 @@ class AreGoodsShippedDirectlyController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      val nameOfGoods = request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
+
       val preparedForm =
-        request.userAnswers
-          .getOrElse(UserAnswers(request.userId))
-          .get(AreGoodsShippedDirectlyPage) match {
+        request.userAnswers.get(AreGoodsShippedDirectlyPage) match {
           case None        => form
           case Some(value) => form.fill(value)
         }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(nameOfGoods, preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers
-                                    .getOrElse(UserAnswers(request.userId))
-                                    .set(AreGoodsShippedDirectlyPage, value)
-                                )
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(AreGoodsShippedDirectlyPage, mode, updatedAnswers))
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        val nameOfGoods =
+          request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
+
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(nameOfGoods, formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(
+                                    request.userAnswers.set(AreGoodsShippedDirectlyPage, value)
+                                  )
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(
+                navigator.nextPage(AreGoodsShippedDirectlyPage, mode, updatedAnswers)
+              )
+          )
+    }
 }

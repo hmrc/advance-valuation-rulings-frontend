@@ -1,0 +1,45 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this()
+
+@()
+
+@*
+Taken from address-lookup-frontend.
+Kept the comment about override the onConfirm function because it is still relevant.
+Comments are not rendered in browser.
+*@
+<script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/location-autocomplete.min.js")'></script>
+<script>
+        openregisterLocationPicker({
+            additionalSynonyms: [
+                { name: 'NI', code: 'country:GB' }
+            ],
+            selectElement: document.getElementById('countryId'),
+            name: 'countryId',
+            defaultValue: '',
+            url: '@controllers.routes.Assets.versioned("/json/location-autocomplete-graph.json")',
+
+            onConfirm: () => {
+                const matchingOption = Array.from(document.querySelectorAll("#countryId-select > option")).find(function (c) {
+                    return c.text === document.getElementById("countryId").value;
+                });
+                const countryCode = matchingOption ? matchingOption.value : undefined;
+                document.getElementById("countryId-select").value = countryCode;
+            }
+        })
+</script>

@@ -153,11 +153,20 @@ confidentialInformation.bulletPoint.1 = model numbers
 confidentialInformation.bulletPoint.2 = patent information
 
 
-describeTheGoods.title = describeTheGoods
-describeTheGoods.heading = describeTheGoods
-describeTheGoods.checkYourAnswersLabel = describeTheGoods
-describeTheGoods.error.required = Enter describeTheGoods
+describeTheGoods.title = How would you describe the {0}?
+describeTheGoods.heading = How would you describe the {0}?
+describeTheGoods.caption = About the goods
+describeTheGoods.para.1 = This information may appear on the Advance Valuation Rulings website.
+describeTheGoods.para.2 = The more detailed the description is, the faster we will be able to process your application.
+describeTheGoods.para.3 = The description can include details such as:
+describeTheGoods.list.1 = what it is
+describeTheGoods.list.2 = what it is used for
+describeTheGoods.list.3 = how it works
+describeTheGoods.list.4 = how it is packaged
+describeTheGoods.insetText = You will be able to add confidential information and upload files later in the application.
+describeTheGoods.error.required = Provide detailed description of goods
 describeTheGoods.error.length = DescribeTheGoods must be 1000 characters or less
+describeTheGoods.checkYourAnswersLabel = describeTheGoods
 describeTheGoods.change.hidden = DescribeTheGoods
 
 hasConfidentialInformation.title = Do you want to add any confidential information about the {0}?
@@ -169,11 +178,19 @@ hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
 hasConfidentialInformation.error.required = Select Yes if you like to provide any confidential information
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
 
-howAreTheGoodsMade.title = howAreTheGoodsMade
-howAreTheGoodsMade.heading = howAreTheGoodsMade
+howAreTheGoodsMade.title = How are the {0} made?
+howAreTheGoodsMade.heading = How are the {0} made?
+howAreTheGoodsMade.caption = About the goods
+howAreTheGoodsMade.para.1 = This information may appear on the Advance Valuation Rulings website.
+howAreTheGoodsMade.para.2 = The more detailed the description is, the faster we will be able to process your application
+howAreTheGoodsMade.para.3 = The description can include details such as:
+howAreTheGoodsMade.insetText = You will be able to add confidential information and upload files later in the application.
+howAreTheGoodsMade.list.1 = what the goods are made from (the materials used in their manufacture)
+howAreTheGoodsMade.list.2 = how they are made
+howAreTheGoodsMade.list.3 = the stages of processing involved in their manufacture
+howAreTheGoodsMade.error.required = Provide details of how the goods are made
+howAreTheGoodsMade.error.length = Details must be 1000 characters or less
 howAreTheGoodsMade.checkYourAnswersLabel = howAreTheGoodsMade
-howAreTheGoodsMade.error.required = Enter howAreTheGoodsMade
-howAreTheGoodsMade.error.length = HowAreTheGoodsMade must be 1000 characters or less
 howAreTheGoodsMade.change.hidden = HowAreTheGoodsMade
 
 priceOfGoods.title = PriceOfGoods
@@ -205,7 +222,6 @@ accountHome.heading = Your applications and rulings
 accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
 
-
 checkRegisteredDetails.title = Check the name and address for EORI number
 checkRegisteredDetails.heading = Check the name and address for EORI number {0}
 checkRegisteredDetails.subheading = Are these details correct?
@@ -226,16 +242,20 @@ mustHaveCommodityCode.bulletPoint.2 = Work out the {0}
 mustHaveCommodityCode.bulletPoint.3.link = Get a legally binding decision
 mustHaveCommodityCode.bulletPoint.3 = {0} on the commodity code to use when importing into or exporting from Great Britain
 
-areGoodsShippedDirectly.title = areGoodsShippedDirectly
-areGoodsShippedDirectly.heading = areGoodsShippedDirectly
+areGoodsShippedDirectly.title = Are the {0} being shipped directly from their country of origin to Great Britain?
+areGoodsShippedDirectly.heading = Are the {0} being shipped directly from their country of origin to Great Britain?
+areGoodsShippedDirectly.caption = About the goods
 areGoodsShippedDirectly.checkYourAnswersLabel = areGoodsShippedDirectly
-areGoodsShippedDirectly.error.required = Select yes if areGoodsShippedDirectly
+areGoodsShippedDirectly.error.required = Select Yes if the goods are shipped directly
 areGoodsShippedDirectly.change.hidden = AreGoodsShippedDirectly
 
-whatCountryAreGoodsFrom.title = whatCountryAreGoodsFrom
-whatCountryAreGoodsFrom.heading = whatCountryAreGoodsFrom
+whatCountryAreGoodsFrom.title = Which country are the {0} coming from?
+whatCountryAreGoodsFrom.heading = Which country are the {0} coming from?
+whatCountryAreGoodsFrom.caption = About the goods
 whatCountryAreGoodsFrom.checkYourAnswersLabel = whatCountryAreGoodsFrom
-whatCountryAreGoodsFrom.error.required = Enter whatCountryAreGoodsFrom
+whatCountryAreGoodsFrom.paragraph = See {0} if you are unsure whether the UK trades with the goods’ country of origin.
+whatCountryAreGoodsFrom.link = trade sanctions, arms embargoes and trade restrictions
+whatCountryAreGoodsFrom.error.required = Please provide the country of origin
 whatCountryAreGoodsFrom.error.length = WhatCountryAreGoodsFrom must be 50 characters or less
 whatCountryAreGoodsFrom.change.hidden = WhatCountryAreGoodsFrom
 

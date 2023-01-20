@@ -16,10 +16,9 @@
 
 @this()
 
- @(content: Html, classes: String = "govuk-inset-text", id: Option[String] = None)
+@(content: Html, classes: String = "govuk-inset-text", id: Option[String] = None)
 
 
- <div class="@classes" @id.map{id=> id="@id"}>
-     @content
- </div>
- 
+<div class="@classes" @id.map{id=> id="@id"}>
+    @content
+</div>

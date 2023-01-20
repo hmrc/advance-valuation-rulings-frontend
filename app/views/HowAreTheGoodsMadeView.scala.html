@@ -14,36 +14,58 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
+    paragraph: Paragraph,
+    caption: Caption,
+    heading: Heading,
+    bulletList: BulletList,
+    inset: InsetPara,
+    cancelLink: CancelApplicationLink
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(nameOfGoods: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("howAreTheGoodsMade.title"))) {
+@layout(pageTitle = title(form, messages("howAreTheGoodsMade.title", nameOfGoods))) {
 
     @formHelper(action = routes.HowAreTheGoodsMadeController.onSubmit(mode)) {
+
+        @caption(messages("howAreTheGoodsMade.caption"))
+
+        @heading(messages("howAreTheGoodsMade.heading", nameOfGoods))
+
+        @paragraph(Html(messages("howAreTheGoodsMade.para.1")))
+        @inset(Html(messages("howAreTheGoodsMade.insetText")))
+        @paragraph(Html(messages("howAreTheGoodsMade.para.2")))
+        @paragraph(Html(messages("howAreTheGoodsMade.para.3")))
+
+        @bulletList(Seq(
+            Html(messages("howAreTheGoodsMade.list.1")),
+            Html(messages("howAreTheGoodsMade.list.2")),
+            Html(messages("howAreTheGoodsMade.list.3"))
+        ))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
+
+    @govukTextarea(
+            TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("howAreTheGoodsMade.heading")).asPageHeading()
-            )
-            .withWidth(Full)
+                label = Label(None)
+                )
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }

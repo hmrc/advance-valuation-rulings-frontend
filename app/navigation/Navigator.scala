@@ -69,6 +69,20 @@ class Navigator @Inject() () {
       case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)
     }
 
+  private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
+    userAnswers.get(HasCommodityCodePage) match {
+      case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(false) => MustHaveCommodityCodeController.onPageLoad()
+    }
+
+  private def commodityCodePage(userAnswers: UserAnswers): Call =
+    userAnswers.get(CommodityCodePage) match {
+      case None    => CommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
+    }
+
+  // todo: page removed from prototype
   private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(PriceOfGoodsPage) match {
       case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
@@ -96,13 +110,6 @@ class Navigator @Inject() () {
     userAnswers.get(DescribeTheGoodsPage) match {
       case None    => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
       case Some(_) => HasConfidentialInformationController.onPageLoad(models.NormalMode)
-    }
-
-  private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
-    userAnswers.get(HasCommodityCodePage) match {
-      case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(false) => MustHaveCommodityCodeController.onPageLoad()
     }
 
   private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =
@@ -136,12 +143,6 @@ class Navigator @Inject() () {
       case None        => UploadAnotherSupportingDocumentController.onPageLoad(models.NormalMode)
       case Some(true)  => UploadSupportingDocumentsController.onPageLoad
       case Some(false) => routes.IndexController.onPageLoad
-    }
-
-  private def commodityCodePage(userAnswers: UserAnswers): Call =
-    userAnswers.get(HasCommodityCodePage) match {
-      case None    => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
