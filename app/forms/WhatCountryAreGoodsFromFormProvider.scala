@@ -27,6 +27,6 @@ class WhatCountryAreGoodsFromFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "answer" -> text("whatCountryAreGoodsFrom.error.required")
-        .verifying(maxLength(50, "whatCountryAreGoodsFrom.error.length"))
+        .verifying(minLength(1, "whatCountryAreGoodsFrom.error.length"))
     )
 }

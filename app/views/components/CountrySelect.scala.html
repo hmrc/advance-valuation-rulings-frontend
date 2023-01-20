@@ -18,12 +18,11 @@
 
 @(form: Form[_], countries: Seq[(String, String)]=models.CountrySelectOptions.countries)(implicit messages: Messages)
 
-
  @govukSelect(
   Select(
       id = "countryId",
       name = "answer",
-      errorMessage = form("countryId").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
+      errorMessage = form("answer").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
       items = {
         SelectItem(
                 text = ""
@@ -35,12 +34,9 @@
               )
           }
       },
-      label = Label(
-          content = Text(messages("whatCountryAreGoodsFrom.heading")),
-          classes = "govuk-label govuk-label--m"
-      )
+      label = Label()
       //TODO: County Code is not to prefilled on returning to the page due to GDS autocomplete bug which forces a change to the defaulted prefill value
   )
-)
+) 
 
 @autoComplete()

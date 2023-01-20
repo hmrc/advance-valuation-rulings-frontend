@@ -248,10 +248,13 @@ areGoodsShippedDirectly.checkYourAnswersLabel = areGoodsShippedDirectly
 areGoodsShippedDirectly.error.required = Select Yes if the goods are shipped directly
 areGoodsShippedDirectly.change.hidden = AreGoodsShippedDirectly
 
-whatCountryAreGoodsFrom.title = whatCountryAreGoodsFrom
-whatCountryAreGoodsFrom.heading = whatCountryAreGoodsFrom
+whatCountryAreGoodsFrom.title = Which country are the {0} coming from?
+whatCountryAreGoodsFrom.heading = Which country are the {0} coming from?
+whatCountryAreGoodsFrom.caption = About the goods
 whatCountryAreGoodsFrom.checkYourAnswersLabel = whatCountryAreGoodsFrom
-whatCountryAreGoodsFrom.error.required = Enter whatCountryAreGoodsFrom
+whatCountryAreGoodsFrom.paragraph = See {0} if you are unsure whether the UK trades with the goods’ country of origin.
+whatCountryAreGoodsFrom.link = trade sanctions, arms embargoes and trade restrictions
+whatCountryAreGoodsFrom.error.required = Please provide the country of origin
 whatCountryAreGoodsFrom.error.length = WhatCountryAreGoodsFrom must be 50 characters or less
 whatCountryAreGoodsFrom.change.hidden = WhatCountryAreGoodsFrom
 

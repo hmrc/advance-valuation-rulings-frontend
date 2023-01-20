@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import config.FrontendAppConfig
 @import views.html.helper.CSPNonce
 
 @this(
@@ -24,15 +25,28 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     govukSelect: GovukSelect,
-    countrySelect: CountrySelect
+    countrySelect: CountrySelect,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    link: Link,
+    cancelApplicationLink: CancelApplicationLink,
+    config: FrontendAppConfig
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
 
 @additionalHeadBlock = {
     <link href='@routes.Assets.versioned("stylesheets/location-autocomplete.min.css")' media="all" rel="stylesheet" type="text/css"@CSPNonce.get.map {n=> nonce="@n"} />
   }
 
+@tradeSanctionsInformationLink = {
+    @link(
+            id = "trade_sanctions_information_link",
+            text = messages("whatCountryAreGoodsFrom.link"),
+            call = Call("GET", config.tradeSanctionsInformationUrl)
+        )
+}
   
 @layout(
     pageTitle = title(form, messages("whatCountryAreGoodsFrom.title")), 
@@ -40,16 +54,26 @@
     additionalHeadBlock=Some(additionalHeadBlock)
     ){
 
-    @formHelper(action = routes.WhatCountryAreGoodsFromController.onSubmit(mode)) {
+    @caption(messages("whatCountryAreGoodsFrom.caption"))
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+    @heading(messages("whatCountryAreGoodsFrom.heading", nameOfGoods))
+
+    @if(form.errors.nonEmpty) {
+    @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
+    @paragraph(content = Html(messages("whatCountryAreGoodsFrom.paragraph", tradeSanctionsInformationLink)))
+
+    @formHelper(action = routes.WhatCountryAreGoodsFromController.onSubmit(mode)) {
 
         @countrySelect(form)
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
+
     }
+    @cancelApplicationLink()
 }
+
+

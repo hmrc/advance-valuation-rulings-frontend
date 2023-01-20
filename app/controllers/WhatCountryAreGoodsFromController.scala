@@ -17,18 +17,15 @@
 package controllers
 
 import javax.inject.Inject
-
 import scala.concurrent.{ExecutionContext, Future}
-
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.WhatCountryAreGoodsFromFormProvider
 import models.{Mode, UserAnswers}
 import navigation.Navigator
-import pages.WhatCountryAreGoodsFromPage
+import pages.{NameOfGoodsPage, WhatCountryAreGoodsFromPage}
 import repositories.SessionRepository
 import views.html.WhatCountryAreGoodsFromView
 
@@ -48,33 +45,36 @@ class WhatCountryAreGoodsFromController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
+      val whatCountryAreGoodsFrom = request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
+
       val preparedForm =
         request.userAnswers
-          .getOrElse(UserAnswers(request.userId))
           .get(WhatCountryAreGoodsFromPage) match {
           case None        => form
           case Some(answer) => form.fill(answer)
         }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode, whatCountryAreGoodsFrom))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val whatCountryAreGoodsFrom = request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
+
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
+          formWithErrors => {
+            println(formWithErrors)
             Future.successful(
-              BadRequest(view(formWithErrors, mode))
-            ),
+              BadRequest(view(formWithErrors, mode, whatCountryAreGoodsFrom))
+            )},
           answer =>
             for {
               updatedAnswers <- Future.fromTry(
                                   request.userAnswers
-                                    .getOrElse(UserAnswers(request.userId))
                                     .set(WhatCountryAreGoodsFromPage, answer)
                                 )
               _              <- sessionRepository.set(updatedAnswers)
