@@ -29,17 +29,17 @@ Comments are not rendered in browser.
             additionalSynonyms: [
                 { name: 'NI', code: 'country:GB' }
             ],
-            selectElement: document.getElementById('location-autocomplete'),
-            name: 'countryAutocomplete',
+            selectElement: document.getElementById('countryId'),
+            name: 'countryId',
             defaultValue: '',
             url: '@controllers.routes.Assets.versioned("/json/location-autocomplete-graph.json")',
 
             onConfirm: () => {
-                const matchingOption = Array.from(document.querySelectorAll("#countryCode-select > option")).find(function (c) {
+                const matchingOption = Array.from(document.querySelectorAll("#countryId-select > option")).find(function (c) {
                     return c.text === document.getElementById("countryId").value;
                 });
                 const countryCode = matchingOption ? matchingOption.value : undefined;
-                document.getElementById("countryCode-select").value = countryCode;
+                document.getElementById("countryId-select").value = countryCode;
             }
         })
 </script>

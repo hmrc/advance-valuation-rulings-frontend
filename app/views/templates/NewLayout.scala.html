@@ -19,12 +19,15 @@
  @import views.html.helper.CSPNonce
  @import config.FrontendAppConfig
  @import controllers.routes
-  @import views.html.components._
+ @import views.html.components._
+ @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteCss
+
  
  @this(
     appConfig: FrontendAppConfig,
     hmrcLayout: HmrcLayout, 
-    standardAlphaBanner: StandardAlphaBanner
+    standardAlphaBanner: StandardAlphaBanner,
+    HmrcAccessibleAutocompleteCss: HmrcAccessibleAutocompleteCss,
 )
  
  @(
@@ -37,6 +40,13 @@
     }
 }
 
+@additionalHeadBlock = {
+  
+    @if(autoCompleteEnabled) {
+      <link href='@routes.Assets.versioned("stylesheets/location-autocomplete.min.css")' media="all" rel="stylesheet" type="text/css"@CSPNonce.get.map {n=> nonce="@n"} />
+    }
+  }
+
  @hmrcLayout(
    pageTitle = Some(pageTitle),
    isWelshTranslationAvailable = true, /* or false if your service has not been translated */
@@ -46,6 +56,6 @@
    nonce = CSPNonce.get,
    backLinkUrl = Some("#"),
    additionalScriptsBlock = Some(additionalScripts),
-   additionalHeadBlock = None,
+   additionalHeadBlock = Some(additionalHeadBlock),
  )(contentBlock)
  

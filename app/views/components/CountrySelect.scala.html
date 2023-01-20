@@ -21,7 +21,7 @@
 
  @govukSelect(
   Select(
-      id = "location-autocomplete",
+      id = "countryId",
       name = "countryId",
       errorMessage = form("countryId").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
       items = {
