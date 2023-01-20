@@ -20,32 +20,19 @@
  @import config.FrontendAppConfig
  @import controllers.routes
  @import views.html.components._
- @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteCss
-
  
  @this(
     appConfig: FrontendAppConfig,
     hmrcLayout: HmrcLayout, 
-    standardAlphaBanner: StandardAlphaBanner,
-    HmrcAccessibleAutocompleteCss: HmrcAccessibleAutocompleteCss,
+    standardAlphaBanner: StandardAlphaBanner
 )
  
  @(
     pageTitle: String, 
     autoCompleteEnabled: Boolean = false,
+    additionalScripts: Option[Html] = None,
+    additionalHeadBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
- 
-@additionalScripts = {
-      @if(autoCompleteEnabled) {
-    }
-}
-
-@additionalHeadBlock = {
-  
-    @if(autoCompleteEnabled) {
-      <link href='@routes.Assets.versioned("stylesheets/location-autocomplete.min.css")' media="all" rel="stylesheet" type="text/css"@CSPNonce.get.map {n=> nonce="@n"} />
-    }
-  }
 
  @hmrcLayout(
    pageTitle = Some(pageTitle),
@@ -55,7 +42,7 @@
    phaseBanner = Some(standardAlphaBanner(url = appConfig.feedbackUrl)),
    nonce = CSPNonce.get,
    backLinkUrl = Some("#"),
-   additionalScriptsBlock = Some(additionalScripts),
-   additionalHeadBlock = Some(additionalHeadBlock),
+   additionalScriptsBlock = additionalScripts,
+   additionalHeadBlock = additionalHeadBlock,
  )(contentBlock)
  
