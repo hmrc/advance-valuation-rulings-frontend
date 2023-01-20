@@ -14,14 +14,56 @@
  * limitations under the License.
  *@
 
+@import components._
+@import models.NormalMode
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        caption: Caption,
+        heading: Heading,
+        cancelApplicationLink: CancelApplicationLink,
+        paragraph: Paragraph,
+        list: BulletList
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(nameOfGoods: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title"))) {
+@layout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title", nameOfGoods))) {
 
-    <h1 class="govuk-heading-xl">@messages("uploadSupportingDocuments.heading")</h1>
+    @caption(messages("uploadSupportingDocuments.caption"))
+    @heading(messages("uploadSupportingDocuments.heading", nameOfGoods))
+
+    @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
+    @list(Seq(
+                Html(messages("uploadSupportingDocuments.bulletPoint.1")),
+                Html(messages("uploadSupportingDocuments.bulletPoint.2")),
+                Html(messages("uploadSupportingDocuments.bulletPoint.3")),
+                ),
+            "govuk-list govuk-list--bullet",
+    )
+
+    @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
+    @list(Seq(
+
+                Html(messages("uploadSupportingDocuments.bulletPoint.4")),
+                Html(messages("uploadSupportingDocuments.bulletPoint.5"))
+                ),
+            "govuk-list govuk-list--bullet",
+    )
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="file-upload-1">
+        Upload a file
+      </label>
+      <input class="govuk-file-upload" id="file-upload-1" name="file-upload-1" type="file">
+    </div>
+
+    @govukButton(
+        ButtonViewModel(messages("site.uploadContinue"))
+            .asLink(routes.IsThisFileConfidentialController.onPageLoad(NormalMode).url)
+    )
+    <P></P>
+    @cancelApplicationLink()
+
 }

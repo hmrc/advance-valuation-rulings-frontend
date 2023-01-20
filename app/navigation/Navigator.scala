@@ -31,23 +31,26 @@ import routes._
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ValuationMethodPage            => valuationMethodPage
-    case NameOfGoodsPage                => nameOfGoodsPage
-    case HasCommodityCodePage           => hasCommodityCodePage
-    case CommodityCodePage              => commodityCodePage
-    case PriceOfGoodsPage               => priceOfGoodsPage
-    case WhatCountryAreGoodsFromPage    => whatCountryAreGoodsFromPage
-    case AreGoodsShippedDirectlyPage    => areGoodsShippedDirectlyPage
-    case DescribeTheGoodsPage           => describeTheGoodsPage
-    case HowAreTheGoodsMadePage         => howAreTheGoodsMadePage
-    case HasConfidentialInformationPage => hasConfidentialInformationPage
-    case ConfidentialInformationPage    => confidentialInformationPage
-    case ImportGoodsPage                => importGoodsPage
-    case RequiredInformationPage        => requiredInformationPage
-    case CheckRegisteredDetailsPage     => checkRegisteredDetailsPage
-    case ApplicationContactDetailsPage  => applicationContactDetailsPage
-    case DoYouWantToUploadDocumentsPage => doYouWantToUploadDocumentsPage
-    case _                              => _ => routes.IndexController.onPageLoad
+    case ValuationMethodPage                 => valuationMethodPage
+    case NameOfGoodsPage                     => nameOfGoodsPage
+    case HasCommodityCodePage                => hasCommodityCodePage
+    case CommodityCodePage                   => commodityCodePage
+    case PriceOfGoodsPage                    => priceOfGoodsPage
+    case WhatCountryAreGoodsFromPage         => whatCountryAreGoodsFromPage
+    case AreGoodsShippedDirectlyPage         => areGoodsShippedDirectlyPage
+    case DescribeTheGoodsPage                => describeTheGoodsPage
+    case HowAreTheGoodsMadePage              => howAreTheGoodsMadePage
+    case HasConfidentialInformationPage      => hasConfidentialInformationPage
+    case ConfidentialInformationPage         => confidentialInformationPage
+    case ImportGoodsPage                     => importGoodsPage
+    case RequiredInformationPage             => requiredInformationPage
+    case CheckRegisteredDetailsPage          => checkRegisteredDetailsPage
+    case ApplicationContactDetailsPage       => applicationContactDetailsPage
+    case DoYouWantToUploadDocumentsPage      => doYouWantToUploadDocumentsPage
+    case IsThisFileConfidentialPage          => isThisFileConfidentialPage
+    case UploadAnotherSupportingDocumentPage => uploadAnotherSupportingDocumentPage
+
+    case _ => _ => routes.IndexController.onPageLoad
   }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
@@ -118,7 +121,20 @@ class Navigator @Inject() () {
   private def doYouWantToUploadDocumentsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
-      case Some(true)  => routes.IndexController.onPageLoad
+      case Some(true)  => UploadSupportingDocumentsController.onPageLoad
+      case Some(false) => routes.IndexController.onPageLoad
+    }
+
+  private def isThisFileConfidentialPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(IsThisFileConfidentialPage) match {
+      case None    => IsThisFileConfidentialController.onPageLoad(models.NormalMode)
+      case Some(_) => UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
+    }
+
+  private def uploadAnotherSupportingDocumentPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(UploadAnotherSupportingDocumentPage) match {
+      case None        => UploadAnotherSupportingDocumentController.onPageLoad(models.NormalMode)
+      case Some(true)  => UploadSupportingDocumentsController.onPageLoad
       case Some(false) => routes.IndexController.onPageLoad
     }
 

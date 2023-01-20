@@ -48,12 +48,10 @@ class DoYouWantToUploadDocumentsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val preparedForm =
-        request.userAnswers
-          .getOrElse(UserAnswers(request.userId))
-          .get(DoYouWantToUploadDocumentsPage) match {
+        request.userAnswers.get(DoYouWantToUploadDocumentsPage) match {
           case None        => form
           case Some(value) => form.fill(value)
         }
@@ -61,23 +59,21 @@ class DoYouWantToUploadDocumentsController @Inject() (
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers
-                                    .getOrElse(UserAnswers(request.userId))
-                                    .set(DoYouWantToUploadDocumentsPage, value)
-                                )
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(
-              navigator.nextPage(DoYouWantToUploadDocumentsPage, mode, updatedAnswers)
-            )
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <-
+                  Future.fromTry(request.userAnswers.set(DoYouWantToUploadDocumentsPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(
+                navigator.nextPage(DoYouWantToUploadDocumentsPage, mode, updatedAnswers)
+              )
+          )
+    }
 }

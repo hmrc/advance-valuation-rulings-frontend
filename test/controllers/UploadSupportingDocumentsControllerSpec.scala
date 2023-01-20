@@ -24,6 +24,8 @@ import views.html.UploadSupportingDocumentsView
 
 class UploadSupportingDocumentsControllerSpec extends SpecBase {
 
+  val nameOfGoods = "No name of goods found"
+
   "UploadSupportingDocuments Controller" - {
 
     "must return OK and the correct view for a GET" in {
@@ -38,7 +40,7 @@ class UploadSupportingDocumentsControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[UploadSupportingDocumentsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(nameOfGoods)(request, messages(application)).toString
       }
     }
   }
