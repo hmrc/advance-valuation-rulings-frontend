@@ -30,7 +30,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.WhatCountryAreGoodsFromPage
+import pages.{NameOfGoodsPage, WhatCountryAreGoodsFromPage}
 import repositories.SessionRepository
 import views.html.WhatCountryAreGoodsFromView
 
@@ -38,8 +38,10 @@ class WhatCountryAreGoodsFromControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new WhatCountryAreGoodsFromFormProvider()
-  val form         = formProvider()
+  val formProvider  = new WhatCountryAreGoodsFromFormProvider()
+  val form          = formProvider()
+  val nameOfGoods   = "Horse"
+  val noNameOfGoods = "No name of goods found"
 
   lazy val whatCountryAreGoodsFromRoute =
     routes.WhatCountryAreGoodsFromController.onPageLoad(NormalMode).url
@@ -58,7 +60,7 @@ class WhatCountryAreGoodsFromControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[WhatCountryAreGoodsFromView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, noNameOfGoods)(
           request,
           messages(application)
         ).toString
@@ -68,7 +70,13 @@ class WhatCountryAreGoodsFromControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(WhatCountryAreGoodsFromPage, "answer").success.value
+        UserAnswers(userAnswersId)
+          .set(WhatCountryAreGoodsFromPage, "Iceland")
+          .success
+          .value
+          .set(NameOfGoodsPage, "Horse")
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -80,7 +88,7 @@ class WhatCountryAreGoodsFromControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("Iceland"), NormalMode, nameOfGoods)(
           request,
           messages(application)
         ).toString
@@ -129,7 +137,7 @@ class WhatCountryAreGoodsFromControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, noNameOfGoods)(
           request,
           messages(application)
         ).toString
@@ -148,9 +156,7 @@ class WhatCountryAreGoodsFromControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.AreGoodsShippedDirectlyController
-          .onPageLoad(NormalMode)
-          .url
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

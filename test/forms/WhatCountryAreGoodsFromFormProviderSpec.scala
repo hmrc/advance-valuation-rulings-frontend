@@ -24,7 +24,6 @@ class WhatCountryAreGoodsFromFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "whatCountryAreGoodsFrom.error.required"
   val lengthKey   = "whatCountryAreGoodsFrom.error.length"
-  val maxLength   = 50
 
   val form = new WhatCountryAreGoodsFromFormProvider()()
 
@@ -35,14 +34,7 @@ class WhatCountryAreGoodsFromFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      nonEmptyString
     )
 
     behave like mandatoryField(
