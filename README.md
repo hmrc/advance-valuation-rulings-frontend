@@ -1,5 +1,5 @@
 
-# advance-valuation-rulings-frontend
+# advance-valuation-ruling-frontend
 
 This is the frontend for the [Advance Valuation Rulings](https://github.com/hmrc/advance-valuation-rulings) service
 
