@@ -31,7 +31,6 @@
  @(
     pageTitle: String, 
     autoCompleteEnabled: Boolean = false,
-    additionalScripts: Option[Html] = None,
     additionalHeadBlock: Option[Html] = None,
     showBackLink: Boolean = true,
     showSignOut: Boolean = true,
@@ -39,18 +38,27 @@
 
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
-@timeOutDialog = {
-    @hmrcTimeoutDialogHelper(
-        timeout             = Some(appConfig.timeout),
-        countdown           = Some(appConfig.countdown),
-        keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
-        keepAliveButtonText = Some(messages("timeout.keepAlive")),
-        signOutUrl          = controllers.auth.routes.AuthController.signOut.url,
-        signOutButtonText   = Some(messages("timeout.signOut")),
-        timeoutUrl          = Some(controllers.auth.routes.AuthController.signOutNoSurvey.url),
-        title               = Some(messages("timeout.title")),
-        message             = Some(messages("timeout.message"))
-    )
+@additionalScripts = {
+  <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
+}
+
+@headBlock = {
+    @{if(timeout) {
+        hmrcTimeoutDialogHelper(
+                timeout             = Some(appConfig.timeout),
+                countdown           = Some(appConfig.countdown),
+                keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
+                keepAliveButtonText = Some(messages("timeout.keepAlive")),
+                signOutUrl          = controllers.auth.routes.AuthController.signOut.url,
+                signOutButtonText   = Some(messages("timeout.signOut")),
+                timeoutUrl          = Some(controllers.auth.routes.AuthController.signOutNoSurvey.url),
+                title               = Some(messages("timeout.title")),
+                message             = Some(messages("timeout.message"))
+                )
+        additionalHeadBlock
+        } else additionalHeadBlock
+    }
+    additionalHeadBlock
 }
 
  @hmrcLayout(
@@ -61,7 +69,7 @@
    phaseBanner = Some(standardAlphaBanner(url = appConfig.feedbackUrl)),
    nonce = CSPNonce.get,
    backLinkUrl = if(showBackLink) Some("#") else None,
-   additionalScriptsBlock = additionalScripts,
-   additionalHeadBlock = {if(timeout) Some(timeOutDialog) else None},
+   additionalScriptsBlock = Some(additionalScripts),
+   additionalHeadBlock = Some(headBlock)
  )(contentBlock)
  
