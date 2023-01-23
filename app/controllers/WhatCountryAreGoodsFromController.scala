@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.WhatCountryAreGoodsFromFormProvider
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
 import pages.{NameOfGoodsPage, WhatCountryAreGoodsFromPage}
 import repositories.SessionRepository
