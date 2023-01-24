@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.NameOfGoodsFormProvider
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
 import pages.NameOfGoodsPage
 import repositories.SessionRepository
@@ -48,10 +48,10 @@ class NameOfGoodsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val preparedForm =
-        request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NameOfGoodsPage) match {
+        request.userAnswers.get(NameOfGoodsPage) match {
           case None        =>
             form
           case Some(value) => form.fill(value)
@@ -60,21 +60,21 @@ class NameOfGoodsController @Inject() (
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers
-                                    .getOrElse(UserAnswers(request.userId))
-                                    .set(NameOfGoodsPage, value)
-                                )
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(NameOfGoodsPage, mode, updatedAnswers))
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(
+                                    request.userAnswers
+                                      .set(NameOfGoodsPage, value)
+                                  )
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(NameOfGoodsPage, mode, updatedAnswers))
+          )
+    }
 }

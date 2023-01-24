@@ -49,10 +49,10 @@ class ValuationMethodController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       val preparedForm =
-        request.userAnswers.getOrElse(UserAnswers(request.userId)).get(ValuationMethodPage) match {
+        request.userAnswers.get(ValuationMethodPage) match {
           case None        => form
           case Some(value) => form.fill(value)
         }
