@@ -21,28 +21,30 @@
  @import controllers.routes
  @import views.html.components._
  
- @this(
+@this(
     appConfig: FrontendAppConfig,
     hmrcLayout: HmrcLayout, 
     standardAlphaBanner: StandardAlphaBanner
 )
  
- @(
-    pageTitle: String, 
-    autoCompleteEnabled: Boolean = false,
-    additionalScripts: Option[Html] = None,
-    additionalHeadBlock: Option[Html] = None
+@(
+  pageTitle: String, 
+  autoCompleteEnabled: Boolean = false,
+  additionalHeadBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
- @hmrcLayout(
-   pageTitle = Some(pageTitle),
-   isWelshTranslationAvailable = true, /* or false if your service has not been translated */
-   serviceUrl = Some(routes.IndexController.onPageLoad.url),
-   signOutUrl = Some(controllers.auth.routes.AuthController.signOut.url),
-   phaseBanner = Some(standardAlphaBanner(url = appConfig.feedbackUrl)),
-   nonce = CSPNonce.get,
-   backLinkUrl = Some("#"),
-   additionalScriptsBlock = additionalScripts,
-   additionalHeadBlock = additionalHeadBlock,
- )(contentBlock)
- 
+@additionalScripts = {
+  <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
+}
+
+@hmrcLayout(
+  pageTitle = Some(pageTitle),
+  isWelshTranslationAvailable = true, /* or false if your service has not been translated */
+  serviceUrl = Some(routes.IndexController.onPageLoad.url),
+  signOutUrl = Some(controllers.auth.routes.AuthController.signOut.url),
+  phaseBanner = Some(standardAlphaBanner(url = appConfig.feedbackUrl)),
+  nonce = CSPNonce.get,
+  backLinkUrl = Some("#"),
+  additionalScriptsBlock = Some(additionalScripts),
+  additionalHeadBlock = additionalHeadBlock,
+)(contentBlock)
