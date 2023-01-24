@@ -37,8 +37,8 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-index.title = advance-valuation-rulings-frontend
-index.heading = advance-valuation-rulings-frontend
+index.title = advance-valuation-ruling-frontend
+index.heading = advance-valuation-ruling-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
 caption.prefix = This section is
