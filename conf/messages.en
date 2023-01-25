@@ -73,8 +73,7 @@ valuationMethod.title = Select the method you will use to value your goods
 valuationMethod.heading = Select the method you will use to value your goods
 valuationMethod.caption = About the goods
 valuationMethod.paragraph = There are six different methods to work out the customs value of your imports. If you are unsure which method to use, start with Method 1, which is the normal method of valuation. See an {0}.
-
-Choose which valuation method you will use to work out the customs value of your imports:
+valuationMethod.link.text = overview of all valuation methods
 valuationMethod.hint = Choose which valuation method you will use to work out the customs value of your imports:
 valuationMethod.method1 = Method 1: Transaction value
 valuationMethod.method1.hint = This is based on price paid or payable by the buyer to the seller for the goods when they are sold for export to the UK.
