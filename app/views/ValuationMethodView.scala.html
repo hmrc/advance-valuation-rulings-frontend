@@ -34,13 +34,11 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@overviewLink = @link(
+@overviewLink = {@link(
             id = "overview-of-methods-link",
             text = messages("valuationMethod.link.text"),
-            call = Call("GET", config.overviewOfMethodsGuide)
-https://www.gov.uk/guidance/prepare-to-work-out-the-customs-value-of-your-imported-goods
-        )
-    }
+            call = Call("GET", config.overviewForMethodsUrl)
+        )}
 
 @layout(pageTitle = title(form, messages("valuationMethod.title"))) {
 
