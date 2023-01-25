@@ -71,10 +71,25 @@ nameOfGoods.change.hidden = NameOfGoods
 
 valuationMethod.title = Select the method you will use to value your goods
 valuationMethod.heading = Select the method you will use to value your goods
+valuationMethod.caption = About the goods
+valuationMethod.paragraph = There are six different methods to work out the customs value of your imports. If you are unsure which method to use, start with Method 1, which is the normal method of valuation. See an {0}.
+valuationMethod.link.text = overview of all valuation methods
+valuationMethod.hint = Choose which valuation method you will use to work out the customs value of your imports:
 valuationMethod.method1 = Method 1: Transaction value
+valuationMethod.method1.hint = This is based on price paid or payable by the buyer to the seller for the goods when they are sold for export to the UK.
 valuationMethod.method2 = Method 2: Transaction value of identical goods
+valuationMethod.method2.hint = This is based on the transaction value of identical goods exported to the UK at or about the same time as the goods being valued.
+valuationMethod.method3 = Method 3: Transaction value of similar goods
+valuationMethod.method3.hint = This is based on the price paid or payable for goods which are similar to the goods to be valued.
+valuationMethod.method4 = Method 4: Deductive method
+valuationMethod.method4.hint = This is based on the selling price in the UK of the goods, identical goods or similar goods.
+valuationMethod.method5 = Method 5: Computed value
+valuationMethod.method5.hint = This is based on the costs of production of the imported goods, using the total of the cost or value of materials and fabrication or other processing used in producing the goods.
+valuationMethod.method6 = Method 6: Fall-back method
+valuationMethod.method6.hint = This is based on adapting methods 1 to 5 flexibly to fit unusual circumstances.
+
 valuationMethod.checkYourAnswersLabel = Select the method you will use to value your goods
-valuationMethod.error.required = Select valuationMethod
+valuationMethod.error.required = Please select method you want an advance ruling 
 valuationMethod.change.hidden = ValuationMethod
 
 commodityCode.title = What is the commodity code for the {0}?
