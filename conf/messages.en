@@ -66,7 +66,7 @@ nameOfGoods.caption = About the goods
 nameOfGoods.hint = This could be a short description, for example, ‘silicone smartphone case’. 
 nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, ‘silicone smartphone case’.
 nameOfGoods.error.required = Enter a short name to describe the goods
-nameOfGoods.error.length = Name for the goods must be 100 characters or less
+nameOfGoods.error.length = Maximum allowed characters is 8168 or less
 nameOfGoods.change.hidden = NameOfGoods
 
 valuationMethod.title = Select the method you will use to value your goods
@@ -189,7 +189,7 @@ howAreTheGoodsMade.list.1 = what the goods are made from (the materials used in 
 howAreTheGoodsMade.list.2 = how they are made
 howAreTheGoodsMade.list.3 = the stages of processing involved in their manufacture
 howAreTheGoodsMade.error.required = Provide details of how the goods are made
-howAreTheGoodsMade.error.length = Details must be 1000 characters or less
+howAreTheGoodsMade.error.length = Maximum allowed characters is 8168 or less
 howAreTheGoodsMade.checkYourAnswersLabel = howAreTheGoodsMade
 howAreTheGoodsMade.change.hidden = HowAreTheGoodsMade
 

@@ -24,7 +24,7 @@ class DescribeTheGoodsFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "describeTheGoods.error.required"
   val lengthKey   = "describeTheGoods.error.length"
-  val maxLength   = 1000
+  val maxLength   = 8167
 
   val form = new DescribeTheGoodsFormProvider()()
 
