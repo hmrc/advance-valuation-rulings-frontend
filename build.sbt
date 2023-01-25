@@ -57,6 +57,8 @@ lazy val root = (project in file("."))
       "-Wunused:imports", // Warn if an import selector is not referenced.
       "-Wunused:privates" // Warn if a private member is unused.
     ),
+    // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
+    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     resolvers ++= Seq(Resolver.jcenterRepo),
