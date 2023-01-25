@@ -158,6 +158,7 @@ package object models {
                     }
                   }
             }
+        case (path, _)                                                                 => JsError("unsupported path: " ++ path.toString)
       }
   }
 }

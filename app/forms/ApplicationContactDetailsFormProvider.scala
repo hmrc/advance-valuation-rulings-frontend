@@ -18,7 +18,6 @@ package forms
 
 import javax.inject.Inject
 
-import play.api.data._
 import play.api.data.Form
 import play.api.data.Forms._
 

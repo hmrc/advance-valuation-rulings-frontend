@@ -35,5 +35,6 @@ class EORIBeUpToDateController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData)(implicit request => Ok(view()))
+  def onPageLoad: Action[AnyContent] =
+    (identify andThen getData andThen requireData)(implicit _request => Ok(view()))
 }
