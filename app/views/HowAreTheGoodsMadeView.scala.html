@@ -55,12 +55,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-
     @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
                 label = Label(None)
                 )
+                .withRows(15)
+                .withAttribute("maxlength","8167")
+
         )
 
         @govukButton(

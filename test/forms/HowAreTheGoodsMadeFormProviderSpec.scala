@@ -24,7 +24,7 @@ class HowAreTheGoodsMadeFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "howAreTheGoodsMade.error.required"
   val lengthKey   = "howAreTheGoodsMade.error.length"
-  val maxLength   = 1000
+  val maxLength   = 8167
 
   val form = new HowAreTheGoodsMadeFormProvider()()
 

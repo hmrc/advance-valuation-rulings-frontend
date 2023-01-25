@@ -71,5 +71,8 @@ trait TextareaFluency {
 
     def withSize(size: String): Textarea =
       textarea.withCssClass(size)
+
+    def withRows(rows: Int): Textarea =
+      textarea.copy(rows = rows)
   }
 }
