@@ -22,8 +22,6 @@ import play.api.mvc.Call
 
 import controllers.routes
 import models._
-import models.ValuationMethod.Method1
-import models.ValuationMethod.Method2
 import pages._
 import routes._
 
@@ -57,9 +55,14 @@ class Navigator @Inject() () {
     userAnswers.get(ValuationMethodPage) match {
       case None                  => ValuationMethodController.onPageLoad(models.NormalMode)
       case Some(valuationMethod) =>
+        import models.ValuationMethod._
         valuationMethod match {
           case Method1 => NameOfGoodsController.onPageLoad(models.NormalMode)
           case Method2 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method3 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method4 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method5 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method6 => NameOfGoodsController.onPageLoad(models.NormalMode)
         }
     }
 

@@ -18,6 +18,7 @@ package models
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait ValuationMethod
@@ -26,10 +27,18 @@ object ValuationMethod extends Enumerable.Implicits {
 
   case object Method1 extends WithName("method1") with ValuationMethod
   case object Method2 extends WithName("method2") with ValuationMethod
+  case object Method3 extends WithName("method3") with ValuationMethod
+  case object Method4 extends WithName("method4") with ValuationMethod
+  case object Method5 extends WithName("method5") with ValuationMethod
+  case object Method6 extends WithName("method6") with ValuationMethod
 
   val values: Seq[ValuationMethod] = Seq(
     Method1,
-    Method2
+    Method2,
+    Method3,
+    Method4,
+    Method5,
+    Method6
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
@@ -37,7 +46,8 @@ object ValuationMethod extends Enumerable.Implicits {
       RadioItem(
         content = Text(messages(s"valuationMethod.${value.toString}")),
         value = Some(value.toString),
-        id = Some(s"value_$index")
+        id = Some(s"value_$index"),
+        hint = Some(Hint(content = Text(messages(s"valuationMethod.${value.toString}.hint"))))
       )
   }
 

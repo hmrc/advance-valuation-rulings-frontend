@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components.CancelApplicationLink
+@import components._
 
 @this(
     layout: templates.Layout,
@@ -22,12 +22,18 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    cancelApplicationLink: CancelApplicationLink
+    cancelApplicationLink: CancelApplicationLink,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("valuationMethod.title"))) {
+
+    @caption(messages("valuationMethod.caption"))
+    @heading(messages("valuationMethod.heading"))
 
     @formHelper(action = routes.ValuationMethodController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -38,7 +44,7 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("valuationMethod.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("valuationMethod.hint")),
                 items  = ValuationMethod.options
             )
         )
