@@ -4,7 +4,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import sbt.Def
 import scoverage.ScoverageKeys
 
-lazy val appName: String = "advance-valuation-ruling-frontend"
+lazy val appName: String = "advance-valuation-rulings-frontend"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
