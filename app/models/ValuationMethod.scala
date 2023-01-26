@@ -52,7 +52,7 @@ object ValuationMethod extends Enumerable.Implicits {
     case (value, index) =>
       RadioItem(
         content = HtmlContent(
-          Html("<strong>" + messages(s"valuationMethod.${value.toString}") + "</strong>")
+          Html(messages(s"valuationMethod.${value.toString}"))
         ),
         value = Some(value.toString),
         id = Some(s"value_$index"),
