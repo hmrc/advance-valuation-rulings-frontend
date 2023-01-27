@@ -66,7 +66,7 @@ nameOfGoods.caption = About the goods
 nameOfGoods.hint = This could be a short description, for example, ‘silicone smartphone case’. 
 nameOfGoods.checkYourAnswersLabel = This could be a short description, for example, ‘silicone smartphone case’.
 nameOfGoods.error.required = Enter a short name to describe the goods
-nameOfGoods.error.length = Maximum allowed characters is 8168 or less
+nameOfGoods.error.length = Maximum allowed characters is 100 or less
 nameOfGoods.change.hidden = NameOfGoods
 
 valuationMethod.title = Select the method you will use to value your goods
@@ -180,7 +180,7 @@ describeTheGoods.list.3 = how it works
 describeTheGoods.list.4 = how it is packaged
 describeTheGoods.insetText = You will be able to add confidential information and upload files later in the application.
 describeTheGoods.error.required = Provide detailed description of goods
-describeTheGoods.error.length = DescribeTheGoods must be 1000 characters or less
+describeTheGoods.error.length = DescribeTheGoods must be 8168 characters or less
 describeTheGoods.checkYourAnswersLabel = describeTheGoods
 describeTheGoods.change.hidden = DescribeTheGoods
 
