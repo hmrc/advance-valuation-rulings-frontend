@@ -126,3 +126,13 @@ GET        /changeUploadAnotherSupportingDocument                  controllers.U
 POST       /changeUploadAnotherSupportingDocument                  controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = CheckMode)
 
 GET        /uploadSupportingDocuments                       controllers.UploadSupportingDocumentsController.onPageLoad()
+
+GET        /explainReasonComputedValue                        controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainReasonComputedValue                        controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainReasonComputedValue                  controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainReasonComputedValue                  controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = CheckMode)
+
+GET        /whyComputedValue                        controllers.WhyComputedValueController.onPageLoad(mode: Mode = NormalMode)
+POST       /whyComputedValue                        controllers.WhyComputedValueController.onSubmit(mode: Mode = NormalMode)
+GET        /changeWhyComputedValue                  controllers.WhyComputedValueController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeWhyComputedValue                  controllers.WhyComputedValueController.onSubmit(mode: Mode = CheckMode)
