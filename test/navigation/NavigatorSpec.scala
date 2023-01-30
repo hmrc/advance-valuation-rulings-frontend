@@ -29,15 +29,82 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(
-          UnknownPage,
-          NormalMode,
+      "RequiredInformationPage must" in {
+        val userAnswers =
           UserAnswers("id")
-        ) mustBe routes.IndexController.onPageLoad
+            .set(RequiredInformationPage, RequiredInformation.values.toSet)
+            .get
+        navigator.nextPage(
+          RequiredInformationPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
       }
+
+      "ImportGoodsPage must" - {
+
+        "navigate to PublicInformationNoticePage when True" in {
+          val userAnswers =
+            UserAnswers("id")
+              .set(ImportGoodsPage, true)
+              .get
+          navigator.nextPage(
+            ImportGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.PublicInformationNoticeController.onPageLoad()
+        }
+
+        "and navigate to ImportingGoodsPage when False" in {
+          val userAnswers =
+            UserAnswers("id")
+              .set(ImportGoodsPage, false)
+              .get
+          navigator.nextPage(
+            ImportGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ImportingGoodsController.onPageLoad()
+        }
+      }
+
+      "CheckRegisteredDetailsPage must" - {
+
+        "navigate to ApplicationContactDetailsPage when Yes" in {
+          val userAnswers =
+            UserAnswers("id").set(CheckRegisteredDetailsPage, CheckRegisteredDetails.Yes).get
+          navigator.nextPage(
+            CheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+        }
+
+        "and navigate to EORIBeUpToDatePage when No" in {
+          val userAnswers =
+            UserAnswers("id").set(CheckRegisteredDetailsPage, CheckRegisteredDetails.No).get
+          navigator.nextPage(
+            CheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.EORIBeUpToDateController.onPageLoad
+        }
+      }
+
+      "ApplicationContactDetailsPage must" in {
+        val userAnswers =
+          UserAnswers("id")
+            .set(ApplicationContactDetailsPage, ApplicationContactDetails("name", "email", "phone"))
+            .get
+        navigator.nextPage(
+          ApplicationContactDetailsPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+      }
+
+//     TODO: Method Pages Navigation Spec should be down below
+
     }
 
     "in Check mode" - {
