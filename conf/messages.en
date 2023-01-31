@@ -89,7 +89,7 @@ valuationMethod.method6 = Method 6: Fall-back method
 valuationMethod.method6.hint = This is based on adapting methods 1 to 5 flexibly to fit unusual circumstances.
 
 valuationMethod.checkYourAnswersLabel = Select the method you will use to value your goods
-valuationMethod.error.required = Please select method you want an advance ruling 
+valuationMethod.error.required = Please select method you want for an advance ruling 
 valuationMethod.change.hidden = ValuationMethod
 
 commodityCode.title = What is the commodity code for the {0}?
