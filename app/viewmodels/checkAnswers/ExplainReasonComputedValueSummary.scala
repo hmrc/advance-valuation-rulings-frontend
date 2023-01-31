@@ -16,26 +16,29 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.ExplainReasonComputedValuePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, UserAnswers}
+import pages.ExplainReasonComputedValuePage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ExplainReasonComputedValueSummary  {
+object ExplainReasonComputedValueSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ExplainReasonComputedValuePage).map {
       answer =>
-
         SummaryListRowViewModel(
-          key     = "explainReasonComputedValue.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          key = "explainReasonComputedValue.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.ExplainReasonComputedValueController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.ExplainReasonComputedValueController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("explainReasonComputedValue.change.hidden"))
           )
         )

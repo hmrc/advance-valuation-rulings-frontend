@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.ExplainReasonComputedValueFormProvider
 import models.{NormalMode, UserAnswers}
@@ -24,23 +31,18 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ExplainReasonComputedValuePage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.ExplainReasonComputedValueView
-
-import scala.concurrent.Future
 
 class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ExplainReasonComputedValueFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val explainReasonComputedValueRoute = routes.ExplainReasonComputedValueController.onPageLoad(NormalMode).url
+  lazy val explainReasonComputedValueRoute =
+    routes.ExplainReasonComputedValueController.onPageLoad(NormalMode).url
 
   "ExplainReasonComputedValue Controller" - {
 
@@ -56,13 +58,17 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[ExplainReasonComputedValueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ExplainReasonComputedValuePage, "answer").success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(ExplainReasonComputedValuePage, "answer").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +80,10 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +129,10 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

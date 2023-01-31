@@ -16,26 +16,29 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.WhyComputedValuePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, UserAnswers}
+import pages.WhyComputedValuePage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object WhyComputedValueSummary  {
+object WhyComputedValueSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(WhyComputedValuePage).map {
       answer =>
-
         SummaryListRowViewModel(
-          key     = "whyComputedValue.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          key = "whyComputedValue.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.WhyComputedValueController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.WhyComputedValueController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("whyComputedValue.change.hidden"))
           )
         )

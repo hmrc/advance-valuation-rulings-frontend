@@ -16,57 +16,61 @@
 
 package controllers
 
-import controllers.actions._
-import forms.WhyComputedValueFormProvider
 import javax.inject.Inject
-import models.Mode
-import navigation.Navigator
-import pages.WhyComputedValuePage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.WhyComputedValueView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhyComputedValueController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: WhyComputedValueFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: WhyComputedValueView
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import controllers.actions._
+import forms.WhyComputedValueFormProvider
+import models.Mode
+import navigation.Navigator
+import pages.WhyComputedValuePage
+import repositories.SessionRepository
+import views.html.WhyComputedValueView
+
+class WhyComputedValueController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: WhyComputedValueFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: WhyComputedValueView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-
       val preparedForm = request.userAnswers.get(WhyComputedValuePage) match {
-        case None => form
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhyComputedValuePage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers))
-      )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <-
+                  Future.fromTry(request.userAnswers.set(WhyComputedValuePage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers))
+          )
+    }
 }

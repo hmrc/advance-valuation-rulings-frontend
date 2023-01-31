@@ -16,14 +16,15 @@
 
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class WhyComputedValueFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "whyComputedValue.error.required"
-  val lengthKey = "whyComputedValue.error.length"
-  val maxLength = 8167
+  val lengthKey   = "whyComputedValue.error.length"
+  val maxLength   = 8167
 
   val form = new WhyComputedValueFormProvider()()
 
