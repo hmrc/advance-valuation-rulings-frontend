@@ -105,6 +105,57 @@ class NavigatorSpec extends SpecBase {
 
 //     TODO: Method Pages Navigation Spec should be down below
 
+      "HasCommodityCodePage must" - {
+        "navigage to CommodityCode when yes" in {
+          navigator.nextPage(
+            HasCommodityCodePage,
+            NormalMode,
+            UserAnswers("id").set(HasCommodityCodePage, true).success.value
+          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode)
+        }
+      }
+      // Additional pages
+
+      "CommodityCode must" - {
+        "navigate to WhatCountryAreGoodsFrom when set" in {
+          navigator.nextPage(
+            CommodityCodePage,
+            NormalMode,
+            UserAnswers("id").set(CommodityCodePage, "1234567890").success.value
+          ) mustBe routes.WhatCountryAreGoodsFromController.onPageLoad(NormalMode)
+        }
+      }
+
+      "WhatCountryAreGoodsFrom must" - {
+        "navigate to AreGoodsShippedDirectly" in {
+          navigator.nextPage(
+            WhatCountryAreGoodsFromPage,
+            NormalMode,
+            UserAnswers("id").set(WhatCountryAreGoodsFromPage, "GB").success.value
+          ) mustBe routes.AreGoodsShippedDirectlyController.onPageLoad(NormalMode)
+        }
+      }
+
+      "AreGoodsShippedDirectly must" - {
+        "navigate to DescribeTheGoods when true" in {
+          navigator.nextPage(
+            AreGoodsShippedDirectlyPage,
+            NormalMode,
+            UserAnswers("id").set(AreGoodsShippedDirectlyPage, true).success.value
+          ) mustBe routes.DescribeTheGoodsController.onPageLoad(NormalMode)
+        }
+
+      }
+
+      "AreGoodsShippedDirectly must" - {
+        "navigate to HowAreTheGoodsMade when given valid data" in {
+          navigator.nextPage(
+            DescribeTheGoodsPage,
+            NormalMode,
+            UserAnswers("id").set(DescribeTheGoodsPage, "Some goods").success.value
+          ) mustBe routes.HowAreTheGoodsMadeController.onPageLoad(NormalMode)
+        }
+      }
     }
 
     "in Check mode" - {
