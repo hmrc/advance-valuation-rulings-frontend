@@ -21,6 +21,13 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryWhyComputedValuePage: Arbitrary[WhyComputedValuePage.type] =
+    Arbitrary(WhyComputedValuePage)
+
+  implicit lazy val arbitraryExplainReasonComputedValuePage
+    : Arbitrary[ExplainReasonComputedValuePage.type] =
+    Arbitrary(ExplainReasonComputedValuePage)
+
   implicit lazy val arbitraryUploadAnotherSupportingDocumentPage
     : Arbitrary[UploadAnotherSupportingDocumentPage.type] =
     Arbitrary(UploadAnotherSupportingDocumentPage)

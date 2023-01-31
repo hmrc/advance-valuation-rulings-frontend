@@ -340,3 +340,26 @@ uploadSupportingDocuments.bulletPoint.2 = up to 10 files
 uploadSupportingDocuments.bulletPoint.3 = photographs, manuals, brochures or technical specifications
 uploadSupportingDocuments.bulletPoint.4 = smaller than 10MB
 uploadSupportingDocuments.bulletPoint.5 = a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
+
+explainReasonComputedValue.title = Please explain why you have selected Method 5 to value your goods
+explainReasonComputedValue.caption = About the goods
+explainReasonComputedValue.heading = Please explain why you have selected Method 5 to value your goods
+explainReasonComputedValue.paragraph = Please outline why you believe Method 5 (computed value) is the correct route to work out the customs value of your imports.
+explainReasonComputedValue.checkYourAnswersLabel = explainReasonComputedValue
+explainReasonComputedValue.error.required = Please explain why you have selected Method 5 to value your goods
+explainReasonComputedValue.error.length = Maximum allowed characters is 8168
+explainReasonComputedValue.change.hidden = ExplainReasonComputedValue
+
+whyComputedValue.title = Please outline why you have not selected Methods 1-4 to value your goods
+whyComputedValue.caption = About the goods
+whyComputedValue.heading = Please outline why you have not selected Methods 1-4 to value your goods
+whyComputedValue.paragraph.1 = Before you try Method 5 you must first have tried to use:
+whyComputedValue.bulletPoint.1 = Method 1 (transaction value of imported goods)
+whyComputedValue.bulletPoint.2 = Method 2 (transaction value of identical goods)
+whyComputedValue.bulletPoint.3 = Method 3 (transaction value of similar goods)
+whyComputedValue.bulletPoint.4 = Method 4 (deductive method)
+whyComputedValue.paragraph.2 = Please explain why you believe Methods 1-4 are not suitable to work out the customs value of your imports.
+whyComputedValue.checkYourAnswersLabel = whyComputedValue
+whyComputedValue.error.required = Please outline why you have not selected Methods 1-4 to value your goods
+whyComputedValue.error.length = Maximum allowed characters is 8168
+whyComputedValue.change.hidden = WhyComputedValue

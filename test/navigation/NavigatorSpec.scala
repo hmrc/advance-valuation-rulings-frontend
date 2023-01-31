@@ -38,19 +38,30 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe routes.IndexController.onPageLoad
       }
+
+      "must go from whyComputedValuePage to explainReasonComputedValuePage" in {
+        val userAnswers = UserAnswers("id").set(WhyComputedValuePage, "banana").get
+        navigator.nextPage(
+          WhyComputedValuePage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(mode = NormalMode)
+      }
+
     }
 
-    "in Check mode" - {
+  }
 
-      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
+  "in Check mode" - {
 
-        case object UnknownPage extends Page
-        navigator.nextPage(
-          UnknownPage,
-          CheckMode,
-          UserAnswers("id")
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
-      }
+    "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
+
+      case object UnknownPage extends Page
+      navigator.nextPage(
+        UnknownPage,
+        CheckMode,
+        UserAnswers("id")
+      ) mustBe routes.CheckYourAnswersController.onPageLoad
     }
   }
 }

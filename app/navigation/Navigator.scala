@@ -47,6 +47,8 @@ class Navigator @Inject() () {
     case DoYouWantToUploadDocumentsPage      => doYouWantToUploadDocumentsPage
     case IsThisFileConfidentialPage          => isThisFileConfidentialPage
     case UploadAnotherSupportingDocumentPage => uploadAnotherSupportingDocumentPage
+    case WhyComputedValuePage                => whyComputedValuePage
+    case ExplainReasonComputedValuePage      => explainReasonComputedValuePage
 
     case _ => _ => routes.IndexController.onPageLoad
   }
@@ -61,9 +63,21 @@ class Navigator @Inject() () {
           case Method2 => NameOfGoodsController.onPageLoad(models.NormalMode)
           case Method3 => NameOfGoodsController.onPageLoad(models.NormalMode)
           case Method4 => NameOfGoodsController.onPageLoad(models.NormalMode)
-          case Method5 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method5 => WhyComputedValueController.onPageLoad(models.NormalMode)
           case Method6 => NameOfGoodsController.onPageLoad(models.NormalMode)
         }
+    }
+
+  private def whyComputedValuePage(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhyComputedValuePage) match {
+      case None    => WhyComputedValueController.onPageLoad(models.NormalMode)
+      case Some(_) => ExplainReasonComputedValueController.onPageLoad(models.NormalMode)
+    }
+
+  private def explainReasonComputedValuePage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ExplainReasonComputedValuePage) match {
+      case None    => ExplainReasonComputedValueController.onPageLoad(models.NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(models.NormalMode)
     }
 
   private def nameOfGoodsPage(userAnswers: UserAnswers): Call =
