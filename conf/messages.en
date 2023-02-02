@@ -363,3 +363,23 @@ whyComputedValue.checkYourAnswersLabel = whyComputedValue
 whyComputedValue.error.required = Please outline why you have not selected Methods 1-4 to value your goods
 whyComputedValue.error.length = Maximum allowed characters is 8168
 whyComputedValue.change.hidden = WhyComputedValue
+
+haveYouUsedMethodOneInPast.title = In the past 90-days, have you used Valuation Method 1 to import any goods?
+haveYouUsedMethodOneInPast.heading = In the past 90-days, have you used Valuation Method 1 to import any goods?
+haveYouUsedMethodOneInPast.caption = About the goods
+haveYouUsedMethodOneInPast.paragraph.1 = Method 1 (transaction value of imported goods) is the most common method of valuation. It is based on the price paid or payable by the buyer to the seller for the goods being sold for export to the UK.
+haveYouUsedMethodOneInPast.error.required = Select yes if you have used valuation method 1 to import any goods in past 90 days
+haveYouUsedMethodOneInPast.checkYourAnswersLabel = haveYouUsedMethodOneInPast
+haveYouUsedMethodOneInPast.change.hidden = HaveYouUsedMethodOneInPast
+
+whyTransactionValueOfSimilarGoods.title = Please explain why you have not selected Methods 1 or 2 to value your goods
+whyTransactionValueOfSimilarGoods.heading = Please explain why you have not selected Methods 1 or 2 to value your goods
+whyTransactionValueOfSimilarGoods.caption = About the goods
+whyTransactionValueOfSimilarGoods.paragraph.1 = Before you try Method 3 you must first have tried to use:
+whyTransactionValueOfSimilarGoods.paragraph.2 = Please outline why you believe Methods 1 and 2 are not suitable to work out the customs value of your imports.
+whyTransactionValueOfSimilarGoods.bulletPoint.1 = Method 1 (transaction value of imported goods)
+whyTransactionValueOfSimilarGoods.bulletPoint.2 = Method 2 (transaction value of identical goods)
+whyTransactionValueOfSimilarGoods.error.required = Please explain why you have not selected Methods 1 or 2 to value your goods
+whyTransactionValueOfSimilarGoods.error.length = WhyTransactionValueOfSimilarGoods must be 8167 characters or less
+whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = whyTransactionValueOfSimilarGoods
+whyTransactionValueOfSimilarGoods.change.hidden = WhyTransactionValueOfSimilarGoods

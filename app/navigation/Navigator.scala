@@ -29,26 +29,28 @@ import routes._
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ValuationMethodPage                 => valuationMethodPage
-    case NameOfGoodsPage                     => nameOfGoodsPage
-    case HasCommodityCodePage                => hasCommodityCodePage
-    case CommodityCodePage                   => commodityCodePage
-    case PriceOfGoodsPage                    => priceOfGoodsPage
-    case WhatCountryAreGoodsFromPage         => whatCountryAreGoodsFromPage
-    case AreGoodsShippedDirectlyPage         => areGoodsShippedDirectlyPage
-    case DescribeTheGoodsPage                => describeTheGoodsPage
-    case HowAreTheGoodsMadePage              => howAreTheGoodsMadePage
-    case HasConfidentialInformationPage      => hasConfidentialInformationPage
-    case ConfidentialInformationPage         => confidentialInformationPage
-    case ImportGoodsPage                     => importGoodsPage
-    case RequiredInformationPage             => requiredInformationPage
-    case CheckRegisteredDetailsPage          => checkRegisteredDetailsPage
-    case ApplicationContactDetailsPage       => applicationContactDetailsPage
-    case DoYouWantToUploadDocumentsPage      => doYouWantToUploadDocumentsPage
-    case IsThisFileConfidentialPage          => isThisFileConfidentialPage
-    case UploadAnotherSupportingDocumentPage => uploadAnotherSupportingDocumentPage
-    case WhyComputedValuePage                => whyComputedValuePage
-    case ExplainReasonComputedValuePage      => explainReasonComputedValuePage
+    case ValuationMethodPage                   => valuationMethodPage
+    case NameOfGoodsPage                       => nameOfGoodsPage
+    case HasCommodityCodePage                  => hasCommodityCodePage
+    case CommodityCodePage                     => commodityCodePage
+    case PriceOfGoodsPage                      => priceOfGoodsPage
+    case WhatCountryAreGoodsFromPage           => whatCountryAreGoodsFromPage
+    case AreGoodsShippedDirectlyPage           => areGoodsShippedDirectlyPage
+    case DescribeTheGoodsPage                  => describeTheGoodsPage
+    case HowAreTheGoodsMadePage                => howAreTheGoodsMadePage
+    case HasConfidentialInformationPage        => hasConfidentialInformationPage
+    case ConfidentialInformationPage           => confidentialInformationPage
+    case ImportGoodsPage                       => importGoodsPage
+    case RequiredInformationPage               => requiredInformationPage
+    case CheckRegisteredDetailsPage            => checkRegisteredDetailsPage
+    case ApplicationContactDetailsPage         => applicationContactDetailsPage
+    case DoYouWantToUploadDocumentsPage        => doYouWantToUploadDocumentsPage
+    case IsThisFileConfidentialPage            => isThisFileConfidentialPage
+    case UploadAnotherSupportingDocumentPage   => uploadAnotherSupportingDocumentPage
+    case WhyComputedValuePage                  => whyComputedValuePage
+    case ExplainReasonComputedValuePage        => explainReasonComputedValuePage
+    case WhyTransactionValueOfSimilarGoodsPage => whyTransactionValueOfSimilarGoodsPage
+    case HaveYouUsedMethodOneInPastPage        => haveYouUsedMethodOneInPastPage
 
     case _ => _ => routes.IndexController.onPageLoad
   }
@@ -61,13 +63,28 @@ class Navigator @Inject() () {
         valuationMethod match {
           case Method1 => NameOfGoodsController.onPageLoad(models.NormalMode)
           case Method2 => NameOfGoodsController.onPageLoad(models.NormalMode)
-          case Method3 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method3 => WhyTransactionValueOfSimilarGoodsController.onPageLoad(models.NormalMode)
           case Method4 => NameOfGoodsController.onPageLoad(models.NormalMode)
           case Method5 => WhyComputedValueController.onPageLoad(models.NormalMode)
           case Method6 => NameOfGoodsController.onPageLoad(models.NormalMode)
         }
     }
 
+  // Method 3----------------------------------------------------------------
+  private def whyTransactionValueOfSimilarGoodsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
+      case None    => WhyTransactionValueOfSimilarGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
+    }
+
+  private def haveYouUsedMethodOneInPastPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
+      case None    => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(models.NormalMode)
+    }
+
+  // ----------------------------------------------------------------
+  // method 5----------------------------------------------------------------
   private def whyComputedValuePage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyComputedValuePage) match {
       case None    => WhyComputedValueController.onPageLoad(models.NormalMode)
@@ -79,8 +96,8 @@ class Navigator @Inject() () {
       case None    => ExplainReasonComputedValueController.onPageLoad(models.NormalMode)
       case Some(_) => NameOfGoodsController.onPageLoad(models.NormalMode)
     }
-
-  private def nameOfGoodsPage(userAnswers: UserAnswers): Call =
+  // ----------------------------------------------------------------
+  private def nameOfGoodsPage(userAnswers: UserAnswers): Call                =
     userAnswers.get(NameOfGoodsPage) match {
       case None    => NameOfGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)
@@ -111,6 +128,7 @@ class Navigator @Inject() () {
       case None    => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
       case Some(_) => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
     }
+
   private def areGoodsShippedDirectlyPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AreGoodsShippedDirectlyPage) match {
       case None    => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
