@@ -146,3 +146,8 @@ GET        /whyTransactionValueOfSimilarGoods                        controllers
 POST       /whyTransactionValueOfSimilarGoods                        controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWhyTransactionValueOfSimilarGoods                  controllers.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhyTransactionValueOfSimilarGoods                  controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /whyIdenticalGoods                        controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /whyIdenticalGoods                        controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)

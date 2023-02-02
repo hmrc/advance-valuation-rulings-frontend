@@ -51,6 +51,26 @@ class Navigator @Inject() () {
     case ExplainReasonComputedValuePage        => explainReasonComputedValuePage
     case WhyTransactionValueOfSimilarGoodsPage => whyTransactionValueOfSimilarGoodsPage
     case HaveYouUsedMethodOneInPastPage        => haveYouUsedMethodOneInPastPage
+    case NameOfGoodsPage                       => nameOfGoodsPage
+    case HasCommodityCodePage                  => hasCommodityCodePage
+    case CommodityCodePage                     => commodityCodePage
+    case PriceOfGoodsPage                      => priceOfGoodsPage
+    case WhatCountryAreGoodsFromPage           => whatCountryAreGoodsFromPage
+    case AreGoodsShippedDirectlyPage           => areGoodsShippedDirectlyPage
+    case DescribeTheGoodsPage                  => describeTheGoodsPage
+    case HowAreTheGoodsMadePage                => howAreTheGoodsMadePage
+    case HasConfidentialInformationPage        => hasConfidentialInformationPage
+    case ConfidentialInformationPage           => confidentialInformationPage
+    case ImportGoodsPage                       => importGoodsPage
+    case RequiredInformationPage               => requiredInformationPage
+    case CheckRegisteredDetailsPage            => checkRegisteredDetailsPage
+    case ApplicationContactDetailsPage         => applicationContactDetailsPage
+    case DoYouWantToUploadDocumentsPage        => doYouWantToUploadDocumentsPage
+    case IsThisFileConfidentialPage            => isThisFileConfidentialPage
+    case UploadAnotherSupportingDocumentPage   => uploadAnotherSupportingDocumentPage
+    case WhyIdenticalGoodsPage                 => whyIdenticalGoodsPage
+    case WhyComputedValuePage                  => whyComputedValuePage
+    case ExplainReasonComputedValuePage        => explainReasonComputedValuePage
 
     case _ => _ => routes.IndexController.onPageLoad
   }
@@ -62,12 +82,19 @@ class Navigator @Inject() () {
         import models.ValuationMethod._
         valuationMethod match {
           case Method1 => NameOfGoodsController.onPageLoad(models.NormalMode)
-          case Method2 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method2 => WhyIdenticalGoodsController.onPageLoad(models.NormalMode)
           case Method3 => WhyTransactionValueOfSimilarGoodsController.onPageLoad(models.NormalMode)
           case Method4 => NameOfGoodsController.onPageLoad(models.NormalMode)
           case Method5 => WhyComputedValueController.onPageLoad(models.NormalMode)
           case Method6 => NameOfGoodsController.onPageLoad(models.NormalMode)
         }
+    }
+
+  // Method 2----------------------------------------------------------------
+  private def whyIdenticalGoodsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhyIdenticalGoodsPage) match {
+      case None    => WhyIdenticalGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
     }
 
   // Method 3----------------------------------------------------------------

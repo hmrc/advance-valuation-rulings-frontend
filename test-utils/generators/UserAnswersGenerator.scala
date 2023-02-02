@@ -31,6 +31,8 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(WhyTransactionValueOfSimilarGoodsPage.type, JsValue)] ::
       arbitrary[(HaveYouUsedMethodOneInPastPage.type, JsValue)] ::
       arbitrary[(WhyComputedValuePage.type, JsValue)] ::
+      arbitrary[(WhyIdenticalGoodsPage.type, JsValue)] ::
+      arbitrary[(WhyComputedValuePage.type, JsValue)] ::
       arbitrary[(ExplainReasonComputedValuePage.type, JsValue)] ::
       arbitrary[(UploadAnotherSupportingDocumentPage.type, JsValue)] ::
       arbitrary[(IsThisFileConfidentialPage.type, JsValue)] ::
