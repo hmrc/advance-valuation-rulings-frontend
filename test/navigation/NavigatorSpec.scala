@@ -29,6 +29,36 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
+      "must go from a page that doesn't exist in the route map to Index" in {
+
+        case object UnknownPage extends Page
+        navigator.nextPage(
+          UnknownPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.IndexController.onPageLoad
+      }
+
+      "valuationMethod page must navigate to" - {
+        "WhyTransactionValueOfSimilarGoods page when method 3 is selected" in {
+          val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method3).get
+          navigator.nextPage(
+            ValuationMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode = NormalMode)
+        }
+      }
+      "WhyTransactionValueOfSimilarGoods page must navigate to HaveYouUsedMethodOneInPast page" in {
+        val userAnswers =
+          UserAnswers("id").set(WhyTransactionValueOfSimilarGoodsPage, "bananas").get
+        navigator.nextPage(
+          WhyTransactionValueOfSimilarGoodsPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.IndexController.onPageLoad
+
+      }
       "RequiredInformationPage must" in {
         val userAnswers =
           UserAnswers("id")

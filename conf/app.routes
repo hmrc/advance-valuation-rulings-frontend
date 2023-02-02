@@ -136,3 +136,13 @@ GET        /whyComputedValue                        controllers.WhyComputedValue
 POST       /whyComputedValue                        controllers.WhyComputedValueController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWhyComputedValue                  controllers.WhyComputedValueController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhyComputedValue                  controllers.WhyComputedValueController.onSubmit(mode: Mode = CheckMode)
+
+GET        /haveYouUsedMethodOneInPast                        controllers.HaveYouUsedMethodOneInPastController.onPageLoad(mode: Mode = NormalMode)
+POST       /haveYouUsedMethodOneInPast                        controllers.HaveYouUsedMethodOneInPastController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHaveYouUsedMethodOneInPast                  controllers.HaveYouUsedMethodOneInPastController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHaveYouUsedMethodOneInPast                  controllers.HaveYouUsedMethodOneInPastController.onSubmit(mode: Mode = CheckMode)
+
+GET        /whyTransactionValueOfSimilarGoods                        controllers.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /whyTransactionValueOfSimilarGoods                        controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeWhyTransactionValueOfSimilarGoods                  controllers.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeWhyTransactionValueOfSimilarGoods                  controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = CheckMode)
