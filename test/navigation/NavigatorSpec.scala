@@ -29,14 +29,132 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(
-          UnknownPage,
-          NormalMode,
+      "RequiredInformationPage must" in {
+        val userAnswers =
           UserAnswers("id")
-        ) mustBe routes.IndexController.onPageLoad
+            .set(RequiredInformationPage, RequiredInformation.values.toSet)
+            .get
+        navigator.nextPage(
+          RequiredInformationPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
+      }
+
+      "ImportGoodsPage must" - {
+
+        "navigate to PublicInformationNoticePage when True" in {
+          val userAnswers =
+            UserAnswers("id")
+              .set(ImportGoodsPage, true)
+              .get
+          navigator.nextPage(
+            ImportGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.PublicInformationNoticeController.onPageLoad()
+        }
+
+        "and navigate to ImportingGoodsPage when False" in {
+          val userAnswers =
+            UserAnswers("id")
+              .set(ImportGoodsPage, false)
+              .get
+          navigator.nextPage(
+            ImportGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ImportingGoodsController.onPageLoad()
+        }
+      }
+
+      "CheckRegisteredDetailsPage must" - {
+
+        "navigate to ApplicationContactDetailsPage when Yes" in {
+          val userAnswers =
+            UserAnswers("id").set(CheckRegisteredDetailsPage, CheckRegisteredDetails.Yes).get
+          navigator.nextPage(
+            CheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+        }
+
+        "and navigate to EORIBeUpToDatePage when No" in {
+          val userAnswers =
+            UserAnswers("id").set(CheckRegisteredDetailsPage, CheckRegisteredDetails.No).get
+          navigator.nextPage(
+            CheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.EORIBeUpToDateController.onPageLoad
+        }
+      }
+
+      "ApplicationContactDetailsPage must" in {
+        val userAnswers =
+          UserAnswers("id")
+            .set(ApplicationContactDetailsPage, ApplicationContactDetails("name", "email", "phone"))
+            .get
+        navigator.nextPage(
+          ApplicationContactDetailsPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+      }
+
+//     TODO: Method Pages Navigation Spec should be down below
+
+      "HasCommodityCodePage must" - {
+        "navigage to CommodityCode when yes" in {
+          navigator.nextPage(
+            HasCommodityCodePage,
+            NormalMode,
+            UserAnswers("id").set(HasCommodityCodePage, true).success.value
+          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode)
+        }
+      }
+      // Additional pages
+
+      "CommodityCode must" - {
+        "navigate to WhatCountryAreGoodsFrom when set" in {
+          navigator.nextPage(
+            CommodityCodePage,
+            NormalMode,
+            UserAnswers("id").set(CommodityCodePage, "1234567890").success.value
+          ) mustBe routes.WhatCountryAreGoodsFromController.onPageLoad(NormalMode)
+        }
+      }
+
+      "WhatCountryAreGoodsFrom must" - {
+        "navigate to AreGoodsShippedDirectly" in {
+          navigator.nextPage(
+            WhatCountryAreGoodsFromPage,
+            NormalMode,
+            UserAnswers("id").set(WhatCountryAreGoodsFromPage, "GB").success.value
+          ) mustBe routes.AreGoodsShippedDirectlyController.onPageLoad(NormalMode)
+        }
+      }
+
+      "AreGoodsShippedDirectly must" - {
+        "navigate to DescribeTheGoods when true" in {
+          navigator.nextPage(
+            AreGoodsShippedDirectlyPage,
+            NormalMode,
+            UserAnswers("id").set(AreGoodsShippedDirectlyPage, true).success.value
+          ) mustBe routes.DescribeTheGoodsController.onPageLoad(NormalMode)
+        }
+
+      }
+
+      "AreGoodsShippedDirectly must" - {
+        "navigate to HowAreTheGoodsMade when given valid data" in {
+          navigator.nextPage(
+            DescribeTheGoodsPage,
+            NormalMode,
+            UserAnswers("id").set(DescribeTheGoodsPage, "Some goods").success.value
+          ) mustBe routes.HowAreTheGoodsMadeController.onPageLoad(NormalMode)
+        }
       }
 
       "must go from whyComputedValuePage to explainReasonComputedValuePage" in {
