@@ -29,6 +29,9 @@ trait PageGenerators {
     : Arbitrary[HaveYouUsedMethodOneInPastPage.type] =
     Arbitrary(HaveYouUsedMethodOneInPastPage)
 
+  implicit lazy val arbitraryWhyIdenticalGoodsPage: Arbitrary[WhyIdenticalGoodsPage.type] =
+    Arbitrary(WhyIdenticalGoodsPage)
+
   implicit lazy val arbitraryWhyComputedValuePage: Arbitrary[WhyComputedValuePage.type] =
     Arbitrary(WhyComputedValuePage)
 

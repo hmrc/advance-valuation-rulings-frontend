@@ -139,6 +139,15 @@ class NavigatorSpec extends SpecBase {
       }
 
       "valuationMethod page must navigate to" - {
+        "WhyIdenticalGoods page when method 2 is selected" in {
+          val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method2).get
+          navigator.nextPage(
+            ValuationMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = NormalMode)
+        }
+
         "WhyTransactionValueOfSimilarGoods page when method 3 is selected" in {
           val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method3).get
           navigator.nextPage(
@@ -150,7 +159,7 @@ class NavigatorSpec extends SpecBase {
       }
 
       "HasCommodityCodePage must" - {
-        "navigage to CommodityCode when yes" in {
+        "navigate to CommodityCode when yes" in {
           navigator.nextPage(
             HasCommodityCodePage,
             NormalMode,
@@ -196,6 +205,26 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             UserAnswers("id").set(DescribeTheGoodsPage, "Some goods").success.value
           ) mustBe routes.HowAreTheGoodsMadeController.onPageLoad(NormalMode)
+        }
+      }
+
+      "whyIdenticalGoods Page must" - {
+        "must go to HaveYouUsedMethodOneInPastPage" in {
+          val userAnswers = UserAnswers("id").set(WhyIdenticalGoodsPage, "banana").get
+          navigator.nextPage(
+            WhyIdenticalGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(mode = NormalMode)
+        }
+
+        "must navigate to itself" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            WhyIdenticalGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = NormalMode)
         }
       }
 

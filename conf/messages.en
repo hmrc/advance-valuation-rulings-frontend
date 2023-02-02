@@ -383,3 +383,12 @@ whyTransactionValueOfSimilarGoods.error.required = Please explain why you have n
 whyTransactionValueOfSimilarGoods.error.length = WhyTransactionValueOfSimilarGoods must be 8167 characters or less
 whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = whyTransactionValueOfSimilarGoods
 whyTransactionValueOfSimilarGoods.change.hidden = WhyTransactionValueOfSimilarGoods
+
+whyIdenticalGoods.title = Please outline why you have not selected Method 1 to value your goods
+whyIdenticalGoods.caption = About the goods
+whyIdenticalGoods.heading = Please outline why you have not selected Method 1 to value your goods
+whyIdenticalGoods.paragraph = Before you try Method 2 you must first have tried to use Method 1 (transaction value of imported goods). Please explain why you believe Method 1 is not suitable to work out the customs value of your imports.
+whyIdenticalGoods.checkYourAnswersLabel = whyIdenticalGoods
+whyIdenticalGoods.error.required = Please outline why you have not selected Method 1 to value your goods
+whyIdenticalGoods.error.length = Maximum allowed characters is 8168
+whyIdenticalGoods.change.hidden = WhyIdenticalGoods
