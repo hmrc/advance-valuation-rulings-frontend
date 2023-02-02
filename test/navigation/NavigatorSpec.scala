@@ -38,15 +38,30 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
-      "WhyTransactionValueOfSimilarGoods page must navigate to HaveYouUsedMethodOneInPast page" in {
-        val userAnswers =
-          UserAnswers("id").set(WhyTransactionValueOfSimilarGoodsPage, "bananas").get
-        navigator.nextPage(
-          WhyTransactionValueOfSimilarGoodsPage,
-          NormalMode,
-          userAnswers
-        ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode)
+      "WhyTransactionValueOfSimilarGoods page" - {
 
+        "must navigate to HaveYouUsedMethodOneInPast page" in {
+          val userAnswers =
+            UserAnswers("id").set(WhyTransactionValueOfSimilarGoodsPage, "bananas").get
+          navigator.nextPage(
+            WhyTransactionValueOfSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode)
+
+        }
+      }
+
+      "HaveYouUsedMethodOneInPast page" - {
+        "must navigate to nameOfGoods Page" in {
+          val userAnswers =
+            UserAnswers("id").set(HaveYouUsedMethodOneInPastPage, true).get
+          navigator.nextPage(
+            HaveYouUsedMethodOneInPastPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
+        }
       }
 
       "RequiredInformationPage must" in {
