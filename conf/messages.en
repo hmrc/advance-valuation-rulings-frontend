@@ -180,7 +180,7 @@ describeTheGoods.list.3 = how it works
 describeTheGoods.list.4 = how it is packaged
 describeTheGoods.insetText = You will be able to add confidential information and upload files later in the application.
 describeTheGoods.error.required = Provide detailed description of goods
-describeTheGoods.error.length = DescribeTheGoods must be 8168 characters or less
+describeTheGoods.error.length = Maximum allowed characters is 8168
 describeTheGoods.checkYourAnswersLabel = describeTheGoods
 describeTheGoods.change.hidden = DescribeTheGoods
 
@@ -368,7 +368,7 @@ haveYouUsedMethodOneInPast.title = In the past 90-days, have you used Valuation 
 haveYouUsedMethodOneInPast.heading = In the past 90-days, have you used Valuation Method 1 to import any goods?
 haveYouUsedMethodOneInPast.caption = About the goods
 haveYouUsedMethodOneInPast.paragraph.1 = Method 1 (transaction value of imported goods) is the most common method of valuation. It is based on the price paid or payable by the buyer to the seller for the goods being sold for export to the UK.
-haveYouUsedMethodOneInPast.error.required = Select yes if you have used valuation method 1 to import any goods in past 90 days
+haveYouUsedMethodOneInPast.error.required = Select yes if you have used Valuation Method 1 to import any goods in past 90 days
 haveYouUsedMethodOneInPast.checkYourAnswersLabel = haveYouUsedMethodOneInPast
 haveYouUsedMethodOneInPast.change.hidden = HaveYouUsedMethodOneInPast
 
@@ -380,7 +380,7 @@ whyTransactionValueOfSimilarGoods.paragraph.2 = Please outline why you believe M
 whyTransactionValueOfSimilarGoods.bulletPoint.1 = Method 1 (transaction value of imported goods)
 whyTransactionValueOfSimilarGoods.bulletPoint.2 = Method 2 (transaction value of identical goods)
 whyTransactionValueOfSimilarGoods.error.required = Please explain why you have not selected Methods 1 or 2 to value your goods
-whyTransactionValueOfSimilarGoods.error.length = WhyTransactionValueOfSimilarGoods must be 8167 characters or less
+whyTransactionValueOfSimilarGoods.error.length = Maximum allowed characters is 8168
 whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = whyTransactionValueOfSimilarGoods
 whyTransactionValueOfSimilarGoods.change.hidden = WhyTransactionValueOfSimilarGoods
 
