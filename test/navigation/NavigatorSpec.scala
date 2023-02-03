@@ -64,16 +64,27 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "RequiredInformationPage must" in {
-        val userAnswers =
-          UserAnswers("id")
-            .set(RequiredInformationPage, RequiredInformation.values.toSet)
-            .get
-        navigator.nextPage(
-          RequiredInformationPage,
-          NormalMode,
-          userAnswers
-        ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
+      "RequiredInformationPage must" - {
+        "navigate to Import goods page when all values are set" in {
+          val userAnswers =
+            UserAnswers("id")
+              .set(RequiredInformationPage, RequiredInformation.values.toSet)
+              .get
+          navigator.nextPage(
+            RequiredInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
+        }
+
+        "navigate to self when no values are set" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            RequiredInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.RequiredInformationController.onPageLoad
+        }
       }
 
       "ImportGoodsPage must" - {
@@ -100,6 +111,15 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.ImportingGoodsController.onPageLoad()
+        }
+
+        "navigate to ImportingGoodsPage when no value is set" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            ImportGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
         }
       }
 
@@ -139,6 +159,24 @@ class NavigatorSpec extends SpecBase {
       }
 
       "valuationMethod page must navigate to" - {
+        "self when no method is selected" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            ValuationMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+        }
+
+        "NameOfGoods page when method 1 is selected" in {
+          val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method1).get
+          navigator.nextPage(
+            ValuationMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+        }
+
         "WhyIdenticalGoods page when method 2 is selected" in {
           val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method2).get
           navigator.nextPage(
@@ -155,6 +193,33 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode = NormalMode)
+        }
+
+        "NameOfGoods page when method 4 is selected" in {
+          val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method4).get
+          navigator.nextPage(
+            ValuationMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+        }
+
+        "WhyComputedValue page when method 5 is selected" in {
+          val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method5).get
+          navigator.nextPage(
+            ValuationMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WhyComputedValueController.onPageLoad(mode = NormalMode)
+        }
+
+        "NameOfGoods page when method 6 is selected" in {
+          val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method6).get
+          navigator.nextPage(
+            ValuationMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
         }
       }
 
