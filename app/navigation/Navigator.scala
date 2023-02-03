@@ -51,28 +51,8 @@ class Navigator @Inject() () {
     case ExplainReasonComputedValuePage        => explainReasonComputedValuePage
     case WhyTransactionValueOfSimilarGoodsPage => whyTransactionValueOfSimilarGoodsPage
     case HaveYouUsedMethodOneInPastPage        => haveYouUsedMethodOneInPastPage
-    case NameOfGoodsPage                       => nameOfGoodsPage
-    case HasCommodityCodePage                  => hasCommodityCodePage
-    case CommodityCodePage                     => commodityCodePage
-    case PriceOfGoodsPage                      => priceOfGoodsPage
-    case WhatCountryAreGoodsFromPage           => whatCountryAreGoodsFromPage
-    case AreGoodsShippedDirectlyPage           => areGoodsShippedDirectlyPage
-    case DescribeTheGoodsPage                  => describeTheGoodsPage
-    case HowAreTheGoodsMadePage                => howAreTheGoodsMadePage
-    case HasConfidentialInformationPage        => hasConfidentialInformationPage
-    case ConfidentialInformationPage           => confidentialInformationPage
-    case ImportGoodsPage                       => importGoodsPage
-    case RequiredInformationPage               => requiredInformationPage
-    case CheckRegisteredDetailsPage            => checkRegisteredDetailsPage
-    case ApplicationContactDetailsPage         => applicationContactDetailsPage
-    case DoYouWantToUploadDocumentsPage        => doYouWantToUploadDocumentsPage
-    case IsThisFileConfidentialPage            => isThisFileConfidentialPage
-    case UploadAnotherSupportingDocumentPage   => uploadAnotherSupportingDocumentPage
     case WhyIdenticalGoodsPage                 => whyIdenticalGoodsPage
-    case WhyComputedValuePage                  => whyComputedValuePage
-    case ExplainReasonComputedValuePage        => explainReasonComputedValuePage
-
-    case _ => _ => routes.IndexController.onPageLoad
+    case _                                     => _ => routes.IndexController.onPageLoad
   }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
