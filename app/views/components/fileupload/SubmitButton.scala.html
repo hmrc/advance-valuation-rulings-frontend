@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.fileupload
+@(label: Option[String] = None)(implicit messages: Messages)
 
-case class UpscanFileReference(reference: String)
-
-case class UpscanInitiateResponse(
-  fileReference: UpscanFileReference,
-  postTarget: String,
-  formFields: Map[String, String]
-)
+<div class="section">
+    <button id="submit" class="button">
+        @if(label.nonEmpty) {
+            @label
+        } else {
+            @messages("site.continue")
+        }
+    </button>
+</div>

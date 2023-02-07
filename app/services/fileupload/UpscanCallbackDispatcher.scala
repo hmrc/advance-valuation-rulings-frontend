@@ -30,32 +30,32 @@
 //  * limitations under the License.
 //  */
 
-// package services.fileupload
+package services.fileupload
 
-// import javax.inject.Inject
+import javax.inject.Inject
 
-// import scala.concurrent.Future
+import scala.concurrent.Future
 
-// import controllers.fileupload.{CallbackBody, FailedCallbackBody, ReadyCallbackBody}
-// import model.fileupload.{Failed, UploadedSuccessfully}
+import controllers.fileupload.{CallbackBody, FailedCallbackBody, ReadyCallbackBody}
+import models.fileupload.{Failed, UploadedSuccessfully}
 
-// class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker) {
+class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker) {
 
-//   def handleCallback(callback: CallbackBody): Future[Unit] = {
+  def handleCallback(callback: CallbackBody): Future[Unit] = {
 
-//     val uploadStatus = callback match {
-//       case s: ReadyCallbackBody  =>
-//         UploadedSuccessfully(
-//           s.uploadDetails.fileName,
-//           s.uploadDetails.fileMimeType,
-//           s.downloadUrl.getFile,
-//           Some(s.uploadDetails.size)
-//         )
-//       case _: FailedCallbackBody =>
-//         Failed
-//     }
+    val uploadStatus = callback match {
+      case s: ReadyCallbackBody  =>
+        UploadedSuccessfully(
+          s.uploadDetails.fileName,
+          s.uploadDetails.fileMimeType,
+          s.downloadUrl.getFile,
+          Some(s.uploadDetails.size)
+        )
+      case _: FailedCallbackBody =>
+        Failed
+    }
 
-//     sessionStorage.registerUploadResult(callback.reference, uploadStatus)
-//   }
+    sessionStorage.registerUploadResult(callback.reference, uploadStatus)
+  }
 
-// }
+}

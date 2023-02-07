@@ -77,10 +77,18 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  lazy val callbackEndpointTarget: String = ??? // loadConfig("upscan.callback-endpoint")
-  lazy val initiateUrl: String            =
-    ??? // servicesConfig.baseUrl("upscan-initiate") + "/upscan/initiate"
-  lazy val initiateV2Url: String          =
-    ??? // servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
+  lazy val callbackEndpointTarget: String = loadConfig("upscan.callback-endpoint")
+
+  lazy val uploadRedirectTargetBase = loadConfig("upload-redirect-target-base")
+
+  lazy val initiateV2Url: String =
+    configuration
+      .get[Service]("microservice.services.upscan-initiate")
+      .baseUrl + "/upscan/v2/initiate"
+
+  private def loadConfig(key: String) =
+    configuration
+      .getOptional[String](key)
+      .getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
 }

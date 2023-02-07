@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.fileupload
+@import config.FrontendAppConfig
 
-case class UpscanFileReference(reference: String)
+@this(mainLayout: templates.Layout)
 
-case class UpscanInitiateResponse(
-  fileReference: UpscanFileReference,
-  postTarget: String,
-  formFields: Map[String, String]
-)
+@()(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+
+@mainLayout(pageTitle = titleNoForm("Your form has been submitted successfully")) {
+    <h1>Your form has been submitted successfully</h1>
+}
