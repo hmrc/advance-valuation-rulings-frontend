@@ -67,6 +67,7 @@ object CallbackBody {
   }
 }
 
+//todo change this to something else
 case class UploadDetails(
   uploadTimestamp: Instant,
   checksum: String,
