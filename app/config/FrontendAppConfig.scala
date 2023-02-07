@@ -76,4 +76,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+
+  lazy val callbackEndpointTarget: String = ??? // loadConfig("upscan.callback-endpoint")
+  lazy val initiateUrl: String            =
+    ??? // servicesConfig.baseUrl("upscan-initiate") + "/upscan/initiate"
+  lazy val initiateV2Url: String          =
+    ??? // servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
+
 }
