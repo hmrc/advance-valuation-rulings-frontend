@@ -17,34 +17,28 @@
 package connectors
 
 import javax.inject.Inject
-import play.api.libs.json.{Json, OFormat, Reads, Writes}
-import play.mvc.Http.HeaderNames
-import config.FrontendAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import models.fileupload.{UpscanFileReference, UpscanInitiateResponse}
-import PreparedUpload._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-sealed trait UpscanInitiateRequest
+import play.api.libs.json.{Json, OFormat, Reads, Writes}
+import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-// TODO expectedContentType is also an optional value
-case class UpscanInitiateRequestV1(
-  callbackUrl: String,
-  successRedirect: Option[String] = None,
-  minimumFileSize: Option[Int]    = None,
-  maximumFileSize: Option[Int]    = Some(512))
-    extends UpscanInitiateRequest
+import PreparedUpload._
+import config.FrontendAppConfig
+import models.fileupload.{UpscanFileReference, UpscanInitiateResponse}
+
+sealed trait UpscanInitiateRequest
 
 // TODO expectedContentType is also an optional value
 case class UpscanInitiateRequestV2(
   callbackUrl: String,
   successRedirect: Option[String] = None,
-  errorRedirect: Option[String]   = None,
-  minimumFileSize: Option[Int]    = None,
-  maximumFileSize: Option[Int]    = Some(512))
-    extends UpscanInitiateRequest
+  errorRedirect: Option[String] = None,
+  minimumFileSize: Option[Int] = None,
+  maximumFileSize: Option[Int] = Some(512)
+) extends UpscanInitiateRequest
 
 case class UploadForm(href: String, fields: Map[String, String])
 
@@ -55,10 +49,6 @@ object Reference {
 }
 
 case class PreparedUpload(reference: Reference, uploadRequest: UploadForm)
-
-object UpscanInitiateRequestV1 {
-  implicit val format: OFormat[UpscanInitiateRequestV1] = Json.format[UpscanInitiateRequestV1]
-}
 
 object UpscanInitiateRequestV2 {
   implicit val format: OFormat[UpscanInitiateRequestV2] = Json.format[UpscanInitiateRequestV2]
@@ -71,22 +61,17 @@ object PreparedUpload {
   implicit val format: Reads[PreparedUpload] = Json.reads[PreparedUpload]
 }
 
-class UpscanInitiateConnector @Inject()(httpClient: HttpClient, appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) {
+class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)(
+  implicit ec: ExecutionContext
+) {
 
   private val headers = Map(
     HeaderNames.CONTENT_TYPE -> "application/json"
   )
 
-  def initiateV1(redirectOnSuccess: Option[String])(implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
-    val request = UpscanInitiateRequestV1(
-      callbackUrl = appConfig.callbackEndpointTarget,
-      successRedirect = redirectOnSuccess
-    )
-    initiate(appConfig.initiateUrl, request)
-  }
-
-  def initiateV2(redirectOnSuccess: Option[String], redirectOnError: Option[String])
-                (implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
+  def initiateV2(redirectOnSuccess: Option[String], redirectOnError: Option[String])(implicit
+    hc: HeaderCarrier
+  ): Future[UpscanInitiateResponse] = {
     val request = UpscanInitiateRequestV2(
       callbackUrl = appConfig.callbackEndpointTarget,
       successRedirect = redirectOnSuccess,
@@ -95,11 +80,12 @@ class UpscanInitiateConnector @Inject()(httpClient: HttpClient, appConfig: Front
     initiate(appConfig.initiateV2Url, request)
   }
 
-  private def initiate[T](url: String, request: T)(
-    implicit hc: HeaderCarrier,
-    wts: Writes[T]): Future[UpscanInitiateResponse] =
+  private def initiate[T](url: String, request: T)(implicit
+    hc: HeaderCarrier,
+    wts: Writes[T]
+  ): Future[UpscanInitiateResponse] =
     for {
-      response <- httpClient.POST[T, PreparedUpload](url, request, headers.toSeq)
+      response     <- httpClient.POST[T, PreparedUpload](url, request, headers.toSeq)
       fileReference = UpscanFileReference(response.reference.value)
       postTarget    = response.uploadRequest.href
       formFields    = response.uploadRequest.fields

@@ -1,0 +1,48 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import helper._
+@import config.FrontendAppConfig
+@import models.fileupload._
+
+
+@this(mainLayout: templates.Layout)
+
+@(form: Form[_], uploadedFile: UploadedSuccessfully)(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+
+@mainLayout(pageTitle = titleNoForm("Hellooo submit")) {
+    <h1>Please fill in additional information</h1>
+
+    <form action="@controllers.fileupload.routes.UploadFormController.submitFormWithFile" method="post">
+        @CSRF.formField
+
+        <input type="hidden" name="uploadedFileId" value='@form.data("uploadedFileId")'/>
+
+        @components.fileupload.InputText(
+        field = form("field1"),
+        label = "Field1"
+        )
+
+        @components.fileupload.InputText(
+        field = form("field2"),
+        label = "Field2"
+        )
+
+       <div>Included file: @uploadedFile.name</div>
+
+        @components.fileupload.SubmitButton()
+    </form>
+}

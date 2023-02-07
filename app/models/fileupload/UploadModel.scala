@@ -16,12 +16,12 @@
 
 package models.fileupload
 
-import connectors._ // do properly
+import java.util.UUID
 
-import org.bson.types.ObjectId
 import play.api.mvc.QueryStringBindable
 
-import java.util.UUID
+import connectors._ // do properly
+import org.bson.types.ObjectId
 
 sealed trait UploadStatus
 case object InProgress extends UploadStatus

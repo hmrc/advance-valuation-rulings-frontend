@@ -151,3 +151,17 @@ GET        /whyIdenticalGoods                        controllers.WhyIdenticalGoo
 POST       /whyIdenticalGoods                        controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /v2/hello-world                      controllers.fileupload.UploadFormController.showV2
+
+GET        /hello-world/submission-form         controllers.fileupload.UploadFormController.showSubmissionForm(uploadId:  models.fileupload.UploadId)
+POST       /hello-world/submission-form         controllers.fileupload.UploadFormController.submitFormWithFile
+GET        /hello-world/submission-form/result  controllers.fileupload.UploadFormController.showSubmissionResult
+
+# upload file redirects
+GET        /hello-world/success                 controllers.fileupload.UploadFormController.showResult(uploadId:  models.fileupload.UploadId)
+GET        /hello-world/error                   controllers.fileupload.UploadFormController.showError(errorCode: String, errorMessage: String, errorRequestId: String, key: String)
+
+# upload file notification callback
++ nocsrf
+POST       /hello-world/upscan-callback         controllers.fileupload.UploadCallbackController.callback
