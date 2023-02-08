@@ -16,13 +16,43 @@
 
 @import config.FrontendAppConfig
 @import models.fileupload._
+@import components._
 
-@this(mainLayout: templates.Layout)
+@this(  mainLayout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukButton: GovukButton,
+        caption: Caption,
+        heading: Heading,
+        cancelApplicationLink: CancelApplicationLink,
+        paragraph: Paragraph,
+        list: BulletList
+    )
 
 @(upscanInitiateResponse : UpscanInitiateResponse)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
 
 @mainLayout(pageTitle = titleNoForm("uplodForm")) {
-    <h1>Please upload the file</h1>
+
+    @caption(messages("uploadSupportingDocuments.caption"))
+    @heading(messages("uploadSupportingDocuments.heading", "nameOfGoods"))
+
+ @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
+    @list(Seq(
+                Html(messages("uploadSupportingDocuments.bulletPoint.1")),
+                Html(messages("uploadSupportingDocuments.bulletPoint.2")),
+                Html(messages("uploadSupportingDocuments.bulletPoint.3")),
+                ),
+            "govuk-list govuk-list--bullet",
+    )
+
+    @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
+    @list(Seq(
+
+                Html(messages("uploadSupportingDocuments.bulletPoint.4")),
+                Html(messages("uploadSupportingDocuments.bulletPoint.5"))
+                ),
+            "govuk-list govuk-list--bullet",
+    )
+
 
     <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
 
@@ -32,12 +62,13 @@
 
         <div class="js-visible mt-3">
 
-            <div class="form-group">
-                <label class="form-label" for="file-input">
-                    <span class="">File to upload</span>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="file-input">
+                    Upload a file
                 </label>
                 <div class="form-control-wrapper">
                     <input
+                            class="govuk-file-upload"
                             type="file"
                             id="file-input"
                             name="file"
@@ -48,8 +79,13 @@
 
         </div>
 
-        <div class="section">
-            <button id="submit" class="button"> Upload </button>
-        </div>
-    </form>
+        @govukButton(
+            ButtonViewModel(messages("Upload and continue"))
+                .preventingDoubleClick()
+                .withAttribute(("id" -> "submit"))
+        )
+         </form>
+
+    @cancelApplicationLink()
+
 }
