@@ -17,7 +17,7 @@
 package repositories
 
 import connectors.Reference
-import models.fileupload.{Failed, InProgress, UploadDetails, UploadId, UploadedSuccessfully}
+import models.fileupload.{Failed, InProgress, UploadDetails, UploadedSuccessfully, UploadId}
 import org.bson.types.ObjectId
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -30,7 +30,7 @@ class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
       val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), InProgress)
 
       val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output = FileUploadRepository.mongoFormat.reads(serialized)
+      val output     = FileUploadRepository.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }
@@ -39,7 +39,7 @@ class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
       val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Failed)
 
       val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output = FileUploadRepository.mongoFormat.reads(serialized)
+      val output     = FileUploadRepository.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }
@@ -53,7 +53,7 @@ class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
       )
 
       val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output = FileUploadRepository.mongoFormat.reads(serialized)
+      val output     = FileUploadRepository.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }
@@ -67,7 +67,7 @@ class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
       )
 
       val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output = FileUploadRepository.mongoFormat.reads(serialized)
+      val output     = FileUploadRepository.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }
