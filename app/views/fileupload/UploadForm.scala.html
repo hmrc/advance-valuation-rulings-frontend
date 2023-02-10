@@ -28,7 +28,23 @@
         list: BulletList
     )
 
-@(upscanInitiateResponse : UpscanInitiateResponse)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+@(upscanInitiateResponse : UpscanInitiateResponse, errorMsg: Option[String]=None)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+
+@formInputClass = @{
+    if(errorMsg.isDefined) {
+        "govuk-file-upload govuk-file-upload--error"
+    } else {
+        "govuk-file-upload"
+    }
+}
+
+@formGroupClass = @{
+    if(errorMsg.isDefined) {
+        "govuk-form-group govuk-form-group--error"
+    } else {
+        "govuk-form-group"
+    }
+}
 
 @mainLayout(pageTitle = titleNoForm("uplodForm")) {
 
@@ -62,13 +78,19 @@
 
         <div class="js-visible mt-3">
 
-            <div class="govuk-form-group">
+            <div class="@formGroupClass">
+                @if(errorMsg.isDefined) {
+                    <p id="file-input-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @errorMsg.get
+                    </p>
+                }
+                
                 <label class="govuk-label" for="file-input">
                     Upload a file
                 </label>
                 <div class="form-control-wrapper">
                     <input
-                            class="govuk-file-upload"
+                            class="@formInputClass"
                             type="file"
                             id="file-input"
                             name="file"
