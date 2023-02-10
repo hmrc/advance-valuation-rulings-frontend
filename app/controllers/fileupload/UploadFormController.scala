@@ -83,8 +83,10 @@ class UploadFormController @Inject() (
             .flatMap(
               uploadResult =>
                 uploadResult match {
-                  case None         => Future(BadRequest(s"Upload with id $uploadId not found"))
-                  case Some(result) =>
+                  case None                               => Future(BadRequest(s"Upload with id $uploadId not found"))
+                  case Some(status: UploadedSuccessfully) =>
+                    showSubmissionForm(existingFileId)(request)
+                  case Some(result)                       =>
                     val errorRedirectUrl   =
                       appConfig.uploadRedirectTargetBase + "/advance-valuation-ruling/v3/hello-world"
                     val successRedirectUrl =
@@ -123,6 +125,7 @@ class UploadFormController @Inject() (
     )(SampleForm.apply)(SampleForm.unapply)
   )
 
+  // TODO: Move to another controller
   def showSubmissionForm(uploadId: UploadId): Action[AnyContent] = Action.async {
     implicit request =>
       val emptyForm = sampleForm.fill(SampleForm("", "", uploadId))
