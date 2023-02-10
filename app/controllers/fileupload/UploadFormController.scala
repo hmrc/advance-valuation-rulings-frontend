@@ -52,7 +52,7 @@ class UploadFormController @Inject() (
       val successRedirectUrl =
         appConfig.uploadRedirectTargetBase + routes.UploadFormController.showResult(uploadId).url
       val errorRedirectUrl   =
-        appConfig.uploadRedirectTargetBase + "/hello-world-upscan/hello-world/error"
+        appConfig.uploadRedirectTargetBase + "/hello-world-upscan/v2/hello-world"
       for {
         upscanInitiateResponse <-
           upscanInitiateConnector.initiateV2(Some(successRedirectUrl), Some(errorRedirectUrl))
@@ -63,6 +63,48 @@ class UploadFormController @Inject() (
       } yield Ok(uploadFormView(upscanInitiateResponse))
   }
 
+  def showV3(
+    errorCode: Option[String],
+    errorMessage: Option[String],
+    errorRequestId: Option[String],
+    key: Option[String],
+    uploadId: Option[UploadId]
+  ): Action[AnyContent] = Action.async {
+    implicit request =>
+      // appConfig.uploadRedirectTargetBase + "/advance-valuation-ruling/v3/hello-world"
+      val redirectUrl =
+        appConfig.uploadRedirectTargetBase + "/advance-valuation-ruling/v3/hello-world"
+
+      uploadId match {
+        case None                =>
+          // new file upload / error handling
+          val uploadFileId       = UploadId.generate
+          val successRedirectUrl =
+            appConfig.uploadRedirectTargetBase + routes.UploadFormController
+              .showV3(None, None, None, None, Some(uploadFileId))
+              .url
+
+          // val errorRedirectUrl   =
+          //   appConfig.uploadRedirectTargetBase + "/advance-valuation-ruling/v3/hello-world"
+
+          for {
+            upscanInitiateResponse <-
+              upscanInitiateConnector.initiateV2(Some(successRedirectUrl), Some(redirectUrl))
+            _                      <- uploadProgressTracker.requestUpload(
+                                        uploadFileId,
+                                        Reference(upscanInitiateResponse.fileReference.reference)
+                                      )
+          } yield Ok(uploadFormView(upscanInitiateResponse, errorMessage))
+        case Some(scannedFileId) =>
+          // handle success
+          for (uploadResult <- uploadProgressTracker.getUploadResult(scannedFileId))
+            yield uploadResult match {
+              case Some(result) => Ok(uploadResultView(scannedFileId, result))
+              case None         => BadRequest(s"Upload with id $uploadId not found")
+            }
+      }
+  }
+
   def showResult(uploadId: UploadId): Action[AnyContent] = Action.async {
     implicit request =>
       for (uploadResult <- uploadProgressTracker.getUploadResult(uploadId))
@@ -70,22 +112,6 @@ class UploadFormController @Inject() (
           case Some(result) => Ok(uploadResultView(uploadId, result))
           case None         => BadRequest(s"Upload with id $uploadId not found")
         }
-  }
-
-  def showError(
-    errorCode: String,
-    errorMessage: String,
-    errorRequestId: String,
-    key: String
-  ): Action[AnyContent] = Action {
-    implicit request =>
-      Ok(
-        errorView(
-          "Upload Error",
-          errorMessage,
-          s"Code: $errorCode, RequestId: $errorRequestId, FileReference: $key"
-        )
-      )
   }
 
   private case class SampleForm(field1: String, field2: String, uploadedFileId: UploadId)
