@@ -22,7 +22,7 @@
 @(uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
 
 @refreshHeader = {
- <meta http-equiv="refresh" content="1"/>
+ <meta http-equiv="refresh" content="2"/>
 }
 
 @mainLayout(pageTitle = titleNoForm("Verifying uploaded file"), additionalHeadBlock = {
@@ -31,7 +31,7 @@ case InProgress => Some(refreshHeader)
 case _ => None
 }
 }) {
-    <h1>Verifying uploaded file</h1>
+    <h1>This is the page</h1>
 
     @status match {
      case InProgress => { Waiting for the file to be scanned }

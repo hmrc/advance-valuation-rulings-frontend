@@ -24,6 +24,7 @@ import connectors._ // do properly
 import org.bson.types.ObjectId
 
 sealed trait UploadStatus
+case object NotStarted extends UploadStatus
 case object InProgress extends UploadStatus
 case object Failed extends UploadStatus
 

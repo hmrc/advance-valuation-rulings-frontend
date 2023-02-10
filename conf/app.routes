@@ -179,9 +179,6 @@ GET        /hello-world/submission-form         controllers.fileupload.UploadFor
 POST       /hello-world/submission-form         controllers.fileupload.UploadFormController.submitFormWithFile
 GET        /hello-world/submission-form/result  controllers.fileupload.UploadFormController.showSubmissionResult
 
-# upload file redirects
-GET        /hello-world/success                 controllers.fileupload.UploadFormController.showResult(uploadId:  models.fileupload.UploadId)
-
 # upload file notification callback
 + nocsrf
 POST       /hello-world/upscan-callback         controllers.fileupload.UploadCallbackController.callback
