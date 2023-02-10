@@ -39,6 +39,10 @@
     }
 }
 
+@refreshHeader = {
+    <meta http-equiv="refresh" content="3"/>
+   }   
+
 @formGroupClass = @{
     if(errorMsg.isDefined) {
         "govuk-form-group govuk-form-group--error"
@@ -47,7 +51,12 @@
     }
 }
 
-@mainLayout(pageTitle = titleNoForm("uplodForm")) {
+@mainLayout(pageTitle = titleNoForm("uplodForm"), additionalHeadBlock = {
+    status match {
+    case InProgress => Some(refreshHeader)
+    case _ => None
+    }
+    }) {
 
     @caption(messages("uploadSupportingDocuments.caption"))
     @heading(messages("uploadSupportingDocuments.heading", "nameOfGoods"))
