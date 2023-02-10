@@ -25,10 +25,11 @@
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
-        list: BulletList
+        list: BulletList,
+        fileStatus: FileStatus
     )
 
-@(upscanInitiateResponse : UpscanInitiateResponse, errorMsg: Option[String]=None)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+@(upscanInitiateResponse : UpscanInitiateResponse, errorMsg: Option[String]=None, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
 
 @formInputClass = @{
     if(errorMsg.isDefined) {
@@ -96,6 +97,7 @@
                             name="file"
                             accept=".pdf,.doc,.docx,.xlsx,.xls,.png,.jpeg,.jpg,.txt"
                     />
+                    @fileStatus(uploadId, status)
                 </div>
             </div>
 
