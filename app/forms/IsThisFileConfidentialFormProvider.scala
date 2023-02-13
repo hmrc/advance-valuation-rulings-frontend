@@ -19,13 +19,26 @@ package forms
 import javax.inject.Inject
 
 import play.api.data.Form
+import play.api.data.Forms.mapping
 
 import forms.mappings.Mappings
+import models.fileupload.FileConfidentiality
 
 class IsThisFileConfidentialFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[FileConfidentiality] =
     Form(
-      "value" -> boolean("isThisFileConfidential.error.required")
+      mapping(
+        "value"    -> boolean("isThisFileConfidential.error.required"),
+        "uploadId" -> text("isThisFileConfidential.error.file.required")
+      )(FileConfidentiality.apply)(
+        (fileConfidentiality: FileConfidentiality) =>
+          Some(
+            (
+              fileConfidentiality.value,
+              fileConfidentiality.uploadId
+            )
+          )
+      )
     )
 }

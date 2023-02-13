@@ -23,12 +23,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logging
 import play.api.data.Form
-import play.api.data.Forms.{mapping, text}
+import play.api.data.Forms.{boolean, mapping, text}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import config.FrontendAppConfig
 import connectors.{Reference, UpscanInitiateConnector}
+import controllers.IsThisFileConfidentialController
 import models.fileupload.{FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
@@ -42,7 +43,8 @@ class UploadFormController @Inject() (
   uploadResultView: UploadResult,
   submissionFormView: SubmissionForm,
   errorView: views.html.ErrorTemplate,
-  submissionResultView: SubmissionResult
+  submissionResultView: SubmissionResult,
+  isThisFileConfidentialController: IsThisFileConfidentialController
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendController(mcc)
     with Logging {
@@ -66,23 +68,20 @@ class UploadFormController @Inject() (
             result       <- uploadResult match {
                               case None                               =>
                                 Future(BadRequest(s"Upload with id $uploadId not found"))
-                              // Existing unsuccessful or inprogress
-                              case Some(result)                       =>
-                                showUploadForm(uploadFileId, errorMessage, result)
-                              // Success
                               case Some(status: UploadedSuccessfully) =>
                                 showSubmissionForm(existingFileId)(request)
+                              case Some(result)                       =>
+                                showUploadForm(uploadFileId, errorMessage, result)
                             }
           } yield result
       }
   }
 
-  private case class SampleForm(field1: String, field2: String, uploadedFileId: UploadId)
+  private case class SampleForm(field1: Boolean, uploadedFileId: UploadId)
 
   private val sampleForm = Form(
     mapping(
-      "field1"         -> text,
-      "field2"         -> text,
+      "field1"         -> boolean,
       "uploadedFileId" -> text.transform[UploadId](UploadId(_), _.value)
     )(SampleForm.apply)(SampleForm.unapply)
   )
@@ -90,12 +89,16 @@ class UploadFormController @Inject() (
   // TODO: Move to another controller
   def showSubmissionForm(uploadId: UploadId): Action[AnyContent] = Action.async {
     implicit request =>
-      val emptyForm = sampleForm.fill(SampleForm("", "", uploadId))
-      for (uploadResult <- uploadProgressTracker.getUploadResult(uploadId))
-        yield uploadResult match {
-          case Some(s: UploadedSuccessfully) => Ok(submissionFormView(emptyForm, s))
-          case _                             => InternalServerError("Something gone wrong")
-        }
+      for {
+        uploadResult <- uploadProgressTracker.getUploadResult(uploadId)
+        result       <- uploadResult match {
+                          case Some(s: UploadedSuccessfully) =>
+                            isThisFileConfidentialController
+                              .onPageLoad(mode = models.NormalMode)
+                              .apply(request)
+                          case _                             => Future.successful(InternalServerError("Something gone wrong"))
+                        }
+      } yield result
   }
 
   def submitFormWithFile(): Action[AnyContent] = Action.async {
