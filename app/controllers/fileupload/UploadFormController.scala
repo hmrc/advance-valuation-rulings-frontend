@@ -18,6 +18,7 @@ package controllers.fileupload
 
 import javax.inject.{Inject, Singleton}
 
+import cats.syntax.all._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logging
@@ -28,8 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import config.FrontendAppConfig
 import connectors.{Reference, UpscanInitiateConnector}
-import models.fileupload.{UploadedSuccessfully, UploadId}
-import models.fileupload.NotStarted
+import models.fileupload.{FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
 
@@ -55,63 +55,25 @@ class UploadFormController @Inject() (
     uploadId: Option[UploadId]
   ): Action[AnyContent] = Action.async {
     implicit request =>
-      val nextUploadFileId = UploadId.generate
       uploadId match {
         case None                 =>
-          // new file upload / error handling
-          val errorRedirectUrl   =
-            appConfig.uploadRedirectTargetBase + "/advance-valuation-ruling/v3/hello-world"
-          val successRedirectUrl =
-            appConfig.uploadRedirectTargetBase + routes.UploadFormController
-              .showV3(None, None, None, None, Some(nextUploadFileId))
-              .url
-
-          for {
-            upscanInitiateResponse <-
-              upscanInitiateConnector.initiateV2(Some(successRedirectUrl), Some(errorRedirectUrl))
-            _                      <- uploadProgressTracker.requestUpload(
-                                        nextUploadFileId,
-                                        Reference(upscanInitiateResponse.fileReference.reference)
-                                      )
-          } yield Ok(
-            uploadFormView(upscanInitiateResponse, errorMessage, nextUploadFileId, NotStarted)
-          )
+          val nextUploadFileId = FileUploadId.generateNewFileUploadId
+          showUploadForm(nextUploadFileId, errorMessage, NotStarted)
         case Some(existingFileId) =>
-          // Handle success / existing upload
-          uploadProgressTracker
-            .getUploadResult(existingFileId)
-            .flatMap(
-              uploadResult =>
-                uploadResult match {
-                  case None                               => Future(BadRequest(s"Upload with id $uploadId not found"))
-                  case Some(status: UploadedSuccessfully) =>
-                    showSubmissionForm(existingFileId)(request)
-                  case Some(result)                       =>
-                    val errorRedirectUrl   =
-                      appConfig.uploadRedirectTargetBase + "/advance-valuation-ruling/v3/hello-world"
-                    val successRedirectUrl =
-                      appConfig.uploadRedirectTargetBase + routes.UploadFormController
-                        .showV3(None, None, None, None, Some(existingFileId))
-                        .url
-
-                    for {
-                      upscanInitiateResponse <-
-                        upscanInitiateConnector
-                          .initiateV2(Some(successRedirectUrl), Some(errorRedirectUrl))
-                      _                      <- uploadProgressTracker.requestUpload(
-                                                  nextUploadFileId,
-                                                  Reference(upscanInitiateResponse.fileReference.reference)
-                                                )
-                    } yield Ok(
-                      uploadFormView(
-                        upscanInitiateResponse,
-                        errorMessage,
-                        existingFileId,
-                        result
-                      )
-                    )
-                }
-            )
+          val uploadFileId = FileUploadId.fromExistingUploadId(existingFileId)
+          for {
+            uploadResult <- uploadProgressTracker.getUploadResult(existingFileId)
+            result       <- uploadResult match {
+                              case None                               =>
+                                Future(BadRequest(s"Upload with id $uploadId not found"))
+                              // Existing unsuccessful or inprogress
+                              case Some(result)                       =>
+                                showUploadForm(uploadFileId, errorMessage, result)
+                              // Success
+                              case Some(status: UploadedSuccessfully) =>
+                                showSubmissionForm(existingFileId)(request)
+                            }
+          } yield result
       }
   }
 
@@ -151,5 +113,35 @@ class UploadFormController @Inject() (
 
   def showSubmissionResult(): Action[AnyContent] = Action.async {
     implicit request => Future.successful(Ok(submissionResultView()))
+  }
+
+  // Could be moved out to a service
+  private def showUploadForm(
+    fileUploadId: FileUploadId,
+    errorMessage: Option[String],
+    result: UploadStatus
+  )(implicit
+    request: MessagesRequest[AnyContent]
+  ) = {
+    val redirectUrlFileId   = fileUploadId.redirectUrlFileId
+    val requestUploadFileId = fileUploadId.nextUploadFileId
+
+    val baseUrl     = appConfig.uploadRedirectTargetBase
+    val redirectUrl = routes.UploadFormController
+      .showV3(None, None, None, None, Some(redirectUrlFileId))
+      .url
+
+    val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/v3/hello-world".some
+    val successRedirectUrl = s"${baseUrl}$redirectUrl".some
+
+    for {
+      response <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)
+      _        <- uploadProgressTracker.requestUpload(
+                    requestUploadFileId,
+                    Reference(response.fileReference.reference)
+                  )
+    } yield Ok(
+      uploadFormView(response, errorMessage, redirectUrlFileId, result)
+    )
   }
 }
