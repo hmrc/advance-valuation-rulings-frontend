@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
 import models.{NormalMode, UserAnswers}
-import models.fileupload.FileConfidentiality
+import models.fileupload.UpscanFileDetails
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -71,7 +71,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
       val userAnswers =
         UserAnswers(userAnswersId)
-          .set(IsThisFileConfidentialPage, FileConfidentiality(true, id))
+          .set(IsThisFileConfidentialPage, UpscanFileDetails(true, id))
           .success
           .value
 
@@ -86,7 +86,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(FileConfidentiality(true, id)),
+          form.fill(UpscanFileDetails(true, id)),
           NormalMode
         )(
           request,

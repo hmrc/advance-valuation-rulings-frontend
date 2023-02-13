@@ -20,6 +20,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     caption: Caption,
@@ -46,10 +47,31 @@
 
         @govukRadios(
             RadiosViewModel.yesNo(
-                field = form("value"),
+                field = form("isConfidential"),
                 legend = Legend()
             )
         )
+
+        @govukInput(
+                    InputViewModel(
+                        field = form("uploadId"),
+                        label = Label(None)
+                    )
+                )
+        @govukInput(
+                    InputViewModel(
+                        field = form("name"),
+                        label = Label(None)
+                    )
+                )
+        @govukInput(
+                    InputViewModel(
+                        field = form("downloadUrl"),
+                        label = Label(None)
+                    )
+                )
+
+
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

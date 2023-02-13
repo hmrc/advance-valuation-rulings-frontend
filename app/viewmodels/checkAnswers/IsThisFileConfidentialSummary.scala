@@ -30,7 +30,7 @@ object IsThisFileConfidentialSummary {
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(IsThisFileConfidentialPage).map {
       answer =>
-        val value = if (answer.value) "site.yes" else "site.no"
+        val value = if (answer.isConfidential) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
           key = "isThisFileConfidential.checkYourAnswersLabel",

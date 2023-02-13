@@ -22,21 +22,25 @@ import play.api.data.Form
 import play.api.data.Forms.mapping
 
 import forms.mappings.Mappings
-import models.fileupload.FileConfidentiality
+import models.fileupload.UpscanFileDetails
 
 class IsThisFileConfidentialFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[FileConfidentiality] =
+  def apply(): Form[UpscanFileDetails] =
     Form(
       mapping(
-        "value"    -> boolean("isThisFileConfidential.error.required"),
-        "uploadId" -> text("isThisFileConfidential.error.file.required")
-      )(FileConfidentiality.apply)(
-        (fileConfidentiality: FileConfidentiality) =>
+        "value"       -> boolean("isThisFileConfidential.error.required"),
+        "uploadId"    -> text("isThisFileConfidential.error.file.required"),
+        "name"        -> text("isThisFileConfidential.error.name.required"),
+        "downloadUrl" -> text("isThisFileConfidential.error.downloadUrl.required")
+      )(UpscanFileDetails.apply)(
+        (fileConfidentiality: UpscanFileDetails) =>
           Some(
             (
-              fileConfidentiality.value,
-              fileConfidentiality.uploadId
+              fileConfidentiality.isConfidential,
+              fileConfidentiality.uploadId,
+              fileConfidentiality.name,
+              fileConfidentiality.downloadUrl
             )
           )
       )
