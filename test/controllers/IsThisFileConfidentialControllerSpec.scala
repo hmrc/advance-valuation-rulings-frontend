@@ -67,11 +67,13 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val id: String = "212534"
+      val id: String          = "212534"
+      val name: String        = "hello.txt"
+      val downloadUrl: String = "localhost:9000/download"
 
       val userAnswers =
         UserAnswers(userAnswersId)
-          .set(IsThisFileConfidentialPage, UpscanFileDetails(true, id))
+          .set(IsThisFileConfidentialPage, UpscanFileDetails(true, id, name, downloadUrl))
           .success
           .value
 
@@ -86,7 +88,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(UpscanFileDetails(true, id)),
+          form.fill(UpscanFileDetails(true, id, name, downloadUrl)),
           NormalMode
         )(
           request,

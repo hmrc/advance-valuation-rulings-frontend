@@ -68,7 +68,7 @@ class IsThisFileConfidentialController @Inject() (
         Ok(view(preparedForm, mode))
     }
 
-  def onCallback(id: UploadId, details: UploadedSuccessfully): Action[AnyContent] =
+  def onCallback(id: UploadId, fileName: String, downloadUrl: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {

@@ -175,9 +175,6 @@ POST       /changeIsTheSaleSubjectToConditions                  controllers.IsTh
 GET        /v2/hello-world                      controllers.fileupload.UploadFormController.showV2
 GET        /v3/hello-world                      controllers.fileupload.UploadFormController.showV3(errorCode: Option[String], errorMessage: Option[String], errorRequestId: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId])
 
-GET        /hello-world/submission-form         controllers.fileupload.UploadFormController.showSubmissionForm(uploadId:  models.fileupload.UploadId)
-POST       /hello-world/submission-form         controllers.fileupload.UploadFormController.submitFormWithFile
-GET        /hello-world/submission-form/result  controllers.fileupload.UploadFormController.showSubmissionResult
 
 # upload file notification callback
 + nocsrf
