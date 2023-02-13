@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import forms.IsThisFileConfidentialFormProvider
 import models.{Mode, NormalMode}
-import models.fileupload.{UploadedSuccessfully, UploadId, UpscanFileDetails}
+import models.fileupload.{UploadId, UpscanFileDetails}
 import navigation.Navigator
 import pages.IsThisFileConfidentialPage
 import repositories.SessionRepository
@@ -49,17 +49,18 @@ class IsThisFileConfidentialController @Inject() (
 
   val form = formProvider()
 
+  // More appropiate for 'CheckAnswers'? Might be possible via back button
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
-          case None         => form.bind(Map("uploadId" -> "12344")).discardingErrors
+          case None         => form
           case Some(answer) =>
             form.fill(
               UpscanFileDetails(
                 answer.isConfidential,
                 answer.uploadId,
-                answer.name,
+                answer.fileName,
                 answer.downloadUrl
               )
             )
@@ -71,18 +72,15 @@ class IsThisFileConfidentialController @Inject() (
   def onCallback(id: UploadId, fileName: String, downloadUrl: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
-          case None         => form.bind(Map("uploadId" -> id.value)).discardingErrors
-          case Some(answer) =>
-            form.fill(
-              UpscanFileDetails(
-                answer.isConfidential,
-                answer.uploadId,
-                answer.name,
-                answer.downloadUrl
-              )
+        val preparedForm = form
+          .bind(
+            Map(
+              "uploadId"    -> id.value,
+              "fileName"    -> fileName,
+              "downloadUrl" -> downloadUrl
             )
-        }
+          )
+          .discardingErrors
 
         Ok(view(preparedForm, NormalMode))
     }

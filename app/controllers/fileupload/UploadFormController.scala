@@ -31,7 +31,6 @@ import controllers.IsThisFileConfidentialController
 import models.fileupload.{FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
-//         <input type="hidden" name="uploadedFileId" value='@form.data("uploadedFileId")'/>
 
 @Singleton
 class UploadFormController @Inject() (
