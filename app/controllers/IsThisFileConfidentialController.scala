@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import forms.IsThisFileConfidentialFormProvider
 import models.Mode
+import models.fileupload.{FileConfidentiality, FileUploadId}
 import navigation.Navigator
 import pages.IsThisFileConfidentialPage
 import repositories.SessionRepository
@@ -48,15 +49,26 @@ class IsThisFileConfidentialController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
+          case None         => form.bind(Map("uploadId" -> "12344")).discardingErrors
+          case Some(answer) => form.fill(FileConfidentiality(answer.value, answer.uploadId))
+        }
 
-      Ok(view(preparedForm, mode))
-  }
+        Ok(view(preparedForm, mode))
+    }
+//  def onPageLoad(mode: Mode): Action[AnyContent] =
+//    (identify andThen getData andThen requireData) {
+//      implicit request =>
+//        val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
+//          case None         => form.bind(Map("uploadId" -> "12344"))
+//          case Some(answer) => form.fill(FileConfidentiality(answer.value, answer.uploadId))
+//        }
+//
+//        Ok(view(preparedForm, mode))
+//    }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
