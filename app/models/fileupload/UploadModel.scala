@@ -52,3 +52,20 @@ object UploadId {
   ): QueryStringBindable[UploadId] =
     stringBinder.transform(UploadId(_), _.value)
 }
+
+sealed trait FileUploadId {
+  def nextUploadFileId: UploadId
+  def redirectUrlFileId: UploadId
+}
+object FileUploadId {
+  def generateNewFileUploadId                  = NewFileUpload(UploadId.generate)
+  def fromExistingUploadId(uploadId: UploadId) = ExistingFileUpload(uploadId, UploadId.generate)
+}
+case class NewFileUpload(nextFileId: UploadId) extends FileUploadId {
+  def redirectUrlFileId: UploadId = nextFileId
+  def nextUploadFileId: UploadId  = nextFileId
+}
+case class ExistingFileUpload(existingFileId: UploadId, nextFileId: UploadId) extends FileUploadId {
+  def redirectUrlFileId: UploadId = existingFileId
+  def nextUploadFileId: UploadId  = nextFileId
+}
