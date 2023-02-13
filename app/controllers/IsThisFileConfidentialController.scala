@@ -26,8 +26,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.IsThisFileConfidentialFormProvider
-import models.Mode
-import models.fileupload.{FileConfidentiality, FileUploadId}
+import models.{Mode, NormalMode}
+import models.fileupload.{UploadedSuccessfully, UploadId, UpscanFileDetails}
 import navigation.Navigator
 import pages.IsThisFileConfidentialPage
 import repositories.SessionRepository
@@ -54,21 +54,38 @@ class IsThisFileConfidentialController @Inject() (
       implicit request =>
         val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
           case None         => form.bind(Map("uploadId" -> "12344")).discardingErrors
-          case Some(answer) => form.fill(FileConfidentiality(answer.value, answer.uploadId))
+          case Some(answer) =>
+            form.fill(
+              UpscanFileDetails(
+                answer.isConfidential,
+                answer.uploadId,
+                answer.name,
+                answer.downloadUrl
+              )
+            )
         }
 
         Ok(view(preparedForm, mode))
     }
-//  def onPageLoad(mode: Mode): Action[AnyContent] =
-//    (identify andThen getData andThen requireData) {
-//      implicit request =>
-//        val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
-//          case None         => form.bind(Map("uploadId" -> "12344"))
-//          case Some(answer) => form.fill(FileConfidentiality(answer.value, answer.uploadId))
-//        }
-//
-//        Ok(view(preparedForm, mode))
-//    }
+
+  def onCallback(id: UploadId, details: UploadedSuccessfully): Action[AnyContent] =
+    (identify andThen getData andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
+          case None         => form.bind(Map("uploadId" -> id.value)).discardingErrors
+          case Some(answer) =>
+            form.fill(
+              UpscanFileDetails(
+                answer.isConfidential,
+                answer.uploadId,
+                answer.name,
+                answer.downloadUrl
+              )
+            )
+        }
+
+        Ok(view(preparedForm, NormalMode))
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
@@ -84,5 +101,6 @@ class IsThisFileConfidentialController @Inject() (
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
           )
+
     }
 }
