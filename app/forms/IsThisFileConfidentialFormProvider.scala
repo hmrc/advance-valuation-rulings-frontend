@@ -31,7 +31,7 @@ class IsThisFileConfidentialFormProvider @Inject() extends Mappings {
       mapping(
         "value"       -> boolean("isThisFileConfidential.error.required"),
         "uploadId"    -> text("isThisFileConfidential.error.file.required"),
-        "name"        -> text("isThisFileConfidential.error.name.required"),
+        "fileName"    -> text("isThisFileConfidential.error.name.required"),
         "downloadUrl" -> text("isThisFileConfidential.error.downloadUrl.required")
       )(UpscanFileDetails.apply)(
         (fileConfidentiality: UpscanFileDetails) =>
@@ -39,7 +39,7 @@ class IsThisFileConfidentialFormProvider @Inject() extends Mappings {
             (
               fileConfidentiality.isConfidential,
               fileConfidentiality.uploadId,
-              fileConfidentiality.name,
+              fileConfidentiality.fileName,
               fileConfidentiality.downloadUrl
             )
           )
