@@ -22,8 +22,6 @@ import cats.syntax.all._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logging
-import play.api.data.Form
-import play.api.data.Forms.{boolean, mapping, text}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -33,6 +31,7 @@ import controllers.IsThisFileConfidentialController
 import models.fileupload.{FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
+//         <input type="hidden" name="uploadedFileId" value='@form.data("uploadedFileId")'/>
 
 @Singleton
 class UploadFormController @Inject() (
@@ -40,10 +39,6 @@ class UploadFormController @Inject() (
   uploadProgressTracker: UploadProgressTracker,
   mcc: MessagesControllerComponents,
   uploadFormView: UploadForm,
-  uploadResultView: UploadResult,
-  submissionFormView: SubmissionForm,
-  errorView: views.html.ErrorTemplate,
-  submissionResultView: SubmissionResult,
   isThisFileConfidentialController: IsThisFileConfidentialController
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendController(mcc)
@@ -69,7 +64,7 @@ class UploadFormController @Inject() (
                               case None                               =>
                                 Future(BadRequest(s"Upload with id $uploadId not found"))
                               case Some(status: UploadedSuccessfully) =>
-                                showSubmissionForm(existingFileId)(request)
+                                continueToIsFileConfidential(existingFileId, status)(request)
                               case Some(result)                       =>
                                 showUploadForm(uploadFileId, errorMessage, result)
                             }
@@ -77,45 +72,26 @@ class UploadFormController @Inject() (
       }
   }
 
-  private case class SampleForm(field1: Boolean, uploadedFileId: UploadId)
-
-  private val sampleForm = Form(
-    mapping(
-      "field1"         -> boolean,
-      "uploadedFileId" -> text.transform[UploadId](UploadId(_), _.value)
-    )(SampleForm.apply)(SampleForm.unapply)
-  )
-
-  // TODO: Move to another controller
-  def showSubmissionForm(uploadId: UploadId): Action[AnyContent] = Action.async {
+  def continueToIsFileConfidential(
+    uploadId: UploadId,
+    uploadDetails: UploadedSuccessfully
+  ): Action[AnyContent] = Action.async {
     implicit request =>
       for {
         uploadResult <- uploadProgressTracker.getUploadResult(uploadId)
-        result       <- uploadResult match {
-                          case Some(s: UploadedSuccessfully) =>
-                            isThisFileConfidentialController
-                              .onPageLoad(mode = models.NormalMode)
-                              .apply(request)
-                          case _                             => Future.successful(InternalServerError("Something gone wrong"))
-                        }
+
+        result <- uploadResult match {
+                    case Some(s: UploadedSuccessfully) =>
+                      isThisFileConfidentialController
+                        .onCallback(
+                          uploadId,
+                          uploadDetails.name,
+                          uploadDetails.downloadUrl
+                        )
+                        .apply(request)
+                    case _                             => Future.successful(InternalServerError("Something gone wrong"))
+                  }
       } yield result
-  }
-
-  def submitFormWithFile(): Action[AnyContent] = Action.async {
-    implicit request =>
-      sampleForm
-        .bindFromRequest()
-        .fold(
-          errors => Future.successful(BadRequest(s"Problem with a form $errors")),
-          _ => {
-            logger.info("Form successfully submitted")
-            Future.successful(Redirect(routes.UploadFormController.showSubmissionResult))
-          }
-        )
-  }
-
-  def showSubmissionResult(): Action[AnyContent] = Action.async {
-    implicit request => Future.successful(Ok(submissionResultView()))
   }
 
   // Could be moved out to a service
