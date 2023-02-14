@@ -17,6 +17,7 @@
 @import config.FrontendAppConfig
 @import models.fileupload._
 @import components._
+@import controllers.fileupload.routes.UploadFormController
 
 @this(  mainLayout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -25,8 +26,7 @@
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
-        list: BulletList,
-        fileStatus: FileStatus
+        list: BulletList
     )
 
 @(upscanInitiateResponse : UpscanInitiateResponse, errorMsg: Option[String]=None, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
@@ -51,11 +51,24 @@
     }
 }
 
+@continueButton = @{govukButton(
+    ButtonViewModel(
+        if(status == InProgress) {
+            messages("Upload in progress")
+        } else {
+            messages("Upload and continue")
+        }    
+        )
+        .preventingDoubleClick()
+        .withAttribute(("id" -> "submit"))
+        .disableIf(status == InProgress)
+)}
+
 @mainLayout(pageTitle = titleNoForm("uplodForm"), additionalHeadBlock = {
     status match {
-    case InProgress => Some(refreshHeader)
-    case _ => None
-    }
+        case InProgress => Some(refreshHeader)
+        case _ => None
+        }
     }) {
 
     @caption(messages("uploadSupportingDocuments.caption"))
@@ -86,8 +99,7 @@
             <input type="hidden" name="@field._1" value="@field._2"/>
         }
 
-        <div class="js-visible mt-3">
-
+        <div class="mt-3">
             <div class="@formGroupClass">
                 @if(errorMsg.isDefined) {
                     <p id="file-input-error" class="govuk-error-message">
@@ -95,30 +107,27 @@
                     </p>
                 }
                 
-                <label class="govuk-label" for="file-input">
-                    Upload a file
-                </label>
-                <div class="form-control-wrapper">
-                    <input
-                            class="@formInputClass"
-                            type="file"
-                            id="file-input"
-                            name="file"
-                            accept=".pdf,.doc,.docx,.xlsx,.xls,.png,.jpeg,.jpg,.txt"
-                    />
-                    @fileStatus(uploadId, status)
-                </div>
+                @if(status != InProgress) {
+                    <label class="govuk-label" for="file-input">
+                        Upload a file
+                    </label>
+                    <div class="form-control-wrapper">
+                        <input
+                                class="@formInputClass"
+                                type="file"
+                                id="file-input"
+                                name="file"
+                                accept=".pdf,.doc,.docx,.xlsx,.xls,.png,.jpeg,.jpg,.txt"
+                        />
+                    </div>
+                }
+                
             </div>
 
         </div>
 
-        @govukButton(
-            ButtonViewModel(messages("Upload and continue"))
-                .preventingDoubleClick()
-                .withAttribute(("id" -> "submit"))
-        )
+        @continueButton
          </form>
 
     @cancelApplicationLink()
-
 }
