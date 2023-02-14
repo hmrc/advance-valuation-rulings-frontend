@@ -29,10 +29,10 @@
         list: BulletList
     )
 
-@(upscanInitiateResponse : UpscanInitiateResponse, errorMsg: Option[String]=None, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+@(upscanInitiateResponse : UpscanInitiateResponse, errorCode: Option[String]=None, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
 
 @formInputClass = @{
-    if(errorMsg.isDefined) {
+    if(errorCode.isDefined) {
         "govuk-file-upload govuk-file-upload--error"
     } else {
         "govuk-file-upload"
@@ -44,7 +44,7 @@
    }   
 
 @formGroupClass = @{
-    if(errorMsg.isDefined) {
+    if(errorCode.isDefined) {
         "govuk-form-group govuk-form-group--error"
     } else {
         "govuk-form-group"
@@ -54,9 +54,9 @@
 @continueButton = @{govukButton(
     ButtonViewModel(
         if(status == InProgress) {
-            messages("Upload in progress")
+            messages("uploadSupportingDocuments.button.inProgress")
         } else {
-            messages("Upload and continue")
+            messages("uploadSupportingDocuments.button")
         }    
         )
         .preventingDoubleClick()
@@ -64,7 +64,7 @@
         .disableIf(status == InProgress)
 )}
 
-@mainLayout(pageTitle = titleNoForm("uplodForm"), additionalHeadBlock = {
+@mainLayout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title")), additionalHeadBlock = {
     status match {
         case InProgress => Some(refreshHeader)
         case _ => None
@@ -101,15 +101,15 @@
 
         <div class="mt-3">
             <div class="@formGroupClass">
-                @if(errorMsg.isDefined) {
+                @if(errorCode.isDefined) {
                     <p id="file-input-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @errorMsg.get
+                        <span class="govuk-visually-hidden">Error:</span> @{messages("uploadSupportingDocuments." + errorCode.get)}
                     </p>
                 }
                 
                 @if(status != InProgress) {
                     <label class="govuk-label" for="file-input">
-                        Upload a file
+                        @messages("uploadSupportingDocuments.label")
                     </label>
                     <div class="form-control-wrapper">
                         <input

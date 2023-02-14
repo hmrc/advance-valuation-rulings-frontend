@@ -54,7 +54,8 @@ class IsThisFileConfidentialController @Inject() (
     (identify andThen getData andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
-          case None         => form
+          case None         =>
+            form
           case Some(answer) =>
             form.fill(
               UpscanFileDetails(

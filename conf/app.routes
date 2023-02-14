@@ -171,9 +171,9 @@ GET        /isTheSaleSubjectToConditions                        controllers.IsTh
 POST       /isTheSaleSubjectToConditions                        controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = CheckMode)
+
 # file upload
-GET        /v2/hello-world                      controllers.fileupload.UploadFormController.showV2
-GET        /v3/hello-world                      controllers.fileupload.UploadFormController.showV3(errorCode: Option[String], errorMessage: Option[String], errorRequestId: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId])
+GET        /v3/hello-world                      controllers.fileupload.UploadFormController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId])
 
 # upload file notification callback
 + nocsrf

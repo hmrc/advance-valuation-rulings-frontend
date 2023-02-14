@@ -30,7 +30,7 @@ import config.FrontendAppConfig
 import connectors.{Reference, UpscanInitiateConnector}
 import controllers.IsThisFileConfidentialController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import models.fileupload.{Failed, FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
+import models.fileupload.{FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
 import models.requests.DataRequest
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
@@ -50,18 +50,20 @@ class UploadFormController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def showV3(
-    errorCode: Option[String],
-    errorMessage: Option[String],
-    errorRequestId: Option[String],
+  private val knownS3ErrorCodes = List("entitytoolarge", "entitytoosmall", "rejected", "quarantine")
+
+  def onPageLoad(
+    error: Option[String],
     key: Option[String],
     uploadId: Option[UploadId]
   ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+
     implicit request: DataRequest[AnyContent] =>
+      val errorCode = error.flatMap(code => knownS3ErrorCodes.find(_ == code.toLowerCase))
       uploadId match {
         case None                 =>
           val nextUploadFileId = FileUploadId.generateNewFileUploadId
-          showUploadForm(nextUploadFileId, errorMessage, NotStarted)
+          showUploadForm(nextUploadFileId, errorCode, NotStarted)
         case Some(existingFileId) =>
           val uploadFileId = FileUploadId.fromExistingUploadId(existingFileId)
           for {
@@ -72,7 +74,7 @@ class UploadFormController @Inject() (
                               case Some(status: UploadedSuccessfully) =>
                                 continueToIsFileConfidential(existingFileId, status)(request)
                               case Some(result)                       =>
-                                showUploadForm(uploadFileId, errorMessage, result)
+                                showUploadForm(uploadFileId, errorCode, result)
                             }
           } yield result
       }
@@ -103,7 +105,7 @@ class UploadFormController @Inject() (
   // Could be moved out to a service
   private def showUploadForm(
     fileUploadId: FileUploadId,
-    errorMessage: Option[String],
+    errorCode: Option[String],
     result: UploadStatus
   )(implicit
     request: DataRequest[AnyContent]
@@ -113,7 +115,7 @@ class UploadFormController @Inject() (
 
     val baseUrl     = appConfig.uploadRedirectTargetBase
     val redirectUrl = routes.UploadFormController
-      .showV3(None, None, None, None, Some(redirectUrlFileId))
+      .onPageLoad(None, None, Some(redirectUrlFileId))
       .url
 
     val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/v3/hello-world".some
@@ -126,7 +128,7 @@ class UploadFormController @Inject() (
                     Reference(response.fileReference.reference)
                   )
     } yield Ok(
-      uploadFormView(response, errorMessage, redirectUrlFileId, result)
+      uploadFormView(response, errorCode, redirectUrlFileId, result)
     )
   }
 }

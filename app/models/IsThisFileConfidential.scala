@@ -20,7 +20,12 @@ import play.api.libs.json.{__, OFormat, OWrites, Reads}
 
 import models.fileupload.UploadId
 
-case class IsThisFileConfidential(fileId: UploadId, isConfidential: Boolean)
+case class IsThisFileConfidential(
+  uploadId: UploadId,
+  isConfidential: Boolean,
+  downloadUrl: String, // URL?
+  fileName: String
+)
 
 object IsThisFileConfidential {
 
@@ -29,8 +34,10 @@ object IsThisFileConfidential {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "fileId").read[String].map(UploadId(_)) and
-        (__ \ "isConfidential").read[Boolean]
+      (__ \ "uploadId").read[String].map(UploadId(_)) and
+        (__ \ "isConfidential").read[Boolean] and
+        (__ \ "downloadUrl").read[String] and
+        (__ \ "fileName").read[String]
     )(IsThisFileConfidential.apply _)
   }
 
@@ -39,12 +46,21 @@ object IsThisFileConfidential {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "fileId").write[String] and
-        (__ \ "isConfidential").write[Boolean]
+      (__ \ "uploadId").write[String] and
+        (__ \ "isConfidential").write[Boolean] and
+        (__ \ "downloadUrl").write[String] and
+        (__ \ "fileName").write[String]
     )(
       unlift(
         (isFileConfidential: IsThisFileConfidential) =>
-          Some((isFileConfidential.fileId.value, isFileConfidential.isConfidential))
+          Some(
+            (
+              isFileConfidential.uploadId.value,
+              isFileConfidential.isConfidential,
+              isFileConfidential.downloadUrl,
+              isFileConfidential.fileName
+            )
+          )
       )
     )
   }
