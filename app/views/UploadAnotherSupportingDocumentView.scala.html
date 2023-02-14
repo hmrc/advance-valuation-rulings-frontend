@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import models.fileupload.UpscanFileDetails
 @import models.NormalMode
 
 @this(
@@ -31,7 +32,7 @@
     link: Link
 )
 
-@(nameOfGoods: String, numOfDocs: String, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(numOfDocs: String, fileDetails: Option[UpscanFileDetails], form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @removeLink = {
     @link(
@@ -41,20 +42,28 @@
         )
     }
 
-@layout(pageTitle = title(form, messages("uploadAnotherSupportingDocument.title", numOfDocs, nameOfGoods))) {
+@layout(pageTitle = title(
+    form, 
+    messages("uploadAnotherSupportingDocument.title", 
+        messages(s"uploadAnotherSupportingDocument.$numOfDocs")
+        )
+    )
+    ) {
 
     @caption(messages("uploadAnotherSupportingDocument.caption"))
-    @heading(messages("uploadAnotherSupportingDocument.heading", numOfDocs, nameOfGoods))
+    @heading(messages("uploadAnotherSupportingDocument.heading", messages(s"uploadAnotherSupportingDocument.$numOfDocs")))
 
     <table class="govuk-table">
       <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-          <td scope="row" class="govuk-table__cell">Filename</td>
-          <td class="govuk-table__cell">
-              @removeLink
-          </td>
-        </tr>
-
+        @if(fileDetails.isDefined) {
+            <tr class="govuk-table__row">
+            <td scope="row" class="govuk-table__cell">@{fileDetails.get.fileName}</td>
+              <td class="govuk-table__cell">@{if (fileDetails.get.isConfidential) messages("uploadAnotherSupportingDocument.keepConfidential")}</td>
+              <td class="govuk-table__cell">
+                  @removeLink
+              </td>
+            </tr>
+        }
       </tbody>
     </table>
 

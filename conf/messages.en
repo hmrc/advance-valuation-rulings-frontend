@@ -322,13 +322,15 @@ isThisFileConfidential.error.required = Select yes if this file is confidential
 isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
 isThisFileConfidential.change.hidden = IsThisFileConfidential
 
-uploadAnotherSupportingDocument.title = You have uploaded {0} supporting document for the {1}
-uploadAnotherSupportingDocument.heading = You have uploaded {0} supporting document for the {1}
+uploadAnotherSupportingDocument.title = You have uploaded {0} supporting document for the goods
+uploadAnotherSupportingDocument.heading = You have uploaded {0} supporting document for the goods
 uploadAnotherSupportingDocument.subHeading = Do you want to upload another supporting document?
 uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.error.required = Select yes if uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.one = one
+uploadAnotherSupportingDocument.keepConfidential = Keep confidential
 
 uploadSupportingDocuments.title = Upload supporting documents for the goods
 uploadSupportingDocuments.heading = Upload supporting documents for the goods
