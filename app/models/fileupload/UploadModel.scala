@@ -20,7 +20,6 @@ import java.util.UUID
 
 import play.api.mvc.QueryStringBindable
 
-import connectors._ // do properly
 import org.bson.types.ObjectId
 
 sealed trait UploadStatus
@@ -38,7 +37,7 @@ case class UploadedSuccessfully(
 case class UploadDetails(
   id: ObjectId,
   uploadId: UploadId,
-  reference: Reference,
+  reference: connectors.Reference,
   status: UploadStatus
 )
 

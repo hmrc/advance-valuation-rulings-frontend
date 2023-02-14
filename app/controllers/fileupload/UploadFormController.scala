@@ -21,27 +21,34 @@ import javax.inject.{Inject, Singleton}
 import cats.syntax.all._
 import scala.concurrent.{ExecutionContext, Future}
 
-import play.api.Logging
+import play.api.i18n.I18nSupport
+import play.api.i18n.MessagesApi
 import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
 import connectors.{Reference, UpscanInitiateConnector}
 import controllers.IsThisFileConfidentialController
-import models.fileupload.{FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.fileupload.{Failed, FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
+import models.requests.DataRequest
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
 
 @Singleton
 class UploadFormController @Inject() (
+  override val messagesApi: MessagesApi,
+  val controllerComponents: MessagesControllerComponents,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
   upscanInitiateConnector: UpscanInitiateConnector,
   uploadProgressTracker: UploadProgressTracker,
-  mcc: MessagesControllerComponents,
   uploadFormView: UploadForm,
   isThisFileConfidentialController: IsThisFileConfidentialController
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
-    extends FrontendController(mcc)
-    with Logging {
+    extends FrontendBaseController
+    with I18nSupport {
 
   def showV3(
     errorCode: Option[String],
@@ -49,8 +56,8 @@ class UploadFormController @Inject() (
     errorRequestId: Option[String],
     key: Option[String],
     uploadId: Option[UploadId]
-  ): Action[AnyContent] = Action.async {
-    implicit request =>
+  ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request: DataRequest[AnyContent] =>
       uploadId match {
         case None                 =>
           val nextUploadFileId = FileUploadId.generateNewFileUploadId
@@ -99,7 +106,7 @@ class UploadFormController @Inject() (
     errorMessage: Option[String],
     result: UploadStatus
   )(implicit
-    request: MessagesRequest[AnyContent]
+    request: DataRequest[AnyContent]
   ) = {
     val redirectUrlFileId   = fileUploadId.redirectUrlFileId
     val requestUploadFileId = fileUploadId.nextUploadFileId
