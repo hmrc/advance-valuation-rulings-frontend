@@ -318,7 +318,7 @@ isThisFileConfidential.heading = Do you want this file to be marked as confident
 isThisFileConfidential.caption = About the goods
 isThisFileConfidential.para.1 = You could mark the file as confidential if it includes business-sensitive information, for example model numbers or patent details.
 isThisFileConfidential.para.2 = Files marked as confidential will not appear on the Advance Valuation Rulings website.
-isThisFileConfidential.error.required = Select yes if isThisFileConfidential
+isThisFileConfidential.error.required = Select yes if this file is confidential
 isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
 isThisFileConfidential.change.hidden = IsThisFileConfidential
 
@@ -340,6 +340,15 @@ uploadSupportingDocuments.bulletPoint.2 = up to 10 files
 uploadSupportingDocuments.bulletPoint.3 = photographs, manuals, brochures or technical specifications
 uploadSupportingDocuments.bulletPoint.4 = smaller than 10MB
 uploadSupportingDocuments.bulletPoint.5 = a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
+
+uploadSupportingDocuments.label = Upload a file
+uploadSupportingDocuments.button=Upload and continue
+uploadSupportingDocuments.button.inProgress=Uploading file
+
+uploadSupportingDocuments.entitytoolarge = The selected file must be smaller than 10 MB
+uploadSupportingDocuments.entitytoosmall = The selected file is empty
+uploadSupportingDocuments.rejected = The selected file must be a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
+uploadSupportingDocuments.quarantine = The selected file contains a virus
 
 explainReasonComputedValue.title = Please explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods
