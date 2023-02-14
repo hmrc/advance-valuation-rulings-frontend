@@ -44,7 +44,7 @@ object UpscanFileDetails {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "value").write[Boolean] and
+      (__ \ "isConfidential").write[Boolean] and
         (__ \ "uploadId").write[String] and
         (__ \ "fileName").write[String] and
         (__ \ "downloadUrl").write[String]
