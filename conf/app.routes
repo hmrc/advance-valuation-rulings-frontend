@@ -125,7 +125,7 @@ POST       /uploadAnotherSupportingDocument                        controllers.U
 GET        /changeUploadAnotherSupportingDocument                  controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeUploadAnotherSupportingDocument                  controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /uploadSupportingDocuments                       controllers.UploadSupportingDocumentsController.onPageLoad()
+GET        /uploadSupportingDocuments                       controllers.fileupload.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId])
 
 GET        /explainReasonComputedValue                        controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = NormalMode)
 POST       /explainReasonComputedValue                        controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode)
@@ -152,7 +152,6 @@ POST       /whyIdenticalGoods                        controllers.WhyIdenticalGoo
 GET        /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /v3/hello-world                      controllers.fileupload.UploadFormController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId])
 
 # upload file notification callback
 + nocsrf

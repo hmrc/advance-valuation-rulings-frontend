@@ -25,8 +25,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import pages.NameOfGoodsPage
 import views.html.UploadSupportingDocumentsView
-
-class UploadSupportingDocumentsController @Inject() (
+//todo remove
+class oldUploadController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -40,6 +40,6 @@ class UploadSupportingDocumentsController @Inject() (
     implicit request =>
       val nameOfGoods = request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
 
-      Ok(view(nameOfGoods))
+      Ok(view())
   }
 }

@@ -26,11 +26,12 @@ import play.api.test.Helpers._
 import base.SpecBase
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models.{NormalMode, UserAnswers}
+import models.fileupload.{UploadId, UpscanFileDetails}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadAnotherSupportingDocumentPage
+import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import repositories.SessionRepository
 import views.html.UploadAnotherSupportingDocumentView
 
@@ -38,8 +39,9 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
   def onwardRoute = Call("GET", "/foo")
 
-  val nameOfGoods = "No name of goods found"
-  val numOfDocs   = "one"
+  val nameOfGoods                        = "No name of goods found"
+  val numOfDocs                          = "one"
+  val upscanFileDeets: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
   val formProvider = new UploadAnotherSupportingDocumentFormProvider()
   val form         = formProvider()
@@ -49,9 +51,16 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
   "UploadAnotherSupportingDocument Controller" - {
 
+    val ans: UserAnswers                  = emptyUserAnswers
+      .set(IsThisFileConfidentialPage, true)
+      .flatMap(_.set(UploadSupportingDocumentPage, upscanFileDeets))
+      .get
+    val ansNoConfidentiality: UserAnswers =
+      emptyUserAnswers.set(UploadSupportingDocumentPage, upscanFileDeets).get
+
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(ans)).build()
 
       running(application) {
         val request = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
@@ -61,7 +70,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(numOfDocs, None, form, NormalMode)(
+        contentAsString(result) mustEqual view(numOfDocs, upscanFileDeets, true, form, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -70,10 +79,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers =
-        UserAnswers(userAnswersId).set(UploadAnotherSupportingDocumentPage, true).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(ans)).build()
 
       running(application) {
         val request = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
@@ -83,13 +89,24 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(numOfDocs, None, form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(numOfDocs, upscanFileDeets, true, form, NormalMode)(
           request,
           messages(application)
         ).toString
       }
     }
+    "must redirect when missing confidentiality data" in {
 
+      val application = applicationBuilder(userAnswers = Some(ansNoConfidentiality)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+      }
+    }
     "must redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
@@ -118,7 +135,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(ans)).build()
 
       running(application) {
         val request =
@@ -132,7 +149,13 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(numOfDocs, None, boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(
+          numOfDocs,
+          upscanFileDeets,
+          true,
+          boundForm,
+          NormalMode
+        )(
           request,
           messages(application)
         ).toString

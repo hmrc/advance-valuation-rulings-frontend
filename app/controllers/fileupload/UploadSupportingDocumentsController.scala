@@ -38,7 +38,7 @@ import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
 
 @Singleton
-class UploadFormController @Inject() (
+class UploadSupportingDocumentsController @Inject() (
   override val messagesApi: MessagesApi,
   val controllerComponents: MessagesControllerComponents,
   sessionRepository: SessionRepository,
@@ -56,9 +56,9 @@ class UploadFormController @Inject() (
   private val knownS3ErrorCodes = List("entitytoolarge", "entitytoosmall", "rejected", "quarantine")
 
   def onPageLoad(
-    error: Option[String],
-    key: Option[String],
-    uploadId: Option[UploadId]
+    error: Option[String] = None,
+    key: Option[String] = None,
+    uploadId: Option[UploadId] = None
   ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
 
     implicit request: DataRequest[AnyContent] =>
@@ -127,7 +127,7 @@ class UploadFormController @Inject() (
     val requestUploadFileId = fileUploadIds.nextUploadFileId
 
     val baseUrl     = appConfig.host
-    val redirectUrl = routes.UploadFormController
+    val redirectUrl = controllers.fileupload.routes.UploadSupportingDocumentsController
       .onPageLoad(None, None, Some(redirectUrlFileId))
       .url
 
