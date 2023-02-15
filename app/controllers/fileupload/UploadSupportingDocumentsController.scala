@@ -131,7 +131,7 @@ class UploadSupportingDocumentsController @Inject() (
       .onPageLoad(None, None, Some(redirectUrlFileId))
       .url
 
-    val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/v3/hello-world".some
+    val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
     val successRedirectUrl = s"${baseUrl}$redirectUrl".some
 
     for {

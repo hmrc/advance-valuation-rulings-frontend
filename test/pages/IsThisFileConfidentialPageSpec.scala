@@ -21,11 +21,11 @@ import pages.behaviours.PageBehaviours
 class IsThisFileConfidentialPageSpec extends PageBehaviours {
 
   "IsThisFileConfidentialPage" - {
-//
-//    beRetrievable[Boolean](IsThisFileConfidentialPage)
-//
-//    beSettable[Boolean](IsThisFileConfidentialPage)
-//
-//    beRemovable[Boolean](IsThisFileConfidentialPage)
+
+    beRetrievable[Boolean](IsThisFileConfidentialPage)
+
+    beSettable[Boolean](IsThisFileConfidentialPage)
+
+    beRemovable[Boolean](IsThisFileConfidentialPage)
   }
 }
