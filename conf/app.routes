@@ -156,4 +156,4 @@ GET        /v3/hello-world                      controllers.fileupload.UploadFor
 
 # upload file notification callback
 + nocsrf
-POST       /hello-world/upscan-callback         controllers.fileupload.UploadCallbackController.callback
+POST       /upscan-callback         controllers.fileupload.UploadCallbackController.callback

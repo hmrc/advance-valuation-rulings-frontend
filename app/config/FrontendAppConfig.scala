@@ -77,9 +77,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  lazy val callbackEndpointTarget: String = loadConfig("upscan.callback-endpoint")
-
-  lazy val uploadRedirectTargetBase = loadConfig("upload-redirect-target-base")
+  lazy val callbackEndpointTarget: String = loadConfig("host")
+    + "/upscan-callback"
 
   lazy val initiateV2Url: String =
     configuration
