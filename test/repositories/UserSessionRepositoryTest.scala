@@ -16,8 +16,7 @@
 
 package repositories
 
-import connectors.Reference
-import models.fileupload.{Failed, InProgress, UploadDetails, UploadedSuccessfully, UploadId}
+import models.fileupload._
 import org.bson.types.ObjectId
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

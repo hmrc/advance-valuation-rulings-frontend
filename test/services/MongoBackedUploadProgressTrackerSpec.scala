@@ -20,8 +20,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
-import connectors.Reference
-import models.fileupload.{UploadDetails, UploadedSuccessfully, UploadId}
+import models.fileupload._
 import org.scalatest.concurrent.IntegrationPatience
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

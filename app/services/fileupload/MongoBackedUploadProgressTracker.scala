@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import connectors.Reference // move to model
 import models.fileupload._
 import org.bson.types.ObjectId
 import repositories.FileUploadRepository
