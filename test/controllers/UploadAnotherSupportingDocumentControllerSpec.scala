@@ -61,7 +61,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(nameOfGoods, numOfDocs, form, NormalMode)(
+        contentAsString(result) mustEqual view(numOfDocs, None, form, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(nameOfGoods, numOfDocs, form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(numOfDocs, None, form.fill(true), NormalMode)(
           request,
           messages(application)
         ).toString
@@ -132,7 +132,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(nameOfGoods, numOfDocs, boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(numOfDocs, None, boundForm, NormalMode)(
           request,
           messages(application)
         ).toString

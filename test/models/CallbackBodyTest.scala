@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package models
 
 import java.net.URL
 import java.time.Instant
 
 import play.api.libs.json.{Json, JsSuccess}
 
-import connectors.Reference
-import controllers.fileupload.{CallbackBody, ErrorDetails, FailedCallbackBody, ReadyCallbackBody}
-import models.fileupload.UploadDetails
+import models.fileupload._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -54,7 +52,7 @@ class CallbackBodyTest extends AnyWordSpec with Matchers {
           ReadyCallbackBody(
             reference = Reference("11370e18-6e24-453e-b45a-76d3e32ea33d"),
             downloadUrl = new URL("https://bucketName.s3.eu-west-2.amazonaws.com?1235676"),
-            uploadDetails = controllers.fileupload.UploadDetails(
+            uploadDetails = CallbackUploadDetails(
               uploadTimestamp = Instant.parse("2018-04-24T09:30:00Z"),
               checksum = "396f101dd52e8b2ace0dcf5ed09b1d1f030e608938510ce46e7a5c7a4e775100",
               fileMimeType = "application/pdf",

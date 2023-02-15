@@ -27,10 +27,10 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
-import connectors.{Reference, UpscanInitiateConnector}
+import connectors.UpscanInitiateConnector
 import controllers.IsThisFileConfidentialController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import models.fileupload.{FileUploadId, NotStarted, UploadedSuccessfully, UploadId, UploadStatus}
+import models.fileupload._
 import models.requests.DataRequest
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
@@ -62,10 +62,10 @@ class UploadFormController @Inject() (
       val errorCode = error.flatMap(code => knownS3ErrorCodes.find(_ == code.toLowerCase))
       uploadId match {
         case None                 =>
-          val nextUploadFileId = FileUploadId.generateNewFileUploadId
-          showUploadForm(nextUploadFileId, errorCode, NotStarted)
+          val nextUploadFileIds = FileUploadIds.generateNewFileUploadId
+          showUploadForm(nextUploadFileIds, errorCode, NotStarted)
         case Some(existingFileId) =>
-          val uploadFileId = FileUploadId.fromExistingUploadId(existingFileId)
+          val fileUploadIds = FileUploadIds.fromExistingUploadId(existingFileId)
           for {
             uploadResult <- uploadProgressTracker.getUploadResult(existingFileId)
             result       <- uploadResult match {
@@ -74,7 +74,7 @@ class UploadFormController @Inject() (
                               case Some(status: UploadedSuccessfully) =>
                                 continueToIsFileConfidential(existingFileId, status)(request)
                               case Some(result)                       =>
-                                showUploadForm(uploadFileId, errorCode, result)
+                                showUploadForm(fileUploadIds, errorCode, result)
                             }
           } yield result
       }
@@ -104,14 +104,14 @@ class UploadFormController @Inject() (
 
   // Could be moved out to a service
   private def showUploadForm(
-    fileUploadId: FileUploadId,
+    fileUploadIds: FileUploadIds,
     errorCode: Option[String],
     result: UploadStatus
   )(implicit
     request: DataRequest[AnyContent]
   ) = {
-    val redirectUrlFileId   = fileUploadId.redirectUrlFileId
-    val requestUploadFileId = fileUploadId.nextUploadFileId
+    val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
+    val requestUploadFileId = fileUploadIds.nextUploadFileId
 
     val baseUrl     = appConfig.uploadRedirectTargetBase
     val redirectUrl = routes.UploadFormController

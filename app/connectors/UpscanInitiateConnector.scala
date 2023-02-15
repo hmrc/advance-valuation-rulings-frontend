@@ -25,41 +25,8 @@ import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-import PreparedUpload._
 import config.FrontendAppConfig
-import models.fileupload.{UpscanFileReference, UpscanInitiateResponse}
-
-sealed trait UpscanInitiateRequest
-
-// TODO expectedContentType is also an optional value
-case class UpscanInitiateRequestV2(
-  callbackUrl: String,
-  successRedirect: Option[String] = None,
-  errorRedirect: Option[String] = None,
-  minimumFileSize: Option[Int] = None,
-  maximumFileSize: Option[Int] = Some(512)
-) extends UpscanInitiateRequest
-
-case class UploadForm(href: String, fields: Map[String, String])
-
-case class Reference(value: String) extends AnyVal
-
-object Reference {
-  implicit val referenceReader: Reads[Reference] = Reads.StringReads.map(Reference(_))
-}
-
-case class PreparedUpload(reference: Reference, uploadRequest: UploadForm)
-
-object UpscanInitiateRequestV2 {
-  implicit val format: OFormat[UpscanInitiateRequestV2] = Json.format[UpscanInitiateRequestV2]
-}
-
-object PreparedUpload {
-
-  implicit val uploadFormFormat: Reads[UploadForm] = Json.reads[UploadForm]
-
-  implicit val format: Reads[PreparedUpload] = Json.reads[PreparedUpload]
-}
+import models.fileupload.{Reference, UpscanFileReference, UpscanInitiateResponse}
 
 class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)(
   implicit ec: ExecutionContext
@@ -72,7 +39,7 @@ class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: Fron
   def initiateV2(redirectOnSuccess: Option[String], redirectOnError: Option[String])(implicit
     hc: HeaderCarrier
   ): Future[UpscanInitiateResponse] = {
-    val request = UpscanInitiateRequestV2(
+    val request = UpscanInitiateRequest(
       callbackUrl = appConfig.callbackEndpointTarget,
       successRedirect = redirectOnSuccess,
       errorRedirect = redirectOnError
@@ -91,4 +58,27 @@ class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: Fron
       formFields    = response.uploadRequest.fields
     } yield UpscanInitiateResponse(fileReference, postTarget, formFields)
 
+}
+
+private case class UpscanInitiateRequest(
+  callbackUrl: String,
+  successRedirect: Option[String] = None,
+  errorRedirect: Option[String] = None,
+  minimumFileSize: Option[Int] = None,
+  maximumFileSize: Option[Int] = Some(512)
+)
+
+private case class UploadForm(href: String, fields: Map[String, String])
+
+private case class PreparedUpload(reference: Reference, uploadRequest: UploadForm)
+
+private object UpscanInitiateRequest {
+  implicit val format: OFormat[UpscanInitiateRequest] = Json.format[UpscanInitiateRequest]
+}
+
+private object PreparedUpload {
+
+  implicit val uploadFormFormat: Reads[UploadForm] = Json.reads[UploadForm]
+
+  implicit val format: Reads[PreparedUpload] = Json.reads[PreparedUpload]
 }

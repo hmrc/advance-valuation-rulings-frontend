@@ -27,7 +27,6 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
 
-import connectors.Reference
 import models.fileupload._
 import org.bson.types.ObjectId
 import org.mongodb.scala.model.{FindOneAndUpdateOptions, Indexes, IndexModel, IndexOptions}
