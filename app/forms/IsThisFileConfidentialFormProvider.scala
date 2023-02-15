@@ -19,30 +19,13 @@ package forms
 import javax.inject.Inject
 
 import play.api.data.Form
-import play.api.data.Forms.mapping
 
 import forms.mappings.Mappings
-import models.fileupload.UpscanFileDetails
 
 class IsThisFileConfidentialFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[UpscanFileDetails] =
+  def apply(): Form[Boolean] =
     Form(
-      mapping(
-        "isConfidential" -> boolean("isThisFileConfidential.error.required"),
-        "uploadId"       -> text("isThisFileConfidential.error.file.required"),
-        "fileName"       -> text("isThisFileConfidential.error.name.required"),
-        "downloadUrl"    -> text("isThisFileConfidential.error.downloadUrl.required")
-      )(UpscanFileDetails.apply)(
-        (fileConfidentiality: UpscanFileDetails) =>
-          Some(
-            (
-              fileConfidentiality.isConfidential,
-              fileConfidentiality.uploadId,
-              fileConfidentiality.fileName,
-              fileConfidentiality.downloadUrl
-            )
-          )
-      )
+      "value" -> boolean("isThisFileConfidential.error.required")
     )
 }

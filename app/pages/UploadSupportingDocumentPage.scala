@@ -18,9 +18,11 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object IsThisFileConfidentialPage extends QuestionPage[Boolean] {
+import models.fileupload.UpscanFileDetails
+
+case object UploadSupportingDocumentPage extends QuestionPage[UpscanFileDetails] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "value"
+  override def toString: String = "uploadAnotherSupportingDocument"
 }

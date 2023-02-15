@@ -33,42 +33,24 @@
 
 @layout(pageTitle = title(form, messages("isThisFileConfidential.title"))) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @caption(messages("isThisFileConfidential.caption"))
     @heading(messages("isThisFileConfidential.heading"))
 
     @paragraph(Html(messages("isThisFileConfidential.para.1")))
     @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
-    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode), 'autoComplete -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
-                field = form("isConfidential"),
+                field = form("value"),
                 legend = Legend()
             )
-        )
-
-        @govukInput(
-            InputViewModel(
-                field = form("uploadId"),
-                label = Label(None)
-            ).withInputType("hidden")
-        )
-        @govukInput(
-            InputViewModel(
-                field = form("fileName"),
-                label = Label(None)
-            ).withInputType("hidden")
-        )
-        @govukInput(
-            InputViewModel(
-                field = form("downloadUrl"),
-                label = Label(None)
-            ).withInputType("hidden")
         )
 
         @govukButton(

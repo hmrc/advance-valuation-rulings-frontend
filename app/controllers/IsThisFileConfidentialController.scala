@@ -27,9 +27,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import forms.IsThisFileConfidentialFormProvider
 import models.{Mode, NormalMode}
-import models.fileupload.{UploadId, UpscanFileDetails}
 import navigation.Navigator
-import pages.IsThisFileConfidentialPage
+import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import repositories.SessionRepository
 import views.html.IsThisFileConfidentialView
 
@@ -49,7 +48,6 @@ class IsThisFileConfidentialController @Inject() (
 
   val form = formProvider()
 
-  // More appropiate for 'CheckAnswers'? Might be possible via back button
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
@@ -57,33 +55,20 @@ class IsThisFileConfidentialController @Inject() (
           case None         =>
             form
           case Some(answer) =>
-            form.fill(
-              UpscanFileDetails(
-                answer.isConfidential,
-                answer.uploadId,
-                answer.fileName,
-                answer.downloadUrl
-              )
-            )
+            form.fill(answer)
         }
 
         Ok(view(preparedForm, mode))
     }
 
-  def onCallback(id: UploadId, fileName: String, downloadUrl: String): Action[AnyContent] =
+  def onCallback(): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        val preparedForm = form
-          .bind(
-            Map(
-              "uploadId"    -> id.value,
-              "fileName"    -> fileName,
-              "downloadUrl" -> downloadUrl
-            )
-          )
-          .discardingErrors
-
-        Ok(view(preparedForm, NormalMode))
+        request.userAnswers.get(UploadSupportingDocumentPage) match {
+          // RequireData redirects to the JourneyRecoveryController if no data is found
+          case None        => Redirect(routes.JourneyRecoveryController.onPageLoad())
+          case Some(value) => Ok(view(form, NormalMode))
+        }
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
@@ -95,8 +80,7 @@ class IsThisFileConfidentialController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(IsThisFileConfidentialPage, value))
+                updatedAnswers <- request.userAnswers.setFuture(IsThisFileConfidentialPage, value)
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
           )
