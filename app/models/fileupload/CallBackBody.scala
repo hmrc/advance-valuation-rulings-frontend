@@ -48,8 +48,7 @@ case class CallbackUploadDetails(
 )
 
 object CallbackBody {
-  // must be in scope to create Reads for ReadyCallbackBody
-  private implicit val urlFormat: Format[URL] = HttpUrlFormat.format
+  implicit val urlFormat: Format[URL] = HttpUrlFormat.format
 
   implicit val uploadDetailsReads = Json.reads[CallbackUploadDetails]
 
@@ -64,7 +63,7 @@ object CallbackBody {
       case JsDefined(JsString("READY"))  => implicitly[Reads[ReadyCallbackBody]].reads(json)
       case JsDefined(JsString("FAILED")) => implicitly[Reads[FailedCallbackBody]].reads(json)
       case JsDefined(value)              => JsError(s"Invalid type distriminator: $value")
-      case _: JsUndefined                => JsError(s"Missing type distriminator")
+      case JsUndefined()                 => JsError(s"Missing type distriminator")
     }
   }
 }

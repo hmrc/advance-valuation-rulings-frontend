@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package repositories
+package models.fileupload
 
 import models.fileupload._
 import org.bson.types.ObjectId
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
+class UploadDetailsTest extends AnyWordSpec with Matchers {
 
   "Serialization and deserialization of UploadDetails" should {
 
     "serialize and deserialize InProgress status" in {
       val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), InProgress)
 
-      val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output     = FileUploadRepository.mongoFormat.reads(serialized)
+      val serialized = UploadDetails.mongoFormat.writes(input)
+      val output     = UploadDetails.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }
@@ -37,8 +37,8 @@ class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
     "serialize and deserialize Failed status" in {
       val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Failed)
 
-      val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output     = FileUploadRepository.mongoFormat.reads(serialized)
+      val serialized = UploadDetails.mongoFormat.writes(input)
+      val output     = UploadDetails.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }
@@ -51,8 +51,8 @@ class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
         UploadedSuccessfully("foo.txt", "text/plain", "http:localhost:8080", size = None)
       )
 
-      val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output     = FileUploadRepository.mongoFormat.reads(serialized)
+      val serialized = UploadDetails.mongoFormat.writes(input)
+      val output     = UploadDetails.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }
@@ -65,8 +65,8 @@ class UserSessionRepositoryTest extends AnyWordSpec with Matchers {
         UploadedSuccessfully("foo.txt", "text/plain", "http:localhost:8080", size = Some(123456))
       )
 
-      val serialized = FileUploadRepository.mongoFormat.writes(input)
-      val output     = FileUploadRepository.mongoFormat.reads(serialized)
+      val serialized = UploadDetails.mongoFormat.writes(input)
+      val output     = UploadDetails.mongoFormat.reads(serialized)
 
       output.get shouldBe input
     }

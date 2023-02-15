@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package models.fileupload
 
 import java.net.URL
 import java.time.Instant
