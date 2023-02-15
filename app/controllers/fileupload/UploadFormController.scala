@@ -32,6 +32,8 @@ import controllers.IsThisFileConfidentialController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import models.fileupload._
 import models.requests.DataRequest
+import pages.UploadSupportingDocumentPage
+import repositories.SessionRepository
 import services.fileupload.UploadProgressTracker
 import views.html.fileupload._
 
@@ -39,6 +41,7 @@ import views.html.fileupload._
 class UploadFormController @Inject() (
   override val messagesApi: MessagesApi,
   val controllerComponents: MessagesControllerComponents,
+  sessionRepository: SessionRepository,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
@@ -80,29 +83,39 @@ class UploadFormController @Inject() (
       }
   }
 
-  def continueToIsFileConfidential(
+  private def storeAnswers(
+    request: DataRequest[AnyContent],
     uploadId: UploadId,
     uploadDetails: UploadedSuccessfully
-  ): Action[AnyContent] = Action.async {
-    implicit request =>
-      for {
-        uploadResult <- uploadProgressTracker.getUploadResult(uploadId)
-
-        result <- uploadResult match {
-                    case Some(s: UploadedSuccessfully) =>
-                      isThisFileConfidentialController
-                        .onCallback(
-                          uploadId,
-                          uploadDetails.name,
-                          uploadDetails.downloadUrl
-                        )
-                        .apply(request)
-                    case _                             => Future.successful(InternalServerError("Something gone wrong"))
-                  }
-      } yield result
+  ) = {
+    val payload = UpscanFileDetails(uploadId, uploadDetails.name, uploadDetails.downloadUrl)
+    Future
+      .fromTry(
+        request.userAnswers
+          .set(UploadSupportingDocumentPage, payload)
+      )
+      .flatMap(updatedAnswers => sessionRepository.set(updatedAnswers))
   }
 
-  // Could be moved out to a service
+  private def continueToIsFileConfidential(
+    uploadId: UploadId,
+    uploadDetails: UploadedSuccessfully
+  ): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        for {
+          uploadResult <- uploadProgressTracker.getUploadResult(uploadId)
+          result       <- uploadResult match {
+                            case Some(s: UploadedSuccessfully) =>
+                              storeAnswers(request, uploadId, s)
+                                .flatMap(
+                                  _ => isThisFileConfidentialController.onCallback().apply(request)
+                                )
+                            case _                             => Future.successful(InternalServerError("Something gone wrong"))
+                          }
+        } yield result
+    }
+
   private def showUploadForm(
     fileUploadIds: FileUploadIds,
     errorCode: Option[String],

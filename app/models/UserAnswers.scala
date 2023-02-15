@@ -18,6 +18,7 @@ package models
 
 import java.time.Instant
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 import play.api.libs.json._
@@ -52,6 +53,11 @@ final case class UserAnswers(
         page.cleanup(Some(value), updatedAnswers)
     }
   }
+
+  def setFuture[A](page: Settable[A], value: A)(implicit
+    writes: Writes[A]
+  ): Future[UserAnswers] =
+    Future.fromTry(set(page, value))
 
   def remove[A](page: Settable[A]): Try[UserAnswers] = {
 

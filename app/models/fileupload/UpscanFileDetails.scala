@@ -19,8 +19,7 @@ package models.fileupload
 import play.api.libs.json.{__, OFormat, OWrites, Reads}
 
 case class UpscanFileDetails(
-  isConfidential: Boolean,
-  uploadId: String,
+  uploadId: UploadId,
   fileName: String,
   downloadUrl: String
 )
@@ -32,8 +31,7 @@ object UpscanFileDetails {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "isConfidential").read[Boolean] and
-        (__ \ "uploadId").read[String] and
+      (__ \ "uploadId").read[UploadId] and
         (__ \ "fileName").read[String] and
         (__ \ "downloadUrl").read[String]
     )(UpscanFileDetails.apply _)
@@ -44,8 +42,7 @@ object UpscanFileDetails {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "isConfidential").write[Boolean] and
-        (__ \ "uploadId").write[String] and
+      (__ \ "uploadId").write[UploadId] and
         (__ \ "fileName").write[String] and
         (__ \ "downloadUrl").write[String]
     )(unlift(UpscanFileDetails.unapply))
