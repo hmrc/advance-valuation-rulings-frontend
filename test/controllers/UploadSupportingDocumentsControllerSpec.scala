@@ -16,16 +16,11 @@
 
 package controllers
 
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import config.FrontendAppConfig
-import models.fileupload.{InProgress, UploadId, UpscanFileReference, UpscanInitiateResponse}
-import org.mockito.Mock
 import org.mockito.MockitoSugar.{mock, when}
-import views.html.fileupload.UploadForm
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 
 class UploadSupportingDocumentsControllerSpec extends SpecBase {
 
