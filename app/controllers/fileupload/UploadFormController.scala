@@ -126,7 +126,7 @@ class UploadFormController @Inject() (
     val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
     val requestUploadFileId = fileUploadIds.nextUploadFileId
 
-    val baseUrl     = appConfig.uploadRedirectTargetBase
+    val baseUrl     = appConfig.host
     val redirectUrl = routes.UploadFormController
       .onPageLoad(None, None, Some(redirectUrlFileId))
       .url
