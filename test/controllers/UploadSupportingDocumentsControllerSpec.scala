@@ -16,11 +16,12 @@
 
 package controllers
 
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import config.FrontendAppConfig
 import org.mockito.MockitoSugar.{mock, when}
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 
 class UploadSupportingDocumentsControllerSpec extends SpecBase {
 
