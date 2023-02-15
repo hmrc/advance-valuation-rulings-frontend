@@ -27,12 +27,12 @@
         list: BulletList
 )
 
-@(nameOfGoods: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title", nameOfGoods))) {
+@layout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title"))) {
 
     @caption(messages("uploadSupportingDocuments.caption"))
-    @heading(messages("uploadSupportingDocuments.heading", nameOfGoods))
+    @heading(messages("uploadSupportingDocuments.heading"))
 
     @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
     @list(Seq(

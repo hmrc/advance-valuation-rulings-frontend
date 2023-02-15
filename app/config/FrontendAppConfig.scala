@@ -84,6 +84,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
     configuration
       .get[Service]("microservice.services.upscan-initiate")
       .baseUrl + "/upscan/v2/initiate"
+  val maximumFileSize            = 10000000 // in bytes
 
   private def loadConfig(key: String) =
     configuration

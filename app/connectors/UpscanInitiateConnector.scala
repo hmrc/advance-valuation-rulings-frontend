@@ -42,7 +42,8 @@ class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: Fron
     val request = UpscanInitiateRequest(
       callbackUrl = appConfig.callbackEndpointTarget,
       successRedirect = redirectOnSuccess,
-      errorRedirect = redirectOnError
+      errorRedirect = redirectOnError,
+      maximumFileSize = Some(appConfig.maximumFileSize)
     )
     initiate(appConfig.initiateV2Url, request)
   }

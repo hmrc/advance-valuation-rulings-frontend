@@ -104,7 +104,10 @@ class UploadAnotherSupportingDocumentController @Inject() (
       case (Some(fileDetails), Some(confidential)) =>
         f(fileDetails, confidential)
       case (_, _)                                  =>
-        Redirect(fileupload.routes.UploadFormController.onPageLoad(None, None, None))
+        Redirect(
+          controllers.fileupload.routes.UploadSupportingDocumentsController
+            .onPageLoad(None, None, None)
+        )
     }
   }
 }

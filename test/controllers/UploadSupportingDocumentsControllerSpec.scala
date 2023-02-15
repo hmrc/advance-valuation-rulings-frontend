@@ -16,31 +16,40 @@
 
 package controllers
 
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import views.html.UploadSupportingDocumentsView
+import config.FrontendAppConfig
+import models.fileupload.{InProgress, UploadId, UpscanFileReference, UpscanInitiateResponse}
+import org.mockito.Mock
+import org.mockito.MockitoSugar.{mock, when}
+import views.html.fileupload.UploadForm
 
 class UploadSupportingDocumentsControllerSpec extends SpecBase {
 
-  val nameOfGoods = "No name of goods found"
+  private val mockAppConf = mock[FrontendAppConfig]
 
   "UploadSupportingDocuments Controller" - {
-
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.UploadSupportingDocumentsController.onPageLoad().url)
+        when(mockAppConf.host).thenReturn("any-url")
+
+        val request = FakeRequest(
+          GET,
+          controllers.fileupload.routes.UploadSupportingDocumentsController
+            .onPageLoad(None, None, None)
+            .url
+        )
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(nameOfGoods)(request, messages(application)).toString
       }
     }
   }

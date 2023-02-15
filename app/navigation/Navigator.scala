@@ -170,7 +170,9 @@ class Navigator @Inject() () {
   private def doYouWantToUploadDocumentsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
-      case Some(true)  => UploadSupportingDocumentsController.onPageLoad
+      case Some(true)  =>
+        controllers.fileupload.routes.UploadSupportingDocumentsController
+          .onPageLoad(None, None, None)
       case Some(false) => routes.IndexController.onPageLoad
     }
 
@@ -183,7 +185,9 @@ class Navigator @Inject() () {
   private def uploadAnotherSupportingDocumentPage(userAnswers: UserAnswers): Call =
     userAnswers.get(UploadAnotherSupportingDocumentPage) match {
       case None        => UploadAnotherSupportingDocumentController.onPageLoad(models.NormalMode)
-      case Some(true)  => UploadSupportingDocumentsController.onPageLoad
+      case Some(true)  =>
+        controllers.fileupload.routes.UploadSupportingDocumentsController
+          .onPageLoad(None, None, None)
       case Some(false) => routes.IndexController.onPageLoad
     }
 

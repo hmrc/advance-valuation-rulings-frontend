@@ -16,14 +16,21 @@
 
 package models.fileupload
 
+import scala.concurrent.Future
+
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import play.api.mvc.Result
 import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
 
 import models.fileupload._
 import org.bson.types.ObjectId
 
-sealed trait UploadStatus
+sealed trait UploadStatus {
+  def apply(result: Future[Result]) = ???
+
+}
+
 case object NotStarted extends UploadStatus
 case object InProgress extends UploadStatus
 case object Failed extends UploadStatus
