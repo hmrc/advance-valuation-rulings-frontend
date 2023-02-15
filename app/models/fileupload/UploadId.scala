@@ -18,6 +18,8 @@ package models.fileupload
 
 import java.util.UUID
 
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 import play.api.mvc.QueryStringBindable
 
 case class UploadId(value: String) extends AnyVal
@@ -29,6 +31,12 @@ object UploadId {
     stringBinder: QueryStringBindable[String]
   ): QueryStringBindable[UploadId] =
     stringBinder.transform(UploadId(_), _.value)
+
+  implicit val idFormat: Format[UploadId] =
+    Format(
+      Reads.StringReads.map(UploadId(_)),
+      Writes.StringWrites.contramap[UploadId](_.value)
+    )
 }
 
 sealed trait FileUploadIds {
@@ -43,7 +51,8 @@ case class NewFileUpload(nextFileId: UploadId) extends FileUploadIds {
   def redirectUrlFileId: UploadId = nextFileId
   def nextUploadFileId: UploadId  = nextFileId
 }
-case class ExistingFileUpload(existingFileId: UploadId, nextFileId: UploadId) extends FileUploadIds {
+case class ExistingFileUpload(existingFileId: UploadId, nextFileId: UploadId)
+    extends FileUploadIds {
   def redirectUrlFileId: UploadId = existingFileId
   def nextUploadFileId: UploadId  = nextFileId
 }

@@ -16,10 +16,19 @@
 
 package models.fileupload
 
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 import play.api.libs.json.Reads
+import play.api.mvc.QueryStringBindable
 
 case class Reference(value: String) extends AnyVal
 
 object Reference {
+  implicit val referenceFormat: Format[Reference] =
+    Format(
+      Reads.StringReads.map(Reference(_)),
+      Writes.StringWrites.contramap[Reference](_.value)
+    )
+
   implicit val referenceReader: Reads[Reference] = Reads.StringReads.map(Reference(_))
 }
