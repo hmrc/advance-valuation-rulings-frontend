@@ -77,14 +77,14 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  lazy val callbackEndpointTarget: String =
-    loadConfig("host") + "/advance-valuation-ruling/upscan-callback"
+  // testing on qa,
+  val callbackEndpointTarget: String = loadConfig("upscan.callbackUrl")
+  val maximumFileSize: Int           = configuration.get[Int]("upscan.maxFileSize")
 
   lazy val initiateV2Url: String =
     configuration
       .get[Service]("microservice.services.upscan-initiate")
       .baseUrl + "/upscan/v2/initiate"
-  val maximumFileSize            = 10000000 // in bytes
 
   private def loadConfig(key: String) =
     configuration
