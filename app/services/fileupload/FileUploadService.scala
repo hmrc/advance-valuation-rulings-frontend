@@ -16,7 +16,7 @@
 
 package services.fileupload
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
 import cats.syntax.all._
 import scala.concurrent.ExecutionContext
@@ -35,15 +35,27 @@ case class FileUploadResult(
   redirectFileId: UploadId
 )
 
-@Singleton
-class FileUploadService @Inject() (
+trait FileUploadService {
+  def initiateUpload()(implicit
+    hc: HeaderCarrier
+  ): Future[FileUploadResult]
+
+  def initiateWithExisting(fileUploadIds: FileUploadIds)(implicit
+    hc: HeaderCarrier
+  ): Future[FileUploadResult]
+
+  def getUploadStatus(uploadId: UploadId): Future[Option[UploadStatus]]
+}
+
+class UpscanFileUploadService @Inject() (
   upscanInitiateConnector: UpscanInitiateConnector,
-  uploadProgressTracker: UploadProgressTracker
-)(implicit ec: ExecutionContext) {
+  uploadProgressTracker: UploadProgressTracker,
+  appConfig: FrontendAppConfig
+)(implicit ec: ExecutionContext)
+    extends FileUploadService {
 
   def initiateUpload()(implicit
-    hc: HeaderCarrier,
-    appConfig: FrontendAppConfig
+    hc: HeaderCarrier
   ): Future[FileUploadResult] = {
     val fileUploadIds       = FileUploadIds.generateNewFileUploadId
     val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
@@ -66,8 +78,7 @@ class FileUploadService @Inject() (
   }
 
   def initiateWithExisting(fileUploadIds: FileUploadIds)(implicit
-    hc: HeaderCarrier,
-    appConfig: FrontendAppConfig
+    hc: HeaderCarrier
   ) = {
     val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
     val requestUploadFileId = fileUploadIds.nextUploadFileId
@@ -86,9 +97,10 @@ class FileUploadService @Inject() (
                     requestUploadFileId,
                     Reference(response.fileReference.reference)
                   )
+      status   <- getUploadStatus(redirectUrlFileId)
     } yield FileUploadResult(
       response,
-      InProgress,
+      status.getOrElse(NotStarted),
       redirectUrlFileId
     )
 

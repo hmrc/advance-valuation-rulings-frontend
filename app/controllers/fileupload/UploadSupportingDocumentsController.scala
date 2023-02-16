@@ -43,8 +43,6 @@ class UploadSupportingDocumentsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  // upscanInitiateConnector: UpscanInitiateConnector,
-  // uploadProgressTracker: UploadProgressTracker,
   fileUploadService: FileUploadService,
   uploadSupportingDocumentsView: UploadSupportingDocumentsView,
   isThisFileConfidentialController: IsThisFileConfidentialController
