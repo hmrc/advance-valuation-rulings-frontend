@@ -23,9 +23,9 @@ import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
 import models.fileupload._
-import services.fileupload.{FileUploadService, FileUploadResult}
+import services.fileupload.{FileUploadResult, FileUploadService}
 
-class FakeFileUploadService @Inject() extends FileUploadService  {
+class FakeFileUploadService @Inject() extends FileUploadService {
   import FakeFileUploadService._
   def initiateUpload()(implicit
     _hc: HeaderCarrier
