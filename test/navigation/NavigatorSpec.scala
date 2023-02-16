@@ -190,6 +190,38 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "UploadAnotherSupportingDocumentPage must" - {
+        "self when no answer is selected" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(mode = NormalMode)
+        }
+
+        "UploadSupportingDocumentsPage when Yes is selected" in {
+          val userAnswers =
+            UserAnswers("id").set(UploadAnotherSupportingDocumentPage, true).get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController
+            .onPageLoad(None, None, None)
+        }
+
+        "IndexPage when No is selected" in {
+          val userAnswers =
+            UserAnswers("id").set(UploadAnotherSupportingDocumentPage, false).get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.IndexController.onPageLoad
+        }
+      }
+
       "IsThisFileConfidentialPage must" - {
         "self when no method is select" in {
           val userAnswers = UserAnswers("id")
