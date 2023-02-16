@@ -25,6 +25,33 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryIsThereASaleInvolvedUserAnswersEntry
+    : Arbitrary[(IsThereASaleInvolvedPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[IsThereASaleInvolvedPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryIsSaleBetweenRelatedPartiesUserAnswersEntry
+    : Arbitrary[(IsSaleBetweenRelatedPartiesPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[IsSaleBetweenRelatedPartiesPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryExplainHowPartiesAreRelatedUserAnswersEntry
+    : Arbitrary[(ExplainHowPartiesAreRelatedPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ExplainHowPartiesAreRelatedPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryWhyTransactionValueOfSimilarGoodsUserAnswersEntry
     : Arbitrary[(WhyTransactionValueOfSimilarGoodsPage.type, JsValue)] =
     Arbitrary {

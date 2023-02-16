@@ -30,6 +30,7 @@ class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case ValuationMethodPage                   => valuationMethodPage
+    case IsThereASaleInvolvedPage              => isThereASaleInvolvedPage
     case NameOfGoodsPage                       => nameOfGoodsPage
     case HasCommodityCodePage                  => hasCommodityCodePage
     case CommodityCodePage                     => commodityCodePage
@@ -61,7 +62,7 @@ class Navigator @Inject() () {
       case Some(valuationMethod) =>
         import models.ValuationMethod._
         valuationMethod match {
-          case Method1 => NameOfGoodsController.onPageLoad(models.NormalMode)
+          case Method1 => IsThereASaleInvolvedController.onPageLoad(models.NormalMode)
           case Method2 => WhyIdenticalGoodsController.onPageLoad(models.NormalMode)
           case Method3 => WhyTransactionValueOfSimilarGoodsController.onPageLoad(models.NormalMode)
           case Method4 => NameOfGoodsController.onPageLoad(models.NormalMode)
@@ -70,8 +71,19 @@ class Navigator @Inject() () {
         }
     }
 
+  // Method 1----------------------------------------------------------------
+
+  private def isThereASaleInvolvedPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(IsThereASaleInvolvedPage) match {
+      case None        => IsThereASaleInvolvedController.onPageLoad(models.NormalMode)
+      case Some(true)  => IsSaleBetweenRelatedPartiesController.onPageLoad(models.NormalMode)
+      case Some(false) =>
+        IsThereASaleInvolvedController.onPageLoad(
+          models.NormalMode
+        ) // Are there any restrictions on the use or resale of the goods? page
+    }
   // Method 2----------------------------------------------------------------
-  private def whyIdenticalGoodsPage(userAnswers: UserAnswers): Call =
+  private def whyIdenticalGoodsPage(userAnswers: UserAnswers): Call    =
     userAnswers.get(WhyIdenticalGoodsPage) match {
       case None    => WhyIdenticalGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)

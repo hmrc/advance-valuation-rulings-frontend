@@ -168,13 +168,13 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
         }
 
-        "NameOfGoods page when method 1 is selected" in {
+        "isThereASaleInvolved page when method 1 is selected" in {
           val userAnswers = UserAnswers("id").set(ValuationMethodPage, ValuationMethod.Method1).get
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(mode = NormalMode)
         }
 
         "WhyIdenticalGoods page when method 2 is selected" in {
@@ -220,6 +220,16 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "isThereASaleInvolved must" - {
+        "navigate to IsSaleBetweenRelatedParties page when yes" in {
+          navigator.nextPage(
+            IsThereASaleInvolvedPage,
+            NormalMode,
+            UserAnswers("id").set(IsThereASaleInvolvedPage, true).success.value
+          ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
         }
       }
 

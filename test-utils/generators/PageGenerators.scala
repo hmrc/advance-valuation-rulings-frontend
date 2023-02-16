@@ -21,6 +21,17 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryIsThereASaleInvolvedPage: Arbitrary[IsThereASaleInvolvedPage.type] =
+    Arbitrary(IsThereASaleInvolvedPage)
+
+  implicit lazy val arbitraryIsSaleBetweenRelatedPartiesPage
+    : Arbitrary[IsSaleBetweenRelatedPartiesPage.type] =
+    Arbitrary(IsSaleBetweenRelatedPartiesPage)
+
+  implicit lazy val arbitraryExplainHowPartiesAreRelatedPage
+    : Arbitrary[ExplainHowPartiesAreRelatedPage.type] =
+    Arbitrary(ExplainHowPartiesAreRelatedPage)
+
   implicit lazy val arbitraryWhyTransactionValueOfSimilarGoodsPage
     : Arbitrary[WhyTransactionValueOfSimilarGoodsPage.type] =
     Arbitrary(WhyTransactionValueOfSimilarGoodsPage)

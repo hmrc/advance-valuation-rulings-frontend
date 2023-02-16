@@ -151,3 +151,18 @@ GET        /whyIdenticalGoods                        controllers.WhyIdenticalGoo
 POST       /whyIdenticalGoods                        controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /explainHowPartiesAreRelated                        controllers.ExplainHowPartiesAreRelatedController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainHowPartiesAreRelated                        controllers.ExplainHowPartiesAreRelatedController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainHowPartiesAreRelated                  controllers.ExplainHowPartiesAreRelatedController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainHowPartiesAreRelated                  controllers.ExplainHowPartiesAreRelatedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /isSaleBetweenRelatedParties                        controllers.IsSaleBetweenRelatedPartiesController.onPageLoad(mode: Mode = NormalMode)
+POST       /isSaleBetweenRelatedParties                        controllers.IsSaleBetweenRelatedPartiesController.onSubmit(mode: Mode = NormalMode)
+GET        /changeIsSaleBetweenRelatedParties                  controllers.IsSaleBetweenRelatedPartiesController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeIsSaleBetweenRelatedParties                  controllers.IsSaleBetweenRelatedPartiesController.onSubmit(mode: Mode = CheckMode)
+
+GET        /isThereASaleInvolved                        controllers.IsThereASaleInvolvedController.onPageLoad(mode: Mode = NormalMode)
+POST       /isThereASaleInvolved                        controllers.IsThereASaleInvolvedController.onSubmit(mode: Mode = NormalMode)
+GET        /changeIsThereASaleInvolved                  controllers.IsThereASaleInvolvedController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeIsThereASaleInvolved                  controllers.IsThereASaleInvolvedController.onSubmit(mode: Mode = CheckMode)
