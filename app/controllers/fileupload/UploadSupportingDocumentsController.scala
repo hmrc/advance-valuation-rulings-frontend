@@ -18,7 +18,6 @@ package controllers.fileupload
 
 import javax.inject.{Inject, Singleton}
 
-import cats.syntax.all._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.i18n.I18nSupport
@@ -27,15 +26,14 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
-import connectors.UpscanInitiateConnector
 import controllers.IsThisFileConfidentialController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import models.fileupload._
 import models.requests.DataRequest
 import pages.UploadSupportingDocumentPage
 import repositories.SessionRepository
-import services.fileupload.UploadProgressTracker
-import views.html.fileupload._
+import services.fileupload.FileUploadService
+import views.html.UploadSupportingDocumentsView
 
 @Singleton
 class UploadSupportingDocumentsController @Inject() (
@@ -45,9 +43,10 @@ class UploadSupportingDocumentsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  upscanInitiateConnector: UpscanInitiateConnector,
-  uploadProgressTracker: UploadProgressTracker,
-  uploadFormView: UploadForm,
+  // upscanInitiateConnector: UpscanInitiateConnector,
+  // uploadProgressTracker: UploadProgressTracker,
+  fileUploadService: FileUploadService,
+  uploadSupportingDocumentsView: UploadSupportingDocumentsView,
   isThisFileConfidentialController: IsThisFileConfidentialController
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendBaseController
@@ -56,21 +55,30 @@ class UploadSupportingDocumentsController @Inject() (
   private val knownS3ErrorCodes = List("entitytoolarge", "entitytoosmall", "rejected", "quarantine")
 
   def onPageLoad(
-    error: Option[String] = None,
-    key: Option[String] = None,
-    uploadId: Option[UploadId] = None
+    error: Option[String],
+    key: Option[String],
+    uploadId: Option[UploadId]
   ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
 
     implicit request: DataRequest[AnyContent] =>
       val errorCode = error.flatMap(code => knownS3ErrorCodes.find(_ == code.toLowerCase))
       uploadId match {
-        case None                 =>
-          val nextUploadFileIds = FileUploadIds.generateNewFileUploadId
-          showUploadForm(nextUploadFileIds, errorCode, NotStarted)
+        case None =>
+          for {
+            result <- fileUploadService.initiateUpload()
+          } yield Ok(
+            uploadSupportingDocumentsView(
+              result.upscanResponse,
+              errorCode,
+              result.redirectFileId,
+              result.uploadStatus
+            )
+          )
+
         case Some(existingFileId) =>
           val fileUploadIds = FileUploadIds.fromExistingUploadId(existingFileId)
           for {
-            uploadResult <- uploadProgressTracker.getUploadResult(existingFileId)
+            uploadResult <- fileUploadService.getUploadStatus(existingFileId)
             result       <- uploadResult match {
                               case None                               =>
                                 Future(BadRequest(s"Upload with id $uploadId not found"))
@@ -83,37 +91,19 @@ class UploadSupportingDocumentsController @Inject() (
       }
   }
 
-  private def storeAnswers(
-    request: DataRequest[AnyContent],
-    uploadId: UploadId,
-    uploadDetails: UploadedSuccessfully
-  ) = {
-    val payload = UpscanFileDetails(uploadId, uploadDetails.name, uploadDetails.downloadUrl)
-    Future
-      .fromTry(
-        request.userAnswers
-          .set(UploadSupportingDocumentPage, payload)
-      )
-      .flatMap(updatedAnswers => sessionRepository.set(updatedAnswers))
-  }
-
   private def continueToIsFileConfidential(
     uploadId: UploadId,
     uploadDetails: UploadedSuccessfully
   ): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
+        val payload = UpscanFileDetails(uploadId, uploadDetails.name, uploadDetails.downloadUrl)
+
         for {
-          uploadResult <- uploadProgressTracker.getUploadResult(uploadId)
-          result       <- uploadResult match {
-                            case Some(s: UploadedSuccessfully) =>
-                              storeAnswers(request, uploadId, s)
-                                .flatMap(
-                                  _ => isThisFileConfidentialController.onCallback().apply(request)
-                                )
-                            case _                             => Future.successful(InternalServerError("Something gone wrong"))
-                          }
-        } yield result
+          answers <- request.userAnswers.setFuture(UploadSupportingDocumentPage, payload)
+          _       <- sessionRepository.set(answers)
+          r       <- isThisFileConfidentialController.onCallback().apply(request)
+        } yield r
     }
 
   private def showUploadForm(
@@ -122,26 +112,15 @@ class UploadSupportingDocumentsController @Inject() (
     result: UploadStatus
   )(implicit
     request: DataRequest[AnyContent]
-  ) = {
-    val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
-    val requestUploadFileId = fileUploadIds.nextUploadFileId
-
-    val baseUrl     = appConfig.host
-    val redirectUrl = controllers.fileupload.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, Some(redirectUrlFileId))
-      .url
-
-    val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
-    val successRedirectUrl = s"${baseUrl}$redirectUrl".some
-
+  ) =
     for {
-      response <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)
-      _        <- uploadProgressTracker.requestUpload(
-                    requestUploadFileId,
-                    Reference(response.fileReference.reference)
-                  )
+      response <- fileUploadService.initiateWithExisting(fileUploadIds)
     } yield Ok(
-      uploadFormView(response, errorCode, redirectUrlFileId, result)
+      uploadSupportingDocumentsView(
+        response.upscanResponse,
+        errorCode,
+        response.redirectFileId,
+        result
+      )
     )
-  }
 }
