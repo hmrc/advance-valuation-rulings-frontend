@@ -45,7 +45,7 @@ class FileUploadService @Inject() (
     hc: HeaderCarrier,
     appConfig: FrontendAppConfig
   ): Future[FileUploadResult] = {
-    val fileUploadIds = FileUploadIds.generateNewFileUploadId
+    val fileUploadIds       = FileUploadIds.generateNewFileUploadId
     val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
     val requestUploadFileId = fileUploadIds.nextUploadFileId
 
@@ -57,11 +57,11 @@ class FileUploadService @Inject() (
     val successRedirectUrl = s"${baseUrl}$redirectUrl".some
 
     for {
-      response  <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)
-      _         <- uploadProgressTracker.requestUpload(
-                     requestUploadFileId,
-                     Reference(response.fileReference.reference)
-                   )
+      response <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)
+      _        <- uploadProgressTracker.requestUpload(
+                    requestUploadFileId,
+                    Reference(response.fileReference.reference)
+                  )
     } yield FileUploadResult(response, NotStarted, redirectUrlFileId)
   }
 
