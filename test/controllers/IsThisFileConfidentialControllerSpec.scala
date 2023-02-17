@@ -26,7 +26,6 @@ import play.api.test.Helpers._
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
 import models.{NormalMode, UserAnswers}
-import models.fileupload.{UploadId, UpscanFileDetails}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -67,10 +66,6 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val id: UploadId        = UploadId("212534")
-      val name: String        = "hello.txt"
-      val downloadUrl: String = "localhost:9000/download"
-
       val userAnswers =
         UserAnswers(userAnswersId)
           .set(IsThisFileConfidentialPage, true)
