@@ -151,3 +151,23 @@ GET        /whyIdenticalGoods                        controllers.WhyIdenticalGoo
 POST       /whyIdenticalGoods                        controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhyIdenticalGoods                  controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /areThereRestrictionsOnTheGoods                        controllers.AreThereRestrictionsOnTheGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /areThereRestrictionsOnTheGoods                        controllers.AreThereRestrictionsOnTheGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeAreThereRestrictionsOnTheGoods                  controllers.AreThereRestrictionsOnTheGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeAreThereRestrictionsOnTheGoods                  controllers.AreThereRestrictionsOnTheGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /describeTheConditions                        controllers.DescribeTheConditionsController.onPageLoad(mode: Mode = NormalMode)
+POST       /describeTheConditions                        controllers.DescribeTheConditionsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDescribeTheConditions                  controllers.DescribeTheConditionsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDescribeTheConditions                  controllers.DescribeTheConditionsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /describeTheRestrictions                        controllers.DescribeTheRestrictionsController.onPageLoad(mode: Mode = NormalMode)
+POST       /describeTheRestrictions                        controllers.DescribeTheRestrictionsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDescribeTheRestrictions                  controllers.DescribeTheRestrictionsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDescribeTheRestrictions                  controllers.DescribeTheRestrictionsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /isTheSaleSubjectToConditions                        controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = NormalMode)
+POST       /isTheSaleSubjectToConditions                        controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = CheckMode)

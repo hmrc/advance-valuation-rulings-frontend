@@ -392,3 +392,29 @@ whyIdenticalGoods.checkYourAnswersLabel = whyIdenticalGoods
 whyIdenticalGoods.error.required = Please outline why you have not selected Method 1 to value your goods
 whyIdenticalGoods.error.length = Maximum allowed characters is 8168
 whyIdenticalGoods.change.hidden = WhyIdenticalGoods
+
+areThereRestrictionsOnTheGoods.title = areThereRestrictionsOnTheGoods
+areThereRestrictionsOnTheGoods.heading = areThereRestrictionsOnTheGoods
+areThereRestrictionsOnTheGoods.checkYourAnswersLabel = areThereRestrictionsOnTheGoods
+areThereRestrictionsOnTheGoods.error.required = Select yes if areThereRestrictionsOnTheGoods
+areThereRestrictionsOnTheGoods.change.hidden = AreThereRestrictionsOnTheGoods
+
+describeTheConditions.title = describeTheConditions
+describeTheConditions.heading = describeTheConditions
+describeTheConditions.checkYourAnswersLabel = describeTheConditions
+describeTheConditions.error.required = Enter describeTheConditions
+describeTheConditions.error.length = DescribeTheConditions must be 8167 characters or less
+describeTheConditions.change.hidden = DescribeTheConditions
+
+describeTheRestrictions.title = describeTheRestrictions
+describeTheRestrictions.heading = describeTheRestrictions
+describeTheRestrictions.checkYourAnswersLabel = describeTheRestrictions
+describeTheRestrictions.error.required = Enter describeTheRestrictions
+describeTheRestrictions.error.length = DescribeTheRestrictions must be 8167 characters or less
+describeTheRestrictions.change.hidden = DescribeTheRestrictions
+
+isTheSaleSubjectToConditions.title = isTheSaleSubjectToConditions
+isTheSaleSubjectToConditions.heading = isTheSaleSubjectToConditions
+isTheSaleSubjectToConditions.checkYourAnswersLabel = isTheSaleSubjectToConditions
+isTheSaleSubjectToConditions.error.required = Select yes if isTheSaleSubjectToConditions
+isTheSaleSubjectToConditions.change.hidden = IsTheSaleSubjectToConditions

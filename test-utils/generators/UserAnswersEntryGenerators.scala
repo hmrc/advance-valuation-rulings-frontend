@@ -25,6 +25,38 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryIsTheSaleSubjectToConditionsUserAnswersEntry: Arbitrary[(IsTheSaleSubjectToConditionsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[IsTheSaleSubjectToConditionsPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryDescribeTheRestrictionsUserAnswersEntry: Arbitrary[(DescribeTheRestrictionsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[DescribeTheRestrictionsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryDescribeTheConditionsUserAnswersEntry: Arbitrary[(DescribeTheConditionsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[DescribeTheConditionsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryAreThereRestrictionsOnTheGoodsUserAnswersEntry: Arbitrary[(AreThereRestrictionsOnTheGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[AreThereRestrictionsOnTheGoodsPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryWhyTransactionValueOfSimilarGoodsUserAnswersEntry
     : Arbitrary[(WhyTransactionValueOfSimilarGoodsPage.type, JsValue)] =
     Arbitrary {
