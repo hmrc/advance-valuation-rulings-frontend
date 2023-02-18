@@ -52,6 +52,10 @@ class Navigator @Inject() () {
     case WhyTransactionValueOfSimilarGoodsPage => whyTransactionValueOfSimilarGoodsPage
     case HaveYouUsedMethodOneInPastPage        => haveYouUsedMethodOneInPastPage
     case WhyIdenticalGoodsPage                 => whyIdenticalGoodsPage
+    case AreThereRestrictionsOnTheGoodsPage    => areThereRestrictionsOnTheGoodsPage
+    case DescribeTheRestrictionsPage           => describeTheRestrictionsPage
+    case IsTheSaleSubjectToConditionsPage      => isTheSaleSubjectToConditionsPage
+    case DescribeTheConditionsPage             => describeTheConditionsPage
     case _                                     => _ => routes.IndexController.onPageLoad
   }
 
@@ -68,6 +72,33 @@ class Navigator @Inject() () {
           case Method5 => WhyComputedValueController.onPageLoad(models.NormalMode)
           case Method6 => NameOfGoodsController.onPageLoad(models.NormalMode)
         }
+    }
+  // Method 1----------------------------------------------------------------
+
+  private def areThereRestrictionsOnTheGoodsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(AreThereRestrictionsOnTheGoodsPage) match {
+      case None        => AreThereRestrictionsOnTheGoodsController.onPageLoad(models.NormalMode)
+      case Some(true)  => DescribeTheRestrictionsController.onPageLoad(models.NormalMode)
+      case Some(false) => IsTheSaleSubjectToConditionsController.onPageLoad(models.NormalMode)
+    }
+
+  private def describeTheRestrictionsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(DescribeTheRestrictionsPage) match {
+      case None    => DescribeTheRestrictionsController.onPageLoad(models.NormalMode)
+      case Some(_) => IsTheSaleSubjectToConditionsController.onPageLoad(models.NormalMode)
+    }
+
+  private def isTheSaleSubjectToConditionsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
+      case None        => IsTheSaleSubjectToConditionsController.onPageLoad(models.NormalMode)
+      case Some(true)  => DescribeTheConditionsController.onPageLoad(models.NormalMode)
+      case Some(false) => NameOfGoodsController.onPageLoad(models.NormalMode)
+    }
+
+  private def describeTheConditionsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(DescribeTheConditionsPage) match {
+      case None    => DescribeTheConditionsController.onPageLoad(models.NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(models.NormalMode)
     }
 
   // Method 2----------------------------------------------------------------
