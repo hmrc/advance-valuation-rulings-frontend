@@ -76,4 +76,19 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+
+  // testing on qa,
+  val callbackEndpointTarget: String = loadConfig("upscan.callbackUrl")
+  val maximumFileSize: Int           = configuration.get[Int]("upscan.maxFileSize")
+
+  lazy val initiateV2Url: String =
+    configuration
+      .get[Service]("microservice.services.upscan-initiate")
+      .baseUrl + "/upscan/v2/initiate"
+
+  private def loadConfig(key: String) =
+    configuration
+      .getOptional[String](key)
+      .getOrElse(throw new Exception(s"Missing configuration key: $key"))
+
 }

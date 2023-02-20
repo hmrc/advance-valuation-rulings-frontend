@@ -72,5 +72,8 @@ trait ButtonFluency {
 
     def asWarningButton(): Button =
       withCssClass("govuk-button--warning")
+
+    def disableIf(value: Boolean): Button =
+      button.copy(disabled = value)
   }
 }

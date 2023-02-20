@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package pages
+package models.fileupload
 
-import play.api.libs.json.JsPath
+case class UpscanFileReference(reference: String)
 
-case object IsThisFileConfidentialPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "value"
-}
+case class UpscanInitiateResponse(
+  fileReference: UpscanFileReference,
+  postTarget: String,
+  formFields: Map[String, String]
+)

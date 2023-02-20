@@ -68,7 +68,7 @@ class ApplicationContactDetailsController @Inject() (
             value =>
               for {
                 updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(ApplicationContactDetailsPage, value))
+                  request.userAnswers.setFuture(ApplicationContactDetailsPage, value)
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)

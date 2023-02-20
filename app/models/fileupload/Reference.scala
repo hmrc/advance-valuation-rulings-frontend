@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package pages
+package models.fileupload
 
-import play.api.libs.json.JsPath
+import play.api.libs.json._
+import play.api.libs.json.Reads
 
-case object IsThisFileConfidentialPage extends QuestionPage[Boolean] {
+case class Reference(value: String) extends AnyVal
 
-  override def path: JsPath = JsPath \ toString
+object Reference {
+  implicit val referenceFormat: Format[Reference] =
+    Format(
+      Reads.StringReads.map(Reference(_)),
+      Writes.StringWrites.contramap[Reference](_.value)
+    )
 
-  override def toString: String = "value"
+  implicit val referenceReader: Reads[Reference] = Reads.StringReads.map(Reference(_))
 }

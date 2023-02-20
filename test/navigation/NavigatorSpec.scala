@@ -158,6 +158,91 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
       }
 
+      "DoYouWantToUploadDocumentsPage must" - {
+        "self when no method is select" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            DoYouWantToUploadDocumentsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+        }
+
+        "UploadSupportingDocumentsPage when Yes is selected" in {
+          val userAnswers =
+            UserAnswers("id").set(DoYouWantToUploadDocumentsPage, true).get
+          navigator.nextPage(
+            DoYouWantToUploadDocumentsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController
+            .onPageLoad(None, None, None)
+        }
+
+        "IndexPage when No is selected" in {
+          val userAnswers =
+            UserAnswers("id").set(DoYouWantToUploadDocumentsPage, false).get
+          navigator.nextPage(
+            DoYouWantToUploadDocumentsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.IndexController.onPageLoad
+        }
+      }
+
+      "UploadAnotherSupportingDocumentPage must" - {
+        "self when no answer is selected" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(mode = NormalMode)
+        }
+
+        "UploadSupportingDocumentsPage when Yes is selected" in {
+          val userAnswers =
+            UserAnswers("id").set(UploadAnotherSupportingDocumentPage, true).get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController
+            .onPageLoad(None, None, None)
+        }
+
+        "IndexPage when No is selected" in {
+          val userAnswers =
+            UserAnswers("id").set(UploadAnotherSupportingDocumentPage, false).get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.IndexController.onPageLoad
+        }
+      }
+
+      "IsThisFileConfidentialPage must" - {
+        "self when no method is select" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            IsThisFileConfidentialPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.IsThisFileConfidentialController.onPageLoad(mode = NormalMode)
+        }
+
+        "UploadSupportingDocumentsPage when an answer is selected" in {
+          val userAnswers =
+            UserAnswers("id").set(IsThisFileConfidentialPage, false).get
+          navigator.nextPage(
+            IsThisFileConfidentialPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
+        }
+      }
+
       "valuationMethod page must navigate to" - {
         "self when no method is selected" in {
           val userAnswers = UserAnswers("id")

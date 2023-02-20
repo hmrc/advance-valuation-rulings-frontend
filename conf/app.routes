@@ -125,7 +125,7 @@ POST       /uploadAnotherSupportingDocument                        controllers.U
 GET        /changeUploadAnotherSupportingDocument                  controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeUploadAnotherSupportingDocument                  controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /uploadSupportingDocuments                       controllers.UploadSupportingDocumentsController.onPageLoad()
+GET        /uploadSupportingDocuments                       controllers.fileupload.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId])
 
 GET        /explainReasonComputedValue                        controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = NormalMode)
 POST       /explainReasonComputedValue                        controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode)
@@ -171,3 +171,7 @@ GET        /isTheSaleSubjectToConditions                        controllers.IsTh
 POST       /isTheSaleSubjectToConditions                        controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = CheckMode)
+
+# upload file notification callback
++ nocsrf
+POST       /upscan-callback         controllers.fileupload.UploadCallbackController.callback
