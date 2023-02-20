@@ -77,7 +77,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  // testing on qa,
   val callbackEndpointTarget: String = loadConfig("upscan.callbackUrl")
   val maximumFileSize: Int           = configuration.get[Int]("upscan.maxFileSize")
 

@@ -57,13 +57,11 @@ class UpscanFileUploadService @Inject() (
   def initiateUpload()(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult] = {
-    val fileUploadIds       = FileUploadIds.generateNewFileUploadId
-    val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
-    val requestUploadFileId = fileUploadIds.nextUploadFileId
+    val nextUploadFileId = FileUploadIds.generateNewFileUploadId.nextUploadFileId
 
     val baseUrl            = appConfig.host
     val redirectUrl        = controllers.fileupload.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, Some(redirectUrlFileId))
+      .onPageLoad(None, None, Some(nextUploadFileId))
       .url
     val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
     val successRedirectUrl = s"${baseUrl}$redirectUrl".some
@@ -71,21 +69,21 @@ class UpscanFileUploadService @Inject() (
     for {
       response <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)
       _        <- uploadProgressTracker.requestUpload(
-                    requestUploadFileId,
+                    nextUploadFileId,
                     Reference(response.fileReference.reference)
                   )
-    } yield FileUploadResult(response, NotStarted, redirectUrlFileId)
+    } yield FileUploadResult(response, NotStarted, nextUploadFileId)
   }
 
   def initiateWithExisting(fileUploadIds: FileUploadIds)(implicit
     hc: HeaderCarrier
   ) = {
-    val redirectUrlFileId   = fileUploadIds.redirectUrlFileId
-    val requestUploadFileId = fileUploadIds.nextUploadFileId
+    val redirectUrlFileId = fileUploadIds.redirectUrlFileId
+    val nextUploadFileId  = fileUploadIds.nextUploadFileId
 
     val baseUrl     = appConfig.host
     val redirectUrl = controllers.fileupload.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, Some(redirectUrlFileId))
+      .onPageLoad(None, None, Some(nextUploadFileId))
       .url
 
     val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
@@ -94,7 +92,7 @@ class UpscanFileUploadService @Inject() (
     for {
       response <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)
       _        <- uploadProgressTracker.requestUpload(
-                    requestUploadFileId,
+                    nextUploadFileId,
                     Reference(response.fileReference.reference)
                   )
       status   <- getUploadStatus(redirectUrlFileId)

@@ -20,21 +20,28 @@ import javax.inject.Inject
 
 import scala.concurrent.Future
 
+import play.api.Logger
+
 import models.fileupload.{CallbackBody, Failed, FailedCallbackBody, ReadyCallbackBody, UploadedSuccessfully}
 
 class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker) {
+
+  private val logger = Logger(this.getClass)
 
   def handleCallback(callback: CallbackBody): Future[Unit] = {
 
     val uploadStatus = callback match {
       case s: ReadyCallbackBody  =>
+        logger.warn(s"Successful uploaded notification for file: ${s.uploadDetails.fileName}")
         UploadedSuccessfully(
           s.uploadDetails.fileName,
           s.uploadDetails.fileMimeType,
           s.downloadUrl.getFile,
           Some(s.uploadDetails.size)
         )
-      case _: FailedCallbackBody =>
+      case f: FailedCallbackBody =>
+        val upscanFailureDetails = f.failureDetails.failureReason
+        logger.warn(s"File upload failed notification received from upscan: $upscanFailureDetails")
         Failed
     }
 
