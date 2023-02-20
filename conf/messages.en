@@ -346,6 +346,7 @@ uploadSupportingDocuments.button.inProgress=Uploading file
 
 uploadSupportingDocuments.entitytoolarge = The selected file must be smaller than 10 MB
 uploadSupportingDocuments.entitytoosmall = The selected file is empty
+uploadSupportingDocuments.failed = The selected file failed to upload
 uploadSupportingDocuments.rejected = The selected file must be a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
 uploadSupportingDocuments.quarantine = The selected file contains a virus
 

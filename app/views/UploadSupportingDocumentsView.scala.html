@@ -22,6 +22,7 @@
 @this(  mainLayout: templates.Layout,
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary,
         caption: Caption,
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
@@ -44,7 +45,7 @@
    }   
 
 @formGroupClass = @{
-    if(errorCode.isDefined) {
+    if(errorCode.isDefined || UploadStatus.isError(status)) {
         "govuk-form-group govuk-form-group--error"
     } else {
         "govuk-form-group"
@@ -71,28 +72,29 @@
         }
     }) {
 
-    @caption(messages("uploadSupportingDocuments.caption"))
-    @heading(messages("uploadSupportingDocuments.heading", "nameOfGoods"))
+    <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
+        @if(errorCode.isDefined || UploadStatus.isError(status)) {
+            @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status)))
+        }
 
- @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
-    @list(Seq(
+        @caption(messages("uploadSupportingDocuments.caption"))
+        @heading(messages("uploadSupportingDocuments.heading", "nameOfGoods"))
+
+        @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
+        @list(Seq(
                 Html(messages("uploadSupportingDocuments.bulletPoint.1")),
                 Html(messages("uploadSupportingDocuments.bulletPoint.2")),
-                ),
+            ),
             "govuk-list govuk-list--bullet",
-    )
+        )
 
-    @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
-    @list(Seq(
-
-                Html(messages("uploadSupportingDocuments.bulletPoint.3")),
-                Html(messages("uploadSupportingDocuments.bulletPoint.4"))
-                ),
+        @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
+        @list(Seq(
+            Html(messages("uploadSupportingDocuments.bulletPoint.3")),
+            Html(messages("uploadSupportingDocuments.bulletPoint.4"))
+            ),
             "govuk-list govuk-list--bullet",
-    )
-
-
-    <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
+        )
 
         @for(field <- upscanInitiateResponse.formFields) {
             <input type="hidden" name="@field._1" value="@field._2"/>
@@ -100,9 +102,9 @@
 
         <div class="mt-3">
             <div class="@formGroupClass">
-                @if(errorCode.isDefined) {
+                @if(errorCode.isDefined || UploadStatus.isError(status)) {
                     <p id="file-input-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @{messages("uploadSupportingDocuments." + errorCode.get)}
+                        <span class="govuk-visually-hidden">Error:</span> @{messages("uploadSupportingDocuments." + UploadStatus.message(status))}
                     </p>
                 }
                 

@@ -52,7 +52,7 @@ class UploadSupportingDocumentsController @Inject() (
     with I18nSupport {
 
   private val logger            = Logger(this.getClass)
-  // private val knownS3ErrorCodes = List("entitytoolarge", "entitytoosmall", "rejected", "quarantine")
+  private val knownS3ErrorCodes = List("entitytoolarge", "entitytoosmall", "rejected", "quarantine")
 
   def onPageLoad(
     error: Option[String],
@@ -62,8 +62,8 @@ class UploadSupportingDocumentsController @Inject() (
 
     implicit request: DataRequest[AnyContent] =>
       error.foreach(error => logger.warn(s"Error uploading file: $error for key: $key"))
-      val errorCode = error
-        //error.map(code => knownS3ErrorCodes.find(_ == code.toLowerCase).getOrElse("unknown"))
+      val errorCode =
+        error.map(code => knownS3ErrorCodes.find(_ == code.toLowerCase).getOrElse("unknown"))
       uploadId match {
         case None =>
           for {
