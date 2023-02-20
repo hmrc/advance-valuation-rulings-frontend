@@ -172,9 +172,6 @@ POST       /isTheSaleSubjectToConditions                        controllers.IsTh
 GET        /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeIsTheSaleSubjectToConditions                  controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = CheckMode)
 
-# file upload
-GET        /v3/hello-world                      controllers.fileupload.UploadFormController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId])
-
 # upload file notification callback
 + nocsrf
 POST       /upscan-callback         controllers.fileupload.UploadCallbackController.callback
