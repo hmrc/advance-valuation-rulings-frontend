@@ -30,7 +30,6 @@
 
 @layout(pageTitle = title(form, messages("isThereASaleInvolved.title"))) {
 
-    @caption(messages("isThereASaleInvolved.caption"))
 
     @formHelper(action = routes.IsThereASaleInvolvedController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -38,10 +37,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("isThereASaleInvolved.caption"))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("isThereASaleInvolved.heading")).asPageHeading()
+                legend = LegendViewModel(messages("isThereASaleInvolved.heading")).asPageHeading(),
+                noText = messages("isThereASaleInvolved.no.text")
             )
             .withHint(Hint(Some(messages("isThereASaleInvolved.no.hint"))))
         )

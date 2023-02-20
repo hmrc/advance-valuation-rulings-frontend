@@ -16,6 +16,8 @@
 
 package viewmodels.govuk
 
+import scala.language.postfixOps
+
 import play.api.data.Field
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -58,16 +60,19 @@ trait RadiosFluency {
 
     def yesNo(
       field: Field,
-      legend: Legend
+      legend: Legend,
+      noText: String = "site.no"
     )(implicit messages: Messages): Radios =
       yesNo(
         field = field,
-        fieldset = FieldsetViewModel(legend)
+        fieldset = FieldsetViewModel(legend),
+        noText = noText
       )
 
     def yesNo(
       field: Field,
-      fieldset: Fieldset
+      fieldset: Fieldset,
+      noText: String
     )(implicit messages: Messages): Radios = {
 
       val items = Seq(
@@ -79,7 +84,7 @@ trait RadiosFluency {
         RadioItem(
           id = Some(s"${field.id}-no"),
           value = Some("false"),
-          content = Text(messages("site.no"))
+          content = Text(messages(noText))
         )
       )
 
