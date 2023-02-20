@@ -43,6 +43,33 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
       output.get shouldBe input
     }
 
+    "serialize and deserialize Rejected status" in {
+      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Rejected)
+
+      val serialized = UploadDetails.mongoFormat.writes(input)
+      val output     = UploadDetails.mongoFormat.reads(serialized)
+
+      output.get shouldBe input
+    }
+
+    "serialize and deserialize Quarantine status" in {
+      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Quarantine)
+
+      val serialized = UploadDetails.mongoFormat.writes(input)
+      val output     = UploadDetails.mongoFormat.reads(serialized)
+
+      output.get shouldBe input
+    }
+
+    "serialize and deserialize NotStarted status" in {
+      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), NotStarted)
+
+      val serialized = UploadDetails.mongoFormat.writes(input)
+      val output     = UploadDetails.mongoFormat.reads(serialized)
+
+      output.get shouldBe input
+    }
+
     "serialize and deserialize UploadedSuccessfully status when size is unknown" in {
       val input = UploadDetails(
         ObjectId.get(),

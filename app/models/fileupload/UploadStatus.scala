@@ -49,9 +49,9 @@ object UploadStatus {
   def message(us: UploadStatus): String  =
     us match {
       case InProgress | NotStarted | _: UploadedSuccessfully => ""
-      case Failed                                            => "failed"
-      case Rejected                                          => "rejected"
-      case Quarantine                                        => "quarantine"
+      case Failed                                            => "uploadSupportingDocuments.failed"
+      case Rejected                                          => "uploadSupportingDocuments.rejected"
+      case Quarantine                                        => "uploadSupportingDocuments.quarantine"
     }
   def isError(us: UploadStatus): Boolean =
     us match {
@@ -62,9 +62,9 @@ object UploadStatus {
   def toFormErrors(us: UploadStatus): Map[String, String] =
     us match {
       case InProgress | NotStarted | _: UploadedSuccessfully => Map.empty
-      case Failed                                            => Map("file-input" -> "uploadSupportingDocuments.failed")
-      case Rejected                                          => Map("file-input" -> "uploadSupportingDocuments.rejected")
-      case Quarantine                                        => Map("file-input" -> "uploadSupportingDocuments.quarantine")
+      case Failed                                            => Map("file-input" -> message(Failed))
+      case Rejected                                          => Map("file-input" -> message(Rejected))
+      case Quarantine                                        => Map("file-input" -> message(Quarantine))
     }
 
   implicit val uploadStatusFormat: Format[UploadStatus] = {

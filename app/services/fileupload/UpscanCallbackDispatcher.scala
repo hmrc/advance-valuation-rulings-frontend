@@ -41,7 +41,9 @@ class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker)
         )
       case f: FailedCallbackBody =>
         val upscanFailureDetails = f.failureDetails.failureReason
-        logger.warn(s"File upload failed notification received from upscan: $upscanFailureDetails with reference: ${f.reference.value}")
+        logger.warn(
+          s"File upload failed notification received from upscan: $upscanFailureDetails with reference: ${f.reference.value}"
+        )
         upscanFailureDetails match {
           case "QUARANTINE" => Quarantine
           case "REJECTED"   => Rejected

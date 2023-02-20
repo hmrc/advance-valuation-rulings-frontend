@@ -104,7 +104,7 @@
             <div class="@formGroupClass">
                 @if(errorCode.isDefined || UploadStatus.isError(status)) {
                     <p id="file-input-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @{messages("uploadSupportingDocuments." + UploadStatus.message(status))}
+                        <span class="govuk-visually-hidden">Error:</span> @{messages(UploadStatus.message(status))}
                     </p>
                 }
                 
