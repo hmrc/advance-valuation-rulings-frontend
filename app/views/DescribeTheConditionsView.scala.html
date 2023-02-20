@@ -14,14 +14,19 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukTextarea: GovukTextarea,
+    govukButton: GovukButton,
+    bulletList: BulletList,
+    cancelLink: CancelApplicationLink,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -34,16 +39,23 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
+        @caption(messages("describeTheConditions.caption"))
+        @heading(messages("describeTheConditions.heading"))
+
+        @paragraph(Html(messages("describeTheConditions.paragraph.1")))
+
+        @govukTextarea(
+            TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("describeTheConditions.heading")).asPageHeading()
-            )
-            .withWidth(Full)
+                label = Label(None)
+                )
+                .withRows(15)
+                .withAttribute("maxlength","8167")
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }

@@ -14,12 +14,19 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    bulletList: BulletList,
+    cancelLink: CancelApplicationLink,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -32,10 +39,20 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("areThereRestrictionsOnTheGoods.caption"))
+        @heading(messages("areThereRestrictionsOnTheGoods.heading"))
+
+        @paragraph(content = Html(messages("areThereRestrictionsOnTheGoods.paragraph.1")))
+        @bulletList(Seq(
+            Html(messages("areThereRestrictionsOnTheGoods.bulletPoint.1")),
+            Html(messages("areThereRestrictionsOnTheGoods.bulletPoint.2")),
+            Html(messages("areThereRestrictionsOnTheGoods.bulletPoint.3"))
+        ))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("areThereRestrictionsOnTheGoods.heading")).asPageHeading()
+                legend = Legend(),
             )
         )
 
@@ -43,4 +60,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }
