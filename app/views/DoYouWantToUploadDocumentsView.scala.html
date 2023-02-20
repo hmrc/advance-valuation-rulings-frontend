@@ -34,24 +34,22 @@
 @layout(pageTitle = title(form, messages("doYouWantToUploadDocuments.title"))) {
 
     @formHelper(action = routes.DoYouWantToUploadDocumentsController.onSubmit(mode), 'autoComplete -> "off") {
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
         @caption(messages("doYouWantToUploadDocuments.caption"))
         @heading(messages("doYouWantToUploadDocuments.heading"))
+
         @para(Html(messages("doYouWantToUploadDocuments.para")))
         @list(
             Seq(
                 Html(messages("doYouWantToUploadDocuments.bulletPoint.1")),
                 Html(messages("doYouWantToUploadDocuments.bulletPoint.2")),
-                Html(messages("doYouWantToUploadDocuments.bulletPoint.3")),
-                Html(messages("doYouWantToUploadDocuments.bulletPoint.4")),
-                Html(messages("doYouWantToUploadDocuments.bulletPoint.5"))
+                Html(messages("doYouWantToUploadDocuments.bulletPoint.3"))
             ),
         "govuk-list govuk-list--bullet",
-)
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+        )
 
         @govukRadios(
             RadiosViewModel.yesNo(
