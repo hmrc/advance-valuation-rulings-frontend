@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
 import play.api.mvc._
@@ -50,6 +51,7 @@ class UploadSupportingDocumentsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
+  private val logger            = Logger(this.getClass)
   private val knownS3ErrorCodes = List("entitytoolarge", "entitytoosmall", "rejected", "quarantine")
 
   def onPageLoad(
@@ -59,7 +61,9 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
 
     implicit request: DataRequest[AnyContent] =>
-      val errorCode = error.flatMap(code => knownS3ErrorCodes.find(_ == code.toLowerCase))
+      error.foreach(error => logger.warn(s"Error uploading file: $error for key: $key"))
+      val errorCode =
+        error.map(code => knownS3ErrorCodes.find(_ == code.toLowerCase).getOrElse("unknown"))
       uploadId match {
         case None =>
           for {
