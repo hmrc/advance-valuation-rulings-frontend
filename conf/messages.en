@@ -318,20 +318,22 @@ isThisFileConfidential.heading = Do you want this file to be marked as confident
 isThisFileConfidential.caption = About the goods
 isThisFileConfidential.para.1 = You could mark the file as confidential if it includes business-sensitive information, for example model numbers or patent details.
 isThisFileConfidential.para.2 = Files marked as confidential will not appear on the Advance Valuation Rulings website.
-isThisFileConfidential.error.required = Select yes if isThisFileConfidential
+isThisFileConfidential.error.required = Select yes if this file is confidential
 isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
 isThisFileConfidential.change.hidden = IsThisFileConfidential
 
-uploadAnotherSupportingDocument.title = You have uploaded {0} supporting document for the {1}
-uploadAnotherSupportingDocument.heading = You have uploaded {0} supporting document for the {1}
+uploadAnotherSupportingDocument.title = You have uploaded {0} supporting document for the goods
+uploadAnotherSupportingDocument.heading = You have uploaded {0} supporting document for the goods
 uploadAnotherSupportingDocument.subHeading = Do you want to upload another supporting document?
 uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.error.required = Select yes if uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.one = one
+uploadAnotherSupportingDocument.keepConfidential = Keep confidential
 
-uploadSupportingDocuments.title = Upload supporting documents for the {0}
-uploadSupportingDocuments.heading = Upload supporting documents for the {0}
+uploadSupportingDocuments.title = Upload supporting documents for the goods
+uploadSupportingDocuments.heading = Upload supporting documents for the goods
 uploadSupportingDocuments.caption = About the goods
 uploadSupportingDocuments.paragraph.1 = You can upload:
 uploadSupportingDocuments.paragraph.2 = An individual file must be:
@@ -340,6 +342,15 @@ uploadSupportingDocuments.bulletPoint.2 = up to 10 files
 uploadSupportingDocuments.bulletPoint.3 = photographs, manuals, brochures or technical specifications
 uploadSupportingDocuments.bulletPoint.4 = smaller than 10MB
 uploadSupportingDocuments.bulletPoint.5 = a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
+
+uploadSupportingDocuments.label = Upload a file
+uploadSupportingDocuments.button=Upload and continue
+uploadSupportingDocuments.button.inProgress=Uploading file
+
+uploadSupportingDocuments.entitytoolarge = The selected file must be smaller than 10 MB
+uploadSupportingDocuments.entitytoosmall = The selected file is empty
+uploadSupportingDocuments.rejected = The selected file must be a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
+uploadSupportingDocuments.quarantine = The selected file contains a virus
 
 explainReasonComputedValue.title = Please explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods
@@ -419,3 +430,43 @@ isThereASaleInvolved.no.hint = Method 1: Transaction value can only be used if a
 isThereASaleInvolved.error.required = Select whether a sale is involved
 isThereASaleInvolved.checkYourAnswersLabel = isThereASaleInvolved
 isThereASaleInvolved.change.hidden = IsThereASaleInvolved
+
+areThereRestrictionsOnTheGoods.title = Are there any restrictions on the use or resale of the goods?
+areThereRestrictionsOnTheGoods.heading = Are there any restrictions on the use or resale of the goods?
+areThereRestrictionsOnTheGoods.caption = About the goods
+areThereRestrictionsOnTheGoods.checkYourAnswersLabel = areThereRestrictionsOnTheGoods
+areThereRestrictionsOnTheGoods.error.required = Select whether there any restrictions
+areThereRestrictionsOnTheGoods.change.hidden = AreThereRestrictionsOnTheGoods
+areThereRestrictionsOnTheGoods.paragraph.1 = There must be no restrictions on the buyer’s disposal or use of the goods except for those which:
+areThereRestrictionsOnTheGoods.bulletPoint.1 = are imposed or required by law or by public authorities in the UK
+areThereRestrictionsOnTheGoods.bulletPoint.2 = limit the geographical area where the goods can be resold
+areThereRestrictionsOnTheGoods.bulletPoint.3 = do not substantially affect the value of the goods
+
+describeTheRestrictions.title =  Describe any restrictions on the use or resale of goods
+describeTheRestrictions.heading = Describe any restrictions on the use or resale of goods
+describeTheRestrictions.caption = About the goods
+describeTheRestrictions.checkYourAnswersLabel = describeTheRestrictions
+describeTheRestrictions.error.required = Enter more detail
+describeTheRestrictions.error.length = Maximum allowed characters is 8168
+describeTheRestrictions.change.hidden = DescribeTheRestrictions
+describeTheRestrictions.paragraph.1 = Giving a detailed description of any conditions or circumstances helps us process your application as quickly as possible.
+
+isTheSaleSubjectToConditions.title = Is the sale subject to any conditions or circumstances that could restrict you from valuing the goods?
+isTheSaleSubjectToConditions.heading = Is the sale subject to any conditions or circumstances that could restrict you from valuing the goods?
+isTheSaleSubjectToConditions.caption = About the goods
+isTheSaleSubjectToConditions.checkYourAnswersLabel = isTheSaleSubjectToConditions
+isTheSaleSubjectToConditions.error.required = Select whether the sale is subject to any conditions or circumstances
+isTheSaleSubjectToConditions.change.hidden = IsTheSaleSubjectToConditions
+isTheSaleSubjectToConditions.paragraph.1 = A sale or price must not be based on conditions or circumstances which cannot be calculated in relation to the goods. Examples include:
+isTheSaleSubjectToConditions.bulletPoint.1 = the seller setting the price on condition that you buy other goods from them in specified quantities
+isTheSaleSubjectToConditions.bulletPoint.2 = the price you charge the seller for other goods determining the price you pay for the imported goods
+isTheSaleSubjectToConditions.bulletPoint.3 = an agreement between yourself and the seller determining the price you pay for the imported goods
+
+describeTheConditions.title = Describe the conditions or circumstances which cannot be calculated
+describeTheConditions.heading = Describe the conditions or circumstances which cannot be calculated
+describeTheConditions.caption = About the goods
+describeTheConditions.checkYourAnswersLabel = describeTheConditions
+describeTheConditions.error.required = Enter more detail
+describeTheConditions.error.length = Maximum allowed characters is 8168
+describeTheConditions.change.hidden = DescribeTheConditions
+describeTheConditions.paragraph.1 = Giving a detailed description of any conditions or circumstances helps us process your application as quickly as possible.

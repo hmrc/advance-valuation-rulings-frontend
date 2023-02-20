@@ -20,6 +20,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     caption: Caption,
@@ -32,17 +33,18 @@
 
 @layout(pageTitle = title(form, messages("isThisFileConfidential.title"))) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @caption(messages("isThisFileConfidential.caption"))
     @heading(messages("isThisFileConfidential.heading"))
 
     @paragraph(Html(messages("isThisFileConfidential.para.1")))
     @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
-    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode), 'autoComplete -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(

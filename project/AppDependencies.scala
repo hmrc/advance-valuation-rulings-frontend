@@ -7,6 +7,7 @@ object AppDependencies {
   val PlayFrontendHmrcVersion           = "6.2.0-play-28"
   val PlayConditionalFormMappingVersion = "1.12.0-play-28"
   val BootstrapFrontendPlayVersion      = "7.12.0"
+  val CatsVersion                       = "2.9.0"
 
   val ScalaTestVersion         = "3.2.10"
   val ScalaTestPlusVersion     = "3.2.10.0"
@@ -24,7 +25,8 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-frontend-hmrc"            % PlayFrontendHmrcVersion,
     "uk.gov.hmrc"       %% "play-conditional-form-mapping" % PlayConditionalFormMappingVersion,
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % BootstrapFrontendPlayVersion,
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
+    "org.typelevel"     %% "cats-core"                     % CatsVersion
   )
 
   val test = Seq(

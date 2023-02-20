@@ -14,27 +14,67 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+@import models.fileupload._
 @import components._
-@import models.NormalMode
+@import controllers.fileupload.routes.UploadSupportingDocumentsController
 
-@this(
-        layout: templates.Layout,
+@this(  mainLayout: templates.Layout,
+        formHelper: FormWithCSRF,
         govukButton: GovukButton,
         caption: Caption,
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
         list: BulletList
-)
+    )
 
-@(nameOfGoods: String)(implicit request: Request[_], messages: Messages)
+@(upscanInitiateResponse : UpscanInitiateResponse, errorCode: Option[String]=None, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
 
-@layout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title", nameOfGoods))) {
+@formInputClass = @{
+    if(errorCode.isDefined) {
+        "govuk-file-upload govuk-file-upload--error"
+    } else {
+        "govuk-file-upload"
+    }
+}
+
+@refreshHeader = {
+    <meta http-equiv="refresh" content="3"/>
+   }   
+
+@formGroupClass = @{
+    if(errorCode.isDefined) {
+        "govuk-form-group govuk-form-group--error"
+    } else {
+        "govuk-form-group"
+    }
+}
+
+@continueButton = @{govukButton(
+    ButtonViewModel(
+        if(status == InProgress) {
+            messages("uploadSupportingDocuments.button.inProgress")
+        } else {
+            messages("uploadSupportingDocuments.button")
+        }    
+        )
+        .preventingDoubleClick()
+        .withAttribute(("id" -> "submit"))
+        .disableIf(status == InProgress)
+)}
+
+@mainLayout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title")), additionalHeadBlock = {
+    status match {
+        case InProgress => Some(refreshHeader)
+        case _ => None
+        }
+    }) {
 
     @caption(messages("uploadSupportingDocuments.caption"))
-    @heading(messages("uploadSupportingDocuments.heading", nameOfGoods))
+    @heading(messages("uploadSupportingDocuments.heading", "nameOfGoods"))
 
-    @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
+ @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
     @list(Seq(
                 Html(messages("uploadSupportingDocuments.bulletPoint.1")),
                 Html(messages("uploadSupportingDocuments.bulletPoint.2")),
@@ -52,18 +92,42 @@
             "govuk-list govuk-list--bullet",
     )
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="file-upload-1">
-        Upload a file
-      </label>
-      <input class="govuk-file-upload" id="file-upload-1" name="file-upload-1" type="file">
-    </div>
 
-    @govukButton(
-        ButtonViewModel(messages("site.uploadContinue"))
-            .asLink(routes.IsThisFileConfidentialController.onPageLoad(NormalMode).url)
-    )
-    <P></P>
+    <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
+
+        @for(field <- upscanInitiateResponse.formFields) {
+            <input type="hidden" name="@field._1" value="@field._2"/>
+        }
+
+        <div class="mt-3">
+            <div class="@formGroupClass">
+                @if(errorCode.isDefined) {
+                    <p id="file-input-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @{messages("uploadSupportingDocuments." + errorCode.get)}
+                    </p>
+                }
+                
+                @if(status != InProgress) {
+                    <label class="govuk-label" for="file-input">
+                        @messages("uploadSupportingDocuments.label")
+                    </label>
+                    <div class="form-control-wrapper">
+                        <input
+                                class="@formInputClass"
+                                type="file"
+                                id="file-input"
+                                name="file"
+                                accept=".pdf,.doc,.docx,.xlsx,.xls,.png,.jpeg,.jpg,.txt"
+                        />
+                    </div>
+                }
+                
+            </div>
+
+        </div>
+
+        @continueButton
+         </form>
+
     @cancelApplicationLink()
-
 }

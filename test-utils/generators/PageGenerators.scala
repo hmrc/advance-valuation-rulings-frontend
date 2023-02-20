@@ -32,6 +32,21 @@ trait PageGenerators {
     : Arbitrary[ExplainHowPartiesAreRelatedPage.type] =
     Arbitrary(ExplainHowPartiesAreRelatedPage)
 
+  implicit lazy val arbitraryIsTheSaleSubjectToConditionsPage
+    : Arbitrary[IsTheSaleSubjectToConditionsPage.type] =
+    Arbitrary(IsTheSaleSubjectToConditionsPage)
+
+  implicit lazy val arbitraryDescribeTheRestrictionsPage
+    : Arbitrary[DescribeTheRestrictionsPage.type] =
+    Arbitrary(DescribeTheRestrictionsPage)
+
+  implicit lazy val arbitraryDescribeTheConditionsPage: Arbitrary[DescribeTheConditionsPage.type] =
+    Arbitrary(DescribeTheConditionsPage)
+
+  implicit lazy val arbitraryAreThereRestrictionsOnTheGoodsPage
+    : Arbitrary[AreThereRestrictionsOnTheGoodsPage.type] =
+    Arbitrary(AreThereRestrictionsOnTheGoodsPage)
+
   implicit lazy val arbitraryWhyTransactionValueOfSimilarGoodsPage
     : Arbitrary[WhyTransactionValueOfSimilarGoodsPage.type] =
     Arbitrary(WhyTransactionValueOfSimilarGoodsPage)
