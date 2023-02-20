@@ -16,26 +16,29 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.ExplainHowPartiesAreRelatedPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, UserAnswers}
+import pages.ExplainHowPartiesAreRelatedPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ExplainHowPartiesAreRelatedSummary  {
+object ExplainHowPartiesAreRelatedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ExplainHowPartiesAreRelatedPage).map {
       answer =>
-
         SummaryListRowViewModel(
-          key     = "explainHowPartiesAreRelated.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          key = "explainHowPartiesAreRelated.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.ExplainHowPartiesAreRelatedController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.ExplainHowPartiesAreRelatedController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("explainHowPartiesAreRelated.change.hidden"))
           )
         )

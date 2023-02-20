@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.IsThereASaleInvolvedFormProvider
 import models.{NormalMode, UserAnswers}
@@ -24,23 +31,18 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.IsThereASaleInvolvedPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.IsThereASaleInvolvedView
-
-import scala.concurrent.Future
 
 class IsThereASaleInvolvedControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new IsThereASaleInvolvedFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val isThereASaleInvolvedRoute = routes.IsThereASaleInvolvedController.onPageLoad(NormalMode).url
+  lazy val isThereASaleInvolvedRoute =
+    routes.IsThereASaleInvolvedController.onPageLoad(NormalMode).url
 
   "IsThereASaleInvolved Controller" - {
 
@@ -56,7 +58,10 @@ class IsThereASaleInvolvedControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[IsThereASaleInvolvedView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -74,7 +79,10 @@ class IsThereASaleInvolvedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +128,10 @@ class IsThereASaleInvolvedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

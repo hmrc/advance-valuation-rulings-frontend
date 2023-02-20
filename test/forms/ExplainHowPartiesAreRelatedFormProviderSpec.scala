@@ -16,14 +16,15 @@
 
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class ExplainHowPartiesAreRelatedFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "explainHowPartiesAreRelated.error.required"
-  val lengthKey = "explainHowPartiesAreRelated.error.length"
-  val maxLength = 8167
+  val lengthKey   = "explainHowPartiesAreRelated.error.length"
+  val maxLength   = 8167
 
   val form = new ExplainHowPartiesAreRelatedFormProvider()()
 

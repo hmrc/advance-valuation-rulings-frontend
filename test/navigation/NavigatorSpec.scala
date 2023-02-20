@@ -231,7 +231,31 @@ class NavigatorSpec extends SpecBase {
             UserAnswers("id").set(IsThereASaleInvolvedPage, true).success.value
           ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
         }
+        "navigate to valuationMethod page when no" in {
+          navigator.nextPage(
+            IsThereASaleInvolvedPage,
+            NormalMode,
+            UserAnswers("id").set(IsThereASaleInvolvedPage, false).success.value
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
+        }
       }
+      "IsSaleBetweenRelatedParties page must" - {
+        "navigate to ExplainHowPartiesAreRelated page when yes" in {
+          navigator.nextPage(
+            IsSaleBetweenRelatedPartiesPage,
+            NormalMode,
+            UserAnswers("id").set(IsSaleBetweenRelatedPartiesPage, true).success.value
+          ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode)
+        }
+        //        "navigate to restrictions page when no" in {
+        //          ??? // Are there any restrictions on the use or resale of the goods?
+        //        }
+      }
+      //      "ExplainHowPartiesAreRelated page must" - {
+      //        "navigate to 'restrictions' page" in {
+      //                    ??? // Are there any restrictions on the use or resale of the goods?
+      //        }
+      //      }
 
       "HasCommodityCodePage must" - {
         "navigate to CommodityCode when yes" in {

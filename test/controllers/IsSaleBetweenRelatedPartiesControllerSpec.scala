@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.IsSaleBetweenRelatedPartiesFormProvider
 import models.{NormalMode, UserAnswers}
@@ -24,23 +31,18 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.IsSaleBetweenRelatedPartiesPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.IsSaleBetweenRelatedPartiesView
-
-import scala.concurrent.Future
 
 class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new IsSaleBetweenRelatedPartiesFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val isSaleBetweenRelatedPartiesRoute = routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode).url
+  lazy val isSaleBetweenRelatedPartiesRoute =
+    routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode).url
 
   "IsSaleBetweenRelatedParties Controller" - {
 
@@ -56,13 +58,17 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
         val view = application.injector.instanceOf[IsSaleBetweenRelatedPartiesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(IsSaleBetweenRelatedPartiesPage, true).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(IsSaleBetweenRelatedPartiesPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +80,10 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +129,10 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

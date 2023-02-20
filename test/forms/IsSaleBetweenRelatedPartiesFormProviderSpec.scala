@@ -16,13 +16,14 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.BooleanFieldBehaviours
 
 class IsSaleBetweenRelatedPartiesFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "isSaleBetweenRelatedParties.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new IsSaleBetweenRelatedPartiesFormProvider()()
 

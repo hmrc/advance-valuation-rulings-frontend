@@ -31,6 +31,8 @@ class Navigator @Inject() () {
   private val normalRoutes: Page => UserAnswers => Call = {
     case ValuationMethodPage                   => valuationMethodPage
     case IsThereASaleInvolvedPage              => isThereASaleInvolvedPage
+    case IsSaleBetweenRelatedPartiesPage       => isSaleBetweenRelatedPartiesPage
+    case ExplainHowPartiesAreRelatedPage       => explainHowPartiesAreRelatedPage
     case NameOfGoodsPage                       => nameOfGoodsPage
     case HasCommodityCodePage                  => hasCommodityCodePage
     case CommodityCodePage                     => commodityCodePage
@@ -78,12 +80,26 @@ class Navigator @Inject() () {
       case None        => IsThereASaleInvolvedController.onPageLoad(models.NormalMode)
       case Some(true)  => IsSaleBetweenRelatedPartiesController.onPageLoad(models.NormalMode)
       case Some(false) =>
-        IsThereASaleInvolvedController.onPageLoad(
+        ValuationMethodController.onPageLoad(
           models.NormalMode
-        ) // Are there any restrictions on the use or resale of the goods? page
+        )
     }
+
+  private def isSaleBetweenRelatedPartiesPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(IsSaleBetweenRelatedPartiesPage) match {
+      case None        => IsSaleBetweenRelatedPartiesController.onPageLoad(models.NormalMode)
+      case Some(true)  => ExplainHowPartiesAreRelatedController.onPageLoad(models.NormalMode)
+      case Some(false) => IsSaleBetweenRelatedPartiesController.onPageLoad(models.NormalMode)
+    }
+
+  private def explainHowPartiesAreRelatedPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ExplainHowPartiesAreRelatedPage) match {
+      case None    => ExplainHowPartiesAreRelatedController.onPageLoad(models.NormalMode)
+      case Some(_) => ExplainHowPartiesAreRelatedController.onPageLoad(models.NormalMode)
+    }
+
   // Method 2----------------------------------------------------------------
-  private def whyIdenticalGoodsPage(userAnswers: UserAnswers): Call    =
+  private def whyIdenticalGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyIdenticalGoodsPage) match {
       case None    => WhyIdenticalGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
@@ -115,8 +131,9 @@ class Navigator @Inject() () {
       case None    => ExplainReasonComputedValueController.onPageLoad(models.NormalMode)
       case Some(_) => NameOfGoodsController.onPageLoad(models.NormalMode)
     }
+
   // ----------------------------------------------------------------
-  private def nameOfGoodsPage(userAnswers: UserAnswers): Call                =
+  private def nameOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(NameOfGoodsPage) match {
       case None    => NameOfGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HasCommodityCodeController.onPageLoad(models.NormalMode)

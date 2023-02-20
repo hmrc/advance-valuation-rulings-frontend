@@ -16,27 +16,30 @@
 
 package viewmodels.checkAnswers
 
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
 import controllers.routes
 import models.{CheckMode, UserAnswers}
 import pages.IsThereASaleInvolvedPage
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object IsThereASaleInvolvedSummary  {
+object IsThereASaleInvolvedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(IsThereASaleInvolvedPage).map {
       answer =>
-
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
-          key     = "isThereASaleInvolved.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
+          key = "isThereASaleInvolved.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.IsThereASaleInvolvedController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.IsThereASaleInvolvedController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("isThereASaleInvolved.change.hidden"))
           )
         )
