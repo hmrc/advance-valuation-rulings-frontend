@@ -22,7 +22,7 @@ import scala.concurrent.Future
 
 import play.api.Logger
 
-import models.fileupload.{CallbackBody, Failed, FailedCallbackBody, ReadyCallbackBody, UploadedSuccessfully}
+import models.fileupload.{CallbackBody, Failed, FailedCallbackBody, Quarantine, ReadyCallbackBody, Rejected, UploadedSuccessfully}
 
 class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker) {
 
@@ -32,7 +32,7 @@ class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker)
 
     val uploadStatus = callback match {
       case s: ReadyCallbackBody  =>
-        logger.warn(s"Successful uploaded notification for file: ${s.uploadDetails.fileName}")
+        logger.info(s"Successful uploaded notification for file: ${s.uploadDetails.fileName}")
         UploadedSuccessfully(
           s.uploadDetails.fileName,
           s.uploadDetails.fileMimeType,
@@ -41,8 +41,12 @@ class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker)
         )
       case f: FailedCallbackBody =>
         val upscanFailureDetails = f.failureDetails.failureReason
-        logger.warn(s"File upload failed notification received from upscan: $upscanFailureDetails")
-        Failed
+        logger.warn(s"File upload failed notification received from upscan: $upscanFailureDetails with reference: ${f.reference.value}")
+        upscanFailureDetails match {
+          case "QUARANTINE" => Quarantine
+          case "REJECTED"   => Rejected
+          case _            => Failed
+        }
     }
 
     sessionStorage.registerUploadResult(callback.reference, uploadStatus)

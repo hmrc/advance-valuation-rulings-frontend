@@ -45,6 +45,22 @@ trait ErrorSummaryFluency {
         title = Text(messages("error.summary.title"))
       )
     }
+
+    def withoutForm(
+      errorLinkOverrides: Map[String, String] = Map.empty
+    )(implicit messages: Messages): ErrorSummary = {
+      val errors = errorLinkOverrides.map {
+        case (key, value) =>
+          ErrorLink(
+            href = Some(s"#$key"),
+            content = Text(messages(value))
+          )
+      }.toSeq
+      ErrorSummary(
+        errorList = errors,
+        title = Text(messages("error.summary.title"))
+      )
+    }
   }
 
   implicit class FluentErrorSummary(errorSummary: ErrorSummary) {
