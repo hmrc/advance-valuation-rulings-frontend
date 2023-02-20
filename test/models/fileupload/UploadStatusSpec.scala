@@ -21,7 +21,7 @@ import base.SpecBase
 class UploadStatusSpec extends SpecBase {
 
   "UploadStatus" - {
-    val successStatus    = UploadedSuccessfully("name", "mimeType", "downloadUrl", Some(1L))
+    val successStatus = UploadedSuccessfully("name", "mimeType", "downloadUrl", Some(1L))
 
     "is error must" - {
 
