@@ -14,28 +14,41 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("isSaleBetweenRelatedParties.title"))) {
 
+
+
     @formHelper(action = routes.IsSaleBetweenRelatedPartiesController.onSubmit(mode), 'autoComplete -> "off") {
+
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("isSaleBetweenRelatedParties.caption"))
+        @heading(messages("isSaleBetweenRelatedParties.heading"))
+        @paragraph(content = Html(messages("isSaleBetweenRelatedParties.para")))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("isSaleBetweenRelatedParties.heading")).asPageHeading()
+                legend = Legend()
             )
         )
 
@@ -43,4 +56,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelApplicationLink()
 }

@@ -14,17 +14,23 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("isThereASaleInvolved.title"))) {
+
+    @caption(messages("isThereASaleInvolved.caption"))
 
     @formHelper(action = routes.IsThereASaleInvolvedController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -37,10 +43,12 @@
                 field = form("value"),
                 legend = LegendViewModel(messages("isThereASaleInvolved.heading")).asPageHeading()
             )
+            .withHint(Hint(Some(messages("isThereASaleInvolved.no.hint"))))
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelApplicationLink()
 }

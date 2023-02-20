@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import components._
 @import viewmodels.InputWidth._
 
 @this(
@@ -21,7 +22,12 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
+    paragraph: Paragraph,
+    caption: Caption,
+    heading: Heading,
+    cancelLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -34,12 +40,18 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
+        @caption(messages("explainHowPartiesAreRelated.caption"))
+        @heading(messages("explainHowPartiesAreRelated.heading"))
+        @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
+        @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
+
+         @govukTextarea(
+            TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("explainHowPartiesAreRelated.heading")).asPageHeading()
-            )
-            .withWidth(Full)
+                label = Label(None)
+                )
+                .withRows(15)
+                .withAttribute("maxlength","8167")
         )
 
         @govukButton(
