@@ -37,12 +37,28 @@ class UploadStatusSpec extends SpecBase {
         UploadStatus.isError(Quarantine) mustBe true
       }
 
+      "be true for no file provided" in {
+        UploadStatus.isError(NoFileProvided) mustBe true
+      }
+
+      "be true for entity too large" in {
+        UploadStatus.isError(EntityTooLarge) mustBe true
+      }
+
+      "be true for entity too small" in {
+        UploadStatus.isError(EntityTooSmall) mustBe true
+      }
+
       "be false for not started" in {
         UploadStatus.isError(NotStarted) mustBe false
       }
 
       "be false for in progress" in {
         UploadStatus.isError(InProgress) mustBe false
+      }
+
+      "be false for uploaded successfully" in {
+        UploadStatus.isError(successStatus) mustBe false
       }
     }
 
@@ -74,6 +90,24 @@ class UploadStatusSpec extends SpecBase {
       "create map with quarantine message for quarantine" in {
         UploadStatus.toFormErrors(Quarantine) mustBe Map(
           "file-input" -> "uploadSupportingDocuments.quarantine"
+        )
+      }
+
+      "create map with no file provided message for no file provided" in {
+        UploadStatus.toFormErrors(NoFileProvided) mustBe Map(
+          "file-input" -> "uploadSupportingDocuments.nofileprovided"
+        )
+      }
+
+      "create map with entity too large message for entity too large" in {
+        UploadStatus.toFormErrors(EntityTooLarge) mustBe Map(
+          "file-input" -> "uploadSupportingDocuments.entitytoolarge"
+        )
+      }
+
+      "create map with entity too small message for entity too small" in {
+        UploadStatus.toFormErrors(EntityTooSmall) mustBe Map(
+          "file-input" -> "uploadSupportingDocuments.entitytoosmall"
         )
       }
     }

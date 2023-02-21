@@ -30,10 +30,10 @@
         list: BulletList
     )
 
-@(upscanInitiateResponse : UpscanInitiateResponse, errorCode: Option[String]=None, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+@(upscanInitiateResponse : UpscanInitiateResponse, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
 
 @formInputClass = @{
-    if(errorCode.isDefined) {
+    if(UploadStatus.isError(status)) {
         "govuk-file-upload govuk-file-upload--error"
     } else {
         "govuk-file-upload"
@@ -45,7 +45,7 @@
    }   
 
 @formGroupClass = @{
-    if(errorCode.isDefined || UploadStatus.isError(status)) {
+    if(UploadStatus.isError(status)) {
         "govuk-form-group govuk-form-group--error"
     } else {
         "govuk-form-group"
@@ -73,7 +73,7 @@
     }) {
 
     <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
-        @if(errorCode.isDefined || UploadStatus.isError(status)) {
+        @if(UploadStatus.isError(status)) {
             @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status)))
         }
 
@@ -102,7 +102,7 @@
 
         <div class="mt-3">
             <div class="@formGroupClass">
-                @if(errorCode.isDefined || UploadStatus.isError(status)) {
+                @if(UploadStatus.isError(status)) {
                     <p id="file-input-error" class="govuk-error-message">
                         <span class="govuk-visually-hidden">Error:</span> @{messages(UploadStatus.message(status))}
                     </p>

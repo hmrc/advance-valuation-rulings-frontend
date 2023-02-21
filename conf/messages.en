@@ -349,6 +349,7 @@ uploadSupportingDocuments.entitytoosmall = The selected file is empty
 uploadSupportingDocuments.failed = The selected file failed to upload
 uploadSupportingDocuments.rejected = The selected file must be a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
 uploadSupportingDocuments.quarantine = The selected file contains a virus
+uploadSupportingDocuments.nofileprovided = Select a file to upload
 
 explainReasonComputedValue.title = Please explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods
