@@ -16,24 +16,23 @@
 
 package models.fileupload
 
-import scala.concurrent.Future
-
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import play.api.mvc.Result
 import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
 
 import models.fileupload._
 import org.bson.types.ObjectId
 
-sealed trait UploadStatus {
-  def apply(result: Future[Result]) = ???
-
-}
+sealed trait UploadStatus
 
 case object NotStarted extends UploadStatus
 case object InProgress extends UploadStatus
 case object Failed extends UploadStatus
+case object Rejected extends UploadStatus
+case object Quarantine extends UploadStatus
+case object NoFileProvided extends UploadStatus
+case object EntityTooLarge extends UploadStatus
+case object EntityTooSmall extends UploadStatus
 
 case class UploadedSuccessfully(
   name: String,
@@ -50,6 +49,43 @@ case class UploadDetails(
 )
 
 object UploadStatus {
+  def message(us: UploadStatus): String                      =
+    us match {
+      case InProgress | NotStarted | _: UploadedSuccessfully => ""
+      case Failed                                            => "uploadSupportingDocuments.failed"
+      case Rejected                                          => "uploadSupportingDocuments.rejected"
+      case Quarantine                                        => "uploadSupportingDocuments.quarantine"
+      case NoFileProvided                                    => "uploadSupportingDocuments.nofileprovided"
+      case EntityTooLarge                                    => "uploadSupportingDocuments.entitytoolarge"
+      case EntityTooSmall                                    => "uploadSupportingDocuments.entitytoosmall"
+    }
+  def isError(us: UploadStatus): Boolean                     =
+    us match {
+      case InProgress | NotStarted | _: UploadedSuccessfully => false
+      case Failed | Rejected | Quarantine | NoFileProvided   => true
+      case EntityTooSmall | EntityTooLarge                   => true
+    }
+  def fromErrorCode(errorCode: String): Option[UploadStatus] =
+    errorCode.toLowerCase match {
+      case "quarantine"      => Some(Quarantine)
+      case "rejected"        => Some(Rejected)
+      case "invalidargument" => Some(NoFileProvided)
+      case "entitytoolarge"  => Some(EntityTooLarge)
+      case "entitytoosmall"  => Some(EntityTooSmall)
+      case _                 => None
+    }
+
+  def toFormErrors(us: UploadStatus): Map[String, String] =
+    us match {
+      case InProgress | NotStarted | _: UploadedSuccessfully => Map.empty
+      case Failed                                            => Map("file-input" -> message(Failed))
+      case Rejected                                          => Map("file-input" -> message(Rejected))
+      case Quarantine                                        => Map("file-input" -> message(Quarantine))
+      case NoFileProvided                                    => Map("file-input" -> message(NoFileProvided))
+      case EntityTooLarge                                    => Map("file-input" -> message(EntityTooLarge))
+      case EntityTooSmall                                    => Map("file-input" -> message(EntityTooSmall))
+    }
+
   implicit val uploadStatusFormat: Format[UploadStatus] = {
     implicit val uploadedSuccessfullyFormat: OFormat[UploadedSuccessfully] =
       Json.format[UploadedSuccessfully]
@@ -60,6 +96,11 @@ object UploadStatus {
           case Some(JsString("NotStarted"))           => JsSuccess(NotStarted)
           case Some(JsString("InProgress"))           => JsSuccess(InProgress)
           case Some(JsString("Failed"))               => JsSuccess(Failed)
+          case Some(JsString("Quarantine"))           => JsSuccess(Quarantine)
+          case Some(JsString("Rejected"))             => JsSuccess(Rejected)
+          case Some(JsString("NoFileProvided"))       => JsSuccess(NoFileProvided)
+          case Some(JsString("EntityTooLarge"))       => JsSuccess(EntityTooLarge)
+          case Some(JsString("EntityTooSmall"))       => JsSuccess(EntityTooSmall)
           case Some(JsString("UploadedSuccessfully")) =>
             Json.fromJson[UploadedSuccessfully](jsObject)(uploadedSuccessfullyFormat)
           case Some(value)                            => JsError(s"Unexpected value of _type: $value")
@@ -74,6 +115,11 @@ object UploadStatus {
           case NotStarted              => JsObject(Map("_type" -> JsString("NotStarted")))
           case InProgress              => JsObject(Map("_type" -> JsString("InProgress")))
           case Failed                  => JsObject(Map("_type" -> JsString("Failed")))
+          case Quarantine              => JsObject(Map("_type" -> JsString("Quarantine")))
+          case Rejected                => JsObject(Map("_type" -> JsString("Rejected")))
+          case NoFileProvided          => JsObject(Map("_type" -> JsString("NoFileProvided")))
+          case EntityTooLarge          => JsObject(Map("_type" -> JsString("EntityTooLarge")))
+          case EntityTooSmall          => JsObject(Map("_type" -> JsString("EntityTooSmall")))
           case s: UploadedSuccessfully =>
             Json.toJson(s)(uploadedSuccessfullyFormat).as[JsObject] + ("_type" -> JsString(
               "UploadedSuccessfully"

@@ -50,26 +50,26 @@ class UploadSupportingDocumentsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private val knownS3ErrorCodes = List("entitytoolarge", "entitytoosmall", "rejected", "quarantine")
-
   def onPageLoad(
     error: Option[String],
     key: Option[String],
     uploadId: Option[UploadId]
   ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-
     implicit request: DataRequest[AnyContent] =>
-      val errorCode = error.flatMap(code => knownS3ErrorCodes.find(_ == code.toLowerCase))
+      val statusFromCode = error.flatMap(UploadStatus.fromErrorCode)
+
       uploadId match {
         case None =>
           for {
             result <- fileUploadService.initiateUpload()
+            status  = if (result.uploadStatus == NotStarted) statusFromCode.getOrElse(NotStarted)
+                      else result.uploadStatus
+
           } yield Ok(
             uploadSupportingDocumentsView(
               result.upscanResponse,
-              errorCode,
               result.redirectFileId,
-              result.uploadStatus
+              status
             )
           )
 
@@ -83,7 +83,7 @@ class UploadSupportingDocumentsController @Inject() (
                               case Some(status: UploadedSuccessfully) =>
                                 continueToIsFileConfidential(existingFileId, status)(request)
                               case Some(result)                       =>
-                                showUploadForm(fileUploadIds, errorCode, result)
+                                showUploadForm(fileUploadIds, result)
                             }
           } yield result
       }
@@ -106,7 +106,6 @@ class UploadSupportingDocumentsController @Inject() (
 
   private def showUploadForm(
     fileUploadIds: FileUploadIds,
-    errorCode: Option[String],
     result: UploadStatus
   )(implicit
     request: DataRequest[AnyContent]
@@ -116,7 +115,6 @@ class UploadSupportingDocumentsController @Inject() (
     } yield Ok(
       uploadSupportingDocumentsView(
         response.upscanResponse,
-        errorCode,
         response.redirectFileId,
         result
       )

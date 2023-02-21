@@ -20,8 +20,6 @@ import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.ExecutionContext
 
-import play.api.Logger
-import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -35,11 +33,8 @@ class UploadCallbackController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) {
 
-  private val logger = Logger(this.getClass)
-
   val callback = Action.async(parse.json) {
     implicit request =>
-      logger.info(s"Received callback notification [${Json.stringify(request.body)}]")
       withJsonBody[CallbackBody] {
         feedback: CallbackBody => upscanCallbackDispatcher.handleCallback(feedback).map(_ => Ok)
       }
