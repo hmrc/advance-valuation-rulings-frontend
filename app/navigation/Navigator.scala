@@ -120,13 +120,13 @@ class Navigator @Inject() () {
     userAnswers.get(IsSaleBetweenRelatedPartiesPage) match {
       case None        => IsSaleBetweenRelatedPartiesController.onPageLoad(models.NormalMode)
       case Some(true)  => ExplainHowPartiesAreRelatedController.onPageLoad(models.NormalMode)
-      case Some(false) => IsSaleBetweenRelatedPartiesController.onPageLoad(models.NormalMode)
+      case Some(false) => AreThereRestrictionsOnTheGoodsController.onPageLoad(models.NormalMode)
     }
 
   private def explainHowPartiesAreRelatedPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainHowPartiesAreRelatedPage) match {
       case None    => ExplainHowPartiesAreRelatedController.onPageLoad(models.NormalMode)
-      case Some(_) => ExplainHowPartiesAreRelatedController.onPageLoad(models.NormalMode)
+      case Some(_) => AreThereRestrictionsOnTheGoodsController.onPageLoad(models.NormalMode)
     }
 
   // Method 2----------------------------------------------------------------

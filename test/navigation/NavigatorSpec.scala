@@ -335,15 +335,24 @@ class NavigatorSpec extends SpecBase {
             UserAnswers("id").set(IsSaleBetweenRelatedPartiesPage, true).success.value
           ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode)
         }
-        //        "navigate to restrictions page when no" in {
-        //          ??? // Are there any restrictions on the use or resale of the goods?
-        //        }
+        "navigate to restrictions page when no" in {
+          navigator.nextPage(
+            IsSaleBetweenRelatedPartiesPage,
+            NormalMode,
+            UserAnswers("id").set(IsSaleBetweenRelatedPartiesPage, false).success.value
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+        }
       }
-      //      "ExplainHowPartiesAreRelated page must" - {
-      //        "navigate to 'restrictions' page" in {
-      //                    ??? // Are there any restrictions on the use or resale of the goods?
-      //        }
-      //      }
+
+      "ExplainHowPartiesAreRelated page must" - {
+        "navigate to 'restrictions' page" in {
+          navigator.nextPage(
+            ExplainHowPartiesAreRelatedPage,
+            NormalMode,
+            UserAnswers("id").set(ExplainHowPartiesAreRelatedPage, "explain").success.value
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+        }
+      }
 
       "HasCommodityCodePage must" - {
         "navigate to CommodityCode when yes" in {
