@@ -404,6 +404,33 @@ whyIdenticalGoods.error.required = Please outline why you have not selected Meth
 whyIdenticalGoods.error.length = Maximum allowed characters is 8168
 whyIdenticalGoods.change.hidden = WhyIdenticalGoods
 
+explainHowPartiesAreRelated.title = Describe how the parties are related
+explainHowPartiesAreRelated.heading = Describe how the parties are related
+explainHowPartiesAreRelated.caption = About the goods
+explainHowPartiesAreRelated.para.1 = We can only accept the price paid or payable under Method 1 if your relationship with the seller has not affected the price.
+explainHowPartiesAreRelated.para.2 = Giving a detailed description of the relationship helps us process your application as quickly as possible.
+explainHowPartiesAreRelated.error.required = Enter more detail
+explainHowPartiesAreRelated.checkYourAnswersLabel = explainHowPartiesAreRelated
+explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
+explainHowPartiesAreRelated.change.hidden = ExplainHowPartiesAreRelated
+
+isSaleBetweenRelatedParties.title = Is the sale between related parties?
+isSaleBetweenRelatedParties.heading = Is the sale between related parties?
+isSaleBetweenRelatedParties.caption = About the goods
+isSaleBetweenRelatedParties.para = ‘Related parties’ means there is an existing relationship or common interest between two companies.
+isSaleBetweenRelatedParties.checkYourAnswersLabel = isSaleBetweenRelatedParties
+isSaleBetweenRelatedParties.error.required = Select whether the sale between related parties
+isSaleBetweenRelatedParties.change.hidden = IsSaleBetweenRelatedParties
+
+isThereASaleInvolved.title = Is there a sale involved?
+isThereASaleInvolved.heading = Is there a sale involved?
+isThereASaleInvolved.caption = About the goods
+isThereASaleInvolved.no.text = No - you will have to choose a different method
+isThereASaleInvolved.no.hint = Method 1: Transaction value can only be used if a sale is involved.
+isThereASaleInvolved.error.required = Select whether a sale is involved
+isThereASaleInvolved.checkYourAnswersLabel = isThereASaleInvolved
+isThereASaleInvolved.change.hidden = IsThereASaleInvolved
+
 areThereRestrictionsOnTheGoods.title = Are there any restrictions on the use or resale of the goods?
 areThereRestrictionsOnTheGoods.heading = Are there any restrictions on the use or resale of the goods?
 areThereRestrictionsOnTheGoods.caption = About the goods

@@ -250,14 +250,14 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
         }
 
-        "NameOfGoods page when method 1 is selected" in {
+        "isThereASaleInvolved page when method 1 is selected" in {
           val userAnswers =
             userAnswersWith(ValuationMethodPage, ValuationMethod.Method1)
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(mode = NormalMode)
         }
 
         "WhyIdenticalGoods page when method 2 is selected" in {
@@ -308,6 +308,49 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "isThereASaleInvolved must" - {
+        "navigate to IsSaleBetweenRelatedParties page when yes" in {
+          navigator.nextPage(
+            IsThereASaleInvolvedPage,
+            NormalMode,
+            UserAnswers("id").set(IsThereASaleInvolvedPage, true).success.value
+          ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
+        }
+        "navigate to valuationMethod page when no" in {
+          navigator.nextPage(
+            IsThereASaleInvolvedPage,
+            NormalMode,
+            UserAnswers("id").set(IsThereASaleInvolvedPage, false).success.value
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
+        }
+      }
+      "IsSaleBetweenRelatedParties page must" - {
+        "navigate to ExplainHowPartiesAreRelated page when yes" in {
+          navigator.nextPage(
+            IsSaleBetweenRelatedPartiesPage,
+            NormalMode,
+            UserAnswers("id").set(IsSaleBetweenRelatedPartiesPage, true).success.value
+          ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode)
+        }
+        "navigate to restrictions page when no" in {
+          navigator.nextPage(
+            IsSaleBetweenRelatedPartiesPage,
+            NormalMode,
+            UserAnswers("id").set(IsSaleBetweenRelatedPartiesPage, false).success.value
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "ExplainHowPartiesAreRelated page must" - {
+        "navigate to 'restrictions' page" in {
+          navigator.nextPage(
+            ExplainHowPartiesAreRelatedPage,
+            NormalMode,
+            UserAnswers("id").set(ExplainHowPartiesAreRelatedPage, "explain").success.value
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
         }
       }
 
