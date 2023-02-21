@@ -45,7 +45,7 @@
                 legend = LegendViewModel(messages("isThereASaleInvolved.heading")).asPageHeading(),
                 noText = messages("isThereASaleInvolved.no.text")
             )
-            .withHint(Hint(Some(messages("isThereASaleInvolved.no.hint"))))
+            .withHint(Hint(content = messages("isThereASaleInvolved.no.hint")))
         )
 
         @govukButton(
