@@ -21,7 +21,8 @@ import play.api.data.FormError
 import forms.behaviours.BooleanFieldBehaviours
 
 class HaveTheGoodsBeenSubjectToLegalChallengesFormProviderSpec extends BooleanFieldBehaviours {
-
+  // LDS thinks this is the aws key...
+  // LDS ignore
   val requiredKey = "haveTheGoodsBeenSubjectToLegalChallenges.error.required"
   val invalidKey  = "error.boolean"
 
