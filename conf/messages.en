@@ -159,23 +159,6 @@ confidentialInformation.paragraph.3 = This may include:
 confidentialInformation.bulletPoint.1 = model numbers
 confidentialInformation.bulletPoint.2 = patent information
 
-
-describeTheGoods.title = How would you describe the {0}?
-describeTheGoods.heading = How would you describe the {0}?
-describeTheGoods.caption = About the goods
-describeTheGoods.para.1 = This information may appear on the Advance Valuation Rulings website.
-describeTheGoods.para.2 = The more detailed the description is, the faster we will be able to process your application.
-describeTheGoods.para.3 = The description can include details such as:
-describeTheGoods.list.1 = what it is
-describeTheGoods.list.2 = what it is used for
-describeTheGoods.list.3 = how it works
-describeTheGoods.list.4 = how it is packaged
-describeTheGoods.insetText = You will be able to add confidential information and upload files later in the application.
-describeTheGoods.error.required = Provide detailed description of goods
-describeTheGoods.error.length = Maximum allowed characters is 8168
-describeTheGoods.checkYourAnswersLabel = describeTheGoods
-describeTheGoods.change.hidden = DescribeTheGoods
-
 hasConfidentialInformation.title = Do you want to add any confidential information about the {0}?
 hasConfidentialInformation.heading = Do you want to add any confidential information about the {0}?
 hasConfidentialInformation.caption = About the goods

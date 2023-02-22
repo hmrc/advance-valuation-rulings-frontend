@@ -385,22 +385,12 @@ class NavigatorSpec extends SpecBase {
       }
 
       "AreGoodsShippedDirectly must" - {
-        "navigate to DescribeTheGoods when true" in {
-          navigator.nextPage(
-            AreGoodsShippedDirectlyPage,
-            NormalMode,
-            userAnswersWith(AreGoodsShippedDirectlyPage, true)
-          ) mustBe routes.DescribeTheGoodsController.onPageLoad(NormalMode)
-        }
-      }
-
-      "DescribeTheGoods page must" - {
-//        "navigate to HowAreTheGoodsMade when given valid data" in {
+//        "navigate to DescribeTheGoods when true" in {
 //          navigator.nextPage(
-//            DescribeTheGoodsPage,
+//            AreGoodsShippedDirectlyPage,
 //            NormalMode,
-//            userAnswersWith(DescribeTheGoodsPage, "Some goods")
-//          ) mustBe routes.HowAreTheGoodsMadeController.onPageLoad(NormalMode)
+//            userAnswersWith(AreGoodsShippedDirectlyPage, true)
+//          ) mustBe routes.DescribeTheGoodsController.onPageLoad(NormalMode)
 //        }
       }
 

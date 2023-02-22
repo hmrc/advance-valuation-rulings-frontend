@@ -36,10 +36,8 @@ class Navigator @Inject() () {
     case NameOfGoodsPage                       => nameOfGoodsPage
     case HasCommodityCodePage                  => hasCommodityCodePage
     case CommodityCodePage                     => commodityCodePage
-    case PriceOfGoodsPage                      => priceOfGoodsPage
     case WhatCountryAreGoodsFromPage           => whatCountryAreGoodsFromPage
     case AreGoodsShippedDirectlyPage           => areGoodsShippedDirectlyPage
-    case DescribeTheGoodsPage                  => describeTheGoodsPage
     case HasConfidentialInformationPage        => hasConfidentialInformationPage
     case ConfidentialInformationPage           => confidentialInformationPage
     case ImportGoodsPage                       => importGoodsPage
@@ -182,13 +180,6 @@ class Navigator @Inject() () {
       case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
     }
 
-  // todo: page removed from prototype
-  private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(PriceOfGoodsPage) match {
-      case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
-      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
-    }
-
   private def whatCountryAreGoodsFromPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatCountryAreGoodsFromPage) match {
       case None    => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
@@ -197,14 +188,8 @@ class Navigator @Inject() () {
 
   private def areGoodsShippedDirectlyPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AreGoodsShippedDirectlyPage) match {
-      case None    => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
-      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
-    }
-
-  private def describeTheGoodsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(DescribeTheGoodsPage) match {
-      case None => DescribeTheGoodsController.onPageLoad(models.NormalMode)
-//      case Some(_) => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)todo: replace
+      case None => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
+//      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)todo: replace
     }
 
   private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =

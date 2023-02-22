@@ -67,11 +67,6 @@ POST       /areGoodsShippedDirectly                        controllers.AreGoodsS
 GET        /changeAreGoodsShippedDirectly                  controllers.AreGoodsShippedDirectlyController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeAreGoodsShippedDirectly                  controllers.AreGoodsShippedDirectlyController.onSubmit(mode: Mode = CheckMode)
 
-GET        /describeTheGoods                        controllers.DescribeTheGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /describeTheGoods                        controllers.DescribeTheGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onSubmit(mode: Mode = CheckMode)
-
 GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
 POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
 GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)

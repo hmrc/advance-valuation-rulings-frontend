@@ -100,9 +100,6 @@ trait PageGenerators {
     : Arbitrary[HasConfidentialInformationPage.type] =
     Arbitrary(HasConfidentialInformationPage)
 
-  implicit lazy val arbitraryDescribeTheGoodsPage: Arbitrary[DescribeTheGoodsPage.type] =
-    Arbitrary(DescribeTheGoodsPage)
-
   implicit lazy val arbitraryConfidentialInformationPage
     : Arbitrary[ConfidentialInformationPage.type] =
     Arbitrary(ConfidentialInformationPage)
