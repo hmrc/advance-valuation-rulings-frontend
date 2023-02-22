@@ -205,15 +205,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryHowAreTheGoodsMadeUserAnswersEntry
-    : Arbitrary[(HowAreTheGoodsMadePage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[HowAreTheGoodsMadePage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryHasConfidentialInformationUserAnswersEntry
     : Arbitrary[(HasConfidentialInformationPage.type, JsValue)] =
     Arbitrary {

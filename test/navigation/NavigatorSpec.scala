@@ -395,13 +395,13 @@ class NavigatorSpec extends SpecBase {
       }
 
       "DescribeTheGoods page must" - {
-        "navigate to HowAreTheGoodsMade when given valid data" in {
-          navigator.nextPage(
-            DescribeTheGoodsPage,
-            NormalMode,
-            userAnswersWith(DescribeTheGoodsPage, "Some goods")
-          ) mustBe routes.HowAreTheGoodsMadeController.onPageLoad(NormalMode)
-        }
+//        "navigate to HowAreTheGoodsMade when given valid data" in {
+//          navigator.nextPage(
+//            DescribeTheGoodsPage,
+//            NormalMode,
+//            userAnswersWith(DescribeTheGoodsPage, "Some goods")
+//          ) mustBe routes.HowAreTheGoodsMadeController.onPageLoad(NormalMode)
+//        }
       }
 
       "areThereRestrictionsOnTheGoods page must" - {

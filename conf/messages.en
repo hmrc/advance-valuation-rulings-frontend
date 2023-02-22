@@ -185,21 +185,6 @@ hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
 hasConfidentialInformation.error.required = Select Yes if you like to provide any confidential information
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
 
-howAreTheGoodsMade.title = How are the {0} made?
-howAreTheGoodsMade.heading = How are the {0} made?
-howAreTheGoodsMade.caption = About the goods
-howAreTheGoodsMade.para.1 = This information may appear on the Advance Valuation Rulings website.
-howAreTheGoodsMade.para.2 = The more detailed the description is, the faster we will be able to process your application
-howAreTheGoodsMade.para.3 = The description can include details such as:
-howAreTheGoodsMade.insetText = You will be able to add confidential information and upload files later in the application.
-howAreTheGoodsMade.list.1 = what the goods are made from (the materials used in their manufacture)
-howAreTheGoodsMade.list.2 = how they are made
-howAreTheGoodsMade.list.3 = the stages of processing involved in their manufacture
-howAreTheGoodsMade.error.required = Provide details of how the goods are made
-howAreTheGoodsMade.error.length = Maximum allowed characters is 8168 or less
-howAreTheGoodsMade.checkYourAnswersLabel = howAreTheGoodsMade
-howAreTheGoodsMade.change.hidden = HowAreTheGoodsMade
-
 priceOfGoods.title = PriceOfGoods
 priceOfGoods.heading = PriceOfGoods
 priceOfGoods.checkYourAnswersLabel = PriceOfGoods

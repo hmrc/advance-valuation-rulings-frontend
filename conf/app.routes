@@ -72,11 +72,6 @@ POST       /describeTheGoods                        controllers.DescribeTheGoods
 GET        /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /howAreTheGoodsMade                        controllers.HowAreTheGoodsMadeController.onPageLoad(mode: Mode = NormalMode)
-POST       /howAreTheGoodsMade                        controllers.HowAreTheGoodsMadeController.onSubmit(mode: Mode = NormalMode)
-GET        /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onSubmit(mode: Mode = CheckMode)
-
 GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
 POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
 GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
