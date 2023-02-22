@@ -177,4 +177,3 @@ POST       /haveTheGoodsBeenSubjectToLegalChallenges                        cont
 GET        /changeHaveTheGoodsBeenSubjectToLegalChallenges                  controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeHaveTheGoodsBeenSubjectToLegalChallenges                  controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode: Mode = CheckMode)
 
-GET        /weMightContactYou                       controllers.WeMightContactYouController.onPageLoad()

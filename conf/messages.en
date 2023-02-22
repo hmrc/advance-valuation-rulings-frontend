@@ -427,6 +427,3 @@ haveTheGoodsBeenSubjectToLegalChallenges.heading = haveTheGoodsBeenSubjectToLega
 haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = haveTheGoodsBeenSubjectToLegalChallenges
 haveTheGoodsBeenSubjectToLegalChallenges.error.required = Select yes if haveTheGoodsBeenSubjectToLegalChallenges
 haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = HaveTheGoodsBeenSubjectToLegalChallenges
-
-weMightContactYou.title = weMightContactYou
-weMightContactYou.heading = weMightContactYou
