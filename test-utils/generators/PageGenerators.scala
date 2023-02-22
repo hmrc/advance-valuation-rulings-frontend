@@ -21,6 +21,15 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryHaveTheGoodsBeenSubjectToLegalChallengesPage: Arbitrary[HaveTheGoodsBeenSubjectToLegalChallengesPage.type] =
+    Arbitrary(HaveTheGoodsBeenSubjectToLegalChallengesPage)
+
+  implicit lazy val arbitraryDescriptionOfGoodsPage: Arbitrary[DescriptionOfGoodsPage.type] =
+    Arbitrary(DescriptionOfGoodsPage)
+
+  implicit lazy val arbitraryDescribeTheLegalChallengesPage: Arbitrary[DescribeTheLegalChallengesPage.type] =
+    Arbitrary(DescribeTheLegalChallengesPage)
+
   implicit lazy val arbitraryIsThereASaleInvolvedPage: Arbitrary[IsThereASaleInvolvedPage.type] =
     Arbitrary(IsThereASaleInvolvedPage)
 
