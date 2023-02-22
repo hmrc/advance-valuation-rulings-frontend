@@ -29,7 +29,7 @@
     formHelper: FormWithCSRF,
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(applicantSummary: SummaryList, goodsSummary: SummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -37,9 +37,11 @@
 
     @subheading(messages("checkYourAnswers.applicant.heading"))
     
-    @govukSummaryList(list)
+    @govukSummaryList(applicantSummary)
     
     @subheading(messages("checkYourAnswers.goods.heading"))
+
+    @govukSummaryList(goodsSummary)
 
     @subheading(messages("checkYourAnswers.declaration.heading"))
 

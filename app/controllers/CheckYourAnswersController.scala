@@ -22,8 +22,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.ValuationMethod
+import pages.ValuationMethodPage
+import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 import views.html.CheckYourAnswersView
+import pages.DescriptionOfGoodsPage
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
@@ -37,10 +41,38 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val list = SummaryListViewModel(
-        rows = Seq.empty
-      )
+      val answers          = request.userAnswers
+      val applicantSummary = ApplicantSummary(answers)
 
-      Ok(view(list))
+      val valuationMethod = ValuationMethodSummary.row(answers).toSeq
+
+      val methodAnswers = answers.get(ValuationMethodPage) match {
+        case Some(ValuationMethod.Method1) =>
+          Seq(
+            IsThereASaleInvolvedSummary.row(answers),
+            IsSaleBetweenRelatedPartiesSummary.row(answers),
+            AreThereRestrictionsOnTheGoodsSummary.row(answers),
+            DescribeTheRestrictionsSummary.row(answers),
+            IsTheSaleSubjectToConditionsSummary.row(answers),
+            DescribeTheConditionsSummary.row(answers)
+          ).flatten
+        case _                             => Seq()
+      }
+
+      val wrapUpAnswers = Seq(
+        DescriptionOfGoodsSummary.row(answers),
+        HasCommodityCodeSummary.row(answers),
+        CommodityCodeSummary.row(answers),
+        HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(answers),
+        DescribeTheLegalChallengesSummary.row(answers),
+        HasConfidentialInformationSummary.row(answers),
+        ConfidentialInformationSummary.row(answers),
+        DoYouWantToUploadDocumentsSummary.row(answers)
+      ).flatten
+
+      val goodsSummary = SummaryListViewModel(
+        rows = (valuationMethod ++ methodAnswers ++ wrapUpAnswers)
+      )
+      Ok(view(applicantSummary.rows, goodsSummary))
   }
 }
