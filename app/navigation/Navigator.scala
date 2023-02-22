@@ -248,7 +248,7 @@ class Navigator @Inject() () {
       case Some(true)  =>
         controllers.fileupload.routes.UploadSupportingDocumentsController
           .onPageLoad(None, None, None)
-      case Some(false) => routes.IndexController.onPageLoad
+      case Some(false) => routes.CheckYourAnswersController.onPageLoad
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
