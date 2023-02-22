@@ -93,14 +93,14 @@ class NavigatorSpec extends SpecBase {
 
       "ImportGoodsPage must" - {
 
-        "navigate to PublicInformationNoticePage when True" in {
-          val userAnswers = userAnswersWith(ImportGoodsPage, true)
-          navigator.nextPage(
-            ImportGoodsPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.PublicInformationNoticeController.onPageLoad()
-        }
+//        "navigate to PublicInformationNoticePage when True" in {
+//          val userAnswers = userAnswersWith(ImportGoodsPage, true)
+//          navigator.nextPage(
+//            ImportGoodsPage,
+//            NormalMode,
+//            userAnswers
+//          ) mustBe routes.PublicInformationNoticeController.onPageLoad()
+//        }
 
         "and navigate to ImportingGoodsPage when False" in {
           val userAnswers = userAnswersWith(ImportGoodsPage, false)

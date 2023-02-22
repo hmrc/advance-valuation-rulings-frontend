@@ -254,7 +254,7 @@ class Navigator @Inject() () {
   private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {
       case None        => ImportGoodsController.onPageLoad(models.NormalMode)
-      case Some(true)  => PublicInformationNoticeController.onPageLoad()
+//      case Some(true)  => PublicInformationNoticeController.onPageLoad() todo: replace
       case Some(false) => ImportingGoodsController.onPageLoad()
     }
 

@@ -130,14 +130,6 @@ importGoods.checkYourAnswersLabel = importGoods
 importGoods.error.required = Select Yes if you have intention to move goods
 importGoods.change.hidden = ImportGoods
 
-publicInformationNotice.title = Some of the information you provide in this application may appear on a public website
-publicInformationNotice.heading = Some of the information you provide in this application may appear on a public website
-publicInformationNotice.paragraph.1 = If you are granted a ruling for your goods it will be published on the {0} This information is available for other traders to view so that they can find a ruling if they are trading with similar goods.
-publicInformationNotice.paragraph.1.link = Search for Advance Valuation Rulings website.
-publicInformationNotice.paragraph.2 = You will be told throughout the application which information may appear on the Advance Valuation Rulings website.
-publicInformationNotice.paragraph.3 = You will be able to mark information and files as confidential in your application. We will not publish confidential information or files on the Advance Valuation Rulings website.
-publicInformationNotice.button.continue = Agree and continue
-
 requiredInformation.title = Information you need to complete an application
 requiredInformation.heading = Information you need to continue your application
 requiredInformation.option1 = I have subscribed to the Customs Declaration Service.

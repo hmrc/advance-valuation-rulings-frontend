@@ -49,8 +49,6 @@ POST       /importGoods                        controllers.ImportGoodsController
 GET        /changeImportGoods                  controllers.ImportGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeImportGoods                  controllers.ImportGoodsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /publicInformationNotice                       controllers.PublicInformationNoticeController.onPageLoad()
-
 GET        /requiredInformation                        controllers.RequiredInformationController.onPageLoad()
 POST       /requiredInformation                        controllers.RequiredInformationController.onSubmit()
 
