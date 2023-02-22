@@ -206,16 +206,6 @@ checkRegisteredDetails.error.required = Select Yes shown if the address is corre
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
 checkRegisteredDetails.warning = These are the details we currently have on record. They should reflect the office, headquarters or permanent business establishment used to register your EORI number.
 
-whatCountryAreGoodsFrom.title = Which country are the {0} coming from?
-whatCountryAreGoodsFrom.heading = Which country are the {0} coming from?
-whatCountryAreGoodsFrom.caption = About the goods
-whatCountryAreGoodsFrom.checkYourAnswersLabel = whatCountryAreGoodsFrom
-whatCountryAreGoodsFrom.paragraph = See {0} if you are unsure whether the UK trades with the goods’ country of origin.
-whatCountryAreGoodsFrom.link = trade sanctions, arms embargoes and trade restrictions
-whatCountryAreGoodsFrom.error.required = Please provide the country of origin
-whatCountryAreGoodsFrom.error.length = WhatCountryAreGoodsFrom must be 50 characters or less
-whatCountryAreGoodsFrom.change.hidden = WhatCountryAreGoodsFrom
-
 applicationContactDetails.title = Provide the contact details for this application
 applicationContactDetails.heading = Provide the contact details for this application
 applicationContactDetails.caption = About the applicant

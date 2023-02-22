@@ -47,7 +47,6 @@ trait UserAnswersGenerator extends TryValues {
       arbitrary[(DoYouWantToUploadDocumentsPage.type, JsValue)] ::
       arbitrary[(ApplicationContactDetailsPage.type, JsValue)] ::
       arbitrary[(CheckRegisteredDetailsPage.type, JsValue)] ::
-      arbitrary[(PriceOfGoodsPage.type, JsValue)] ::
       arbitrary[(HasConfidentialInformationPage.type, JsValue)] ::
       arbitrary[(ConfidentialInformationPage.type, JsValue)] ::
       arbitrary[(RequiredInformationPage.type, JsValue)] ::

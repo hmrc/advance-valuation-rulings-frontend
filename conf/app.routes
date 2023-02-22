@@ -57,11 +57,6 @@ POST       /confidentialInformation                        controllers.Confident
 GET        /changeConfidentialInformation                  controllers.ConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeConfidentialInformation                  controllers.ConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
 
-GET        /whatCountryAreGoodsFrom                        controllers.WhatCountryAreGoodsFromController.onPageLoad(mode: Mode = NormalMode)
-POST       /whatCountryAreGoodsFrom                        controllers.WhatCountryAreGoodsFromController.onSubmit(mode: Mode = NormalMode)
-GET        /changeWhatCountryAreGoodsFrom                  controllers.WhatCountryAreGoodsFromController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeWhatCountryAreGoodsFrom                  controllers.WhatCountryAreGoodsFromController.onSubmit(mode: Mode = CheckMode)
-
 GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
 POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
 GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
