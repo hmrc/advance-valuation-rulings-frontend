@@ -209,14 +209,14 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(None, None, None)
         }
 
-        "IndexPage when No is selected" in {
+        "CheckYourAnswers page when No is selected" in {
           val userAnswers =
             UserAnswers("id").set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.IndexController.onPageLoad
+          ) mustBe routes.CheckYourAnswersController.onPageLoad
         }
       }
 

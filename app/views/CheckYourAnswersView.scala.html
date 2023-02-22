@@ -14,16 +14,52 @@
  * limitations under the License.
  *@
 
+@import components._
+
+
 @this(
     layout: templates.Layout,
-    govukSummaryList: GovukSummaryList
+    govukSummaryList: GovukSummaryList,
+    govukButton: GovukButton,
+    heading: Heading,
+    subheading: Subheading,
+    paragraph: Paragraph,
+    bulletList: BulletList,
+    cancelApplicationLink: CancelApplicationLink,
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
+    @heading(messages("checkYourAnswers.heading"))
 
+    @subheading(messages("checkYourAnswers.applicant.heading"))
+    
     @govukSummaryList(list)
+    
+    @subheading(messages("checkYourAnswers.goods.heading"))
+
+    @subheading(messages("checkYourAnswers.declaration.heading"))
+
+    @paragraph(Html(messages("checkYourAnswers.declaration.paragraph1")))
+
+    @bulletList(Seq(
+        Html(messages("checkYourAnswers.declaration.bulletPoint.1")),
+        Html(messages("checkYourAnswers.declaration.bulletPoint.2")),
+        Html(messages("checkYourAnswers.declaration.bulletPoint.3")),
+        Html(messages("checkYourAnswers.declaration.bulletPoint.4"))
+    ))
+
+    @paragraph(Html(messages("checkYourAnswers.agreement.subheading")))
+    
+    @bulletList(Seq(
+        Html(messages("checkYourAnswers.agreement.bulletPoint.1")),
+        Html(messages("checkYourAnswers.agreement.bulletPoint.2")),
+        Html(messages("checkYourAnswers.agreement.bulletPoint.3"))
+    ))
+
+    @govukButton(
+        ButtonViewModel(messages("checkYourAnswers.button.continue"))
+    )
 }
