@@ -168,15 +168,6 @@ hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
 hasConfidentialInformation.error.required = Select Yes if you like to provide any confidential information
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
 
-priceOfGoods.title = PriceOfGoods
-priceOfGoods.heading = PriceOfGoods
-priceOfGoods.checkYourAnswersLabel = PriceOfGoods
-priceOfGoods.error.nonNumeric = Enter your priceOfGoods using numbers
-priceOfGoods.error.required = Enter your priceOfGoods
-priceOfGoods.error.wholeNumber = Enter your priceOfGoods using whole numbers
-priceOfGoods.error.outOfRange = PriceOfGoods must be between {0} and {1}
-priceOfGoods.change.hidden = PriceOfGoods
-
 importingGoods.title = This service is designed for those who are importing goods into Great Britain
 importingGoods.heading = This service is designed for those who are importing goods into Great Britain
 importingGoods.caption = About the goods

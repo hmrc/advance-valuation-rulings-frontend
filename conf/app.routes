@@ -62,11 +62,6 @@ POST       /hasConfidentialInformation                        controllers.HasCon
 GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
 
-GET        /priceOfGoods                              controllers.PriceOfGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /priceOfGoods                              controllers.PriceOfGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /changePriceOfGoods                        controllers.PriceOfGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /changePriceOfGoods                        controllers.PriceOfGoodsController.onSubmit(mode: Mode = CheckMode)
-
 GET        /importingGoods                            controllers.ImportingGoodsController.onPageLoad()
 
 GET        /checkRegisteredDetails                        controllers.CheckRegisteredDetailsController.onPageLoad(mode: Mode = NormalMode)
