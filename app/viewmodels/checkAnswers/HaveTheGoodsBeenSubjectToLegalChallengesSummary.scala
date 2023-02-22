@@ -33,6 +33,8 @@ object HaveTheGoodsBeenSubjectToLegalChallengesSummary {
         val value = if (answer) "site.yes" else "site.no"
 
         SummaryListRowViewModel(
+          // LDS flags this an an aws key, but it's not
+          // LDS ignore
           key = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel",
           value = ValueViewModel(value),
           actions = Seq(
