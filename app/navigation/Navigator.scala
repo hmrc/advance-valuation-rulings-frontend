@@ -36,11 +36,6 @@ class Navigator @Inject() () {
     case NameOfGoodsPage                       => nameOfGoodsPage
     case HasCommodityCodePage                  => hasCommodityCodePage
     case CommodityCodePage                     => commodityCodePage
-    case PriceOfGoodsPage                      => priceOfGoodsPage
-    case WhatCountryAreGoodsFromPage           => whatCountryAreGoodsFromPage
-    case AreGoodsShippedDirectlyPage           => areGoodsShippedDirectlyPage
-    case DescribeTheGoodsPage                  => describeTheGoodsPage
-    case HowAreTheGoodsMadePage                => howAreTheGoodsMadePage
     case HasConfidentialInformationPage        => hasConfidentialInformationPage
     case ConfidentialInformationPage           => confidentialInformationPage
     case ImportGoodsPage                       => importGoodsPage
@@ -172,46 +167,15 @@ class Navigator @Inject() () {
 
   private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
-      case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(false) => MustHaveCommodityCodeController.onPageLoad()
+      case None       => HasCommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(true) => CommodityCodeController.onPageLoad(models.NormalMode)
+//      case Some(false) => MustHaveCommodityCodeController.onPageLoad() todo: replace
     }
 
   private def commodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(CommodityCodePage) match {
-      case None    => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
-    }
-
-  // todo: page removed from prototype
-  private def priceOfGoodsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(PriceOfGoodsPage) match {
-      case None    => PriceOfGoodsController.onPageLoad(models.NormalMode)
-      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
-    }
-
-  private def whatCountryAreGoodsFromPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(WhatCountryAreGoodsFromPage) match {
-      case None    => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)
-      case Some(_) => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
-    }
-
-  private def areGoodsShippedDirectlyPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(AreGoodsShippedDirectlyPage) match {
-      case None    => AreGoodsShippedDirectlyController.onPageLoad(models.NormalMode)
-      case Some(_) => DescribeTheGoodsController.onPageLoad(models.NormalMode)
-    }
-
-  private def describeTheGoodsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(DescribeTheGoodsPage) match {
-      case None    => DescribeTheGoodsController.onPageLoad(models.NormalMode)
-      case Some(_) => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
-    }
-
-  private def howAreTheGoodsMadePage(userAnswers: UserAnswers): Call =
-    userAnswers.get(DescribeTheGoodsPage) match {
-      case None    => HowAreTheGoodsMadeController.onPageLoad(models.NormalMode)
-      case Some(_) => HasConfidentialInformationController.onPageLoad(models.NormalMode)
+      case None => CommodityCodeController.onPageLoad(models.NormalMode)
+//      case Some(_) => WhatCountryAreGoodsFromController.onPageLoad(models.NormalMode)todo: replace
     }
 
   private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =
@@ -254,7 +218,7 @@ class Navigator @Inject() () {
   private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {
       case None        => ImportGoodsController.onPageLoad(models.NormalMode)
-      case Some(true)  => PublicInformationNoticeController.onPageLoad()
+//      case Some(true)  => PublicInformationNoticeController.onPageLoad() todo: replace
       case Some(false) => ImportingGoodsController.onPageLoad()
     }
 

@@ -145,14 +145,6 @@ importGoods.checkYourAnswersLabel = importGoods
 importGoods.error.required = Select Yes if you have intention to move goods
 importGoods.change.hidden = ImportGoods
 
-publicInformationNotice.title = Some of the information you provide in this application may appear on a public website
-publicInformationNotice.heading = Some of the information you provide in this application may appear on a public website
-publicInformationNotice.paragraph.1 = If you are granted a ruling for your goods it will be published on the {0} This information is available for other traders to view so that they can find a ruling if they are trading with similar goods.
-publicInformationNotice.paragraph.1.link = Search for Advance Valuation Rulings website.
-publicInformationNotice.paragraph.2 = You will be told throughout the application which information may appear on the Advance Valuation Rulings website.
-publicInformationNotice.paragraph.3 = You will be able to mark information and files as confidential in your application. We will not publish confidential information or files on the Advance Valuation Rulings website.
-publicInformationNotice.button.continue = Agree and continue
-
 requiredInformation.title = Information you need to complete an application
 requiredInformation.heading = Information you need to continue your application
 requiredInformation.option1 = I have subscribed to the Customs Declaration Service.
@@ -182,23 +174,6 @@ confidentialInformation.paragraph.3 = This may include:
 confidentialInformation.bulletPoint.1 = model numbers
 confidentialInformation.bulletPoint.2 = patent information
 
-
-describeTheGoods.title = How would you describe the {0}?
-describeTheGoods.heading = How would you describe the {0}?
-describeTheGoods.caption = About the goods
-describeTheGoods.para.1 = This information may appear on the Advance Valuation Rulings website.
-describeTheGoods.para.2 = The more detailed the description is, the faster we will be able to process your application.
-describeTheGoods.para.3 = The description can include details such as:
-describeTheGoods.list.1 = what it is
-describeTheGoods.list.2 = what it is used for
-describeTheGoods.list.3 = how it works
-describeTheGoods.list.4 = how it is packaged
-describeTheGoods.insetText = You will be able to add confidential information and upload files later in the application.
-describeTheGoods.error.required = Provide detailed description of goods
-describeTheGoods.error.length = Maximum allowed characters is 8168
-describeTheGoods.checkYourAnswersLabel = describeTheGoods
-describeTheGoods.change.hidden = DescribeTheGoods
-
 hasConfidentialInformation.title = Do you want to add any confidential information about the {0}?
 hasConfidentialInformation.heading = Do you want to add any confidential information about the {0}?
 hasConfidentialInformation.caption = About the goods
@@ -207,30 +182,6 @@ hasConfidentialInformation.paragraph.2 = Files marked as confidential will not a
 hasConfidentialInformation.checkYourAnswersLabel = hasConfidentialInformation
 hasConfidentialInformation.error.required = Select Yes if you like to provide any confidential information
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
-
-howAreTheGoodsMade.title = How are the {0} made?
-howAreTheGoodsMade.heading = How are the {0} made?
-howAreTheGoodsMade.caption = About the goods
-howAreTheGoodsMade.para.1 = This information may appear on the Advance Valuation Rulings website.
-howAreTheGoodsMade.para.2 = The more detailed the description is, the faster we will be able to process your application
-howAreTheGoodsMade.para.3 = The description can include details such as:
-howAreTheGoodsMade.insetText = You will be able to add confidential information and upload files later in the application.
-howAreTheGoodsMade.list.1 = what the goods are made from (the materials used in their manufacture)
-howAreTheGoodsMade.list.2 = how they are made
-howAreTheGoodsMade.list.3 = the stages of processing involved in their manufacture
-howAreTheGoodsMade.error.required = Provide details of how the goods are made
-howAreTheGoodsMade.error.length = Maximum allowed characters is 8168 or less
-howAreTheGoodsMade.checkYourAnswersLabel = howAreTheGoodsMade
-howAreTheGoodsMade.change.hidden = HowAreTheGoodsMade
-
-priceOfGoods.title = PriceOfGoods
-priceOfGoods.heading = PriceOfGoods
-priceOfGoods.checkYourAnswersLabel = PriceOfGoods
-priceOfGoods.error.nonNumeric = Enter your priceOfGoods using numbers
-priceOfGoods.error.required = Enter your priceOfGoods
-priceOfGoods.error.wholeNumber = Enter your priceOfGoods using whole numbers
-priceOfGoods.error.outOfRange = PriceOfGoods must be between {0} and {1}
-priceOfGoods.change.hidden = PriceOfGoods
 
 importingGoods.title = This service is designed for those who are importing goods into Great Britain
 importingGoods.heading = This service is designed for those who are importing goods into Great Britain
@@ -260,34 +211,6 @@ checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EO
 checkRegisteredDetails.error.required = Select Yes shown if the address is correct
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
 checkRegisteredDetails.warning = These are the details we currently have on record. They should reflect the office, headquarters or permanent business establishment used to register your EORI number.
-
-mustHaveCommodityCode.title = You must have a commodity code in order to carry on with your application
-mustHaveCommodityCode.heading = You must have a commodity code in order to carry on with your application
-mustHaveCommodityCode.caption = About the goods
-mustHaveCommodityCode.subHeading = Other services you might be interested in:
-mustHaveCommodityCode.bulletPoint.1.link = importing goods into the UK
-mustHaveCommodityCode.bulletPoint.1 = Step-by-step guide to {0}
-mustHaveCommodityCode.bulletPoint.2.link = customs value of your imported goods
-mustHaveCommodityCode.bulletPoint.2 = Work out the {0}
-mustHaveCommodityCode.bulletPoint.3.link = Get a legally binding decision
-mustHaveCommodityCode.bulletPoint.3 = {0} on the commodity code to use when importing into or exporting from Great Britain
-
-areGoodsShippedDirectly.title = Are the {0} being shipped directly from their country of origin to Great Britain?
-areGoodsShippedDirectly.heading = Are the {0} being shipped directly from their country of origin to Great Britain?
-areGoodsShippedDirectly.caption = About the goods
-areGoodsShippedDirectly.checkYourAnswersLabel = areGoodsShippedDirectly
-areGoodsShippedDirectly.error.required = Select Yes if the goods are shipped directly
-areGoodsShippedDirectly.change.hidden = AreGoodsShippedDirectly
-
-whatCountryAreGoodsFrom.title = Which country are the {0} coming from?
-whatCountryAreGoodsFrom.heading = Which country are the {0} coming from?
-whatCountryAreGoodsFrom.caption = About the goods
-whatCountryAreGoodsFrom.checkYourAnswersLabel = whatCountryAreGoodsFrom
-whatCountryAreGoodsFrom.paragraph = See {0} if you are unsure whether the UK trades with the goods’ country of origin.
-whatCountryAreGoodsFrom.link = trade sanctions, arms embargoes and trade restrictions
-whatCountryAreGoodsFrom.error.required = Please provide the country of origin
-whatCountryAreGoodsFrom.error.length = WhatCountryAreGoodsFrom must be 50 characters or less
-whatCountryAreGoodsFrom.change.hidden = WhatCountryAreGoodsFrom
 
 applicationContactDetails.title = Provide the contact details for this application
 applicationContactDetails.heading = Provide the contact details for this application

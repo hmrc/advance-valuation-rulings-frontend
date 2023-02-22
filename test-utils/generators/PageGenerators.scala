@@ -81,30 +81,13 @@ trait PageGenerators {
     : Arbitrary[ApplicationContactDetailsPage.type] =
     Arbitrary(ApplicationContactDetailsPage)
 
-  implicit lazy val arbitraryWhatCountryAreGoodsFromPage
-    : Arbitrary[WhatCountryAreGoodsFromPage.type] =
-    Arbitrary(WhatCountryAreGoodsFromPage)
-
-  implicit lazy val arbitraryAreGoodsShippedDirectlyPage
-    : Arbitrary[AreGoodsShippedDirectlyPage.type] =
-    Arbitrary(AreGoodsShippedDirectlyPage)
-
   implicit lazy val arbitraryCheckRegisteredDetailsPage
     : Arbitrary[CheckRegisteredDetailsPage.type] =
     Arbitrary(CheckRegisteredDetailsPage)
 
-  implicit lazy val arbitraryPriceOfGoodsPage: Arbitrary[PriceOfGoodsPage.type] =
-    Arbitrary(PriceOfGoodsPage)
-
-  implicit lazy val arbitraryHowAreTheGoodsMadePage: Arbitrary[HowAreTheGoodsMadePage.type] =
-    Arbitrary(HowAreTheGoodsMadePage)
-
   implicit lazy val arbitraryHasConfidentialInformationPage
     : Arbitrary[HasConfidentialInformationPage.type] =
     Arbitrary(HasConfidentialInformationPage)
-
-  implicit lazy val arbitraryDescribeTheGoodsPage: Arbitrary[DescribeTheGoodsPage.type] =
-    Arbitrary(DescribeTheGoodsPage)
 
   implicit lazy val arbitraryConfidentialInformationPage
     : Arbitrary[ConfidentialInformationPage.type] =

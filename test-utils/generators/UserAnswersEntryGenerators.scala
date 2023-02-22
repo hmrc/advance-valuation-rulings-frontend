@@ -169,24 +169,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryWhatCountryAreGoodsFromUserAnswersEntry
-    : Arbitrary[(WhatCountryAreGoodsFromPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[WhatCountryAreGoodsFromPage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryAreGoodsShippedDirectlyUserAnswersEntry
-    : Arbitrary[(AreGoodsShippedDirectlyPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[AreGoodsShippedDirectlyPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryCheckRegisteredDetailsUserAnswersEntry
     : Arbitrary[(CheckRegisteredDetailsPage.type, JsValue)] =
     Arbitrary {
@@ -196,39 +178,12 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryPriceOfGoodsUserAnswersEntry
-    : Arbitrary[(PriceOfGoodsPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[PriceOfGoodsPage.type]
-        value <- arbitrary[Int].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryHowAreTheGoodsMadeUserAnswersEntry
-    : Arbitrary[(HowAreTheGoodsMadePage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[HowAreTheGoodsMadePage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryHasConfidentialInformationUserAnswersEntry
     : Arbitrary[(HasConfidentialInformationPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[HasConfidentialInformationPage.type]
         value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryDescribeTheGoodsUserAnswersEntry
-    : Arbitrary[(DescribeTheGoodsPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[DescribeTheGoodsPage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }
 

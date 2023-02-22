@@ -49,8 +49,6 @@ POST       /importGoods                        controllers.ImportGoodsController
 GET        /changeImportGoods                  controllers.ImportGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeImportGoods                  controllers.ImportGoodsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /publicInformationNotice                       controllers.PublicInformationNoticeController.onPageLoad()
-
 GET        /requiredInformation                        controllers.RequiredInformationController.onPageLoad()
 POST       /requiredInformation                        controllers.RequiredInformationController.onSubmit()
 
@@ -59,35 +57,10 @@ POST       /confidentialInformation                        controllers.Confident
 GET        /changeConfidentialInformation                  controllers.ConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeConfidentialInformation                  controllers.ConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
 
-GET        /whatCountryAreGoodsFrom                        controllers.WhatCountryAreGoodsFromController.onPageLoad(mode: Mode = NormalMode)
-POST       /whatCountryAreGoodsFrom                        controllers.WhatCountryAreGoodsFromController.onSubmit(mode: Mode = NormalMode)
-GET        /changeWhatCountryAreGoodsFrom                  controllers.WhatCountryAreGoodsFromController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeWhatCountryAreGoodsFrom                  controllers.WhatCountryAreGoodsFromController.onSubmit(mode: Mode = CheckMode)
-
-GET        /areGoodsShippedDirectly                        controllers.AreGoodsShippedDirectlyController.onPageLoad(mode: Mode = NormalMode)
-POST       /areGoodsShippedDirectly                        controllers.AreGoodsShippedDirectlyController.onSubmit(mode: Mode = NormalMode)
-GET        /changeAreGoodsShippedDirectly                  controllers.AreGoodsShippedDirectlyController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeAreGoodsShippedDirectly                  controllers.AreGoodsShippedDirectlyController.onSubmit(mode: Mode = CheckMode)
-
-GET        /describeTheGoods                        controllers.DescribeTheGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /describeTheGoods                        controllers.DescribeTheGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeDescribeTheGoods                  controllers.DescribeTheGoodsController.onSubmit(mode: Mode = CheckMode)
-
-GET        /howAreTheGoodsMade                        controllers.HowAreTheGoodsMadeController.onPageLoad(mode: Mode = NormalMode)
-POST       /howAreTheGoodsMade                        controllers.HowAreTheGoodsMadeController.onSubmit(mode: Mode = NormalMode)
-GET        /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeHowAreTheGoodsMade                  controllers.HowAreTheGoodsMadeController.onSubmit(mode: Mode = CheckMode)
-
 GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
 POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
 GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onSubmit(mode: Mode = CheckMode)
-
-GET        /priceOfGoods                              controllers.PriceOfGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /priceOfGoods                              controllers.PriceOfGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /changePriceOfGoods                        controllers.PriceOfGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /changePriceOfGoods                        controllers.PriceOfGoodsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /importingGoods                            controllers.ImportingGoodsController.onPageLoad()
 
@@ -95,8 +68,6 @@ GET        /checkRegisteredDetails                        controllers.CheckRegis
 POST       /checkRegisteredDetails                        controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeCheckRegisteredDetails                  controllers.CheckRegisteredDetailsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeCheckRegisteredDetails                  controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = CheckMode)
-
-GET        /mustHaveCommodityCode                       controllers.MustHaveCommodityCodeController.onPageLoad()
 
 GET        /applicationContactDetails                        controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = NormalMode)
 POST       /applicationContactDetails                        controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = NormalMode)
