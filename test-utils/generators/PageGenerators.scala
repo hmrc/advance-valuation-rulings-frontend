@@ -85,10 +85,6 @@ trait PageGenerators {
     : Arbitrary[WhatCountryAreGoodsFromPage.type] =
     Arbitrary(WhatCountryAreGoodsFromPage)
 
-  implicit lazy val arbitraryAreGoodsShippedDirectlyPage
-    : Arbitrary[AreGoodsShippedDirectlyPage.type] =
-    Arbitrary(AreGoodsShippedDirectlyPage)
-
   implicit lazy val arbitraryCheckRegisteredDetailsPage
     : Arbitrary[CheckRegisteredDetailsPage.type] =
     Arbitrary(CheckRegisteredDetailsPage)

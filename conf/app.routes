@@ -62,11 +62,6 @@ POST       /whatCountryAreGoodsFrom                        controllers.WhatCount
 GET        /changeWhatCountryAreGoodsFrom                  controllers.WhatCountryAreGoodsFromController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhatCountryAreGoodsFrom                  controllers.WhatCountryAreGoodsFromController.onSubmit(mode: Mode = CheckMode)
 
-GET        /areGoodsShippedDirectly                        controllers.AreGoodsShippedDirectlyController.onPageLoad(mode: Mode = NormalMode)
-POST       /areGoodsShippedDirectly                        controllers.AreGoodsShippedDirectlyController.onSubmit(mode: Mode = NormalMode)
-GET        /changeAreGoodsShippedDirectly                  controllers.AreGoodsShippedDirectlyController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeAreGoodsShippedDirectly                  controllers.AreGoodsShippedDirectlyController.onSubmit(mode: Mode = CheckMode)
-
 GET        /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode)
 POST       /hasConfidentialInformation                        controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode)
 GET        /changeHasConfidentialInformation                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode)

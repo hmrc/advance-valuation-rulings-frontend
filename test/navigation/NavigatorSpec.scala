@@ -374,26 +374,6 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "WhatCountryAreGoodsFrom must" - {
-        "navigate to AreGoodsShippedDirectly" in {
-          navigator.nextPage(
-            WhatCountryAreGoodsFromPage,
-            NormalMode,
-            userAnswersWith(WhatCountryAreGoodsFromPage, "GB")
-          ) mustBe routes.AreGoodsShippedDirectlyController.onPageLoad(NormalMode)
-        }
-      }
-
-      "AreGoodsShippedDirectly must" - {
-//        "navigate to DescribeTheGoods when true" in {
-//          navigator.nextPage(
-//            AreGoodsShippedDirectlyPage,
-//            NormalMode,
-//            userAnswersWith(AreGoodsShippedDirectlyPage, true)
-//          ) mustBe routes.DescribeTheGoodsController.onPageLoad(NormalMode)
-//        }
-      }
-
       "areThereRestrictionsOnTheGoods page must" - {
         "navigate to DescribeTheRestrictions when True" in {
           navigator.nextPage(

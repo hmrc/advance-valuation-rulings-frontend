@@ -206,13 +206,6 @@ checkRegisteredDetails.error.required = Select Yes shown if the address is corre
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
 checkRegisteredDetails.warning = These are the details we currently have on record. They should reflect the office, headquarters or permanent business establishment used to register your EORI number.
 
-areGoodsShippedDirectly.title = Are the {0} being shipped directly from their country of origin to Great Britain?
-areGoodsShippedDirectly.heading = Are the {0} being shipped directly from their country of origin to Great Britain?
-areGoodsShippedDirectly.caption = About the goods
-areGoodsShippedDirectly.checkYourAnswersLabel = areGoodsShippedDirectly
-areGoodsShippedDirectly.error.required = Select Yes if the goods are shipped directly
-areGoodsShippedDirectly.change.hidden = AreGoodsShippedDirectly
-
 whatCountryAreGoodsFrom.title = Which country are the {0} coming from?
 whatCountryAreGoodsFrom.heading = Which country are the {0} coming from?
 whatCountryAreGoodsFrom.caption = About the goods
