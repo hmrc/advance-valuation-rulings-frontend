@@ -18,28 +18,37 @@ package forms
 
 import play.api.data.FormError
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.StringFieldBehaviours
 
-class HaveTheGoodsBeenSubjectToLegalChallengesFormProviderSpec extends BooleanFieldBehaviours {
-  val expected   = "haveTheGoodsBeenSubjectToLegalChallenges.error.required"
-  val invalidKey = "error.boolean"
+class DescribeTheIdenticalGoodsFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new HaveTheGoodsBeenSubjectToLegalChallengesFormProvider()()
+  val requiredKey = "describeTheIdenticalGoods.error.required"
+  val lengthKey   = "describeTheIdenticalGoods.error.length"
+  val maxLength   = 8167
+
+  val form = new DescribeTheIdenticalGoodsFormProvider()()
 
   ".value" - {
 
     val fieldName = "value"
 
-    behave like booleanField(
+    behave like fieldThatBindsValidData(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, expected)
+      requiredError = FormError(fieldName, requiredKey)
     )
   }
 }

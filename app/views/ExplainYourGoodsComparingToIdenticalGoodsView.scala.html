@@ -1,0 +1,72 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import viewmodels.InputWidth._
+@import components._
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
+    caption: Caption,
+    list: BulletList,
+    paragraph: Paragraph,
+    heading: Heading,
+    cancelLink: CancelApplicationLink
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("explainYourGoodsComparingToIdenticalGoods.title"))) {
+
+    @formHelper(action = routes.ExplainYourGoodsComparingToIdenticalGoodsController.onSubmit(mode)) {
+
+    @caption(messages("explainYourGoodsComparingToIdenticalGoods.caption"))
+
+    @heading(messages("explainYourGoodsComparingToIdenticalGoods.heading"))
+
+    @paragraph(Html(messages("explainYourGoodsComparingToIdenticalGoods.paragraph")))
+
+            @list(
+            Seq(
+                Html(messages("explainYourGoodsComparingToIdenticalGoods.bulletPoint.1")),
+                Html(messages("explainYourGoodsComparingToIdenticalGoods.bulletPoint.2"))
+            ),
+        "govuk-list govuk-list--bullet",
+)
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @govukTextarea(
+            TextareaViewModel(
+                field = form("value"),
+                label = Label(None)
+                )
+                .withRows(15)
+                .withAttribute("maxlength","8167")
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
+    }
+@cancelLink()
+}

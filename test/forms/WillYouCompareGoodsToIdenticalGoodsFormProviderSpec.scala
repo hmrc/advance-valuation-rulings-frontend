@@ -20,11 +20,12 @@ import play.api.data.FormError
 
 import forms.behaviours.BooleanFieldBehaviours
 
-class HaveTheGoodsBeenSubjectToLegalChallengesFormProviderSpec extends BooleanFieldBehaviours {
-  val expected   = "haveTheGoodsBeenSubjectToLegalChallenges.error.required"
-  val invalidKey = "error.boolean"
+class WillYouCompareGoodsToIdenticalGoodsFormProviderSpec extends BooleanFieldBehaviours {
 
-  val form = new HaveTheGoodsBeenSubjectToLegalChallengesFormProvider()()
+  val requiredKey = "willYouCompareGoodsToIdenticalGoods.error.required"
+  val invalidKey  = "error.boolean"
+
+  val form = new WillYouCompareGoodsToIdenticalGoodsFormProvider()()
 
   ".value" - {
 
@@ -39,7 +40,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesFormProviderSpec extends BooleanFi
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, expected)
+      requiredError = FormError(fieldName, requiredKey)
     )
   }
 }

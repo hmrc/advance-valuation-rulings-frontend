@@ -60,11 +60,67 @@ class NavigatorSpec extends SpecBase {
       }
 
       "HaveYouUsedMethodOneInPast page" - {
-        "must navigate to DescriptionOfGoods Page" in {
+        "must navigate to describeTheIdenticalGoods Page when True" in {
           val userAnswers =
             userAnswersWith(HaveYouUsedMethodOneInPastPage, true)
           navigator.nextPage(
             HaveYouUsedMethodOneInPastPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
+        }
+
+        "must navigate to willYouCompareGoodsToIdenticalGoods Page when False" in {
+          val userAnswers =
+            userAnswersWith(HaveYouUsedMethodOneInPastPage, false)
+          navigator.nextPage(
+            HaveYouUsedMethodOneInPastPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "DescribeTheIdenticalGoods page" - {
+        "must navigate to DescriptionOfGoods Page" in {
+          val userAnswers =
+            userAnswersWith(DescribeTheIdenticalGoodsPage, "describe goods")
+          navigator.nextPage(
+            DescribeTheIdenticalGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "WillYouCompareGoodsToIdenticalGoods page" - {
+        "must navigate to explainYourGoodsComparingToIdenticalGoods Page when True" in {
+          val userAnswers =
+            userAnswersWith(WillYouCompareGoodsToIdenticalGoodsPage, true)
+          navigator.nextPage(
+            WillYouCompareGoodsToIdenticalGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(NormalMode)
+        }
+
+        "must navigate to ValuationMethod Page when False" in {
+          val userAnswers =
+            userAnswersWith(WillYouCompareGoodsToIdenticalGoodsPage, false)
+          navigator.nextPage(
+            WillYouCompareGoodsToIdenticalGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
+        }
+      }
+
+      "ExplainYourGoodsComparingToIdenticalGoods page" - {
+        "must navigate to DescriptionOfGoods Page" in {
+          val userAnswers =
+            userAnswersWith(ExplainYourGoodsComparingToIdenticalGoodsPage, "describe goods")
+          navigator.nextPage(
+            ExplainYourGoodsComparingToIdenticalGoodsPage,
             NormalMode,
             userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
