@@ -172,9 +172,9 @@ class Navigator @Inject() () {
 
   private def hasCommodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
-      case None        => HasCommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(true)  => CommodityCodeController.onPageLoad(models.NormalMode)
-      case Some(false) => MustHaveCommodityCodeController.onPageLoad()
+      case None       => HasCommodityCodeController.onPageLoad(models.NormalMode)
+      case Some(true) => CommodityCodeController.onPageLoad(models.NormalMode)
+//      case Some(false) => MustHaveCommodityCodeController.onPageLoad() todo: replace
     }
 
   private def commodityCodePage(userAnswers: UserAnswers): Call =
