@@ -25,7 +25,8 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryHaveTheGoodsBeenSubjectToLegalChallengesUserAnswersEntry: Arbitrary[(HaveTheGoodsBeenSubjectToLegalChallengesPage.type, JsValue)] =
+  implicit lazy val arbitraryHaveTheGoodsBeenSubjectToLegalChallengesUserAnswersEntry
+    : Arbitrary[(HaveTheGoodsBeenSubjectToLegalChallengesPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[HaveTheGoodsBeenSubjectToLegalChallengesPage.type]
@@ -33,7 +34,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryDescriptionOfGoodsUserAnswersEntry: Arbitrary[(DescriptionOfGoodsPage.type, JsValue)] =
+  implicit lazy val arbitraryDescriptionOfGoodsUserAnswersEntry
+    : Arbitrary[(DescriptionOfGoodsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[DescriptionOfGoodsPage.type]
@@ -41,7 +43,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryDescribeTheLegalChallengesUserAnswersEntry: Arbitrary[(DescribeTheLegalChallengesPage.type, JsValue)] =
+  implicit lazy val arbitraryDescribeTheLegalChallengesUserAnswersEntry
+    : Arbitrary[(DescribeTheLegalChallengesPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[DescribeTheLegalChallengesPage.type]
