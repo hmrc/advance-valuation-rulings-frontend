@@ -62,8 +62,8 @@ class DetailsSummarySpec extends SpecBase with Generators {
     }
 
     "create details row for has legal challenges" in {
-      val key: Key = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
-      keys must contain(key)
+      val expected = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
+      keys must contain(expected)
     }
 
     "create details row for legal challenges" in {
