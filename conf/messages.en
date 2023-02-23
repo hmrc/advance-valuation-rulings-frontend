@@ -337,7 +337,7 @@ whyIdenticalGoods.caption = About the goods
 whyIdenticalGoods.heading = Please outline why you have not selected Method 1 to value your goods
 whyIdenticalGoods.paragraph = Before you try Method 2 you must first have tried to use Method 1 (transaction value of imported goods). Please explain why you believe Method 1 is not suitable to work out the customs value of your imports.
 whyIdenticalGoods.checkYourAnswersLabel = whyIdenticalGoods
-whyIdenticalGoods.error.required = Please outline why you have not selected Method 1 to value your goods
+whyIdenticalGoods.error.required = Enter an explanation of why you have not selected Method 1 to value your goods
 whyIdenticalGoods.error.length = Maximum allowed characters is 8168
 whyIdenticalGoods.change.hidden = WhyIdenticalGoods
 
@@ -416,7 +416,7 @@ describeTheIdenticalGoods.bulletPoint.1 = produced in the same country
 describeTheIdenticalGoods.bulletPoint.2 = exported to the UK at or about the same time (within 90 days)
 describeTheIdenticalGoods.bulletPoint.3 = the same in all respects including physical characteristics, quality and reputation — minor differences in appearance do not matter
 describeTheIdenticalGoods.checkYourAnswersLabel = describeTheIdenticalGoods
-describeTheIdenticalGoods.error.required = Describe the identical goods
+describeTheIdenticalGoods.error.required = Enter a description of the identical goods
 describeTheIdenticalGoods.error.length = Maximum allowed characters is 8168
 describeTheIdenticalGoods.change.hidden = DescribeTheIdenticalGoods
 
@@ -427,7 +427,7 @@ explainYourGoodsComparingToIdenticalGoods.paragraph = You should use Method 3: T
 explainYourGoodsComparingToIdenticalGoods.bulletPoint.1 = you do not think Method 2 is the correct way to value your goods
 explainYourGoodsComparingToIdenticalGoods.bulletPoint.2 = you do not have any further information about the identical goods
 explainYourGoodsComparingToIdenticalGoods.checkYourAnswersLabel = explainYourGoodsComparingToIdenticalGoods
-explainYourGoodsComparingToIdenticalGoods.error.required = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
+explainYourGoodsComparingToIdenticalGoods.error.required = Enter an explanation about how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 explainYourGoodsComparingToIdenticalGoods.error.length = Maximum allowed characters is 8168
 explainYourGoodsComparingToIdenticalGoods.change.hidden = ExplainYourGoodsComparingToIdenticalGoods
 
@@ -435,7 +435,7 @@ willYouCompareGoodsToIdenticalGoods.title = Will you be comparing your goods to 
 willYouCompareGoodsToIdenticalGoods.caption = About the goods
 willYouCompareGoodsToIdenticalGoods.heading = Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days?
 willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = willYouCompareGoodsToIdenticalGoods
-willYouCompareGoodsToIdenticalGoods.error.required = Select yes if Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days
+willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 willYouCompareGoodsToIdenticalGoods.change.hidden = WillYouCompareGoodsToIdenticalGoods
 
 describeTheLegalChallenges.title = describeTheLegalChallenges
