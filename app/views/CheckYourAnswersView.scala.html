@@ -26,6 +26,7 @@
     paragraph: Paragraph,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
+    formHelper: FormWithCSRF,
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
@@ -59,7 +60,9 @@
         Html(messages("checkYourAnswers.agreement.bulletPoint.3"))
     ))
 
-    @govukButton(
+    @formHelper(action = routes.ApplicationCompleteController.onPageLoad()) {
+        @govukButton(
         ButtonViewModel(messages("checkYourAnswers.button.continue"))
-    )
+        )
+    }
 }
