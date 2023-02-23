@@ -29,15 +29,15 @@ object DetailsSummary {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): DetailsSummary = {
 
     val rows = Seq(
-        DescriptionOfGoodsSummary.row(userAnswers),
-        HasCommodityCodeSummary.row(userAnswers),
-        CommodityCodeSummary.row(userAnswers),
-        HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(userAnswers),
-        DescribeTheLegalChallengesSummary.row(userAnswers),
-        HasConfidentialInformationSummary.row(userAnswers),
-        ConfidentialInformationSummary.row(userAnswers),
-        DoYouWantToUploadDocumentsSummary.row(userAnswers)
-      ).flatten
+      DescriptionOfGoodsSummary.row(userAnswers),
+      HasCommodityCodeSummary.row(userAnswers),
+      CommodityCodeSummary.row(userAnswers),
+      HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(userAnswers),
+      DescribeTheLegalChallengesSummary.row(userAnswers),
+      HasConfidentialInformationSummary.row(userAnswers),
+      ConfidentialInformationSummary.row(userAnswers),
+      DoYouWantToUploadDocumentsSummary.row(userAnswers)
+    ).flatten
 
     DetailsSummary(SummaryListViewModel(rows))
   }
