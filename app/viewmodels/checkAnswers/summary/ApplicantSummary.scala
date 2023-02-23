@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.checkAnswers.summary
+
+import cats.syntax.all._
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
@@ -22,14 +24,13 @@ import models.UserAnswers
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
-case class ApplicantSummary(rows: SummaryList)
+case class ApplicantSummary(rows: SummaryList) extends AnyVal
 
 object ApplicantSummary {
-
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): ApplicantSummary = {
 
-    val eoriRow: Seq[SummaryListRow] = CheckRegisteredDetailsSummary.rows(userAnswers).toSeq.flatten
-    val userRows                     = ApplicationContactDetailsSummary.rows(userAnswers).toSeq.flatten
+    val eoriRow: Seq[SummaryListRow] = CheckRegisteredDetailsSummary.rows(userAnswers).orEmpty
+    val userRows                     = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
     ApplicantSummary(SummaryListViewModel(rows = eoriRow ++ userRows))
   }
 }
