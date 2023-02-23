@@ -23,44 +23,50 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
     caption: Caption,
+    list: BulletList,
+    paragraph: Paragraph,
     heading: Heading,
-    link: Link
+    cancelLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("nameOfGoods.title"))) {
+@layout(pageTitle = title(form, messages("explainYourGoodsComparingToIdenticalGoods.title"))) {
+
+    @formHelper(action = routes.ExplainYourGoodsComparingToIdenticalGoodsController.onSubmit(mode)) {
 
     @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-    @caption(messages("nameOfGoods.caption"))
+    @caption(messages("explainYourGoodsComparingToIdenticalGoods.caption"))
 
-    @heading(messages("nameOfGoods.heading"))
+    @heading(messages("explainYourGoodsComparingToIdenticalGoods.heading"))
 
-    @formHelper(action = routes.NameOfGoodsController.onSubmit(mode)) {
+    @paragraph(Html(messages("explainYourGoodsComparingToIdenticalGoods.paragraph")))
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"), 
+            @list(
+            Seq(
+                Html(messages("explainYourGoodsComparingToIdenticalGoods.bulletPoint.1")),
+                Html(messages("explainYourGoodsComparingToIdenticalGoods.bulletPoint.2"))
+            ),
+        "govuk-list govuk-list--bullet",
+)
+
+        @govukTextarea(
+            TextareaViewModel(
+                field = form("value"),
                 label = Label(None)
-            )
-            .withHint(Hint(content = Text(messages("nameOfGoods.hint"))))
-            .withWidth(Full)
+                )
+                .withRows(15)
+                .withAttribute("maxlength","8167")
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
-
-
-    @link(
-            id = "cancel_application",
-            text = messages("site.cancel"),
-            newTab = false,
-            call = Call("GET", "accountHome")
-        )
+@cancelLink()
 }

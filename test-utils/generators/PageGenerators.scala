@@ -21,6 +21,18 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryWillYouCompareGoodsToIdenticalGoodsPage
+    : Arbitrary[WillYouCompareGoodsToIdenticalGoodsPage.type] =
+    Arbitrary(WillYouCompareGoodsToIdenticalGoodsPage)
+
+  implicit lazy val arbitraryExplainYourGoodsComparingToIdenticalGoodsPage
+    : Arbitrary[ExplainYourGoodsComparingToIdenticalGoodsPage.type] =
+    Arbitrary(ExplainYourGoodsComparingToIdenticalGoodsPage)
+
+  implicit lazy val arbitraryDescribeTheIdenticalGoodsPage
+    : Arbitrary[DescribeTheIdenticalGoodsPage.type] =
+    Arbitrary(DescribeTheIdenticalGoodsPage)
+
   implicit lazy val arbitraryHaveTheGoodsBeenSubjectToLegalChallengesPage
     : Arbitrary[HaveTheGoodsBeenSubjectToLegalChallengesPage.type] =
     Arbitrary(HaveTheGoodsBeenSubjectToLegalChallengesPage)

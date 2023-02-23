@@ -36,15 +36,15 @@
 
     @formHelper(action = routes.WhyIdenticalGoodsController.onSubmit(mode)) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @caption(messages("whyIdenticalGoods.caption"))
 
     @heading(messages("whyIdenticalGoods.heading"))
 
     @paragraph(Html(messages("whyIdenticalGoods.paragraph")))
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
        @govukTextarea(
             TextareaViewModel(

@@ -21,9 +21,9 @@ import play.api.data.FormError
 import forms.behaviours.StringFieldBehaviours
 
 class DescribeTheLegalChallengesFormProviderSpec extends StringFieldBehaviours {
-  val expected = "describeTheLegalChallenges.error.required"
-  val lengthKey   = "describeTheLegalChallenges.error.length"
-  val maxLength   = 8167
+  val expected  = "describeTheLegalChallenges.error.required"
+  val lengthKey = "describeTheLegalChallenges.error.length"
+  val maxLength = 8167
 
   val form = new DescribeTheLegalChallengesFormProvider()()
 
