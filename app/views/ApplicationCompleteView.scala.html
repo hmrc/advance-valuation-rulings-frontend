@@ -14,14 +14,70 @@
  * limitations under the License.
  *@
 
+ @import components._
+ @import config.FrontendAppConfig
+
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton
+    layout: templates.Layout,
+    govukErrorSummary: GovukErrorSummary,
+    govukButton: GovukButton,
+    govukTextarea: GovukTextarea,
+    bulletList: BulletList,
+    cancelApplicationLink: CancelApplicationLink,
+    link: Link,
+    caption: Caption,
+    heading: Heading,
+    subheading: Subheading,
+    paragraph: Paragraph,
+    insetPara: InsetPara,
+    config: FrontendAppConfig
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("applicationComplete.title"))) {
+@guideLink = {
+    @link(
+            id = "step_by_step_guide_link",
+            text = messages("applicationComplete.paragraph.3.link"),
+            call = Call("GET", config.stepByStepGuideUrl)
+        )
+    }
 
-    <h1 class="govuk-heading-xl">@messages("applicationComplete.heading")</h1>
+@appealLink = {
+    @link(
+            id = "appeal_ruling_link",
+            text = messages("applicationComplete.appeal.paragraph.2.link"),
+            call = Call("GET", config.stepByStepGuideUrl)
+        )
+    }
+
+@layout(pageTitle = titleNoForm(messages("applicationComplete.title"))) {
+    
+
+    @heading(messages("applicationComplete.heading"))
+
+    @subheading(messages("applicationComplete.subheading"))
+
+    @paragraph(Html(messages("applicationComplete.paragraph.1")))
+    @paragraph(Html(messages("applicationComplete.paragraph.2")))
+    @paragraph(Html(messages("applicationComplete.paragraph.3", guideLink)))
+
+
+    @govukButton(
+        ButtonViewModel(messages("site.continue"))
+    )
+
+    @subheading(messages("applicationComplete.ruling.subheading"))
+    @paragraph(Html(messages("applicationComplete.ruling.paragraph")))
+
+    @bulletList(Seq(
+        Html(messages("applicationComplete.ruling.bulletPoint.1")),
+        Html(messages("applicationComplete.ruling.bulletPoint.2"))
+    ))
+
+    @subheading(messages("applicationComplete.appeal.subheading"))
+    @paragraph(Html(messages("applicationComplete.appeal.paragraph.1")))
+    @paragraph(Html(messages("applicationComplete.appeal.paragraph.2", appealLink)))
+
+    @subheading(messages("applicationComplete.application.heading"))
 }

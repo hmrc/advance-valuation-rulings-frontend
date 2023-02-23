@@ -18,34 +18,34 @@
 @import config.FrontendAppConfig
 
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        formHelper: FormWithCSRF,
-        caption: Caption,
-        heading: Heading,
-        paragraph: Paragraph,
-        link: Link,
-        bulletList: BulletList,
-        cancelApplicationLink: CancelApplicationLink,
-        config: FrontendAppConfig
+  layout: templates.Layout,
+  govukButton: GovukButton,
+  formHelper: FormWithCSRF,
+  caption: Caption,
+  heading: Heading,
+  paragraph: Paragraph,
+  link: Link,
+  bulletList: BulletList,
+  cancelApplicationLink: CancelApplicationLink,
+  config: FrontendAppConfig
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @fillInAnEnquiryLink = {
   @link(
-          id = "eori_be_up_to_date_link_one",
-          text = messages("eoriBeUpToDate.bulletPoint.1.link"),
-          call = Call("GET", config.fillInAnEnquiryFormUrl)
-        )
+    id = "eori_be_up_to_date_link_one",
+    text = messages("eoriBeUpToDate.bulletPoint.1.link"),
+    call = Call("GET", config.fillInAnEnquiryFormUrl)
+  )
 }
 
 @importAndExportEnquiriesLink = {
-  @link(
-          id = "eori_be_up_to_date_link_two",
-          text = messages("eoriBeUpToDate.bulletPoint.2.link"),
-          call = Call("GET", config.importAndExportEnquiriesUrl)
-        )
+@link(
+    id = "eori_be_up_to_date_link_two",
+    text = messages("eoriBeUpToDate.bulletPoint.2.link"),
+    call = Call("GET", config.tribunalAppealLink)
+  )
 }
 
 @layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title"))) {
@@ -59,11 +59,11 @@
 @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
 
 @bulletList(
-       Seq(
-            Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
-            Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
-       ),
-        "govuk-list govuk-list--bullet govuk-list--spaced",
+  Seq(
+    Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
+    Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
+  ),
+  "govuk-list govuk-list--bullet govuk-list--spaced",
 )
 
 @cancelApplicationLink()
