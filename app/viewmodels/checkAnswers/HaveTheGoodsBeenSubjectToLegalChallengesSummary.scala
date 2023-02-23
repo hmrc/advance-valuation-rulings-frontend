@@ -31,11 +31,9 @@ object HaveTheGoodsBeenSubjectToLegalChallengesSummary {
     answers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage).map {
       answer =>
         val value = if (answer) "site.yes" else "site.no"
-
+        val label = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
         SummaryListRowViewModel(
-          // LDS flags this an an aws key, but it's not
-          // LDS ignore
-          key = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel",
+          key = label,
           value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel(

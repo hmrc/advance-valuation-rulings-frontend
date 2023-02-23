@@ -21,9 +21,7 @@ import play.api.data.FormError
 import forms.behaviours.StringFieldBehaviours
 
 class DescribeTheLegalChallengesFormProviderSpec extends StringFieldBehaviours {
-  // LDS thinks this is the aws key...
-  // LDS ignore
-  val requiredKey = "describeTheLegalChallenges.error.required"
+  val expected = "describeTheLegalChallenges.error.required"
   val lengthKey   = "describeTheLegalChallenges.error.length"
   val maxLength   = 8167
 
@@ -49,7 +47,7 @@ class DescribeTheLegalChallengesFormProviderSpec extends StringFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, expected)
     )
   }
 }
