@@ -37,6 +37,10 @@
 
     @formHelper(action = routes.DescribeTheIdenticalGoodsController.onSubmit(mode)) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @caption(messages("describeTheIdenticalGoods.caption"))
 
     @heading(messages("describeTheIdenticalGoods.heading"))
@@ -51,10 +55,6 @@
             ),
         "govuk-list govuk-list--bullet",
 )
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
         @govukTextarea(
             TextareaViewModel(

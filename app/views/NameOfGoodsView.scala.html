@@ -32,15 +32,15 @@
 
 @layout(pageTitle = title(form, messages("nameOfGoods.title"))) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @caption(messages("nameOfGoods.caption"))
 
     @heading(messages("nameOfGoods.heading"))
 
     @formHelper(action = routes.NameOfGoodsController.onSubmit(mode)) {
-        
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
         @govukInput(
             InputViewModel(

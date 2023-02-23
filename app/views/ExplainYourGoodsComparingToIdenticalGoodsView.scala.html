@@ -37,6 +37,10 @@
 
     @formHelper(action = routes.ExplainYourGoodsComparingToIdenticalGoodsController.onSubmit(mode)) {
 
+    @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
     @caption(messages("explainYourGoodsComparingToIdenticalGoods.caption"))
 
     @heading(messages("explainYourGoodsComparingToIdenticalGoods.heading"))
@@ -50,10 +54,6 @@
             ),
         "govuk-list govuk-list--bullet",
 )
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
         @govukTextarea(
             TextareaViewModel(

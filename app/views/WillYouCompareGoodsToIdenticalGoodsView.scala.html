@@ -33,12 +33,13 @@
 
     @formHelper(action = routes.WillYouCompareGoodsToIdenticalGoodsController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @caption(messages("willYouCompareGoodsToIdenticalGoods.caption"))
-        @heading(messages("willYouCompareGoodsToIdenticalGoods.heading"))
-
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+
+        @caption(messages("willYouCompareGoodsToIdenticalGoods.caption"))
+
+        @heading(messages("willYouCompareGoodsToIdenticalGoods.heading"))
 
         <!--TODO: need to change the No label to No - if you choose ‘no’ you will need to select an alternative valuation method-->
         @govukRadios(

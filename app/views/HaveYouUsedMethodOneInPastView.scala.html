@@ -34,13 +34,13 @@
 
     @formHelper(action = routes.HaveYouUsedMethodOneInPastController.onSubmit(mode), 'autoComplete -> "off") {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @caption(messages("haveYouUsedMethodOneInPast.caption"))
     @heading(messages("haveYouUsedMethodOneInPast.heading"))
     @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.1")))
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
         @govukRadios(
             RadiosViewModel.yesNo(
