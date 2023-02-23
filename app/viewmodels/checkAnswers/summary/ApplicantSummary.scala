@@ -20,6 +20,7 @@ import cats.syntax.all._
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
+
 import models.UserAnswers
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
