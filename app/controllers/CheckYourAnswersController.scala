@@ -38,27 +38,10 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val answers             = request.userAnswers
-      // val applicantSummary = ApplicantSummary(answers)
+      val answers = request.userAnswers
+
       val applicationSummmary = ApplicationSummary(answers)
-      // val valuationMethod = ValuationMethodSummary.row(answers).toSeq
 
-      // val methodAnswers = answers.get(ValuationMethodPage) match {
-      //   case Some(ValuationMethod.Method1) =>
-      //     Seq(
-      //       IsThereASaleInvolvedSummary.row(answers),
-      //       IsSaleBetweenRelatedPartiesSummary.row(answers),
-      //       AreThereRestrictionsOnTheGoodsSummary.row(answers),
-      //       DescribeTheRestrictionsSummary.row(answers),
-      //       IsTheSaleSubjectToConditionsSummary.row(answers),
-      //       DescribeTheConditionsSummary.row(answers)
-      //     ).flatten
-      //   case _                             => Seq()
-      // }
-
-      // val goodsSummary = SummaryListViewModel(
-      //   rows = (valuationMethod ++ methodAnswers ++ wrapUpAnswers)
-      // )
       Ok(view(applicationSummmary))
   }
 }

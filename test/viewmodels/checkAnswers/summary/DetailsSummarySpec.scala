@@ -37,8 +37,13 @@ class DetailsSummarySpec extends SpecBase with Generators {
     val summary: DetailsSummary = DetailsSummary(allAnswersInput.success.value)
     val rows                    = summary.rows.rows
     val keys                    = rows.map(_.key)
+
     "create details rows for all relavent pages" in {
       rows.length mustBe 8
+    }
+
+    "does not include empty rows" in {
+      DetailsSummary(emptyUserAnswers).rows.rows mustBe empty
     }
 
     "create details row for description of goods" in {

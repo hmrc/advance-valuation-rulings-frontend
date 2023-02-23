@@ -19,16 +19,18 @@ package viewmodels.checkAnswers.summary
 import play.api.i18n.Messages
 
 import models.UserAnswers
-
+import viewmodels.checkAnswers.summary.DetailsSummary
 case class ApplicationSummary(
   applicant: ApplicantSummary,
-  details: DetailsSummary
+  details: DetailsSummary,
+  methodOne: MethodOneSummary
 )
 
 object ApplicationSummary {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): ApplicationSummary =
     ApplicationSummary(
       applicant = ApplicantSummary(userAnswers),
-      details = DetailsSummary(userAnswers)
+      details = DetailsSummary(userAnswers),
+      methodOne = MethodOneSummary(userAnswers)
     )
 }

@@ -22,73 +22,70 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import base.SpecBase
-import generators.Generators
 import models._
 import pages._
 import viewmodels.implicits._
 
-class ApplicantSummarySpec extends SpecBase with Generators {
-  import ApplicantSummarySpec._
+class MethodOneSummarySpec extends SpecBase {
+  import MethodOneSummarySpec._
 
-  "ApplicantSummary should" - {
+  "MethodOneSummary should" - {
 
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
-    val summary: ApplicantSummary = ApplicantSummary(allAnswersInput.success.value)
+    val summary: MethodOneSummary = MethodOneSummary(allAnswersInput.success.value)
     val rows                      = summary.rows.rows
     val keys                      = rows.map(_.key)
-
     "create details rows for all relavent pages" in {
       rows.length mustBe 6
     }
 
     "does not include empty rows" in {
-      ApplicantSummary(emptyUserAnswers).rows.rows mustBe empty
+      MethodOneSummary(emptyUserAnswers).rows.rows mustBe empty
     }
 
-    "create details row for EORI number" in {
-      val key: Key = "checkYourAnswers.eori.number.label"
+    "create details row is there a sale involved" in {
+      val key: Key = "isThereASaleInvolved.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details row for EORI registered name" in {
-      val key: Key = "checkYourAnswers.eori.name.label"
+    "create details row is sale between related parties" in {
+      val key: Key = "isSaleBetweenRelatedParties.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details row for EORI registered address" in {
-      val key: Key = "checkYourAnswers.eori.address.label"
+    "create details row for are there any restrictions on the goods" in {
+      val key: Key = "areThereRestrictionsOnTheGoods.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details row for applicant name" in {
-      val key: Key = "checkYourAnswers.applicant.name.label"
+    "create details row for describe the restrictions" in {
+      val key: Key = "describeTheRestrictions.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details for for applicant email" in {
-      val key: Key = "checkYourAnswers.applicant.email.label"
+    "create details row for is the sale subject to conditions" in {
+      val key: Key = "isTheSaleSubjectToConditions.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details for for applicant phone" in {
-      val key: Key = "checkYourAnswers.applicant.phone.label"
+    "create details row for describe the conditions" in {
+      val key: Key = "describeTheConditions.checkYourAnswersLabel"
       keys must contain(key)
     }
   }
 }
 
-object ApplicantSummarySpec {
+object MethodOneSummarySpec {
   val emptyUserAnswers = UserAnswers("test")
 
   val allAnswersInput: Try[UserAnswers] =
-    emptyUserAnswers
-      .set(DescriptionOfGoodsPage, "test")
-      .flatMap(_.set(CheckRegisteredDetailsPage, CheckRegisteredDetails.Yes))
-      .flatMap(
-        _.set(
-          ApplicationContactDetailsPage,
-          ApplicationContactDetails(name = "test", email = "test", phone = "01234567890")
-        )
-      )
+    for {
+      ua <- emptyUserAnswers.set(IsThereASaleInvolvedPage, true)
+      ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+      ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+      ua <- ua.set(DescribeTheRestrictionsPage, "test")
+      ua <- ua.set(IsTheSaleSubjectToConditionsPage, true)
+      ua <- ua.set(DescribeTheConditionsPage, "test")
+    } yield ua
 }
