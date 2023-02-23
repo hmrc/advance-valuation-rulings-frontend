@@ -21,8 +21,8 @@ import play.api.data.FormError
 import forms.behaviours.BooleanFieldBehaviours
 
 class HaveTheGoodsBeenSubjectToLegalChallengesFormProviderSpec extends BooleanFieldBehaviours {
-  val expected = "haveTheGoodsBeenSubjectToLegalChallenges.error.required"
-  val invalidKey  = "error.boolean"
+  val expected   = "haveTheGoodsBeenSubjectToLegalChallenges.error.required"
+  val invalidKey = "error.boolean"
 
   val form = new HaveTheGoodsBeenSubjectToLegalChallengesFormProvider()()
 

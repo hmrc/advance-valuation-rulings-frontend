@@ -54,9 +54,18 @@ lazy val root = (project in file("."))
       "-explaintypes", // Explain type errors in more detail.
       "-language:existentials", // Existential types (besides wildcard types) can be written and inferred
       "-language:higherKinds", // Allow higher-kinded types
-      // "-unchecked", // Enable additional warnings where generated code depends on assumptions.
+      "-unchecked", // Enable additional warnings where generated code depends on assumptions.
       "-Wunused:imports", // Warn if an import selector is not referenced.
-      "-Wunused:privates" // Warn if a private member is unused.
+      "-Wunused:privates", // Warn if a private member is unused.
+      "-Wunused:patvars", // Warn if a variable bound in a pattern is unused.
+      "-Wvalue-discard", // Warn when non-Unit expression results are unused.
+
+      "-Ybackend-parallelism", // Enable paralellisation
+      "8",
+      "-Ycache-plugin-class-loader:last-modified", // Enables caching of classloaders for compiler plugins
+      "-Ycache-macro-class-loader:last-modified", // and macro definitions. This can lead to performance improvements.
+      "-Xfatal-warnings" // Fail the compilation if there are any warnings.
+
     ),
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
