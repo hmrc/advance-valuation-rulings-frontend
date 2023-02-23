@@ -46,28 +46,39 @@ class DetailsSummarySpec extends SpecBase with Generators {
       DetailsSummary(emptyUserAnswers).rows.rows mustBe empty
     }
 
-    "create details row for description of goods" in {
+    "create row for description of goods" in {
       val key: Key = "descriptionOfGoods.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details row for has commidity code" in {
+    "create row for has commidity code" in {
       val key: Key = "hasCommodityCode.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details row for commidity code" in {
+    "create row for commodityCode code" in {
       val key: Key = "commodityCode.checkYourAnswersLabel"
       keys must contain(key)
     }
 
-    "create details row for has legal challenges" in {
+    "create row for has legal challenges" in {
       val expected = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
-      keys must contain(expected)
+      val key: Key = expected
+      keys must contain(key)
     }
 
-    "create details row for legal challenges" in {
+    "create row for legal challenges" in {
       val key: Key = "describeTheLegalChallenges.checkYourAnswersLabel"
+      keys must contain(key)
+    }
+
+    "create row for has confidential information" in {
+      val key: Key = "hasConfidentialInformation.checkYourAnswersLabel"
+      keys must contain(key)
+    }
+
+    "create row for confidential information" in {
+      val key: Key = "confidentialInformation.checkYourAnswersLabel"
       keys must contain(key)
     }
   }
