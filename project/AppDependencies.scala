@@ -40,6 +40,7 @@ object AppDependencies {
     "org.mockito"            %% "mockito-scala"           % MockitoScalaVersion,
     "org.scalacheck"         %% "scalacheck"              % ScalaCheckVersion,
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
+    "uk.gov.hmrc"            %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
     "com.vladsch.flexmark"    % "flexmark-all"            % FlexmarkVersion
   ).map(_ % "test, it")
 

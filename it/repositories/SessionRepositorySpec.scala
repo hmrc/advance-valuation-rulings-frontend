@@ -111,7 +111,8 @@ class SessionRepositorySpec
         val expectedUpdatedAnswers = userAnswers copy (lastUpdated = instant)
 
         result mustEqual true
-        val updatedAnswers = find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
+        val updatedAnswers =
+          find(Filters.equal("_id", userAnswers.id)).futureValue.headOption.value
         updatedAnswers mustEqual expectedUpdatedAnswers
       }
     }

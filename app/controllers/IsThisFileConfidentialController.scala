@@ -66,8 +66,8 @@ class IsThisFileConfidentialController @Inject() (
       implicit request =>
         request.userAnswers.get(UploadSupportingDocumentPage) match {
           // RequireData redirects to the JourneyRecoveryController if no data is found
-          case None        => Redirect(routes.JourneyRecoveryController.onPageLoad())
-          case Some(value) => Ok(view(form, NormalMode))
+          case None    => Redirect(routes.JourneyRecoveryController.onPageLoad())
+          case Some(_) => Ok(view(form, NormalMode))
         }
     }
 
