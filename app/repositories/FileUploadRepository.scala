@@ -57,6 +57,6 @@ class FileUploadRepository @Inject() (mongoComponent: MongoComponent)(implicit e
         update = set("status", Codecs.toBson(newStatus)),
         options = FindOneAndUpdateOptions().upsert(true)
       )
-      .toFuture
+      .toFuture()
       .map(_.status)
 }

@@ -18,12 +18,12 @@ package connectors
 
 import javax.inject.Inject
 
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 import play.mvc.Http.HeaderNames
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http._
 
 import config.FrontendAppConfig
 import models.fileupload.{Reference, UpscanFileReference, UpscanInitiateResponse}
@@ -48,6 +48,7 @@ class UpscanInitiateConnector @Inject() (httpClient: HttpClient, appConfig: Fron
     initiate(appConfig.initiateV2Url, request)
   }
 
+  @nowarn("cat=deprecation")
   private def initiate[T](url: String, request: T)(implicit
     hc: HeaderCarrier,
     wts: Writes[T]

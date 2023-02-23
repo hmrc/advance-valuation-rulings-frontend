@@ -87,7 +87,7 @@ class NavigatorSpec extends SpecBase {
             RequiredInformationPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.RequiredInformationController.onPageLoad
+          ) mustBe routes.RequiredInformationController.onPageLoad()
         }
       }
 
@@ -242,7 +242,7 @@ class NavigatorSpec extends SpecBase {
             CheckRegisteredDetailsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.EORIBeUpToDateController.onPageLoad
+          ) mustBe routes.EORIBeUpToDateController.onPageLoad()
         }
       }
 
