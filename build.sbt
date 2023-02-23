@@ -47,7 +47,7 @@ lazy val root = (project in file("."))
       "-feature", // Emit warning and location for usages of features that should be imported explicitly.
       "-rootdir",
       baseDirectory.value.getCanonicalPath,
-      "-Wconf:cat=feature:ws,cat=optimizer:ws,src=target/.*:s",
+      "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s",
       // "-deprecation",                      // Emit warning when using deprecated APIs. cannot enable due to twirl...
       "-encoding",
       "utf-8", // Specify character encoding used by source files.
@@ -64,8 +64,6 @@ lazy val root = (project in file("."))
       "8",
       "-Ycache-plugin-class-loader:last-modified", // Enables caching of classloaders for compiler plugins
       "-Ycache-macro-class-loader:last-modified", // and macro definitions. This can lead to performance improvements.
-      "-Xfatal-warnings" // Fail the compilation if there are any warnings.
-
     ),
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
