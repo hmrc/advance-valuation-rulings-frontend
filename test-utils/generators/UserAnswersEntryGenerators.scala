@@ -25,6 +25,33 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryHaveTheGoodsBeenSubjectToLegalChallengesUserAnswersEntry
+    : Arbitrary[(HaveTheGoodsBeenSubjectToLegalChallengesPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[HaveTheGoodsBeenSubjectToLegalChallengesPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryDescriptionOfGoodsUserAnswersEntry
+    : Arbitrary[(DescriptionOfGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[DescriptionOfGoodsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryDescribeTheLegalChallengesUserAnswersEntry
+    : Arbitrary[(DescribeTheLegalChallengesPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[DescribeTheLegalChallengesPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryIsThereASaleInvolvedUserAnswersEntry
     : Arbitrary[(IsThereASaleInvolvedPage.type, JsValue)] =
     Arbitrary {

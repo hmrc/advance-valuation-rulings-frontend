@@ -26,8 +26,8 @@ import queries.Settable
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers = UserAnswers("id")
-  val navigator        = new Navigator
+  val EmptyUserAnswers: UserAnswers = UserAnswers("id")
+  val navigator                     = new Navigator
 
   "Navigator" - {
 
@@ -60,14 +60,14 @@ class NavigatorSpec extends SpecBase {
       }
 
       "HaveYouUsedMethodOneInPast page" - {
-        "must navigate to nameOfGoods Page" in {
+        "must navigate to DescriptionOfGoods Page" in {
           val userAnswers =
             userAnswersWith(HaveYouUsedMethodOneInPastPage, true)
           navigator.nextPage(
             HaveYouUsedMethodOneInPastPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
         }
       }
 
@@ -93,14 +93,14 @@ class NavigatorSpec extends SpecBase {
 
       "ImportGoodsPage must" - {
 
-        //        "navigate to PublicInformationNoticePage when True" in {
-        //          val userAnswers = userAnswersWith(ImportGoodsPage, true)
-        //          navigator.nextPage(
-        //            ImportGoodsPage,
-        //            NormalMode,
-        //            userAnswers
-        //          ) mustBe routes.PublicInformationNoticeController.onPageLoad()
-        //        }
+        "navigate to ContactPage page when True" in {
+          val userAnswers = userAnswersWith(ImportGoodsPage, true)
+          navigator.nextPage(
+            ImportGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ContactPageController.onPageLoad()
+        }
 
         "and navigate to ImportingGoodsPage when False" in {
           val userAnswers = userAnswersWith(ImportGoodsPage, false)
@@ -117,6 +117,109 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             EmptyUserAnswers
           ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "hasCommodityCodePage" - {
+        "navigate to CommodityCode page when True" in {
+          val userAnswers = userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            HasCommodityCodePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode)
+        }
+
+        "and navigate to HaveTheGoodsBeenSubjectToLegalChallenges when False" in {
+          val userAnswers = userAnswersWith(HasCommodityCodePage, false)
+          navigator.nextPage(
+            HasCommodityCodePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode)
+        }
+
+      }
+
+      "HaveTheGoodsBeenSubjectToLegalChallenges page" - {
+        "navigate to DescribeTheLegalChallenges when Yes" in {
+          val userAnswers = userAnswersWith(HaveTheGoodsBeenSubjectToLegalChallengesPage, true)
+          navigator.nextPage(
+            HaveTheGoodsBeenSubjectToLegalChallengesPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(mode = NormalMode)
+        }
+
+        "and navigate to HasConfidentialInformation when No" in {
+          val userAnswers =
+            userAnswersWith(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          navigator.nextPage(
+            HaveTheGoodsBeenSubjectToLegalChallengesPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasConfidentialInformationController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "DescribeTheLegalChallenges" - {
+        "navigate to HasConfidentialInformation page when all values are set" in {
+          val userAnswers =
+            userAnswersWith(DescribeTheLegalChallengesPage, "legalities")
+          navigator.nextPage(
+            DescribeTheLegalChallengesPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasConfidentialInformationController.onPageLoad(mode = NormalMode)
+        }
+
+        "navigate to self when no values are set" in {
+          navigator.nextPage(
+            DescribeTheLegalChallengesPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(NormalMode)
+        }
+      }
+
+      "HasConfidentialInformation page" - {
+        "navigate to DescribeTheLegalChallenges when Yes" in {
+          val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+          navigator.nextPage(
+            HasConfidentialInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ConfidentialInformationController.onPageLoad(mode = NormalMode)
+        }
+
+        "and navigate to DoYouWantToUploadDocuments when No" in {
+          val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
+          navigator.nextPage(
+            HasConfidentialInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+
+        }
+      }
+
+      "ConfidentialInformation page" - {
+        "navigate to DoYouWantToUploadDocuments page when all values are set" in {
+          val userAnswers =
+            userAnswersWith(ConfidentialInformationPage, "top secret")
+          navigator.nextPage(
+            ConfidentialInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+        }
+
+        "navigate to self when no values are set" in {
+          navigator.nextPage(
+            ConfidentialInformationPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode)
         }
       }
 
@@ -177,14 +280,14 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(None, None, None)
         }
 
-        "IndexPage when No is selected" in {
+        "CheckYourAnswers page when No is selected" in {
           val userAnswers =
             UserAnswers("id").set(DoYouWantToUploadDocumentsPage, false).get
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.IndexController.onPageLoad
+          ) mustBe routes.CheckYourAnswersController.onPageLoad
         }
       }
 
@@ -280,14 +383,14 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode = NormalMode)
         }
 
-        "NameOfGoods page when method 4 is selected" in {
+        "DescriptionOfGoods page when method 4 is selected" in {
           val userAnswers =
             userAnswersWith(ValuationMethodPage, ValuationMethod.Method4)
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)
         }
 
         "WhyComputedValue page when method 5 is selected" in {
@@ -300,14 +403,14 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.WhyComputedValueController.onPageLoad(mode = NormalMode)
         }
 
-        "NameOfGoods page when method 6 is selected" in {
+        "DescriptionOfGoods page when method 6 is selected" in {
           val userAnswers =
             userAnswersWith(ValuationMethodPage, ValuationMethod.Method6)
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)
         }
       }
 
@@ -327,6 +430,7 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
         }
       }
+
       "IsSaleBetweenRelatedParties page must" - {
         "navigate to ExplainHowPartiesAreRelated page when yes" in {
           navigator.nextPage(
@@ -365,145 +469,146 @@ class NavigatorSpec extends SpecBase {
       }
 
       "CommodityCode must" - {
-        //        "navigate to WhatCountryAreGoodsFrom when set" in {
-        //          navigator.nextPage(
-        //            CommodityCodePage,
-        //            NormalMode,
-        //            userAnswersWith(CommodityCodePage, "1234567890")
-        //          ) mustBe routes.WhatCountryAreGoodsFromController.onPageLoad(NormalMode)
+        "navigate to WhatCountryAreGoodsFrom when set" in {
+          navigator.nextPage(
+            CommodityCodePage,
+            NormalMode,
+            userAnswersWith(CommodityCodePage, "1234567890")
+          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode)
+        }
+      }
+
+      "areThereRestrictionsOnTheGoods page must" - {
+        "navigate to DescribeTheRestrictions when True" in {
+          navigator.nextPage(
+            AreThereRestrictionsOnTheGoodsPage,
+            NormalMode,
+            userAnswersWith(AreThereRestrictionsOnTheGoodsPage, true)
+          ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode)
+        }
+
+        "navigate to IsTheSaleSubjectToConditions when False" in {
+          navigator.nextPage(
+            AreThereRestrictionsOnTheGoodsPage,
+            NormalMode,
+            userAnswersWith(AreThereRestrictionsOnTheGoodsPage, false)
+          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+        }
+
+        "navigate to itself when user has no data for the page" in {
+          navigator.nextPage(
+            AreThereRestrictionsOnTheGoodsPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "describeTheRestrictions page must" - {
+        "navigate to itself when user has no data for the page" in {
+          navigator.nextPage(
+            DescribeTheRestrictionsPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode)
+        }
+
+        "navigate to IsTheSaleSubjectToConditions when answers has data" in {
+          navigator.nextPage(
+            DescribeTheRestrictionsPage,
+            NormalMode,
+            userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions")
+          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "isTheSaleSubjectToConditions page must" - {
+        "navigate to describeTheConditions when True" in {
+          navigator.nextPage(
+            IsTheSaleSubjectToConditionsPage,
+            NormalMode,
+            userAnswersWith(IsTheSaleSubjectToConditionsPage, true)
+          ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
+        }
+
+        "navigate to DescriptionOfGoods when False" in {
+          navigator.nextPage(
+            IsTheSaleSubjectToConditionsPage,
+            NormalMode,
+            userAnswersWith(IsTheSaleSubjectToConditionsPage, false)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+        }
+
+        "navigate to itself when user has no data for the page" in {
+          navigator.nextPage(
+            IsTheSaleSubjectToConditionsPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "describeTheConditions page must" - {
+        "navigate to itself when user has no data for the page" in {
+          navigator.nextPage(
+            DescribeTheConditionsPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
+        }
+
+        "navigate to DescriptionOfGoods when answers has data" in {
+          navigator.nextPage(
+            DescribeTheConditionsPage,
+            NormalMode,
+            userAnswersWith(DescribeTheConditionsPage, "Some conditions")
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "whyIdenticalGoods Page must" - {
+        "navigate to HaveYouUsedMethodOneInPastPage" in {
+          val userAnswers = userAnswersWith(WhyIdenticalGoodsPage, "banana")
+          navigator.nextPage(
+            WhyIdenticalGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(mode = NormalMode)
+        }
+
+        "navigate to itself when user has no data for the page" in {
+          navigator.nextPage(
+            WhyIdenticalGoodsPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "whyComputedValue Page must" - {
+        "navigate go to explainReasonComputedValuePage" in {
+          val userAnswers = userAnswersWith(WhyComputedValuePage, "banana")
+          navigator.nextPage(
+            WhyComputedValuePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(mode = NormalMode)
+        }
       }
     }
 
-    "areThereRestrictionsOnTheGoods page must" - {
-      "navigate to DescribeTheRestrictions when True" in {
-        navigator.nextPage(
-          AreThereRestrictionsOnTheGoodsPage,
-          NormalMode,
-          userAnswersWith(AreThereRestrictionsOnTheGoodsPage, true)
-        ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode)
-      }
+    "in Check mode" - {
 
-      "navigate to IsTheSaleSubjectToConditions when False" in {
-        navigator.nextPage(
-          AreThereRestrictionsOnTheGoodsPage,
-          NormalMode,
-          userAnswersWith(AreThereRestrictionsOnTheGoodsPage, false)
-        ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
-      }
+      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
 
-      "navigate to itself when user has no data for the page" in {
+        case object UnknownPage extends Page
         navigator.nextPage(
-          AreThereRestrictionsOnTheGoodsPage,
-          NormalMode,
+          UnknownPage,
+          CheckMode,
           EmptyUserAnswers
-        ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+        ) mustBe routes.CheckYourAnswersController.onPageLoad
       }
     }
 
-    "describeTheRestrictions page must" - {
-      "navigate to itself when user has no data for the page" in {
-        navigator.nextPage(
-          DescribeTheRestrictionsPage,
-          NormalMode,
-          EmptyUserAnswers
-        ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode)
-      }
-
-      "navigate to IsTheSaleSubjectToConditions when answers has data" in {
-        navigator.nextPage(
-          DescribeTheRestrictionsPage,
-          NormalMode,
-          userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions")
-        ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
-      }
-    }
-
-    "isTheSaleSubjectToConditions page must" - {
-      "navigate to describeTheConditions when True" in {
-        navigator.nextPage(
-          IsTheSaleSubjectToConditionsPage,
-          NormalMode,
-          userAnswersWith(IsTheSaleSubjectToConditionsPage, true)
-        ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
-      }
-
-      "navigate to nameOfGoods when False" in {
-        navigator.nextPage(
-          IsTheSaleSubjectToConditionsPage,
-          NormalMode,
-          userAnswersWith(IsTheSaleSubjectToConditionsPage, false)
-        ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
-      }
-
-      "navigate to itself when user has no data for the page" in {
-        navigator.nextPage(
-          IsTheSaleSubjectToConditionsPage,
-          NormalMode,
-          EmptyUserAnswers
-        ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
-      }
-    }
-
-    "describeTheConditions page must" - {
-      "navigate to itself when user has no data for the page" in {
-        navigator.nextPage(
-          DescribeTheConditionsPage,
-          NormalMode,
-          EmptyUserAnswers
-        ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
-      }
-
-      "navigate to nameOfGoods when answers has data" in {
-        navigator.nextPage(
-          DescribeTheConditionsPage,
-          NormalMode,
-          userAnswersWith(DescribeTheConditionsPage, "Some conditions")
-        ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
-      }
-    }
-
-    "whyIdenticalGoods Page must" - {
-      "navigate to HaveYouUsedMethodOneInPastPage" in {
-        val userAnswers = userAnswersWith(WhyIdenticalGoodsPage, "banana")
-        navigator.nextPage(
-          WhyIdenticalGoodsPage,
-          NormalMode,
-          userAnswers
-        ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(mode = NormalMode)
-      }
-
-      "navigate to itself when user has no data for the page" in {
-        navigator.nextPage(
-          WhyIdenticalGoodsPage,
-          NormalMode,
-          EmptyUserAnswers
-        ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = NormalMode)
-      }
-    }
-
-    "whyComputedValue Page must" - {
-      "navigate go to explainReasonComputedValuePage" in {
-        val userAnswers = userAnswersWith(WhyComputedValuePage, "banana")
-        navigator.nextPage(
-          WhyComputedValuePage,
-          NormalMode,
-          userAnswers
-        ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(mode = NormalMode)
-      }
-    }
   }
-
-  "in Check mode" - {
-
-    "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
-
-      case object UnknownPage extends Page
-      navigator.nextPage(
-        UnknownPage,
-        CheckMode,
-        EmptyUserAnswers
-      ) mustBe routes.CheckYourAnswersController.onPageLoad
-    }
-  }
-
 }

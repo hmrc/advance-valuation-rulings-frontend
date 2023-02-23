@@ -161,3 +161,19 @@ POST       /changeIsTheSaleSubjectToConditions                  controllers.IsTh
 # upload file notification callback
 + nocsrf
 POST       /upscan-callback         controllers.fileupload.UploadCallbackController.callback
+
+GET        /describeTheLegalChallenges                        controllers.DescribeTheLegalChallengesController.onPageLoad(mode: Mode = NormalMode)
+POST       /describeTheLegalChallenges                        controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDescribeTheLegalChallenges                  controllers.DescribeTheLegalChallengesController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDescribeTheLegalChallenges                  controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = CheckMode)
+
+GET        /descriptionOfGoods                        controllers.DescriptionOfGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /descriptionOfGoods                        controllers.DescriptionOfGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDescriptionOfGoods                  controllers.DescriptionOfGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDescriptionOfGoods                  controllers.DescriptionOfGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /haveTheGoodsBeenSubjectToLegalChallenges                        controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(mode: Mode = NormalMode)
+POST       /haveTheGoodsBeenSubjectToLegalChallenges                        controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHaveTheGoodsBeenSubjectToLegalChallenges                  controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHaveTheGoodsBeenSubjectToLegalChallenges                  controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode: Mode = CheckMode)
+

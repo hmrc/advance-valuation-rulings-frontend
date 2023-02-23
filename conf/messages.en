@@ -407,3 +407,23 @@ describeTheConditions.error.required = Enter more detail
 describeTheConditions.error.length = Maximum allowed characters is 8168
 describeTheConditions.change.hidden = DescribeTheConditions
 describeTheConditions.paragraph.1 = Giving a detailed description of any conditions or circumstances helps us process your application as quickly as possible.
+
+describeTheLegalChallenges.title = describeTheLegalChallenges
+describeTheLegalChallenges.heading = describeTheLegalChallenges
+describeTheLegalChallenges.checkYourAnswersLabel = describeTheLegalChallenges
+describeTheLegalChallenges.error.required = Enter describeTheLegalChallenges
+describeTheLegalChallenges.error.length = DescribeTheLegalChallenges must be 8167 characters or less
+describeTheLegalChallenges.change.hidden = DescribeTheLegalChallenges
+
+descriptionOfGoods.title = descriptionOfGoods
+descriptionOfGoods.heading = descriptionOfGoods
+descriptionOfGoods.checkYourAnswersLabel = descriptionOfGoods
+descriptionOfGoods.error.required = Enter descriptionOfGoods
+descriptionOfGoods.error.length = DescriptionOfGoods must be 100 characters or less
+descriptionOfGoods.change.hidden = DescriptionOfGoods
+
+haveTheGoodsBeenSubjectToLegalChallenges.title = haveTheGoodsBeenSubjectToLegalChallenges
+haveTheGoodsBeenSubjectToLegalChallenges.heading = haveTheGoodsBeenSubjectToLegalChallenges
+haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = haveTheGoodsBeenSubjectToLegalChallenges
+haveTheGoodsBeenSubjectToLegalChallenges.error.required = Select yes if haveTheGoodsBeenSubjectToLegalChallenges
+haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = HaveTheGoodsBeenSubjectToLegalChallenges
