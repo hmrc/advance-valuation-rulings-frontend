@@ -38,49 +38,58 @@ class DetailsSummarySpec extends SpecBase with Generators {
     val rows                    = summary.rows.rows
     val keys                    = rows.map(_.key)
 
-    "create details rows for all relavent pages" in {
-      rows.length mustBe 8
+    "when given empty user answers" - {
+      val summary: DetailsSummary = DetailsSummary(emptyUserAnswers)
+      val rows                    = summary.rows.rows
+      val keys                    = rows.map(_.key)
+
+      "must create no rows" in {
+        rows mustBe empty
+      }
     }
 
-    "does not include empty rows" in {
-      DetailsSummary(emptyUserAnswers).rows.rows mustBe empty
+    "when the user has answers for all relevant pages" - {
+      "create rows for each pages" in {
+        rows.length mustBe 8
+      }
+
+      "create row for description of goods" in {
+        val key: Key = "descriptionOfGoods.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for has commidity code" in {
+        val key: Key = "hasCommodityCode.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for commodityCode code" in {
+        val key: Key = "commodityCode.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for has legal challenges" in {
+        val expected = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
+        val key: Key = expected
+        keys must contain(key)
+      }
+
+      "create row for legal challenges" in {
+        val key: Key = "describeTheLegalChallenges.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for has confidential information" in {
+        val key: Key = "hasConfidentialInformation.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for confidential information" in {
+        val key: Key = "confidentialInformation.checkYourAnswersLabel"
+        keys must contain(key)
+      }
     }
 
-    "create row for description of goods" in {
-      val key: Key = "descriptionOfGoods.checkYourAnswersLabel"
-      keys must contain(key)
-    }
-
-    "create row for has commidity code" in {
-      val key: Key = "hasCommodityCode.checkYourAnswersLabel"
-      keys must contain(key)
-    }
-
-    "create row for commodityCode code" in {
-      val key: Key = "commodityCode.checkYourAnswersLabel"
-      keys must contain(key)
-    }
-
-    "create row for has legal challenges" in {
-      val expected = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
-      val key: Key = expected
-      keys must contain(key)
-    }
-
-    "create row for legal challenges" in {
-      val key: Key = "describeTheLegalChallenges.checkYourAnswersLabel"
-      keys must contain(key)
-    }
-
-    "create row for has confidential information" in {
-      val key: Key = "hasConfidentialInformation.checkYourAnswersLabel"
-      keys must contain(key)
-    }
-
-    "create row for confidential information" in {
-      val key: Key = "confidentialInformation.checkYourAnswersLabel"
-      keys must contain(key)
-    }
   }
 }
 

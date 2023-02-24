@@ -30,50 +30,59 @@ import viewmodels.implicits._
 class ApplicantSummarySpec extends SpecBase with Generators {
   import ApplicantSummarySpec._
 
-  "ApplicantSummary should" - {
+  "ApplicantSummary" - {
 
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
-    val summary: ApplicantSummary = ApplicantSummary(allAnswersInput.success.value)
-    val rows                      = summary.rows.rows
-    val keys                      = rows.map(_.key)
+    "when given empty user answers" - {
+      val summary: ApplicantSummary = ApplicantSummary(emptyUserAnswers)
+      val rows                      = summary.rows.rows
+      val keys                      = rows.map(_.key)
 
-    "create details rows for all relavent pages" in {
-      rows.length mustBe 6
+      "must create no rows" in {
+        rows mustBe empty
+      }
     }
 
-    "does not include empty rows" in {
-      ApplicantSummary(emptyUserAnswers).rows.rows mustBe empty
-    }
+    "when the user has answers for all relevant pages" - {
 
-    "create details row for EORI number" in {
-      val key: Key = "checkYourAnswers.eori.number.label"
-      keys must contain(key)
-    }
+      val summary: ApplicantSummary = ApplicantSummary(allAnswersInput.success.value)
+      val rows                      = summary.rows.rows
+      val keys                      = rows.map(_.key)
 
-    "create details row for EORI registered name" in {
-      val key: Key = "checkYourAnswers.eori.name.label"
-      keys must contain(key)
-    }
+      "must create rows for each page" in {
+        rows.length mustBe 6
+      }
 
-    "create details row for EORI registered address" in {
-      val key: Key = "checkYourAnswers.eori.address.label"
-      keys must contain(key)
-    }
+      "create row for EORI number" in {
+        val key: Key = "checkYourAnswers.eori.number.label"
+        keys must contain(key)
+      }
 
-    "create details row for applicant name" in {
-      val key: Key = "checkYourAnswers.applicant.name.label"
-      keys must contain(key)
-    }
+      "create row for EORI registered name" in {
+        val key: Key = "checkYourAnswers.eori.name.label"
+        keys must contain(key)
+      }
 
-    "create details for for applicant email" in {
-      val key: Key = "checkYourAnswers.applicant.email.label"
-      keys must contain(key)
-    }
+      "create row for EORI registered address" in {
+        val key: Key = "checkYourAnswers.eori.address.label"
+        keys must contain(key)
+      }
 
-    "create details for for applicant phone" in {
-      val key: Key = "checkYourAnswers.applicant.phone.label"
-      keys must contain(key)
+      "create row for applicant name" in {
+        val key: Key = "checkYourAnswers.applicant.name.label"
+        keys must contain(key)
+      }
+
+      "create row for applicant email" in {
+        val key: Key = "checkYourAnswers.applicant.email.label"
+        keys must contain(key)
+      }
+
+      "create row for applicant phone" in {
+        val key: Key = "checkYourAnswers.applicant.phone.label"
+        keys must contain(key)
+      }
     }
   }
 }

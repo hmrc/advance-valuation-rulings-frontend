@@ -36,42 +36,51 @@ class MethodOneSummarySpec extends SpecBase {
     val summary: MethodOneSummary = MethodOneSummary(allAnswersInput.success.value)
     val rows                      = summary.rows.rows
     val keys                      = rows.map(_.key)
-    "create details rows for all relavent pages" in {
-      rows.length mustBe 6
+
+    "when given empty user answers" - {
+      val summary: MethodOneSummary = MethodOneSummary(emptyUserAnswers)
+      val rows                      = summary.rows.rows
+      val keys                      = rows.map(_.key)
+
+      "must create no rows" in {
+        rows mustBe empty
+      }
     }
 
-    "does not include empty rows" in {
-      MethodOneSummary(emptyUserAnswers).rows.rows mustBe empty
-    }
+    "when the user has answers for all relevant pages" - {
+      "create details rows for all relavent pages" in {
+        rows.length mustBe 6
+      }
 
-    "create details row is there a sale involved" in {
-      val key: Key = "isThereASaleInvolved.checkYourAnswersLabel"
-      keys must contain(key)
-    }
+      "create row for there a sale involved" in {
+        val key: Key = "isThereASaleInvolved.checkYourAnswersLabel"
+        keys must contain(key)
+      }
 
-    "create details row is sale between related parties" in {
-      val key: Key = "isSaleBetweenRelatedParties.checkYourAnswersLabel"
-      keys must contain(key)
-    }
+      "create row for sale between related parties" in {
+        val key: Key = "isSaleBetweenRelatedParties.checkYourAnswersLabel"
+        keys must contain(key)
+      }
 
-    "create details row for are there any restrictions on the goods" in {
-      val key: Key = "areThereRestrictionsOnTheGoods.checkYourAnswersLabel"
-      keys must contain(key)
-    }
+      "create row for are there any restrictions on the goods" in {
+        val key: Key = "areThereRestrictionsOnTheGoods.checkYourAnswersLabel"
+        keys must contain(key)
+      }
 
-    "create details row for describe the restrictions" in {
-      val key: Key = "describeTheRestrictions.checkYourAnswersLabel"
-      keys must contain(key)
-    }
+      "create row for describe the restrictions" in {
+        val key: Key = "describeTheRestrictions.checkYourAnswersLabel"
+        keys must contain(key)
+      }
 
-    "create details row for is the sale subject to conditions" in {
-      val key: Key = "isTheSaleSubjectToConditions.checkYourAnswersLabel"
-      keys must contain(key)
-    }
+      "create row for is the sale subject to conditions" in {
+        val key: Key = "isTheSaleSubjectToConditions.checkYourAnswersLabel"
+        keys must contain(key)
+      }
 
-    "create details row for describe the conditions" in {
-      val key: Key = "describeTheConditions.checkYourAnswersLabel"
-      keys must contain(key)
+      "create row for describe the conditions" in {
+        val key: Key = "describeTheConditions.checkYourAnswersLabel"
+        keys must contain(key)
+      }
     }
   }
 }
