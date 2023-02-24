@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import viewmodels.checkAnswers.summary._
 
 
 @this(
@@ -29,7 +30,7 @@
     formHelper: FormWithCSRF,
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -37,9 +38,12 @@
 
     @subheading(messages("checkYourAnswers.applicant.heading"))
     
-    @govukSummaryList(list)
+    @govukSummaryList(applicationSummary.applicant.rows)
     
     @subheading(messages("checkYourAnswers.goods.heading"))
+
+    @govukSummaryList(applicationSummary.methodOne.rows)
+    @govukSummaryList(applicationSummary.details.rows)
 
     @subheading(messages("checkYourAnswers.declaration.heading"))
 
