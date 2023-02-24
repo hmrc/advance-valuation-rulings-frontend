@@ -18,7 +18,6 @@ package connectors
 
 import scala.concurrent.{ExecutionContext, Future}
 
-//import play.api.Logger
 import play.api.http.Status
 import play.api.mvc.Request
 import uk.gov.hmrc.http.{HttpClient, HttpException, UpstreamErrorResponse}
