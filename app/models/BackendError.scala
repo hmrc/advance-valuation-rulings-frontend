@@ -23,4 +23,3 @@ final case class BackendError(code: Int, message: String)
 object BackendError {
   implicit val format: OFormat[BackendError] = Json.format[BackendError]
 }
-
