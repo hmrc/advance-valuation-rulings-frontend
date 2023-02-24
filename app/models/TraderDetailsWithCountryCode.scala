@@ -18,15 +18,23 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class TraderDetails(
-  eori: String,
-  name: String,
-  streetAndNumber: String,
-  city: String,
-  country: Option[String] = None,
-  postalCode: Option[String] = None
-)
+final case class TraderDetailsWithCountryCode(
+  EORINo: String,
+  CDSFullName: String,
+  CDSEstablishmentAddress: CDSEstablishmentAddress
+) {
+  def traderDetails: TraderDetails =
+    TraderDetails(
+      EORINo,
+      CDSFullName,
+      CDSEstablishmentAddress.streetAndNumber,
+      CDSEstablishmentAddress.city,
+      CountrySelectOptions.countryCodeToCountry(CDSEstablishmentAddress.countryCode),
+      CDSEstablishmentAddress.postalCode
+    )
+}
 
-object TraderDetails {
-  implicit val format: OFormat[TraderDetails] = Json.format[TraderDetails]
+object TraderDetailsWithCountryCode {
+  implicit val format: OFormat[TraderDetailsWithCountryCode] =
+    Json.format[TraderDetailsWithCountryCode]
 }

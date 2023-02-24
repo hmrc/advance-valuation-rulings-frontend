@@ -321,11 +321,11 @@ class Navigator @Inject() () {
     }
 
   private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(CheckRegisteredDetailsPage) match {
-      case None                             => CheckRegisteredDetailsController.onPageLoad(models.NormalMode)
-      case Some(CheckRegisteredDetails.Yes) =>
+    userAnswers.get(CheckRegisteredDetailsPage).map(_.value) match {
+      case None        => CheckRegisteredDetailsController.onPageLoad(models.NormalMode)
+      case Some(true)  =>
         ApplicationContactDetailsController.onPageLoad(models.NormalMode)
-      case Some(CheckRegisteredDetails.No)  => EORIBeUpToDateController.onPageLoad()
+      case Some(false) => EORIBeUpToDateController.onPageLoad()
     }
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =

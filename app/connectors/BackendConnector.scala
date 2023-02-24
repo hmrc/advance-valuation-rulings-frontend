@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 
 import com.google.inject.Inject
-import models.{BackendError, TraderDetails}
+import models.{BackendError, TraderDetailsWithCountryCode}
 import models.requests.TraderDetailsRequest
 
 class BackendConnector @Inject() (
@@ -36,16 +36,16 @@ class BackendConnector @Inject() (
   ec: ExecutionContext
 ) extends FrontendHeaderCarrierProvider {
 
-  type Result = Either[BackendError, TraderDetails]
+  type Result = Either[BackendError, TraderDetailsWithCountryCode]
 
   private val backendBaseUrl = servicesConfig.baseUrl("advance-valuation-rulings-backend")
   private val backendURL     = s"$backendBaseUrl/advance-valuation-rulings"
 
   def getTraderDetails(
     traderDetailsRequest: TraderDetailsRequest
-  )(implicit request: Request[_]): Future[Either[BackendError, TraderDetails]] =
+  )(implicit request: Request[_]): Future[Either[BackendError, TraderDetailsWithCountryCode]] =
     httpClient
-      .POST[TraderDetailsRequest, TraderDetails](
+      .POST[TraderDetailsRequest, TraderDetailsWithCountryCode](
         s"$backendURL/trader-details",
         traderDetailsRequest
       )

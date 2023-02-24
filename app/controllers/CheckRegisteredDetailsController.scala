@@ -20,13 +20,17 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
-import models.Mode
+import models.{CheckRegisteredDetails, Mode}
+import models.requests.TraderDetailsRequest
 import navigation.Navigator
 import pages.CheckRegisteredDetailsPage
 import repositories.SessionRepository
@@ -41,22 +45,28 @@ class CheckRegisteredDetailsController @Inject() (
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckRegisteredDetailsView
+  view: CheckRegisteredDetailsView,
+  backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[CheckRegisteredDetails] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(CheckRegisteredDetailsPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
-  }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        request.userAnswers.get(CheckRegisteredDetailsPage) match {
+          case Some(value) => Future.successful(Ok(view(form.fill(value), mode)))
+          case None        =>
+            backendConnector.getTraderDetails(TraderDetailsRequest("test Ack", "AB1234567")).map { // TODO: Replace with actual values
+              case Right(traderDetailsWithCountryCode) =>
+                val formFields = Json.toJson(traderDetailsWithCountryCode.traderDetails)
+                Ok(view(form.bind(formFields).discardingErrors, mode))
+              case Left(backendError)                  => Redirect(routes.JourneyRecoveryController.onPageLoad())
+            }
+        }
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {

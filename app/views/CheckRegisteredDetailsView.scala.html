@@ -34,24 +34,28 @@
 @layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
 
     @caption(messages("checkRegisteredDetails.caption"))
-    @heading(messages("checkRegisteredDetails.heading", "GB123456789000"))
+    @heading(messages("checkRegisteredDetails.heading", form("eori").value.getOrElse("N/A")))
 
     @warning(content=Html(messages("checkRegisteredDetails.warning")))
 
     @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @paragraph(content=Html("Smart case Ltd<br>1 Somewhere<br>London<br>NW11<br>United Kingdom"))
+        @paragraph(content=Html(
+            form("name").value.getOrElse("N/A") + "<br>" +
+            form("streetAndNumber").value.getOrElse("N/A") + "<br>" +
+            form("city").value.getOrElse("N/A") + "<br>" +
+            form("postalCode").value.map(_ + "<br>").getOrElse("N/A <br>") +
+            form("country").value.getOrElse("N/A")
+        ))
 
         @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(messages("checkRegisteredDetails.subheading"))
-                    .asPageHeading(size = viewmodels.LegendSize.Medium),
-                items  = CheckRegisteredDetails.options
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = Legend()
             )
         )
 
