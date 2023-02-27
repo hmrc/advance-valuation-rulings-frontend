@@ -15,13 +15,18 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukTextarea: GovukTextarea,
+    govukButton: GovukButton,
+    cancelLink: CancelApplicationLink,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -34,16 +39,23 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
+        @caption(messages("describeTheLegalChallenges.caption"))
+        @heading(messages("describeTheLegalChallenges.heading"))
+
+        @paragraph(Html(messages("describeTheLegalChallenges.para")))
+
+        @govukTextarea(
+            TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("describeTheLegalChallenges.heading")).asPageHeading()
-            )
-            .withWidth(Full)
+                label = Label(None)
+                )
+                .withRows(15)
+                .withAttribute("maxlength","8167")
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }
