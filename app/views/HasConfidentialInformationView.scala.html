@@ -25,24 +25,28 @@
     caption: Caption,
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    insetPara: InsetPara
 )
 
 @(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("hasConfidentialInformation.title", nameOfGoods))) {
+@layout(pageTitle = title(form, messages("hasConfidentialInformation.title"))) {
 
-    @caption(messages("hasConfidentialInformation.caption"))
-    @heading(messages("hasConfidentialInformation.heading", nameOfGoods))
 
-    @paragraph(Html(messages("hasConfidentialInformation.paragraph.1")))
-    @paragraph(Html(messages("hasConfidentialInformation.paragraph.2")))
 
     @formHelper(action = routes.HasConfidentialInformationController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+
+        @caption(messages("hasConfidentialInformation.caption"))
+        @heading(messages("hasConfidentialInformation.heading"))
+
+        @paragraph(Html(messages("hasConfidentialInformation.paragraph.1")))
+        @paragraph(Html(messages("hasConfidentialInformation.paragraph.2")))
+        @insetPara(Html(messages("hasConfidentialInformation.paragraph.inset")))
 
         @govukRadios(
             RadiosViewModel.yesNo(

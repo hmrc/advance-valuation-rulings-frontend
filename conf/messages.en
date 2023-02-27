@@ -182,13 +182,14 @@ confidentialInformation.paragraph.3 = This may include:
 confidentialInformation.bulletPoint.1 = model numbers
 confidentialInformation.bulletPoint.2 = patent information
 
-hasConfidentialInformation.title = Do you want to add any confidential information about the {0}?
-hasConfidentialInformation.heading = Do you want to add any confidential information about the {0}?
+hasConfidentialInformation.title = Do you want to add any confidential information about the goods?
+hasConfidentialInformation.heading = Do you want to add any confidential information about the goods?
 hasConfidentialInformation.caption = About the goods
-hasConfidentialInformation.paragraph.1 = You could mark the file as confidential if it includes business-sensitive information, for example model numbers or patent details.
-hasConfidentialInformation.paragraph.2 = Files marked as confidential will not appear on the Advance Valuation Rulings website.
+hasConfidentialInformation.paragraph.1 = This could include any information about contractual or sensitive commercial arrangements.
+hasConfidentialInformation.paragraph.2 = We will not publish confidential information.
+hasConfidentialInformation.paragraph.inset = You will be able to upload files later in the application.
 hasConfidentialInformation.checkYourAnswersLabel = Do you want to add any confidential information about the goods?
-hasConfidentialInformation.error.required = Select Yes if you like to provide any confidential information
+hasConfidentialInformation.error.required = Select yes if you want to add any confidential information about the goods
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
 
 importingGoods.title = This service is designed for those who are importing goods into Great Britain
