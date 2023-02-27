@@ -147,6 +147,30 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "ExplainWhyYouHaveNotSelectedMethodOneToThree page" - {
+        "must navigate to ExplainWhyYouChoseMethodFour Page" in {
+          val userAnswers =
+            userAnswersWith(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "explain method four")
+          navigator.nextPage(
+            ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode)
+        }
+      }
+
+      "ExplainWhyYouChoseMethodFour page" - {
+        "must navigate to DescriptionOfGoods Page" in {
+          val userAnswers =
+            userAnswersWith(ExplainWhyYouChoseMethodFourPage, "explain method four")
+          navigator.nextPage(
+            ExplainWhyYouChoseMethodFourPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+        }
+      }
+
       "ImportGoodsPage must" - {
 
         "navigate to ContactPage page when True" in {
@@ -439,14 +463,16 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode = NormalMode)
         }
 
-        "DescriptionOfGoods page when method 4 is selected" in {
+        "ExplainWhyYouHaveNotSelectedMethodOneToThree page when method 4 is selected" in {
           val userAnswers =
             userAnswersWith(ValuationMethodPage, ValuationMethod.Method4)
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode =
+            NormalMode
+          )
         }
 
         "WhyComputedValue page when method 5 is selected" in {

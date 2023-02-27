@@ -194,3 +194,13 @@ POST       /changeHaveTheGoodsBeenSubjectToLegalChallenges                  cont
 
 
 GET        /applicationComplete                       controllers.ApplicationCompleteController.onPageLoad()
+
+GET        /explainWhyYouChoseMethodFour                        controllers.ExplainWhyYouChoseMethodFourController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainWhyYouChoseMethodFour                        controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainWhyYouChoseMethodFour                  controllers.ExplainWhyYouChoseMethodFourController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainWhyYouChoseMethodFour                  controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = CheckMode)
+
+GET        /explainWhyYouHaveNotSelectedMethodOneToThree                        controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainWhyYouHaveNotSelectedMethodOneToThree                        controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainWhyYouHaveNotSelectedMethodOneToThree                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainWhyYouHaveNotSelectedMethodOneToThree                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = CheckMode)
