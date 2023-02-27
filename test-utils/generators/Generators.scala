@@ -84,7 +84,7 @@ trait Generators
     arbitrary[Int] suchThat (x => x < min || x > max)
 
   def nonBooleans: Gen[String] =
-    arbitrary[String]
+    alphaLowerStr
       .suchThat(_.nonEmpty)
       .suchThat(_ != "true")
       .suchThat(_ != "false")
