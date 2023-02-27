@@ -23,14 +23,15 @@ final case class TraderDetailsWithCountryCode(
   CDSFullName: String,
   CDSEstablishmentAddress: CDSEstablishmentAddress
 ) {
-  def traderDetails: TraderDetails =
-    TraderDetails(
-      EORINo,
-      CDSFullName,
-      CDSEstablishmentAddress.streetAndNumber,
-      CDSEstablishmentAddress.city,
-      CountrySelectOptions.countryCodeToCountry(CDSEstablishmentAddress.countryCode),
-      CDSEstablishmentAddress.postalCode
+  def details: CheckRegisteredDetails =
+    CheckRegisteredDetails(
+      value = false,
+      eori = EORINo,
+      name = CDSFullName,
+      streetAndNumber = CDSEstablishmentAddress.streetAndNumber,
+      city = CDSEstablishmentAddress.city,
+      country = CountrySelectOptions.countryCodeToCountry(CDSEstablishmentAddress.countryCode),
+      postalCode = CDSEstablishmentAddress.postalCode
     )
 }
 

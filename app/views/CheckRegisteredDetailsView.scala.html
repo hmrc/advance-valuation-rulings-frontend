@@ -29,12 +29,12 @@
     cancelApplicationLink: CancelApplicationLink
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
 
     @caption(messages("checkRegisteredDetails.caption"))
-    @heading(messages("checkRegisteredDetails.heading", form("eori").value.getOrElse("N/A")))
+    @heading(messages("checkRegisteredDetails.heading", registeredDetails.eori))
 
     @warning(content=Html(messages("checkRegisteredDetails.warning")))
 
@@ -45,11 +45,11 @@
         }
 
         @paragraph(content=Html(
-            form("name").value.getOrElse("N/A") + "<br>" +
-            form("streetAndNumber").value.getOrElse("N/A") + "<br>" +
-            form("city").value.getOrElse("N/A") + "<br>" +
-            form("postalCode").value.map(_ + "<br>").getOrElse("N/A <br>") +
-            form("country").value.getOrElse("N/A")
+            registeredDetails.name + "<br>" +
+            registeredDetails.streetAndNumber + "<br>" +
+            registeredDetails.city + "<br>" +
+            registeredDetails.postalCode.map(_ + "<br>").getOrElse("") +
+            registeredDetails.country
         ))
 
         @govukRadios(

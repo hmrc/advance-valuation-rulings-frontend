@@ -321,7 +321,7 @@ class Navigator @Inject() () {
     }
 
   private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(CheckRegisteredDetailsPage).map(_.value) match {
+    userAnswers.get(CheckRegisteredDetailsPage) match {
       case None        => CheckRegisteredDetailsController.onPageLoad(models.NormalMode)
       case Some(true)  =>
         ApplicationContactDetailsController.onPageLoad(models.NormalMode)

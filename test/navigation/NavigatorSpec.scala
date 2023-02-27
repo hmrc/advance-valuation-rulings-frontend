@@ -307,7 +307,7 @@ class NavigatorSpec extends SpecBase {
 
         "navigate to ApplicationContactDetailsPage when Yes" in {
           val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, CheckRegisteredDetails.Yes)
+            userAnswersWith(CheckRegisteredDetailsPage, value = true)
           navigator.nextPage(
             CheckRegisteredDetailsPage,
             NormalMode,
@@ -317,7 +317,7 @@ class NavigatorSpec extends SpecBase {
 
         "and navigate to EORIBeUpToDatePage when No" in {
           val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, CheckRegisteredDetails.No)
+            userAnswersWith(CheckRegisteredDetailsPage, value = false)
           navigator.nextPage(
             CheckRegisteredDetailsPage,
             NormalMode,
