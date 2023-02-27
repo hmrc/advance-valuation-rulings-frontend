@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.ExplainWhyYouChoseMethodFourFormProvider
 import models.{NormalMode, UserAnswers}
@@ -24,23 +31,18 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ExplainWhyYouChoseMethodFourPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.ExplainWhyYouChoseMethodFourView
-
-import scala.concurrent.Future
 
 class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ExplainWhyYouChoseMethodFourFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val explainWhyYouChoseMethodFourRoute = routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode).url
+  lazy val explainWhyYouChoseMethodFourRoute =
+    routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode).url
 
   "ExplainWhyYouChoseMethodFour Controller" - {
 
@@ -56,13 +58,17 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
         val view = application.injector.instanceOf[ExplainWhyYouChoseMethodFourView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ExplainWhyYouChoseMethodFourPage, "answer").success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(ExplainWhyYouChoseMethodFourPage, "answer").success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +80,10 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +129,10 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

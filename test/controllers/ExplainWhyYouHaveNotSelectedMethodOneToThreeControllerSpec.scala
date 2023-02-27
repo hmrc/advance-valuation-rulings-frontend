@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider
 import models.{NormalMode, UserAnswers}
@@ -24,23 +31,20 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ExplainWhyYouHaveNotSelectedMethodOneToThreePage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.ExplainWhyYouHaveNotSelectedMethodOneToThreeView
 
-import scala.concurrent.Future
-
-class ExplainWhyYouHaveNotSelectedMethodOneToThreeControllerSpec extends SpecBase with MockitoSugar {
+class ExplainWhyYouHaveNotSelectedMethodOneToThreeControllerSpec
+    extends SpecBase
+    with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val explainWhyYouHaveNotSelectedMethodOneToThreeRoute = routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(NormalMode).url
+  lazy val explainWhyYouHaveNotSelectedMethodOneToThreeRoute =
+    routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(NormalMode).url
 
   "ExplainWhyYouHaveNotSelectedMethodOneToThree Controller" - {
 
@@ -56,13 +60,19 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeControllerSpec extends SpecBas
         val view = application.injector.instanceOf[ExplainWhyYouHaveNotSelectedMethodOneToThreeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "answer").success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "answer")
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +84,10 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeControllerSpec extends SpecBas
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +133,10 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeControllerSpec extends SpecBas
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

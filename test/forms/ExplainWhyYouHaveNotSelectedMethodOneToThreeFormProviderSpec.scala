@@ -16,14 +16,15 @@
 
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "explainWhyYouHaveNotSelectedMethodOneToThree.error.required"
-  val lengthKey = "explainWhyYouHaveNotSelectedMethodOneToThree.error.length"
-  val maxLength = 8167
+  val lengthKey   = "explainWhyYouHaveNotSelectedMethodOneToThree.error.length"
+  val maxLength   = 8167
 
   val form = new ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider()()
 

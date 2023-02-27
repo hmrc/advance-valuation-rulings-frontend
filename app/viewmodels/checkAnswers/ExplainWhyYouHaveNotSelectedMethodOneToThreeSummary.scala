@@ -16,27 +16,34 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.ExplainWhyYouHaveNotSelectedMethodOneToThreePage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, UserAnswers}
+import pages.ExplainWhyYouHaveNotSelectedMethodOneToThreePage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ExplainWhyYouHaveNotSelectedMethodOneToThreeSummary  {
+object ExplainWhyYouHaveNotSelectedMethodOneToThreeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage).map {
       answer =>
-
         SummaryListRowViewModel(
-          key     = "explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlFormat.escape(answer).toString),
+          key = "explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden"))
+            ActionItemViewModel(
+              "site.change",
+              routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController
+                .onPageLoad(CheckMode)
+                .url
+            )
+              .withVisuallyHiddenText(
+                messages("explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden")
+              )
           )
         )
     }
