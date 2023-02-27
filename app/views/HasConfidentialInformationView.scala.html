@@ -33,8 +33,6 @@
 
 @layout(pageTitle = title(form, messages("hasConfidentialInformation.title"))) {
 
-
-
     @formHelper(action = routes.HasConfidentialInformationController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
