@@ -174,7 +174,7 @@ confidentialInformation.heading = Describe any confidential information you woul
 confidentialInformation.caption = About the goods
 confidentialInformation.checkYourAnswersLabel = Describe any confidential information you would like to add about the goods
 confidentialInformation.error.required = Enter a description of the confidential information you would like to add about the goods
-confidentialInformation.error.length = Confidential information  must be 8168 characters or less
+confidentialInformation.error.length = Maximum allowed characters is 8168
 confidentialInformation.change.hidden = ConfidentialInformation
 confidentialInformation.paragraph.1 = Confidential information can include:
 confidentialInformation.paragraph.2 = We will not publish confidential information.
@@ -448,11 +448,13 @@ willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = willYouCompareGoodsT
 willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 willYouCompareGoodsToIdenticalGoods.change.hidden = WillYouCompareGoodsToIdenticalGoods
 
-describeTheLegalChallenges.title = describeTheLegalChallenges
-describeTheLegalChallenges.heading = describeTheLegalChallenges
-describeTheLegalChallenges.checkYourAnswersLabel = describeTheLegalChallenges
-describeTheLegalChallenges.error.required = Enter describeTheLegalChallenges
-describeTheLegalChallenges.error.length = DescribeTheLegalChallenges must be 8167 characters or less
+describeTheLegalChallenges.title = Describe the legal challenges relating to the goods
+describeTheLegalChallenges.heading = Describe the legal challenges relating to the goods
+describeTheLegalChallenges.caption = About the goods
+describeTheLegalChallenges.para = Giving a detailed description of legal challenges helps us process your application as quickly as possible.
+describeTheLegalChallenges.checkYourAnswersLabel = Describe the legal challenges relating to the goods
+describeTheLegalChallenges.error.required = Enter a description of the legal challenges relating to the goods
+describeTheLegalChallenges.error.length = Maximum allowed characters is 8168
 describeTheLegalChallenges.change.hidden = DescribeTheLegalChallenges
 
 descriptionOfGoods.title = descriptionOfGoods
