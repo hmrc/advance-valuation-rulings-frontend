@@ -19,6 +19,7 @@ object AppDependencies {
   val ScalaCheckVersion        = "1.15.4"
   val HmrcMongoTestPlayVersion = "0.74.0"
   val FlexmarkVersion          = "0.62.2"
+  val ScoupVersion             = "1.0.0"
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
@@ -41,7 +42,8 @@ object AppDependencies {
     "org.scalacheck"         %% "scalacheck"              % ScalaCheckVersion,
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
     "uk.gov.hmrc"            %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
-    "com.vladsch.flexmark"    % "flexmark-all"            % FlexmarkVersion
+    "com.vladsch.flexmark"    % "flexmark-all"            % FlexmarkVersion,
+    "com.themillhousegroup" %% "scoup"                   % ScoupVersion
   ).map(_ % "test, it")
 
   def apply(): Seq[ModuleID] = compile ++ test

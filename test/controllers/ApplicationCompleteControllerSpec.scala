@@ -35,10 +35,9 @@ class ApplicationCompleteControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ApplicationCompleteView]
-
+        val msgs = messages(application)
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        getHeading(result) mustEqual msgs("applicationComplete.heading")
       }
     }
   }

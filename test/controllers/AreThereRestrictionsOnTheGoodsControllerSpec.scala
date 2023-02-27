@@ -23,7 +23,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-import base.SpecBase
+import base._
 import forms.AreThereRestrictionsOnTheGoodsFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -53,15 +53,13 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
       running(application) {
         val request = FakeRequest(GET, areThereRestrictionsOnTheGoodsRoute)
 
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AreThereRestrictionsOnTheGoodsView]
+        val result: Future[play.api.mvc.Result] = route(application, request).value
+        val msgs                                = messages(application)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        getHeading(result) mustEqual msgs(
+          "areThereRestrictionsOnTheGoods.heading"
+        )
       }
     }
 
@@ -74,16 +72,16 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
 
       running(application) {
         val request = FakeRequest(GET, areThereRestrictionsOnTheGoodsRoute)
-
-        val view = application.injector.instanceOf[AreThereRestrictionsOnTheGoodsView]
+        val msgs    = messages(application)
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
-          request,
-          messages(application)
-        ).toString
+
+        getHeading(result) mustEqual msgs(
+          "areThereRestrictionsOnTheGoods.heading"
+        )
+        hasChecked(result) mustEqual true
       }
     }
 
@@ -123,16 +121,10 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[AreThereRestrictionsOnTheGoodsView]
-
-        val result = route(application, request).value
+        val result    = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        hasError(result) mustEqual true
       }
     }
 

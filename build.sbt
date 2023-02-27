@@ -60,8 +60,6 @@ lazy val root = (project in file("."))
       "-Wunused:patvars", // Warn if a variable bound in a pattern is unused.
       "-Wvalue-discard", // Warn when non-Unit expression results are unused.
 
-      "-Ybackend-parallelism", // Enable paralellisation
-      "8",
       "-Ycache-plugin-class-loader:last-modified", // Enables caching of classloaders for compiler plugins
       "-Ycache-macro-class-loader:last-modified", // and macro definitions. This can lead to performance improvements.
     ),

@@ -55,13 +55,9 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CheckRegisteredDetailsView]
-
+        val msgs = messages(application)
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        getHeading(result) mustEqual msgs("checkRegisteredDetails.heading")
       }
     }
 

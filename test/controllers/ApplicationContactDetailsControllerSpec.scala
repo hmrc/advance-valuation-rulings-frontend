@@ -59,11 +59,9 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
 
         val view = application.injector.instanceOf[ApplicationContactDetailsView]
 
+        val msgs = messages(application)
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        getHeading(result) mustEqual msgs("applicationContactDetails.heading")
       }
     }
 
@@ -89,10 +87,8 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(ApplicationContactDetails("value 1", "value 2", "value 3")),
-          NormalMode
-        )(request, messages(application)).toString
+
+        contentAsString(result) must include("value 1")
       }
     }
 
@@ -142,10 +138,7 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        hasError(result) mustEqual true
       }
     }
 

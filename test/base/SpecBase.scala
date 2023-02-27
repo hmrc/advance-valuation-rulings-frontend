@@ -16,12 +16,17 @@
 
 package base
 
+import scala.concurrent.Future
+
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+import play.api.test.Helpers.contentAsString
 
+import akka.util.Timeout
+import com.themillhousegroup.scoup.Scoup
 import controllers.actions._
 import models.UserAnswers
 import org.scalatest.{OptionValues, TryValues}
@@ -56,4 +61,27 @@ trait SpecBase
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )
+
+  def getHeading(result: Future[play.api.mvc.Result])(implicit timeout: Timeout) =
+    Scoup.parseHTML(contentAsString(result)).select("h1").text
+
+  def hasChecked(result: Future[play.api.mvc.Result])(implicit to: Timeout) =
+    !Scoup
+      .parseHTML(contentAsString(result))
+      .getElementsByAttribute("checked")
+      .select(".govuk-radios__input")
+      .isEmpty()
+
+  def hasError(result: Future[play.api.mvc.Result])(implicit to: Timeout) =
+    !(Scoup
+      .parseHTML(contentAsString(result))
+      // .getElementById()
+      .select(".govuk-error-summary__title")
+      .isEmpty()
+      &&
+        Scoup
+          .parseHTML(contentAsString(result))
+          .select(".govuk-error-message")
+          .isEmpty())
+
 }

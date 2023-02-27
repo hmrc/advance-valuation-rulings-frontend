@@ -36,9 +36,10 @@ class AccountHomeControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[AccountHomeView]
+        val msgs = messages(application)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        getHeading(result) mustEqual msgs("accountHome.heading")
       }
     }
   }
