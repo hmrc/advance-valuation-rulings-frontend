@@ -29,39 +29,42 @@ import routes._
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ValuationMethodPage                           => valuationMethodPage
-    case IsThereASaleInvolvedPage                      => isThereASaleInvolvedPage
-    case IsSaleBetweenRelatedPartiesPage               => isSaleBetweenRelatedPartiesPage
-    case ExplainHowPartiesAreRelatedPage               => explainHowPartiesAreRelatedPage
-    case DescriptionOfGoodsPage                        => descriptionOfGoodsPage
-    case HasCommodityCodePage                          => hasCommodityCodePage
-    case CommodityCodePage                             => commodityCodePage
-    case HaveTheGoodsBeenSubjectToLegalChallengesPage  =>
+    case ValuationMethodPage                              => valuationMethodPage
+    case IsThereASaleInvolvedPage                         => isThereASaleInvolvedPage
+    case IsSaleBetweenRelatedPartiesPage                  => isSaleBetweenRelatedPartiesPage
+    case ExplainHowPartiesAreRelatedPage                  => explainHowPartiesAreRelatedPage
+    case DescriptionOfGoodsPage                           => descriptionOfGoodsPage
+    case HasCommodityCodePage                             => hasCommodityCodePage
+    case CommodityCodePage                                => commodityCodePage
+    case HaveTheGoodsBeenSubjectToLegalChallengesPage     =>
       haveTheGoodsBeenSubjectToLegalChallengesPage
-    case DescribeTheLegalChallengesPage                => describeTheLegalChallengesPage
-    case HasConfidentialInformationPage                => hasConfidentialInformationPage
-    case ConfidentialInformationPage                   => confidentialInformationPage
-    case ImportGoodsPage                               => importGoodsPage
-    case RequiredInformationPage                       => requiredInformationPage
-    case CheckRegisteredDetailsPage                    => checkRegisteredDetailsPage
-    case ApplicationContactDetailsPage                 => applicationContactDetailsPage
-    case DoYouWantToUploadDocumentsPage                => doYouWantToUploadDocumentsPage
-    case IsThisFileConfidentialPage                    => isThisFileConfidentialPage
-    case UploadAnotherSupportingDocumentPage           => uploadAnotherSupportingDocumentPage
-    case WhyComputedValuePage                          => whyComputedValuePage
-    case ExplainReasonComputedValuePage                => explainReasonComputedValuePage
-    case WhyTransactionValueOfSimilarGoodsPage         => whyTransactionValueOfSimilarGoodsPage
-    case HaveYouUsedMethodOneInPastPage                => haveYouUsedMethodOneInPastPage
-    case WhyIdenticalGoodsPage                         => whyIdenticalGoodsPage
-    case AreThereRestrictionsOnTheGoodsPage            => areThereRestrictionsOnTheGoodsPage
-    case DescribeTheRestrictionsPage                   => describeTheRestrictionsPage
-    case IsTheSaleSubjectToConditionsPage              => isTheSaleSubjectToConditionsPage
-    case DescribeTheConditionsPage                     => describeTheConditionsPage
-    case DescribeTheIdenticalGoodsPage                 => describeTheIdenticalGoodsPage
-    case ExplainYourGoodsComparingToIdenticalGoodsPage =>
+    case DescribeTheLegalChallengesPage                   => describeTheLegalChallengesPage
+    case HasConfidentialInformationPage                   => hasConfidentialInformationPage
+    case ConfidentialInformationPage                      => confidentialInformationPage
+    case ImportGoodsPage                                  => importGoodsPage
+    case RequiredInformationPage                          => requiredInformationPage
+    case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
+    case ApplicationContactDetailsPage                    => applicationContactDetailsPage
+    case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
+    case IsThisFileConfidentialPage                       => isThisFileConfidentialPage
+    case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
+    case WhyComputedValuePage                             => whyComputedValuePage
+    case ExplainReasonComputedValuePage                   => explainReasonComputedValuePage
+    case WhyTransactionValueOfSimilarGoodsPage            => whyTransactionValueOfSimilarGoodsPage
+    case HaveYouUsedMethodOneInPastPage                   => haveYouUsedMethodOneInPastPage
+    case WhyIdenticalGoodsPage                            => whyIdenticalGoodsPage
+    case AreThereRestrictionsOnTheGoodsPage               => areThereRestrictionsOnTheGoodsPage
+    case DescribeTheRestrictionsPage                      => describeTheRestrictionsPage
+    case IsTheSaleSubjectToConditionsPage                 => isTheSaleSubjectToConditionsPage
+    case DescribeTheConditionsPage                        => describeTheConditionsPage
+    case DescribeTheIdenticalGoodsPage                    => describeTheIdenticalGoodsPage
+    case ExplainYourGoodsComparingToIdenticalGoodsPage    =>
       explainYourGoodsComparingToIdenticalGoodsPage
-    case WillYouCompareGoodsToIdenticalGoodsPage       => willYouCompareGoodsToIdenticalGoodsPage
-    case _                                             => _ => routes.IndexController.onPageLoad
+    case WillYouCompareGoodsToIdenticalGoodsPage          => willYouCompareGoodsToIdenticalGoodsPage
+    case ExplainWhyYouHaveNotSelectedMethodOneToThreePage =>
+      explainWhyYouHaveNotSelectedMethodOneToThreePage
+    case ExplainWhyYouChoseMethodFourPage                 => explainWhyYouChoseMethodFourPage
+    case _                                                => _ => routes.IndexController.onPageLoad
   }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
@@ -73,7 +76,8 @@ class Navigator @Inject() () {
           case Method1 => IsThereASaleInvolvedController.onPageLoad(models.NormalMode)
           case Method2 => WhyIdenticalGoodsController.onPageLoad(models.NormalMode)
           case Method3 => WhyTransactionValueOfSimilarGoodsController.onPageLoad(models.NormalMode)
-          case Method4 => DescriptionOfGoodsController.onPageLoad(models.NormalMode)
+          case Method4 =>
+            ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(models.NormalMode)
           case Method5 => WhyComputedValueController.onPageLoad(models.NormalMode)
           case Method6 => DescriptionOfGoodsController.onPageLoad(models.NormalMode)
         }
@@ -173,7 +177,20 @@ class Navigator @Inject() () {
       case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
     }
 
-  // ----------------------------------------------------------------
+  // method 4 ----------------------------------------------------------------
+  private def explainWhyYouHaveNotSelectedMethodOneToThreePage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage) match {
+      case None    =>
+        ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(models.NormalMode)
+      case Some(_) => ExplainWhyYouChoseMethodFourController.onPageLoad(models.NormalMode)
+    }
+
+  private def explainWhyYouChoseMethodFourPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ExplainWhyYouChoseMethodFourPage) match {
+      case None    => ExplainWhyYouChoseMethodFourController.onPageLoad(models.NormalMode)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(models.NormalMode)
+    }
+
   // method 5----------------------------------------------------------------
   private def whyComputedValuePage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyComputedValuePage) match {

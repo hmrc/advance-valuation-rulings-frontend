@@ -491,3 +491,27 @@ applicationComplete.appeal.paragraph.1 = If you do not agree with the decision, 
 applicationComplete.appeal.paragraph.2 = Alternatively, you can {0} who are independent of HMRC. If you disagree with the outcome of an HMRC review, you can still appeal to the tribunal.
 applicationComplete.appeal.paragraph.2.link = appeal directly to the tribunal service,
 applicationComplete.application.heading = Your Application
+
+explainWhyYouChoseMethodFour.title = Explain why you have selected Method 4 to value your goods
+explainWhyYouChoseMethodFour.caption = About the goods
+explainWhyYouChoseMethodFour.heading = Explain why you have selected Method 4 to value your goods
+explainWhyYouChoseMethodFour.paragraph.1 = Method 4 (deductive method) uses the selling price of the goods in the UK.
+explainWhyYouChoseMethodFour.paragraph.2 = You can only use Method 4 if the goods are being sold to an unrelated person in the UK. If the goods are not being sold to an unrelated person, you can try Method 5 (computed value) before Method 4.
+explainWhyYouChoseMethodFour.paragraph.3 = ‘Unrelated’ means there isn't an existing relationship or common interest between two companies.
+explainWhyYouChoseMethodFour.checkYourAnswersLabel = explainWhyYouChoseMethodFour
+explainWhyYouChoseMethodFour.error.required = Enter an explanation about why you have selected Method 4 to value your goods
+explainWhyYouChoseMethodFour.error.length = Maximum allowed characters is 8168
+explainWhyYouChoseMethodFour.change.hidden = ExplainWhyYouChoseMethodFour
+
+explainWhyYouHaveNotSelectedMethodOneToThree.title = Explain why you have not selected Methods 1-3 to value your goods
+explainWhyYouHaveNotSelectedMethodOneToThree.caption = About the goods
+explainWhyYouHaveNotSelectedMethodOneToThree.heading = Explain why you have not selected Methods 1-3 to value your goods
+explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.1 = Before you try Method 4 you must first have used:
+explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.1 = Method 1 (transaction value of imported goods)
+explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.2 = Method 2 (transaction value of identical goods)
+explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.3 = Method 3 (transaction value of similar goods)
+explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2 = Explain why you believe Methods 1-3 are not suitable to work out the customs value of your goods.
+explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel = explainWhyYouHaveNotSelectedMethodOneToThree
+explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Enter an explanation about why you have not selected methods 1 to 3 to value your goods
+explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Maximum allowed characters is 8168
+explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = ExplainWhyYouHaveNotSelectedMethodOneToThree

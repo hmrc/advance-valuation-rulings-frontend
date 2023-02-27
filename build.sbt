@@ -63,7 +63,7 @@ lazy val root = (project in file("."))
       "-Ybackend-parallelism", // Enable paralellisation
       "8",
       "-Ycache-plugin-class-loader:last-modified", // Enables caching of classloaders for compiler plugins
-      "-Ycache-macro-class-loader:last-modified", // and macro definitions. This can lead to performance improvements.
+      "-Ycache-macro-class-loader:last-modified" // and macro definitions. This can lead to performance improvements.
     ),
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
