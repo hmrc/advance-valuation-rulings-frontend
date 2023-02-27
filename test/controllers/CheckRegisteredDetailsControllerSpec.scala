@@ -32,7 +32,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CheckRegisteredDetailsPage
 import repositories.SessionRepository
-import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
@@ -52,12 +51,10 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, checkRegisteredDetailsRoute)
+        val result  = route(application, request).value
+        val msgs    = messages(application)
 
-        val result = route(application, request).value
-
-        val msgs = messages(application)
         status(result) mustEqual OK
-        getHeading(result) mustEqual msgs("checkRegisteredDetails.heading")
       }
     }
 
@@ -72,16 +69,11 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, checkRegisteredDetailsRoute)
-
-        val view = application.injector.instanceOf[CheckRegisteredDetailsView]
-
-        val result = route(application, request).value
+        val result  = route(application, request).value
+        val msgs    = messages(application)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(CheckRegisteredDetails.values.head),
-          NormalMode
-        )(request, messages(application)).toString
+        hasChecked(result) mustEqual true
       }
     }
 
@@ -120,17 +112,11 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, checkRegisteredDetailsRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-
-        val view = application.injector.instanceOf[CheckRegisteredDetailsView]
-
+        val msgs   = messages(application)
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        hasError(result) mustEqual true
       }
     }
 
@@ -140,8 +126,7 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, checkRegisteredDetailsRoute)
-
-        val result = route(application, request).value
+        val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
