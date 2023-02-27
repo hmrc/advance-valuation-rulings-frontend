@@ -22,7 +22,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import viewmodels.govuk.summarylist._
+import pages.DescriptionOfGoodsPage
+import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
@@ -37,10 +38,10 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val list = SummaryListViewModel(
-        rows = Seq.empty
-      )
+      val answers = request.userAnswers
 
-      Ok(view(list))
+      val applicationSummmary = ApplicationSummary(answers)
+
+      Ok(view(applicationSummmary))
   }
 }

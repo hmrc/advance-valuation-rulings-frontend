@@ -192,8 +192,8 @@ POST       /haveTheGoodsBeenSubjectToLegalChallenges                        cont
 GET        /changeHaveTheGoodsBeenSubjectToLegalChallenges                  controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeHaveTheGoodsBeenSubjectToLegalChallenges                  controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode: Mode = CheckMode)
 
-
 GET        /applicationComplete                       controllers.ApplicationCompleteController.onPageLoad()
+
 
 GET        /explainWhyYouChoseMethodFour                        controllers.ExplainWhyYouChoseMethodFourController.onPageLoad(mode: Mode = NormalMode)
 POST       /explainWhyYouChoseMethodFour                        controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = NormalMode)
@@ -204,3 +204,19 @@ GET        /explainWhyYouHaveNotSelectedMethodOneToThree                        
 POST       /explainWhyYouHaveNotSelectedMethodOneToThree                        controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = NormalMode)
 GET        /changeExplainWhyYouHaveNotSelectedMethodOneToThree                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeExplainWhyYouHaveNotSelectedMethodOneToThree                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /describeTheIdenticalGoods                        controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /describeTheIdenticalGoods                        controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDescribeTheIdenticalGoods                  controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDescribeTheIdenticalGoods                  controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /explainYourGoodsComparingToIdenticalGoods                        controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainYourGoodsComparingToIdenticalGoods                        controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainYourGoodsComparingToIdenticalGoods                  controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainYourGoodsComparingToIdenticalGoods                  controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /willYouCompareGoodsToIdenticalGoods                        controllers.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /willYouCompareGoodsToIdenticalGoods                        controllers.WillYouCompareGoodsToIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeWillYouCompareGoodsToIdenticalGoods                  controllers.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeWillYouCompareGoodsToIdenticalGoods                  controllers.WillYouCompareGoodsToIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
+
