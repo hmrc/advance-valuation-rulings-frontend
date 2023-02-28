@@ -515,3 +515,25 @@ explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel = explainWhyY
 explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Enter an explanation about why you have not selected methods 1 to 3 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Maximum allowed characters is 8168
 explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = ExplainWhyYouHaveNotSelectedMethodOneToThree
+
+adaptMethod.title = Which method would you like to adapt?
+adaptMethod.heading = Which method would you like to adapt?
+adaptMethod.method1 = Method 1: TranMethod 1: Transaction value
+adaptMethod.method2 = Method 2: Transaction value of identical goods
+adaptMethod.checkYourAnswersLabel = Which method would you like to adapt?
+adaptMethod.error.required = Select adaptMethod
+adaptMethod.change.hidden = AdaptMethod
+
+explainHowYouWillUseMethodSix.title = explainHowYouWillUseMethodSix
+explainHowYouWillUseMethodSix.heading = explainHowYouWillUseMethodSix
+explainHowYouWillUseMethodSix.checkYourAnswersLabel = explainHowYouWillUseMethodSix
+explainHowYouWillUseMethodSix.error.required = Enter explainHowYouWillUseMethodSix
+explainHowYouWillUseMethodSix.error.length = ExplainHowYouWillUseMethodSix must be 8167 characters or less
+explainHowYouWillUseMethodSix.change.hidden = ExplainHowYouWillUseMethodSix
+
+explainWhyYouHaveNotSeletedMethodOneToFive.title = explainWhyYouHaveNotSeletedMethodOneToFive
+explainWhyYouHaveNotSeletedMethodOneToFive.heading = explainWhyYouHaveNotSeletedMethodOneToFive
+explainWhyYouHaveNotSeletedMethodOneToFive.checkYourAnswersLabel = explainWhyYouHaveNotSeletedMethodOneToFive
+explainWhyYouHaveNotSeletedMethodOneToFive.error.required = Enter explainWhyYouHaveNotSeletedMethodOneToFive
+explainWhyYouHaveNotSeletedMethodOneToFive.error.length = ExplainWhyYouHaveNotSeletedMethodOneToFive must be 8167 characters or less
+explainWhyYouHaveNotSeletedMethodOneToFive.change.hidden = ExplainWhyYouHaveNotSeletedMethodOneToFive

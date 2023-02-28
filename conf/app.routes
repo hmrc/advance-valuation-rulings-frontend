@@ -220,3 +220,18 @@ POST       /willYouCompareGoodsToIdenticalGoods                        controlle
 GET        /changeWillYouCompareGoodsToIdenticalGoods                  controllers.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWillYouCompareGoodsToIdenticalGoods                  controllers.WillYouCompareGoodsToIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /adaptMethod                        controllers.AdaptMethodController.onPageLoad(mode: Mode = NormalMode)
+POST       /adaptMethod                        controllers.AdaptMethodController.onSubmit(mode: Mode = NormalMode)
+GET        /changeAdaptMethod                  controllers.AdaptMethodController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeAdaptMethod                  controllers.AdaptMethodController.onSubmit(mode: Mode = CheckMode)
+
+GET        /explainHowYouWillUseMethodSix                        controllers.ExplainHowYouWillUseMethodSixController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainHowYouWillUseMethodSix                        controllers.ExplainHowYouWillUseMethodSixController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainHowYouWillUseMethodSix                  controllers.ExplainHowYouWillUseMethodSixController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainHowYouWillUseMethodSix                  controllers.ExplainHowYouWillUseMethodSixController.onSubmit(mode: Mode = CheckMode)
+
+GET        /explainWhyYouHaveNotSeletedMethodOneToFive                        controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainWhyYouHaveNotSeletedMethodOneToFive                        controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onSubmit(mode: Mode = CheckMode)

@@ -21,6 +21,11 @@ import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryAdaptMethod: Arbitrary[AdaptMethod] =
+    Arbitrary {
+      Gen.oneOf(AdaptMethod.values.toSeq)
+    }
+
   implicit lazy val arbitraryCheckRegisteredDetails: Arbitrary[CheckRegisteredDetails] =
     Arbitrary {
       Gen.oneOf(CheckRegisteredDetails.values.toSeq)
