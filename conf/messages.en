@@ -554,3 +554,16 @@ explainHowYouWillUseMethodSix.error.length = Maximum allowed characters is 8168
 explainHowYouWillUseMethodSix.change.hidden = ExplainHowYouWillUseMethodSix
 explainHowYouWillUseMethodSix.paragraph.1 = Method 6 (fall-back method) is the final valuation method you can try.
 explainHowYouWillUseMethodSix.paragraph.2 = Tell us how you plan to use Method 6. You should also let us know if you want to adapt another method for your circumstances.
+
+explainYourGoodsComparingToSimilarGoods.title = explainYourGoodsComparingToSimilarGoods
+explainYourGoodsComparingToSimilarGoods.heading = explainYourGoodsComparingToSimilarGoods
+explainYourGoodsComparingToSimilarGoods.checkYourAnswersLabel = explainYourGoodsComparingToSimilarGoods
+explainYourGoodsComparingToSimilarGoods.error.required = Enter explainYourGoodsComparingToSimilarGoods
+explainYourGoodsComparingToSimilarGoods.error.length = ExplainYourGoodsComparingToSimilarGoods must be 8167 characters or less
+explainYourGoodsComparingToSimilarGoods.change.hidden = ExplainYourGoodsComparingToSimilarGoods
+
+willYouCompareToSimilarGoods.title = willYouCompareToSimilarGoods
+willYouCompareToSimilarGoods.heading = willYouCompareToSimilarGoods
+willYouCompareToSimilarGoods.checkYourAnswersLabel = willYouCompareToSimilarGoods
+willYouCompareToSimilarGoods.error.required = Select yes if willYouCompareToSimilarGoods
+willYouCompareToSimilarGoods.change.hidden = WillYouCompareToSimilarGoods

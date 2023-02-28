@@ -235,3 +235,13 @@ GET        /explainWhyYouHaveNotSelectedMethodOneToFive                        c
 POST       /explainWhyYouHaveNotSelectedMethodOneToFive                        controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = NormalMode)
 GET        /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = CheckMode)
+
+GET        /explainYourGoodsComparingToSimilarGoods                        controllers.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainYourGoodsComparingToSimilarGoods                        controllers.ExplainYourGoodsComparingToSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainYourGoodsComparingToSimilarGoods                  controllers.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainYourGoodsComparingToSimilarGoods                  controllers.ExplainYourGoodsComparingToSimilarGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /willYouCompareToSimilarGoods                        controllers.WillYouCompareToSimilarGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /willYouCompareToSimilarGoods                        controllers.WillYouCompareToSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeWillYouCompareToSimilarGoods                  controllers.WillYouCompareToSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeWillYouCompareToSimilarGoods                  controllers.WillYouCompareToSimilarGoodsController.onSubmit(mode: Mode = CheckMode)

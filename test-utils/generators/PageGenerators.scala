@@ -21,6 +21,12 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryWillYouCompareToSimilarGoodsPage: Arbitrary[WillYouCompareToSimilarGoodsPage.type] =
+    Arbitrary(WillYouCompareToSimilarGoodsPage)
+
+  implicit lazy val arbitraryExplainYourGoodsComparingToSimilarGoodsPage: Arbitrary[ExplainYourGoodsComparingToSimilarGoodsPage.type] =
+    Arbitrary(ExplainYourGoodsComparingToSimilarGoodsPage)
+
   implicit lazy val arbitraryExplainWhyYouHaveNotSelectedMethodOneToFivePage
     : Arbitrary[ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type] =
     Arbitrary(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
