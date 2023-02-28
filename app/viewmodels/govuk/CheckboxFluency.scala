@@ -57,7 +57,7 @@ trait CheckboxFluency {
         name = name,
         errorMessage = errorMessage(form(name)),
         items = items.map {
-          item => item copy (checked = form.data.exists(data => data._2 == item.value))
+          item => item.copy(checked = form.data.exists(data => data._2 == item.value))
         }
       )
   }
@@ -65,7 +65,10 @@ trait CheckboxFluency {
   implicit class FluentCheckboxes(checkboxes: Checkboxes) {
 
     def describedBy(value: String): Checkboxes =
-      checkboxes copy (describedBy = Some(value))
+      checkboxes.copy(describedBy = Some(value))
+
+    def withHint(hint: Hint): Checkboxes =
+      checkboxes.copy(hint = Some(hint))
   }
 
   object CheckboxItemViewModel {
@@ -87,18 +90,18 @@ trait CheckboxFluency {
   implicit class FluentCheckboxItem(item: CheckboxItem) {
 
     def withLabel(label: Label): CheckboxItem =
-      item copy (label = Some(label))
+      item.copy(label = Some(label))
 
     def withHint(hint: Hint): CheckboxItem =
-      item copy (hint = Some(hint))
+      item.copy(hint = Some(hint))
 
     def withConditionalHtml(html: Html): CheckboxItem =
-      item copy (conditionalHtml = Some(html))
+      item.copy(conditionalHtml = Some(html))
 
     def disabled(): CheckboxItem =
-      item copy (disabled = true)
+      item.copy(disabled = true)
 
     def withAttribute(attribute: (String, String)): CheckboxItem =
-      item copy (attributes = item.attributes + attribute)
+      item.copy(attributes = item.attributes + attribute)
   }
 }

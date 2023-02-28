@@ -23,7 +23,9 @@
     govukCheckboxes: GovukCheckboxes,
     govukButton: GovukButton,
     cancelApplicationLink: CancelApplicationLink,
-    caption: Caption
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
@@ -32,19 +34,21 @@
 
     @formHelper(action = routes.RequiredInformationController.onSubmit(), 'autoComplete -> "off") {
 
-        @caption(messages("requiredInformation.caption"))
-
+        
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
+        
+        @caption(messages("requiredInformation.caption"))
+        @heading(messages("requiredInformation.heading"))
 
         @govukCheckboxes(
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel(messages("requiredInformation.heading")).asPageHeading(),
+                legend = Legend(),
                 items  = RequiredInformation.checkboxItems
-            )
+            ).withHint(Hint(content=Text(messages("requiredInformation.hint"))))
         )
 
         @govukButton(
