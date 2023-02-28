@@ -40,7 +40,7 @@ class RequiredInformationFormProviderSpec extends CheckboxFieldBehaviours {
     }
 
     "fail to bind when less than 8 answers are selected" in {
-      val data = allValues - s"$fieldName[7]"
+      val data = allValues - s"$fieldName[5]"
       form.bind(data).errors must contain(
         FormError(s"$fieldName", "requiredInformation.error.selectAll")
       )
@@ -65,8 +65,6 @@ object RequiredInformationFormProviderSpec {
     s"$fieldName[2]" -> RequiredInformation.values(2).toString,
     s"$fieldName[3]" -> RequiredInformation.values(3).toString,
     s"$fieldName[4]" -> RequiredInformation.values(4).toString,
-    s"$fieldName[5]" -> RequiredInformation.values(5).toString,
-    s"$fieldName[6]" -> RequiredInformation.values(6).toString,
-    s"$fieldName[7]" -> RequiredInformation.values(7).toString
+    s"$fieldName[5]" -> RequiredInformation.values(5).toString
   )
 }
