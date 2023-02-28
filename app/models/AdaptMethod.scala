@@ -33,7 +33,11 @@ object AdaptMethod extends Enumerable.Implicits {
 
   val values: Seq[AdaptMethod] = Seq(
     Method1,
-    Method2
+    Method2,
+    Method3,
+    Method4,
+    Method5,
+    NoOtherMethod
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {

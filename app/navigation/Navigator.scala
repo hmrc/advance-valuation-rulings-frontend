@@ -223,8 +223,8 @@ class Navigator @Inject() () {
     userAnswers: UserAnswers
   ): Call =
     userAnswers.get(AdaptMethodPage) match {
-      case None    => ExplainHowYouWillUseMethodSixController.onPageLoad(models.NormalMode)
-      case Some(_) => AdaptMethodController.onPageLoad(models.NormalMode)
+      case None    => AdaptMethodController.onPageLoad(models.NormalMode)
+      case Some(_) => ExplainHowYouWillUseMethodSixController.onPageLoad(models.NormalMode)
     }
 
   private def explainHowYouWillUseMethodSixPage(

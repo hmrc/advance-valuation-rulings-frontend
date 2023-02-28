@@ -44,7 +44,7 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("adaptMethod.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("adaptMethod.hint")),
                 items  = AdaptMethod.options
             )
         )

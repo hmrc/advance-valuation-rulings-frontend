@@ -50,10 +50,11 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToFivePage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+      val preparedForm =
+        request.userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToFivePage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
       Ok(view(preparedForm, mode))
   }
@@ -67,9 +68,15 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, value))
+                updatedAnswers <-
+                  Future.fromTry(
+                    request.userAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, value)
+                  )
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator
+                  .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, mode, updatedAnswers)
+              )
           )
     }
 }
