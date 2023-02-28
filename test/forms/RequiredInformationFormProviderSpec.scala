@@ -57,7 +57,7 @@ class RequiredInformationFormProviderSpec extends CheckboxFieldBehaviours {
 
 object RequiredInformationFormProviderSpec {
   val fieldName   = "value"
-  val requiredKey = "requiredInformation.error.required"
+  val requiredKey = "requiredInformation.error.selectAll"
 
   val allValues = Map(
     s"$fieldName[0]" -> RequiredInformation.values.head.toString,
