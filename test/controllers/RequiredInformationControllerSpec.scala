@@ -112,9 +112,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
               "value[2]" -> RequiredInformation.Option3.toString,
               "value[3]" -> RequiredInformation.Option4.toString,
               "value[4]" -> RequiredInformation.Option5.toString,
-              "value[5]" -> RequiredInformation.Option6.toString,
-              "value[6]" -> RequiredInformation.Option7.toString,
-              "value[7]" -> RequiredInformation.Option8.toString
+              "value[5]" -> RequiredInformation.Option6.toString
             )
 
         val result = route(application, request).value
