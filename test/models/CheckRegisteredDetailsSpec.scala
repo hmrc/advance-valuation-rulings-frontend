@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{Json, JsString}
+import play.api.libs.json.Json
 
 import generators.ModelGenerators
 import org.scalacheck.Arbitrary.arbitrary
@@ -33,27 +33,43 @@ class CheckRegisteredDetailsSpec
     with OptionValues {
 
   "CheckRegisteredDetails" - {
+    val validJson = Json.parse("""
+                      |{
+                      |  "value": true,
+                      |  "eori": "GB123456789012",
+                      |  "name": "name",
+                      |  "streetAndNumber": "streetAndNumber",
+                      |  "city": "city",
+                      |  "country": "country",
+                      |  "postalCode": "postalCode"
+                      |}
+      """.stripMargin)
 
-    "must deserialise valid values" in {
+    val validDetails = CheckRegisteredDetails(
+      value = true,
+      eori = "GB123456789012",
+      name = "name",
+      streetAndNumber = "streetAndNumber",
+      city = "city",
+      country = "country",
+      postalCode = Some("postalCode")
+    )
 
-      val gen = arbitrary[CheckRegisteredDetails]
-
-      forAll(gen) {
-        checkRegisteredDetails =>
-          JsString(checkRegisteredDetails.toString)
-            .validate[CheckRegisteredDetails]
-            .asOpt
-            .value mustEqual checkRegisteredDetails
-      }
+    "must deserialise" in {
+      CheckRegisteredDetails.format.reads(validJson).asOpt mustEqual Some(validDetails)
     }
-
     "must serialise" in {
-
+      CheckRegisteredDetails.format.writes(validDetails) mustEqual validJson
+    }
+    "must serialise and deserialise" in {
       val gen = arbitrary[CheckRegisteredDetails]
 
       forAll(gen) {
         checkRegisteredDetails =>
-          Json.toJson(checkRegisteredDetails) mustEqual JsString(checkRegisteredDetails.toString)
+          val asJson = CheckRegisteredDetails.format.writes(checkRegisteredDetails)
+          val result = CheckRegisteredDetails.format.reads(asJson).asOpt
+
+          result mustEqual Some(checkRegisteredDetails)
       }
     }
   }
