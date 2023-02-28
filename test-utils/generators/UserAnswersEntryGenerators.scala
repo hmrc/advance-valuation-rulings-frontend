@@ -25,7 +25,8 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryDescribeTheSimilarGoodsUserAnswersEntry: Arbitrary[(DescribeTheSimilarGoodsPage.type, JsValue)] =
+  implicit lazy val arbitraryDescribeTheSimilarGoodsUserAnswersEntry
+    : Arbitrary[(DescribeTheSimilarGoodsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[DescribeTheSimilarGoodsPage.type]
