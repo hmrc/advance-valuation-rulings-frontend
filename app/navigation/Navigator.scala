@@ -18,10 +18,13 @@ package navigation
 
 import javax.inject.{Inject, Singleton}
 
+import cats.implicits.catsSyntaxOptionId
+
 import play.api.mvc.Call
 
 import controllers.routes
 import models._
+import models.ValuationMethod._
 import pages._
 import routes._
 
@@ -147,13 +150,21 @@ class Navigator @Inject() () {
       case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
     }
 
-  private def haveYouUsedMethodOneInPastPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
-      case None        => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
-      case Some(true)  => DescribeTheIdenticalGoodsController.onPageLoad(models.NormalMode)
-      case Some(false) =>
+  private def haveYouUsedMethodOneInPastPage(userAnswers: UserAnswers): Call = {
+    val method: Option[ValuationMethod] = userAnswers.get(ValuationMethodPage)
+    println(s"\nBANANAS: $method \n")
+    (userAnswers.get(HaveYouUsedMethodOneInPastPage), method) match {
+      case (None, _)                    => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
+      case (Some(true), Some(Method2))  =>
+        DescribeTheIdenticalGoodsController.onPageLoad(models.NormalMode)
+      case (Some(false), Some(Method2)) =>
+        WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(models.NormalMode)
+//      case (Some(true), Some(Method3))  =>
+//        DescribeTheSimilarGoods.onPageLoad(models.NormalMode)
+      case (Some(false), Some(Method3)) =>
         WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(models.NormalMode)
     }
+  }
 
   private def describeTheIdenticalGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {

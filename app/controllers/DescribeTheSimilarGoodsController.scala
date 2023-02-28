@@ -1,19 +1,3 @@
-/*
- * Copyright 2023 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package controllers
 
 import javax.inject.Inject
@@ -25,23 +9,23 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import forms.WillYouCompareToSimilarGoodsFormProvider
+import forms.DescribeTheSimilarGoodsFormProvider
 import models.Mode
 import navigation.Navigator
-import pages.WillYouCompareToSimilarGoodsPage
+import pages.DescribeTheSimilarGoodsPage
 import repositories.SessionRepository
-import views.html.WillYouCompareToSimilarGoodsView
+import views.html.DescribeTheSimilarGoodsView
 
-class WillYouCompareToSimilarGoodsController @Inject() (
+class DescribeTheSimilarGoodsController @Inject() (
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: WillYouCompareToSimilarGoodsFormProvider,
+  formProvider: DescribeTheSimilarGoodsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: WillYouCompareToSimilarGoodsView
+  view: DescribeTheSimilarGoodsView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -50,7 +34,7 @@ class WillYouCompareToSimilarGoodsController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(WillYouCompareToSimilarGoodsPage) match {
+      val preparedForm = request.userAnswers.get(DescribeTheSimilarGoodsPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -67,12 +51,9 @@ class WillYouCompareToSimilarGoodsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(WillYouCompareToSimilarGoodsPage, value))
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(DescribeTheSimilarGoodsPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(WillYouCompareToSimilarGoodsPage, mode, updatedAnswers)
-              )
+              } yield Redirect(navigator.nextPage(DescribeTheSimilarGoodsPage, mode, updatedAnswers))
           )
     }
 }

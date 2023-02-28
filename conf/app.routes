@@ -245,3 +245,8 @@ GET        /willYouCompareToSimilarGoods                        controllers.Will
 POST       /willYouCompareToSimilarGoods                        controllers.WillYouCompareToSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWillYouCompareToSimilarGoods                  controllers.WillYouCompareToSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWillYouCompareToSimilarGoods                  controllers.WillYouCompareToSimilarGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /describeTheSimilarGoods                        controllers.DescribeTheSimilarGoodsController.onPageLoad(mode: Mode = NormalMode)
+POST       /describeTheSimilarGoods                        controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeDescribeTheSimilarGoods                  controllers.DescribeTheSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeDescribeTheSimilarGoods                  controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = CheckMode)

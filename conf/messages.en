@@ -567,3 +567,10 @@ willYouCompareToSimilarGoods.heading = willYouCompareToSimilarGoods
 willYouCompareToSimilarGoods.checkYourAnswersLabel = willYouCompareToSimilarGoods
 willYouCompareToSimilarGoods.error.required = Select yes if willYouCompareToSimilarGoods
 willYouCompareToSimilarGoods.change.hidden = WillYouCompareToSimilarGoods
+
+describeTheSimilarGoods.title = describeTheSimilarGoods
+describeTheSimilarGoods.heading = describeTheSimilarGoods
+describeTheSimilarGoods.checkYourAnswersLabel = describeTheSimilarGoods
+describeTheSimilarGoods.error.required = Enter describeTheSimilarGoods
+describeTheSimilarGoods.error.length = DescribeTheSimilarGoods must be 8167 characters or less
+describeTheSimilarGoods.change.hidden = DescribeTheSimilarGoods
