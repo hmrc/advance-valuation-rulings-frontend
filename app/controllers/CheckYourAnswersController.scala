@@ -22,7 +22,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import pages.DescriptionOfGoodsPage
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersView
 

@@ -41,7 +41,6 @@ class DetailsSummarySpec extends SpecBase with Generators {
     "when given empty user answers" - {
       val summary: DetailsSummary = DetailsSummary(emptyUserAnswers)
       val rows                    = summary.rows.rows
-      val keys                    = rows.map(_.key)
 
       "must create no rows" in {
         rows mustBe empty

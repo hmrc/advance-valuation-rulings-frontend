@@ -231,7 +231,7 @@ POST       /explainHowYouWillUseMethodSix                        controllers.Exp
 GET        /changeExplainHowYouWillUseMethodSix                  controllers.ExplainHowYouWillUseMethodSixController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeExplainHowYouWillUseMethodSix                  controllers.ExplainHowYouWillUseMethodSixController.onSubmit(mode: Mode = CheckMode)
 
-GET        /explainWhyYouHaveNotSeletedMethodOneToFive                        controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onPageLoad(mode: Mode = NormalMode)
-POST       /explainWhyYouHaveNotSeletedMethodOneToFive                        controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onSubmit(mode: Mode = NormalMode)
-GET        /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSeletedMethodOneToFiveController.onSubmit(mode: Mode = CheckMode)
+GET        /explainWhyYouHaveNotSelectedMethodOneToFive                        controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode: Mode = NormalMode)
+POST       /explainWhyYouHaveNotSelectedMethodOneToFive                        controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = NormalMode)
+GET        /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeExplainWhyYouHaveNotSeletedMethodOneToFive                  controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = CheckMode)

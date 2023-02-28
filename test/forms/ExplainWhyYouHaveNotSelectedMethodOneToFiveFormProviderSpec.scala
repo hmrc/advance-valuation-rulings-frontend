@@ -20,13 +20,13 @@ import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
 
-class ExplainHowYouWillUseMethodSixFormProviderSpec extends StringFieldBehaviours {
+class ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "explainHowYouWillUseMethodSix.error.required"
-  val lengthKey   = "explainHowYouWillUseMethodSix.error.length"
+  val requiredKey = "explainWhyYouHaveNotSelectedMethodOneToFive.error.required"
+  val lengthKey   = "explainWhyYouHaveNotSelectedMethodOneToFive.error.length"
   val maxLength   = 8167
 
-  val form = new ExplainHowYouWillUseMethodSixFormProvider()()
+  val form = new ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider()()
 
   ".value" - {
 

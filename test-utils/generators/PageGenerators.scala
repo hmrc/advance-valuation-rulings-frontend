@@ -21,10 +21,12 @@ import pages._
 
 trait PageGenerators {
 
-  implicit lazy val arbitraryExplainWhyYouHaveNotSeletedMethodOneToFivePage: Arbitrary[ExplainWhyYouHaveNotSeletedMethodOneToFivePage.type] =
-    Arbitrary(ExplainWhyYouHaveNotSeletedMethodOneToFivePage)
+  implicit lazy val arbitraryExplainWhyYouHaveNotSelectedMethodOneToFivePage
+    : Arbitrary[ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type] =
+    Arbitrary(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
 
-  implicit lazy val arbitraryExplainHowYouWillUseMethodSixPage: Arbitrary[ExplainHowYouWillUseMethodSixPage.type] =
+  implicit lazy val arbitraryExplainHowYouWillUseMethodSixPage
+    : Arbitrary[ExplainHowYouWillUseMethodSixPage.type] =
     Arbitrary(ExplainHowYouWillUseMethodSixPage)
 
   implicit lazy val arbitraryAdaptMethodPage: Arbitrary[AdaptMethodPage.type] =

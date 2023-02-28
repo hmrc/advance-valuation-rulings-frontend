@@ -64,6 +64,10 @@ class Navigator @Inject() () {
     case ExplainWhyYouHaveNotSelectedMethodOneToThreePage =>
       explainWhyYouHaveNotSelectedMethodOneToThreePage
     case ExplainWhyYouChoseMethodFourPage                 => explainWhyYouChoseMethodFourPage
+    case ExplainWhyYouHaveNotSelectedMethodOneToFivePage  =>
+      explainWhyYouHaveNotSelectedMethodOneToFivePage
+    case ExplainHowYouWillUseMethodSixPage                => explainHowYouWillUseMethodSixPage
+    case AdaptMethodPage                                  => adaptMethodPage
     case _                                                => _ => routes.IndexController.onPageLoad
   }
 
@@ -79,7 +83,8 @@ class Navigator @Inject() () {
           case Method4 =>
             ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(models.NormalMode)
           case Method5 => WhyComputedValueController.onPageLoad(models.NormalMode)
-          case Method6 => DescriptionOfGoodsController.onPageLoad(models.NormalMode)
+          case Method6 =>
+            ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(models.NormalMode)
         }
     }
   // Method 1----------------------------------------------------------------
@@ -201,6 +206,32 @@ class Navigator @Inject() () {
   private def explainReasonComputedValuePage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainReasonComputedValuePage) match {
       case None    => ExplainReasonComputedValueController.onPageLoad(models.NormalMode)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(models.NormalMode)
+    }
+
+  // method 6----------------------------------------------------------------
+  private def explainWhyYouHaveNotSelectedMethodOneToFivePage(
+    userAnswers: UserAnswers
+  ): Call =
+    userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToFivePage) match {
+      case None    =>
+        ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(models.NormalMode)
+      case Some(_) => AdaptMethodController.onPageLoad(models.NormalMode)
+    }
+
+  private def adaptMethodPage(
+    userAnswers: UserAnswers
+  ): Call =
+    userAnswers.get(AdaptMethodPage) match {
+      case None    => ExplainHowYouWillUseMethodSixController.onPageLoad(models.NormalMode)
+      case Some(_) => AdaptMethodController.onPageLoad(models.NormalMode)
+    }
+
+  private def explainHowYouWillUseMethodSixPage(
+    userAnswers: UserAnswers
+  ): Call =
+    userAnswers.get(ExplainHowYouWillUseMethodSixPage) match {
+      case None    => ExplainHowYouWillUseMethodSixController.onPageLoad(models.NormalMode)
       case Some(_) => DescriptionOfGoodsController.onPageLoad(models.NormalMode)
     }
 

@@ -485,14 +485,16 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.WhyComputedValueController.onPageLoad(mode = NormalMode)
         }
 
-        "DescriptionOfGoods page when method 6 is selected" in {
+        "ExplainWhyYouHaveNotSelectedMethodOneToFiveController page when method 6 is selected" in {
           val userAnswers =
             userAnswersWith(ValuationMethodPage, ValuationMethod.Method6)
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode =
+            NormalMode
+          )
         }
       }
 

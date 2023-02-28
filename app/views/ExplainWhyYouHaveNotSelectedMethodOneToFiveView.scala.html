@@ -32,20 +32,31 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("explainHowYouWillUseMethodSix.title"))) {
+@layout(pageTitle = title(form, messages("explainWhyYouHaveNotSelectedMethodOneToFive.title"))) {
 
-    @formHelper(action = routes.ExplainHowYouWillUseMethodSixController.onSubmit(mode)) {
+    @formHelper(action = routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("explainHowYouWillUseMethodSix.caption"))
+        @caption(messages("explainWhyYouHaveNotSelectedMethodOneToFive.caption"))
 
-        @heading(messages("explainHowYouWillUseMethodSix.heading"))
+        @heading(messages("explainWhyYouHaveNotSelectedMethodOneToFive.heading"))
 
-        @paragraph(Html(messages("explainHowYouWillUseMethodSix.paragraph.1")))
-        @paragraph(Html(messages("explainHowYouWillUseMethodSix.paragraph.2")))
+        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1")))
+
+        @list(
+            Seq(
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.1")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.2")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.3")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.4")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.5"))
+            ),
+        "govuk-list govuk-list--bullet",
+        )
+        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.2")))
 
 
         @govukTextarea(

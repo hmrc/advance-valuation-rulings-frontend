@@ -25,15 +25,17 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryExplainWhyYouHaveNotSeletedMethodOneToFiveUserAnswersEntry: Arbitrary[(ExplainWhyYouHaveNotSeletedMethodOneToFivePage.type, JsValue)] =
+  implicit lazy val arbitraryExplainWhyYouHaveNotSelectedMethodOneToFiveUserAnswersEntry
+    : Arbitrary[(ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[ExplainWhyYouHaveNotSeletedMethodOneToFivePage.type]
+        page  <- arbitrary[ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type]
         value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryExplainHowYouWillUseMethodSixUserAnswersEntry: Arbitrary[(ExplainHowYouWillUseMethodSixPage.type, JsValue)] =
+  implicit lazy val arbitraryExplainHowYouWillUseMethodSixUserAnswersEntry
+    : Arbitrary[(ExplainHowYouWillUseMethodSixPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ExplainHowYouWillUseMethodSixPage.type]
@@ -41,7 +43,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryAdaptMethodUserAnswersEntry: Arbitrary[(AdaptMethodPage.type, JsValue)] =
+  implicit lazy val arbitraryAdaptMethodUserAnswersEntry
+    : Arbitrary[(AdaptMethodPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[AdaptMethodPage.type]
