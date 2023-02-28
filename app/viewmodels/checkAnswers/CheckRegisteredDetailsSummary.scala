@@ -86,6 +86,6 @@ object CheckRegisteredDetailsSummary {
       number          = registeredNumberRow(contactDetails)
       name            = registeredNameRow(contactDetails)
       address         = registeredAddressRow(contactDetails)
-      result          = Seq()
+      result          = Seq(number, name, address)
     } yield result
 }
