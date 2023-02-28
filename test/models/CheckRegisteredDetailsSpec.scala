@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.{JsError, Json, JsString}
+import play.api.libs.json.{Json, JsString}
 
+import generators.ModelGenerators
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -29,13 +29,14 @@ class CheckRegisteredDetailsSpec
     extends AnyFreeSpec
     with Matchers
     with ScalaCheckPropertyChecks
+    with ModelGenerators
     with OptionValues {
 
   "CheckRegisteredDetails" - {
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(CheckRegisteredDetails.values.toSeq)
+      val gen = arbitrary[CheckRegisteredDetails]
 
       forAll(gen) {
         checkRegisteredDetails =>
@@ -46,20 +47,9 @@ class CheckRegisteredDetailsSpec
       }
     }
 
-    "must fail to deserialise invalid values" in {
-
-      val gen =
-        arbitrary[String] suchThat (!CheckRegisteredDetails.values.map(_.toString).contains(_))
-
-      forAll(gen) {
-        invalidValue =>
-          JsString(invalidValue).validate[CheckRegisteredDetails] mustEqual JsError("error.invalid")
-      }
-    }
-
     "must serialise" in {
 
-      val gen = Gen.oneOf(CheckRegisteredDetails.values.toSeq)
+      val gen = arbitrary[CheckRegisteredDetails]
 
       forAll(gen) {
         checkRegisteredDetails =>

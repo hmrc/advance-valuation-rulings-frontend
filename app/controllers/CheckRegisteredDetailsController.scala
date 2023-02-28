@@ -24,14 +24,13 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.{JsError, Json, JsSuccess}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
-import models.{CheckRegisteredDetails, Mode, UserAnswers}
+import models.{CheckRegisteredDetails, Mode}
 import models.requests.{DataRequest, TraderDetailsRequest}
 import navigation.Navigator
 import pages.CheckRegisteredDetailsPage
@@ -62,19 +61,22 @@ class CheckRegisteredDetailsController @Inject() (
       implicit request =>
         request.userAnswers.get(CheckRegisteredDetailsPage) match {
           case Some(value) =>
-            handleForm((details: CheckRegisteredDetails) => Ok(view(form.fill(value), mode, details)))
+            handleForm(
+              (details: CheckRegisteredDetails) => Ok(view(form.fill(value.value), mode, details))
+            )
           case None        =>
             backendConnector
               .getTraderDetails(TraderDetailsRequest(UUID.randomUUID().toString, request.userId))
               .flatMap {
                 case Right(traderDetails) =>
                   val checkRegisteredDetails = traderDetails.details
-                  val mergedUserAnswersData  =
-                    request.userAnswers.data ++ Json.toJsObject(checkRegisteredDetails)
 
-                  sessionRepository
-                    .set(UserAnswers(request.userId, mergedUserAnswersData))
-                    .map(_ => Ok(view(form, mode, checkRegisteredDetails)))
+                  for {
+                    answers        <-
+                      request.userAnswers
+                        .setFuture(CheckRegisteredDetailsPage, checkRegisteredDetails)
+                    updatedAnswers <- sessionRepository.set(answers)
+                  } yield Ok(view(form, mode, checkRegisteredDetails))
                 case Left(backendError)   =>
                   logger.error(s"Failed to get trader details from backend: $backendError")
                   Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
@@ -89,13 +91,24 @@ class CheckRegisteredDetailsController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              handleForm((details: CheckRegisteredDetails) => BadRequest(view(formWithErrors, mode, details))),
+              handleForm(
+                (details: CheckRegisteredDetails) => BadRequest(view(formWithErrors, mode, details))
+              ),
             value =>
-              for {
-                answers        <-
-                  Future.fromTry(request.userAnswers.set(CheckRegisteredDetailsPage, value))
-                updatedAnswers <- sessionRepository.update(answers)
-              } yield Redirect(navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers))
+              request.userAnswers.get(CheckRegisteredDetailsPage) match {
+                case Some(userAnswers) =>
+                  val updatedAnswers = userAnswers.copy(value = value)
+                  for {
+                    answers        <-
+                      request.userAnswers.setFuture(CheckRegisteredDetailsPage, updatedAnswers)
+                    updatedAnswers <- sessionRepository.update(answers)
+                  } yield Redirect(
+                    navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
+                  )
+                case None              =>
+                  logger.error(s"Failed to submit check registered details as user has no answers")
+                  Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+              }
           )
     }
 
@@ -103,14 +116,14 @@ class CheckRegisteredDetailsController @Inject() (
     detailsToResult: CheckRegisteredDetails => Result
   )(implicit request: DataRequest[AnyContent]): Future[Result] =
     for {
-      answers <- sessionRepository.get(request.userAnswers.id)
-      result   = answers.map(_.data.validate[CheckRegisteredDetails]) match {
-                   case Some(JsSuccess(registrationDetails, _)) =>
-                     logger.debug(s"User answers data\n ${Json.prettyPrint(answers.get.data)}")
-                     detailsToResult(registrationDetails)
-                   case Some(JsError(error))                    =>
-                     logger.error(s"Failed to convert json to CheckRegisteredDetails: $error")
-                     Redirect(routes.JourneyRecoveryController.onPageLoad())
-                 }
+      userAnswers <- sessionRepository.get(request.userAnswers.id)
+      details      = userAnswers.flatMap(_.get(CheckRegisteredDetailsPage))
+      result       = details match {
+                       case Some(registrationDetails) =>
+                         detailsToResult(registrationDetails)
+                       case None                      =>
+                         logger.error(s"User has no answer for CheckRegisteredDetails")
+                         Redirect(routes.JourneyRecoveryController.onPageLoad())
+                     }
     } yield result
 }

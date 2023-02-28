@@ -24,10 +24,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import models.{CheckRegisteredDetails, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import pages.CheckRegisteredDetailsPage
 import repositories.SessionRepository
 import views.html.EORIBeUpToDateView
 
@@ -35,8 +37,17 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val checkRegisteredDetailRoute =
+  lazy val checkRegisteredDetailRoute           =
     routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode).url
+  val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
+    value = false,
+    eori = "GB123456789012345",
+    name = "Test Name",
+    streetAndNumber = "Test Street 1",
+    city = "Test City",
+    country = "Test Country",
+    postalCode = Some("Test Postal Code")
+  )
 
   "EORIBeUpToDate Controller" - {
 
@@ -60,10 +71,23 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
+      val userAnswers      = UserAnswers(userAnswersId)
+        .set(CheckRegisteredDetailsPage, registeredDetails)
+        .success
+        .value
+      val answersAfterPost = UserAnswers(userAnswersId)
+        .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
+        .success
+        .value
+
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.update(any())) thenReturn Future.successful(
+        answersAfterPost
+      )
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -73,7 +97,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, checkRegisteredDetailRoute)
-            .withFormUrlEncodedBody(("value", "yes"))
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -85,11 +109,19 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when 'no' is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
+      val userAnswers           = UserAnswers(userAnswersId)
+        .set(CheckRegisteredDetailsPage, registeredDetails)
+        .success
+        .value
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.update(any())) thenReturn Future.successful(
+        userAnswers
+      )
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -99,7 +131,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, checkRegisteredDetailRoute)
-            .withFormUrlEncodedBody(("value", "no"))
+            .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 

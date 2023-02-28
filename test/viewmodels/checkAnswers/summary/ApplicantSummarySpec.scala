@@ -37,7 +37,6 @@ class ApplicantSummarySpec extends SpecBase with Generators {
     "when given empty user answers" - {
       val summary: ApplicantSummary = ApplicantSummary(emptyUserAnswers)
       val rows                      = summary.rows.rows
-      val keys                      = rows.map(_.key)
 
       "must create no rows" in {
         rows mustBe empty
@@ -93,7 +92,20 @@ object ApplicantSummarySpec {
   val allAnswersInput: Try[UserAnswers] =
     emptyUserAnswers
       .set(DescriptionOfGoodsPage, "test")
-      .flatMap(_.set(CheckRegisteredDetailsPage, CheckRegisteredDetails.Yes))
+      .flatMap(
+        _.set(
+          CheckRegisteredDetailsPage,
+          CheckRegisteredDetails(
+            true,
+            "eorinumber",
+            "name",
+            "streetAndNumber",
+            "city",
+            "country",
+            Some("postcode")
+          )
+        )
+      )
       .flatMap(
         _.set(
           ApplicationContactDetailsPage,

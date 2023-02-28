@@ -18,10 +18,9 @@ package forms
 
 import play.api.data.FormError
 
-import forms.behaviours.OptionFieldBehaviours
-import models.CheckRegisteredDetails
+import forms.behaviours.BooleanFieldBehaviours
 
-class CheckRegisteredDetailsFormProviderSpec extends OptionFieldBehaviours {
+class CheckRegisteredDetailsFormProviderSpec extends BooleanFieldBehaviours {
 
   val form = new CheckRegisteredDetailsFormProvider()()
 
@@ -29,12 +28,12 @@ class CheckRegisteredDetailsFormProviderSpec extends OptionFieldBehaviours {
 
     val fieldName   = "value"
     val requiredKey = "checkRegisteredDetails.error.required"
+    val invalidKey  = "error.boolean"
 
-    behave like optionsField[CheckRegisteredDetails](
+    behave like booleanField(
       form,
       fieldName,
-      validValues = CheckRegisteredDetails.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(

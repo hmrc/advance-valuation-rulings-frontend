@@ -304,10 +304,19 @@ class NavigatorSpec extends SpecBase {
       }
 
       "CheckRegisteredDetailsPage must" - {
+        val data = CheckRegisteredDetails(
+          value = true,
+          eori = "GB1234567890",
+          name = "name",
+          streetAndNumber = "street",
+          city = "city",
+          postalCode = Some("postcode"),
+          country = "GB"
+        )
 
         "navigate to ApplicationContactDetailsPage when Yes" in {
           val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, value = true)
+            userAnswersWith(CheckRegisteredDetailsPage, value = data)
           navigator.nextPage(
             CheckRegisteredDetailsPage,
             NormalMode,
@@ -317,7 +326,7 @@ class NavigatorSpec extends SpecBase {
 
         "and navigate to EORIBeUpToDatePage when No" in {
           val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, value = false)
+            userAnswersWith(CheckRegisteredDetailsPage, value = data.copy(value = false))
           navigator.nextPage(
             CheckRegisteredDetailsPage,
             NormalMode,
