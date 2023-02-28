@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components._
 
 @this(
@@ -33,29 +32,20 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("explainWhyYouHaveNotSelectedMethodOneToThree.title"))) {
+@layout(pageTitle = title(form, messages("explainHowYouWillUseMethodSix.title"))) {
 
-    @formHelper(action = routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode)) {
+    @formHelper(action = routes.ExplainHowYouWillUseMethodSixController.onSubmit(mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("explainWhyYouHaveNotSelectedMethodOneToThree.caption"))
+        @caption(messages("explainHowYouWillUseMethodSix.caption"))
 
-        @heading(messages("explainWhyYouHaveNotSelectedMethodOneToThree.heading"))
+        @heading(messages("explainHowYouWillUseMethodSix.heading"))
 
-        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.1")))
-
-        @list(
-            Seq(
-                Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.1")),
-                Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.2")),
-                Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.3"))
-            ),
-        "govuk-list govuk-list--bullet",
-)
-        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2")))
+        @paragraph(Html(messages("explainHowYouWillUseMethodSix.paragraph.1")))
+        @paragraph(Html(messages("explainHowYouWillUseMethodSix.paragraph.2")))
 
 
         @govukTextarea(

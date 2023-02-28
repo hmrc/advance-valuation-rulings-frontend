@@ -485,14 +485,16 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.WhyComputedValueController.onPageLoad(mode = NormalMode)
         }
 
-        "DescriptionOfGoods page when method 6 is selected" in {
+        "ExplainWhyYouHaveNotSelectedMethodOneToFiveController page when method 6 is selected" in {
           val userAnswers =
             userAnswersWith(ValuationMethodPage, ValuationMethod.Method6)
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode =
+            NormalMode
+          )
         }
       }
 
@@ -675,6 +677,67 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      // Method 6
+      "explainWhyYouHaveNotSelectedMethodOneToFive Page must" - {
+        "navigate to self when user has no data for the page" in {
+          navigator.nextPage(
+            ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode =
+            NormalMode
+          )
+        }
+
+        "navigate to adaptMethodPage when user has data for the page" in {
+          val userAnswers =
+            userAnswersWith(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, "banana")
+          navigator.nextPage(
+            ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AdaptMethodController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "adaptMethod Page must" - {
+        "navigate to self when user has no data for the page" in {
+          navigator.nextPage(
+            AdaptMethodPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.AdaptMethodController.onPageLoad(mode = NormalMode)
+        }
+
+        "navigate to explainHowYouWillUseMethodSixPage when user has data for the page" in {
+          val userAnswers = userAnswersWith(AdaptMethodPage, AdaptMethod.values.head)
+          navigator.nextPage(
+            AdaptMethodPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "explainHowYouWillUseMethodSix Page must" - {
+        "navigate to self when user has no data for the page" in {
+          navigator.nextPage(
+            ExplainHowYouWillUseMethodSixPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(mode = NormalMode)
+        }
+
+        "navigate to descriptionOfTheGoodsPage when user has data for the page" in {
+          val userAnswers = userAnswersWith(ExplainHowYouWillUseMethodSixPage, "banana")
+          navigator.nextPage(
+            ExplainHowYouWillUseMethodSixPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)
         }
       }
     }

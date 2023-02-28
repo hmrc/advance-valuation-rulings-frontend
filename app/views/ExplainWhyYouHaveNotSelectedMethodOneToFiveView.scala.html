@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import viewmodels.InputWidth._
 @import components._
 
 @this(
@@ -33,29 +32,31 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("explainWhyYouHaveNotSelectedMethodOneToThree.title"))) {
+@layout(pageTitle = title(form, messages("explainWhyYouHaveNotSelectedMethodOneToFive.title"))) {
 
-    @formHelper(action = routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode)) {
+    @formHelper(action = routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("explainWhyYouHaveNotSelectedMethodOneToThree.caption"))
+        @caption(messages("explainWhyYouHaveNotSelectedMethodOneToFive.caption"))
 
-        @heading(messages("explainWhyYouHaveNotSelectedMethodOneToThree.heading"))
+        @heading(messages("explainWhyYouHaveNotSelectedMethodOneToFive.heading"))
 
-        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.1")))
+        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1")))
 
         @list(
             Seq(
-                Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.1")),
-                Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.2")),
-                Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.3"))
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.1")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.2")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.3")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.4")),
+                Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.5"))
             ),
         "govuk-list govuk-list--bullet",
-)
-        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2")))
+        )
+        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.2")))
 
 
         @govukTextarea(
