@@ -36,15 +36,15 @@
 
     @formHelper(action = routes.ExplainReasonComputedValueController.onSubmit(mode)) {
 
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
     @caption(messages("explainReasonComputedValue.caption"))
 
     @heading(messages("explainReasonComputedValue.heading"))
 
     @paragraph(Html(messages("explainReasonComputedValue.paragraph")))
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
     @govukTextarea(
             TextareaViewModel(
