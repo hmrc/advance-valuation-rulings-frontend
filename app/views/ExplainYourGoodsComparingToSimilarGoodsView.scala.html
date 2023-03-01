@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import viewmodels.InputWidth._
 @import components._
 
 @this(
@@ -23,40 +24,36 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     govukTextarea: GovukTextarea,
-    cancelLink: CancelApplicationLink,
-    paragraph: Paragraph,
     caption: Caption,
+    list: BulletList,
+    paragraph: Paragraph,
     heading: Heading,
-    bulletList: BulletList
+    cancelLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whyTransactionValueOfSimilarGoods.title"))) {
+@layout(pageTitle = title(form, messages("explainYourGoodsComparingToSimilarGoods.title"))) {
 
-    @formHelper(action = routes.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode)) {
+    @formHelper(action = routes.ExplainYourGoodsComparingToSimilarGoodsController.onSubmit(mode)) {
 
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-    @caption(messages("whyTransactionValueOfSimilarGoods.caption"))
+        @caption(messages("explainYourGoodsComparingToSimilarGoods.caption"))
+        @heading(messages("explainYourGoodsComparingToSimilarGoods.heading"))
+        @paragraph(Html(messages("explainYourGoodsComparingToSimilarGoods.paragraph")))
 
-    @heading(messages("whyTransactionValueOfSimilarGoods.heading"))
+        @list(
+            Seq(
+                Html(messages("explainYourGoodsComparingToSimilarGoods.bulletPoint.1")),
+                Html(messages("explainYourGoodsComparingToSimilarGoods.bulletPoint.2"))
+            ),
+            "govuk-list govuk-list--bullet",
+        )
 
-    @paragraph(Html(messages("whyTransactionValueOfSimilarGoods.paragraph.1")))
-
-    @bulletList(Seq(
-            Html(messages("whyTransactionValueOfSimilarGoods.bulletPoint.1")),
-            Html(messages("whyTransactionValueOfSimilarGoods.bulletPoint.2")),
-        ))
-
-    @paragraph(Html(messages("whyTransactionValueOfSimilarGoods.paragraph.2")))
-
-
-
-
-    @govukTextarea(
+        @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
                 label = Label(None)
@@ -69,6 +66,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
-@cancelLink()
+    @cancelLink()
 }
-

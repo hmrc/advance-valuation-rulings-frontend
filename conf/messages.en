@@ -553,3 +553,42 @@ explainHowYouWillUseMethodSix.error.length = Maximum allowed characters is 8168
 explainHowYouWillUseMethodSix.change.hidden = ExplainHowYouWillUseMethodSix
 explainHowYouWillUseMethodSix.paragraph.1 = Method 6 (fall-back method) is the final valuation method you can try.
 explainHowYouWillUseMethodSix.paragraph.2 = Tell us how you plan to use Method 6. You should also let us know if you want to adapt another method for your circumstances.
+
+explainYourGoodsComparingToSimilarGoods.title = Explain how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
+explainYourGoodsComparingToSimilarGoods.heading = Explain how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
+explainYourGoodsComparingToSimilarGoods.caption = About the goods
+explainYourGoodsComparingToSimilarGoods.paragraph = You should use Method 4: Deductive method if:
+explainYourGoodsComparingToSimilarGoods.bulletPoint.1 = you do not think Method 3 is the correct way to value your goods
+explainYourGoodsComparingToSimilarGoods.bulletPoint.2 = you do not have any further information about the similar goods
+explainYourGoodsComparingToSimilarGoods.checkYourAnswersLabel = Explain how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
+explainYourGoodsComparingToSimilarGoods.error.required = Enter an explanation of how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
+explainYourGoodsComparingToSimilarGoods.error.length = Maximum allowed characters is 8168
+explainYourGoodsComparingToSimilarGoods.change.hidden = ExplainYourGoodsComparingToSimilarGoods
+
+willYouCompareToSimilarGoods.title = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
+willYouCompareToSimilarGoods.heading = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
+willYouCompareToSimilarGoods.caption = About the goods
+willYouCompareToSimilarGoods.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
+willYouCompareToSimilarGoods.checkYourAnswersLabel = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
+willYouCompareToSimilarGoods.error.required = Select yes if you will be be comparing your goods to similar goods imported by another buyer or seller in the past 90 days
+willYouCompareToSimilarGoods.change.hidden = WillYouCompareToSimilarGoods
+
+describeTheSimilarGoods.title = Describe the similar goods
+describeTheSimilarGoods.heading = Describe the similar goods
+describeTheSimilarGoods.caption = About the goods
+describeTheSimilarGoods.paragraph.1 = Similar goods are not identical to the goods being valued but:
+describeTheSimilarGoods.bulletPoint.1 = are produced in the same country
+describeTheSimilarGoods.bulletPoint.2 = can carry out the same tasks
+describeTheSimilarGoods.bulletPoint.3 = are commercially interchangeable
+describeTheSimilarGoods.checkYourAnswersLabel = Describe the similar goods
+describeTheSimilarGoods.error.required = Enter a description of the similar goods
+describeTheSimilarGoods.error.length = Maximum allowed characters is 8168
+describeTheSimilarGoods.change.hidden = DescribeTheSimilarGoods
+
+haveYouUsedMethodOneForSimilarGoodsInPast.title = In the past 90 days, have you used Valuation Method 1 to import any goods that are similar to the goods being valued?
+haveYouUsedMethodOneForSimilarGoodsInPast.heading = In the past 90 days, have you used Valuation Method 1 to import any goods that are similar to the goods being valued?
+haveYouUsedMethodOneForSimilarGoodsInPast.caption = About the goods
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Method 3 is based on the transaction value of similar goods exported to the UK at or about the same time (within 90-days) as the goods being valued.
+haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = In the past 90 days, have you used Valuation Method 1 to import any goods that are similar to the goods being valued?
+haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if you have used valuation Method 1 to import any goods in the past 90 days
+haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = HaveYouUsedMethodOneForSimilarGoodsInPast

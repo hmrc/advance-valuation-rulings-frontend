@@ -25,6 +25,42 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryHaveYouUsedMethodOneForSimilarGoodsInPastUserAnswersEntry
+    : Arbitrary[(HaveYouUsedMethodOneForSimilarGoodsInPastPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[HaveYouUsedMethodOneForSimilarGoodsInPastPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryDescribeTheSimilarGoodsUserAnswersEntry
+    : Arbitrary[(DescribeTheSimilarGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[DescribeTheSimilarGoodsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryWillYouCompareToSimilarGoodsUserAnswersEntry
+    : Arbitrary[(WillYouCompareToSimilarGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[WillYouCompareToSimilarGoodsPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryExplainYourGoodsComparingToSimilarGoodsUserAnswersEntry
+    : Arbitrary[(ExplainYourGoodsComparingToSimilarGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ExplainYourGoodsComparingToSimilarGoodsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryExplainWhyYouHaveNotSelectedMethodOneToFiveUserAnswersEntry
     : Arbitrary[(ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type, JsValue)] =
     Arbitrary {

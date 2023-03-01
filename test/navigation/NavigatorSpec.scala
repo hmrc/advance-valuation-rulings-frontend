@@ -21,6 +21,7 @@ import play.api.libs.json.Writes
 import base.SpecBase
 import controllers.routes
 import models._
+import models.ValuationMethod._
 import pages._
 import queries.Settable
 
@@ -54,30 +55,99 @@ class NavigatorSpec extends SpecBase {
             WhyTransactionValueOfSimilarGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode)
+          ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode)
 
         }
       }
 
       "HaveYouUsedMethodOneInPast page" - {
+
         "must navigate to describeTheIdenticalGoods Page when True" in {
-          val userAnswers =
-            userAnswersWith(HaveYouUsedMethodOneInPastPage, true)
+          val ans = userAnswersWith(HaveYouUsedMethodOneInPastPage, true)
           navigator.nextPage(
             HaveYouUsedMethodOneInPastPage,
             NormalMode,
-            userAnswers
+            ans
           ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
         }
 
         "must navigate to willYouCompareGoodsToIdenticalGoods Page when False" in {
-          val userAnswers =
-            userAnswersWith(HaveYouUsedMethodOneInPastPage, false)
+          val ans = userAnswersWith(HaveYouUsedMethodOneInPastPage, false)
           navigator.nextPage(
             HaveYouUsedMethodOneInPastPage,
             NormalMode,
-            userAnswers
+            ans
           ) mustBe routes.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(NormalMode)
+
+        }
+
+      }
+
+      "haveYouUsedMethodOneForSimilarGoodsInPast page" - {
+
+        "must navigate to describeTheSimilarGoods Page when True" in {
+          val ans = userAnswersWith(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
+          navigator.nextPage(
+            HaveYouUsedMethodOneForSimilarGoodsInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
+        }
+
+        "must navigate to WillYouCompareToSimilarGoodsController Page when False" in {
+          val ans = userAnswersWith(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+          navigator.nextPage(
+            HaveYouUsedMethodOneForSimilarGoodsInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.WillYouCompareToSimilarGoodsController.onPageLoad(NormalMode)
+
+        }
+      }
+
+      "DescribeTheSimilarGoods page" - {
+        "must navigate to WillYouCompareToSimilarGoods Page" in {
+          val userAnswers =
+            userAnswersWith(DescribeTheSimilarGoodsPage, "similar goods")
+          navigator.nextPage(
+            DescribeTheSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WillYouCompareToSimilarGoodsController.onPageLoad(NormalMode)
+        }
+      }
+
+      "WillYouCompareGoodsToSimilarGoods page" - {
+        "must navigate to ExplainYourGoodsComparingToSimilarGoods Page when True" in {
+          val userAnswers =
+            userAnswersWith(WillYouCompareToSimilarGoodsPage, true)
+          navigator.nextPage(
+            WillYouCompareToSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(NormalMode)
+        }
+
+        "must navigate to ValuationMethod Page when False" in {
+          val userAnswers =
+            userAnswersWith(WillYouCompareToSimilarGoodsPage, false)
+          navigator.nextPage(
+            WillYouCompareToSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
+        }
+      }
+
+      "ExplainYourGoodsComparingToSimilarGoods page" - {
+        "must navigate to DescriptionOfGoods Page" in {
+          val userAnswers =
+            userAnswersWith(ExplainYourGoodsComparingToSimilarGoodsPage, "describe goods")
+          navigator.nextPage(
+            ExplainYourGoodsComparingToSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
         }
       }
 
