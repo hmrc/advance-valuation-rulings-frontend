@@ -24,8 +24,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import connectors.BackendConnector
 import forms.CheckRegisteredDetailsFormProvider
-import models.{CheckRegisteredDetails, NormalMode, UserAnswers}
+import models.{CDSEstablishmentAddress, CheckRegisteredDetails, NormalMode, TraderDetails, TraderDetailsWithCountryCode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -55,13 +56,34 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
       postalCode = Some("Test Postal Code")
     )
 
+    val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+      EORINo = registeredDetails.eori,
+      CDSFullName = registeredDetails.name,
+      CDSEstablishmentAddress = CDSEstablishmentAddress(
+        streetAndNumber = registeredDetails.streetAndNumber,
+        city = registeredDetails.city,
+        countryCode = "GB",
+        postalCode = registeredDetails.postalCode
+      )
+    )
+
     val userAnswers = UserAnswers(userAnswersId)
       .set(CheckRegisteredDetailsPage, registeredDetails)
       .success
       .value
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val mockBackendConnector = mock[BackendConnector]
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackendConnector)
+        )
+        .build()
+
+      when(mockBackendConnector.getTraderDetails(any())(any())) thenReturn Future.successful(
+        Right(traderDetailsWithCountryCode)
+      )
 
       running(application) {
         val request = FakeRequest(GET, checkRegisteredDetailsRoute)
