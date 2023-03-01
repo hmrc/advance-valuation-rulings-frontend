@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import javax.inject.Inject
+import play.api.libs.json.{Json, OFormat}
 
-import play.api.data.Form
+final case class CDSEstablishmentAddress(
+  streetAndNumber: String,
+  city: String,
+  countryCode: String,
+  postalCode: Option[String] = None
+)
 
-import forms.mappings.Mappings
-
-class CheckRegisteredDetailsFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[Boolean] =
-    Form(
-      "value" -> boolean("checkRegisteredDetails.error.required")
-    )
+object CDSEstablishmentAddress {
+  implicit val format: OFormat[CDSEstablishmentAddress] = Json.format[CDSEstablishmentAddress]
 }

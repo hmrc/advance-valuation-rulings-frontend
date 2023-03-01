@@ -18,17 +18,13 @@ package generators
 
 import models._
 import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary.arbitrary
 
 trait ModelGenerators {
 
   implicit lazy val arbitraryAdaptMethod: Arbitrary[AdaptMethod] =
     Arbitrary {
       Gen.oneOf(AdaptMethod.values.toSeq)
-    }
-
-  implicit lazy val arbitraryCheckRegisteredDetails: Arbitrary[CheckRegisteredDetails] =
-    Arbitrary {
-      Gen.oneOf(CheckRegisteredDetails.values.toSeq)
     }
 
   implicit lazy val arbitraryRequiredInformation: Arbitrary[RequiredInformation] =
@@ -40,4 +36,16 @@ trait ModelGenerators {
     Arbitrary {
       Gen.oneOf(ValuationMethod.values.toSeq)
     }
+
+  implicit lazy val arbitraryCheckRegisteredDetails: Arbitrary[CheckRegisteredDetails] = Arbitrary {
+    for {
+      value           <- arbitrary[Boolean]
+      eori            <- Gen.alphaStr.suchThat(_.nonEmpty)
+      name            <- Gen.alphaStr.suchThat(_.nonEmpty)
+      streetAndNumber <- Gen.alphaStr.suchThat(_.nonEmpty)
+      city            <- Gen.alphaStr.suchThat(_.nonEmpty)
+      country         <- Gen.alphaStr.suchThat(_.nonEmpty)
+      postalCode      <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
+    } yield CheckRegisteredDetails(value, eori, name, streetAndNumber, city, country, postalCode)
+  }
 }

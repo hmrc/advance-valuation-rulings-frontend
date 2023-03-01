@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import javax.inject.Inject
+import play.api.libs.json.{Json, OFormat}
 
-import play.api.data.Form
+final case class BackendError(code: Int, message: String)
 
-import forms.mappings.Mappings
-
-class CheckRegisteredDetailsFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[Boolean] =
-    Form(
-      "value" -> boolean("checkRegisteredDetails.error.required")
-    )
+object BackendError {
+  implicit val format: OFormat[BackendError] = Json.format[BackendError]
 }

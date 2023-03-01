@@ -29,7 +29,7 @@ import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import config.FrontendAppConfig
 import models.UserAnswers
-import org.mongodb.scala.bson.conversions.Bson
+import org.bson.conversions.Bson
 import org.mongodb.scala.model._
 
 @Singleton
@@ -86,6 +86,15 @@ class SessionRepository @Inject() (
       .toFuture()
       .map(_ => true)
   }
+
+  def update(update: UserAnswers): Future[UserAnswers] =
+    for {
+      maybeAnswers <- this.get(update.id)
+      merged        = maybeAnswers
+                        .map(answers => answers.copy(data = answers.data ++ update.data))
+                        .getOrElse(update)
+      _            <- this.set(merged)
+    } yield merged
 
   def clear(id: String): Future[Boolean] =
     collection

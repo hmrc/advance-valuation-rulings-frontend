@@ -16,31 +16,18 @@
 
 package models
 
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import play.api.libs.json.{Json, OFormat}
 
-sealed trait CheckRegisteredDetails
+case class CheckRegisteredDetails(
+  value: Boolean,
+  eori: String,
+  name: String,
+  streetAndNumber: String,
+  city: String,
+  country: String,
+  postalCode: Option[String]
+)
 
-object CheckRegisteredDetails extends Enumerable.Implicits {
-
-  case object Yes extends WithName("yes") with CheckRegisteredDetails
-  case object No extends WithName("no") with CheckRegisteredDetails
-
-  val values: Seq[CheckRegisteredDetails] = Seq(
-    Yes,
-    No
-  )
-
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = Text(messages(s"site.${value.toString}")),
-        value = Some(value.toString),
-        id = Some(s"value_$index")
-      )
-  }
-
-  implicit val enumerable: Enumerable[CheckRegisteredDetails] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+object CheckRegisteredDetails {
+  implicit val format: OFormat[CheckRegisteredDetails] = Json.format[CheckRegisteredDetails]
 }

@@ -30,6 +30,16 @@ object CountrySelectOptions {
         None
     }
 
+  def countryCodeToCountry(code: String): String =
+    countries
+      .filter {
+        case (_, countryCode) =>
+          countryCode == s"country:$code" || countryCode == s"territory:$code"
+      }
+      .map(_._1)
+      .headOption
+      .getOrElse(throw new IllegalArgumentException(s"No country found for country code $code"))
+
   private val locationCanonicalList = """[
   [
     "Abu Dhabi",

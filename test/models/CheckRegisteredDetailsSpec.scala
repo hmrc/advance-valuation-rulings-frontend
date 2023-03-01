@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.{JsError, Json, JsString}
+import play.api.libs.json.Json
 
+import generators.ModelGenerators
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -29,41 +29,47 @@ class CheckRegisteredDetailsSpec
     extends AnyFreeSpec
     with Matchers
     with ScalaCheckPropertyChecks
+    with ModelGenerators
     with OptionValues {
 
   "CheckRegisteredDetails" - {
+    val validJson = Json.parse("""
+                      |{
+                      |  "value": true,
+                      |  "eori": "GB123456789012",
+                      |  "name": "name",
+                      |  "streetAndNumber": "streetAndNumber",
+                      |  "city": "city",
+                      |  "country": "country",
+                      |  "postalCode": "postalCode"
+                      |}
+      """.stripMargin)
 
-    "must deserialise valid values" in {
+    val validDetails = CheckRegisteredDetails(
+      value = true,
+      eori = "GB123456789012",
+      name = "name",
+      streetAndNumber = "streetAndNumber",
+      city = "city",
+      country = "country",
+      postalCode = Some("postalCode")
+    )
 
-      val gen = Gen.oneOf(CheckRegisteredDetails.values.toSeq)
-
-      forAll(gen) {
-        checkRegisteredDetails =>
-          JsString(checkRegisteredDetails.toString)
-            .validate[CheckRegisteredDetails]
-            .asOpt
-            .value mustEqual checkRegisteredDetails
-      }
+    "must deserialise" in {
+      CheckRegisteredDetails.format.reads(validJson).asOpt mustEqual Some(validDetails)
     }
-
-    "must fail to deserialise invalid values" in {
-
-      val gen =
-        arbitrary[String] suchThat (!CheckRegisteredDetails.values.map(_.toString).contains(_))
-
-      forAll(gen) {
-        invalidValue =>
-          JsString(invalidValue).validate[CheckRegisteredDetails] mustEqual JsError("error.invalid")
-      }
-    }
-
     "must serialise" in {
-
-      val gen = Gen.oneOf(CheckRegisteredDetails.values.toSeq)
+      CheckRegisteredDetails.format.writes(validDetails) mustEqual validJson
+    }
+    "must serialise and deserialise" in {
+      val gen = arbitrary[CheckRegisteredDetails]
 
       forAll(gen) {
         checkRegisteredDetails =>
-          Json.toJson(checkRegisteredDetails) mustEqual JsString(checkRegisteredDetails.toString)
+          val asJson = CheckRegisteredDetails.format.writes(checkRegisteredDetails)
+          val result = CheckRegisteredDetails.format.reads(asJson).asOpt
+
+          result mustEqual Some(checkRegisteredDetails)
       }
     }
   }

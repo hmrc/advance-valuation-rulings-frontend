@@ -24,15 +24,15 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import connectors.BackendConnector
 import forms.CheckRegisteredDetailsFormProvider
-import models.{CheckRegisteredDetails, NormalMode, UserAnswers}
+import models.{BackendError, CDSEstablishmentAddress, CheckRegisteredDetails, NormalMode, TraderDetails, TraderDetailsWithCountryCode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CheckRegisteredDetailsPage
 import repositories.SessionRepository
-import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
@@ -46,46 +46,64 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   "CheckRegisteredDetails Controller" - {
 
+    val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
+      value = false,
+      eori = "GB123456789012345",
+      name = "Test Name",
+      streetAndNumber = "Test Street 1",
+      city = "Test City",
+      country = "Test Country",
+      postalCode = Some("Test Postal Code")
+    )
+
+    val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+      EORINo = registeredDetails.eori,
+      CDSFullName = registeredDetails.name,
+      CDSEstablishmentAddress = CDSEstablishmentAddress(
+        streetAndNumber = registeredDetails.streetAndNumber,
+        city = registeredDetails.city,
+        countryCode = "GB",
+        postalCode = registeredDetails.postalCode
+      )
+    )
+
+    val userAnswers = UserAnswers(userAnswersId)
+      .set(CheckRegisteredDetailsPage, registeredDetails)
+      .success
+      .value
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val mockBackendConnector = mock[BackendConnector]
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackendConnector)
+        )
+        .build()
+
+      when(mockBackendConnector.getTraderDetails(any())(any())) thenReturn Future.successful(
+        Right(traderDetailsWithCountryCode)
+      )
 
       running(application) {
         val request = FakeRequest(GET, checkRegisteredDetailsRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CheckRegisteredDetailsView]
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
-          request,
-          messages(application)
-        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId)
-        .set(CheckRegisteredDetailsPage, CheckRegisteredDetails.values.head)
-        .success
-        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, checkRegisteredDetailsRoute)
 
-        val view = application.injector.instanceOf[CheckRegisteredDetailsView]
-
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(CheckRegisteredDetails.values.head),
-          NormalMode
-        )(request, messages(application)).toString
       }
     }
 
@@ -93,10 +111,17 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      val answersAfterPost = UserAnswers(userAnswersId)
+        .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
+        .success
+        .value
+
+      when(mockSessionRepository.update(any())) thenReturn Future.successful(
+        answersAfterPost
+      )
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -106,7 +131,7 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, checkRegisteredDetailsRoute)
-            .withFormUrlEncodedBody(("value", CheckRegisteredDetails.values.head.toString))
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -124,17 +149,9 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
           FakeRequest(POST, checkRegisteredDetailsRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-
-        val view = application.injector.instanceOf[CheckRegisteredDetailsView]
-
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
-          request,
-          messages(application)
-        ).toString
       }
     }
 
@@ -159,7 +176,32 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, checkRegisteredDetailsRoute)
-            .withFormUrlEncodedBody(("value", CheckRegisteredDetails.values.head.toString))
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "redirect to Journey Recovery if the registered details retrieval from backend fails" in {
+
+      val mockBackendConnector = mock[BackendConnector]
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackendConnector)
+        )
+        .build()
+
+      when(mockBackendConnector.getTraderDetails(any())(any())) thenReturn Future.successful(
+        Left(BackendError(code = 500, message = "some backed error"))
+      )
+
+      running(application) {
+        val request = FakeRequest(GET, checkRegisteredDetailsRoute)
 
         val result = route(application, request).value
 
