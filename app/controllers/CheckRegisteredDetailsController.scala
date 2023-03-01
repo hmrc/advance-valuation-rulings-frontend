@@ -65,17 +65,19 @@ class CheckRegisteredDetailsController @Inject() (
               (details: CheckRegisteredDetails) => Ok(view(form.fill(value.value), mode, details))
             )
           case None        =>
+            val eoriNumber =
+              "GB070081349000" // TODO: This EORI is to quickly test backend integration and will be fixed in the next PR
             backendConnector
-              .getTraderDetails(TraderDetailsRequest(UUID.randomUUID().toString, request.userId))
+              .getTraderDetails(TraderDetailsRequest(UUID.randomUUID().toString, eoriNumber))
               .flatMap {
                 case Right(traderDetails) =>
                   val checkRegisteredDetails = traderDetails.details
 
                   for {
-                    answers        <-
+                    answers <-
                       request.userAnswers
                         .setFuture(CheckRegisteredDetailsPage, checkRegisteredDetails)
-                    updatedAnswers <- sessionRepository.set(answers)
+                    _       <- sessionRepository.set(answers)
                   } yield Ok(view(form, mode, checkRegisteredDetails))
                 case Left(backendError)   =>
                   logger.error(s"Failed to get trader details from backend: $backendError")
