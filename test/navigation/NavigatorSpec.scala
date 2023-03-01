@@ -61,50 +61,47 @@ class NavigatorSpec extends SpecBase {
       }
 
       "HaveYouUsedMethodOneInPast page" - {
-        "when user has selected Method2" - {
-          val answers =
-            userAnswersWith(ValuationMethodPage, Method2)
 
-          "must navigate to describeTheIdenticalGoods Page when True" in {
-            val ans = answers.set(HaveYouUsedMethodOneInPastPage, true).success.value
-            navigator.nextPage(
-              HaveYouUsedMethodOneInPastPage,
-              NormalMode,
-              ans
-            ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
-          }
-
-          "must navigate to willYouCompareGoodsToIdenticalGoods Page when False" in {
-            val ans = answers.set(HaveYouUsedMethodOneInPastPage, false).success.value
-            navigator.nextPage(
-              HaveYouUsedMethodOneInPastPage,
-              NormalMode,
-              ans
-            ) mustBe routes.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(NormalMode)
-          }
+        "must navigate to describeTheIdenticalGoods Page when True" in {
+          val ans = userAnswersWith(HaveYouUsedMethodOneInPastPage, true)
+          navigator.nextPage(
+            HaveYouUsedMethodOneInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
         }
 
-        "when user has selected Method3" - {
-          val answers =
-            userAnswersWith(ValuationMethodPage, Method3)
+        "must navigate to willYouCompareGoodsToIdenticalGoods Page when False" in {
+          val ans = userAnswersWith(HaveYouUsedMethodOneInPastPage, false)
+          navigator.nextPage(
+            HaveYouUsedMethodOneInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(NormalMode)
 
-          "must navigate to describeTheSimilarGoods Page when True" in {
-            val ans = answers.set(HaveYouUsedMethodOneInPastPage, true).success.value
-            navigator.nextPage(
-              HaveYouUsedMethodOneInPastPage,
-              NormalMode,
-              ans
-            ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
-          }
+        }
 
-          "must navigate to WillYouCompareToSimilarGoodsController Page when False" in {
-            val ans = answers.set(HaveYouUsedMethodOneInPastPage, false).success.value
-            navigator.nextPage(
-              HaveYouUsedMethodOneInPastPage,
-              NormalMode,
-              ans
-            ) mustBe routes.WillYouCompareToSimilarGoodsController.onPageLoad(NormalMode)
-          }
+      }
+
+      "haveYouUsedMethodOneForSimilarGoodsInPast page" - {
+
+        "must navigate to describeTheSimilarGoods Page when True" in {
+          val ans = userAnswersWith(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
+          navigator.nextPage(
+            HaveYouUsedMethodOneForSimilarGoodsInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
+        }
+
+        "must navigate to WillYouCompareToSimilarGoodsController Page when False" in {
+          val ans = userAnswersWith(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+          navigator.nextPage(
+            HaveYouUsedMethodOneForSimilarGoodsInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.WillYouCompareToSimilarGoodsController.onPageLoad(NormalMode)
+
         }
       }
 

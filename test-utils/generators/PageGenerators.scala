@@ -21,7 +21,8 @@ import pages._
 
 trait PageGenerators {
 
-  implicit lazy val arbitraryHaveYouUsedMethodOneForSimilarGoodsInPastPage: Arbitrary[HaveYouUsedMethodOneForSimilarGoodsInPastPage.type] =
+  implicit lazy val arbitraryHaveYouUsedMethodOneForSimilarGoodsInPastPage
+    : Arbitrary[HaveYouUsedMethodOneForSimilarGoodsInPastPage.type] =
     Arbitrary(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
 
   implicit lazy val arbitraryDescribeTheSimilarGoodsPage

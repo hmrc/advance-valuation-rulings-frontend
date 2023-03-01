@@ -52,6 +52,8 @@ class Navigator @Inject() () {
     case WhyComputedValuePage                          => whyComputedValuePage
     case ExplainReasonComputedValuePage                => explainReasonComputedValuePage
     case WhyTransactionValueOfSimilarGoodsPage         => whyTransactionValueOfSimilarGoodsPage
+    case HaveYouUsedMethodOneForSimilarGoodsInPastPage =>
+      haveYouUsedMethodOneForSimilarGoodsInPastPage
     case HaveYouUsedMethodOneInPastPage                => haveYouUsedMethodOneInPastPage
     case WhyIdenticalGoodsPage                         => whyIdenticalGoodsPage
     case AreThereRestrictionsOnTheGoodsPage            => areThereRestrictionsOnTheGoodsPage
@@ -153,21 +155,14 @@ class Navigator @Inject() () {
       case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
     }
 
-  private def haveYouUsedMethodOneInPastPage(userAnswers: UserAnswers): Call = {
-    val method: Option[ValuationMethod] = userAnswers.get(ValuationMethodPage)
-
-    (userAnswers.get(HaveYouUsedMethodOneInPastPage), method) match {
-      case (None, _)                    => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
-      case (Some(true), Some(Method2))  =>
+  private def haveYouUsedMethodOneInPastPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
+      case None        => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
+      case Some(true)  =>
         DescribeTheIdenticalGoodsController.onPageLoad(models.NormalMode)
-      case (Some(false), Some(Method2)) =>
+      case Some(false) =>
         WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(models.NormalMode)
-      case (Some(true), Some(Method3))  =>
-        DescribeTheSimilarGoodsController.onPageLoad(models.NormalMode)
-      case (Some(false), Some(Method3)) =>
-        WillYouCompareToSimilarGoodsController.onPageLoad(models.NormalMode)
     }
-  }
 
   private def describeTheIdenticalGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
@@ -194,6 +189,16 @@ class Navigator @Inject() () {
     userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
       case None    => WhyTransactionValueOfSimilarGoodsController.onPageLoad(models.NormalMode)
       case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
+    }
+
+  private def haveYouUsedMethodOneForSimilarGoodsInPastPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage) match {
+      case None        =>
+        HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(models.NormalMode)
+      case Some(true)  =>
+        DescribeTheSimilarGoodsController.onPageLoad(models.NormalMode)
+      case Some(false) =>
+        WillYouCompareToSimilarGoodsController.onPageLoad(models.NormalMode)
     }
 
   private def describeTheSimilarGoodsPage(userAnswers: UserAnswers): Call                      =
