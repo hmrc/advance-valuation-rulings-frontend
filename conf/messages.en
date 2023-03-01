@@ -13,6 +13,17 @@ site.signIn = Sign in
 site.govuk = GOV.UK
 site.cancel = Cancel application
 
+site.1 = one
+site.2 = two
+site.3 = three
+site.4 = four
+site.5 = five
+site.6 = six
+site.7 = seven
+site.8 = eight
+site.9 = nine
+site.10 = ten
+
 date.day = Day
 date.month = Month
 date.year = Year
@@ -260,8 +271,10 @@ isThisFileConfidential.error.required = Select yes if you want to mark this file
 isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
 isThisFileConfidential.change.hidden = IsThisFileConfidential
 
-uploadAnotherSupportingDocument.title = You have uploaded {0} supporting document
-uploadAnotherSupportingDocument.heading = You have uploaded {0} supporting document
+uploadAnotherSupportingDocument.title.one = You have uploaded one supporting document
+uploadAnotherSupportingDocument.heading.one = You have uploaded one supporting document
+uploadAnotherSupportingDocument.title.many = You have uploaded {0} supporting documents
+uploadAnotherSupportingDocument.heading.many = You have uploaded {0} supporting documents
 uploadAnotherSupportingDocument.subHeading = Do you want to upload another supporting document?
 uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument

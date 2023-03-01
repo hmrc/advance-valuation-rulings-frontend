@@ -28,6 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import config.FrontendAppConfig
 import controllers.IsThisFileConfidentialController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.NormalMode
 import models.fileupload._
 import models.requests.DataRequest
 import pages.UploadSupportingDocumentPage
@@ -49,6 +50,7 @@ class UploadSupportingDocumentsController @Inject() (
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
+  private val logger = play.api.Logger(this.getClass)
 
   def onPageLoad(
     error: Option[String],
@@ -97,10 +99,20 @@ class UploadSupportingDocumentsController @Inject() (
       implicit request =>
         val payload = UpscanFileDetails(uploadId, uploadDetails.name, uploadDetails.downloadUrl)
 
+        // The user can get here in two states:
+        // 1. No uploaded files, so no entry (None)
+        // 2. Some uploaded files, so an entry with a list of files (Some[UploadedFiles])
+
         for {
-          answers <- request.userAnswers.setFuture(UploadSupportingDocumentPage, payload)
+          answers <-
+            request.userAnswers.upsertFuture(
+              UploadSupportingDocumentPage,
+              (uploadedFiles: UploadedFiles) => uploadedFiles.addFile(payload),
+              UploadedFiles(payload)
+            )
           _       <- sessionRepository.set(answers)
-          r       <- isThisFileConfidentialController.onCallback().apply(request)
+          _        = logger.info(s"Uploaded file added to sesion repo uploadId: $uploadId")
+          r       <- isThisFileConfidentialController.onPageLoad(NormalMode)(request)
         } yield r
     }
 

@@ -24,7 +24,7 @@ import scala.util.{Failure, Success, Try}
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import queries.{Gettable, Settable}
+import queries.Modifiable
 
 final case class UserAnswers(
   id: String,
@@ -32,13 +32,13 @@ final case class UserAnswers(
   lastUpdated: Instant = Instant.now
 ) {
 
-  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
+  def get[A](page: Modifiable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
 
-  def getOrElse[A](page: Gettable[A], default: => A)(implicit rds: Reads[A]): A =
+  def getOrElse[A](page: Modifiable[A], default: => A)(implicit rds: Reads[A]): A =
     get(page).getOrElse(default)
 
-  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
+  def set[A](page: Modifiable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
@@ -54,12 +54,40 @@ final case class UserAnswers(
     }
   }
 
-  def setFuture[A](page: Settable[A], value: A)(implicit
+  def setFuture[A](page: Modifiable[A], value: A)(implicit
     writes: Writes[A]
   ): Future[UserAnswers] =
     Future.fromTry(set(page, value))
 
-  def remove[A](page: Settable[A]): Try[UserAnswers] = {
+  def upsert[A](page: Modifiable[A], f: A => A, default: A)(implicit
+    format: Format[A]
+  ): Try[UserAnswers] =
+    get[A](page) match {
+      case Some(value) =>
+        set[A](page, f(value))
+      case None        =>
+        set[A](page, default)
+    }
+
+  def upsertFuture[A](page: Modifiable[A], f: A => A, default: A)(implicit
+    format: Format[A]
+  ): Future[UserAnswers] =
+    Future.fromTry(upsert(page, f, default))
+
+  def modify[A](page: Modifiable[A], f: A => A)(implicit format: Format[A]): Try[UserAnswers] =
+    get[A](page) match {
+      case Some(value) =>
+        set[A](page, f(value))
+      case None        =>
+        Failure(new Exception(s"Cannot find value at ${page.path}"))
+    }
+
+  def modifyFuture[A](page: Modifiable[A], f: A => A)(implicit
+    format: Format[A]
+  ): Future[UserAnswers] =
+    Future.fromTry(modify(page, f))
+
+  def remove[A](page: Modifiable[A]): Try[UserAnswers] = {
 
     val updatedData = data.removeObject(page.path) match {
       case JsSuccess(jsValue, _) =>

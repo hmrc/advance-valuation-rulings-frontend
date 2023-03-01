@@ -16,54 +16,14 @@
 
 package models
 
-import play.api.libs.json.{__, OFormat, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 import models.fileupload.UploadId
 
-case class IsThisFileConfidential(
-  uploadId: UploadId,
-  isConfidential: Boolean,
-  downloadUrl: String, // URL?
-  fileName: String
-)
+case class IsThisFileConfidential(uploadId: UploadId, isConfidential: Boolean)
 
 object IsThisFileConfidential {
-
-  val reads: Reads[IsThisFileConfidential] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "uploadId").read[String].map(UploadId(_)) and
-        (__ \ "isConfidential").read[Boolean] and
-        (__ \ "downloadUrl").read[String] and
-        (__ \ "fileName").read[String]
-    )(IsThisFileConfidential.apply _)
-  }
-
-  val writes: OWrites[IsThisFileConfidential] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "uploadId").write[String] and
-        (__ \ "isConfidential").write[Boolean] and
-        (__ \ "downloadUrl").write[String] and
-        (__ \ "fileName").write[String]
-    )(
-      unlift(
-        (isFileConfidential: IsThisFileConfidential) =>
-          Some(
-            (
-              isFileConfidential.uploadId.value,
-              isFileConfidential.isConfidential,
-              isFileConfidential.downloadUrl,
-              isFileConfidential.fileName
-            )
-          )
-      )
-    )
-  }
-
-  implicit val format: OFormat[IsThisFileConfidential] = OFormat(reads, writes)
+  implicit val reads  = Json.reads[IsThisFileConfidential]
+  implicit val writes = Json.writes[IsThisFileConfidential]
+  implicit val format = OFormat(reads, writes)
 }

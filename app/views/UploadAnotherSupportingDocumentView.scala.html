@@ -16,7 +16,9 @@
 
 @import components._
 @import models.fileupload.UpscanFileDetails
-@import models.NormalMode
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
+@import models._
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 
 @this(
     layout: templates.Layout,
@@ -25,6 +27,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     govukSummaryList: GovukSummaryList,
+    govukTable: GovukTable,
     caption: Caption,
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
@@ -32,7 +35,7 @@
     link: Link
 )
 
-@(numOfDocs: String, fileDetails: UpscanFileDetails, isConfidential: Boolean, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(numOfDocs: String, supportingDocumentsTable: Table, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @removeLink = {
     @link(
@@ -42,39 +45,35 @@
         )
     }
 
-@layout(pageTitle = title(
-    form, 
-    messages("uploadAnotherSupportingDocument.title", 
-        messages(s"uploadAnotherSupportingDocument.$numOfDocs")
-        )
-    )
-    ) {
+@titleMessage = @{
+    if (numOfDocs == "one") {
+        messages("uploadAnotherSupportingDocument.title.one")
+    } else {
+        messages("uploadAnotherSupportingDocument.title.many", messages(numOfDocs))
+    }
+}
+
+@pageHeading = @{
+    if (numOfDocs == "one") {
+        messages("uploadAnotherSupportingDocument.heading.one")
+    } else {
+        messages("uploadAnotherSupportingDocument.heading.many", messages(numOfDocs))
+    }
+}
+
+@layout(pageTitle = title(form, titleMessage)) {
 
     @caption(messages("uploadAnotherSupportingDocument.caption"))
-    @heading(messages("uploadAnotherSupportingDocument.heading", messages(s"uploadAnotherSupportingDocument.$numOfDocs")))
+    @heading(pageHeading)
 
-    <table class="govuk-table">
-      <tbody class="govuk-table__body">
-
-
-            <tr class="govuk-table__row">
-            <td scope="row" class="govuk-table__cell">@{fileDetails.fileName}</td>
-              <td class="govuk-table__cell">@{if (isConfidential) messages("uploadAnotherSupportingDocument.keepConfidential")}</td>
-              <td class="govuk-table__cell">
-                  @removeLink
-              </td>
-            </tr>
-
-      </tbody>
-    </table>
-
+    @govukTable(supportingDocumentsTable)
 
     @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-
+        
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),

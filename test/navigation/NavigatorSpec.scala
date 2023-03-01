@@ -23,7 +23,7 @@ import controllers.routes
 import models._
 import models.ValuationMethod._
 import pages._
-import queries.Settable
+import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
@@ -32,7 +32,7 @@ class NavigatorSpec extends SpecBase {
 
   "Navigator" - {
 
-    def userAnswersWith[A: Writes](page: Settable[A], value: A): UserAnswers =
+    def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
       EmptyUserAnswers.set(page, value).success.value
 
     "must go from a page that doesn't exist in the route map to Index" in {
