@@ -36,6 +36,10 @@
 
     @formHelper(action = routes.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode)) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @caption(messages("whyTransactionValueOfSimilarGoods.caption"))
 
     @heading(messages("whyTransactionValueOfSimilarGoods.heading"))
@@ -50,9 +54,7 @@
     @paragraph(Html(messages("whyTransactionValueOfSimilarGoods.paragraph.2")))
 
 
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
+
 
     @govukTextarea(
             TextareaViewModel(

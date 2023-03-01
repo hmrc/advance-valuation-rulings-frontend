@@ -585,3 +585,9 @@ describeTheSimilarGoods.checkYourAnswersLabel = Describe the similar goods
 describeTheSimilarGoods.error.required = Enter a description of the similar goods
 describeTheSimilarGoods.error.length = Maximum allowed characters is 8168
 describeTheSimilarGoods.change.hidden = DescribeTheSimilarGoods
+
+haveYouUsedMethodOneForSimilarGoodsInPast.title = haveYouUsedMethodOneForSimilarGoodsInPast
+haveYouUsedMethodOneForSimilarGoodsInPast.heading = haveYouUsedMethodOneForSimilarGoodsInPast
+haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = haveYouUsedMethodOneForSimilarGoodsInPast
+haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if haveYouUsedMethodOneForSimilarGoodsInPast
+haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = HaveYouUsedMethodOneForSimilarGoodsInPast

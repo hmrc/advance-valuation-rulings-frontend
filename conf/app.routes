@@ -250,3 +250,8 @@ GET        /describeTheSimilarGoods                        controllers.DescribeT
 POST       /describeTheSimilarGoods                        controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /changeDescribeTheSimilarGoods                  controllers.DescribeTheSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeDescribeTheSimilarGoods                  controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /haveYouUsedMethodOneForSimilarGoodsInPast                        controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(mode: Mode = NormalMode)
+POST       /haveYouUsedMethodOneForSimilarGoodsInPast                        controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode: Mode = NormalMode)
+GET        /changeHaveYouUsedMethodOneForSimilarGoodsInPast                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeHaveYouUsedMethodOneForSimilarGoodsInPast                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode: Mode = CheckMode)

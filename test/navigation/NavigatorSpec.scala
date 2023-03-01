@@ -61,7 +61,7 @@ class NavigatorSpec extends SpecBase {
       }
 
       "HaveYouUsedMethodOneInPast page" - {
-        "when use has selected Method2" - {
+        "when user has selected Method2" - {
           val answers =
             userAnswersWith(ValuationMethodPage, Method2)
 
@@ -84,7 +84,7 @@ class NavigatorSpec extends SpecBase {
           }
         }
 
-        "when use has selected Method3" - {
+        "when user has selected Method3" - {
           val answers =
             userAnswersWith(ValuationMethodPage, Method3)
 
