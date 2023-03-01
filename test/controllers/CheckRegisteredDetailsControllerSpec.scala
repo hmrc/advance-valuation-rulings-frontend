@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import connectors.BackendConnector
 import forms.CheckRegisteredDetailsFormProvider
-import models.{CDSEstablishmentAddress, CheckRegisteredDetails, NormalMode, TraderDetails, TraderDetailsWithCountryCode, UserAnswers}
+import models.{BackendError, CDSEstablishmentAddress, CheckRegisteredDetails, NormalMode, TraderDetails, TraderDetailsWithCountryCode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -177,6 +177,31 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
         val request =
           FakeRequest(POST, checkRegisteredDetailsRoute)
             .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "redirect to Journey Recovery if the registered details retrieval from backend fails" in {
+
+      val mockBackendConnector = mock[BackendConnector]
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackendConnector)
+        )
+        .build()
+
+      when(mockBackendConnector.getTraderDetails(any())(any())) thenReturn Future.successful(
+        Left(BackendError(code = 500, message = "some backed error"))
+      )
+
+      running(application) {
+        val request = FakeRequest(GET, checkRegisteredDetailsRoute)
 
         val result = route(application, request).value
 
