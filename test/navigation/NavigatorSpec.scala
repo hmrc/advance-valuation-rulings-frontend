@@ -55,7 +55,7 @@ class NavigatorSpec extends SpecBase {
             WhyTransactionValueOfSimilarGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode)
+          ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode)
 
         }
       }

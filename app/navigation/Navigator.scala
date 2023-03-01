@@ -188,7 +188,8 @@ class Navigator @Inject() () {
   private def whyTransactionValueOfSimilarGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
       case None    => WhyTransactionValueOfSimilarGoodsController.onPageLoad(models.NormalMode)
-      case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(models.NormalMode)
+      case Some(_) =>
+        HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(models.NormalMode)
     }
 
   private def haveYouUsedMethodOneForSimilarGoodsInPastPage(userAnswers: UserAnswers): Call =
