@@ -14,13 +14,20 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    paragraph: Paragraph,
+    heading: Heading,
+    cancelLink: CancelApplicationLink
 )
+
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
@@ -32,10 +39,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("haveYouUsedMethodOneForSimilarGoodsInPast.caption"))
+        @heading(messages("haveYouUsedMethodOneForSimilarGoodsInPast.heading"))
+        @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1")))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("haveYouUsedMethodOneForSimilarGoodsInPast.heading")).asPageHeading()
+                legend = Legend()
             )
         )
 
@@ -43,4 +54,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }

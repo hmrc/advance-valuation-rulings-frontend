@@ -586,8 +586,10 @@ describeTheSimilarGoods.error.required = Enter a description of the similar good
 describeTheSimilarGoods.error.length = Maximum allowed characters is 8168
 describeTheSimilarGoods.change.hidden = DescribeTheSimilarGoods
 
-haveYouUsedMethodOneForSimilarGoodsInPast.title = haveYouUsedMethodOneForSimilarGoodsInPast
-haveYouUsedMethodOneForSimilarGoodsInPast.heading = haveYouUsedMethodOneForSimilarGoodsInPast
-haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = haveYouUsedMethodOneForSimilarGoodsInPast
-haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if haveYouUsedMethodOneForSimilarGoodsInPast
+haveYouUsedMethodOneForSimilarGoodsInPast.title = In the past 90 days, have you used Valuation Method 1 to import any goods that are similar to the goods being valued?
+haveYouUsedMethodOneForSimilarGoodsInPast.heading = In the past 90 days, have you used Valuation Method 1 to import any goods that are similar to the goods being valued?
+haveYouUsedMethodOneForSimilarGoodsInPast.caption = About the goods
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Method 3 is based on the transaction value of similar goods exported to the UK at or about the same time (within 90-days) as the goods being valued.
+haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = In the past 90 days, have you used Valuation Method 1 to import any goods that are similar to the goods being valued?
+haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if you have used valuation Method 1 to import any goods in the past 90 days
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = HaveYouUsedMethodOneForSimilarGoodsInPast
