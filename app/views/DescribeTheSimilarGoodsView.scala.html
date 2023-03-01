@@ -15,13 +15,20 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukTextarea: GovukTextarea,
+    govukButton: GovukButton,
+    bulletList: BulletList,
+    cancelLink: CancelApplicationLink,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    list: BulletList
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -34,16 +41,31 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("describeTheSimilarGoods.heading")).asPageHeading()
+        @caption(messages("describeTheSimilarGoods.caption"))
+        @heading(messages("describeTheSimilarGoods.heading"))
+
+        @paragraph(Html(messages("describeTheSimilarGoods.paragraph.1")))
+        @list(
+            Seq(
+                Html(messages("describeTheSimilarGoods.bulletPoint.1")),
+                Html(messages("describeTheSimilarGoods.bulletPoint.2")),
+                Html(messages("describeTheSimilarGoods.bulletPoint.3"))
+            ),
+        "govuk-list govuk-list--bullet",
+        )
+
+        @govukTextarea(
+        TextareaViewModel(
+            field = form("value"),
+            label = Label(None)
             )
-            .withWidth(Full)
+            .withRows(15)
+            .withAttribute("maxlength","8167")
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }
