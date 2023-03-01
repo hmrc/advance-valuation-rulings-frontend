@@ -562,10 +562,12 @@ explainYourGoodsComparingToSimilarGoods.error.required = Enter explainYourGoodsC
 explainYourGoodsComparingToSimilarGoods.error.length = ExplainYourGoodsComparingToSimilarGoods must be 8167 characters or less
 explainYourGoodsComparingToSimilarGoods.change.hidden = ExplainYourGoodsComparingToSimilarGoods
 
-willYouCompareToSimilarGoods.title = willYouCompareToSimilarGoods
-willYouCompareToSimilarGoods.heading = willYouCompareToSimilarGoods
-willYouCompareToSimilarGoods.checkYourAnswersLabel = willYouCompareToSimilarGoods
-willYouCompareToSimilarGoods.error.required = Select yes if willYouCompareToSimilarGoods
+willYouCompareToSimilarGoods.title = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
+willYouCompareToSimilarGoods.heading = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
+willYouCompareToSimilarGoods.caption = About the goods
+willYouCompareToSimilarGoods.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
+willYouCompareToSimilarGoods.checkYourAnswersLabel = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
+willYouCompareToSimilarGoods.error.required = Select yes if you will be be comparing your goods to similar goods imported by another buyer or seller in the past 90 days
 willYouCompareToSimilarGoods.change.hidden = WillYouCompareToSimilarGoods
 
 describeTheSimilarGoods.title = Describe the similar goods

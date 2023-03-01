@@ -14,12 +14,16 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -32,10 +36,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("willYouCompareToSimilarGoods.caption"))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("willYouCompareToSimilarGoods.heading")).asPageHeading()
+                legend = LegendViewModel(messages("willYouCompareToSimilarGoods.heading")).asPageHeading(),
+                noText = messages("willYouCompareToSimilarGoods.no.text")
             )
         )
 
@@ -43,4 +50,6 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelApplicationLink()
+
 }
