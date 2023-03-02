@@ -27,6 +27,7 @@
     cancelApplicationLink: CancelApplicationLink,
     caption: Caption,
     heading: Heading,
+    subheading: Subheading,
     paragraph: Paragraph,
     link: Link,
     config: FrontendAppConfig
@@ -42,9 +43,6 @@
 
 @layout(pageTitle = title(form, messages("valuationMethod.title"))) {
 
-    @caption(messages("valuationMethod.caption"))
-    @heading(messages("valuationMethod.heading"))
-    @paragraph(Html(messages("valuationMethod.paragraph", overviewLink)))
 
     @formHelper(action = routes.ValuationMethodController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -52,10 +50,18 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @caption(messages("valuationMethod.caption"))
+        @heading(messages("valuationMethod.heading"))
+        @paragraph(Html(messages("valuationMethod.paragraph.1", overviewLink)))
+        @paragraph(Html(messages("valuationMethod.paragraph.2")))
+        @paragraph(Html(messages("valuationMethod.paragraph.3")))
+        @subheading(messages("valuationMethod.h2"))
+
+
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("valuationMethod.hint")),
+                legend = Legend(content = messages("valuationMethod.hint"), classes = "govuk-hint"),
                 items  = ValuationMethod.options
             )
         )
