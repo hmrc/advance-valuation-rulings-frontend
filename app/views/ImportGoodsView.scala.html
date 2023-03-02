@@ -22,6 +22,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
+    heading: Heading,
     caption: Caption,
     cancelApplicationLink: CancelApplicationLink
 )
@@ -32,16 +33,18 @@
 
     @formHelper(action = routes.ImportGoodsController.onSubmit(mode), 'autoComplete -> "off") {
         
-        @caption(messages("importGoods.caption"))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("importGoods.caption"))
+        @heading(messages("importGoods.heading"))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("importGoods.heading")).asPageHeading()
+                legend = Legend()
             )
         )
 
