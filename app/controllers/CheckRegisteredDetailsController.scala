@@ -68,7 +68,9 @@ class CheckRegisteredDetailsController @Inject() (
             val eoriNumber =
               "GB070081349000" // TODO: This EORI is to quickly test backend integration and will be fixed in the next PR
             backendConnector
-              .getTraderDetails(TraderDetailsRequest(UUID.randomUUID().toString, eoriNumber))
+              .getTraderDetails(
+                TraderDetailsRequest(UUID.randomUUID().toString.replaceAll("-", ""), eoriNumber)
+              )
               .flatMap {
                 case Right(traderDetails) =>
                   val checkRegisteredDetails = traderDetails.details
