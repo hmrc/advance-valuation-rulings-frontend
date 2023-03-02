@@ -66,7 +66,7 @@ class CheckRegisteredDetailsController @Inject() (
             )
           case None        =>
             val eoriNumber =
-              "GB070081349000" // TODO: This EORI is to quickly test backend integration and will be fixed in the next PR
+              "GB333186844456" // TODO: This EORI is to quickly test backend integration and will be fixed in the next PR
             backendConnector
               .getTraderDetails(
                 TraderDetailsRequest(UUID.randomUUID().toString.replaceAll("-", ""), eoriNumber)
