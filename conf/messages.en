@@ -221,10 +221,10 @@ checkRegisteredDetails.error.required = Select yes to confirm your EORI details
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
 checkRegisteredDetails.warning = These are the details we have on record. They should be the details used to register your EORI number.
 
-applicationContactDetails.title = Provide the contact details for this application
-applicationContactDetails.heading = Provide the contact details for this application
+applicationContactDetails.title = Your contact details
+applicationContactDetails.heading = Your contact details
 applicationContactDetails.caption = About the applicant
-applicationContactDetails.paragraph = These details <strong>will only</strong> be used to contact you with questions relating to this application.
+applicationContactDetails.paragraph = We will only use these details if we need to contact you about your application.
 applicationContactDetails.checkYourAnswersLabel = applicationContactDetails
 applicationContactDetails.fullName.label = Full name
 applicationContactDetails.email.label = Email address
@@ -232,7 +232,6 @@ applicationContactDetails.telephoneNumber.label = Telephone number
 applicationContactDetails.fullName.error.required = Enter your full name
 applicationContactDetails.telephoneNumber.error.required = Enter your telephone number
 applicationContactDetails.email.error.required = Enter your email address
-
 applicationContactDetails.error.required = Enter applicationContactDetails
 applicationContactDetails.error.length = ApplicationContactDetails must be 100 characters or less
 applicationContactDetails.change.hidden = ApplicationContactDetails
