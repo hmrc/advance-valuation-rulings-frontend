@@ -331,9 +331,17 @@ class Navigator @Inject() () {
     }
 
   private def isThisFileConfidentialPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(IsThisFileConfidentialPage) match {
-      case None    => IsThisFileConfidentialController.onPageLoad(models.NormalMode)
-      case Some(_) => UploadAnotherSupportingDocumentController.onPageLoad(models.NormalMode)
+    userAnswers.get(UploadSupportingDocumentPage) match {
+      case None                => doYouWantToUploadDocumentsPage(userAnswers)
+      case Some(uploadedFiles) =>
+        uploadedFiles match {
+          case UploadedFiles(Some(_), _)                    =>
+            IsThisFileConfidentialController.onPageLoad(models.NormalMode)
+          case UploadedFiles(None, files) if files.nonEmpty =>
+            UploadAnotherSupportingDocumentController.onPageLoad(models.NormalMode)
+          case UploadedFiles(None, _)                       =>
+            DoYouWantToUploadDocumentsController.onPageLoad(models.NormalMode)
+        }
     }
 
   private def uploadAnotherSupportingDocumentPage(userAnswers: UserAnswers): Call =

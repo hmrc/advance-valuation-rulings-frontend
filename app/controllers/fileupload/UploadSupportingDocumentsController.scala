@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import config.FrontendAppConfig
 import controllers.IsThisFileConfidentialController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import models.NormalMode
+import models._
 import models.fileupload._
 import models.requests.DataRequest
 import pages.UploadSupportingDocumentPage
@@ -59,7 +59,6 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request: DataRequest[AnyContent] =>
       val statusFromCode = error.flatMap(UploadStatus.fromErrorCode)
-
       uploadId match {
         case None =>
           for {
@@ -99,21 +98,17 @@ class UploadSupportingDocumentsController @Inject() (
       implicit request =>
         val payload = UpscanFileDetails(uploadId, uploadDetails.name, uploadDetails.downloadUrl)
 
-        // The user can get here in two states:
-        // 1. No uploaded files, so no entry (None)
-        // 2. Some uploaded files, so an entry with a list of files (Some[UploadedFiles])
-
         for {
           answers <-
             request.userAnswers.upsertFuture(
               UploadSupportingDocumentPage,
               (uploadedFiles: UploadedFiles) => uploadedFiles.addFile(payload),
-              UploadedFiles(payload)
+              UploadedFiles.initialise(payload)
             )
           _       <- sessionRepository.set(answers)
           _        = logger.info(s"Uploaded file added to sesion repo uploadId: $uploadId")
-          r       <- isThisFileConfidentialController.onPageLoad(NormalMode)(request)
-        } yield r
+          result  <- isThisFileConfidentialController.onPageLoad(NormalMode)(request)
+        } yield result
     }
 
   private def showUploadForm(

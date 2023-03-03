@@ -26,8 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.IsThisFileConfidentialFormProvider
-import models.{IsThisFileConfidential, Mode}
-import models.fileupload.FileConfidentiality
+import models._
 import navigation.Navigator
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import repositories.SessionRepository
@@ -53,23 +52,23 @@ class IsThisFileConfidentialController @Inject() (
     (identify andThen getData andThen requireData) {
       implicit request =>
         val userAnswers = request.userAnswers
+        val result      = for {
+          fileUploads   <- userAnswers.get(UploadSupportingDocumentPage)
+          theUpload     <- fileUploads.lastUpload
+          isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
+          preparedForm   = isConfidential match {
+                             case None        => form
+                             case Some(value) => form.fill(value)
+                           }
+        } yield Ok(view(preparedForm, mode))
 
-        val isConfidentialAndId = for {
-          uploads           <- userAnswers.get(UploadSupportingDocumentPage)
-          fileInQuestion    <- uploads.lastUploadId
-          confidentialityMap = userAnswers.get(IsThisFileConfidentialPage)
-        } yield (fileInQuestion, confidentialityMap.flatMap(_.files.get(fileInQuestion)))
-
-        isConfidentialAndId match {
-          case Some((uploadId, isConfidential)) =>
-            val formData: Seq[(String, String)] =
-              isConfidential.toSeq.map(value => ("value" -> value.toString)) ++ Seq(
-                ("uploadId" -> uploadId.value)
-              )
-            val preparedForm                    = form.bind(Map.from(formData)).discardingErrors
-            Ok(view(preparedForm, mode))
-          case None                             => // could send them to 'uploaded files'
-            Redirect(routes.JourneyRecoveryController.onPageLoad())
+        result match {
+          case Some(result) => result
+          case None         =>
+            Redirect(
+              controllers.fileupload.routes.UploadSupportingDocumentsController
+                .onPageLoad(None, None, None)
+            )
         }
     }
 
@@ -80,13 +79,12 @@ class IsThisFileConfidentialController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            (value: IsThisFileConfidential) =>
+            (value: Boolean) =>
               for {
                 updatedAnswers <-
-                  request.userAnswers.upsertFuture(
-                    IsThisFileConfidentialPage,
-                    (files: FileConfidentiality) => files.setConfidentiality(value),
-                    FileConfidentiality(value)
+                  request.userAnswers.modifyFuture(
+                    UploadSupportingDocumentPage,
+                    (files: UploadedFiles) => files.setConfidentiality(value)
                   )
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))

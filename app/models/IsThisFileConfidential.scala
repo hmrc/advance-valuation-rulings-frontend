@@ -16,14 +16,66 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-import models.fileupload.UploadId
+import models.fileupload._
 
-case class IsThisFileConfidential(uploadId: UploadId, isConfidential: Boolean)
+case class UploadedFiles(
+  lastUpload: Option[UpscanFileDetails],
+  files: Map[UploadId, UploadedFile]
+) {
+  def addFile(upscanFileDetails: UpscanFileDetails): UploadedFiles =
+    UploadedFiles(
+      Some(upscanFileDetails),
+      files
+    )
+  def setConfidentiality(isConfidential: Boolean): UploadedFiles   =
+    this.lastUpload match {
+      case Some(lastUpload) =>
+        val newFile = UploadedFile(
+          lastUpload.fileName,
+          lastUpload.downloadUrl,
+          isConfidential
+        )
+        UploadedFiles(
+          None,
+          files + (lastUpload.uploadId -> newFile)
+        )
+      case None             => this
+    }
 
-object IsThisFileConfidential {
-  implicit val reads  = Json.reads[IsThisFileConfidential]
-  implicit val writes = Json.writes[IsThisFileConfidential]
+  def removeFile(uploadId: UploadId): UploadedFiles = {
+    val lastUploadId = if (this.lastUpload.contains(uploadId)) None else this.lastUpload
+    UploadedFiles(lastUploadId, files - uploadId)
+  }
+
+  def fileCount: Int = files.size
+}
+
+case class UploadedFile(fileName: String, downloadUrl: String, isConfidential: Boolean)
+object UploadedFile {
+  implicit val reads  = Json.reads[UploadedFile]
+  implicit val writes = Json.writes[UploadedFile]
   implicit val format = OFormat(reads, writes)
+}
+
+object UploadedFiles {
+  implicit val readsFiles: Reads[scala.collection.immutable.Map[UploadId, UploadedFile]] = Reads
+    .map[UploadedFile]
+    .map((values: Map[String, UploadedFile]) => values.map { case ((k, v)) => (UploadId(k), v) })
+  implicit val writesFiles: Writes[Map[UploadId, UploadedFile]]                          = OWrites
+    .map[UploadedFile]
+    .contramap((uf: Map[UploadId, UploadedFile]) => uf.map { case ((k, v)) => (k.value, v) })
+
+  implicit val reads                          = Json.reads[UploadedFiles]
+  implicit val writes: OWrites[UploadedFiles] = (
+    (JsPath \ "lastUpload").writeOptionWithNull[UpscanFileDetails] and
+      (JsPath \ "files").write[Map[UploadId, UploadedFile]]
+  )((uploadedFiles: UploadedFiles) => (uploadedFiles.lastUpload, uploadedFiles.files))
+
+  implicit val format = OFormat(reads, writes)
+
+  def initialise(file: UpscanFileDetails) =
+    UploadedFiles(Some(file), Map.empty)
 }

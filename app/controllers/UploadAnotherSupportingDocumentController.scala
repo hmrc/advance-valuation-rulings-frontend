@@ -27,10 +27,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
-import models.fileupload._
-import models.requests.DataRequest
 import navigation.Navigator
-import pages.{IsThisFileConfidentialPage, UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
+import pages.{UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
 import repositories.SessionRepository
 import views.html.UploadAnotherSupportingDocumentView
 
@@ -57,11 +55,16 @@ class UploadAnotherSupportingDocumentController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      withFileDetailsAndConfidentiality {
-        (uploadedFiles, fileConfidentiality) =>
-          val table = SupportingDocumentsTable(uploadedFiles, fileConfidentiality)
+      request.userAnswers.get(UploadSupportingDocumentPage) match {
+        case Some(uploadedFiles) =>
+          val table = SupportingDocumentsTable(uploadedFiles)
           val count = s"site.${table.rows.size}"
           Ok(view(count, table, preparedForm, mode))
+        case None                =>
+          Redirect(
+            controllers.fileupload.routes.UploadSupportingDocumentsController
+              .onPageLoad(None, None, None)
+          )
       }
   }
 
@@ -72,14 +75,19 @@ class UploadAnotherSupportingDocumentController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => {
-              val result =
-                withFileDetailsAndConfidentiality {
-                  (uploadedFiles, fileConfidentiality) =>
-                    val table = SupportingDocumentsTable(uploadedFiles, fileConfidentiality)
-                    val count = s"site.${table.rows.size}"
 
-                    BadRequest(view(count, table, formWithErrors, mode))
-                }
+              val result = request.userAnswers.get(UploadSupportingDocumentPage) match {
+                case Some(uploadedFiles) =>
+                  val table = SupportingDocumentsTable(uploadedFiles)
+                  val count = s"site.${table.rows.size}"
+                  Ok(view(count, table, formWithErrors, mode))
+                case None                =>
+                  Redirect(
+                    controllers.fileupload.routes.UploadSupportingDocumentsController
+                      .onPageLoad(None, None, None)
+                  )
+              }
+
               Future.successful(result)
             },
             value =>
@@ -91,25 +99,4 @@ class UploadAnotherSupportingDocumentController @Inject() (
               )
           )
     }
-
-  private def withFileDetailsAndConfidentiality(
-    f: (UploadedFiles, FileConfidentiality) => play.api.mvc.Result
-  )(implicit request: DataRequest[AnyContent]) = {
-    val isConfidential: Option[FileConfidentiality] =
-      request.userAnswers.get(IsThisFileConfidentialPage) // map
-
-    val upscanDetails: Option[UploadedFiles] =
-      request.userAnswers.get(UploadSupportingDocumentPage)
-
-    (upscanDetails, isConfidential) match {
-      case (Some(fileDetails), Some(confidential)) =>
-        f(fileDetails, confidential)
-
-      case _ =>
-        Redirect(
-          controllers.fileupload.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None)
-        )
-    }
-  }
 }

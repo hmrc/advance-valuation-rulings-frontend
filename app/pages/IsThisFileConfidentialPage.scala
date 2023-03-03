@@ -18,9 +18,7 @@ package pages
 
 import play.api.libs.json.JsPath
 
-import models.fileupload.FileConfidentiality
-
-case object IsThisFileConfidentialPage extends QuestionPage[FileConfidentiality] {
+case object IsThisFileConfidentialPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 

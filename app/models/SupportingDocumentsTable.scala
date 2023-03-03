@@ -20,35 +20,22 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
 
-import models.fileupload._
-
 case class SupportingDocument(uploadId: String, fileName: String, isConfidential: Boolean)
 object SupportingDocument {
-  // TODO rename
-  def makeFromAnswers(
-    uploadedFiles: UploadedFiles,
-    fileConfidentiality: FileConfidentiality
-  ): Seq[SupportingDocument] =
+  def makeForFiles(uploadedFiles: UploadedFiles): Seq[SupportingDocument] =
     uploadedFiles.files.map {
       case (fileId, fileDetails) =>
-        val isConfidential = fileConfidentiality.files
-          .get(fileId)
-          // .find(_.uploadId == file.id)
-          .getOrElse(false)
-        // TODO could be option and not show
-        SupportingDocument(fileId.value, fileDetails.fileName, isConfidential)
+        SupportingDocument(fileId.value, fileDetails.fileName, fileDetails.isConfidential)
     }.toSeq
 }
 object SupportingDocumentsTable {
 
   def apply(
-    uploadedFiles: UploadedFiles,
-    fileConfidentiality: FileConfidentiality
+    uploadedFiles: UploadedFiles
   )(implicit messages: Messages): Table = {
 
-    val supportingDocuments: Seq[SupportingDocument] = SupportingDocument.makeFromAnswers(
-      uploadedFiles,
-      fileConfidentiality
+    val supportingDocuments: Seq[SupportingDocument] = SupportingDocument.makeForFiles(
+      uploadedFiles
     )
 
     Table(
