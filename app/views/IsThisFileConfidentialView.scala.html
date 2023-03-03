@@ -47,6 +47,8 @@
 
     @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode), 'autoComplete -> "off") {
 
+        <input type="hidden" name="uploadId" value="@uploadId"/>
+        
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),

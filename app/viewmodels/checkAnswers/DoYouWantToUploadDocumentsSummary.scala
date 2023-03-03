@@ -20,8 +20,9 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.DoYouWantToUploadDocumentsPage
+import models._
+import models.fileupload._
+import pages.{DoYouWantToUploadDocumentsPage, IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -44,4 +45,37 @@ object DoYouWantToUploadDocumentsSummary {
           )
         )
     }
+}
+
+object UploadedDocumentsSummary {
+
+  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] = {
+    val isConfidential: Option[FileConfidentiality] =
+      userAnswers.get(IsThisFileConfidentialPage)
+
+    val upscanDetails: Option[UploadedFiles] =
+      userAnswers.get(UploadSupportingDocumentPage)
+
+    val documentsOption = for {
+      fileConfidentiality <- isConfidential
+      uploadedFiles       <- upscanDetails
+      supportingDocuments  = SupportingDocument.makeFromAnswers(uploadedFiles, fileConfidentiality)
+    } yield supportingDocuments
+    documentsOption
+      .map(documents => documents.map(_.fileName).mkString(", "))
+      .map(
+        (answer: String) =>
+          SummaryListRowViewModel(
+            key = "uploadSupportingDocuments.checkYourAnswersLabel",
+            value = ValueViewModel(answer),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.change",
+                routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url
+              )
+                .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+            )
+          )
+      )
+  }
 }

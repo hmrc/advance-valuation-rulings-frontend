@@ -23,15 +23,13 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
 import models.fileupload._
 
 case class SupportingDocument(uploadId: String, fileName: String, isConfidential: Boolean)
-
-object SupportingDocumentsTable {
-
-  def apply(
+object SupportingDocument {
+  // TODO rename
+  def makeFromAnswers(
     uploadedFiles: UploadedFiles,
     fileConfidentiality: FileConfidentiality
-  )(implicit messages: Messages): Table = {
-
-    val supportingDocuments: Seq[SupportingDocument] = uploadedFiles.files.map {
+  ): Seq[SupportingDocument] =
+    uploadedFiles.files.map {
       case (fileId, fileDetails) =>
         val isConfidential = fileConfidentiality.files
           .get(fileId)
@@ -40,6 +38,18 @@ object SupportingDocumentsTable {
         // TODO could be option and not show
         SupportingDocument(fileId.value, fileDetails.fileName, isConfidential)
     }.toSeq
+}
+object SupportingDocumentsTable {
+
+  def apply(
+    uploadedFiles: UploadedFiles,
+    fileConfidentiality: FileConfidentiality
+  )(implicit messages: Messages): Table = {
+
+    val supportingDocuments: Seq[SupportingDocument] = SupportingDocument.makeFromAnswers(
+      uploadedFiles,
+      fileConfidentiality
+    )
 
     Table(
       head = None,

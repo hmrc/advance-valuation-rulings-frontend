@@ -61,14 +61,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
         (uploadedFiles, fileConfidentiality) =>
           val table = SupportingDocumentsTable(uploadedFiles, fileConfidentiality)
           val count = s"site.${table.rows.size}"
-          Ok(
-            view(
-              count,
-              table,
-              preparedForm,
-              mode
-            )
-          )
+          Ok(view(count, table, preparedForm, mode))
       }
   }
 
@@ -78,29 +71,23 @@ class UploadAnotherSupportingDocumentController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors =>
-              Future
-                .successful(
-                  withFileDetailsAndConfidentiality(
-                    (uploadedFiles, fileConfidentiality) =>
-                      BadRequest(
-                        view(
-                          "one",
-                          SupportingDocumentsTable(uploadedFiles, fileConfidentiality),
-                          formWithErrors,
-                          mode
-                        )
-                      )
-                  )
-                ),
+            formWithErrors => {
+              val result =
+                withFileDetailsAndConfidentiality {
+                  (uploadedFiles, fileConfidentiality) =>
+                    val table = SupportingDocumentsTable(uploadedFiles, fileConfidentiality)
+                    val count = s"site.${table.rows.size}"
+
+                    BadRequest(view(count, table, formWithErrors, mode))
+                }
+              Future.successful(result)
+            },
             value =>
               for {
-                updatedAnswers <-
-                  Future
-                    .fromTry(request.userAnswers.set(UploadAnotherSupportingDocumentPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                answers <- request.userAnswers.setFuture(UploadAnotherSupportingDocumentPage, value)
+                _       <- sessionRepository.set(answers)
               } yield Redirect(
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)
+                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
               )
           )
     }
@@ -110,9 +97,8 @@ class UploadAnotherSupportingDocumentController @Inject() (
   )(implicit request: DataRequest[AnyContent]) = {
     val isConfidential: Option[FileConfidentiality] =
       request.userAnswers.get(IsThisFileConfidentialPage) // map
-    // val upscanDetails: Option[UpscanFileDetails] =
-    //   request.userAnswers.get(UploadSupportingDocumentPage)
-    val upscanDetails: Option[UploadedFiles]        =
+
+    val upscanDetails: Option[UploadedFiles] =
       request.userAnswers.get(UploadSupportingDocumentPage)
 
     (upscanDetails, isConfidential) match {

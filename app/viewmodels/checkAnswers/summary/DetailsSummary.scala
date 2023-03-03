@@ -36,7 +36,8 @@ object DetailsSummary {
       DescribeTheLegalChallengesSummary.row(userAnswers),
       HasConfidentialInformationSummary.row(userAnswers),
       ConfidentialInformationSummary.row(userAnswers),
-      DoYouWantToUploadDocumentsSummary.row(userAnswers)
+      DoYouWantToUploadDocumentsSummary.row(userAnswers),
+      UploadedDocumentsSummary.row(userAnswers)
     ).flatten
 
     DetailsSummary(SummaryListViewModel(rows))
