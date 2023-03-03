@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
+import models.fileupload.UploadId
 import navigation.Navigator
 import pages.{UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
 import repositories.SessionRepository
@@ -41,6 +42,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   requireData: DataRequiredAction,
   formProvider: UploadAnotherSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
+  link: views.html.components.Link,
   view: UploadAnotherSupportingDocumentView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -57,7 +59,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
       request.userAnswers.get(UploadSupportingDocumentPage) match {
         case Some(uploadedFiles) =>
-          val table = SupportingDocumentsTable(uploadedFiles)
+          val table = SupportingDocumentsRows(uploadedFiles, link)
           val count = s"site.${table.rows.size}"
           Ok(view(count, table, preparedForm, mode))
         case None                =>
@@ -78,7 +80,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
               val result = request.userAnswers.get(UploadSupportingDocumentPage) match {
                 case Some(uploadedFiles) =>
-                  val table = SupportingDocumentsTable(uploadedFiles)
+                  val table = SupportingDocumentsRows(uploadedFiles, link)
                   val count = s"site.${table.rows.size}"
                   Ok(view(count, table, formWithErrors, mode))
                 case None                =>
@@ -99,4 +101,21 @@ class UploadAnotherSupportingDocumentController @Inject() (
               )
           )
     }
+
+  def onDelete(uploadId: String) = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      for {
+        updatedAnswers <-
+          request.userAnswers.modifyFuture(
+            UploadSupportingDocumentPage,
+            (uploadedFiles: UploadedFiles) => uploadedFiles.removeFile(UploadId(uploadId))
+          )
+        updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
+        _              <- sessionRepository.set(updatedAnswers)
+        r               =
+          Redirect(
+            navigator.nextPage(UploadAnotherSupportingDocumentPage, NormalMode, updatedAnswers)
+          )
+      } yield r
+  }
 }

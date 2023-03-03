@@ -18,14 +18,15 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
 @import models._
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
+@import viewmodels.checkAnswers.summary._
 
 @this(
     layout: templates.Layout,
+    govukSummaryList: GovukSummaryList,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    govukSummaryList: GovukSummaryList,
     govukTable: GovukTable,
     caption: Caption,
     heading: Heading,
@@ -34,7 +35,7 @@
     link: Link
 )
 
-@(numOfDocs: String, supportingDocumentsTable: Table, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(numOfDocs: String, uploadedFiles: SummaryList, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @removeLink = {
     @link(
@@ -65,7 +66,7 @@
     @caption(messages("uploadAnotherSupportingDocument.caption"))
     @heading(pageHeading)
 
-    @govukTable(supportingDocumentsTable)
+    @govukSummaryList(uploadedFiles)
 
     @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode), 'autoComplete -> "off") {
 

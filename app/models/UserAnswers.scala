@@ -102,6 +102,9 @@ final case class UserAnswers(
         page.cleanup(None, updatedAnswers)
     }
   }
+
+  def removeFuture[A](page: Modifiable[A]): Future[UserAnswers] =
+    Future.fromTry(remove(page))
 }
 
 object UserAnswers {

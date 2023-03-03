@@ -17,8 +17,12 @@
 package models
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
+
+import viewmodels.govuk.summarylist._
+import viewmodels.implicits._
 
 case class SupportingDocument(uploadId: String, fileName: String, isConfidential: Boolean)
 object SupportingDocument {
@@ -28,10 +32,11 @@ object SupportingDocument {
         SupportingDocument(fileId.value, fileDetails.fileName, fileDetails.isConfidential)
     }.toSeq
 }
-object SupportingDocumentsTable {
 
+object SupportingDocumentsTable {
   def apply(
-    uploadedFiles: UploadedFiles
+    uploadedFiles: UploadedFiles,
+    link: views.html.components.Link
   )(implicit messages: Messages): Table = {
 
     val supportingDocuments: Seq[SupportingDocument] = SupportingDocument.makeForFiles(
@@ -51,9 +56,63 @@ object SupportingDocumentsTable {
                 else ""
               )
             ),
-            TableRow(content = Text(messages("site.remove")))
+            TableRow(
+              content = HtmlContent(
+                {
+                  link(
+                    id = document.uploadId,
+                    text = messages("site.remove"),
+                    call = play.api.mvc.Call(
+                      "DELETE",
+                      controllers.routes.UploadAnotherSupportingDocumentController
+                        .onDelete(document.uploadId)
+                        .url
+                    )
+                  )
+                }
+                // s"""<a href="${controllers.routes.UploadAnotherSupportingDocumentController
+                //     .onDelete(document.uploadId)
+                //     .url}">${messages("site.remove")}</a>"""
+              )
+            )
           )
       }
     )
+  }
+}
+
+object SupportingDocumentsRows {
+  def apply(
+    uploadedFiles: UploadedFiles,
+    link: views.html.components.Link
+  )(implicit messages: Messages): SummaryList = {
+    val rows =
+      uploadedFiles.files.map {
+        case (fileId, fileDetails) =>
+          SummaryListRowViewModel(
+            key = KeyViewModel(
+              content = Text(fileDetails.fileName)
+            ),
+            value = ValueViewModel(
+              content = Text(
+                if (fileDetails.isConfidential)
+                  messages("uploadAnotherSupportingDocument.keepConfidential")
+                else ""
+              )
+            ),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.remove",
+                controllers.routes.UploadAnotherSupportingDocumentController
+                  .onDelete(fileId.value)
+                  .url
+              )
+                .withVisuallyHiddenText(messages("site.remove"))
+            )
+          )
+      }.toSeq
+
+    SummaryList(rows)
+
   }
 }
