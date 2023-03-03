@@ -15,12 +15,14 @@
  */
 
 package controllers
-
 import javax.inject.Inject
 
+import cats.syntax.validated
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -52,15 +54,18 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(UploadAnotherSupportingDocumentPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
-
       request.userAnswers.get(UploadSupportingDocumentPage) match {
         case Some(uploadedFiles) =>
-          val table = SupportingDocumentsRows(uploadedFiles, link)
-          val count = s"site.${table.rows.size}"
+          val table        = SupportingDocumentsRows(uploadedFiles, link)
+          val count        = table.rows.size
+          val preparedForm = request.userAnswers.get(UploadAnotherSupportingDocumentPage) match {
+            case None        =>
+              form
+                .bind(JsObject.apply(Seq("fileCount" -> JsNumber(BigDecimal(count)))))
+                .discardingErrors
+            case Some(value) =>
+              form.fill(UploadAnotherSupportingDocument(value, count))
+          }
           Ok(view(count, table, preparedForm, mode))
         case None                =>
           Redirect(
@@ -77,11 +82,10 @@ class UploadAnotherSupportingDocumentController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => {
-
               val result = request.userAnswers.get(UploadSupportingDocumentPage) match {
                 case Some(uploadedFiles) =>
                   val table = SupportingDocumentsRows(uploadedFiles, link)
-                  val count = s"site.${table.rows.size}"
+                  val count = table.rows.size
                   Ok(view(count, table, formWithErrors, mode))
                 case None                =>
                   Redirect(
@@ -92,13 +96,37 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
               Future.successful(result)
             },
-            value =>
-              for {
-                answers <- request.userAnswers.setFuture(UploadAnotherSupportingDocumentPage, value)
-                _       <- sessionRepository.set(answers)
-              } yield Redirect(
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
-              )
+            value => {
+              val validated = if (value.value && value.fileCount >= 10) {
+                form
+                  .fill(value)
+                  .withError("value", "uploadAnotherSupportingDocument.error.fileCount")
+              } else form
+
+              if (validated.hasErrors) {
+                val result = request.userAnswers.get(UploadSupportingDocumentPage) match {
+                  case Some(uploadedFiles) =>
+                    val table = SupportingDocumentsRows(uploadedFiles, link)
+                    val count = table.rows.size
+                    Ok(view(count, table, validated, mode))
+                  case None                =>
+                    Redirect(
+                      controllers.fileupload.routes.UploadSupportingDocumentsController
+                        .onPageLoad(None, None, None)
+                    )
+                }
+
+                Future.successful(result)
+              } else {
+                for {
+                  answers <-
+                    request.userAnswers.setFuture(UploadAnotherSupportingDocumentPage, value.value)
+                  _       <- sessionRepository.set(answers)
+                } yield Redirect(
+                  navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
+                )
+              }
+            }
           )
     }
 

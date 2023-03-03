@@ -19,13 +19,20 @@ package forms
 import javax.inject.Inject
 
 import play.api.data.Form
+import play.api.data.Forms._
 
 import forms.mappings.Mappings
+import models.UploadAnotherSupportingDocument
 
 class UploadAnotherSupportingDocumentFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[UploadAnotherSupportingDocument] =
     Form(
-      "value" -> boolean("uploadAnotherSupportingDocument.error.required")
+      mapping(
+        "value"     -> boolean("uploadAnotherSupportingDocument.error.required"),
+        "fileCount" -> int("uploadAnotherSupportingDocument.error.required")
+      )(UploadAnotherSupportingDocument.apply)(
+        (uasd: UploadAnotherSupportingDocument) => Some((uasd.value, uasd.fileCount))
+      )
     )
 }

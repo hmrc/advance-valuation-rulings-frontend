@@ -279,6 +279,7 @@ uploadAnotherSupportingDocument.subHeading = Do you want to upload another suppo
 uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.error.required = Select yes if you want to upload another document
+uploadAnotherSupportingDocument.error.fileCount = You can only upload up to 10 files
 uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Keep confidential

@@ -17,12 +17,42 @@
 package models
 
 import play.api.i18n.Messages
+import play.api.libs.json.{__, OFormat, OWrites, Reads}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
 
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+
+case class UploadAnotherSupportingDocument(
+  value: Boolean,
+  fileCount: Int
+)
+object UploadAnotherSupportingDocument {
+
+  val reads: Reads[UploadAnotherSupportingDocument] = {
+
+    import play.api.libs.functional.syntax._
+
+    (
+      (__ \ "value").read[Boolean] and
+        (__ \ "fileCount").read[Int]
+    )(UploadAnotherSupportingDocument.apply _)
+  }
+
+  val writes: OWrites[UploadAnotherSupportingDocument] = {
+
+    import play.api.libs.functional.syntax._
+
+    (
+      (__ \ "value").write[Boolean] and
+        (__ \ "fileCount").write[Int]
+    )(unlift(UploadAnotherSupportingDocument.unapply))
+  }
+
+  implicit val format: OFormat[UploadAnotherSupportingDocument] = OFormat(reads, writes)
+}
 
 case class SupportingDocument(uploadId: String, fileName: String, isConfidential: Boolean)
 object SupportingDocument {
