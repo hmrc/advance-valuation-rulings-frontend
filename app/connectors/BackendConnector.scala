@@ -16,18 +16,20 @@
 
 package connectors
 
+import java.util.UUID
+
 import scala.concurrent.{ExecutionContext, Future}
+
 import play.api.http.Status
 import play.api.mvc.Request
 import uk.gov.hmrc.http.{HttpClient, HttpException, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
+
 import com.google.inject.Inject
 import models.{BackendError, TraderDetailsWithCountryCode}
 import models.requests.TraderDetailsRequest
-
-import java.util.UUID
 
 class BackendConnector @Inject() (
   servicesConfig: ServicesConfig,
