@@ -63,54 +63,6 @@ object SupportingDocument {
     }.toSeq
 }
 
-object SupportingDocumentsTable {
-  def apply(
-    uploadedFiles: UploadedFiles,
-    link: views.html.components.Link
-  )(implicit messages: Messages): Table = {
-
-    val supportingDocuments: Seq[SupportingDocument] = SupportingDocument.makeForFiles(
-      uploadedFiles
-    )
-
-    Table(
-      head = None,
-      rows = supportingDocuments.map {
-        document =>
-          Seq(
-            TableRow(content = Text(document.fileName)),
-            TableRow(content =
-              Text(
-                if (document.isConfidential)
-                  messages("uploadAnotherSupportingDocument.keepConfidential")
-                else ""
-              )
-            ),
-            TableRow(
-              content = HtmlContent(
-                {
-                  link(
-                    id = document.uploadId,
-                    text = messages("site.remove"),
-                    call = play.api.mvc.Call(
-                      "DELETE",
-                      controllers.routes.UploadAnotherSupportingDocumentController
-                        .onDelete(document.uploadId)
-                        .url
-                    )
-                  )
-                }
-                // s"""<a href="${controllers.routes.UploadAnotherSupportingDocumentController
-                //     .onDelete(document.uploadId)
-                //     .url}">${messages("site.remove")}</a>"""
-              )
-            )
-          )
-      }
-    )
-  }
-}
-
 object SupportingDocumentsRows {
   def apply(
     uploadedFiles: UploadedFiles,
@@ -142,7 +94,7 @@ object SupportingDocumentsRows {
           )
       }.toSeq
 
-    SummaryList(rows)
+    SummaryList(rows).withoutBorders()
 
   }
 }

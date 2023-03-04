@@ -25,12 +25,13 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
-import models.{NormalMode, UserAnswers}
+import models._
+import models.fileupload._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.IsThisFileConfidentialPage
+import pages.UploadSupportingDocumentPage
 import repositories.SessionRepository
 import views.html.IsThisFileConfidentialView
 
@@ -43,12 +44,17 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val isThisFileConfidentialRoute =
     routes.IsThisFileConfidentialController.onPageLoad(NormalMode).url
+  val fileDetails: UpscanFileDetails   = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
+  val userAnswers =
+    UserAnswers(userAnswersId)
+      .set(UploadSupportingDocumentPage, UploadedFiles.initialise(fileDetails))
+      .success
+      .value
   "IsThisFileConfidential Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, isThisFileConfidentialRoute)
@@ -65,13 +71,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers =
-        UserAnswers(userAnswersId)
-          .set(IsThisFileConfidentialPage, true)
-          .success
-          .value
-
+    "must not populate the form on a GET when the question has previously been answered" in {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -83,7 +83,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(true),
+          form,
           NormalMode
         )(
           request,
@@ -99,7 +99,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -120,7 +120,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =

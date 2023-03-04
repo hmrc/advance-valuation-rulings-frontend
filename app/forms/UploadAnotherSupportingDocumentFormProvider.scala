@@ -26,13 +26,8 @@ import models.UploadAnotherSupportingDocument
 
 class UploadAnotherSupportingDocumentFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[UploadAnotherSupportingDocument] =
+  def apply(): Form[Boolean] =
     Form(
-      mapping(
-        "value"     -> boolean("uploadAnotherSupportingDocument.error.required"),
-        "fileCount" -> int("uploadAnotherSupportingDocument.error.required")
-      )(UploadAnotherSupportingDocument.apply)(
-        (uasd: UploadAnotherSupportingDocument) => Some((uasd.value, uasd.fileCount))
-      )
+      "value" -> boolean("uploadAnotherSupportingDocument.error.required")
     )
 }

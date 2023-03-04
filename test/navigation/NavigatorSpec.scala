@@ -21,7 +21,7 @@ import play.api.libs.json.Writes
 import base.SpecBase
 import controllers.routes
 import models._
-import models.ValuationMethod._
+import models.fileupload._
 import pages._
 import queries.Modifiable
 
@@ -483,8 +483,24 @@ class NavigatorSpec extends SpecBase {
       }
 
       "IsThisFileConfidentialPage must" - {
+
+        "redirect to UploadSupportingDocumentsPage user has no files" in {
+          val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            IsThisFileConfidentialPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+        }
+
+        val fileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
         "self when no method is select" in {
           val userAnswers = UserAnswers("id")
+            .set(
+              UploadSupportingDocumentPage,
+              UploadedFiles.initialise(fileDetails)
+            )
+            .get
           navigator.nextPage(
             IsThisFileConfidentialPage,
             NormalMode,
@@ -493,8 +509,12 @@ class NavigatorSpec extends SpecBase {
         }
 
         "UploadSupportingDocumentsPage when an answer is selected" in {
-          val userAnswers =
-            UserAnswers("id").set(IsThisFileConfidentialPage, false).get
+          val userAnswers = UserAnswers("id")
+            .set(
+              UploadSupportingDocumentPage,
+              UploadedFiles.initialise(fileDetails).setConfidentiality(false)
+            )
+            .get
           navigator.nextPage(
             IsThisFileConfidentialPage,
             NormalMode,

@@ -51,6 +51,7 @@ class UploadSupportingDocumentsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
   private val logger = play.api.Logger(this.getClass)
+  import controllers.PageOps
 
   def onPageLoad(
     error: Option[String],
@@ -100,8 +101,7 @@ class UploadSupportingDocumentsController @Inject() (
 
         for {
           answers <-
-            request.userAnswers.upsertFuture(
-              UploadSupportingDocumentPage,
+            UploadSupportingDocumentPage.upsert(
               (uploadedFiles: UploadedFiles) => uploadedFiles.addFile(payload),
               UploadedFiles.initialise(payload)
             )
