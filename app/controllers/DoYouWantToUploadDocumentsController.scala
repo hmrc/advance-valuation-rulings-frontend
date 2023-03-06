@@ -50,11 +50,7 @@ class DoYouWantToUploadDocumentsController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm =
-        request.userAnswers.get(DoYouWantToUploadDocumentsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+      val preparedForm = DoYouWantToUploadDocumentsPage.fill(form)
 
       Ok(view(preparedForm, mode))
   }
@@ -68,8 +64,7 @@ class DoYouWantToUploadDocumentsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(DoYouWantToUploadDocumentsPage, value))
+                updatedAnswers <- DoYouWantToUploadDocumentsPage.set(value)
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(DoYouWantToUploadDocumentsPage, mode, updatedAnswers)

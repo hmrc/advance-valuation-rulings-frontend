@@ -21,18 +21,19 @@ import play.api.libs.json.Writes
 import base.SpecBase
 import controllers.routes
 import models._
-import models.ValuationMethod._
+import models.fileupload._
 import pages._
-import queries.Settable
+import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers = UserAnswers("id")
-  val navigator                     = new Navigator
+  val EmptyUserAnswers: UserAnswers  = UserAnswers("id")
+  val navigator                      = new Navigator
+  val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
   "Navigator" - {
 
-    def userAnswersWith[A: Writes](page: Settable[A], value: A): UserAnswers =
+    def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
       EmptyUserAnswers.set(page, value).success.value
 
     "must go from a page that doesn't exist in the route map to Index" in {
@@ -483,8 +484,23 @@ class NavigatorSpec extends SpecBase {
       }
 
       "IsThisFileConfidentialPage must" - {
-        "self when no method is select" in {
+
+        "redirect to UploadSupportingDocumentsPage user has no files" in {
           val userAnswers = UserAnswers("id")
+          navigator.nextPage(
+            IsThisFileConfidentialPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+        }
+
+        "redirect to self when user has a file without confidentiality info" in {
+          val userAnswers = UserAnswers("id")
+            .set(
+              UploadSupportingDocumentPage,
+              UploadedFiles.initialise(fileDetails)
+            )
+            .get
           navigator.nextPage(
             IsThisFileConfidentialPage,
             NormalMode,
@@ -493,8 +509,12 @@ class NavigatorSpec extends SpecBase {
         }
 
         "UploadSupportingDocumentsPage when an answer is selected" in {
-          val userAnswers =
-            UserAnswers("id").set(IsThisFileConfidentialPage, false).get
+          val userAnswers = UserAnswers("id")
+            .set(
+              UploadSupportingDocumentPage,
+              UploadedFiles.initialise(fileDetails).setConfidentiality(false)
+            )
+            .get
           navigator.nextPage(
             IsThisFileConfidentialPage,
             NormalMode,

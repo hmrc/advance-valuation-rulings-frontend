@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import connectors.BackendConnector
 import forms.CheckRegisteredDetailsFormProvider
-import models.{BackendError, CDSEstablishmentAddress, CheckRegisteredDetails, NormalMode, TraderDetailsWithCountryCode, UserAnswers}
+import models._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when

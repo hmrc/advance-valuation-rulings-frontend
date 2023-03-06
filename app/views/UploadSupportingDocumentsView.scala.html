@@ -41,7 +41,7 @@
 }
 
 @refreshHeader = {
-    <meta http-equiv="refresh" content="3"/>
+    <meta http-equiv="refresh" content="1"/>
    }   
 
 @formGroupClass = @{
@@ -72,10 +72,10 @@
         }
     }) {
 
-    <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
-        @if(UploadStatus.isError(status)) {
-            @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status)))
-        }
+    @if(UploadStatus.isError(status)) {
+        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status)))
+    }
+
 
         @caption(messages("uploadSupportingDocuments.caption"))
         @heading(messages("uploadSupportingDocuments.heading"))
@@ -95,7 +95,7 @@
             ),
             "govuk-list govuk-list--bullet",
         )
-
+    <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
         @for(field <- upscanInitiateResponse.formFields) {
             <input type="hidden" name="@field._1" value="@field._2"/>
         }

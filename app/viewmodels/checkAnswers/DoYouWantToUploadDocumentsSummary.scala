@@ -20,8 +20,8 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.DoYouWantToUploadDocumentsPage
+import models._
+import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -44,4 +44,31 @@ object DoYouWantToUploadDocumentsSummary {
           )
         )
     }
+}
+
+object UploadedDocumentsSummary {
+
+  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    userAnswers
+      .get(UploadSupportingDocumentPage)
+      .flatMap(
+        uploadedFiles =>
+          if (uploadedFiles.files.isEmpty) {
+            None
+          } else {
+            Some(
+              SummaryListRowViewModel(
+                key = "uploadSupportingDocuments.checkYourAnswersLabel",
+                value = ValueViewModel(uploadedFiles.files.map(_._2.fileName).mkString(", ")),
+                actions = Seq(
+                  ActionItemViewModel(
+                    "site.change",
+                    routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url
+                  )
+                    .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+                )
+              )
+            )
+          }
+      )
 }

@@ -22,5 +22,5 @@ case object IsThisFileConfidentialPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "value"
+  override def toString: String = "isThisFileConfidential"
 }

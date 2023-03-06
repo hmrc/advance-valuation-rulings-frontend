@@ -15,24 +15,23 @@
  */
 
 package controllers
-
 import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import controllers.routes.DoYouWantToUploadDocumentsController
 import forms.UploadAnotherSupportingDocumentFormProvider
-import models.Mode
-import models.NormalMode
-import models.fileupload.UpscanFileDetails
+import models._
+import models.fileupload.UploadId
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
-import pages.IsThisFileConfidentialPage
 import repositories.SessionRepository
 import views.html.UploadAnotherSupportingDocumentView
 
@@ -45,6 +44,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   requireData: DataRequiredAction,
   formProvider: UploadAnotherSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
+  link: views.html.components.Link,
   view: UploadAnotherSupportingDocumentView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -52,62 +52,78 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(UploadAnotherSupportingDocumentPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        makeDocumentRows(request.userAnswers) match {
+          case Some(table) =>
+            val preparedForm = UploadAnotherSupportingDocumentPage.get() match {
+              case None        => form
+              case Some(value) => form.fill(value)
+            }
 
-      withFileDetailsAndConfidentiality(
-        (fileDetails, confidential) =>
-          Ok(view("one", fileDetails, confidential, preparedForm, mode))
-      )
-  }
+            Future.successful(Ok(view(table, preparedForm, mode)))
+          case None        =>
+            redirectToUpdateDocument()
+        }
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        form
-          .bindFromRequest()
+        validateFromRequest(form, request.userAnswers)
           .fold(
             formWithErrors =>
-              Future
-                .successful(
-                  withFileDetailsAndConfidentiality(
-                    (fileDetails, confidential) =>
-                      BadRequest(view("one", fileDetails, confidential, formWithErrors, mode))
-                  )
-                ),
+              makeDocumentRows(request.userAnswers) match {
+                case Some(table) => Future.successful(BadRequest(view(table, formWithErrors, mode)))
+                case None        => redirectToUpdateDocument()
+              },
             value =>
               for {
-                updatedAnswers <-
-                  Future
-                    .fromTry(request.userAnswers.set(UploadAnotherSupportingDocumentPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                answers <- UploadAnotherSupportingDocumentPage.set(value)
+                _       <- sessionRepository.set(answers)
               } yield Redirect(
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)
+                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
               )
           )
     }
 
-  private def withFileDetailsAndConfidentiality(
-    f: (UpscanFileDetails, Boolean) => play.api.mvc.Result
-  )(implicit request: DataRequest[AnyContent]) = {
-    val isConfidential: Option[Boolean]          = request.userAnswers.get(IsThisFileConfidentialPage)
-    val upscanDetails: Option[UpscanFileDetails] =
-      request.userAnswers.get(UploadSupportingDocumentPage)
+  def onDelete(uploadId: String) = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      for {
+        updatedAnswers <- UploadSupportingDocumentPage.modify(_.removeFile(UploadId(uploadId)))
+        updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
+        _              <- sessionRepository.set(updatedAnswers)
+      } yield Redirect(
+        navigator.nextPage(UploadAnotherSupportingDocumentPage, NormalMode, updatedAnswers)
+      )
+  }
 
-    (upscanDetails, isConfidential) match {
-      case (Some(_), None)                         =>
-        Redirect(routes.IsThisFileConfidentialController.onPageLoad(NormalMode))
-      case (Some(fileDetails), Some(confidential)) =>
-        f(fileDetails, confidential)
-      case (_, _)                                  =>
-        Redirect(
-          controllers.fileupload.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None)
-        )
+  private def makeDocumentRows(userAnswers: UserAnswers)(implicit messages: Messages) =
+    userAnswers
+      .get(UploadSupportingDocumentPage) match {
+      case Some(uploadedFiles) if uploadedFiles.files.size > 0 =>
+        Some(SupportingDocumentsRows(uploadedFiles, link))
+      case _                                                   => None
     }
+
+  private def redirectToUpdateDocument() =
+    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)))
+
+  private def validateFromRequest(form: Form[Boolean], userAnswers: UserAnswers)(implicit
+    request: DataRequest[AnyContent]
+  ): Form[Boolean] = {
+    val docCount = UploadSupportingDocumentPage.get().map(_.files.size).getOrElse(0)
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => formWithErrors,
+        value =>
+          if (value && docCount >= 10) {
+            form.fill(value).withError("value", "uploadAnotherSupportingDocument.error.fileCount")
+          } else {
+            form.fill(value)
+          }
+      )
   }
 }
