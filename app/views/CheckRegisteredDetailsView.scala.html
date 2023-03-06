@@ -26,6 +26,7 @@
     heading: Heading,
     warning: Warning,
     paragraph: Paragraph,
+    subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink
 )
 
@@ -33,10 +34,6 @@
 
 @layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
 
-    @caption(messages("checkRegisteredDetails.caption"))
-    @heading(messages("checkRegisteredDetails.heading", registeredDetails.eori))
-
-    @warning(content=Html(messages("checkRegisteredDetails.warning")))
 
     @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -44,6 +41,11 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+
+        @caption(messages("checkRegisteredDetails.caption"))
+        @heading(messages("checkRegisteredDetails.heading", registeredDetails.eori))
+        @warning(content=Html(messages("checkRegisteredDetails.warning")))
+        @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
         @paragraph(content=Html(
             registeredDetails.name + "<br>" +
             registeredDetails.streetAndNumber + "<br>" +
@@ -52,6 +54,7 @@
             registeredDetails.country
         ))
 
+        @subheading(messages("checkRegisteredDetails.subheading"))
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),

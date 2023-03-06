@@ -25,7 +25,9 @@
         paragraph: Paragraph,
         link: Link,
         caption: Caption,
-        config: FrontendAppConfig
+        config: FrontendAppConfig,
+        heading: Heading,
+        subheading: Subheading
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -73,10 +75,8 @@
 @layout(pageTitle = titleNoForm(messages("importingGoods.title"))) {
 
     @caption(messages("importingGoods.caption"))
-
-    <h1 class="govuk-heading-xl">@messages("importingGoods.heading")</h1>
-
-    @paragraph(content = Html(messages("importingGoods.paragraph.1")))
+    @heading(messages("importingGoods.heading"))
+    @subheading(messages("importingGoods.h2"))
 
     @bulletList(
             Seq(

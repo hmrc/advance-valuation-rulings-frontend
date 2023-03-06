@@ -24,8 +24,10 @@
         bulletList: BulletList,
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
+        heading: Heading,
         link: Link,
-        config: FrontendAppConfig
+        config: FrontendAppConfig,
+        caption: Caption
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -39,27 +41,22 @@
     }
 
 @layout(pageTitle = titleNoForm(messages("contactPage.title"))) {
-    <h1 class="govuk-heading-xl">@messages("contactPage.heading")</h1>
+
 
     @formHelper(action = routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode)) {
 
+        @caption(messages("contactPage.caption"))
+        @heading(messages("contactPage.heading"))
         @paragraph(content = Html(messages("contactPage.paragraph.1")))
 
         @paragraph(content = Html(messages("contactPage.paragraph.2")))
 
-        @bulletList(
-            Seq(Html(messages("contactPage.paragraph.2.point.1")), 
-            Html(messages("contactPage.paragraph.2.point.2")))
-            )
-
         @paragraph(content = Html(messages("contactPage.paragraph.3", emailLink)))
         
-        @paragraph(content = Html(messages("contactPage.paragraph.4")))
-        
-        @paragraph(content = Html(messages("contactPage.paragraph.5")))
+
 
         @govukButton(
-            ButtonViewModel(messages("site.continue"))
+            ButtonViewModel(messages("site.acceptContinue"))
         )
     }
 
