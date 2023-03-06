@@ -57,7 +57,7 @@ class HasCommodityCodeControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[HasCommodityCodeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, "No name of goods found")(
+        contentAsString(result) mustEqual view(form, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -80,8 +80,7 @@ class HasCommodityCodeControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(true),
-          NormalMode,
-          "No name of goods found"
+          NormalMode
         )(
           request,
           messages(application)
@@ -157,7 +156,7 @@ class HasCommodityCodeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, "No name of goods found")(
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
           request,
           messages(application)
         ).toString

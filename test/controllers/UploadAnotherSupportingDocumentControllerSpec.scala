@@ -39,7 +39,6 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
   def onwardRoute = Call("GET", "/foo")
 
-  val nameOfGoods                        = "No name of goods found"
   val numOfDocs                          = "one"
   val upscanFileDeets: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 

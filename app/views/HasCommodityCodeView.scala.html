@@ -30,7 +30,7 @@
     config: FrontendAppConfig
 )
 
-@(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @searchLink = {
     @link(
