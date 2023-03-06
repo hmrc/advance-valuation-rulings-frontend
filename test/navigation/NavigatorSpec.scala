@@ -27,8 +27,9 @@ import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers = UserAnswers("id")
-  val navigator                     = new Navigator
+  val EmptyUserAnswers: UserAnswers  = UserAnswers("id")
+  val navigator                      = new Navigator
+  val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
   "Navigator" - {
 
@@ -493,8 +494,7 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
         }
 
-        val fileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
-        "self when no method is select" in {
+        "redirect to self when user has a file without confidentiality info" in {
           val userAnswers = UserAnswers("id")
             .set(
               UploadSupportingDocumentPage,

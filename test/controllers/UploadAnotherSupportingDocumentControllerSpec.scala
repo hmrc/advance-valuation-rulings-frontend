@@ -37,8 +37,8 @@ import views.html.UploadAnotherSupportingDocumentView
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
+  def onwardRoute                        = Call("GET", "/foo")
+  val maximumNumberOfFiles               = 10
   val numOfDocs                          = "one"
   val upscanFileDeets: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
@@ -56,7 +56,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
     None,
     Map.from(
       Seq
-        .fill(10)(UploadedFile("filename", "www.website.com", false))
+        .fill(maximumNumberOfFiles)(UploadedFile("filename", "www.website.com", false))
         .zipWithIndex
         .map(x => (UploadId(s"id${x._2}"), x._1))
     )
@@ -69,10 +69,9 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       .get
     val ansNoConfidentiality: UserAnswers =
       emptyUserAnswers.set(UploadSupportingDocumentPage, uploadedFiles).get
+    lazy val application                  = applicationBuilder(userAnswers = Some(ans)).build()
 
     "must return OK and the correct view for a GET" in {
-
-      val application = applicationBuilder(userAnswers = Some(ans)).build()
 
       running(application) {
         val fileRows =
@@ -175,6 +174,25 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
           request,
           messages(application)
         ).toString
+      }
+    }
+
+    "must redirect to the next pagewhen user with 10 files selects 'No'" in {
+      val answers: UserAnswers =
+        emptyUserAnswers.set(UploadSupportingDocumentPage, fullSetOfFiles).get
+      val application          = applicationBuilder(userAnswers = Some(answers)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, uploadAnotherSupportingDocumentRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(
+          result
+        ).value mustEqual controllers.routes.CheckYourAnswersController.onPageLoad.url
       }
     }
 
