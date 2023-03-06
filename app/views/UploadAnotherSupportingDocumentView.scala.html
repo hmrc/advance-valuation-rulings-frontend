@@ -38,7 +38,7 @@
 @(uploadedFiles: SummaryList, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{
-    if (numOfDocs == "one") {
+    if (numOfDocs == 1) {
         messages("uploadAnotherSupportingDocument.title.one")
     } else {
         messages("uploadAnotherSupportingDocument.title.many", messages(s"site.$numOfDocs"))
