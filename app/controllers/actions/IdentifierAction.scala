@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import controllers.actions.IdentifierAction._
 import controllers.routes
 import models.requests.IdentifierRequest
 
@@ -50,36 +51,35 @@ class AuthenticatedIdentifierAction @Inject() (
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.internalId) {
-      _.map(internalId => block(IdentifierRequest(request, internalId)))
-        .getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
-    } recover {
-      case _: NoActiveSession        =>
-        Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-      case _: AuthorisationException =>
-        Redirect(routes.UnauthorisedController.onPageLoad)
-    }
+    authorised(Enrolment(EnrolmentKey))
+      .retrieve(Retrievals.internalId and Retrievals.authorisedEnrolments) {
+        data =>
+          val internalId =
+            data.a.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+
+          block(IdentifierRequest(request, internalId, getEoriNumber(data.b)))
+      }
+      .recover {
+        case _: NoActiveSession        =>
+          Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+        case _: AuthorisationException =>
+          Redirect(routes.UnauthorisedController.onPageLoad)
+      }
   }
 }
 
-class SessionIdentifierAction @Inject() (
-  val parser: BodyParsers.Default
-)(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction {
+object IdentifierAction {
+  val EnrolmentKey: String   = "HMRC-ATAR-ORG"
+  val EnrolmentIdKey: String = "EORINumber"
 
-  override def invokeBlock[A](
-    request: Request[A],
-    block: IdentifierRequest[A] => Future[Result]
-  ): Future[Result] = {
-
-    implicit val hc: HeaderCarrier =
-      HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-    hc.sessionId match {
-      case Some(session) =>
-        block(IdentifierRequest(request, session.value))
-      case None          =>
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-    }
-  }
+  def getEoriNumber(enrolments: Enrolments): String = {
+    for {
+      enrolment  <- enrolments.getEnrolment(EnrolmentKey)
+      identifier <- enrolment.getIdentifier(EnrolmentIdKey)
+    } yield identifier.value
+  }.getOrElse(
+    throw InsufficientEnrolments(
+      s"Unable to retrieve enrolment for either $EnrolmentKey"
+    )
+  )
 }

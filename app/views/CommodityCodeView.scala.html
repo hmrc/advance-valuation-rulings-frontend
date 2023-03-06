@@ -29,7 +29,7 @@
     cancelApplicationLink: CancelApplicationLink
 )
 
-@(form: Form[_], mode: Mode, nameOfGoods: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("commodityCode.title"))) {
 

@@ -18,5 +18,5 @@ package models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
 
-case class IdentifierRequest[A](request: Request[A], userId: String)
+case class IdentifierRequest[A](request: Request[A], userId: String, eoriNumber: String)
     extends WrappedRequest[A](request)

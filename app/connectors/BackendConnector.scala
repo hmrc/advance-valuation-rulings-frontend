@@ -16,6 +16,8 @@
 
 package connectors
 
+import java.util.UUID
+
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
@@ -47,7 +49,8 @@ class BackendConnector @Inject() (
     httpClient
       .POST[TraderDetailsRequest, TraderDetailsWithCountryCode](
         s"$backendURL/trader-details",
-        traderDetailsRequest
+        body = traderDetailsRequest,
+        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
       )
       .map(response => Right(response))
       .recover {
