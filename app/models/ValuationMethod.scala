@@ -50,8 +50,6 @@ object ValuationMethod extends Enumerable.Implicits {
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>
-      val x = messages(s"valuationMethod.${value.toString}")
-
       RadioItem(
         content = HtmlContent(
           Html(s"<b>${messages(s"valuationMethod.${value.toString}")}</b>")

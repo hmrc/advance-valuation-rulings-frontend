@@ -70,7 +70,6 @@ trait UserAnswersGenerator extends TryValues {
       arbitrary[(HasCommodityCodePage.type, JsValue)] ::
       arbitrary[(CommodityCodePage.type, JsValue)] ::
       arbitrary[(ValuationMethodPage.type, JsValue)] ::
-      arbitrary[(NameOfGoodsPage.type, JsValue)] ::
       Nil
 
   implicit lazy val arbitraryUserData: Arbitrary[UserAnswers] = {

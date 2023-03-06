@@ -22,11 +22,6 @@ GET        /unauthorised                                controllers.Unauthorised
 
 GET        /applications-and-rulings                    controllers.AccountHomeController.onPageLoad()
 
-GET        /nameOfGoods                                 controllers.NameOfGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /nameOfGoods                                 controllers.NameOfGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /changeNameOfGoods                           controllers.NameOfGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeNameOfGoods                           controllers.NameOfGoodsController.onSubmit(mode: Mode = CheckMode)
-
 GET        /select-valuation-method                     controllers.ValuationMethodController.onPageLoad(mode: Mode = NormalMode)
 POST       /select-valuation-method                     controllers.ValuationMethodController.onSubmit(mode: Mode = NormalMode)
 GET        /change-select-valuation-method               controllers.ValuationMethodController.onPageLoad(mode: Mode = CheckMode)

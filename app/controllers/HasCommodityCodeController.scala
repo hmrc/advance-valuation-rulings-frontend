@@ -29,7 +29,6 @@ import forms.HasCommodityCodeFormProvider
 import models.Mode
 import navigation.Navigator
 import pages.HasCommodityCodePage
-import pages.NameOfGoodsPage
 import repositories.SessionRepository
 import views.html.HasCommodityCodeView
 
@@ -51,27 +50,21 @@ class HasCommodityCodeController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val nameOfGoods = request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
-
       val preparedForm = request.userAnswers.get(HasCommodityCodePage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, nameOfGoods))
+      Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        val nameOfGoods =
-          request.userAnswers.get(NameOfGoodsPage).getOrElse("No name of goods found")
-
         form
           .bindFromRequest()
           .fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, mode, nameOfGoods))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
                 updatedAnswers <-

@@ -83,15 +83,6 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-nameOfGoods.title = What is the name of the goods?
-nameOfGoods.heading = What is the name of the goods?
-nameOfGoods.caption = About the goods
-nameOfGoods.hint = This could be a short description, for example, ‘silicone smartphone case’. 
-nameOfGoods.checkYourAnswersLabel = Description of Goods
-nameOfGoods.error.required = Enter a short name to describe the goods
-nameOfGoods.error.length = Maximum allowed characters is 100 or less
-nameOfGoods.change.hidden = NameOfGoods
-
 valuationMethod.title = Select the most appropriate method to value your goods
 valuationMethod.heading = Select the most appropriate method to value your goods
 valuationMethod.caption = About the goods
