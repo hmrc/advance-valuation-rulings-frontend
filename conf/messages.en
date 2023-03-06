@@ -191,10 +191,10 @@ hasConfidentialInformation.checkYourAnswersLabel = Do you want to add any confid
 hasConfidentialInformation.error.required = Select yes if you want to add any confidential information about the goods
 hasConfidentialInformation.change.hidden = HasConfidentialInformation
 
-importingGoods.title = This service is designed for those who are importing goods into Great Britain
-importingGoods.heading = This service is designed for those who are importing goods into Great Britain
-importingGoods.caption = About the goods
-importingGoods.paragraph.1 = Other services you might be interested in:
+importingGoods.title = This service is for importing goods into Great Britain
+importingGoods.heading = This service is for importing goods into Great Britain
+importingGoods.caption = About the applicant
+importingGoods.h2 = Information and services to help you import and export:
 importingGoods.point.1 = {0} - for legally binding decisions on the commodity code used to import into or export from Great Britain
 importingGoods.point.1.link = Advance Tariff Rulings
 importingGoods.point.2 = {0} - for legally binding decisions on the origin of the goods being imported into or exported from Great Britain
