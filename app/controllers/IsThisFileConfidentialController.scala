@@ -51,24 +51,18 @@ class IsThisFileConfidentialController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        val userAnswers = request.userAnswers
-        val result      = for {
-          fileUploads   <- userAnswers.get(UploadSupportingDocumentPage)
+        val result = for {
+          fileUploads   <- UploadSupportingDocumentPage.get()
           theUpload     <- fileUploads.lastUpload
           isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
-          preparedForm   = isConfidential match {
-                             case None        => form
-                             case Some(value) => form.fill(value)
-                           }
+          preparedForm   = isConfidential.map(form.fill).getOrElse(form)
         } yield Ok(view(preparedForm, mode))
 
-        result match {
-          case Some(result) => result
-          case None         =>
-            Redirect(
-              controllers.fileupload.routes.UploadSupportingDocumentsController
-                .onPageLoad(None, None, None)
-            )
+        result.getOrElse {
+          Redirect(
+            controllers.fileupload.routes.UploadSupportingDocumentsController
+              .onPageLoad(None, None, None)
+          )
         }
     }
 
@@ -81,11 +75,9 @@ class IsThisFileConfidentialController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             (value: Boolean) =>
               for {
-                updatedAnswers <-
-                  request.userAnswers.modifyFuture(
-                    UploadSupportingDocumentPage,
-                    (files: UploadedFiles) => files.setConfidentiality(value)
-                  )
+                updatedAnswers <- UploadSupportingDocumentPage.modify(
+                                    (files: UploadedFiles) => files.setConfidentiality(value)
+                                  )
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
           )

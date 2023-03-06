@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -46,15 +47,10 @@ class ConfidentialInformationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
+  val form: Form[String]                         = formProvider()
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val preparedForm = request.userAnswers.get(ConfidentialInformationPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
-
+      val preparedForm = ConfidentialInformationPage.fill(form)
       Ok(view(preparedForm, mode))
   }
 
@@ -67,8 +63,7 @@ class ConfidentialInformationController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(ConfidentialInformationPage, value))
+                updatedAnswers <- ConfidentialInformationPage.set(value)
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers)

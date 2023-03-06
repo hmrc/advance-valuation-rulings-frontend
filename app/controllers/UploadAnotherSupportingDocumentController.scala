@@ -113,7 +113,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   private def validateFromRequest(form: Form[Boolean], userAnswers: UserAnswers)(implicit
     request: DataRequest[AnyContent]
   ): Form[Boolean] = {
-    val docCount = userAnswers.get(UploadSupportingDocumentPage).map(_.files.size).getOrElse(0)
+    val docCount = UploadSupportingDocumentPage.get().map(_.files.size).getOrElse(0)
     form
       .bindFromRequest()
       .fold(

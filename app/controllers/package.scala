@@ -16,6 +16,7 @@
 
 import scala.concurrent.Future
 
+import play.api.data.Form
 import play.api.libs.json._
 
 import models.UserAnswers
@@ -31,5 +32,10 @@ package object controllers {
       request.userAnswers.modifyFuture(page, f)
     def upsert(f: A => A, default: A)(implicit request: DataRequest[_]): Future[UserAnswers] =
       request.userAnswers.upsertFuture(page, f, default)
+    def fill(form: Form[A])(implicit request: DataRequest[_]): Form[A]                       =
+      request.userAnswers.get(page) match {
+        case Some(data) => form.fill(data)
+        case None       => form
+      }
   }
 }
