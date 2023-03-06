@@ -26,7 +26,6 @@ import models._
 import models.ValuationMethod._
 import pages._
 
-@Singleton
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
@@ -205,7 +204,7 @@ class Navigator @Inject() () {
   private def describeTheSimilarGoodsPage(userAnswers: UserAnswers): Call                      =
     userAnswers.get(DescribeTheSimilarGoodsPage) match {
       case None    => DescribeTheSimilarGoodsController.onPageLoad(models.NormalMode)
-      case Some(_) => WillYouCompareToSimilarGoodsController.onPageLoad(models.NormalMode)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(models.NormalMode)
     }
   private def willYouCompareToSimilarGoodsPage(userAnswers: UserAnswers): Call                 =
     userAnswers.get(WillYouCompareToSimilarGoodsPage) match {
