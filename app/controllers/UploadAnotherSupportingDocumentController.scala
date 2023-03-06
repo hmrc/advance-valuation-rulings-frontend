@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import controllers.fileupload.routes.UploadSupportingDocumentsController
+import controllers.routes.DoYouWantToUploadDocumentsController
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import models.fileupload.UploadId
@@ -108,7 +108,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
     }
 
   private def redirectToUpdateDocument() =
-    Future.successful(Redirect(UploadSupportingDocumentsController.onPageLoad(None, None, None)))
+    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)))
 
   private def validateFromRequest(form: Form[Boolean], userAnswers: UserAnswers)(implicit
     request: DataRequest[AnyContent]
