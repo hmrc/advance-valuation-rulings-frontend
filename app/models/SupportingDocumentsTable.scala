@@ -20,7 +20,6 @@ import play.api.i18n.Messages
 import play.api.libs.json.{__, OFormat, OWrites, Reads}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
 
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._

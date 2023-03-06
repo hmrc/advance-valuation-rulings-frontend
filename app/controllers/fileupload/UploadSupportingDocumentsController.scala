@@ -107,8 +107,7 @@ class UploadSupportingDocumentsController @Inject() (
             )
           _       <- sessionRepository.set(answers)
           _        = logger.info(s"Uploaded file added to sesion repo uploadId: $uploadId")
-          result  <- isThisFileConfidentialController.onPageLoad(NormalMode)(request)
-        } yield result
+        } yield Redirect(controllers.routes.IsThisFileConfidentialController.onPageLoad(NormalMode))
     }
 
   private def showUploadForm(

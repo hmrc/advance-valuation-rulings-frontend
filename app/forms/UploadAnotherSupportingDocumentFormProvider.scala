@@ -19,10 +19,8 @@ package forms
 import javax.inject.Inject
 
 import play.api.data.Form
-import play.api.data.Forms._
 
 import forms.mappings.Mappings
-import models.UploadAnotherSupportingDocument
 
 class UploadAnotherSupportingDocumentFormProvider @Inject() extends Mappings {
 
