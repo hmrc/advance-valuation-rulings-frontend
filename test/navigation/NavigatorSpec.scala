@@ -113,7 +113,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheSimilarGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.WillYouCompareToSimilarGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
         }
       }
 
