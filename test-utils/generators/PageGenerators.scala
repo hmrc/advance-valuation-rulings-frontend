@@ -165,7 +165,4 @@ trait PageGenerators {
 
   implicit lazy val arbitraryValuationMethodPage: Arbitrary[ValuationMethodPage.type] =
     Arbitrary(ValuationMethodPage)
-
-  implicit lazy val arbitraryNameOfGoodsPage: Arbitrary[NameOfGoodsPage.type] =
-    Arbitrary(NameOfGoodsPage)
 }
