@@ -331,11 +331,11 @@ haveYouUsedMethodOneInPast.error.required = Select yes if you have used Valuatio
 haveYouUsedMethodOneInPast.checkYourAnswersLabel = haveYouUsedMethodOneInPast
 haveYouUsedMethodOneInPast.change.hidden = HaveYouUsedMethodOneInPast
 
-whyTransactionValueOfSimilarGoods.title = Please explain why you have not selected Methods 1 or 2 to value your goods
-whyTransactionValueOfSimilarGoods.heading = Please explain why you have not selected Methods 1 or 2 to value your goods
+whyTransactionValueOfSimilarGoods.title = Explain why you have not selected Methods 1 or 2 to value your goods
+whyTransactionValueOfSimilarGoods.heading = Explain why you have not selected Methods 1 or 2 to value your goods
 whyTransactionValueOfSimilarGoods.caption = About the goods
-whyTransactionValueOfSimilarGoods.paragraph.1 = Before you try Method 3 you must first have tried to use:
-whyTransactionValueOfSimilarGoods.paragraph.2 = Please outline why you believe Methods 1 and 2 are not suitable to work out the customs value of your imports.
+whyTransactionValueOfSimilarGoods.paragraph.1 = Before you try Method 3 you must first have used:
+whyTransactionValueOfSimilarGoods.paragraph.2 = Explain why you believe Methods 1-2 are not suitable to work out the customs value of your goods.
 whyTransactionValueOfSimilarGoods.bulletPoint.1 = Method 1 (transaction value of imported goods)
 whyTransactionValueOfSimilarGoods.bulletPoint.2 = Method 2 (transaction value of identical goods)
 whyTransactionValueOfSimilarGoods.error.required = Enter an explanation about why you have not selected Method 1 or 2 to value your goods
