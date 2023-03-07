@@ -20,10 +20,11 @@ import play.api.i18n.Messages
 
 import models.UserAnswers
 import viewmodels.checkAnswers.summary.DetailsSummary
+
 case class ApplicationSummary(
   applicant: ApplicantSummary,
   details: DetailsSummary,
-  methodOne: MethodOneSummary
+  method: MethodSummary
 )
 
 object ApplicationSummary {
@@ -31,6 +32,6 @@ object ApplicationSummary {
     ApplicationSummary(
       applicant = ApplicantSummary(userAnswers),
       details = DetailsSummary(userAnswers),
-      methodOne = MethodOneSummary(userAnswers)
+      method = MethodSummary(userAnswers)
     )
 }
