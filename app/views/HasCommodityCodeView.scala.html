@@ -48,15 +48,15 @@
 
 @layout(pageTitle = title(form, messages("hasCommodityCode.title"))) {
 
-    @caption(messages("hasCommodityCode.caption"))
-
-    @heading(s"${messages("hasCommodityCode.heading")}")
-
     @formHelper(action = routes.HasCommodityCodeController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+
+        @caption(messages("hasCommodityCode.caption"))
+
+        @heading(s"${messages("hasCommodityCode.heading")}")
 
         @detailsDrop(messages("hasCommodityCode.details.label"),
                     detailsContent
