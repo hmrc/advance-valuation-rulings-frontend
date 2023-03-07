@@ -23,6 +23,7 @@
     govukRadios: GovukRadios,
     govukButton: GovukButton,
     caption: Caption,
+    heading: Heading,
     cancelApplicationLink: CancelApplicationLink
 )
 
@@ -36,13 +37,13 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-
+        @heading(messages("isThereASaleInvolved.heading"))
         @caption(messages("isThereASaleInvolved.caption"))
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("isThereASaleInvolved.heading")).asPageHeading(),
+                legend = Legend(),
                 noText = messages("isThereASaleInvolved.no.text")
             )
             .withHint(Hint(content = messages("isThereASaleInvolved.no.hint")))
