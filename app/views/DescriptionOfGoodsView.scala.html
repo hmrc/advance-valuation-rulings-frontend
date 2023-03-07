@@ -15,13 +15,17 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    cancelLink: CancelApplicationLink,
+    caption: Caption,
+    heading: Heading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -34,16 +38,24 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("descriptionOfGoods.caption"))
+        @heading(messages("descriptionOfGoods.heading"))
+
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("descriptionOfGoods.heading")).asPageHeading()
+                label = Label(None)
             )
             .withWidth(Full)
+            .withHint(Hint(
+                id = Some("description-hint"),
+                content = messages("descriptionOfGoods.hint")
+                ))
         )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )
     }
+    @cancelLink()
 }

@@ -27,7 +27,8 @@
     heading: Heading,
     link: Link,
     paragraph: Paragraph,
-    config: FrontendAppConfig
+    config: FrontendAppConfig,
+    detailsDrop: DetailsDrop
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -39,6 +40,11 @@
             call = Call("GET", config.findCommodityCodeUrl)
         )
     }
+
+@detailsContent = @{Html(
+                    messages("hasCommodityCode.paragraph.1",
+                    searchLink)
+                )}
 
 @layout(pageTitle = title(form, messages("hasCommodityCode.title"))) {
 
@@ -52,16 +58,16 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @detailsDrop(messages("hasCommodityCode.details.label"),
+                    detailsContent
+                    )
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend(
-                    content=HtmlContent(
-                        messages("hasCommodityCode.paragraph.1", searchLink)
-                        )
-                    )
-                )
+                legend = Legend()
             )
+        )
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))

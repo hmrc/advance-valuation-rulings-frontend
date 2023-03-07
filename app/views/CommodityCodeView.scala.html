@@ -36,10 +36,7 @@
     @formHelper(action = routes.CommodityCodeController.onSubmit(mode)) {
 
         @caption(messages("commodityCode.caption"))
-
         @heading(messages("commodityCode.heading"))
-
-        @paragraph(Html(messages("commodityCode.para")))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -51,6 +48,10 @@
                 label = Label(None)
                 )
             .withWidth(Full)
+            .withHint(Hint(
+                id = Some("commodity-code-hint"),
+                content = messages("commodityCode.hint")
+                ))
         )
 
         @govukButton(
