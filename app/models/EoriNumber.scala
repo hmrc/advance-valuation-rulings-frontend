@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-package models.requests
+package models
 
-import play.api.libs.json.{Json, OFormat}
-
-final case class TraderDetailsRequest(
-  acknowledgementReference: String,
-  EORI: String
-)
-
-object TraderDetailsRequest {
-  implicit val format: OFormat[TraderDetailsRequest] = Json.format[TraderDetailsRequest]
-}
+final case class EoriNumber(value: String)

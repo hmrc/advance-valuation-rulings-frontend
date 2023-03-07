@@ -20,11 +20,12 @@ import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import com.google.inject.{Inject, Singleton}
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration) {
+class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
@@ -80,6 +81,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   val callbackEndpointTarget: String = loadConfig("upscan.callbackUrl")
   val maximumFileSize: Int           = configuration.get[Int]("upscan.maxFileSize")
+
+  val advanceValuationRulingsBackendURL: String =
+    s"${servicesConfig.baseUrl("advance-valuation-rulings-backend")}/advance-valuation-rulings"
 
   lazy val initiateV2Url: String =
     configuration

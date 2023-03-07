@@ -17,7 +17,8 @@
 package viewmodels.checkAnswers
 
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
@@ -33,7 +34,7 @@ object CheckRegisteredDetailsSummary {
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.name.label",
-      value = ValueViewModel(HtmlFormat.escape("Smart case Ltd").toString),
+      value = ValueViewModel(HtmlFormat.escape(answer.name).body),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
@@ -49,12 +50,16 @@ object CheckRegisteredDetailsSummary {
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.address.label",
       value = ValueViewModel(
-        HtmlFormat
-          .escape("""Somewhere
-        London
-        NW11
-        United Kingdom""")
-          .toString
+        HtmlContent(
+          Html(
+            s"${HtmlFormat.escape(answer.streetAndNumber).body}<br>" +
+              s"${HtmlFormat.escape(answer.city).body}<br>" +
+              answer.postalCode
+                .map(value => s"${HtmlFormat.escape(value).body}<br>")
+                .getOrElse("") +
+              s"${HtmlFormat.escape(answer.country).body}"
+          )
+        )
       ),
       actions = Seq(
         ActionItemViewModel(
@@ -70,7 +75,7 @@ object CheckRegisteredDetailsSummary {
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.number.label",
-      value = ValueViewModel(HtmlFormat.escape("GB123456789000").toString),
+      value = ValueViewModel(HtmlFormat.escape(answer.eori).body),
       actions = Seq(
         ActionItemViewModel(
           "site.change",

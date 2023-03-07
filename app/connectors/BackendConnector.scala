@@ -21,35 +21,33 @@ import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
-import play.api.mvc.Request
-import uk.gov.hmrc.http.{HttpClient, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 
 import com.google.inject.Inject
-import models.{BackendError, TraderDetailsWithCountryCode}
-import models.requests.TraderDetailsRequest
+import config.FrontendAppConfig
+import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode}
 
 class BackendConnector @Inject() (
-  servicesConfig: ServicesConfig,
+  config: FrontendAppConfig,
   httpClient: HttpClient
-)(implicit
-  ec: ExecutionContext
 ) extends FrontendHeaderCarrierProvider {
 
   type Result = Either[BackendError, TraderDetailsWithCountryCode]
 
-  private val backendBaseUrl = servicesConfig.baseUrl("advance-valuation-rulings-backend")
-  private val backendURL     = s"$backendBaseUrl/advance-valuation-rulings"
+  private val backendUrl = config.advanceValuationRulingsBackendURL
 
   def getTraderDetails(
-    traderDetailsRequest: TraderDetailsRequest
-  )(implicit request: Request[_]): Future[Either[BackendError, TraderDetailsWithCountryCode]] =
+    acknowledgementReference: AcknowledgementReference,
+    eoriNumber: EoriNumber
+  )(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Either[BackendError, TraderDetailsWithCountryCode]] =
     httpClient
-      .POST[TraderDetailsRequest, TraderDetailsWithCountryCode](
-        s"$backendURL/trader-details",
-        body = traderDetailsRequest,
+      .GET[TraderDetailsWithCountryCode](
+        s"$backendUrl/trader-details/${acknowledgementReference.value}/${eoriNumber.value}",
         headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
       )
       .map(response => Right(response))
