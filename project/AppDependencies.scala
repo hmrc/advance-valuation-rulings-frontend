@@ -9,16 +9,17 @@ object AppDependencies {
   val BootstrapFrontendPlayVersion      = "7.12.0"
   val CatsVersion                       = "2.9.0"
 
-  val ScalaTestVersion         = "3.2.10"
-  val ScalaTestPlusVersion     = "3.2.10.0"
-  val ScalaTestPlusPlayVersion = "5.1.0"
-  val MockitoScalaVersion      = "1.16.42"
-  val PegdownVersion           = "1.6.0"
-  val JsoupVersion             = "1.14.3"
-  val MockitoVersion           = "3.11.2"
-  val ScalaCheckVersion        = "1.15.4"
-  val HmrcMongoTestPlayVersion = "0.74.0"
-  val FlexmarkVersion          = "0.62.2"
+  val ScalaTestVersion          = "3.2.10"
+  val ScalaTestPlusVersion      = "3.2.10.0"
+  val ScalaTestPlusPlayVersion  = "5.1.0"
+  val MockitoScalaVersion       = "1.16.42"
+  val PegdownVersion            = "1.6.0"
+  val JsoupVersion              = "1.14.3"
+  val MockitoVersion            = "3.11.2"
+  val ScalaCheckVersion         = "1.15.4"
+  val ScalaCheckRegexGenVersion = "0.1.2"
+  val HmrcMongoTestPlayVersion  = "0.74.0"
+  val FlexmarkVersion           = "0.62.2"
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
@@ -39,6 +40,7 @@ object AppDependencies {
     "com.typesafe.play"      %% "play-test"               % PlayVersion.current,
     "org.mockito"            %% "mockito-scala"           % MockitoScalaVersion,
     "org.scalacheck"         %% "scalacheck"              % ScalaCheckVersion,
+    "wolfendale"             %% "scalacheck-gen-regexp"   % ScalaCheckRegexGenVersion,
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
     "uk.gov.hmrc"            %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
     "com.vladsch.flexmark"    % "flexmark-all"            % FlexmarkVersion
