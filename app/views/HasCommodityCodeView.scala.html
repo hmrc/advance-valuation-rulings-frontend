@@ -28,7 +28,8 @@
     link: Link,
     paragraph: Paragraph,
     config: FrontendAppConfig,
-    detailsDrop: DetailsDrop
+    detailsDrop: DetailsDrop,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -74,9 +75,5 @@
         )
     }
 
-    @link(
-        id = "cancel_application",
-        text = messages("site.cancel"),
-        call = Call("GET", "accountHome")
-    )
+    @cancelApplicationLink()
 }

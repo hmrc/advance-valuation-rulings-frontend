@@ -87,8 +87,73 @@ class MethodSummarySpec extends SpecBase {
       }
     }
 
-    "when the user has answers for all relevant pages for method two" - {
-      val summary: MethodSummary = MethodSummary(methodTwoAllAnswersInput.success.value)
+    "when the user has answers method one without conditions or restrictions" - {
+      val summary: MethodSummary = MethodSummary(methodOneShortFlow.success.value)
+      val rows                   = summary.rows.rows
+      val keys                   = rows.map(_.key)
+
+      "create details rows for all relavent pages" in {
+        rows.length mustBe 5
+      }
+
+      "create row for valuation method" in {
+        val key: Key = "valuationMethod.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for there a sale involved" in {
+        val key: Key = "isThereASaleInvolved.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for sale between related parties" in {
+        val key: Key = "isSaleBetweenRelatedParties.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for are there any restrictions on the goods" in {
+        val key: Key = "areThereRestrictionsOnTheGoods.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for is the sale subject to conditions" in {
+        val key: Key = "isTheSaleSubjectToConditions.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+    }
+
+    "when the user has answers for method two using method one in the past" - {
+      val summary: MethodSummary = MethodSummary(methodTwoUsedMethodOneInPast.success.value)
+      val rows                   = summary.rows.rows
+      val keys                   = rows.map(_.key)
+
+      "create details rows for all relavent pages" in {
+        rows.length mustBe 4
+      }
+
+      "create row for valuation method" in {
+        val key: Key = "valuationMethod.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for why identical goods" in {
+        val key: Key = "whyIdenticalGoods.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for have you used method one in past" in {
+        val key: Key = "haveYouUsedMethodOneInPast.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for describe the identical goods" in {
+        val key: Key = "describeTheIdenticalGoods.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+    }
+
+    "when the user has answers for method two stating describing to similar goods" - {
+      val summary: MethodSummary = MethodSummary(methodTwoNotUsedMethodOneInPast.success.value)
       val rows                   = summary.rows.rows
       val keys                   = rows.map(_.key)
 
@@ -113,11 +178,6 @@ class MethodSummarySpec extends SpecBase {
 
       "create row for explain importing to identical goods" in {
         val key: Key = "explainYourGoodsComparingToIdenticalGoods.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-
-      "create row for describe the identical goods" in {
-        val key: Key = "describeTheIdenticalGoods.checkYourAnswersLabel"
         keys must contain(key)
       }
     }
@@ -267,13 +327,33 @@ class MethodSummarySpec extends SpecBase {
         ua <- ua.set(DescribeTheConditionsPage, "test")
       } yield ua
 
-    val methodTwoAllAnswersInput: Try[UserAnswers] =
+    val methodOneShortFlow: Try[UserAnswers] =
+      for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, true)
+        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, false)
+        ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+        // The following should not show up in the summary
+        ua <- ua.set(DescribeTheRestrictionsPage, "test")
+        ua <- ua.set(DescribeTheConditionsPage, "test")
+      } yield ua
+
+    val methodTwoUsedMethodOneInPast: Try[UserAnswers] =
       for {
         ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
         ua <- ua.set(WhyIdenticalGoodsPage, "test")
         ua <- ua.set(HaveYouUsedMethodOneInPastPage, true)
-        ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, "test")
         ua <- ua.set(DescribeTheIdenticalGoodsPage, "test")
+      } yield ua
+
+    val methodTwoNotUsedMethodOneInPast: Try[UserAnswers] =
+      for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+        ua <- ua.set(WhyIdenticalGoodsPage, "test")
+        ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
+        ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
+        ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, "test")
       } yield ua
 
     val methodThreeAllAnswersInput: Try[UserAnswers] =

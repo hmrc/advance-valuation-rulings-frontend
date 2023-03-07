@@ -41,30 +41,68 @@ object MethodSummary {
 
   protected def methodOne(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
 
+    val conditionsRows = userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
+      case Some(true)  =>
+        Seq(
+          IsTheSaleSubjectToConditionsSummary.row(userAnswers),
+          DescribeTheConditionsSummary.row(userAnswers)
+        ).flatten
+      case Some(false) => Seq(IsTheSaleSubjectToConditionsSummary.row(userAnswers)).flatten
+      case None        => Seq.empty
+    }
+
+    val restrictionsRows = userAnswers.get(AreThereRestrictionsOnTheGoodsPage) match {
+      case Some(true)  =>
+        Seq(
+          AreThereRestrictionsOnTheGoodsSummary.row(userAnswers),
+          DescribeTheRestrictionsSummary.row(userAnswers)
+        ).flatten
+      case Some(false) => Seq(AreThereRestrictionsOnTheGoodsSummary.row(userAnswers)).flatten
+      case None        => Seq.empty
+    }
+
     val rows = Seq(
       ValuationMethodSummary.row(userAnswers),
       IsThereASaleInvolvedSummary.row(userAnswers),
-      IsSaleBetweenRelatedPartiesSummary.row(userAnswers),
-      AreThereRestrictionsOnTheGoodsSummary.row(userAnswers),
-      DescribeTheRestrictionsSummary.row(userAnswers),
-      IsTheSaleSubjectToConditionsSummary.row(userAnswers),
-      DescribeTheConditionsSummary.row(userAnswers)
+      IsSaleBetweenRelatedPartiesSummary.row(userAnswers)
     ).flatten
 
-    MethodSummary(SummaryListViewModel(rows))
+    MethodSummary(SummaryListViewModel(rows ++ restrictionsRows ++ conditionsRows))
   }
 
   protected def methodTwo(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
+    val identicalGoodsRows = userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
+      case Some(true)  =>
+        Seq(
+          HaveYouUsedMethodOneInPastSummary.row(userAnswers),
+          DescribeTheIdenticalGoodsSummary.row(userAnswers)
+        ).flatten
+      case Some(false) =>
+        Seq(
+          HaveYouUsedMethodOneInPastSummary.row(userAnswers)
+        ).flatten
+      case None        => Seq.empty
+    }
+
+    val compareGoodsRows = userAnswers.get(WillYouCompareGoodsToIdenticalGoodsPage) match {
+      case Some(true)  =>
+        Seq(
+          WillYouCompareGoodsToIdenticalGoodsSummary.row(userAnswers),
+          ExplainYourGoodsComparingToIdenticalGoodsSummary.row(userAnswers)
+        ).flatten
+      case Some(false) =>
+        Seq(
+          HaveYouUsedMethodOneInPastSummary.row(userAnswers)
+        ).flatten
+      case None        => Seq.empty
+    }
 
     val rows = Seq(
       ValuationMethodSummary.row(userAnswers),
-      WhyIdenticalGoodsSummary.row(userAnswers),
-      HaveYouUsedMethodOneInPastSummary.row(userAnswers),
-      ExplainYourGoodsComparingToIdenticalGoodsSummary.row(userAnswers),
-      DescribeTheIdenticalGoodsSummary.row(userAnswers)
+      WhyIdenticalGoodsSummary.row(userAnswers)
     ).flatten
 
-    MethodSummary(SummaryListViewModel(rows))
+    MethodSummary(SummaryListViewModel(rows ++ identicalGoodsRows ++ compareGoodsRows))
   }
 
   protected def methodThree(
