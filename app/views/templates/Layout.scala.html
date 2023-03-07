@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
- @import uk.gov.hmrc.hmrcfrontend.views.config.StandardAlphaBanner
+ @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
  @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
  @import views.html.helper.CSPNonce
  @import config.FrontendAppConfig
@@ -24,7 +24,7 @@
  @this(
     appConfig: FrontendAppConfig,
     hmrcLayout: HmrcLayout, 
-    standardAlphaBanner: StandardAlphaBanner,
+    standardBetaBanner: StandardBetaBanner,
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
 )
  
@@ -67,7 +67,7 @@
    isWelshTranslationAvailable = true, /* or false if your service has not been translated */
    serviceUrl = Some(routes.IndexController.onPageLoad.url),
    signOutUrl = if(showBackLink) Some(controllers.auth.routes.AuthController.signOut.url) else None,
-   phaseBanner = Some(standardAlphaBanner(url = appConfig.feedbackUrl)),
+   phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
    nonce = CSPNonce.get,
    backLinkUrl = if(showBackLink) Some("#") else None,
    additionalScriptsBlock = Some(additionalScripts),
