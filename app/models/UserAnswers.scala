@@ -17,6 +17,7 @@
 package models
 
 import java.time.Instant
+import java.util.UUID
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -31,6 +32,7 @@ import queries.Modifiable
 final case class UserAnswers(
   id: String,
   data: JsObject = Json.obj(),
+  applicationNumber: String = UUID.randomUUID.toString.replaceAll("-", ""),
   lastUpdated: Instant = Instant.now
 ) {
 
@@ -118,6 +120,7 @@ object UserAnswers {
     (
       (__ \ "_id").read[String] and
         (__ \ "data").read[JsObject] and
+        (__ \ "applicationNumber").read[String] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
     )(UserAnswers.apply _)
   }
@@ -129,6 +132,7 @@ object UserAnswers {
     (
       (__ \ "_id").write[String] and
         (__ \ "data").write[JsObject] and
+        (__ \ "applicationNumber").write[String] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
     )(unlift(UserAnswers.unapply))
   }

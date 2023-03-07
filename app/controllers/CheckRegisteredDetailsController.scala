@@ -16,7 +16,6 @@
 
 package controllers
 
-import java.util.UUID
 import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -65,9 +64,11 @@ class CheckRegisteredDetailsController @Inject() (
               (details: CheckRegisteredDetails) => Ok(view(form.fill(value.value), mode, details))
             )
           case None        =>
-            val ref = UUID.randomUUID().toString.replaceAll("-", "")
             backendConnector
-              .getTraderDetails(AcknowledgementReference(ref), EoriNumber(request.eoriNumber))
+              .getTraderDetails(
+                AcknowledgementReference(request.userAnswers.applicationNumber),
+                EoriNumber(request.eoriNumber)
+              )
               .flatMap {
                 case Right(traderDetails) =>
                   for {

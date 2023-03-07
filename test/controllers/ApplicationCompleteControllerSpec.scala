@@ -16,33 +16,47 @@
 
 package controllers
 
+import play.api.libs.json._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import generators.Generators
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import views.html.ApplicationCompleteView
 
-class ApplicationCompleteControllerSpec extends SpecBase {
+class ApplicationCompleteControllerSpec extends SpecBase with Generators {
 
   "ApplicationComplete Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
+        userAnswers =>
+          val Email             = "testEmail@mail.com"
+          val applicationNumber = userAnswers.applicationNumber
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+          val emailUpdate   = (__ \ "applicationContactDetails" \ "email").json.put(JsString(Email))
+          val dataWithEmail = userAnswers.data.transform(__.json.update(emailUpdate)).get
+          val answers       = userAnswers.copy(data = dataWithEmail)
+          val application   = applicationBuilder(userAnswers = Option(answers)).build()
 
-      running(application) {
-        val request =
-          FakeRequest(GET, routes.ApplicationCompleteController.onPageLoad().url)
+          running(application) {
+            val request =
+              FakeRequest(
+                GET,
+                routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+              )
 
-        val result = route(application, request).value
+            val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ApplicationCompleteView]
+            val view = application.injector.instanceOf[ApplicationCompleteView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(
-          request,
-          messages(application)
-        ).toString
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(applicationNumber, Email)(
+              request,
+              messages(application)
+            ).toString
+          }
       }
     }
   }

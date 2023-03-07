@@ -25,7 +25,7 @@ import wolfendale.scalacheck.regexp.RegexpGen
 trait TraderDetailsGenerator extends Generators {
 
   implicit lazy val arbitraryEoriNumberGen: Arbitrary[EoriNumber] = Arbitrary(
-    RegexpGen.from("([a-zA-Z]{2})(\\d{12})").map(EoriNumber)
+    RegexpGen.from("^[A-Z]{2}[0-9A-Z]{12}$").map(EoriNumber)
   )
 
   implicit lazy val arbitraryTraderDetailsWithCountryCode: Arbitrary[TraderDetailsWithCountryCode] =

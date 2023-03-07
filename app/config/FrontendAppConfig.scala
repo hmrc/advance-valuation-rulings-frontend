@@ -48,6 +48,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val stepByStepGuideUrl: String     = configuration.get[String]("urls.stepByStepGuide")
   val generalInformationUrl: String  = configuration.get[String]("urls.generalInformation")
   val helpAndSupportUrl: String      = configuration.get[String]("urls.helpAndSupport")
+  val customsDeclarationUrl: String  = configuration.get[String]("urls.customsDeclaration")
 
   val importingGoodsGuideUrl: String     = configuration.get[String]("urls.importingGoodsGuide")
   val importedGoodsValueGuideUrl: String = configuration.get[String]("urls.importedGoodsValueGuide")

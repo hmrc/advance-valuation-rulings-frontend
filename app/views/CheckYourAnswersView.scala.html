@@ -64,9 +64,9 @@
         Html(messages("checkYourAnswers.agreement.bulletPoint.3"))
     ))
 
-    @formHelper(action = routes.ApplicationCompleteController.onPageLoad()) {
+    @formHelper(action = routes.CheckYourAnswersController.onSubmit) {
         @govukButton(
-        ButtonViewModel(messages("checkYourAnswers.button.continue"))
+            ButtonViewModel(messages("checkYourAnswers.button.continue"))
         )
     }
 
