@@ -25,20 +25,11 @@
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
         heading: Heading,
-        link: Link,
         config: FrontendAppConfig,
         caption: Caption
 )
 
 @()(implicit request: Request[_], messages: Messages)
-
-@emailLink = {
-    @link(
-            id = "how_should_we_contact_you_email",
-            text = config.contactEmail,
-            call = Call("GET", "mailto:" + config.contactEmail)
-        )
-    }
 
 @layout(pageTitle = titleNoForm(messages("contactPage.title"))) {
 
@@ -50,10 +41,6 @@
         @paragraph(content = Html(messages("contactPage.paragraph.1")))
 
         @paragraph(content = Html(messages("contactPage.paragraph.2")))
-
-        @paragraph(content = Html(messages("contactPage.paragraph.3", emailLink)))
-        
-
 
         @govukButton(
             ButtonViewModel(messages("site.acceptContinue"))
