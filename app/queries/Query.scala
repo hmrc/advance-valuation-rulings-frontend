@@ -36,3 +36,5 @@ trait Settable[A] extends Query {
     Success(userAnswers)
   }
 }
+
+trait Modifiable[A] extends Gettable[A] with Settable[A]

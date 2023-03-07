@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-package pages
+package models
 
-import play.api.libs.json.JsPath
-
-case object IsThisFileConfidentialPage extends QuestionPage[Boolean] {
-
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "isThisFileConfidential"
-}
+final case class AcknowledgementReference(value: String)

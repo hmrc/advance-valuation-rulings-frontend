@@ -25,43 +25,58 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.UploadAnotherSupportingDocumentFormProvider
-import models.{NormalMode, UserAnswers}
+import models._
 import models.fileupload.{UploadId, UpscanFileDetails}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import pages.UploadSupportingDocumentPage
 import repositories.SessionRepository
 import views.html.UploadAnotherSupportingDocumentView
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
+  def onwardRoute                        = Call("GET", "/foo")
+  val maximumNumberOfFiles               = 10
   val numOfDocs                          = "one"
   val upscanFileDeets: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
+  val uploadedFiles                   = UploadedFiles.initialise(upscanFileDeets)
+  val uploadedFileWithConfidentiality = uploadedFiles.setConfidentiality(true)
+
   val formProvider = new UploadAnotherSupportingDocumentFormProvider()
   val form         = formProvider()
+  val link         = new views.html.components.Link()
 
   lazy val uploadAnotherSupportingDocumentRoute =
     routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode).url
 
+  val fullSetOfFiles = UploadedFiles(
+    None,
+    Map.from(
+      Seq
+        .fill(maximumNumberOfFiles)(UploadedFile("filename", "www.website.com", false))
+        .zipWithIndex
+        .map(x => (UploadId(s"id${x._2}"), x._1))
+    )
+  )
+
   "UploadAnotherSupportingDocument Controller" - {
 
     val ans: UserAnswers                  = emptyUserAnswers
-      .set(IsThisFileConfidentialPage, true)
-      .flatMap(_.set(UploadSupportingDocumentPage, upscanFileDeets))
+      .set(UploadSupportingDocumentPage, uploadedFileWithConfidentiality)
       .get
     val ansNoConfidentiality: UserAnswers =
-      emptyUserAnswers.set(UploadSupportingDocumentPage, upscanFileDeets).get
+      emptyUserAnswers.set(UploadSupportingDocumentPage, uploadedFiles).get
+    lazy val application                  = applicationBuilder(userAnswers = Some(ans)).build()
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(ans)).build()
-
       running(application) {
+        val fileRows =
+          SupportingDocumentsRows(uploadedFileWithConfidentiality, link)(messages(application))
+
         val request = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
 
         val result = route(application, request).value
@@ -69,7 +84,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(numOfDocs, upscanFileDeets, true, form, NormalMode)(
+        contentAsString(result) mustEqual view(fileRows, form, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -81,14 +96,16 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val application = applicationBuilder(userAnswers = Some(ans)).build()
 
       running(application) {
-        val request = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
+        val request  = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
+        val fileRows =
+          SupportingDocumentsRows(uploadedFileWithConfidentiality, link)(messages(application))
 
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(numOfDocs, upscanFileDeets, true, form, NormalMode)(
+        contentAsString(result) mustEqual view(fileRows, form, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -135,7 +152,8 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(ans)).build()
-
+      val fileRows    =
+        SupportingDocumentsRows(uploadedFileWithConfidentiality, link)(messages(application))
       running(application) {
         val request =
           FakeRequest(POST, uploadAnotherSupportingDocumentRoute)
@@ -149,15 +167,66 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
-          numOfDocs,
-          upscanFileDeets,
-          true,
+          fileRows,
           boundForm,
           NormalMode
         )(
           request,
           messages(application)
         ).toString
+      }
+    }
+
+    "must redirect to the next pagewhen user with 10 files selects 'No'" in {
+      val answers: UserAnswers =
+        emptyUserAnswers.set(UploadSupportingDocumentPage, fullSetOfFiles).get
+      val application          = applicationBuilder(userAnswers = Some(answers)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, uploadAnotherSupportingDocumentRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(
+          result
+        ).value mustEqual controllers.routes.CheckYourAnswersController.onPageLoad.url
+      }
+    }
+
+    "must return a Bad Request and errors when user attempt to upload too many files" in {
+      val answers: UserAnswers =
+        emptyUserAnswers.set(UploadSupportingDocumentPage, fullSetOfFiles).get
+      val application          = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val fileRows =
+        SupportingDocumentsRows(fullSetOfFiles, link)(messages(application))
+
+      running(application) {
+        val request =
+          FakeRequest(POST, uploadAnotherSupportingDocumentRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val boundForm = form
+          .bind(Map("value" -> "true"))
+          .withError("value", "uploadAnotherSupportingDocument.error.fileCount")
+
+        val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          fileRows,
+          boundForm,
+          NormalMode
+        )(
+          request,
+          messages(application)
+        ).toString
+
       }
     }
 

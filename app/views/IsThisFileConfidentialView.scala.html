@@ -31,6 +31,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
+@uploadId = @{form("uploadId").value.getOrElse("")}
 @layout(pageTitle = title(form, messages("isThisFileConfidential.title"))) {
 
     @if(form.errors.nonEmpty) {
@@ -45,7 +46,7 @@
 
 
     @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode), 'autoComplete -> "off") {
-
+        
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),

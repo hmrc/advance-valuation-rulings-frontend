@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import connectors.BackendConnector
 import forms.CheckRegisteredDetailsFormProvider
-import models.{BackendError, CDSEstablishmentAddress, CheckRegisteredDetails, NormalMode, TraderDetailsWithCountryCode, UserAnswers}
+import models._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -81,9 +81,12 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
         )
         .build()
 
-      when(mockBackendConnector.getTraderDetails(any())(any())) thenReturn Future.successful(
-        Right(traderDetailsWithCountryCode)
-      )
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(traderDetailsWithCountryCode)
+        )
 
       running(application) {
         val request = FakeRequest(GET, checkRegisteredDetailsRoute)
@@ -196,7 +199,9 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
         )
         .build()
 
-      when(mockBackendConnector.getTraderDetails(any())(any())) thenReturn Future.successful(
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future.successful(
         Left(BackendError(code = 500, message = "some backed error"))
       )
 

@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.IsThisFileConfidentialFormProvider
-import models.{Mode, NormalMode}
+import models._
 import navigation.Navigator
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import repositories.SessionRepository
@@ -51,23 +51,18 @@ class IsThisFileConfidentialController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage) match {
-          case None         =>
-            form
-          case Some(answer) =>
-            form.fill(answer)
-        }
+        val result = for {
+          fileUploads   <- UploadSupportingDocumentPage.get()
+          theUpload     <- fileUploads.lastUpload
+          isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
+          preparedForm   = isConfidential.map(form.fill).getOrElse(form)
+        } yield Ok(view(preparedForm, mode))
 
-        Ok(view(preparedForm, mode))
-    }
-
-  def onCallback(): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
-      implicit request =>
-        request.userAnswers.get(UploadSupportingDocumentPage) match {
-          // RequireData redirects to the JourneyRecoveryController if no data is found
-          case None    => Redirect(routes.JourneyRecoveryController.onPageLoad())
-          case Some(_) => Ok(view(form, NormalMode))
+        result.getOrElse {
+          Redirect(
+            controllers.fileupload.routes.UploadSupportingDocumentsController
+              .onPageLoad(None, None, None)
+          )
         }
     }
 
@@ -78,9 +73,11 @@ class IsThisFileConfidentialController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            value =>
+            (value: Boolean) =>
               for {
-                updatedAnswers <- request.userAnswers.setFuture(IsThisFileConfidentialPage, value)
+                updatedAnswers <- UploadSupportingDocumentPage.modify(
+                                    (files: UploadedFiles) => files.setConfidentiality(value)
+                                  )
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
           )

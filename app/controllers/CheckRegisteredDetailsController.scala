@@ -30,8 +30,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
-import models.{CheckRegisteredDetails, Mode}
-import models.requests.{DataRequest, TraderDetailsRequest}
+import models.{AcknowledgementReference, CheckRegisteredDetails, EoriNumber, Mode}
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.CheckRegisteredDetailsPage
 import repositories.SessionRepository
@@ -65,9 +65,9 @@ class CheckRegisteredDetailsController @Inject() (
               (details: CheckRegisteredDetails) => Ok(view(form.fill(value.value), mode, details))
             )
           case None        =>
-            val acknowledgementRef = UUID.randomUUID().toString.replaceAll("-", "")
+            val ref = UUID.randomUUID().toString.replaceAll("-", "")
             backendConnector
-              .getTraderDetails(TraderDetailsRequest(acknowledgementRef, request.eoriNumber))
+              .getTraderDetails(AcknowledgementReference(ref), EoriNumber(request.eoriNumber))
               .flatMap {
                 case Right(traderDetails) =>
                   for {
