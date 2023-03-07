@@ -147,7 +147,6 @@ contactPage.heading = If we need to contact you about your application
 contactPage.caption = About the applicant
 contactPage.paragraph.1 = We might contact you by phone or email if we need more information about your application.
 contactPage.paragraph.2 = Emails might not be secure, or could be read or changed by someone else.
-contactPage.paragraph.3 = You should contact us on {0} if you do not want us to contact you by email.
 
 importGoods.title = To use this service, you must intend to bring goods into Great Britain
 importGoods.heading = Are you planning to import goods into Great Britain?
