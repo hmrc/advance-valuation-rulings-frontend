@@ -100,7 +100,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       running(application) {
         val request  = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
         val fileRows =
-          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, CheckMode)(
+          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode)(
             messages(application)
           )
 
