@@ -27,11 +27,11 @@ import services.fileupload.{FileUploadResult, FileUploadService}
 
 class FakeFileUploadService @Inject() extends FileUploadService {
   import FakeFileUploadService._
-  def initiateUpload()(implicit
-    _hc: HeaderCarrier
+  def initiateUpload(mode: models.Mode)(implicit
+    hc: HeaderCarrier
   ): Future[FileUploadResult] = Future.successful(NewUploadResult)
 
-  def initiateWithExisting(fileUploadIds: FileUploadIds)(implicit
+  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: models.Mode)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult] = Future.successful(ExistingUploadResult)
 

@@ -75,7 +75,9 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
       running(application) {
         val fileRows =
-          SupportingDocumentsRows(uploadedFileWithConfidentiality, link)(messages(application))
+          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode)(
+            messages(application)
+          )
 
         val request = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
 
@@ -98,7 +100,9 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       running(application) {
         val request  = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
         val fileRows =
-          SupportingDocumentsRows(uploadedFileWithConfidentiality, link)(messages(application))
+          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, CheckMode)(
+            messages(application)
+          )
 
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
@@ -153,7 +157,9 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
       val application = applicationBuilder(userAnswers = Some(ans)).build()
       val fileRows    =
-        SupportingDocumentsRows(uploadedFileWithConfidentiality, link)(messages(application))
+        SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode)(
+          messages(application)
+        )
       running(application) {
         val request =
           FakeRequest(POST, uploadAnotherSupportingDocumentRoute)
@@ -202,7 +208,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val application          = applicationBuilder(userAnswers = Some(answers)).build()
 
       val fileRows =
-        SupportingDocumentsRows(fullSetOfFiles, link)(messages(application))
+        SupportingDocumentsRows(fullSetOfFiles, link, NormalMode)(messages(application))
 
       running(application) {
         val request =

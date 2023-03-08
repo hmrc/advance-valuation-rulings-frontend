@@ -437,7 +437,7 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None)
+            .onPageLoad(None, None, None, NormalMode)
         }
 
         "CheckYourAnswers page when No is selected" in {
@@ -469,7 +469,7 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None)
+            .onPageLoad(None, None, None, NormalMode)
         }
 
         "CheckYourAnswers page when No is selected" in {

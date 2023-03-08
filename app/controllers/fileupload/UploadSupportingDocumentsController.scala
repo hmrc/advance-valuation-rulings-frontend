@@ -56,14 +56,15 @@ class UploadSupportingDocumentsController @Inject() (
   def onPageLoad(
     error: Option[String],
     key: Option[String],
-    uploadId: Option[UploadId]
+    uploadId: Option[UploadId],
+    mode: Mode
   ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request: DataRequest[AnyContent] =>
       val statusFromCode = error.flatMap(UploadStatus.fromErrorCode)
       uploadId match {
         case None =>
           for {
-            result <- fileUploadService.initiateUpload()
+            result <- fileUploadService.initiateUpload(mode)
             status  = if (result.uploadStatus == NotStarted) statusFromCode.getOrElse(NotStarted)
                       else result.uploadStatus
 
@@ -83,9 +84,9 @@ class UploadSupportingDocumentsController @Inject() (
                               case None                               =>
                                 Future(BadRequest(s"Upload with id $uploadId not found"))
                               case Some(status: UploadedSuccessfully) =>
-                                continueToIsFileConfidential(existingFileId, status)(request)
+                                continueToIsFileConfidential(existingFileId, status, mode)(request)
                               case Some(result)                       =>
-                                showUploadForm(fileUploadIds, result)
+                                showUploadForm(fileUploadIds, result, mode)
                             }
           } yield result
       }
@@ -93,7 +94,8 @@ class UploadSupportingDocumentsController @Inject() (
 
   private def continueToIsFileConfidential(
     uploadId: UploadId,
-    uploadDetails: UploadedSuccessfully
+    uploadDetails: UploadedSuccessfully,
+    mode: Mode
   ): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
@@ -107,17 +109,18 @@ class UploadSupportingDocumentsController @Inject() (
             )
           _       <- sessionRepository.set(answers)
           _        = logger.info(s"Uploaded file added to sesion repo uploadId: $uploadId")
-        } yield Redirect(controllers.routes.IsThisFileConfidentialController.onPageLoad(NormalMode))
+        } yield Redirect(controllers.routes.IsThisFileConfidentialController.onPageLoad(mode))
     }
 
   private def showUploadForm(
     fileUploadIds: FileUploadIds,
-    result: UploadStatus
+    result: UploadStatus,
+    mode: Mode
   )(implicit
     request: DataRequest[AnyContent]
   ) =
     for {
-      response <- fileUploadService.initiateWithExisting(fileUploadIds)
+      response <- fileUploadService.initiateWithExisting(fileUploadIds, mode)
     } yield Ok(
       uploadSupportingDocumentsView(
         response.upscanResponse,
