@@ -25,6 +25,7 @@
     govukButton: GovukButton,
     govukTextarea: GovukTextarea,
     paragraph: Paragraph,
+    bulletList: BulletList,
     caption: Caption,
     heading: Heading,
     cancelLink: CancelApplicationLink
@@ -44,7 +45,13 @@
 
     @heading(messages("whyIdenticalGoods.heading"))
 
-    @paragraph(Html(messages("whyIdenticalGoods.paragraph")))
+    @paragraph(Html(messages("whyIdenticalGoods.paragraph.1")))
+
+    @bulletList(Seq(
+        Html(messages("whyIdenticalGoods.bulletPoint.1"))
+    ))
+
+    @paragraph(Html(messages("whyIdenticalGoods.paragraph.2")))
 
        @govukTextarea(
             TextareaViewModel(
