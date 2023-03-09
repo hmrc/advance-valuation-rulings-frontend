@@ -39,13 +39,11 @@
 
         @caption(messages("willYouCompareGoodsToIdenticalGoods.caption"))
 
-        @heading(messages("willYouCompareGoodsToIdenticalGoods.heading"))
-
-        <!--TODO: need to change the No label to No - if you choose ‘no’ you will need to select an alternative valuation method-->
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend()
+                legend = LegendViewModel(messages("willYouCompareGoodsToIdenticalGoods.heading")).asPageHeading(),
+                noText = messages("willYouCompareGoodsToIdenticalGoods.no.text")
             )
         )
 
