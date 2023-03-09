@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 import play.api.mvc.Call
 
-import controllers.routes
+import controllers.fileupload.routes.UploadSupportingDocumentsController
 import controllers.routes._
 import models._
 import models.ValuationMethod._
@@ -28,7 +28,7 @@ import pages._
 
 class Navigator @Inject() () {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def routes: Page => UserAnswers => Call = {
     case ValuationMethodPage                           => valuationMethodPage
     case IsThereASaleInvolvedPage                      => isThereASaleInvolvedPage
     case IsSaleBetweenRelatedPartiesPage               => isSaleBetweenRelatedPartiesPage
@@ -75,7 +75,7 @@ class Navigator @Inject() () {
       explainWhyYouHaveNotSelectedMethodOneToFivePage
     case ExplainHowYouWillUseMethodSixPage                => explainHowYouWillUseMethodSixPage
     case AdaptMethodPage                                  => adaptMethodPage
-    case _                                                => _ => routes.IndexController.onPageLoad
+    case _                                                => _ => IndexController.onPageLoad
   }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
@@ -324,9 +324,9 @@ class Navigator @Inject() () {
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)
       case Some(true)  =>
-        controllers.fileupload.routes.UploadSupportingDocumentsController
+        UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
-      case Some(false) => routes.CheckYourAnswersController.onPageLoad
+      case Some(false) => CheckYourAnswersController.onPageLoad
     }
 
   private def isThisFileConfidentialPage(userAnswers: UserAnswers): Call =
@@ -347,9 +347,9 @@ class Navigator @Inject() () {
     userAnswers.get(UploadAnotherSupportingDocumentPage) match {
       case None        => UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
       case Some(true)  =>
-        controllers.fileupload.routes.UploadSupportingDocumentsController
+        UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
-      case Some(false) => routes.CheckYourAnswersController.onPageLoad
+      case Some(false) => CheckYourAnswersController.onPageLoad
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
@@ -382,7 +382,7 @@ class Navigator @Inject() () {
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      routes(page)(userAnswers)
     case CheckMode  =>
       CheckModeNavigator.nextPage(page)(userAnswers)
   }

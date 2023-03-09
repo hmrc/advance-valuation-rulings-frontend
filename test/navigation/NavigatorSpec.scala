@@ -79,9 +79,7 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             ans
           ) mustBe routes.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(NormalMode)
-
         }
-
       }
 
       "haveYouUsedMethodOneForSimilarGoodsInPast page" - {
