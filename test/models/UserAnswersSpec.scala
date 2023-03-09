@@ -16,20 +16,20 @@
 
 package models
 
+import base.SpecBase
 import generators.Generators
+import generators.ModelGenerators
 import generators.UserAnswersGenerator
-// import matchers.should.Matchers._
+import models._
+import models.ValuationMethod._
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest._
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
-import matchers.should.Matchers._
-import models.ValuationMethod._
-import base.SpecBase
 
 class UserAnswersSpec
     extends SpecBase
     with ScalaCheckPropertyChecks
+    with ModelGenerators
     with UserAnswersGenerator
     with Generators {
 
@@ -40,16 +40,16 @@ class UserAnswersSpec
       forAll(answers) {
         answers =>
           val withMethod = answers.set(ValuationMethodPage, Method1).success.value
-          val result =
+          val result     =
             UserAnswers.updateValuationMethod(withMethod, Method2).success.value
 
-          result.get(ValuationMethodPage) shouldEqual Some(Method2)
-          result.get(IsThereASaleInvolvedPage) shouldEqual None
-          result.get(IsSaleBetweenRelatedPartiesPage) shouldEqual None
-          result.get(IsTheSaleSubjectToConditionsPage) shouldEqual None
-          result.get(DescribeTheConditionsPage) shouldEqual None
-          result.get(AreThereRestrictionsOnTheGoodsPage) shouldEqual None
-          result.get(DescribeTheRestrictionsPage) shouldEqual None
+          result.get(ValuationMethodPage)                must be(Some(Method2))
+          result.get(IsThereASaleInvolvedPage)           must be(empty)
+          result.get(IsSaleBetweenRelatedPartiesPage)    must be(empty)
+          result.get(IsTheSaleSubjectToConditionsPage)   must be(empty)
+          result.get(DescribeTheConditionsPage)          must be(empty)
+          result.get(AreThereRestrictionsOnTheGoodsPage) must be(empty)
+          result.get(DescribeTheRestrictionsPage)        must be(empty)
       }
     }
 
@@ -59,15 +59,15 @@ class UserAnswersSpec
       forAll(answers) {
         answers =>
           val withMethod = answers.set(ValuationMethodPage, Method2).success.value
-          val result =
+          val result     =
             UserAnswers.updateValuationMethod(withMethod, Method3).success.value
 
-          result.get(ValuationMethodPage) shouldEqual Some(Method3)
-          result.get(WhyIdenticalGoodsPage) shouldEqual None
-          result.get(HaveYouUsedMethodOneInPastPage) shouldEqual None
-          result.get(DescribeTheIdenticalGoodsPage) shouldEqual None
-          result.get(WillYouCompareGoodsToIdenticalGoodsPage) shouldEqual None
-          result.get(ExplainYourGoodsComparingToIdenticalGoodsPage) shouldEqual None
+          result.get(ValuationMethodPage)                           must be(Some(Method3))
+          result.get(WhyIdenticalGoodsPage)                         must be(empty)
+          result.get(HaveYouUsedMethodOneInPastPage)                must be(empty)
+          result.get(DescribeTheIdenticalGoodsPage)                 must be(empty)
+          result.get(WillYouCompareGoodsToIdenticalGoodsPage)       must be(empty)
+          result.get(ExplainYourGoodsComparingToIdenticalGoodsPage) must be(empty)
       }
     }
 
@@ -77,16 +77,15 @@ class UserAnswersSpec
       forAll(answers) {
         answers =>
           val withMethod = answers.set(ValuationMethodPage, Method3).success.value
-          val result =
+          val result     =
             UserAnswers.updateValuationMethod(withMethod, Method4).success.value
 
-                      
-          result.get(ValuationMethodPage) shouldEqual Some(Method4)
-          result.get(WhyTransactionValueOfSimilarGoodsPage) shouldEqual None
-          result.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage) shouldEqual None
-          result.get(WillYouCompareToSimilarGoodsPage) shouldEqual None
-          result.get(ExplainYourGoodsComparingToSimilarGoodsPage) shouldEqual None
-          result.get(DescribeTheSimilarGoodsPage) shouldEqual None
+          result.get(ValuationMethodPage)                           must be(Some(Method4))
+          result.get(WhyTransactionValueOfSimilarGoodsPage)         must be(empty)
+          result.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage) must be(empty)
+          result.get(WillYouCompareToSimilarGoodsPage)              must be(empty)
+          result.get(ExplainYourGoodsComparingToSimilarGoodsPage)   must be(empty)
+          result.get(DescribeTheSimilarGoodsPage)                   must be(empty)
       }
     }
 
@@ -96,12 +95,12 @@ class UserAnswersSpec
       forAll(answers) {
         answers =>
           val withMethod = answers.set(ValuationMethodPage, Method4).success.value
-          val result =
+          val result     =
             UserAnswers.updateValuationMethod(withMethod, Method5).success.value
 
-          result.get(ValuationMethodPage) shouldEqual Some(Method5)
-          result.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage) shouldEqual None
-          result.get(ExplainWhyYouChoseMethodFourPage) shouldEqual None
+          result.get(ValuationMethodPage)                              must be(Some(Method5))
+          result.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage) must be(empty)
+          result.get(ExplainWhyYouChoseMethodFourPage)                 must be(empty)
       }
     }
 
@@ -111,12 +110,12 @@ class UserAnswersSpec
       forAll(answers) {
         answers =>
           val withMethod = answers.set(ValuationMethodPage, Method5).success.value
-          val result =
+          val result     =
             UserAnswers.updateValuationMethod(withMethod, Method6).success.value
 
-          result.get(WhyComputedValuePage) shouldEqual None
-          result.get(ExplainReasonComputedValuePage) shouldEqual None
-          result.get(ValuationMethodPage) shouldEqual Some(Method6)
+          result.get(WhyComputedValuePage)           must be(empty)
+          result.get(ExplainReasonComputedValuePage) must be(empty)
+          result.get(ValuationMethodPage)            must be(Some(Method6))
       }
     }
 
@@ -126,12 +125,13 @@ class UserAnswersSpec
       forAll(answers) {
         answers =>
           val withMethod = answers.set(ValuationMethodPage, Method6).success.value
-          val result =
+          val result     =
             UserAnswers.updateValuationMethod(withMethod, Method1).success.value
 
-          result.get(ExplainWhyYouHaveNotSelectedMethodOneToFivePage) shouldEqual None
-          result.get(AdaptMethodPage) shouldEqual None
-          result.get(ExplainHowYouWillUseMethodSixPage) shouldEqual None
+          result.get(ExplainWhyYouHaveNotSelectedMethodOneToFivePage) must be(empty)
+          result.get(AdaptMethodPage)                                 must be(empty)
+          result.get(ExplainHowYouWillUseMethodSixPage)               must be(empty)
+          result.get(ValuationMethodPage)                             must be(Some(Method1))
       }
     }
   }
