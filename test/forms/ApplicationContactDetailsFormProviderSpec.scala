@@ -29,21 +29,21 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
   val form = new ApplicationContactDetailsFormProvider()()
 
   ".nameField" - {
-    val nameField = "name"
-    val lengthKey = "applicationContactDetails.fullName.length"
-    val nameMaxLength   = 100
+    val nameField     = "name"
+    val lengthKey     = "applicationContactDetails.fullName.length"
+    val nameMaxLength = 100
 
     behave like fieldThatBindsValidData(
       form,
       nameField,
-      stringsExceptSpecificValues(Seq(""))
+      nonNumerics
     )
 
-    behave like fieldWithMaxLength(
+    behave like alphaStringWithMaxLength(
       form,
       nameField,
-      maxLength = nameMaxLength,
-      lengthError = FormError(nameField, lengthKey, Seq(nameMaxLength))
+      nameMaxLength,
+      FormError(nameField, lengthKey)
     )
 
     behave like mandatoryField(
@@ -51,32 +51,47 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
       nameField,
       requiredError = FormError(nameField, nameRequiredKey)
     )
+
   }
 
   ".emailField" - {
     val emailField = "email"
-
-    behave like fieldThatBindsValidData(
-      form,
-      emailField,
-      stringsExceptSpecificValues(Seq(""))
-    )
 
     behave like mandatoryField(
       form,
       emailField,
       requiredError = FormError(emailField, emailRequiredKey)
     )
+
+    "binds valid email" in {
+      val boundForm = form.bind(
+        Map[String, String](
+          "name"  -> "Julius",
+          "email" -> "JuliusCaesar@spqr.com",
+          "phone" -> "07123456789"
+        )
+      )
+      boundForm.errors mustBe Seq.empty
+    }
+
+    "not bind invalid email" in {
+      val boundForm = form.bind(
+        Map[String, String](
+          "name"  -> "Julius",
+          "email" -> "com.nonsense@",
+          "phone" -> "07123456789"
+        )
+      )
+      boundForm.errors must not be Seq.empty
+    }
   }
 
   ".phoneField" - {
-    val phoneField = "phone"
-    val lengthKey = "applicationContactDetails.fullName.length"
+    val phoneField     = "phone"
+    val lengthKey      = "applicationContactDetails.fullName.length"
     val phoneMaxLength = 24
 
-
-
-    behave like fieldWithMaxLength(
+    behave like numericStringWithMaxLength(
       form,
       phoneField,
       maxLength = phoneMaxLength,
@@ -86,7 +101,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       phoneField,
-      stringsExceptSpecificValues(Seq(""))
+      numericStringsBetweenRange(0, phoneMaxLength)
     )
 
     behave like mandatoryField(

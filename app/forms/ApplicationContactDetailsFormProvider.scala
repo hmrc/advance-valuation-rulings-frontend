@@ -32,14 +32,12 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         "name"  -> text(nameRequiredError)
-          .verifying(Constraints.pattern(nameRegex, nameFormatError))
+          .verifying(Constraints.pattern(nameRegex, error = nameFormatError))
           .verifying(maxLength(nameMaxLength, nameLengthError)),
-
         "email" -> text(emailRequiredError)
-          .verifying(Constraints.emailAddress),
-
+          .verifying(Constraints.emailAddress(errorMessage = emailFormatError)),
         "phone" -> text(phoneRequiredError)
-          .verifying(Constraints.pattern(phoneNumberRegex, phoneFormatError))
+          .verifying(Constraints.pattern(phoneNumberRegex, error = phoneFormatError))
           .verifying(maxLength(phoneNumberMaxLength, phoneLengthError))
       )(ApplicationContactDetails.apply)(
         (applicationContactDetails: ApplicationContactDetails) =>
@@ -57,7 +55,7 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
 object ApplicationContactDetailsFormProvider {
 
   private val nameMaxLength = 100
-  private val nameRegex     = "^[A-z '.-]*$".r
+  private val nameRegex     = "^[a-zA-Z -]*$".r
 
   private val phoneNumberMaxLength = 24
   private val phoneNumberRegex     = "^[0-9]*$".r
@@ -67,6 +65,7 @@ object ApplicationContactDetailsFormProvider {
   private val nameLengthError   = "applicationContactDetails.fullName.length"
 
   private val emailRequiredError = "applicationContactDetails.email.error.required"
+  private val emailFormatError   = "applicationContactDetails.email.error.format"
 
   private val phoneRequiredError = "applicationContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "applicationContactDetails.telephoneNumber.error.format"

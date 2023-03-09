@@ -21,6 +21,7 @@ import java.time.{Instant, LocalDate, ZoneOffset}
 import org.scalacheck.{Gen, Shrink}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
+import wolfendale.scalacheck.regexp.RegexpGen
 
 trait Generators
     extends UserAnswersGenerator
@@ -29,6 +30,9 @@ trait Generators
     with UserAnswersEntryGenerators {
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny
+
+//  def generateEmailString(): Gen[String] =
+//    arbitrary[String] suchThat
 
   def genIntersperseString(
     gen: Gen[String],
@@ -96,6 +100,12 @@ trait Generators
     for {
       length <- choose(1, maxLength)
       chars  <- listOfN(length, Gen.alphaNumChar)
+    } yield chars.mkString
+
+  def alphaStringsWithMaxLength(maxLength: Int): Gen[String] =
+    for {
+      length <- choose(1, maxLength)
+      chars  <- listOfN(length, Gen.alphaChar)
     } yield chars.mkString
 
   def stringsLongerThan(minLength: Int): Gen[String] = for {
