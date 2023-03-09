@@ -433,7 +433,7 @@ describeTheIdenticalGoods.bulletPoint.1 = produced in the same country
 describeTheIdenticalGoods.bulletPoint.2 = exported to the UK at or about the same time (within 90 days)
 describeTheIdenticalGoods.bulletPoint.3 = the same in all respects including physical characteristics, quality and reputation — minor differences in appearance do not matter
 describeTheIdenticalGoods.checkYourAnswersLabel = Description of identical goods
-describeTheIdenticalGoods.error.required = Enter an explanation of how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
+describeTheIdenticalGoods.error.required = Enter a description of the identical goods
 describeTheIdenticalGoods.error.length = Maximum allowed characters is 8168
 describeTheIdenticalGoods.change.hidden = DescribeTheIdenticalGoods
 
