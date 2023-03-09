@@ -65,7 +65,8 @@ object SupportingDocument {
 object SupportingDocumentsRows {
   def apply(
     uploadedFiles: UploadedFiles,
-    link: views.html.components.Link
+    link: views.html.components.Link,
+    mode: Mode
   )(implicit messages: Messages): SummaryList = {
     val rows =
       uploadedFiles.files.map {
@@ -85,7 +86,7 @@ object SupportingDocumentsRows {
               ActionItemViewModel(
                 "site.remove",
                 controllers.routes.UploadAnotherSupportingDocumentController
-                  .onDelete(fileId.value)
+                  .onDelete(fileId.value, mode)
                   .url
               )
                 .withVisuallyHiddenText(messages("site.remove"))

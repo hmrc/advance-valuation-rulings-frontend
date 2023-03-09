@@ -55,7 +55,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        makeDocumentRows(request.userAnswers) match {
+        makeDocumentRows(request.userAnswers, mode) match {
           case Some(table) =>
             val preparedForm = UploadAnotherSupportingDocumentPage.get() match {
               case None        => form
@@ -64,7 +64,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
             Future.successful(Ok(view(table, preparedForm, mode)))
           case None        =>
-            redirectToUpdateDocument()
+            redirectToUpdateDocument(mode)
         }
     }
 
@@ -74,9 +74,9 @@ class UploadAnotherSupportingDocumentController @Inject() (
         validateFromRequest(form, request.userAnswers)
           .fold(
             formWithErrors =>
-              makeDocumentRows(request.userAnswers) match {
+              makeDocumentRows(request.userAnswers, mode) match {
                 case Some(table) => Future.successful(BadRequest(view(table, formWithErrors, mode)))
-                case None        => redirectToUpdateDocument()
+                case None        => redirectToUpdateDocument(mode)
               },
             value =>
               for {
@@ -88,27 +88,28 @@ class UploadAnotherSupportingDocumentController @Inject() (
           )
     }
 
-  def onDelete(uploadId: String) = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      for {
-        updatedAnswers <- UploadSupportingDocumentPage.modify(_.removeFile(UploadId(uploadId)))
-        updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
-        _              <- sessionRepository.set(updatedAnswers)
-      } yield Redirect(
-        navigator.nextPage(UploadAnotherSupportingDocumentPage, NormalMode, updatedAnswers)
-      )
-  }
+  def onDelete(uploadId: String, mode: Mode) =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        for {
+          updatedAnswers <- UploadSupportingDocumentPage.modify(_.removeFile(UploadId(uploadId)))
+          updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
+          _              <- sessionRepository.set(updatedAnswers)
+        } yield Redirect(
+          navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)
+        )
+    }
 
-  private def makeDocumentRows(userAnswers: UserAnswers)(implicit messages: Messages) =
+  private def makeDocumentRows(userAnswers: UserAnswers, mode: Mode)(implicit messages: Messages) =
     userAnswers
       .get(UploadSupportingDocumentPage) match {
       case Some(uploadedFiles) if uploadedFiles.files.size > 0 =>
-        Some(SupportingDocumentsRows(uploadedFiles, link))
+        Some(SupportingDocumentsRows(uploadedFiles, link, mode))
       case _                                                   => None
     }
 
-  private def redirectToUpdateDocument() =
-    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)))
+  private def redirectToUpdateDocument(mode: Mode) =
+    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(mode)))
 
   private def validateFromRequest(form: Form[Boolean], userAnswers: UserAnswers)(implicit
     request: DataRequest[AnyContent]

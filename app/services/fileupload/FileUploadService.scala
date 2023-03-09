@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import config.FrontendAppConfig
 import connectors.UpscanInitiateConnector
+import models.Mode
 import models.fileupload._
 import services.fileupload.UploadProgressTracker
 
@@ -36,11 +37,13 @@ case class FileUploadResult(
 )
 
 trait FileUploadService {
-  def initiateUpload()(implicit
+  def initiateUpload(
+    mode: Mode
+  )(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult]
 
-  def initiateWithExisting(fileUploadIds: FileUploadIds)(implicit
+  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: Mode)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult]
 
@@ -54,14 +57,14 @@ class UpscanFileUploadService @Inject() (
 )(implicit ec: ExecutionContext)
     extends FileUploadService {
 
-  def initiateUpload()(implicit
+  def initiateUpload(mode: Mode)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult] = {
     val nextUploadFileId = FileUploadIds.generateNewFileUploadId.nextUploadFileId
 
     val baseUrl            = appConfig.host
     val redirectUrl        = controllers.fileupload.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, Some(nextUploadFileId))
+      .onPageLoad(None, None, Some(nextUploadFileId), mode)
       .url
     val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
     val successRedirectUrl = s"${baseUrl}$redirectUrl".some
@@ -75,7 +78,7 @@ class UpscanFileUploadService @Inject() (
     } yield FileUploadResult(response, NotStarted, nextUploadFileId)
   }
 
-  def initiateWithExisting(fileUploadIds: FileUploadIds)(implicit
+  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: Mode)(implicit
     hc: HeaderCarrier
   ) = {
     val redirectUrlFileId = fileUploadIds.redirectUrlFileId
@@ -83,7 +86,7 @@ class UpscanFileUploadService @Inject() (
 
     val baseUrl     = appConfig.host
     val redirectUrl = controllers.fileupload.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, Some(nextUploadFileId))
+      .onPageLoad(None, None, Some(nextUploadFileId), mode)
       .url
 
     val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
