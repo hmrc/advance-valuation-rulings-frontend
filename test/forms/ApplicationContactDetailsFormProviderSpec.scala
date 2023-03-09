@@ -30,11 +30,20 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".nameField" - {
     val nameField = "name"
+    val lengthKey = "applicationContactDetails.fullName.length"
+    val nameMaxLength   = 100
 
     behave like fieldThatBindsValidData(
       form,
       nameField,
       stringsExceptSpecificValues(Seq(""))
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      nameField,
+      maxLength = nameMaxLength,
+      lengthError = FormError(nameField, lengthKey, Seq(nameMaxLength))
     )
 
     behave like mandatoryField(
@@ -62,6 +71,17 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".phoneField" - {
     val phoneField = "phone"
+    val lengthKey = "applicationContactDetails.fullName.length"
+    val phoneMaxLength = 24
+
+
+
+    behave like fieldWithMaxLength(
+      form,
+      phoneField,
+      maxLength = phoneMaxLength,
+      lengthError = FormError(phoneField, lengthKey, Seq(phoneMaxLength))
+    )
 
     behave like fieldThatBindsValidData(
       form,
