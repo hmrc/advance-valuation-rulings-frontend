@@ -98,6 +98,12 @@ trait Generators
       chars  <- listOfN(length, Gen.alphaNumChar)
     } yield chars.mkString
 
+  def alphaStringsWithMaxLength(maxLength: Int): Gen[String] =
+    for {
+      length <- choose(1, maxLength)
+      chars  <- listOfN(length, Gen.alphaChar)
+    } yield chars.mkString
+
   def stringsLongerThan(minLength: Int): Gen[String] = for {
     maxLength <- (minLength * 2).max(100)
     length    <- Gen.chooseNum(minLength + 1, maxLength)

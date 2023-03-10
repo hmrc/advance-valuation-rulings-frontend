@@ -31,14 +31,18 @@ class ApplicationCompleteControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ApplicationCompleteController.onPageLoad().url)
+        val request =
+          FakeRequest(GET, routes.ApplicationCompleteController.onPageLoad().url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ApplicationCompleteView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view()(
+          request,
+          messages(application)
+        ).toString
       }
     }
   }

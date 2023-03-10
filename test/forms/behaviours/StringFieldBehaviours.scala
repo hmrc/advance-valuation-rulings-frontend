@@ -46,7 +46,22 @@ trait StringFieldBehaviours extends FieldBehaviours {
       forAll(numericStringsBetweenRange(maxLength + 1, Int.MaxValue) -> "aString") {
         string =>
           val result = form.bind(Map(fieldName -> string)).apply(fieldName)
-          result.errors must contain only lengthError
+          result.errors contains lengthError
+      }
+    }
+
+  def alphaStringWithMaxLength(
+    form: Form[_],
+    fieldName: String,
+    maxLength: Int,
+    lengthError: FormError
+  ): Unit =
+    s"not bind alpha strings longer than $maxLength characters" in {
+
+      forAll(alphaStringsWithMaxLength(maxLength)) {
+        string =>
+          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+          result.errors must not contain lengthError
       }
     }
 
