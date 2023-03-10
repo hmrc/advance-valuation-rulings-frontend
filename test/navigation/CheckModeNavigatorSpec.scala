@@ -780,6 +780,38 @@ class CheckModeNavigatorSpec extends SpecBase {
         }
       }
 
+      // Pre method pages
+      "Pre Method Navigation" - {
+        "CheckRegisteredDetails page" - {
+          def registeredDetails(value: Boolean) = CheckRegisteredDetails(
+            value,
+            eori = "eori",
+            name = "name",
+            streetAndNumber = "streetAndNumber",
+            city = "city",
+            country = "country",
+            postalCode = None
+          )
+          "navigate to CheckYourAnswers when Yes" in {
+            val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, registeredDetails(true))
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              CheckMode,
+              userAnswers
+            ) mustBe checkYourAnswers
+          }
+
+          "and navigate to EORI Be Up To Date when No" in {
+            val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, registeredDetails(false))
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.EORIBeUpToDateController.onPageLoad()
+          }
+        }
+      }
+
       // Post method pages
       "Post Method Navigation" - {
         "HasConfidentialInformation page" - {
