@@ -21,6 +21,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc._
 import play.api.mvc.Results._
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -43,6 +45,12 @@ class AuthenticatedIdentifierAction @Inject() (
     extends IdentifierAction
     with AuthorisedFunctions {
 
+  def redirectToEoriComponent: Result =
+    Redirect(config.arsSubscribeUrl)
+
+  private def authorise(): AuthorisedFunction =
+    authorised(Enrolment(EnrolmentKey) and AuthProviders(GovernmentGateway))
+
   override def invokeBlock[A](
     request: Request[A],
     block: IdentifierRequest[A] => Future[Result]
@@ -51,17 +59,22 @@ class AuthenticatedIdentifierAction @Inject() (
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(Enrolment(EnrolmentKey))
+    authorise()
       .retrieve(Retrievals.internalId and Retrievals.authorisedEnrolments) {
-        data =>
-          val internalId =
-            data.a.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+        case ~(Some(internalId: String), allEnrolments: Enrolments) =>
+          IdentifierAction
+            .getEoriNumber(allEnrolments)
+            .map(eori => block(IdentifierRequest(request, internalId, eori)))
+            .getOrElse(throw InsufficientEnrolments())
 
-          block(IdentifierRequest(request, internalId, getEoriNumber(data.b)))
+        case _ =>
+          throw new UnauthorizedException("Unable to retrieve internal Id")
       }
       .recover {
         case _: NoActiveSession        =>
           Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+        case _: InsufficientEnrolments =>
+          redirectToEoriComponent
         case _: AuthorisationException =>
           Redirect(routes.UnauthorisedController.onPageLoad)
       }
@@ -72,14 +85,9 @@ object IdentifierAction {
   val EnrolmentKey: String   = "HMRC-ATAR-ORG"
   val EnrolmentIdKey: String = "EORINumber"
 
-  def getEoriNumber(enrolments: Enrolments): String = {
+  def getEoriNumber(enrolments: Enrolments): Option[String] =
     for {
       enrolment  <- enrolments.getEnrolment(EnrolmentKey)
       identifier <- enrolment.getIdentifier(EnrolmentIdKey)
     } yield identifier.value
-  }.getOrElse(
-    throw InsufficientEnrolments(
-      s"Unable to retrieve enrolment for either $EnrolmentKey"
-    )
-  )
 }
