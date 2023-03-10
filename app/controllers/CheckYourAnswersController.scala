@@ -16,11 +16,15 @@
 
 package controllers
 
+import scala.concurrent.{ExecutionContext, Future}
+
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
+import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersView
@@ -31,9 +35,13 @@ class CheckYourAnswersController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView
-) extends FrontendBaseController
+  view: CheckYourAnswersView,
+  backendConnector: BackendConnector
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
+
+  private val logger = Logger(this.getClass)
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
@@ -43,4 +51,23 @@ class CheckYourAnswersController @Inject() (
 
       Ok(view(applicationSummmary))
   }
+
+  def onSubmit(): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async {
+      implicit request =>
+        backendConnector
+          .submitAnswers(request.userAnswers)
+          .flatMap {
+            case Right(_)           =>
+              Future.successful(
+                Redirect(
+                  routes.ApplicationCompleteController
+                    .onPageLoad(request.userAnswers.applicationNumber)
+                )
+              )
+            case Left(backendError) =>
+              logger.error(s"Failed to submit user answers to backend: $backendError")
+              Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+          }
+    }
 }

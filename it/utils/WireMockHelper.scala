@@ -9,7 +9,9 @@ import com.github.tomakehurst.wiremock.{client, WireMockServer}
 import com.github.tomakehurst.wiremock.client.{MappingBuilder, ResponseDefinitionBuilder, WireMock}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.github.tomakehurst.wiremock.http.{HttpHeader, HttpHeaders}
+import com.github.tomakehurst.wiremock.http.{HttpHeader, HttpHeaders, RequestMethod}
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import org.openqa.selenium.InvalidArgumentException
 import utils.WireMockHelper.{wireMockPort, MappingBuilderExt, ResponseDefinitionBuilderExt}
 
 trait WireMockHelper {
@@ -26,15 +28,25 @@ trait WireMockHelper {
   def resetWireMock(): Unit =
     wireMockServer.resetAll()
 
-  def stubGet(
+  def stub(
+    requestMethod: RequestMethod,
     url: String,
     statusCode: Int,
     responseBody: String,
+    requestBody: Option[String] = None,
     requestHeaders: Set[(String, String)] = Set.empty,
     responseHeaders: Set[(String, String)] = Set.empty
-  ): Unit =
+  ): StubMapping = {
+    val mappingBuilder = requestMethod match {
+      case RequestMethod.GET  => get(urlEqualTo(url))
+      case RequestMethod.POST =>
+        post(urlEqualTo(url)).withRequestBody(equalTo(requestBody.getOrElse("")))
+      case unexpected         =>
+        throw new InvalidArgumentException(s"Unexpected wiremock stub request method $unexpected")
+    }
+
     stubFor(
-      get(urlEqualTo(url))
+      mappingBuilder
         .withRequestHeaders(requestHeaders)
         .willReturn(
           aResponse()
@@ -43,6 +55,7 @@ trait WireMockHelper {
             .withBody(responseBody)
         )
     )
+  }
 }
 
 object WireMockHelper {

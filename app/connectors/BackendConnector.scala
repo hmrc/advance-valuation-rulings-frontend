@@ -18,16 +18,17 @@ package connectors
 
 import java.util.UUID
 
+import cats.implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode}
+import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
 
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
@@ -51,6 +52,28 @@ class BackendConnector @Inject() (
         headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
       )
       .map(response => Right(response))
+      .recover {
+        case e: Throwable =>
+          onError(e)
+      }
+
+  def submitAnswers(
+    userAnswers: UserAnswers
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
+    httpClient
+      .POST[UserAnswers, HttpResponse](
+        s"$backendUrl/submit-answers",
+        body = userAnswers,
+        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
+      )
+      .map {
+        response =>
+          if (Status.isSuccessful(response.status)) {
+            response.asRight
+          } else {
+            BackendError(response.status, response.body).asLeft
+          }
+      }
       .recover {
         case e: Throwable =>
           onError(e)

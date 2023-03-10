@@ -18,7 +18,9 @@ package controllers
 
 import javax.inject.Inject
 
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.JsString
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -35,7 +37,16 @@ class ApplicationCompleteController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request => Ok(view())
-  }
+  private val logger = Logger(this.getClass)
+
+  def onPageLoad(applicationNumber: String): Action[AnyContent] =
+    (identify andThen getData andThen requireData) {
+      implicit request =>
+        (request.userAnswers.data \ "applicationContactDetails" \ "email").toOption match {
+          case Some(JsString(applicantEmail)) => Ok(view(applicationNumber, applicantEmail))
+          case None                           =>
+            logger.error(s"Applicant email is empty for id: ${request.userId}")
+            Redirect(routes.JourneyRecoveryController.onPageLoad())
+        }
+    }
 }
