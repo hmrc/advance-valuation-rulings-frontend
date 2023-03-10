@@ -55,8 +55,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val applyForATRGuideUrl: String        = configuration.get[String]("urls.applyForATRGuide")
   val overviewForMethodsUrl: String      = configuration.get[String]("urls.overviewForMethods")
 
-  private val eoriCommonComponentUrl = loadConfig("urls.eoriCommonComponent")
-  val arsSubscribeUrl: String        = s"$eoriCommonComponentUrl/customs-enrolment-services/ars/subscribe"
+  val arsSubscribeUrl = configuration
+    .get[Service]("microservice.services.eoriCommonComponent")
+    .baseUrl + "/customs-enrolment-services/ars/subscribe"
 
   val tribunalAppealLink: String           = configuration.get[String]("urls.tribunalAppeal")
   val tradeSanctionsInformationUrl: String =
