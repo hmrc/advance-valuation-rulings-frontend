@@ -36,7 +36,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       nameField,
-      nonNumerics
+      alphaStringsWithMaxLength(nameMaxLength)
     )
 
     behave like alphaStringWithMaxLength(
