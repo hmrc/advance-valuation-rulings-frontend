@@ -111,14 +111,15 @@ object MethodSummary {
 
     val methodRow = ValuationMethodSummary.row(userAnswers)
 
-    val usedMethodOne = userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+    val usedMethod = userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
 
-    val rows = usedMethodOne match {
+    val rows = usedMethod match {
       case Some(true) =>
         Seq(
           methodRow,
           WhyTransactionValueOfSimilarGoodsSummary.row(userAnswers),
-          HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(userAnswers)
+          HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(userAnswers),
+          DescribeTheSimilarGoodsSummary.row(userAnswers)
         ).flatten
       case _          =>
         Seq(

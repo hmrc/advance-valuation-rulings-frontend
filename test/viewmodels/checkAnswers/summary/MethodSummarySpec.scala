@@ -188,7 +188,7 @@ class MethodSummarySpec extends SpecBase {
       val keys                   = rows.map(_.key)
 
       "create details rows for all relavent pages" in {
-        rows.length mustBe 3
+        rows.length mustBe 4
       }
 
       "create row for valuation method" in {
@@ -203,6 +203,11 @@ class MethodSummarySpec extends SpecBase {
 
       "create row for have you used method one for similar goods in past" in {
         val key: Key = "haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel"
+        keys must contain(key)
+      }
+
+      "create row for describe similar goods" in {
+        val key: Key = "describeTheSimilarGoods.checkYourAnswersLabel"
         keys must contain(key)
       }
     }

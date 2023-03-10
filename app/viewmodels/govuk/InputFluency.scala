@@ -56,6 +56,11 @@ trait InputFluency {
         .withInputMode("numeric")
         .withPattern("[0-9]*")
 
+    def asTelephone(): Input =
+      input
+        .withInputMode("tel")
+        .withPattern("[0-9]*")
+
     def withId(id: String): Input =
       input.copy(id = id)
 

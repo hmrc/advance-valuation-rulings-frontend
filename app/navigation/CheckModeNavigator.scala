@@ -30,6 +30,16 @@ object CheckModeNavigator {
 
   private val checkYourAnswers = routes.CheckYourAnswersController.onPageLoad
 
+  // Pre nav
+  private def checkRegisteredDetails(implicit userAnswers: UserAnswers): Call =
+    userAnswers.get(CheckRegisteredDetailsPage) match {
+      case None                    => CheckRegisteredDetailsController.onPageLoad(CheckMode)
+      case Some(registeredDetails) =>
+        if (registeredDetails.value)
+          checkYourAnswers
+        else EORIBeUpToDateController.onPageLoad()
+    }
+
   // Post navigation
   private def hasConfidentialInformation(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(HasConfidentialInformationPage) match {
@@ -275,6 +285,8 @@ object CheckModeNavigator {
     }
 
   def nextPage(page: Page)(implicit userAnswers: UserAnswers): Call = page match {
+    case CheckRegisteredDetailsPage => checkRegisteredDetails
+
     case ValuationMethodPage                          => valuationMethod
     case HasConfidentialInformationPage               => hasConfidentialInformation
     case HaveTheGoodsBeenSubjectToLegalChallengesPage => haveBeenSubjectToLegalChallenges
