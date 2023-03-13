@@ -26,13 +26,14 @@ import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import models.ValuationMethod._
+import org.mongodb.scala.bson.ObjectId
 import pages._
 import queries.Modifiable
 
 final case class UserAnswers(
   id: String,
   data: JsObject = Json.obj(),
-  applicationNumber: String = UUID.randomUUID.toString.replaceAll("-", ""),
+  applicationNumber: String = new ObjectId().toHexString.toUpperCase(),
   lastUpdated: Instant = Instant.now
 ) {
 
