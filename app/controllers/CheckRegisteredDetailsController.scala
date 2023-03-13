@@ -66,7 +66,9 @@ class CheckRegisteredDetailsController @Inject() (
           case None        =>
             backendConnector
               .getTraderDetails(
-                AcknowledgementReference(request.userAnswers.applicationNumber),
+                AcknowledgementReference(
+                  s"${request.eoriNumber}-${request.userAnswers.applicationNumber}"
+                ),
                 EoriNumber(request.eoriNumber)
               )
               .flatMap {

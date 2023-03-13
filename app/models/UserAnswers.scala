@@ -17,7 +17,6 @@
 package models
 
 import java.time.Instant
-import java.util.UUID
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
