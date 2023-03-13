@@ -32,6 +32,7 @@ import forms.CheckRegisteredDetailsFormProvider
 import models.{AcknowledgementReference, CheckRegisteredDetails, EoriNumber, Mode}
 import models.requests.DataRequest
 import navigation.Navigator
+import org.apache.commons.lang3.StringUtils
 import pages.CheckRegisteredDetailsPage
 import repositories.SessionRepository
 import views.html.CheckRegisteredDetailsView
@@ -55,6 +56,9 @@ class CheckRegisteredDetailsController @Inject() (
 
   val form: Form[Boolean] = formProvider()
 
+  private val AckRefLength = 32
+  private val AckRefPad    = "0"
+
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
@@ -67,7 +71,8 @@ class CheckRegisteredDetailsController @Inject() (
             backendConnector
               .getTraderDetails(
                 AcknowledgementReference(
-                  s"${request.eoriNumber}-${request.userAnswers.applicationNumber}"
+                  StringUtils
+                    .rightPad(request.userAnswers.applicationNumber, AckRefLength, AckRefPad)
                 ),
                 EoriNumber(request.eoriNumber)
               )
