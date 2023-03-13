@@ -44,7 +44,7 @@ class ApplicationCompleteController @Inject() (
       implicit request =>
         (request.userAnswers.data \ "applicationContactDetails" \ "email").toOption match {
           case Some(JsString(applicantEmail)) => Ok(view(applicationNumber, applicantEmail))
-          case None                           =>
+          case _                              =>
             logger.error(s"Applicant email is empty for id: ${request.userId}")
             Redirect(routes.JourneyRecoveryController.onPageLoad())
         }
