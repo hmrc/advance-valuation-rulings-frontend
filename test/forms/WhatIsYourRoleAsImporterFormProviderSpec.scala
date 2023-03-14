@@ -1,8 +1,9 @@
 package forms
 
+import play.api.data.FormError
+
 import forms.behaviours.OptionFieldBehaviours
 import models.WhatIsYourRoleAsImporter
-import play.api.data.FormError
 
 class WhatIsYourRoleAsImporterFormProviderSpec extends OptionFieldBehaviours {
 
@@ -10,13 +11,13 @@ class WhatIsYourRoleAsImporterFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "whatIsYourRoleAsImporter.error.required"
 
     behave like optionsField[WhatIsYourRoleAsImporter](
       form,
       fieldName,
-      validValues  = WhatIsYourRoleAsImporter.values,
+      validValues = WhatIsYourRoleAsImporter.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

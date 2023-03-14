@@ -1,30 +1,32 @@
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{NormalMode, WhatIsYourRoleAsImporter, UserAnswers}
+import models.{NormalMode, UserAnswers, WhatIsYourRoleAsImporter}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhatIsYourRoleAsImporterPage
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import repositories.SessionRepository
 import views.html.WhatIsYourRoleAsImporterView
-
-import scala.concurrent.Future
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val whatIsYourRoleAsImporterRoute = routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode).url
+  lazy val whatIsYourRoleAsImporterRoute =
+    routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode).url
 
   val formProvider = new WhatIsYourRoleAsImporterFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "WhatIsYourRoleAsImporter Controller" - {
 
@@ -40,13 +42,19 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.values.head)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -58,7 +66,10 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(WhatIsYourRoleAsImporter.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(WhatIsYourRoleAsImporter.values.head),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -104,7 +115,10 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

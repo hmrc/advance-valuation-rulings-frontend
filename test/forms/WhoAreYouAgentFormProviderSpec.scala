@@ -1,13 +1,14 @@
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class WhoAreYouAgentFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "whoAreYouAgent.error.required"
-  val lengthKey = "whoAreYouAgent.error.length"
-  val maxLength = 100
+  val lengthKey   = "whoAreYouAgent.error.length"
+  val maxLength   = 100
 
   val form = new WhoAreYouAgentFormProvider()()
 

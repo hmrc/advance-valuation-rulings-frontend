@@ -25,7 +25,8 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryWhoAreYouAgentUserAnswersEntry: Arbitrary[(WhoAreYouAgentPage.type, JsValue)] =
+  implicit lazy val arbitraryWhoAreYouAgentUserAnswersEntry
+    : Arbitrary[(WhoAreYouAgentPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[WhoAreYouAgentPage.type]
@@ -33,7 +34,8 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryWhatIsYourRoleAsImporterUserAnswersEntry: Arbitrary[(WhatIsYourRoleAsImporterPage.type, JsValue)] =
+  implicit lazy val arbitraryWhatIsYourRoleAsImporterUserAnswersEntry
+    : Arbitrary[(WhatIsYourRoleAsImporterPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[WhatIsYourRoleAsImporterPage.type]
