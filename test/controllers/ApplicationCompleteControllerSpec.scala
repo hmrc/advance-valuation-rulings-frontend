@@ -22,7 +22,10 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import generators.Generators
+import models.ValuationMethod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import pages.ValuationMethodPage
+import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
 class ApplicationCompleteControllerSpec extends SpecBase with Generators {
@@ -31,7 +34,8 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
 
     "must return OK and the correct view for a GET" in {
       ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
-        userAnswers =>
+        ua =>
+          val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
           val Email             = "testEmail@mail.com"
           val applicationNumber = userAnswers.applicationNumber
 
@@ -41,18 +45,18 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
           val application   = applicationBuilder(userAnswers = Option(answers)).build()
 
           running(application) {
-            val request =
+            val request       =
               FakeRequest(
                 GET,
                 routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
               )
+            implicit val msgs = messages(application)
+            val result        = route(application, request).value
 
-            val result = route(application, request).value
-
-            val view = application.injector.instanceOf[ApplicationCompleteView]
-
+            val view    = application.injector.instanceOf[ApplicationCompleteView]
+            val summary = ApplicationSummary(userAnswers).removeActions
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(applicationNumber, Email)(
+            contentAsString(result) mustEqual view(applicationNumber, Email, summary)(
               request,
               messages(application)
             ).toString
