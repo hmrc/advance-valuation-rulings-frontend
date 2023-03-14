@@ -611,3 +611,18 @@ haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Method 3 is based on the
 haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = In the past 90 days, have you used Valuation Method 1 to import any goods that are similar to the goods being valued?
 haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if you have used valuation Method 1 to import any goods in the past 90 days
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = HaveYouUsedMethodOneForSimilarGoodsInPast
+
+whatIsYourRoleAsImporter.title = How would you describe your role as an importer?
+whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?
+whatIsYourRoleAsImporter.employeeOfOrg = An employee of the organisation
+whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Agent acting on behalf of an organisation
+whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your role as an importer?
+whatIsYourRoleAsImporter.error.required = Select whatIsYourRoleAsImporter
+whatIsYourRoleAsImporter.change.hidden = WhatIsYourRoleAsImporter
+
+whoAreYouAgent.title = whoAreYouAgent
+whoAreYouAgent.heading = whoAreYouAgent
+whoAreYouAgent.checkYourAnswersLabel = whoAreYouAgent
+whoAreYouAgent.error.required = Enter whoAreYouAgent
+whoAreYouAgent.error.length = WhoAreYouAgent must be 100 characters or less
+whoAreYouAgent.change.hidden = WhoAreYouAgent

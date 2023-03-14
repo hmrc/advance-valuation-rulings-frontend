@@ -21,6 +21,12 @@ import pages._
 
 trait PageGenerators {
 
+  implicit lazy val arbitraryWhoAreYouAgentPage: Arbitrary[WhoAreYouAgentPage.type] =
+    Arbitrary(WhoAreYouAgentPage)
+
+  implicit lazy val arbitraryWhatIsYourRoleAsImporterPage: Arbitrary[WhatIsYourRoleAsImporterPage.type] =
+    Arbitrary(WhatIsYourRoleAsImporterPage)
+
   implicit lazy val arbitraryHaveYouUsedMethodOneForSimilarGoodsInPastPage
     : Arbitrary[HaveYouUsedMethodOneForSimilarGoodsInPastPage.type] =
     Arbitrary(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
