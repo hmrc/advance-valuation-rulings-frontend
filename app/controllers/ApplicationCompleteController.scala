@@ -25,6 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
 class ApplicationCompleteController @Inject() (
@@ -42,8 +43,12 @@ class ApplicationCompleteController @Inject() (
   def onPageLoad(applicationNumber: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        (request.userAnswers.data \ "applicationContactDetails" \ "email").toOption match {
-          case Some(JsString(applicantEmail)) => Ok(view(applicationNumber, applicantEmail))
+        val answers             = request.userAnswers
+        val applicationSummmary = ApplicationSummary(answers).removeActions()
+
+        (answers.data \ "applicationContactDetails" \ "email").toOption match {
+          case Some(JsString(applicantEmail)) =>
+            Ok(view(applicationNumber, applicantEmail, applicationSummmary))
           case _                              =>
             logger.error(s"Applicant email is empty for id: ${request.userId}")
             Redirect(routes.JourneyRecoveryController.onPageLoad())

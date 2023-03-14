@@ -25,7 +25,15 @@ case class ApplicationSummary(
   applicant: ApplicantSummary,
   details: DetailsSummary,
   method: MethodSummary
-)
+) {
+
+  def removeActions(): ApplicationSummary =
+    copy(
+      applicant = applicant.removeActions(),
+      details = details.removeActions(),
+      method = method.removeActions()
+    )
+}
 
 object ApplicationSummary {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): ApplicationSummary =
