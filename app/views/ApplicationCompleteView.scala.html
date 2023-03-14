@@ -16,12 +16,14 @@
 
  @import components._
  @import config.FrontendAppConfig
+ @import viewmodels.checkAnswers.summary._
 
 @this(
     layout: templates.Layout,
     govukErrorSummary: GovukErrorSummary,
     govukButton: GovukButton,
     govukTextarea: GovukTextarea,
+    govukSummaryList: GovukSummaryList,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
     link: Link,
@@ -36,7 +38,7 @@
 
 )
 
-@(applicationNumber: String, email: String)(implicit request: Request[_], messages: Messages)
+@(applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
 @guideLink = {
     @link(
@@ -107,4 +109,13 @@
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.2", appealLink)))
 
     @subheading(messages("applicationComplete.application.heading"),"l")
+
+    @subheading(messages("checkYourAnswers.applicant.heading"))
+    
+    @govukSummaryList(applicationSummary.applicant.rows)
+    
+    @subheading(messages("checkYourAnswers.goods.heading"))
+
+    @govukSummaryList(applicationSummary.method.rows)
+    @govukSummaryList(applicationSummary.details.rows)
 }
