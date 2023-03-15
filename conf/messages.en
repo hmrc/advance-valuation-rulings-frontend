@@ -617,7 +617,7 @@ whatIsYourRoleAsImporter.heading = How would you describe your role as an import
 whatIsYourRoleAsImporter.employeeOfOrg = An employee of the organisation
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Agent acting on behalf of an organisation
 whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your role as an importer?
-whatIsYourRoleAsImporter.error.required = Select whatIsYourRoleAsImporter
+whatIsYourRoleAsImporter.error.required = Select your role
 whatIsYourRoleAsImporter.change.hidden = WhatIsYourRoleAsImporter
 
 whoAreYouAgent.title = whoAreYouAgent
