@@ -7,7 +7,6 @@ import scala.concurrent.ExecutionContext
 
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.ws.WSClient
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
@@ -38,6 +37,7 @@ trait BaseIntegrationSpec
   implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   val traderDetailsEndpoint = "/advance-valuation-rulings/trader-details"
+  val submitAnswersEndpoint = "/advance-valuation-rulings/submit-answers"
 
   override def fakeApplication(): Application =
     GuiceApplicationBuilder()

@@ -3,14 +3,16 @@ package connectors
 import play.api.http.Status
 import play.api.libs.json.Json
 
-import generators.TraderDetailsGenerator
-import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode}
+import com.github.tomakehurst.wiremock.http.RequestMethod._
+import generators.{TraderDetailsGenerator, UserAnswersGenerator}
+import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
 class BackendConnectorSpec
     extends BaseIntegrationSpec
     with WireMockHelper
-    with TraderDetailsGenerator {
+    with TraderDetailsGenerator
+    with UserAnswersGenerator {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -40,7 +42,8 @@ class BackendConnectorSpec
           val successResponse  = traderDetailsWithCountryCode
           val expectedResponse = Json.stringify(Json.toJson(successResponse))
 
-          stubGet(
+          stub(
+            GET,
             traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
             Status.OK,
             expectedResponse
@@ -62,7 +65,8 @@ class BackendConnectorSpec
         (eoriNumber, acknowledgementReference, backendError) =>
           val expectedResponse = Json.stringify(Json.toJson(backendError))
 
-          stubGet(
+          stub(
+            GET,
             traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
             backendError.code,
             expectedResponse
@@ -85,7 +89,8 @@ class BackendConnectorSpec
         (eoriNumber, acknowledgementReference, backendError) =>
           val expectedResponse = Json.stringify(Json.toJson(backendError))
 
-          stubGet(
+          stub(
+            GET,
             traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
             backendError.code,
             expectedResponse
@@ -96,6 +101,27 @@ class BackendConnectorSpec
 
           traderDetails.code mustBe Status.INTERNAL_SERVER_ERROR
           traderDetails.message must include(expectedResponse)
+      }
+    }
+  }
+
+  ".submit" - {
+    "should submit user answers to backend" in {
+      forAll {
+        userAnswers: UserAnswers =>
+          val requestBody = Json.stringify(Json.toJson(userAnswers))
+
+          stub(
+            POST,
+            submitAnswersEndpoint,
+            Status.OK,
+            responseBody = "some response",
+            requestBody = Option(requestBody)
+          )
+
+          val result = connector.submitAnswers(userAnswers).futureValue.value
+
+          result.status mustBe Status.OK
       }
     }
   }

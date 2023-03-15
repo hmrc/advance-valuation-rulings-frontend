@@ -16,33 +16,51 @@
 
 package controllers
 
+import play.api.libs.json._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import generators.Generators
+import models.ValuationMethod
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import pages.ValuationMethodPage
+import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
-class ApplicationCompleteControllerSpec extends SpecBase {
+class ApplicationCompleteControllerSpec extends SpecBase with Generators {
 
   "ApplicationComplete Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
+        ua =>
+          val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+          val Email             = "testEmail@mail.com"
+          val applicationNumber = userAnswers.applicationNumber
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+          val emailUpdate   = (__ \ "applicationContactDetails" \ "email").json.put(JsString(Email))
+          val dataWithEmail = userAnswers.data.transform(__.json.update(emailUpdate)).get
+          val answers       = userAnswers.copy(data = dataWithEmail)
+          val application   = applicationBuilder(userAnswers = Option(answers)).build()
 
-      running(application) {
-        val request =
-          FakeRequest(GET, routes.ApplicationCompleteController.onPageLoad().url)
+          running(application) {
+            val request       =
+              FakeRequest(
+                GET,
+                routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+              )
+            implicit val msgs = messages(application)
+            val result        = route(application, request).value
 
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[ApplicationCompleteView]
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(
-          request,
-          messages(application)
-        ).toString
+            val view    = application.injector.instanceOf[ApplicationCompleteView]
+            val summary = ApplicationSummary(userAnswers).removeActions
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(applicationNumber, Email, summary)(
+              request,
+              messages(application)
+            ).toString
+          }
       }
     }
   }

@@ -25,7 +25,10 @@ import pages._
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
-case class MethodSummary(rows: SummaryList) extends AnyVal
+case class MethodSummary(rows: SummaryList) extends AnyVal {
+  def removeActions(): MethodSummary =
+    MethodSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
+}
 
 object MethodSummary {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary =
@@ -111,14 +114,15 @@ object MethodSummary {
 
     val methodRow = ValuationMethodSummary.row(userAnswers)
 
-    val usedMethodOne = userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+    val usedMethod = userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
 
-    val rows = usedMethodOne match {
+    val rows = usedMethod match {
       case Some(true) =>
         Seq(
           methodRow,
           WhyTransactionValueOfSimilarGoodsSummary.row(userAnswers),
-          HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(userAnswers)
+          HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(userAnswers),
+          DescribeTheSimilarGoodsSummary.row(userAnswers)
         ).flatten
       case _          =>
         Seq(

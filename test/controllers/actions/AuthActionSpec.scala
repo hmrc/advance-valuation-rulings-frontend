@@ -90,7 +90,7 @@ class AuthActionSpec extends SpecBase {
 
     "the user doesn't have sufficient enrolments" - {
 
-      "must redirect the user to the unauthorised page" in {
+      "must redirect the user to eori common component" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -107,7 +107,7 @@ class AuthActionSpec extends SpecBase {
           val result     = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe routes.UnauthorisedController.onPageLoad.url
+          redirectLocation(result).value mustBe appConfig.arsSubscribeUrl
         }
       }
     }

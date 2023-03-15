@@ -24,11 +24,15 @@ import scala.util.{Failure, Success, Try}
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
+import models.ValuationMethod._
+import org.mongodb.scala.bson.ObjectId
+import pages._
 import queries.Modifiable
 
 final case class UserAnswers(
   id: String,
   data: JsObject = Json.obj(),
+  applicationNumber: String = new ObjectId().toHexString.toUpperCase(),
   lastUpdated: Instant = Instant.now
 ) {
 
@@ -116,6 +120,7 @@ object UserAnswers {
     (
       (__ \ "_id").read[String] and
         (__ \ "data").read[JsObject] and
+        (__ \ "applicationNumber").read[String] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
     )(UserAnswers.apply _)
   }
@@ -127,9 +132,67 @@ object UserAnswers {
     (
       (__ \ "_id").write[String] and
         (__ \ "data").write[JsObject] and
+        (__ \ "applicationNumber").write[String] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
     )(unlift(UserAnswers.unapply))
   }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
+
+  def updateValuationMethod(userAnswers: UserAnswers, value: ValuationMethod)(implicit
+    format: Format[ValuationMethod]
+  ): Try[UserAnswers] = {
+    val currentMethod = userAnswers.get(ValuationMethodPage)
+
+    val pathsToClear = ValuationMethodPage.toString +: (currentMethod match {
+      case None          => Seq.empty
+      case Some(Method1) =>
+        Seq(
+          IsThereASaleInvolvedPage.toString,
+          IsSaleBetweenRelatedPartiesPage.toString,
+          IsTheSaleSubjectToConditionsPage.toString,
+          DescribeTheConditionsPage.toString,
+          AreThereRestrictionsOnTheGoodsPage.toString,
+          DescribeTheRestrictionsPage.toString
+        )
+      case Some(Method2) =>
+        Seq(
+          WhyIdenticalGoodsPage.toString,
+          HaveYouUsedMethodOneInPastPage.toString,
+          DescribeTheIdenticalGoodsPage.toString,
+          WillYouCompareGoodsToIdenticalGoodsPage.toString,
+          ExplainYourGoodsComparingToIdenticalGoodsPage.toString
+        )
+      case Some(Method3) =>
+        Seq(
+          WhyTransactionValueOfSimilarGoodsPage.toString(),
+          HaveYouUsedMethodOneForSimilarGoodsInPastPage.toString,
+          WillYouCompareToSimilarGoodsPage.toString,
+          ExplainYourGoodsComparingToSimilarGoodsPage.toString,
+          DescribeTheSimilarGoodsPage.toString
+        )
+      case Some(Method4) =>
+        Seq(
+          ExplainWhyYouHaveNotSelectedMethodOneToThreePage.toString,
+          ExplainWhyYouChoseMethodFourPage.toString
+        )
+      case Some(Method5) =>
+        Seq(WhyComputedValuePage.toString, ExplainReasonComputedValuePage.toString)
+      case Some(Method6) =>
+        Seq(
+          ExplainWhyYouHaveNotSelectedMethodOneToFivePage.toString,
+          AdaptMethodPage.toString,
+          ExplainHowYouWillUseMethodSixPage.toString
+        )
+    })
+
+    val updatedData = pathsToClear.foldLeft(userAnswers.data) {
+      case (data, path) =>
+        data - path
+    }
+
+    val updatedAnswers = userAnswers.copy(data = updatedData)
+
+    updatedAnswers.set(ValuationMethodPage, value)
+  }
 }

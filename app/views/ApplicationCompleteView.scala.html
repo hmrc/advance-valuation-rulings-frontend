@@ -16,12 +16,14 @@
 
  @import components._
  @import config.FrontendAppConfig
+ @import viewmodels.checkAnswers.summary._
 
 @this(
     layout: templates.Layout,
     govukErrorSummary: GovukErrorSummary,
     govukButton: GovukButton,
     govukTextarea: GovukTextarea,
+    govukSummaryList: GovukSummaryList,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
     link: Link,
@@ -30,16 +32,27 @@
     subheading: Subheading,
     paragraph: Paragraph,
     insetPara: InsetPara,
-    config: FrontendAppConfig
+    config: FrontendAppConfig,
+    govukPanel: GovukPanel,
+    h3: headingH3
+
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
 @guideLink = {
     @link(
             id = "step_by_step_guide_link",
             text = messages("applicationComplete.paragraph.3.link"),
             call = Call("GET", config.stepByStepGuideUrl)
+        )
+    }
+
+@customsDeclarationLink = {
+    @link(
+            id = "customs-declaration_link",
+            text = messages("applicationComplete.link.customsDeclaration"),
+            call = Call("GET", config.customsDeclarationUrl)
         )
     }
 
@@ -52,32 +65,57 @@
     }
 
 @layout(pageTitle = titleNoForm(messages("applicationComplete.title"))) {
-    
 
-    @heading(messages("applicationComplete.heading"))
-
+<!--confirmation panel-->
+        @govukPanel(Panel(
+                        title = messages("applicationComplete.heading"),
+                        content = HtmlContent(Html(
+                            messages("applicationComplete.reference.message")
+                            +"<br>"
+                            +s"<strong>$applicationNumber</strong>"
+                        ))
+        ))
+<!--what happens next-->
     @subheading(messages("applicationComplete.subheading"))
 
-    @paragraph(Html(messages("applicationComplete.paragraph.1")))
+    @paragraph(Html(messages("applicationComplete.paragraph.1", email)))
     @paragraph(Html(messages("applicationComplete.paragraph.2")))
     @paragraph(Html(messages("applicationComplete.paragraph.3", guideLink)))
 
 
     @govukButton(
-        ButtonViewModel(messages("site.continue"))
+        ButtonViewModel("Go to your applications and rulings")
     )
 
-    @subheading(messages("applicationComplete.ruling.subheading"))
+<!--How to use the ruling-->
+    @h3(messages("applicationComplete.ruling.subheading"))
     @paragraph(Html(messages("applicationComplete.ruling.paragraph")))
 
     @bulletList(Seq(
-        Html(messages("applicationComplete.ruling.bulletPoint.1")),
+        Html(messages("applicationComplete.ruling.bulletPoint.1", customsDeclarationLink)),
         Html(messages("applicationComplete.ruling.bulletPoint.2"))
     ))
 
-    @subheading(messages("applicationComplete.appeal.subheading"))
-    @paragraph(Html(messages("applicationComplete.appeal.paragraph.1")))
+<!--If you have any questions about your application-->
+    @h3(messages("applicationComplete.questions.subheading"))
+    @paragraph( Html(messages("applicationComplete.questions.para.1",
+                "SOME CONTACT")
+                ))
+
+
+<!--Appeal a ruling decision-->
+    @h3(messages("applicationComplete.appeal.subheading"))
+    @paragraph(Html(messages("applicationComplete.appeal.paragraph.1", "SOME CONTACT")))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.2", appealLink)))
 
-    @subheading(messages("applicationComplete.application.heading"))
+    @subheading(messages("applicationComplete.application.heading"),"l")
+
+    @subheading(messages("checkYourAnswers.applicant.heading"))
+    
+    @govukSummaryList(applicationSummary.applicant.rows)
+    
+    @subheading(messages("checkYourAnswers.goods.heading"))
+
+    @govukSummaryList(applicationSummary.method.rows)
+    @govukSummaryList(applicationSummary.details.rows)
 }

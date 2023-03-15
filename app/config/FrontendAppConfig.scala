@@ -48,11 +48,16 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val stepByStepGuideUrl: String     = configuration.get[String]("urls.stepByStepGuide")
   val generalInformationUrl: String  = configuration.get[String]("urls.generalInformation")
   val helpAndSupportUrl: String      = configuration.get[String]("urls.helpAndSupport")
+  val customsDeclarationUrl: String  = configuration.get[String]("urls.customsDeclaration")
 
   val importingGoodsGuideUrl: String     = configuration.get[String]("urls.importingGoodsGuide")
   val importedGoodsValueGuideUrl: String = configuration.get[String]("urls.importedGoodsValueGuide")
   val applyForATRGuideUrl: String        = configuration.get[String]("urls.applyForATRGuide")
   val overviewForMethodsUrl: String      = configuration.get[String]("urls.overviewForMethods")
+
+  val arsSubscribeUrl = configuration
+    .get[Service]("microservice.services.eoriCommonComponent")
+    .baseUrl + "/customs-enrolment-services/ars/subscribe"
 
   val tribunalAppealLink: String           = configuration.get[String]("urls.tribunalAppeal")
   val tradeSanctionsInformationUrl: String =
