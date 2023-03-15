@@ -115,7 +115,7 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
           FakeRequest(POST, applicationContactDetailsRoute)
             .withFormUrlEncodedBody(
               ("name", "my name"),
-              ("email", "my@email.co.uk"),
+              ("email", "email@example.co.uk"),
               ("phone", "07123456789")
             )
 
