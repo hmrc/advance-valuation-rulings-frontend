@@ -21,6 +21,7 @@ import java.time.{Instant, LocalDate, ZoneOffset}
 import org.scalacheck.{Gen, Shrink}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
+import wolfendale.scalacheck.regexp.RegexpGen
 
 trait Generators
     extends UserAnswersGenerator
@@ -29,6 +30,9 @@ trait Generators
     with UserAnswersEntryGenerators {
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny
+
+//  def generateEmailString(): Gen[String] =
+//    arbitrary[String] suchThat
 
   def genIntersperseString(
     gen: Gen[String],

@@ -63,11 +63,15 @@ class UpscanFileUploadService @Inject() (
     val nextUploadFileId = FileUploadIds.generateNewFileUploadId.nextUploadFileId
 
     val baseUrl            = appConfig.host
-    val redirectUrl        = controllers.fileupload.routes.UploadSupportingDocumentsController
+    val redirectRoute      = controllers.fileupload.routes.UploadSupportingDocumentsController
       .onPageLoad(None, None, Some(nextUploadFileId), mode)
       .url
-    val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
-    val successRedirectUrl = s"${baseUrl}$redirectUrl".some
+    val errorRedirectRoute = controllers.fileupload.routes.UploadSupportingDocumentsController
+      .onPageLoad(None, None, None, mode)
+      .url
+
+    val errorRedirectUrl   = s"${baseUrl}$errorRedirectRoute".some
+    val successRedirectUrl = s"${baseUrl}$redirectRoute".some
 
     for {
       response <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)
@@ -84,13 +88,16 @@ class UpscanFileUploadService @Inject() (
     val redirectUrlFileId = fileUploadIds.redirectUrlFileId
     val nextUploadFileId  = fileUploadIds.nextUploadFileId
 
-    val baseUrl     = appConfig.host
-    val redirectUrl = controllers.fileupload.routes.UploadSupportingDocumentsController
+    val baseUrl            = appConfig.host
+    val redirectRoute      = controllers.fileupload.routes.UploadSupportingDocumentsController
       .onPageLoad(None, None, Some(nextUploadFileId), mode)
       .url
+    val errorRedirectRoute = controllers.fileupload.routes.UploadSupportingDocumentsController
+      .onPageLoad(None, None, None, mode)
+      .url
 
-    val errorRedirectUrl   = s"$baseUrl/advance-valuation-ruling/uploadSupportingDocuments".some
-    val successRedirectUrl = s"${baseUrl}$redirectUrl".some
+    val errorRedirectUrl   = s"${baseUrl}$redirectRoute".some
+    val successRedirectUrl = s"${baseUrl}$errorRedirectRoute".some
 
     for {
       response <- upscanInitiateConnector.initiateV2(successRedirectUrl, errorRedirectUrl)

@@ -22,6 +22,11 @@ import org.scalacheck.Arbitrary.arbitrary
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryWhatIsYourRoleAsImporter: Arbitrary[WhatIsYourRoleAsImporter] =
+    Arbitrary {
+      Gen.oneOf(WhatIsYourRoleAsImporter.values.toSeq)
+    }
+
   implicit lazy val arbitraryAdaptMethod: Arbitrary[AdaptMethod] =
     Arbitrary {
       Gen.oneOf(AdaptMethod.values.toSeq)

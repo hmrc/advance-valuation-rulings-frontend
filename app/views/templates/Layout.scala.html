@@ -26,6 +26,7 @@
     hmrcLayout: HmrcLayout, 
     standardBetaBanner: StandardBetaBanner,
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
 )
  
  @(
@@ -61,6 +62,13 @@
         } else additionalHeadBlock
     }
 }
+    @content = {
+        @contentBlock
+
+        <div class="govuk-!-margin-top-8">
+            @hmrcReportTechnicalIssueHelper()
+        </div>
+    }
 
  @hmrcLayout(
    pageTitle = Some(pageTitle),
@@ -72,5 +80,5 @@
    backLinkUrl = if(showBackLink) Some("#") else None,
    additionalScriptsBlock = Some(additionalScripts),
    additionalHeadBlock = Some(headBlock)
- )(contentBlock)
+ )(content)
  

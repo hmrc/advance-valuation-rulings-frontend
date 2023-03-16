@@ -19,45 +19,43 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.ApplicationContactDetailsFormProvider
-import models.{NormalMode, UserAnswers}
-import models.ApplicationContactDetails
+import forms.WhatIsYourRoleAsImporterFormProvider
+import models.{NormalMode, UserAnswers, WhatIsYourRoleAsImporter}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ApplicationContactDetailsPage
+import pages.WhatIsYourRoleAsImporterPage
 import repositories.SessionRepository
-import views.html.ApplicationContactDetailsView
+import views.html.WhatIsYourRoleAsImporterView
 
-class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar {
+class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new ApplicationContactDetailsFormProvider()
+  lazy val whatIsYourRoleAsImporterRoute =
+    routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode).url
+
+  val formProvider = new WhatIsYourRoleAsImporterFormProvider()
   val form         = formProvider()
 
-  lazy val applicationContactDetailsRoute =
-    routes.ApplicationContactDetailsController.onPageLoad(NormalMode).url
-
-  "ApplicationContactDetails Controller" - {
+  "WhatIsYourRoleAsImporter Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, applicationContactDetailsRoute)
+        val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ApplicationContactDetailsView]
+        val view = application.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(
@@ -68,29 +66,24 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = UserAnswers(
-        userAnswersId,
-        Json.obj(
-          ApplicationContactDetailsPage.toString -> Json.obj(
-            "name"  -> "value 1",
-            "email" -> "value 2",
-            "phone" -> "value 3"
-          )
-        )
-      )
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.values.head)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, applicationContactDetailsRoute)
+        val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
 
-        val view = application.injector.instanceOf[ApplicationContactDetailsView]
+        val view = application.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(ApplicationContactDetails("value 1", "value 2", "value 3")),
+          form.fill(WhatIsYourRoleAsImporter.values.head),
           NormalMode
         )(request, messages(application)).toString
       }
@@ -112,12 +105,8 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
 
       running(application) {
         val request =
-          FakeRequest(POST, applicationContactDetailsRoute)
-            .withFormUrlEncodedBody(
-              ("name", "my name"),
-              ("email", "email@example.co.uk"),
-              ("phone", "07123456789")
-            )
+          FakeRequest(POST, whatIsYourRoleAsImporterRoute)
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.values.head.toString))
 
         val result = route(application, request).value
 
@@ -132,12 +121,12 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
 
       running(application) {
         val request =
-          FakeRequest(POST, applicationContactDetailsRoute)
-            .withFormUrlEncodedBody(("value", ""))
+          FakeRequest(POST, whatIsYourRoleAsImporterRoute)
+            .withFormUrlEncodedBody(("value", "invalid value"))
 
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[ApplicationContactDetailsView]
+        val view = application.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
         val result = route(application, request).value
 
@@ -154,7 +143,7 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, applicationContactDetailsRoute)
+        val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
 
         val result = route(application, request).value
 
@@ -163,18 +152,19 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
       }
     }
 
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+    "redirect to Journey Recovery for a POST if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, applicationContactDetailsRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+          FakeRequest(POST, whatIsYourRoleAsImporterRoute)
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.values.head.toString))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
+
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
