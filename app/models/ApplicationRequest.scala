@@ -16,20 +16,9 @@
 
 package models
 
-case class ApplicationRequest(
-  applicant: Applicant,
-  requestedMethod: RequestedMethod,
-  goodsDetails: GoodsDetails,
-  attachments: Seq[UploadedDocument]
-)
+import play.api.libs.json._
 
-/** determined via `_type` field, e.g. "_type" = "IndividualApplicant"
-  */
-sealed trait Applicant
-case class IndividualApplicant(
-  holder: EORIDetails,
-  contact: ContactDetails
-) extends Applicant
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 
 case class UploadedDocument(
   id: String,
@@ -39,6 +28,23 @@ case class UploadedDocument(
   mimeType: String,
   size: Long
 )
+object UploadedDocument {
+  implicit val format: OFormat[UploadedDocument] = Json.format[UploadedDocument]
+}
+
+sealed trait Applicant
+case class IndividualApplicant(
+  holder: EORIDetails,
+  contact: ContactDetails
+) extends Applicant
+
+object Applicant {
+  implicit val roleFormat: OFormat[Applicant] = Json.format[Applicant]
+}
+
+object IndividualApplicant {
+  implicit val format: OFormat[IndividualApplicant] = Json.format[IndividualApplicant]
+}
 
 case class GoodsDetails(
   goodDescription: String,
@@ -46,6 +52,10 @@ case class GoodsDetails(
   knownLegalProceedings: Option[String],
   confidentialInformation: Option[String]
 )
+
+object GoodsDetails {
+  implicit val format: OFormat[GoodsDetails] = Json.format[GoodsDetails]
+}
 
 case class EORIDetails(
   eori: String,
@@ -56,16 +66,19 @@ case class EORIDetails(
   postcode: String,
   country: String
 )
+object EORIDetails {
+  implicit val format: OFormat[EORIDetails] = Json.format[EORIDetails]
+}
 
 case class ContactDetails(
   name: String,
   email: String,
   phone: Option[String]
 )
+object ContactDetails {
+  implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
+}
 
-/** determined via `_type` field, e.g. "_type" = "MethodOne" { "_type": "MethodOne",
-  * "saleBetweenRelatedParties": "blah blah", ...
-  */
 sealed trait RequestedMethod
 
 case class MethodOne(
@@ -73,50 +86,102 @@ case class MethodOne(
   goodsRestrictions: Option[String],
   saleConditions: Option[String]
 ) extends RequestedMethod
+object MethodOne {
+  implicit val format: OFormat[MethodOne] = Json.format[MethodOne]
+}
 
 sealed trait IdenticalGoodsExplaination
-// again, "_type": "PreviouslyImportedGoods", etc
 case class PreviousIdenticalGoods(value: String) extends IdenticalGoodsExplaination
+object PreviousIdenticalGoods {
+  implicit val format: OFormat[PreviousIdenticalGoods] = Json.format[PreviousIdenticalGoods]
+}
 case class OtherUsersIdenticalGoods(value: String) extends IdenticalGoodsExplaination
+object OtherUsersIdenticalGoods {
+  implicit val format = Json.format[OtherUsersIdenticalGoods]
+}
+
+object IdenticalGoodsExplaination {
+  implicit val format: OFormat[IdenticalGoodsExplaination] = Json.format[IdenticalGoodsExplaination]
+}
 
 case class MethodTwo(
   whyNotOtherMethods: String,
   detailedDescription: IdenticalGoodsExplaination
 ) extends RequestedMethod
+object MethodTwo {
+  implicit val format: OFormat[MethodTwo] = Json.format[MethodTwo]
+}
 
 sealed trait SimilarGoodsExplaination
-// again, "_type": "PreviouslyImportedGoods", etc
 case class PreviousSimilarGoods(value: String) extends SimilarGoodsExplaination
 case class OtherUsersSimilarGoods(value: String) extends SimilarGoodsExplaination
+
+object PreviousSimilarGoods {
+  implicit val format: OFormat[PreviousSimilarGoods] = Json.format[PreviousSimilarGoods]
+}
+object OtherUsersSimilarGoods {
+  implicit val format: OFormat[OtherUsersSimilarGoods] = Json.format[OtherUsersSimilarGoods]
+}
+
+object SimilarGoodsExplaination {
+  implicit val format: OFormat[SimilarGoodsExplaination] = Json.format[SimilarGoodsExplaination]
+}
 
 case class MethodThree(
   whyNotOtherMethods: String,
   detailedDescription: SimilarGoodsExplaination
 ) extends RequestedMethod
+object MethodThree {
+  implicit val format: OFormat[MethodThree] = Json.format[MethodThree]
+}
 
 case class MethodFour(
   whyNotOtherMethods: String,
   deductiveMethod: String
 ) extends RequestedMethod
+object MethodFour {
+  implicit val format: OFormat[MethodFour] = Json.format[MethodFour]
+}
 
 case class MethodFive(
-  whyNotOtherMethods: Boolean,
+  whyNotOtherMethods: String,
   computedValue: String
 ) extends RequestedMethod
+object MethodFive {
+  implicit val format: OFormat[MethodFive] = Json.format[MethodFive]
+}
+
+sealed abstract class AdaptedMethod(override val entryName: String) extends EnumEntry
+
+object AdaptedMethod extends Enum[AdaptedMethod] with PlayJsonEnum[AdaptedMethod] {
+  val values: IndexedSeq[AdaptedMethod] = findValues
+
+  case object MethodOne extends AdaptedMethod("MethodOne")
+  case object MethodTwo extends AdaptedMethod("MethodTwo")
+  case object MethodThree extends AdaptedMethod("MethodThree")
+  case object MethodFour extends AdaptedMethod("MethodFour")
+  case object MethodFive extends AdaptedMethod("MethodFive")
+  case object Unable extends AdaptedMethod("Unable")
+}
 
 case class MethodSix(
   whyNotOtherMethods: String,
-  adoptMethod: AdoptMethod,
+  adoptMethod: AdaptedMethod,
   valuationDescription: String
 ) extends RequestedMethod
+object MethodSix {
+  implicit val format: OFormat[MethodSix] = Json.format[MethodSix]
+}
 
-sealed trait AdoptMethod
-object AdoptMethod {
-  // likely to serialise as "MethodOne", etc
-  case object MethodOne extends AdoptMethod
-  case object MethodTwo extends AdoptMethod
-  case object MethodThree extends AdoptMethod
-  case object MethodFour extends AdoptMethod
-  case object MethodFive extends AdoptMethod
-  case object Unable extends AdoptMethod
+case class ApplicationRequest(
+  applicant: Applicant,
+  requestedMethod: RequestedMethod,
+  goodsDetails: GoodsDetails,
+  attachments: Seq[UploadedDocument]
+)
+object RequestedMethod {
+  implicit val format: OFormat[RequestedMethod] = Json.format[RequestedMethod]
+}
+object ApplicationRequest {
+  implicit val format: OFormat[ApplicationRequest] = Json.format[ApplicationRequest]
 }
