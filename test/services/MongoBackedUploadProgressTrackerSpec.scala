@@ -33,6 +33,8 @@ class MongoBackedUploadProgressTrackerSpec
     with DefaultPlayMongoRepositorySupport[UploadDetails]
     with IntegrationPatience {
 
+  override val checkTtlIndex: Boolean = false
+
   override lazy val repository = new FileUploadRepository(mongoComponent)
 
   val t = new MongoBackedUploadProgressTracker(repository)
