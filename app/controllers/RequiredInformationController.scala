@@ -53,6 +53,7 @@ class RequiredInformationController @Inject() (
     implicit request =>
       logger.info("RequiredInformationController onPageLoad")
 
+      // makeretrievalaction
       val preparedForm = request.userAnswers
         .getOrElse(UserAnswers(request.userId))
         .get(RequiredInformationPage) match {

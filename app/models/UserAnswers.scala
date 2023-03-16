@@ -34,6 +34,7 @@ final case class UserAnswers(
   data: JsObject = Json.obj(),
   applicationNumber: String = new ObjectId().toHexString.toUpperCase(),
   lastUpdated: Instant = Instant.now
+  // affinity group
 ) {
 
   def get[A](page: Modifiable[A])(implicit rds: Reads[A]): Option[A] =
