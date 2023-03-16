@@ -17,10 +17,8 @@
 package models
 
 import play.api.libs.json.{Json, JsSuccess}
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators.ApplicationRequestGenerator
-import models.fileupload._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -30,6 +28,44 @@ class ApplicationRequestSpec
     with Matchers
     with ScalaCheckPropertyChecks
     with ApplicationRequestGenerator {
+
+  import ApplicationRequestSpec._
+
+  "ApplicationRequest" should {
+    "be able to deserialize successful body" in {
+      ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
+        ApplicationRequest(
+          applicant = applicant,
+          requestedMethod = requestedMethod,
+          goodsDetails,
+          attachments = Seq.empty
+        )
+      )
+    }
+
+    "should be able to write body" in {
+      ApplicationRequest.format.writes(
+        ApplicationRequest(
+          applicant = applicant,
+          requestedMethod = requestedMethod,
+          goodsDetails = goodsDetails,
+          attachments = Seq.empty
+        )
+      ) shouldBe Json.parse(body)
+    }
+
+    "form an isomorphism" in {
+      forAll {
+        (applicationRequest: ApplicationRequest) =>
+          val writesResult = ApplicationRequest.format.writes(applicationRequest)
+          val readsResult  = ApplicationRequest.format.reads(writesResult)
+          readsResult should be(JsSuccess(applicationRequest))
+      }
+    }
+  }
+}
+
+object ApplicationRequestSpec {
 
   val applicant = IndividualApplicant(
     holder = EORIDetails(
@@ -46,6 +82,18 @@ class ApplicationRequestSpec
       email = "john@doe.com",
       phone = Some("01234567890")
     )
+  )
+
+  val requestedMethod = MethodThree(
+    whyNotOtherMethods = "whyNotOtherMethods",
+    detailedDescription = PreviousSimilarGoods("detailed description of similar goods")
+  )
+
+  val goodsDetails = GoodsDetails(
+    goodDescription = "Some description",
+    envisagedCommodityCode = Some("1234567890"),
+    knownLegalProceedings = Some("Some legal proceedings"),
+    confidentialInformation = Some("Some confidential information")
   )
 
   val body =
@@ -67,10 +115,13 @@ class ApplicationRequestSpec
     |  },
     |  "_type": "models.IndividualApplicant"
     |},
-    |"requestedMethod": {
-    |  "whyNotOtherMethods": "Some reason",
-    |  "computedValue": "Explanation of how the value was computed",
-    |  "_type": "models.MethodFive"
+    |"requestedMethod" : {
+    |  "whyNotOtherMethods" : "whyNotOtherMethods",
+    |  "detailedDescription" : {
+    |    "_value" : "detailed description of similar goods",
+    |    "_type" : "models.PreviousSimilarGoods"
+    |  },
+    |  "_type" : "models.MethodThree"
     |},
     |"goodsDetails": {
     |  "goodDescription": "Some description",
@@ -80,56 +131,4 @@ class ApplicationRequestSpec
     |},
     |"attachments": []
     }""".stripMargin
-
-  "ApplicationRequest" should {
-    "be able to deserialize successful body" in {
-
-      val result = ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
-        ApplicationRequest(
-          applicant = applicant,
-          requestedMethod = MethodFive(
-            whyNotOtherMethods = "Some reason",
-            computedValue = "Explanation of how the value was computed"
-          ),
-          goodsDetails = GoodsDetails(
-            goodDescription = "Some description",
-            envisagedCommodityCode = Some("1234567890"),
-            knownLegalProceedings = Some("Some legal proceedings"),
-            confidentialInformation = Some("Some confidential information")
-          ),
-          attachments = Seq.empty
-        )
-      )
-    }
-
-    "should be able to write body" in {
-
-      ApplicationRequest.format.writes(
-        ApplicationRequest(
-          applicant = applicant,
-          requestedMethod = MethodFive(
-            whyNotOtherMethods = "Some reason",
-            computedValue = "Explanation of how the value was computed"
-          ),
-          goodsDetails = GoodsDetails(
-            goodDescription = "Some description",
-            envisagedCommodityCode = Some("1234567890"),
-            knownLegalProceedings = Some("Some legal proceedings"),
-            confidentialInformation = Some("Some confidential information")
-          ),
-          attachments = Seq.empty
-        )
-      ) shouldBe Json.parse(body)
-    }
-
-    "form an isomorphism" in {
-      forAll {
-        (applicationRequest: ApplicationRequest) =>
-          val writesResult = ApplicationRequest.format.writes(applicationRequest)
-          val readsResult  = ApplicationRequest.format.reads(writesResult)
-          readsResult should be(JsSuccess(applicationRequest))
-      }
-    }
-  }
-
 }

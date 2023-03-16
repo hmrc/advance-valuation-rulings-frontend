@@ -90,18 +90,20 @@ object MethodOne {
   implicit val format: OFormat[MethodOne] = Json.format[MethodOne]
 }
 
-sealed trait IdenticalGoodsExplaination
-case class PreviousIdenticalGoods(value: String) extends IdenticalGoodsExplaination
+sealed trait IdenticalGoodsExplaination extends Any
+case class PreviousIdenticalGoods(val value: String) extends AnyVal with IdenticalGoodsExplaination
 object PreviousIdenticalGoods {
-  implicit val format: OFormat[PreviousIdenticalGoods] = Json.format[PreviousIdenticalGoods]
+  implicit val format: Format[PreviousIdenticalGoods] = Json.valueFormat[PreviousIdenticalGoods]
 }
-case class OtherUsersIdenticalGoods(value: String) extends IdenticalGoodsExplaination
+case class OtherUsersIdenticalGoods(val value: String)
+    extends AnyVal
+    with IdenticalGoodsExplaination
 object OtherUsersIdenticalGoods {
-  implicit val format = Json.format[OtherUsersIdenticalGoods]
+  implicit val format = Json.valueFormat[OtherUsersIdenticalGoods]
 }
 
 object IdenticalGoodsExplaination {
-  implicit val format: OFormat[IdenticalGoodsExplaination] = Json.format[IdenticalGoodsExplaination]
+  implicit val format: Format[IdenticalGoodsExplaination] = Json.format[IdenticalGoodsExplaination]
 }
 
 case class MethodTwo(
@@ -112,15 +114,15 @@ object MethodTwo {
   implicit val format: OFormat[MethodTwo] = Json.format[MethodTwo]
 }
 
-sealed trait SimilarGoodsExplaination
-case class PreviousSimilarGoods(value: String) extends SimilarGoodsExplaination
-case class OtherUsersSimilarGoods(value: String) extends SimilarGoodsExplaination
+sealed trait SimilarGoodsExplaination extends Any
+case class PreviousSimilarGoods(val value: String) extends AnyVal with SimilarGoodsExplaination
+case class OtherUsersSimilarGoods(val value: String) extends AnyVal with SimilarGoodsExplaination
 
 object PreviousSimilarGoods {
-  implicit val format: OFormat[PreviousSimilarGoods] = Json.format[PreviousSimilarGoods]
+  implicit val format: Format[PreviousSimilarGoods] = Json.valueFormat[PreviousSimilarGoods]
 }
 object OtherUsersSimilarGoods {
-  implicit val format: OFormat[OtherUsersSimilarGoods] = Json.format[OtherUsersSimilarGoods]
+  implicit val format: Format[OtherUsersSimilarGoods] = Json.valueFormat[OtherUsersSimilarGoods]
 }
 
 object SimilarGoodsExplaination {
