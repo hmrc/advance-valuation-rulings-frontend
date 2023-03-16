@@ -3,10 +3,10 @@ import sbt._
 object AppDependencies {
   import play.core.PlayVersion
 
-  val HmrcMongoPlayVersion              = "0.74.0"
-  val PlayFrontendHmrcVersion           = "6.2.0-play-28"
+  val HmrcMongoPlayVersion              = "1.1.0"
+  val PlayFrontendHmrcVersion           = "6.8.0-play-28"
   val PlayConditionalFormMappingVersion = "1.12.0-play-28"
-  val BootstrapFrontendPlayVersion      = "7.12.0"
+  val BootstrapFrontendPlayVersion      = "7.14.0"
   val CatsVersion                       = "2.9.0"
 
   val ScalaTestVersion          = "3.2.10"
