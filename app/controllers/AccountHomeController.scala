@@ -20,18 +20,18 @@ import javax.inject.Inject
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import models.NormalMode
+import navigation.Navigator
 import views.html.AccountHomeView
 
 class AccountHomeController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
 ) extends FrontendBaseController
@@ -41,13 +41,7 @@ class AccountHomeController @Inject() (
   def onPageLoad: Action[AnyContent]       = (identify andThen getData)(implicit request => Ok(view()))
   def startApplication: Action[AnyContent] =
     (identify andThen getData) {
-      implicit request =>
-        val aff = request.affinityGroup
-
-        aff match {
-          case Individual => Redirect(routes.RequiredInformationController.onPageLoad())
-          case _          =>
-            Redirect(routes.RequiredInformationController.onPageLoad())
-        }
+      implicit request => Redirect(navigator.startApplicationRouting(request.affinityGroup))
     }
+
 }

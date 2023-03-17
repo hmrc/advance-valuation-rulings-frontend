@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{NormalMode, UserAnswers, WhatIsYourRoleAsImporter}
+import models.{UserAnswers, WhatIsYourRoleAsImporter}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -39,7 +39,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val whatIsYourRoleAsImporterRoute =
-    routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode).url
+    routes.WhatIsYourRoleAsImporterController.onPageLoad().url
 
   val formProvider = new WhatIsYourRoleAsImporterFormProvider()
   val form         = formProvider()
@@ -58,7 +58,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form)(
           request,
           messages(application)
         ).toString
@@ -83,8 +83,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(WhatIsYourRoleAsImporter.values.head),
-          NormalMode
+          form.fill(WhatIsYourRoleAsImporter.values.head)
         )(request, messages(application)).toString
       }
     }
@@ -131,7 +130,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm)(
           request,
           messages(application)
         ).toString
