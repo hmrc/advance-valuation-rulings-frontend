@@ -21,6 +21,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
 import models.ValuationMethod.{Method1, Method2, Method3, Method4, Method5, Method6}
+import models.requests.ApplicationRequest
 import pages._
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
@@ -170,4 +171,7 @@ object MethodSummary {
 
     MethodSummary(SummaryListViewModel(rows))
   }
+
+  def apply(request: ApplicationRequest)(implicit messages: Messages): MethodSummary =
+    MethodSummary(SummaryListViewModel(Seq.empty))
 }
