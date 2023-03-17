@@ -248,3 +248,7 @@ GET        /whoAreYouAgent                        controllers.WhoAreYouAgentCont
 POST       /whoAreYouAgent                        controllers.WhoAreYouAgentController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onSubmit(mode: Mode = CheckMode)
+
+GET        /application                           controllers.ViewApplicationController.onPageLoad()
+
+GET        /your-application-ruling               controllers.ViewRulingController.onPageLoad()

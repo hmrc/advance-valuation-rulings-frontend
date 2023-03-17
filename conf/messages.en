@@ -626,3 +626,11 @@ whoAreYouAgent.checkYourAnswersLabel = whoAreYouAgent
 whoAreYouAgent.error.required = Enter whoAreYouAgent
 whoAreYouAgent.error.length = WhoAreYouAgent must be 100 characters or less
 whoAreYouAgent.change.hidden = WhoAreYouAgent
+
+viewApplication.title = Your application
+viewApplication.heading = Your application
+
+viewRuling.title = Your ruling documents for {0}
+viewRuling.heading = Your ruling documents for {0}
+viewRuling.subHeading.1 = Your ruling cover letter
+viewRuling.subHeading.2 = Your ruling certificate
