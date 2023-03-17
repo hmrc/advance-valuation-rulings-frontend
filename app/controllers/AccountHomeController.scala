@@ -47,7 +47,7 @@ class AccountHomeController @Inject() (
         aff match {
           case Individual => Redirect(routes.RequiredInformationController.onPageLoad())
           case _          =>
-            Redirect(routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode))
+            Redirect(routes.RequiredInformationController.onPageLoad())
         }
     }
 }
