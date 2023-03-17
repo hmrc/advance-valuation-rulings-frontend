@@ -65,12 +65,12 @@
     }
 
 @advanceValuationRulingServiceEmailLink = {
-@link(
-id = "advance_valuation_ruling_service_email",
-text = messages("applicationComplete.email.link"),
-call = Call("POST", config.advanceValuationRulingServiceEmailUrl)
-)
-}
+    @link(
+            id = "advance_valuation_ruling_service_email",
+            text = messages("applicationComplete.email.link"),
+            call = Call("POST", config.advanceValuationRulingServiceEmailUrl)
+        )
+    }
 
 @layout(pageTitle = titleNoForm(messages("applicationComplete.title"))) {
 
