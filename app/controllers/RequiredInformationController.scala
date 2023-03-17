@@ -38,7 +38,7 @@ class RequiredInformationController @Inject() (
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  isIndividual: IdentifyIndividual,
+  isIndividual: IdentifyIndividualAction,
   formProvider: RequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: RequiredInformationView
