@@ -22,6 +22,7 @@ GET        /account/signed-out                          controllers.auth.SignedO
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET        /applications-and-rulings                    controllers.AccountHomeController.onPageLoad()
+POST        /applications-and-rulings                    controllers.AccountHomeController.startApplication()
 
 GET        /select-valuation-method                     controllers.ValuationMethodController.onPageLoad(mode: Mode = NormalMode)
 POST       /select-valuation-method                     controllers.ValuationMethodController.onSubmit(mode: Mode = NormalMode)

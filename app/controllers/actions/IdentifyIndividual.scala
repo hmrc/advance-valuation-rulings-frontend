@@ -34,11 +34,7 @@ import controllers.actions.IdentifyEori.EnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
 
-trait IdentifierAction
-    extends ActionBuilder[IdentifierRequest, AnyContent]
-    with ActionFunction[Request, IdentifierRequest]
-
-class AuthenticatedIdentifierAction @Inject() (
+class IdentifyIndividual @Inject() (
   override val authConnector: AuthConnector,
   config: FrontendAppConfig,
   val parser: BodyParsers.Default
@@ -64,11 +60,14 @@ class AuthenticatedIdentifierAction @Inject() (
       .retrieve(
         Retrievals.internalId and Retrievals.authorisedEnrolments and Retrievals.affinityGroup
       ) {
-        case Some(internalId) ~ allEnrolments ~ Some(affinityGroup) =>
+        case Some(internalId) ~ allEnrolments ~ Some(Individual) =>
           IdentifyEori
             .getEoriNumber(allEnrolments)
-            .map(eori => block(IdentifierRequest(request, internalId, eori, affinityGroup)))
+            .map(eori => block(IdentifierRequest(request, internalId, eori, Individual)))
             .getOrElse(throw InsufficientEnrolments())
+
+        case Some(_) ~ _ ~ Some(_) =>
+          throw UnsupportedAffinityGroup("User has wrong affinity group")
 
         case _ =>
           throw new UnauthorizedException("Unable to retrieve internal Id")
