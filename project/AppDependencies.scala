@@ -20,6 +20,7 @@ object AppDependencies {
   val ScalaCheckRegexGenVersion = "0.1.2"
   val HmrcMongoTestPlayVersion  = "0.74.0"
   val FlexmarkVersion           = "0.62.2"
+  val EnumeratumVersion         = "1.6.3"
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
@@ -27,7 +28,8 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-conditional-form-mapping" % PlayConditionalFormMappingVersion,
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % BootstrapFrontendPlayVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
-    "org.typelevel"     %% "cats-core"                     % CatsVersion
+    "org.typelevel"     %% "cats-core"                     % CatsVersion,
+    "com.beachape"      %% "enumeratum-play-json"          % EnumeratumVersion
   )
 
   val test = Seq(
