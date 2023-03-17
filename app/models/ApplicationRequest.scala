@@ -39,7 +39,8 @@ case class IndividualApplicant(
 ) extends Applicant
 
 object Applicant {
-  implicit val roleFormat: OFormat[Applicant] = Json.format[Applicant]
+  import ApplicationRequest._
+  implicit val roleFormat: OFormat[Applicant] = Json.configured(jsonConfig).format[Applicant]
 }
 
 object IndividualApplicant {
@@ -103,7 +104,9 @@ object OtherUsersIdenticalGoods {
 }
 
 object IdenticalGoodsExplaination {
-  implicit val format: Format[IdenticalGoodsExplaination] = Json.format[IdenticalGoodsExplaination]
+  import ApplicationRequest.jsonConfig
+  implicit val format: Format[IdenticalGoodsExplaination] =
+    Json.configured(jsonConfig).format[IdenticalGoodsExplaination]
 }
 
 case class MethodTwo(
@@ -126,7 +129,9 @@ object OtherUsersSimilarGoods {
 }
 
 object SimilarGoodsExplaination {
-  implicit val format: OFormat[SimilarGoodsExplaination] = Json.format[SimilarGoodsExplaination]
+  import ApplicationRequest.jsonConfig
+  implicit val format: OFormat[SimilarGoodsExplaination] =
+    Json.configured(jsonConfig).format[SimilarGoodsExplaination]
 }
 
 case class MethodThree(
@@ -134,7 +139,8 @@ case class MethodThree(
   detailedDescription: SimilarGoodsExplaination
 ) extends RequestedMethod
 object MethodThree {
-  implicit val format: OFormat[MethodThree] = Json.format[MethodThree]
+  implicit val format: Format[MethodThree] =
+    Json.format[MethodThree]
 }
 
 case class MethodFour(
@@ -182,8 +188,16 @@ case class ApplicationRequest(
   attachments: Seq[UploadedDocument]
 )
 object RequestedMethod {
-  implicit val format: OFormat[RequestedMethod] = Json.format[RequestedMethod]
+  import ApplicationRequest.jsonConfig
+  implicit val format: OFormat[RequestedMethod] =
+    Json.configured(jsonConfig).format[RequestedMethod]
 }
 object ApplicationRequest {
-  implicit val format: OFormat[ApplicationRequest] = Json.format[ApplicationRequest]
+  private[models] val jsonConfig                   = JsonConfiguration(
+    discriminator = "_type",
+    typeNaming =
+      JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
+  )
+  implicit val format: OFormat[ApplicationRequest] =
+    Json.configured(jsonConfig).format[ApplicationRequest]
 }

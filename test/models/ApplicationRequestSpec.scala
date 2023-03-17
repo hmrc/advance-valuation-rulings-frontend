@@ -66,7 +66,6 @@ class ApplicationRequestSpec
 }
 
 object ApplicationRequestSpec {
-
   val applicant = IndividualApplicant(
     holder = EORIDetails(
       eori = "GB1234567890",
@@ -113,15 +112,15 @@ object ApplicationRequestSpec {
     |    "email": "john@doe.com",
     |    "phone": "01234567890"
     |  },
-    |  "_type": "models.IndividualApplicant"
+    |  "_type": "IndividualApplicant"
     |},
     |"requestedMethod" : {
     |  "whyNotOtherMethods" : "whyNotOtherMethods",
     |  "detailedDescription" : {
     |    "_value" : "detailed description of similar goods",
-    |    "_type" : "models.PreviousSimilarGoods"
+    |    "_type" : "PreviousSimilarGoods"
     |  },
-    |  "_type" : "models.MethodThree"
+    |  "_type" : "MethodThree"
     |},
     |"goodsDetails": {
     |  "goodDescription": "Some description",
