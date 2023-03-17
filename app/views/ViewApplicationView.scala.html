@@ -19,7 +19,7 @@
         govukButton: GovukButton
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(applicationRequest: ApplicationRequest)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewApplication.title"))) {
 

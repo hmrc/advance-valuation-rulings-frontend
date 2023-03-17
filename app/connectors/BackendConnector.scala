@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvi
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode, UserAnswers, ValuationRulingsApplication}
+import models._
 import models.requests._
 
 class BackendConnector @Inject() (

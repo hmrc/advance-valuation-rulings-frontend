@@ -22,6 +22,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.BackendConnector
 import controllers.actions._
 import views.html.ViewApplicationView
 
@@ -30,12 +31,20 @@ class ViewApplicationController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
   view: ViewApplicationView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request => Ok(view())
-  }
+  def onPageLoad(applicationId: String): Action[AnyContent] =
+    (identify andThen getData) {
+      implicit request =>
+        val result = backendConnector.getApplication(applicationId)
+
+        result.map {
+          case Right(application) => Ok(view(application))
+          case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
+        }
+    }
 }
