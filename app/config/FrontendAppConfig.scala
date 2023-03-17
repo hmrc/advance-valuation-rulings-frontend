@@ -67,6 +67,12 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val importAndExportEnquiriesUrl: String =
     configuration.get[String]("urls.importAndExportEnquiries")
 
+  val customsDeclarationUrl: String                 = configuration.get[String]("urls.customsDeclaration")
+  val appealsAndTribunalGuidanceUrl: String         =
+    configuration.get[String]("urls.appealsAndTribunalGuidance")
+  val advanceValuationRulingServiceEmailUrl: String =
+    configuration.get[String]("urls.advanceValuationRulingServiceEmail")
+
   private val exitSurveyBaseUrl: String =
     configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"

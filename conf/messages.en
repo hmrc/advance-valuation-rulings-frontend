@@ -436,7 +436,7 @@ describeTheIdenticalGoods.bulletPoint.1 = produced in the same country
 describeTheIdenticalGoods.bulletPoint.2 = exported to the UK at or about the same time (within 90 days)
 describeTheIdenticalGoods.bulletPoint.3 = the same in all respects including physical characteristics, quality and reputation — minor differences in appearance do not matter
 describeTheIdenticalGoods.checkYourAnswersLabel = Description of identical goods
-describeTheIdenticalGoods.error.required = Enter a description of the identical goods
+describeTheIdenticalGoods.error.required = Enter an explanation of how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
 describeTheIdenticalGoods.error.length = Maximum allowed characters is 8168
 describeTheIdenticalGoods.change.hidden = DescribeTheIdenticalGoods
 
@@ -503,12 +503,13 @@ applicationComplete.link.customsDeclaration = Customs Declaration
 applicationComplete.ruling.bulletPoint.2 = advise the person completing your customs documents that your goods have been given an Advance Valuation Ruling
 applicationComplete.questions.subheading = If you have any questions about your application
 applicationComplete.questions.para.1 = Contact the Advance Valuation Ruling team on {0} if you have any questions about your application.
-
+applicationComplete.email.link = advancevaluationrulingservice@hmrc.gov.uk
 applicationComplete.appeal.subheading = Appeal a ruling decision
 applicationComplete.appeal.paragraph.1 = If you do not agree with the decision, you can request a review by emailing the Advance Valuation Ruling team on {0}.
 applicationComplete.appeal.paragraph.2 = Alternatively, you can {0} who are independent of HMRC. If you disagree with the outcome of an HMRC review, you can still appeal to the tribunal.
 applicationComplete.appeal.paragraph.2.link = appeal directly to the tribunal service,
 applicationComplete.application.heading = Your Application
+applicationComplete.continue.button = Go to your applications and rulings
 
 explainWhyYouChoseMethodFour.title = Explain why you have selected Method 4 to value your goods
 explainWhyYouChoseMethodFour.caption = About the goods

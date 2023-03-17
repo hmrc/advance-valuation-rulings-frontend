@@ -60,9 +60,17 @@
     @link(
             id = "appeal_ruling_link",
             text = messages("applicationComplete.appeal.paragraph.2.link"),
-            call = Call("GET", config.stepByStepGuideUrl)
+            call = Call("GET", config.appealsAndTribunalGuidanceUrl)
         )
     }
+
+@advanceValuationRulingServiceEmailLink = {
+@link(
+id = "advance_valuation_ruling_service_email",
+text = messages("applicationComplete.email.link"),
+call = Call("POST", config.advanceValuationRulingServiceEmailUrl)
+)
+}
 
 @layout(pageTitle = titleNoForm(messages("applicationComplete.title"))) {
 
@@ -99,21 +107,21 @@
 <!--If you have any questions about your application-->
     @h3(messages("applicationComplete.questions.subheading"))
     @paragraph( Html(messages("applicationComplete.questions.para.1",
-                "SOME CONTACT")
+advanceValuationRulingServiceEmailLink)
                 ))
 
 
 <!--Appeal a ruling decision-->
     @h3(messages("applicationComplete.appeal.subheading"))
-    @paragraph(Html(messages("applicationComplete.appeal.paragraph.1", "SOME CONTACT")))
+    @paragraph(Html(messages("applicationComplete.appeal.paragraph.1", advanceValuationRulingServiceEmailLink)))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.2", appealLink)))
 
     @subheading(messages("applicationComplete.application.heading"),"l")
 
     @subheading(messages("checkYourAnswers.applicant.heading"))
-    
+
     @govukSummaryList(applicationSummary.applicant.rows)
-    
+
     @subheading(messages("checkYourAnswers.goods.heading"))
 
     @govukSummaryList(applicationSummary.method.rows)
