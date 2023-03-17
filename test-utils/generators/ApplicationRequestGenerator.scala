@@ -16,7 +16,8 @@
 
 package generators
 
-import models._
+import models.EoriNumber
+import models.requests._
 import org.scalacheck._
 import wolfendale.scalacheck.regexp.RegexpGen
 

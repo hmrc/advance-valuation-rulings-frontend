@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package models
+package models.requests
 
 import play.api.libs.json.{Json, JsSuccess}
 
-import generators.ApplicationRequestGenerator
+import generators._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -65,68 +65,70 @@ class ApplicationRequestSpec
   }
 }
 
-object ApplicationRequestSpec {
+object ApplicationRequestSpec extends Generators {
+  val randomString: String = stringsWithMaxLength(8).sample.get
+
   val applicant = IndividualApplicant(
     holder = EORIDetails(
-      eori = "GB1234567890",
-      businessName = "businessName",
-      addressLine1 = "addressLine1",
-      addressLine2 = "",
+      eori = randomString,
+      businessName = randomString,
+      addressLine1 = randomString,
+      addressLine2 = randomString,
       addressLine3 = "",
-      postcode = "AA1 1AA",
-      country = "GB"
+      postcode = randomString,
+      country = randomString
     ),
     contact = ContactDetails(
-      name = "John Doe",
-      email = "john@doe.com",
-      phone = Some("01234567890")
+      name = randomString,
+      email = randomString,
+      phone = Some(randomString)
     )
   )
 
   val requestedMethod = MethodThree(
-    whyNotOtherMethods = "whyNotOtherMethods",
-    detailedDescription = PreviousSimilarGoods("detailed description of similar goods")
+    whyNotOtherMethods = randomString,
+    detailedDescription = PreviousSimilarGoods(randomString)
   )
 
   val goodsDetails = GoodsDetails(
-    goodDescription = "Some description",
-    envisagedCommodityCode = Some("1234567890"),
-    knownLegalProceedings = Some("Some legal proceedings"),
-    confidentialInformation = Some("Some confidential information")
+    goodDescription = randomString,
+    envisagedCommodityCode = Some(randomString),
+    knownLegalProceedings = Some(randomString),
+    confidentialInformation = Some(randomString)
   )
 
   val body =
-    """{
+    s"""{
     |"applicant": {
     |  "holder": {
-    |    "eori": "GB1234567890",
-    |    "businessName": "businessName",
-    |    "addressLine1": "addressLine1",
-    |    "addressLine2": "",
+    |    "eori": "$randomString",
+    |    "businessName": "$randomString",
+    |    "addressLine1": "$randomString",
+    |    "addressLine2": "$randomString",
     |    "addressLine3": "",
-    |    "postcode": "AA1 1AA",
-    |    "country": "GB"
+    |    "postcode": "$randomString",
+    |    "country": "$randomString"
     |  },
     |  "contact": {
-    |    "name": "John Doe",
-    |    "email": "john@doe.com",
-    |    "phone": "01234567890"
+    |    "name": "$randomString",
+    |    "email": "$randomString",
+    |    "phone": "$randomString"
     |  },
     |  "_type": "IndividualApplicant"
     |},
     |"requestedMethod" : {
-    |  "whyNotOtherMethods" : "whyNotOtherMethods",
+    |  "whyNotOtherMethods" : "$randomString",
     |  "detailedDescription" : {
-    |    "_value" : "detailed description of similar goods",
+    |    "_value" : "$randomString",
     |    "_type" : "PreviousSimilarGoods"
     |  },
     |  "_type" : "MethodThree"
     |},
     |"goodsDetails": {
-    |  "goodDescription": "Some description",
-    |  "envisagedCommodityCode": "1234567890",
-    |  "knownLegalProceedings": "Some legal proceedings",
-    |  "confidentialInformation": "Some confidential information"
+    |  "goodDescription": "$randomString",
+    |  "envisagedCommodityCode": "$randomString",
+    |  "knownLegalProceedings": "$randomString",
+    |  "confidentialInformation": "$randomString"
     |},
     |"attachments": []
     }""".stripMargin
