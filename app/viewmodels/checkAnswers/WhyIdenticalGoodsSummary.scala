@@ -28,19 +28,19 @@ import viewmodels.implicits._
 
 object WhyIdenticalGoodsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WhyIdenticalGoodsPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "whyIdenticalGoods.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.WhyIdenticalGoodsController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("whyIdenticalGoods.change.hidden"))
-          )
+  def row(answer: String)(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "whyIdenticalGoods.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(answer).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.WhyIdenticalGoodsController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("whyIdenticalGoods.change.hidden"))
+      )
+    )
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(WhyIdenticalGoodsPage).map(row)
 }

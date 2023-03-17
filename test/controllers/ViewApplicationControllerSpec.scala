@@ -20,25 +20,38 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import models.ApplicationViewModel
+import models.UserAnswers
+import viewmodels.checkAnswers.summary.ApplicantSummary
+import viewmodels.checkAnswers.summary.DetailsSummary
+import viewmodels.checkAnswers.summary.MethodSummary
 import views.html.ViewApplicationView
 
 class ViewApplicationControllerSpec extends SpecBase {
 
   "ViewApplication Controller" - {
 
+    val fakeId = "id"
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application   = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      implicit val msgs = messages(application)
 
       running(application) {
-        val request = FakeRequest(GET, routes.ViewApplicationController.onPageLoad().url)
+        val request     = FakeRequest(GET, routes.ViewApplicationController.onPageLoad(fakeId).url)
+        val userAnswers = UserAnswers("id")
+        val summary     = ApplicationViewModel(
+          applicant = ApplicantSummary(userAnswers),
+          details = DetailsSummary(userAnswers),
+          method = MethodSummary(userAnswers)
+        )
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ViewApplicationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(summary)(request, messages(application)).toString
       }
     }
   }

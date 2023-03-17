@@ -50,14 +50,14 @@ object DetailsSummary {
   def apply(request: ApplicationRequest)(implicit messages: Messages): DetailsSummary = {
     val rows = Seq(
       DescriptionOfGoodsSummary.row(request),
-      // HasCommodityCodeSummary.row(request),
-      CommodityCodeSummary.row(request)
-      // HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(request),
-      // DescribeTheLegalChallengesSummary.row(request),
-      // HasConfidentialInformationSummary.row(request),
-      // ConfidentialInformationSummary.row(request),
-      // DoYouWantToUploadDocumentsSummary.row(request),
-      // UploadedDocumentsSummary.row(request)
+      HasCommodityCodeSummary.row(request),
+      CommodityCodeSummary.row(request),
+      HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(request),
+      DescribeTheLegalChallengesSummary.row(request),
+      HasConfidentialInformationSummary.row(request),
+      ConfidentialInformationSummary.row(request),
+      DoYouWantToUploadDocumentsSummary.row(request),
+      UploadedDocumentsSummary.row(request)
     ).flatten
 
     DetailsSummary(SummaryListViewModel(rows))

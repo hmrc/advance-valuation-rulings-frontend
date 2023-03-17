@@ -28,21 +28,21 @@ import viewmodels.implicits._
 
 object ExplainYourGoodsComparingToSimilarGoodsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExplainYourGoodsComparingToSimilarGoodsPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "explainYourGoodsComparingToSimilarGoods.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(
-                messages("explainYourGoodsComparingToSimilarGoods.change.hidden")
-              )
-          )
+  def row(answer: String)(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "explainYourGoodsComparingToSimilarGoods.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(answer).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(
+            messages("explainYourGoodsComparingToSimilarGoods.change.hidden")
+          )
+      )
+    )
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ExplainYourGoodsComparingToSimilarGoodsPage).map(row)
 }

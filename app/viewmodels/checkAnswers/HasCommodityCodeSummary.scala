@@ -15,33 +15,43 @@
  */
 
 package viewmodels.checkAnswers
+import cats.implicits._
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
+import models.requests.ApplicationRequest
 import pages.HasCommodityCodePage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object HasCommodityCodeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(HasCommodityCodePage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+  private def makeRow(answer: Boolean)(implicit messages: Messages) = {
+    val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "hasCommodityCode.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.HasCommodityCodeController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("hasCommodityCode.change.hidden"))
-          )
+    SummaryListRowViewModel(
+      key = "hasCommodityCode.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.HasCommodityCodeController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("hasCommodityCode.change.hidden"))
+      )
+    )
+  }
+
+  def row(answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    answers.get(HasCommodityCodePage).map(makeRow)
+  Option
+  def row(request: ApplicationRequest)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    makeRow(request.goodsDetails.envisagedCommodityCode.isDefined).some
 }

@@ -26,12 +26,13 @@ class ViewRulingControllerSpec extends SpecBase {
 
   "ViewRuling Controller" - {
 
+    val fakeId = "id"
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ViewRulingController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ViewRulingController.onPageLoad(fakeId).url)
 
         val result = route(application, request).value
 

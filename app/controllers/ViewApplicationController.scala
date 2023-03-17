@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
+import models.ApplicationViewModel
 import views.html.ViewApplicationView
 
 class ViewApplicationController @Inject() (
@@ -41,14 +42,13 @@ class ViewApplicationController @Inject() (
     with I18nSupport {
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
-    (identify andThen getData) {
+    (identify).async {
       implicit request =>
-        // val result = backendConnector.getApplication(applicationId)
+        val result = backendConnector.getApplication(applicationId)
 
-        // result.map {
-        //   case Right(application) => Ok(view(???))
-        //   case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
-        // }
-        ???
+        result.map {
+          case Right(application) => Ok(view(ApplicationViewModel(application)))
+          case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
+        }
     }
 }

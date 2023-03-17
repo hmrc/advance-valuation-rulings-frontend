@@ -28,12 +28,12 @@ case class ApplicationViewModel(
 )
 
 object ApplicationViewModel {
-  def fromApplicationRequest(applicationRequest: ApplicationRequest)(implicit
+  def apply(applicationRequest: ApplicationRequest)(implicit
     messages: Messages
   ): ApplicationViewModel =
     ApplicationViewModel(
       applicant = ApplicantSummary(applicationRequest),
-      details = ???, // DetailsSummary.fromApplicationRequest(applicationRequest),
+      details = DetailsSummary(applicationRequest),
       method = ??? // MethodSummary.fromApplicationRequest(applicationRequest)
     )
 }
