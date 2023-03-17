@@ -48,7 +48,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val stepByStepGuideUrl: String     = configuration.get[String]("urls.stepByStepGuide")
   val generalInformationUrl: String  = configuration.get[String]("urls.generalInformation")
   val helpAndSupportUrl: String      = configuration.get[String]("urls.helpAndSupport")
-  val customsDeclarationUrl: String  = configuration.get[String]("urls.customsDeclaration")
 
   val importingGoodsGuideUrl: String     = configuration.get[String]("urls.importingGoodsGuide")
   val importedGoodsValueGuideUrl: String = configuration.get[String]("urls.importedGoodsValueGuide")
@@ -66,6 +65,12 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val fillInAnEnquiryFormUrl: String      = configuration.get[String]("urls.fillInAnEnquiryForm")
   val importAndExportEnquiriesUrl: String =
     configuration.get[String]("urls.importAndExportEnquiries")
+
+  val customsDeclarationUrl: String                 = configuration.get[String]("urls.customsDeclaration")
+  val appealsAndTribunalGuidanceUrl: String         =
+    configuration.get[String]("urls.appealsAndTribunalGuidance")
+  val advanceValuationRulingServiceEmailUrl: String =
+    configuration.get[String]("urls.advanceValuationRulingServiceEmail")
 
   private val exitSurveyBaseUrl: String =
     configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
