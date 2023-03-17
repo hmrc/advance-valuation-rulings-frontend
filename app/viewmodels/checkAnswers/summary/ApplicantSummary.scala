@@ -22,6 +22,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
+import models.requests._
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
@@ -35,6 +36,15 @@ object ApplicantSummary {
 
     val eoriRow: Seq[SummaryListRow] = CheckRegisteredDetailsSummary.rows(userAnswers).orEmpty
     val userRows                     = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
+    ApplicantSummary(SummaryListViewModel(rows = eoriRow ++ userRows))
+  }
+
+  def apply(
+    applicationRequest: ApplicationRequest
+  )(implicit messages: Messages): ApplicantSummary = {
+    val eoriRow: Seq[SummaryListRow] =
+      CheckRegisteredDetailsSummary.rows(applicationRequest).orEmpty
+    val userRows                     = ApplicationContactDetailsSummary.rows(applicationRequest).orEmpty
     ApplicantSummary(SummaryListViewModel(rows = eoriRow ++ userRows))
   }
 }

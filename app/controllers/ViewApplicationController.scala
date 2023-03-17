@@ -18,6 +18,8 @@ package controllers
 
 import javax.inject.Inject
 
+import scala.concurrent.ExecutionContext
+
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,17 +36,19 @@ class ViewApplicationController @Inject() (
   backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
   view: ViewApplicationView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
     (identify andThen getData) {
       implicit request =>
-        val result = backendConnector.getApplication(applicationId)
+        // val result = backendConnector.getApplication(applicationId)
 
-        result.map {
-          case Right(application) => Ok(view(application))
-          case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
-        }
+        // result.map {
+        //   case Right(application) => Ok(view(???))
+        //   case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
+        // }
+        ???
     }
 }

@@ -14,12 +14,16 @@
  * limitations under the License.
  *@
 
+ @import components._
+ @import config.FrontendAppConfig
+ @import viewmodels.checkAnswers.summary._
+ 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton
 )
 
-@(applicationRequest: ApplicationRequest)(implicit request: Request[_], messages: Messages)
+@(applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("viewApplication.title"))) {
 
