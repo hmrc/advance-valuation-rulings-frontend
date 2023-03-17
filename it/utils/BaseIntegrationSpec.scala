@@ -36,8 +36,9 @@ trait BaseIntegrationSpec
   implicit val system: ActorSystem               = ActorSystem()
   implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
 
-  val traderDetailsEndpoint = "/advance-valuation-rulings/trader-details"
-  val submitAnswersEndpoint = "/advance-valuation-rulings/submit-answers"
+  val traderDetailsEndpoint     = "/advance-valuation-rulings/trader-details"
+  val submitAnswersEndpoint     = "/advance-valuation-rulings/submit-answers"
+  val submitApplicationEndpoint = "/advance-valuation-rulings/submit-application"
 
   override def fakeApplication(): Application =
     GuiceApplicationBuilder()

@@ -29,6 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvi
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.requests.ApplicationRequest
 
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
@@ -64,6 +65,28 @@ class BackendConnector @Inject() (
       .POST[UserAnswers, HttpResponse](
         s"$backendUrl/submit-answers",
         body = userAnswers,
+        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
+      )
+      .map {
+        response =>
+          if (Status.isSuccessful(response.status)) {
+            response.asRight
+          } else {
+            BackendError(response.status, response.body).asLeft
+          }
+      }
+      .recover {
+        case e: Throwable =>
+          onError(e)
+      }
+
+  def submitApplication(
+    applicationRequest: ApplicationRequest
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
+    httpClient
+      .POST[ApplicationRequest, HttpResponse](
+        s"$backendUrl/submit-application",
+        body = applicationRequest,
         headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
       )
       .map {

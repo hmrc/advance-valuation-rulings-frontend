@@ -4,15 +4,17 @@ import play.api.http.Status
 import play.api.libs.json.Json
 
 import com.github.tomakehurst.wiremock.http.RequestMethod._
-import generators.{TraderDetailsGenerator, UserAnswersGenerator}
+import generators.{ApplicationRequestGenerator, TraderDetailsGenerator, UserAnswersGenerator}
 import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.requests.ApplicationRequest
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
 class BackendConnectorSpec
     extends BaseIntegrationSpec
     with WireMockHelper
     with TraderDetailsGenerator
-    with UserAnswersGenerator {
+    with UserAnswersGenerator
+    with ApplicationRequestGenerator {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -120,6 +122,27 @@ class BackendConnectorSpec
           )
 
           val result = connector.submitAnswers(userAnswers).futureValue.value
+
+          result.status mustBe Status.OK
+      }
+    }
+  }
+
+  ".submitApplication" - {
+    "should submit application to backend" in {
+      forAll {
+        applicationRequest: ApplicationRequest =>
+          val requestBody = Json.stringify(Json.toJson(applicationRequest))
+
+          stub(
+            POST,
+            submitApplicationEndpoint,
+            Status.OK,
+            responseBody = "some response",
+            requestBody = Option(requestBody)
+          )
+
+          val result = connector.submitApplication(applicationRequest).futureValue.value
 
           result.status mustBe Status.OK
       }
