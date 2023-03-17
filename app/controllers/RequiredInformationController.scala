@@ -53,7 +53,6 @@ class RequiredInformationController @Inject() (
     implicit request =>
       logger.info("RequiredInformationController onPageLoad")
 
-      // makeretrievalaction
       val preparedForm = request.userAnswers
         .getOrElse(UserAnswers(request.userId))
         .get(RequiredInformationPage) match {
@@ -78,7 +77,6 @@ class RequiredInformationController @Inject() (
                                     .set(RequiredInformationPage, value)
                                 )
               _              <- sessionRepository.set(updatedAnswers)
-              // todo: update navigator
             } yield Redirect(
               navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
             )

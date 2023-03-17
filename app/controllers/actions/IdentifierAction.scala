@@ -21,7 +21,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc._
 import play.api.mvc.Results._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals

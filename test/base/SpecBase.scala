@@ -53,6 +53,18 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifyIndividualAction].to[FakeIdentifyIndividualAction],
+        bind[FileUploadService].to[FakeFileUploadService],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+      )
+  protected def applicationBuilderAsAgent(
+    userAnswers: Option[UserAnswers] = None
+  ): GuiceApplicationBuilder =
+    new GuiceApplicationBuilder()
+      .overrides(
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifyAgentAction].to[FakeIdentifyAgentAction],
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
       )

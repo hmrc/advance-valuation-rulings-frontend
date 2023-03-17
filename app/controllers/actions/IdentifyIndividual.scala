@@ -34,12 +34,15 @@ import controllers.actions.IdentifyEori.EnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
 
+trait IdentifyIndividualAction
+    extends ActionBuilder[IdentifierRequest, AnyContent]
+    with ActionFunction[Request, IdentifierRequest]
 class IdentifyIndividual @Inject() (
   override val authConnector: AuthConnector,
   config: FrontendAppConfig,
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction
+    extends IdentifyIndividualAction
     with AuthorisedFunctions {
 
   def redirectToEoriComponent: Result =

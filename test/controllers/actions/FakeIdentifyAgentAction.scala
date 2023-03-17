@@ -25,13 +25,13 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import models.requests.IdentifierRequest
 
-class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction {
+class FakeIdentifyAgentAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifyAgentAction {
 
   override def invokeBlock[A](
     request: Request[A],
     block: IdentifierRequest[A] => Future[Result]
   ): Future[Result] =
-    block(IdentifierRequest(request, "id", "eoriNumber", AffinityGroup.Individual))
+    block(IdentifierRequest(request, "id", "eoriNumber", AffinityGroup.Agent))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

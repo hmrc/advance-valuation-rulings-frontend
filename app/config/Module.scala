@@ -31,6 +31,8 @@ class Module extends AbstractModule {
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
+    bind(classOf[IdentifyIndividualAction]).to(classOf[IdentifyIndividual]).asEagerSingleton()
+    bind(classOf[IdentifyAgentAction]).to(classOf[IdentifyAgent]).asEagerSingleton()
 
     bind(classOf[FileUploadService]).to(classOf[UpscanFileUploadService]).asEagerSingleton()
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
