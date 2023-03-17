@@ -12,7 +12,6 @@ import utils.{BaseIntegrationSpec, WireMockHelper}
 class BackendConnectorSpec
     extends BaseIntegrationSpec
     with WireMockHelper
-    with TraderDetailsGenerator
     with UserAnswersGenerator
     with ApplicationRequestGenerator {
 
