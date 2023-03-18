@@ -16,6 +16,10 @@
 
 package controllers
 
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalUnit
+import java.util.Locale
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
@@ -40,6 +44,7 @@ class ViewApplicationController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
+  import ViewApplicationController._
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
     (identify).async {
@@ -47,8 +52,17 @@ class ViewApplicationController @Inject() (
         val result = backendConnector.getApplication(applicationId)
 
         result.map {
-          case Right(application) => Ok(view(ApplicationViewModel(application)))
+          case Right(application) =>
+            val viewModel   = ApplicationViewModel(application.data)
+            val lastUpdated = formatter.format(application.lastUpdated)
+            Ok(view(viewModel, applicationId, lastUpdated))
           case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
         }
     }
+}
+
+object ViewApplicationController {
+  val formatter = DateTimeFormatter
+    .ofPattern("dd/MM/yyyy")
+    .withZone(ZoneId.systemDefault());
 }

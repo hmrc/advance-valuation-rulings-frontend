@@ -32,13 +32,16 @@ trait SummaryListFluency {
   implicit class FluentSummaryList(list: SummaryList) {
 
     def withoutBorders(): SummaryList =
-      list copy (classes = s"${list.classes} govuk-summary-list--no-border")
+      list.copy(classes = s"${list.classes} govuk-summary-list--no-border")
 
     def withCssClass(className: String): SummaryList =
-      list copy (classes = s"${list.classes} $className")
+      list.copy(classes = s"${list.classes} $className")
 
     def withAttribute(attribute: (String, String)): SummaryList =
-      list copy (attributes = list.attributes + attribute)
+      list.copy(attributes = list.attributes + attribute)
+
+    def removeActions(): SummaryList =
+      list.copy(rows = list.rows.map(_.copy(actions = None)))
   }
 
   object SummaryListRowViewModel {

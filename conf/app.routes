@@ -249,9 +249,9 @@ POST       /whoAreYouAgent                        controllers.WhoAreYouAgentCont
 GET        /changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /application:id                            controllers.ViewApplicationController.onPageLoad(id: String)
+GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
 
 GET        /your-application-ruling               controllers.ViewRulingController.onPageLoad()
 
 GET        /cancel                                controllers.CancelApplicationController.onPageLoad()
-GET        /your-application-ruling:id               controllers.ViewRulingController.onPageLoad(id: String)
+GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)

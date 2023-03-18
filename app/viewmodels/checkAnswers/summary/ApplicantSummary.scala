@@ -38,13 +38,4 @@ object ApplicantSummary {
     val userRows                     = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
     ApplicantSummary(SummaryListViewModel(rows = eoriRow ++ userRows))
   }
-
-  def apply(
-    applicationRequest: ApplicationRequest
-  )(implicit messages: Messages): ApplicantSummary = {
-    val eoriRow: Seq[SummaryListRow] =
-      CheckRegisteredDetailsSummary.rows(applicationRequest).orEmpty
-    val userRows                     = ApplicationContactDetailsSummary.rows(applicationRequest).orEmpty
-    ApplicantSummary(SummaryListViewModel(rows = eoriRow ++ userRows))
-  }
 }

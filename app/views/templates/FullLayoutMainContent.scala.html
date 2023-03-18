@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models
+@this()
 
-import java.time.Instant
+@(contentBlock: Html)
 
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
-
-final case class ValuationRulingsApplication(
-  applicationNumber: String,
-  data: requests.ApplicationRequest,
-  lastUpdated: Instant
-)
-
-object ValuationRulingsApplication {
-  implicit val format: OFormat[ValuationRulingsApplication] =
-    Json.format[ValuationRulingsApplication]
-}
+@contentBlock

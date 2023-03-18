@@ -17,12 +17,16 @@
 package models
 
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
 import models.requests._
+import viewmodels.checkAnswers.ApplicationContactDetailsSummary
+import viewmodels.checkAnswers.CheckRegisteredDetailsSummary
 import viewmodels.checkAnswers.summary._
 
 case class ApplicationViewModel(
-  applicant: ApplicantSummary,
+  eori: SummaryList,
+  applicant: SummaryList,
   details: DetailsSummary,
   method: MethodSummary
 )
@@ -30,10 +34,17 @@ case class ApplicationViewModel(
 object ApplicationViewModel {
   def apply(applicationRequest: ApplicationRequest)(implicit
     messages: Messages
-  ): ApplicationViewModel =
+  ): ApplicationViewModel = {
+
+    val eoriRow   = CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
+    val applicant =
+      ApplicationContactDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
+
     ApplicationViewModel(
-      applicant = ApplicantSummary(applicationRequest),
-      details = DetailsSummary(applicationRequest),
-      method = ??? // MethodSummary.fromApplicationRequest(applicationRequest)
+      eori = SummaryList(eoriRow),
+      applicant = SummaryList(applicant),
+      details = DetailsSummary(applicationRequest).removeActions(),
+      method = MethodSummary(applicationRequest).removeActions()
     )
+  }
 }

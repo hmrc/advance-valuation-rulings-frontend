@@ -53,7 +53,7 @@ object DoYouWantToUploadDocumentsSummary {
       .map(makeRow)
 
   def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
-    makeRow(request.attachments.isEmpty).some
+    makeRow(request.attachments.nonEmpty).some
 }
 
 object UploadedDocumentsSummary {

@@ -85,7 +85,7 @@ object ApplicationContactDetailsSummary {
 
   def rows(
     request: ApplicationRequest
-  )(implicit messages: Messages): Option[Seq[SummaryListRow]] = {
+  )(implicit messages: Messages): Seq[SummaryListRow] = {
     val details = Applicant.contactDetails(request.applicant)
 
     val contactDetails = ApplicationContactDetails(
@@ -93,12 +93,11 @@ object ApplicationContactDetailsSummary {
       email = details.email,
       phone = details.phone.getOrElse("")
     )
-    Some(
-      Seq(
-        nameRow(contactDetails),
-        emailRow(contactDetails),
-        contactNumberRow(contactDetails)
-      )
+
+    Seq(
+      nameRow(contactDetails),
+      emailRow(contactDetails),
+      contactNumberRow(contactDetails)
     )
   }
 }

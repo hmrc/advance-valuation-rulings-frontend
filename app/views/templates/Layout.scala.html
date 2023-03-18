@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+ @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
  @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
  @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
  @import views.html.helper.CSPNonce
@@ -26,7 +27,8 @@
     hmrcLayout: HmrcLayout, 
     standardBetaBanner: StandardBetaBanner,
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+    twoThirdsMainContent: TwoThirdsMainContent,
 )
  
  @(
@@ -36,7 +38,7 @@
     showBackLink: Boolean = true,
     showSignOut: Boolean = true,
     timeout: Boolean = true,
-
+    mainContentLayout: Option[Html => Html] = Some(twoThirdsMainContent(_))
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
 @additionalScripts = {
@@ -79,6 +81,7 @@
    nonce = CSPNonce.get,
    backLinkUrl = if(showBackLink) Some("#") else None,
    additionalScriptsBlock = Some(additionalScripts),
-   additionalHeadBlock = Some(headBlock)
+   additionalHeadBlock = Some(headBlock),
+   mainContentLayout = mainContentLayout
  )(content)
  

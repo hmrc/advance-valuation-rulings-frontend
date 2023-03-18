@@ -97,7 +97,7 @@ object CheckRegisteredDetailsSummary {
 
   def rows(
     request: ApplicationRequest
-  )(implicit messages: Messages): Option[Seq[SummaryListRow]] = {
+  )(implicit messages: Messages): Seq[SummaryListRow] = {
     val eoriHolder     = Applicant.eoriHolder(request.applicant)
     val postCode       = if (eoriHolder.postcode.isEmpty) None else Some(eoriHolder.postcode)
     val contactDetails = models.CheckRegisteredDetails(
@@ -109,12 +109,10 @@ object CheckRegisteredDetailsSummary {
       country = eoriHolder.country,
       postalCode = postCode
     )
-    Some(
-      Seq(
-        registeredNumberRow(contactDetails),
-        registeredNameRow(contactDetails),
-        registeredAddressRow(contactDetails)
-      )
+    Seq(
+      registeredNumberRow(contactDetails),
+      registeredNameRow(contactDetails),
+      registeredAddressRow(contactDetails)
     )
   }
 }
