@@ -30,7 +30,7 @@ class BackendConnectorSpec extends SpecBase with ScalaCheckPropertyChecks with M
         callbackBody: ReadyCallbackBody =>
           val request = BackendConnector.ObjectStorePutRequest(callbackBody)
           val json    = Json.toJson(request)
-          println(json)
+
           json mustBe Json.obj(
             "uploadId"    -> callbackBody.reference,
             "downloadUrl" -> callbackBody.downloadUrl.toString,
