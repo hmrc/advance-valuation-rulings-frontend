@@ -38,10 +38,11 @@ trait WireMockHelper {
     responseHeaders: Set[(String, String)] = Set.empty
   ): StubMapping = {
     val mappingBuilder = requestMethod match {
-      case RequestMethod.GET  => get(urlEqualTo(url))
-      case RequestMethod.POST =>
+      case RequestMethod.GET    => get(urlEqualTo(url))
+      case RequestMethod.POST   =>
         post(urlEqualTo(url)).withRequestBody(equalTo(requestBody.getOrElse("")))
-      case unexpected         =>
+      case RequestMethod.DELETE => delete(urlEqualTo(url))
+      case unexpected           =>
         throw new InvalidArgumentException(s"Unexpected wiremock stub request method $unexpected")
     }
 

@@ -22,9 +22,13 @@ import scala.concurrent.Future
 
 import play.api.Logger
 
+import connectors.BackendConnector
 import models.fileupload.{CallbackBody, Failed, FailedCallbackBody, Quarantine, ReadyCallbackBody, Rejected, UploadedSuccessfully}
 
-class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker) {
+class UpscanCallbackDispatcher @Inject() (
+  sessionStorage: UploadProgressTracker,
+  backendConnector: BackendConnector
+) {
 
   private val logger = Logger(this.getClass)
 

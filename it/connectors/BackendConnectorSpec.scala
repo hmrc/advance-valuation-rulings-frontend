@@ -4,15 +4,16 @@ import play.api.http.Status
 import play.api.libs.json.Json
 
 import com.github.tomakehurst.wiremock.http.RequestMethod._
-import generators.{TraderDetailsGenerator, UserAnswersGenerator}
+import generators.{Generators, TraderDetailsGenerator}
 import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.fileupload.ReadyCallbackBody
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
 class BackendConnectorSpec
     extends BaseIntegrationSpec
     with WireMockHelper
     with TraderDetailsGenerator
-    with UserAnswersGenerator {
+    with Generators {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -122,6 +123,47 @@ class BackendConnectorSpec
           val result = connector.submitAnswers(userAnswers).futureValue.value
 
           result.status mustBe Status.OK
+      }
+    }
+  }
+
+  ".putFile" - {
+    "should put file on object store" in {
+      forAll {
+        callback: ReadyCallbackBody =>
+          val request     = BackendConnector.ObjectStorePutRequest(callback)
+          val requestBody = Json.stringify(Json.toJson(request))
+
+          stub(
+            POST,
+            fileUploadEndpoint,
+            Status.OK,
+            responseBody = "some response",
+            requestBody = Option(requestBody)
+          )
+
+          val result = connector.putFile(request).futureValue
+
+          result mustBe Right(())
+      }
+    }
+  }
+
+  ".deleteFile" - {
+    "should delete file on object store" in {
+      forAll(alphaStringsWithMaxLength(12)) {
+        fileId: String =>
+          stub(
+            DELETE,
+            fileUploadEndpoint + "/" + fileId,
+            Status.OK,
+            responseBody = "some response",
+            requestBody = None
+          )
+
+          val result = connector.deleteFile(fileId).futureValue
+
+          result mustBe Right(())
       }
     }
   }

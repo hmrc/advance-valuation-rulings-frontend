@@ -38,6 +38,7 @@ trait BaseIntegrationSpec
 
   val traderDetailsEndpoint = "/advance-valuation-rulings/trader-details"
   val submitAnswersEndpoint = "/advance-valuation-rulings/submit-answers"
+  val fileUploadEndpoint    = "/advance-valuation-rulings/file"
 
   override def fakeApplication(): Application =
     GuiceApplicationBuilder()

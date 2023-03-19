@@ -29,11 +29,11 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvi
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.fileupload.ReadyCallbackBody
 
-class BackendConnector @Inject() (
-  config: FrontendAppConfig,
-  httpClient: HttpClient
-) extends FrontendHeaderCarrierProvider {
+class BackendConnector @Inject() (config: FrontendAppConfig, httpClient: HttpClient)
+    extends FrontendHeaderCarrierProvider {
+  import BackendConnector._
 
   type Result = Either[BackendError, TraderDetailsWithCountryCode]
 
@@ -79,6 +79,49 @@ class BackendConnector @Inject() (
           onError(e)
       }
 
+  def putFile(
+    request: ObjectStorePutRequest
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, Unit]] =
+    httpClient
+      .POST[ObjectStorePutRequest, HttpResponse](
+        s"$backendUrl/file",
+        body = request,
+        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
+      )
+      .map {
+        response =>
+          if (Status.isSuccessful(response.status)) {
+            ().asRight[BackendError]
+          } else {
+            BackendError(response.status, response.body).asLeft
+          }
+      }
+      .recover {
+        case e: Throwable =>
+          onError(e)
+      }
+
+  def deleteFile(
+    fileName: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, Unit]] =
+    httpClient
+      .DELETE[HttpResponse](
+        s"$backendUrl/file/$fileName",
+        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
+      )
+      .map {
+        response =>
+          if (Status.isSuccessful(response.status)) {
+            ().asRight[BackendError]
+          } else {
+            BackendError(response.status, response.body).asLeft
+          }
+      }
+      .recover {
+        case e: Throwable =>
+          onError(e)
+      }
+
   private def onError(ex: Throwable): Left[BackendError, Nothing] = {
     val (code, message) = ex match {
       case e: HttpException         => (e.responseCode, e.getMessage)
@@ -86,5 +129,31 @@ class BackendConnector @Inject() (
       case e: Throwable             => (Status.INTERNAL_SERVER_ERROR, e.getMessage)
     }
     Left(BackendError(code, message))
+  }
+}
+
+object BackendConnector {
+  import play.api.libs.json.{Json, OFormat}
+
+  case class ObjectStorePutRequest(
+    uploadId: String,
+    downloadUrl: String,
+    fileName: String,
+    mimeType: String,
+    size: Long,
+    checksum: String
+  )
+  object ObjectStorePutRequest {
+    implicit val format: OFormat[ObjectStorePutRequest] = Json.format[ObjectStorePutRequest]
+
+    def apply(fileReadyCallback: ReadyCallbackBody): ObjectStorePutRequest =
+      ObjectStorePutRequest(
+        fileReadyCallback.reference.value,
+        fileReadyCallback.downloadUrl.toString,
+        fileReadyCallback.uploadDetails.fileName,
+        fileReadyCallback.uploadDetails.fileMimeType,
+        fileReadyCallback.uploadDetails.size,
+        fileReadyCallback.uploadDetails.checksum
+      )
   }
 }
