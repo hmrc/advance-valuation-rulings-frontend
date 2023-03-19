@@ -252,3 +252,5 @@ POST       /changeWhoAreYouAgent                  controllers.WhoAreYouAgentCont
 GET        /application                           controllers.ViewApplicationController.onPageLoad()
 
 GET        /your-application-ruling               controllers.ViewRulingController.onPageLoad()
+
+GET        /cancel                                controllers.CancelApplicationController.onPageLoad()
