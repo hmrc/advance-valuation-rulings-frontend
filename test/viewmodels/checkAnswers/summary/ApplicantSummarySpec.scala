@@ -27,8 +27,7 @@ import models._
 import pages._
 import viewmodels.implicits._
 
-class ApplicantSummarySpec extends SpecBase with Generators {
-  import ApplicantSummarySpec._
+class ApplicantSummarySpec extends ApplicantSummaryFixtureSpec {
 
   "ApplicantSummary" - {
 
@@ -86,8 +85,7 @@ class ApplicantSummarySpec extends SpecBase with Generators {
   }
 }
 
-object ApplicantSummarySpec {
-  val emptyUserAnswers = UserAnswers("test")
+trait ApplicantSummaryFixtureSpec extends SpecBase with Generators {
 
   val allAnswersInput: Try[UserAnswers] =
     emptyUserAnswers

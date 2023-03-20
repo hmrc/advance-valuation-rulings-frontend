@@ -67,7 +67,7 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
       )
     )
 
-    val userAnswers = UserAnswers(userAnswersId)
+    val userAnswers = UserAnswers(userAnswersId, applicationNumber)
       .set(CheckRegisteredDetailsPage, registeredDetails)
       .success
       .value
@@ -114,7 +114,7 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      val answersAfterPost = UserAnswers(userAnswersId)
+      val answersAfterPost = UserAnswers(userAnswersId, applicationNumber)
         .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
         .success
         .value

@@ -39,6 +39,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  generateApplicationNumber: ApplicationNumberGenerationAction,
   isAgent: IdentifyAgentAction,
   formProvider: WhatIsYourRoleAsImporterFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,17 +50,18 @@ class WhatIsYourRoleAsImporterController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen isAgent andThen getData) {
-    implicit request =>
-      val preparedForm = request.userAnswers
-        .getOrElse(UserAnswers(request.userId))
-        .get(WhatIsYourRoleAsImporterPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen isAgent andThen getData andThen generateApplicationNumber) {
+      implicit request =>
+        val preparedForm = request.userAnswers
+          .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
+          .get(WhatIsYourRoleAsImporterPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm))
-  }
+        Ok(view(preparedForm))
+    }
 
   def onSubmit(): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {

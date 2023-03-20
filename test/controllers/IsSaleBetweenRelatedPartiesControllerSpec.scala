@@ -68,7 +68,10 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(IsSaleBetweenRelatedPartiesPage, true).success.value
+        UserAnswers(userAnswersId, applicationNumber)
+          .set(IsSaleBetweenRelatedPartiesPage, true)
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

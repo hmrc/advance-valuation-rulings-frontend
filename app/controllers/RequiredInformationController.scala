@@ -38,6 +38,8 @@ class RequiredInformationController @Inject() (
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  generateApplicationNumber: ApplicationNumberGenerationAction,
   formProvider: RequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: RequiredInformationView
@@ -48,37 +50,40 @@ class RequiredInformationController @Inject() (
   val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
-    implicit request =>
-      logger.info("RequiredInformationController onPageLoad")
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen getData andThen generateApplicationNumber) {
+      implicit request =>
+        logger.info("RequiredInformationController onPageLoad")
 
-      val preparedForm = request.userAnswers
-        .getOrElse(UserAnswers(request.userId))
-        .get(RequiredInformationPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+        val preparedForm = request.userAnswers
+          .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
+          .get(RequiredInformationPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm))
-  }
+        Ok(view(preparedForm))
+    }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers
-                                    .getOrElse(UserAnswers(request.userId))
-                                    .set(RequiredInformationPage, value)
-                                )
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(
-              navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
-            )
-        )
-  }
+  def onSubmit(): Action[AnyContent] =
+    (identify andThen getData andThen generateApplicationNumber).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              for {
+                updatedAnswers <-
+                  Future.fromTry(
+                    request.userAnswers
+                      .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
+                      .set(RequiredInformationPage, value)
+                  )
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(
+                navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
+              )
+          )
+    }
 }

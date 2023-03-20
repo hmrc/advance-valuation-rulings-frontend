@@ -68,7 +68,10 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(ExplainWhyYouChoseMethodFourPage, "answer").success.value
+        UserAnswers(userAnswersId, applicationNumber)
+          .set(ExplainWhyYouChoseMethodFourPage, "answer")
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

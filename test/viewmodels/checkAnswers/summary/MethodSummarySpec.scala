@@ -26,8 +26,7 @@ import models._
 import pages._
 import viewmodels.implicits._
 
-class MethodSummarySpec extends SpecBase {
-  import MethodSummarySpec._
+class MethodSummarySpec extends MethodSummaryFixtureSpec {
 
   "MethodSummary should" - {
 
@@ -317,90 +316,89 @@ class MethodSummarySpec extends SpecBase {
       }
     }
   }
+}
 
-  object MethodSummarySpec {
-    val emptyUserAnswers = UserAnswers("test")
+trait MethodSummaryFixtureSpec extends SpecBase {
 
-    val methodOneAllAnswersInput: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
-        ua <- ua.set(IsThereASaleInvolvedPage, true)
-        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-        ua <- ua.set(DescribeTheRestrictionsPage, "test")
-        ua <- ua.set(IsTheSaleSubjectToConditionsPage, true)
-        ua <- ua.set(DescribeTheConditionsPage, "test")
-      } yield ua
+  val methodOneAllAnswersInput: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+      ua <- ua.set(IsThereASaleInvolvedPage, true)
+      ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+      ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+      ua <- ua.set(DescribeTheRestrictionsPage, "test")
+      ua <- ua.set(IsTheSaleSubjectToConditionsPage, true)
+      ua <- ua.set(DescribeTheConditionsPage, "test")
+    } yield ua
 
-    val methodOneShortFlow: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
-        ua <- ua.set(IsThereASaleInvolvedPage, true)
-        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, false)
-        ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
-        // The following should not show up in the summary
-        ua <- ua.set(DescribeTheRestrictionsPage, "test")
-        ua <- ua.set(DescribeTheConditionsPage, "test")
-      } yield ua
+  val methodOneShortFlow: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+      ua <- ua.set(IsThereASaleInvolvedPage, true)
+      ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+      ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, false)
+      ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+      // The following should not show up in the summary
+      ua <- ua.set(DescribeTheRestrictionsPage, "test")
+      ua <- ua.set(DescribeTheConditionsPage, "test")
+    } yield ua
 
-    val methodTwoUsedMethodOneInPast: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
-        ua <- ua.set(WhyIdenticalGoodsPage, "test")
-        ua <- ua.set(HaveYouUsedMethodOneInPastPage, true)
-        ua <- ua.set(DescribeTheIdenticalGoodsPage, "test")
-      } yield ua
+  val methodTwoUsedMethodOneInPast: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+      ua <- ua.set(WhyIdenticalGoodsPage, "test")
+      ua <- ua.set(HaveYouUsedMethodOneInPastPage, true)
+      ua <- ua.set(DescribeTheIdenticalGoodsPage, "test")
+    } yield ua
 
-    val methodTwoNotUsedMethodOneInPast: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
-        ua <- ua.set(WhyIdenticalGoodsPage, "test")
-        ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
-        ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
-        ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, "test")
-      } yield ua
+  val methodTwoNotUsedMethodOneInPast: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+      ua <- ua.set(WhyIdenticalGoodsPage, "test")
+      ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
+      ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
+      ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, "test")
+    } yield ua
 
-    val methodThreeAllAnswersInput: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
-        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, "test")
-        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
-        ua <- ua.set(DescribeTheSimilarGoodsPage, "test")
-        ua <- ua.set(WillYouCompareToSimilarGoodsPage, true) // will not get asked
-        ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, "test") // will not get asked
-      } yield ua
+  val methodThreeAllAnswersInput: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+      ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, "test")
+      ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
+      ua <- ua.set(DescribeTheSimilarGoodsPage, "test")
+      ua <- ua.set(WillYouCompareToSimilarGoodsPage, true) // will not get asked
+      ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, "test") // will not get asked
+    } yield ua
 
-    val methodThreeCompareSimilarGoods: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
-        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, "test")
-        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
-        ua <- ua.set(DescribeTheSimilarGoodsPage, "test")
-        ua <- ua.set(WillYouCompareToSimilarGoodsPage, true)
-        ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, "test")
-      } yield ua
+  val methodThreeCompareSimilarGoods: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+      ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, "test")
+      ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+      ua <- ua.set(DescribeTheSimilarGoodsPage, "test")
+      ua <- ua.set(WillYouCompareToSimilarGoodsPage, true)
+      ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, "test")
+    } yield ua
 
-    val methodFourAllAnswersInput: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method4)
-        ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "test")
-        ua <- ua.set(ExplainWhyYouChoseMethodFourPage, "test")
-      } yield ua
+  val methodFourAllAnswersInput: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method4)
+      ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "test")
+      ua <- ua.set(ExplainWhyYouChoseMethodFourPage, "test")
+    } yield ua
 
-    val methodFiveAllAnswersInput: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method5)
-        ua <- ua.set(WhyComputedValuePage, "test")
-        ua <- ua.set(ExplainReasonComputedValuePage, "test")
-      } yield ua
+  val methodFiveAllAnswersInput: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method5)
+      ua <- ua.set(WhyComputedValuePage, "test")
+      ua <- ua.set(ExplainReasonComputedValuePage, "test")
+    } yield ua
 
-    val methodSixAllAnswersInput: Try[UserAnswers] =
-      for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method6)
-        ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, "test")
-        ua <- ua.set(AdaptMethodPage, AdaptMethod.NoOtherMethod)
-        ua <- ua.set(ExplainHowYouWillUseMethodSixPage, "test")
-      } yield ua
-  }
+  val methodSixAllAnswersInput: Try[UserAnswers] =
+    for {
+      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method6)
+      ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, "test")
+      ua <- ua.set(AdaptMethodPage, AdaptMethod.NoOtherMethod)
+      ua <- ua.set(ExplainHowYouWillUseMethodSixPage, "test")
+    } yield ua
 }

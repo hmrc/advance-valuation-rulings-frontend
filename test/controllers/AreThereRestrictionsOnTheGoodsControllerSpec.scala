@@ -68,7 +68,10 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(AreThereRestrictionsOnTheGoodsPage, true).success.value
+        UserAnswers(userAnswersId, applicationNumber)
+          .set(AreThereRestrictionsOnTheGoodsPage, true)
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

@@ -68,7 +68,10 @@ class WillYouCompareGoodsToIdenticalGoodsControllerSpec extends SpecBase with Mo
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(WillYouCompareGoodsToIdenticalGoodsPage, true).success.value
+        UserAnswers(userAnswersId, applicationNumber)
+          .set(WillYouCompareGoodsToIdenticalGoodsPage, true)
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

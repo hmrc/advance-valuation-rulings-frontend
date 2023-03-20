@@ -28,7 +28,7 @@ import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers  = UserAnswers("id")
+  val EmptyUserAnswers: UserAnswers  = UserAnswers("id", applicationNumber)
   val navigator                      = new Navigator
   val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
@@ -439,7 +439,7 @@ class NavigatorSpec extends SpecBase {
 
       "DoYouWantToUploadDocumentsPage must" - {
         "self when no method is select" in {
-          val userAnswers = UserAnswers("id")
+          val userAnswers = UserAnswers("id", applicationNumber)
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
@@ -449,7 +449,7 @@ class NavigatorSpec extends SpecBase {
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
-            UserAnswers("id").set(DoYouWantToUploadDocumentsPage, true).get
+            UserAnswers("id", applicationNumber).set(DoYouWantToUploadDocumentsPage, true).get
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
@@ -460,7 +460,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswers page when No is selected" in {
           val userAnswers =
-            UserAnswers("id").set(DoYouWantToUploadDocumentsPage, false).get
+            UserAnswers("id", applicationNumber).set(DoYouWantToUploadDocumentsPage, false).get
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
@@ -471,7 +471,7 @@ class NavigatorSpec extends SpecBase {
 
       "UploadAnotherSupportingDocumentPage must" - {
         "self when no answer is selected" in {
-          val userAnswers = UserAnswers("id")
+          val userAnswers = UserAnswers("id", applicationNumber)
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -481,7 +481,7 @@ class NavigatorSpec extends SpecBase {
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
-            UserAnswers("id").set(UploadAnotherSupportingDocumentPage, true).get
+            UserAnswers("id", applicationNumber).set(UploadAnotherSupportingDocumentPage, true).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -492,7 +492,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswers page when No is selected" in {
           val userAnswers =
-            UserAnswers("id").set(UploadAnotherSupportingDocumentPage, false).get
+            UserAnswers("id", applicationNumber).set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -504,7 +504,7 @@ class NavigatorSpec extends SpecBase {
       "IsThisFileConfidentialPage must" - {
 
         "redirect to UploadSupportingDocumentsPage user has no files" in {
-          val userAnswers = UserAnswers("id")
+          val userAnswers = UserAnswers("id", applicationNumber)
           navigator.nextPage(
             IsThisFileConfidentialPage,
             NormalMode,
@@ -513,7 +513,7 @@ class NavigatorSpec extends SpecBase {
         }
 
         "redirect to self when user has a file without confidentiality info" in {
-          val userAnswers = UserAnswers("id")
+          val userAnswers = UserAnswers("id", applicationNumber)
             .set(
               UploadSupportingDocumentPage,
               UploadedFiles.initialise(fileDetails)
@@ -527,7 +527,7 @@ class NavigatorSpec extends SpecBase {
         }
 
         "UploadSupportingDocumentsPage when an answer is selected" in {
-          val userAnswers = UserAnswers("id")
+          val userAnswers = UserAnswers("id", applicationNumber)
             .set(
               UploadSupportingDocumentPage,
               UploadedFiles.initialise(fileDetails).setConfidentiality(false)
@@ -620,14 +620,14 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            UserAnswers("id").set(IsThereASaleInvolvedPage, true).success.value
+            UserAnswers("id", applicationNumber).set(IsThereASaleInvolvedPage, true).success.value
           ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
         }
         "navigate to valuationMethod page when no" in {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            UserAnswers("id").set(IsThereASaleInvolvedPage, false).success.value
+            UserAnswers("id", applicationNumber).set(IsThereASaleInvolvedPage, false).success.value
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
         }
       }
@@ -637,14 +637,20 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsSaleBetweenRelatedPartiesPage,
             NormalMode,
-            UserAnswers("id").set(IsSaleBetweenRelatedPartiesPage, true).success.value
+            UserAnswers("id", applicationNumber)
+              .set(IsSaleBetweenRelatedPartiesPage, true)
+              .success
+              .value
           ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode)
         }
         "navigate to restrictions page when no" in {
           navigator.nextPage(
             IsSaleBetweenRelatedPartiesPage,
             NormalMode,
-            UserAnswers("id").set(IsSaleBetweenRelatedPartiesPage, false).success.value
+            UserAnswers("id", applicationNumber)
+              .set(IsSaleBetweenRelatedPartiesPage, false)
+              .success
+              .value
           ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
         }
       }
@@ -654,7 +660,10 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             ExplainHowPartiesAreRelatedPage,
             NormalMode,
-            UserAnswers("id").set(ExplainHowPartiesAreRelatedPage, "explain").success.value
+            UserAnswers("id", applicationNumber)
+              .set(ExplainHowPartiesAreRelatedPage, "explain")
+              .success
+              .value
           ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
         }
       }
