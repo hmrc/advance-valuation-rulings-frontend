@@ -38,7 +38,6 @@ class RequiredInformationController @Inject() (
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   formProvider: RequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: RequiredInformationView
@@ -77,7 +76,6 @@ class RequiredInformationController @Inject() (
                                     .set(RequiredInformationPage, value)
                                 )
               _              <- sessionRepository.set(updatedAnswers)
-              // todo: update navigator
             } yield Redirect(
               navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
             )

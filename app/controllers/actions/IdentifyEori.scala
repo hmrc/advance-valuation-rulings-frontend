@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,28 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import components._
+package controllers.actions
 
-@this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        formHelper: FormWithCSRF,
-        para: Paragraph
-)
+import uk.gov.hmrc.auth.core.Enrolments
 
-@()(implicit request: Request[_], messages: Messages)
+object IdentifyEori {
 
-@layout(pageTitle = titleNoForm(messages("accountHome.title"))) {
+  val EnrolmentKey: String   = "HMRC-ATAR-ORG"
+  val EnrolmentIdKey: String = "EORINumber"
 
-    <h1 class="govuk-heading-xl">@messages("accountHome.heading")</h1>
-
-    @para(Html(messages("accountHome.para")))
-
-    @formHelper(action = routes.AccountHomeController.startApplication()) {
-        @govukButton(
-             ButtonViewModel(messages("accountHome.button.text"))
-        )
-    }
+  def getEoriNumber(enrolments: Enrolments): Option[String] =
+    for {
+      enrolment  <- enrolments.getEnrolment(EnrolmentKey)
+      identifier <- enrolment.getIdentifier(EnrolmentIdKey)
+    } yield identifier.value
 }

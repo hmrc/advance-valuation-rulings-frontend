@@ -21,6 +21,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc._
 import play.api.mvc.Results._
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -33,16 +34,15 @@ import controllers.actions.IdentifyEori.EnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
 
-trait IdentifierAction
+trait IdentifyIndividualAction
     extends ActionBuilder[IdentifierRequest, AnyContent]
     with ActionFunction[Request, IdentifierRequest]
-
-class AuthenticatedIdentifierAction @Inject() (
+class IdentifyIndividual @Inject() (
   override val authConnector: AuthConnector,
   config: FrontendAppConfig,
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction
+    extends IdentifyIndividualAction
     with AuthorisedFunctions {
 
   def redirectToEoriComponent: Result =
@@ -63,11 +63,14 @@ class AuthenticatedIdentifierAction @Inject() (
       .retrieve(
         Retrievals.internalId and Retrievals.authorisedEnrolments and Retrievals.affinityGroup
       ) {
-        case Some(internalId) ~ allEnrolments ~ Some(affinityGroup) =>
+        case Some(internalId) ~ allEnrolments ~ Some(Individual) =>
           IdentifyEori
             .getEoriNumber(allEnrolments)
-            .map(eori => block(IdentifierRequest(request, internalId, eori, affinityGroup)))
+            .map(eori => block(IdentifierRequest(request, internalId, eori, Individual)))
             .getOrElse(throw InsufficientEnrolments())
+
+        case Some(_) ~ _ ~ Some(_) =>
+          throw UnsupportedAffinityGroup("User has wrong affinity group")
 
         case _ =>
           throw new UnauthorizedException("Unable to retrieve internal Id")

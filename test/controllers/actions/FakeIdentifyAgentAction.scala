@@ -16,26 +16,26 @@
 
 package controllers.actions
 
+import javax.inject.Inject
+
 import scala.concurrent.{ExecutionContext, Future}
 
-import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import play.api.mvc._
+import uk.gov.hmrc.auth.core.AffinityGroup
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+import models.requests.IdentifierRequest
 
-  override protected def transform[A](
-    request: IdentifierRequest[A]
-  ): Future[OptionalDataRequest[A]] =
-    Future(
-      OptionalDataRequest(
-        request.request,
-        request.userId,
-        request.eoriNumber,
-        request.affinityGroup,
-        dataToReturn
-      )
-    )
+class FakeIdentifyAgentAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifyAgentAction {
 
-  override protected implicit val executionContext: ExecutionContext =
+  override def invokeBlock[A](
+    request: Request[A],
+    block: IdentifierRequest[A] => Future[Result]
+  ): Future[Result] =
+    block(IdentifierRequest(request, "id", "eoriNumber", AffinityGroup.Agent))
+
+  override def parser: BodyParser[AnyContent] =
+    bodyParsers.default
+
+  override protected def executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 }

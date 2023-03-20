@@ -30,9 +30,6 @@ trait Generators
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny
 
-//  def generateEmailString(): Gen[String] =
-//    arbitrary[String] suchThat
-
   def genIntersperseString(
     gen: Gen[String],
     value: String,

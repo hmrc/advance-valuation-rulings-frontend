@@ -17,6 +17,7 @@
 package navigation
 
 import play.api.libs.json.Writes
+import uk.gov.hmrc.auth.core.AffinityGroup._
 
 import base.SpecBase
 import controllers.routes
@@ -43,6 +44,25 @@ class NavigatorSpec extends SpecBase {
         NormalMode,
         EmptyUserAnswers
       ) mustBe routes.IndexController.onPageLoad
+    }
+
+    "Account Home" - {
+      "should navigate to RequiredInformation page when Individual" in {
+        navigator.startApplicationRouting(Individual) mustBe routes.RequiredInformationController
+          .onPageLoad()
+
+      }
+      "should navigate to WhatIsYourRole page when Agent" in {
+        navigator.startApplicationRouting(Agent) mustBe routes.WhatIsYourRoleAsImporterController
+          .onPageLoad()
+
+      }
+      "should navigate to WhatIsYourRole page when Org" in {
+        navigator.startApplicationRouting(
+          Organisation
+        ) mustBe routes.WhatIsYourRoleAsImporterController
+          .onPageLoad()
+      }
     }
 
     "in Normal mode" - {

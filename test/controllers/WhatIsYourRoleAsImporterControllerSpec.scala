@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{NormalMode, UserAnswers, WhatIsYourRoleAsImporter}
+import models.{UserAnswers, WhatIsYourRoleAsImporter}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -39,7 +39,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val whatIsYourRoleAsImporterRoute =
-    routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode).url
+    routes.WhatIsYourRoleAsImporterController.onPageLoad().url
 
   val formProvider = new WhatIsYourRoleAsImporterFormProvider()
   val form         = formProvider()
@@ -48,7 +48,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
@@ -58,7 +58,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form)(
           request,
           messages(application)
         ).toString
@@ -72,7 +72,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .success
         .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
@@ -83,8 +83,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(WhatIsYourRoleAsImporter.values.head),
-          NormalMode
+          form.fill(WhatIsYourRoleAsImporter.values.head)
         )(request, messages(application)).toString
       }
     }
@@ -96,7 +95,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -117,7 +116,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =
@@ -131,24 +130,10 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm)(
           request,
           messages(application)
         ).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

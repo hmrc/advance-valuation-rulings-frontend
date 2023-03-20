@@ -21,6 +21,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc._
 import play.api.mvc.Results._
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -33,16 +34,16 @@ import controllers.actions.IdentifyEori.EnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
 
-trait IdentifierAction
+trait IdentifyAgentAction
     extends ActionBuilder[IdentifierRequest, AnyContent]
     with ActionFunction[Request, IdentifierRequest]
 
-class AuthenticatedIdentifierAction @Inject() (
+class IdentifyAgent @Inject() (
   override val authConnector: AuthConnector,
   config: FrontendAppConfig,
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction
+    extends IdentifyAgentAction
     with AuthorisedFunctions {
 
   def redirectToEoriComponent: Result =
@@ -63,6 +64,9 @@ class AuthenticatedIdentifierAction @Inject() (
       .retrieve(
         Retrievals.internalId and Retrievals.authorisedEnrolments and Retrievals.affinityGroup
       ) {
+        case Some(_) ~ _ ~ Some(Individual) =>
+          throw UnsupportedAffinityGroup("User has wrong affinity group")
+
         case Some(internalId) ~ allEnrolments ~ Some(affinityGroup) =>
           IdentifyEori
             .getEoriNumber(allEnrolments)

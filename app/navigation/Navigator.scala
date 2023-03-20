@@ -19,6 +19,8 @@ package navigation
 import javax.inject.Inject
 
 import play.api.mvc.Call
+import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
 import controllers.fileupload.routes.UploadSupportingDocumentsController
 import controllers.routes._
@@ -386,4 +388,11 @@ class Navigator @Inject() () {
     case CheckMode  =>
       CheckModeNavigator.nextPage(page)(userAnswers)
   }
+
+  def startApplicationRouting(affinityGroup: AffinityGroup): Call =
+    affinityGroup match {
+      case Individual => RequiredInformationController.onPageLoad()
+      case _          =>
+        WhatIsYourRoleAsImporterController.onPageLoad()
+    }
 }
