@@ -15,21 +15,65 @@
  *@
 
 @import components._
+@import models.ApplicationsAndRulingsResponse
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         formHelper: FormWithCSRF,
-        para: Paragraph
+        para: Paragraph,
+        table: GovukTable
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(applications: Option[ApplicationsAndRulingsResponse] = None)(implicit request: Request[_], messages: Messages)
+<!--one application for now, will eventually take a Option[Seq[ApplicationsAndRulingsResponse]] perhaps-->
+
+@appsTable = @{
+
+<!--one application for now then find a way to loop row creation. -->
+ table(
+        Table(
+            rows = Seq(
+                Seq(
+                    TableRow(content = Text(applications.get.ref),format = Some("text")),
+                    TableRow(content =  Text(applications.get.nameOfGoods),format = Some("text")),
+                    TableRow(content =  Text(applications.get.dateSubmitted),format = Some("text")),
+                    TableRow(content =  Text(applications.get.status),format = Some("text")),
+                    TableRow(content =  Text(applications.get.application), format = Some("text"))
+                )
+            ),
+            head = Some(
+                Seq(
+                    HeadCell(
+                        content = Text(messages("Reference"))
+                    ),
+                    HeadCell(
+                        content = Text(messages("Name of goods"))
+                    ),
+                    HeadCell(
+                        content = Text(messages("Date submitted"))
+                    ),
+                    HeadCell(
+                        content = Text(messages("Status"))
+                    ),
+                    HeadCell(
+                        content = Text("")
+                    )
+                )
+           ),
+           firstCellIsHeader = false,
+           classes = "govuk-!-margin-bottom-9"
+        )
+    )
+
+}
 
 @layout(pageTitle = titleNoForm(messages("accountHome.title"))) {
 
     <h1 class="govuk-heading-xl">@messages("accountHome.heading")</h1>
 
-    @para(Html(messages("accountHome.para")))
+    @{if(applications.isEmpty) para(Html(messages("accountHome.para"))) else appsTable }
 
     @formHelper(action = routes.RequiredInformationController.onPageLoad()) {
         @govukButton(

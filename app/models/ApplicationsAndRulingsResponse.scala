@@ -16,18 +16,19 @@
 
 package models
 
-import java.time.Instant
+import java.time.LocalDate
 
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
+import play.api.libs.json.{Json, OFormat}
 
-final case class ValuationRulingsApplication(
-  applicationNumber: String,
-  data: requests.ApplicationRequest,
-  lastUpdated: Instant
+final case class ApplicationsAndRulingsResponse(
+  ref: String,
+  nameOfGoods: String,
+  dateSubmitted: LocalDate,
+  status: String,
+  application: Option[ValuationRulingsApplication] = None
 )
 
-object ValuationRulingsApplication {
-  implicit val format: OFormat[ValuationRulingsApplication] =
-    Json.format[ValuationRulingsApplication]
+object ApplicationsAndRulingsResponse {
+  implicit val format: OFormat[ApplicationsAndRulingsResponse] =
+    Json.format[ApplicationsAndRulingsResponse]
 }

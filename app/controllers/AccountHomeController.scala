@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.time.LocalDate
 import javax.inject.Inject
 
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -23,6 +24,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import models.ApplicationsAndRulingsResponse
 import views.html.AccountHomeView
 
 class AccountHomeController @Inject() (
@@ -34,5 +36,17 @@ class AccountHomeController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData)(implicit request => Ok(view()))
+  val applicationsAndRulings: Option[ApplicationsAndRulingsResponse] = Some(
+    ApplicationsAndRulingsResponse(
+      ref = "s0m3R3f",
+      nameOfGoods = "daGoods",
+      dateSubmitted = LocalDate.now(),
+      status = "sumbitted"
+    )
+  )
+
+  val x                              = applicationsAndRulings.get.ref
+  def onPageLoad: Action[AnyContent] =
+    (identify andThen getData)(implicit request => Ok(view(applicationsAndRulings)))
+
 }
