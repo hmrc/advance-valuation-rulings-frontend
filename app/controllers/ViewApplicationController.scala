@@ -18,8 +18,6 @@ package controllers
 
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalUnit
-import java.util.Locale
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext

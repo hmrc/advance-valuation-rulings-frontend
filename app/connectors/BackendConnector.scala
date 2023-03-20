@@ -109,17 +109,17 @@ class BackendConnector @Inject() (
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Either[BackendError, ValuationRulingsApplication]] = applicationId match {
-    case "504571387" =>
+    case "TEST" =>
       Future.successful(
         Right(
           ValuationRulingsApplication(
-            "504571387",
+            "TEST",
             BackendConnector.applicationRequest,
             Instant.parse("2020-01-01T00:00:00Z")
           )
         )
       )
-    case _           =>
+    case _      =>
       httpClient
         .GET[ValuationRulingsApplication](
           s"$backendUrl/application/$applicationId",
@@ -145,31 +145,31 @@ class BackendConnector @Inject() (
 object BackendConnector {
   val applicant = IndividualApplicant(
     holder = EORIDetails(
-      eori = "GB1234567890",
+      eori = "eori",
       businessName = "businessName",
       addressLine1 = "addressLine1",
-      addressLine2 = "",
-      addressLine3 = "",
-      postcode = "AA1 1AA",
-      country = "GB"
+      addressLine2 = "addressLine2",
+      addressLine3 = "addressLine3",
+      postcode = "postcode",
+      country = "country"
     ),
     contact = ContactDetails(
-      name = "John Doe",
-      email = "john@doe.com",
-      phone = Some("01234567890")
+      name = "name",
+      email = "email@email.email",
+      phone = None
     )
   )
 
   val requestedMethod = MethodThree(
     whyNotOtherMethods = "whyNotOtherMethods",
-    detailedDescription = PreviousSimilarGoods("detailed description of similar goods")
+    detailedDescription = PreviousSimilarGoods("detailed description")
   )
 
   val goodsDetails = GoodsDetails(
-    goodDescription = "Some description",
-    envisagedCommodityCode = Some("1234567890"),
-    knownLegalProceedings = Some("Some legal proceedings"),
-    confidentialInformation = Some("Some confidential information")
+    goodDescription = "goodDescription",
+    envisagedCommodityCode = Some("envisagedCommodityCode"),
+    knownLegalProceedings = Some("knownLegalProceedings"),
+    confidentialInformation = Some("confidentialInformation")
   )
 
   val applicationRequest = ApplicationRequest(

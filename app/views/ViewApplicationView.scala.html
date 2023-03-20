@@ -53,7 +53,8 @@ s"${appConfig.host}${routes.Assets.versioned(path)}"
 
     <div class="print-this print-save-application hidden-print" style="display: inline-block;">
         <span class="govuk-body hidden-print">
-            <img class="print-this__icon" src="@createLink(" images/icon-print.svg")" alt="Print Icon" aria-hidden="true">
+            <img class="print-this__icon" src="@createLink("images/icon-print.svg")" alt="Print Icon" aria-hidden="true">
+
             <a class="print-this__link" href="javascript:window.print()"
                 data-journey-click="print - click:Your application:Print your application">@messages("site.printApplication")</a>
         </span>

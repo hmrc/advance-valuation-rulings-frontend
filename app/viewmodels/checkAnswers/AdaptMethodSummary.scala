@@ -24,7 +24,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import controllers.routes
 import models.{CheckMode, UserAnswers}
 import models.AdaptMethod
-import models.requests._
 import pages.AdaptMethodPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
