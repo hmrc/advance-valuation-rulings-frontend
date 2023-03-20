@@ -4,15 +4,17 @@ import play.api.http.Status
 import play.api.libs.json.Json
 
 import com.github.tomakehurst.wiremock.http.RequestMethod._
-import generators.{TraderDetailsGenerator, UserAnswersGenerator}
-import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import generators.{TraderDetailsGenerator, UserAnswersGenerator, ValuationRulingApplicationGenerator}
+import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers, ValuationRulingsApplication}
+import models.requests.ApplicationRequest
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
 class BackendConnectorSpec
     extends BaseIntegrationSpec
     with WireMockHelper
+    with UserAnswersGenerator
     with TraderDetailsGenerator
-    with UserAnswersGenerator {
+    with ValuationRulingApplicationGenerator {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -122,6 +124,50 @@ class BackendConnectorSpec
           val result = connector.submitAnswers(userAnswers).futureValue.value
 
           result.status mustBe Status.OK
+      }
+    }
+  }
+
+  ".submitApplication" - {
+    "should submit application to backend" in {
+      forAll {
+        applicationRequest: ApplicationRequest =>
+          val requestBody = Json.stringify(Json.toJson(applicationRequest))
+
+          stub(
+            POST,
+            applicationEndpoint,
+            Status.OK,
+            responseBody = "some response",
+            requestBody = Option(requestBody)
+          )
+
+          val result = connector.submitApplication(applicationRequest).futureValue.value
+
+          result.status mustBe Status.OK
+      }
+    }
+  }
+
+  ".application" - {
+    "should get application from backend" in {
+      forAll {
+        (
+          application: ValuationRulingsApplication,
+        ) =>
+          val expectedResponse = Json.stringify(Json.toJson(application))
+
+          stub(
+            GET,
+            getApplicationRequestUrl(application.applicationNumber),
+            Status.OK,
+            expectedResponse
+          )
+
+          val response =
+            connector.getApplication(application.applicationNumber).futureValue.value
+
+          response mustBe application
       }
     }
   }

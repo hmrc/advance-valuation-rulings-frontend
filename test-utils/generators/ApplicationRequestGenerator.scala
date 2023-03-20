@@ -22,7 +22,7 @@ import org.scalacheck._
 import wolfendale.scalacheck.regexp.RegexpGen
 
 trait ApplicationRequestGenerator extends Generators {
-  implicit lazy val arbitraryEoriNumberGen: Arbitrary[EoriNumber] = Arbitrary(
+  private implicit lazy val arbitraryEoriNumberGen: Arbitrary[EoriNumber] = Arbitrary(
     RegexpGen.from("^[A-Z]{2}[0-9A-Z]{12}$").map(EoriNumber)
   )
 

@@ -16,6 +16,7 @@
 
 package connectors
 
+import java.time.Instant
 import java.util.UUID
 
 import cats.implicits._
@@ -28,7 +29,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvi
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.{AcknowledgementReference, BackendError, EoriNumber, TraderDetailsWithCountryCode, UserAnswers, ValuationRulingsApplication}
+import models.requests._
 
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
@@ -79,6 +81,57 @@ class BackendConnector @Inject() (
           onError(e)
       }
 
+  def submitApplication(
+    applicationRequest: ApplicationRequest
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
+    httpClient
+      .POST[ApplicationRequest, HttpResponse](
+        s"$backendUrl/application",
+        body = applicationRequest,
+        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
+      )
+      .map {
+        response =>
+          if (Status.isSuccessful(response.status)) {
+            response.asRight
+          } else {
+            BackendError(response.status, response.body).asLeft
+          }
+      }
+      .recover {
+        case e: Throwable =>
+          onError(e)
+      }
+
+  def getApplication(
+    applicationId: String
+  )(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Either[BackendError, ValuationRulingsApplication]] = applicationId match {
+    case "504571387" =>
+      Future.successful(
+        Right(
+          ValuationRulingsApplication(
+            "504571387",
+            BackendConnector.applicationRequest,
+            Instant.parse("2020-01-01T00:00:00Z")
+          )
+        )
+      )
+    case _           =>
+      httpClient
+        .GET[ValuationRulingsApplication](
+          s"$backendUrl/application/$applicationId",
+          headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
+        )
+        .map(_.asRight)
+        .recover {
+          case e: Throwable =>
+            onError(e)
+        }
+  }
+
   private def onError(ex: Throwable): Left[BackendError, Nothing] = {
     val (code, message) = ex match {
       case e: HttpException         => (e.responseCode, e.getMessage)
@@ -87,4 +140,42 @@ class BackendConnector @Inject() (
     }
     Left(BackendError(code, message))
   }
+}
+
+object BackendConnector {
+  val applicant = IndividualApplicant(
+    holder = EORIDetails(
+      eori = "GB1234567890",
+      businessName = "businessName",
+      addressLine1 = "addressLine1",
+      addressLine2 = "",
+      addressLine3 = "",
+      postcode = "AA1 1AA",
+      country = "GB"
+    ),
+    contact = ContactDetails(
+      name = "John Doe",
+      email = "john@doe.com",
+      phone = Some("01234567890")
+    )
+  )
+
+  val requestedMethod = MethodThree(
+    whyNotOtherMethods = "whyNotOtherMethods",
+    detailedDescription = PreviousSimilarGoods("detailed description of similar goods")
+  )
+
+  val goodsDetails = GoodsDetails(
+    goodDescription = "Some description",
+    envisagedCommodityCode = Some("1234567890"),
+    knownLegalProceedings = Some("Some legal proceedings"),
+    confidentialInformation = Some("Some confidential information")
+  )
+
+  val applicationRequest = ApplicationRequest(
+    applicant = applicant,
+    requestedMethod = requestedMethod,
+    goodsDetails = goodsDetails,
+    attachments = Seq.empty
+  )
 }

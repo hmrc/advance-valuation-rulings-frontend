@@ -38,6 +38,7 @@ trait BaseIntegrationSpec
 
   val traderDetailsEndpoint = "/advance-valuation-rulings/trader-details"
   val submitAnswersEndpoint = "/advance-valuation-rulings/submit-answers"
+  val applicationEndpoint   = "/advance-valuation-rulings/application"
 
   override def fakeApplication(): Application =
     GuiceApplicationBuilder()
@@ -58,4 +59,9 @@ trait BaseIntegrationSpec
   ): String =
     s"$traderDetailsEndpoint/${URLEncoder.encode(acknowledgementReference.value, StandardCharsets.UTF_8.displayName())}/${URLEncoder
         .encode(eoriNumber.value, StandardCharsets.UTF_8.displayName())}"
+
+  def getApplicationRequestUrl(
+    id: String
+  ): String =
+    s"$applicationEndpoint/${URLEncoder.encode(id, StandardCharsets.UTF_8.displayName())}"
 }
