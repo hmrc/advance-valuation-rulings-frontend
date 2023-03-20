@@ -157,10 +157,6 @@ POST       /conditions-circumstances                                      contro
 GET        /change-conditions-circumstances                                controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-conditions-circumstances                                controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = CheckMode)
 
-# upload file notification callback
-+ nocsrf
-POST       /upscan-callback                                               controllers.fileupload.UploadCallbackController.callback
-
 GET        /describe-identical-goods                                      controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
 POST       /describe-identical-goods                                      controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
 GET        /change-describe-identical-goods                                controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
