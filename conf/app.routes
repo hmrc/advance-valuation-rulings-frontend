@@ -94,8 +94,8 @@ GET        /change-supporting-document-uploaded/remove/:uploadId          contro
 GET        /change-supporting-document-uploaded                           controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-supporting-document-uploaded                           controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /upload-supporting-documents                                   controllers.fileupload.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = NormalMode)
-GET        /change-upload-supporting-documents                            controllers.fileupload.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = CheckMode)
+GET        /upload-supporting-documents                                   controllers.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = NormalMode)
+GET        /change-upload-supporting-documents                            controllers.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = CheckMode)
 
 GET        /explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = NormalMode)
 POST       /explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode)

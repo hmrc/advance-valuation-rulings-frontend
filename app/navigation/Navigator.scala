@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 import play.api.mvc.Call
 
-import controllers.fileupload.routes.UploadSupportingDocumentsController
 import controllers.routes._
+import controllers.routes.UploadSupportingDocumentsController
 import models._
 import models.ValuationMethod._
 import pages._

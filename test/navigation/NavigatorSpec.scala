@@ -434,7 +434,7 @@ class NavigatorSpec extends SpecBase {
             DoYouWantToUploadDocumentsPage,
             NormalMode,
             userAnswers
-          ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController
+          ) mustBe controllers.routes.UploadSupportingDocumentsController
             .onPageLoad(None, None, None, NormalMode)
         }
 
@@ -466,7 +466,7 @@ class NavigatorSpec extends SpecBase {
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController
+          ) mustBe controllers.routes.UploadSupportingDocumentsController
             .onPageLoad(None, None, None, NormalMode)
         }
 
