@@ -15,35 +15,45 @@
  */
 
 package viewmodels.checkAnswers
+import cats.implicits._
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
+import models.requests.ApplicationRequest
 import pages.HaveTheGoodsBeenSubjectToLegalChallengesPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object HaveTheGoodsBeenSubjectToLegalChallengesSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
-        val label = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
-        SummaryListRowViewModel(
-          key = label,
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(
-                messages("haveTheGoodsBeenSubjectToLegalChallenges.change.hidden")
-              )
-          )
+  private def makeRow(answer: Boolean)(implicit messages: Messages) = {
+    val value = if (answer) "site.yes" else "site.no"
+    val label = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
+    SummaryListRowViewModel(
+      key = label,
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(
+            messages("haveTheGoodsBeenSubjectToLegalChallenges.change.hidden")
+          )
+      )
+    )
+  }
+
+  def row(answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    answers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage).map(makeRow)
+
+  def row(request: ApplicationRequest)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    makeRow(request.goodsDetails.knownLegalProceedings.isDefined).some
 }

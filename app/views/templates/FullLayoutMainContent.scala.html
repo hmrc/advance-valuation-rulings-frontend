@@ -16,6 +16,6 @@
 
 @this()
 
-@(message: String, size: String = "xl")
+@(contentBlock: Html)
 
-<h1 class="govuk-heading-@size">@message</h1>
+@contentBlock

@@ -22,41 +22,35 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
+import models.requests.ApplicationRequest
 import pages.CommodityCodePage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object CommodityCodeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CommodityCodePage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "commodityCode.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.CommodityCodeController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("commodityCode.change.hidden"))
-          )
+  private def makeRow(answer: String)(implicit
+    messages: Messages
+  ) =
+    SummaryListRowViewModel(
+      key = "commodityCode.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(answer).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.CommodityCodeController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("commodityCode.change.hidden"))
+      )
+    )
 
-  def eoriNumberRow(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CommodityCodePage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "commodityCode.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.CommodityCodeController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("commodityCode.change.hidden"))
-          )
-        )
-    }
+  def row(answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    answers.get(CommodityCodePage).map(makeRow)
+
+  def row(request: ApplicationRequest)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    request.goodsDetails.envisagedCommodityCode.map(makeRow)
 }

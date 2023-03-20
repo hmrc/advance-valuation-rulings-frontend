@@ -28,19 +28,19 @@ import viewmodels.implicits._
 
 object DescribeTheRestrictionsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DescribeTheRestrictionsPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "describeTheRestrictions.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DescribeTheRestrictionsController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("describeTheRestrictions.change.hidden"))
-          )
+  def row(answer: String)(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "describeTheRestrictions.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(answer).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.DescribeTheRestrictionsController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("describeTheRestrictions.change.hidden"))
+      )
+    )
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(DescribeTheRestrictionsPage).map(row)
 }

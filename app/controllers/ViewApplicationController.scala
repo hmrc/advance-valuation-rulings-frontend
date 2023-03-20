@@ -16,13 +16,19 @@
 
 package controllers
 
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+
+import scala.concurrent.ExecutionContext
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.BackendConnector
 import controllers.actions._
+import models.ApplicationViewModel
 import views.html.ViewApplicationView
 
 class ViewApplicationController @Inject() (
@@ -30,12 +36,31 @@ class ViewApplicationController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
   view: ViewApplicationView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
+  import ViewApplicationController._
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request => Ok(view())
-  }
+  def onPageLoad(applicationId: String): Action[AnyContent] =
+    (identify).async {
+      implicit request =>
+        val result = backendConnector.getApplication(applicationId)
+
+        result.map {
+          case Right(application) =>
+            val viewModel   = ApplicationViewModel(application.data)
+            val lastUpdated = formatter.format(application.lastUpdated)
+            Ok(view(viewModel, applicationId, lastUpdated))
+          case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
+        }
+    }
+}
+
+object ViewApplicationController {
+  val formatter = DateTimeFormatter
+    .ofPattern("dd/MM/yyyy")
+    .withZone(ZoneId.systemDefault());
 }
