@@ -22,7 +22,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import models.requests._
 import pages.ExplainHowYouWillUseMethodSixPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
