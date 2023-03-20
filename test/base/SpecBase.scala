@@ -24,6 +24,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 
+import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
 import models.{ApplicationNumber, UserAnswers}
 import org.mockito.Mockito.when
@@ -71,7 +72,8 @@ trait SpecBase
         bind[IdentifyIndividualAction].to[FakeIdentifyIndividualAction],
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[ApplicationNumberRepository].to(mockApplicationNumberRepo)
+        bind[ApplicationNumberRepository].to(mockApplicationNumberRepo),
+        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
   protected def applicationBuilderAsAgent(
     userAnswers: Option[UserAnswers] = None
@@ -83,6 +85,7 @@ trait SpecBase
         bind[IdentifyAgentAction].to[FakeIdentifyAgentAction],
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[ApplicationNumberRepository].to(mockApplicationNumberRepo)
+        bind[ApplicationNumberRepository].to(mockApplicationNumberRepo),
+        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
 }

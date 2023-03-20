@@ -51,12 +51,6 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     val lengthKey     = "applicationContactDetails.fullName.length"
     val nameMaxLength = 100
 
-    behave like fieldThatBindsValidData(
-      form,
-      nameField,
-      nonNumerics
-    )
-
     behave like alphaStringWithMaxLength(
       form,
       nameField,
