@@ -22,8 +22,8 @@ import play.api.mvc.Call
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
-import controllers.fileupload.routes.UploadSupportingDocumentsController
 import controllers.routes._
+import controllers.routes.UploadSupportingDocumentsController
 import models._
 import models.ValuationMethod._
 import pages._

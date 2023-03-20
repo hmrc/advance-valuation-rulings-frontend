@@ -881,7 +881,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               DoYouWantToUploadDocumentsPage,
               CheckMode,
               userAnswers
-            ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController.onPageLoad(
+            ) mustBe controllers.routes.UploadSupportingDocumentsController.onPageLoad(
               None,
               None,
               None,

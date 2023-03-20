@@ -63,10 +63,10 @@ class UpscanFileUploadService @Inject() (
     val nextUploadFileId = FileUploadIds.generateNewFileUploadId.nextUploadFileId
 
     val baseUrl            = appConfig.host
-    val redirectRoute      = controllers.fileupload.routes.UploadSupportingDocumentsController
+    val redirectRoute      = controllers.routes.UploadSupportingDocumentsController
       .onPageLoad(None, None, Some(nextUploadFileId), mode)
       .url
-    val errorRedirectRoute = controllers.fileupload.routes.UploadSupportingDocumentsController
+    val errorRedirectRoute = controllers.routes.UploadSupportingDocumentsController
       .onPageLoad(None, None, None, mode)
       .url
 
@@ -89,10 +89,10 @@ class UpscanFileUploadService @Inject() (
     val nextUploadFileId  = fileUploadIds.nextUploadFileId
 
     val baseUrl            = appConfig.host
-    val redirectRoute      = controllers.fileupload.routes.UploadSupportingDocumentsController
+    val redirectRoute      = controllers.routes.UploadSupportingDocumentsController
       .onPageLoad(None, None, Some(nextUploadFileId), mode)
       .url
-    val errorRedirectRoute = controllers.fileupload.routes.UploadSupportingDocumentsController
+    val errorRedirectRoute = controllers.routes.UploadSupportingDocumentsController
       .onPageLoad(None, None, None, mode)
       .url
 
