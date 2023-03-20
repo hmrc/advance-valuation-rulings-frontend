@@ -185,7 +185,14 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, requiredInformationRoute)
-            .withFormUrlEncodedBody(("value[0]", RequiredInformation.values.head.toString))
+            .withFormUrlEncodedBody(
+              "value[0]" -> RequiredInformation.Option1.toString,
+              "value[1]" -> RequiredInformation.Option2.toString,
+              "value[2]" -> RequiredInformation.Option3.toString,
+              "value[3]" -> RequiredInformation.Option4.toString,
+              "value[4]" -> RequiredInformation.Option5.toString,
+              "value[5]" -> RequiredInformation.Option6.toString
+            )
 
         val result = route(application, request).value
 
