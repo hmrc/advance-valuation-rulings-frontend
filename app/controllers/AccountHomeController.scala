@@ -17,6 +17,7 @@
 package controllers
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -35,6 +36,10 @@ class AccountHomeController @Inject() (
   view: AccountHomeView
 ) extends FrontendBaseController
     with I18nSupport {
+
+//  val dateFormatter = DateTimeFormatter
+//    .ofPattern("d MMMM yyyy")
+//    .format(dateFormatter)
 
   val applicationsAndRulings: Option[ApplicationsAndRulingsResponse] = Some(
     ApplicationsAndRulingsResponse(
