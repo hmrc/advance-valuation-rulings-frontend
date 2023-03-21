@@ -50,7 +50,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] =
+  def onPageLoad: Action[AnyContent] =
     (identify andThen isAgent andThen getData andThen generateApplicationNumber) {
       implicit request =>
         val preparedForm = request.userAnswers
@@ -63,7 +63,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
         Ok(view(preparedForm))
     }
 
-  def onSubmit(): Action[AnyContent] =
+  def onSubmit: Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         form

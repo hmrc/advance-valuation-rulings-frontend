@@ -45,6 +45,7 @@ class Navigator @Inject() () {
     case ConfidentialInformationPage                   => confidentialInformationPage
     case ImportGoodsPage                               => importGoodsPage
     case RequiredInformationPage                       => requiredInformationPage
+    case WhatIsYourRoleAsImporterPage                  => whatIsYourRoleAsImporterPage
     case CheckRegisteredDetailsPage                    => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                 => applicationContactDetailsPage
     case DoYouWantToUploadDocumentsPage                => doYouWantToUploadDocumentsPage
@@ -361,13 +362,17 @@ class Navigator @Inject() () {
       case Some(false) => ImportingGoodsController.onPageLoad()
     }
 
-  private def requiredInformationPage(userAnswers: UserAnswers): Call =
+  private def requiredInformationPage(userAnswers: UserAnswers): Call      =
     userAnswers.get(RequiredInformationPage) match {
       case None    => RequiredInformationController.onPageLoad()
       case Some(_) => ImportGoodsController.onPageLoad(NormalMode)
     }
-
-  private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call =
+  private def whatIsYourRoleAsImporterPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+      case None    => WhatIsYourRoleAsImporterController.onPageLoad()
+      case Some(_) => RequiredInformationController.onPageLoad()
+    }
+  private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call   =
     userAnswers.get(CheckRegisteredDetailsPage) match {
       case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode)
       case Some(registeredDetails) =>
