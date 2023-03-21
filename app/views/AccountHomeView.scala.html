@@ -32,9 +32,11 @@
 
 @dateFormatter = @{DateTimeFormatter.ofPattern("d MMM yyyy")}
 @appsTable = @{
+<!--application row to be a link making a call to view the application?-->
+
 
 <!--one application for now then find a way to loop row creation. -->
- table(
+    table(
         Table(
             rows = Seq(
                 Seq(
@@ -43,7 +45,6 @@
                     TableRow(content =  Text(applications.get.dateSubmitted.format(dateFormatter)),format = Some("text")),
                     TableRow(content =  Text(applications.get.status),format = Some("text")),
                     TableRow(content =  Text(applications.get.application.toString), format = Some("text"))
-<!--application row to be a link making a call to view the application?-->
                 )
             ),
             head = Some(
