@@ -14,12 +14,18 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    caption: Caption,
+    heading: Heading,
+    para: Paragraph,
+    details: DetailsDrop
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
@@ -32,10 +38,17 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @caption(messages("caption.applicant"))
+        @heading(messages("whatIsYourRoleAsImporter.heading"))
+        @details(   label = messages("whatIsYourRoleAsImporter.details.label"),
+                    content = Html(messages("whatIsYourRoleAsImporter.para.2"))
+        )
+        @para(Html(messages("whatIsYourRoleAsImporter.para.1")))
+
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("whatIsYourRoleAsImporter.heading")).asPageHeading(),
+                legend = Legend(),
                 items  = WhatIsYourRoleAsImporter.options
             )
         )

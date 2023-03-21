@@ -17,6 +17,7 @@ site.printApplication = Print your application
 site.saveApplication = Save your application
 site.page = Page {0} of {1}
 
+
 site.1 = one
 site.2 = two
 site.3 = three
@@ -57,6 +58,7 @@ index.heading = advance-valuation-ruling-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
 caption.prefix = This section is
+caption.applicant = About the applicant
 
 checkYourAnswers.title = Check your answers before sending your application
 checkYourAnswers.heading = Check your answers before sending your application
@@ -620,6 +622,11 @@ whatIsYourRoleAsImporter.title = How would you describe your role as an importer
 whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.employeeOfOrg = An employee of the organisation
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Agent acting on behalf of an organisation
+whatIsYourRoleAsImporter.details.label = Agents acting on behalf of traders
+whatIsYourRoleAsImporter.para.1 = Choose the option that best describes your role:
+whatIsYourRoleAsImporter.para.2 = We are currently developing this route through the Advance Valuation Ruling process and it will be made available soon.
+whatIsYourRoleAsImporter.employeeOfOrg.hint = Imports goods into the UK on behalf of their organisation.
+whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Imports goods into the UK on behalf of an organisation.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.error.required = Select your role
 whatIsYourRoleAsImporter.change.hidden = WhatIsYourRoleAsImporter

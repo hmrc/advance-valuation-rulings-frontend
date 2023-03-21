@@ -17,7 +17,10 @@
 package models
 
 import play.api.i18n.Messages
+import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait WhatIsYourRoleAsImporter
@@ -37,9 +40,13 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, index) =>
       RadioItem(
-        content = Text(messages(s"whatIsYourRoleAsImporter.${value.toString}")),
+        content = HtmlContent(
+          Html(s"<b>${messages(s"whatIsYourRoleAsImporter.${value.toString}")}</b>")
+        ),
         value = Some(value.toString),
-        id = Some(s"value_$index")
+        id = Some(s"value_$index"),
+        hint =
+          Some(Hint(content = Text(messages(s"whatIsYourRoleAsImporter.${value.toString}.hint"))))
       )
   }
 
