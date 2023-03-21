@@ -173,6 +173,7 @@ object BackendConnector {
   )
 
   val applicationRequest = ApplicationRequest(
+    applicationNumber = ApplicationNumber("GBAVR", 1).render,
     applicant = applicant,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,

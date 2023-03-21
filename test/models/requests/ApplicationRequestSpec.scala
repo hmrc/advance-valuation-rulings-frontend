@@ -19,6 +19,7 @@ package models.requests
 import play.api.libs.json.{Json, JsSuccess}
 
 import generators._
+import models.ApplicationNumber
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -35,6 +36,7 @@ class ApplicationRequestSpec
     "be able to deserialize successful body" in {
       ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
         ApplicationRequest(
+          applicationNumber = applicationNumber,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails,
@@ -46,6 +48,7 @@ class ApplicationRequestSpec
     "should be able to write body" in {
       ApplicationRequest.format.writes(
         ApplicationRequest(
+          applicationNumber = applicationNumber,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
@@ -67,6 +70,8 @@ class ApplicationRequestSpec
 
 object ApplicationRequestSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
+
+  val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
   val applicant = IndividualApplicant(
     holder = EORIDetails(
@@ -99,6 +104,7 @@ object ApplicationRequestSpec extends Generators {
 
   val body =
     s"""{
+    |"applicationNumber": "$applicationNumber",
     |"applicant": {
     |  "holder": {
     |    "eori": "$randomString",
