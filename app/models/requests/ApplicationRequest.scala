@@ -192,6 +192,7 @@ object MethodSix {
 }
 
 case class ApplicationRequest(
+  applicationNumber: String,
   applicant: Applicant,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
