@@ -67,7 +67,7 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId)
+      val userAnswers = UserAnswers(userAnswersId, applicationNumber)
         .set(WhyTransactionValueOfSimilarGoodsPage, "answer")
         .success
         .value

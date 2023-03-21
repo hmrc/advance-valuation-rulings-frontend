@@ -68,7 +68,10 @@ class WillYouCompareToSimilarGoodsControllerSpec extends SpecBase with MockitoSu
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(WillYouCompareToSimilarGoodsPage, true).success.value
+        UserAnswers(userAnswersId, applicationNumber)
+          .set(WillYouCompareToSimilarGoodsPage, true)
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

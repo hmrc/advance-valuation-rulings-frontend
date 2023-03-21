@@ -47,7 +47,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
   val fileDetails: UpscanFileDetails   = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
   val userAnswers =
-    UserAnswers(userAnswersId)
+    UserAnswers(userAnswersId, applicationNumber)
       .set(UploadSupportingDocumentPage, UploadedFiles.initialise(fileDetails))
       .success
       .value

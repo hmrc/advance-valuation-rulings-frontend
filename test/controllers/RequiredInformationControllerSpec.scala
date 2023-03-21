@@ -68,7 +68,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId)
+      val userAnswers = UserAnswers(userAnswersId, applicationNumber)
         .set(RequiredInformationPage, RequiredInformation.values.toSet)
         .success
         .value

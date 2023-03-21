@@ -49,7 +49,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
     "must return OK and the correct view for a GET" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId)
+        UserAnswers(userAnswersId, applicationNumber)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -71,7 +71,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId)
+        UserAnswers(userAnswersId, applicationNumber)
           .set(HasConfidentialInformationPage, true)
           .success
           .value

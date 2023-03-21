@@ -71,11 +71,11 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      val userAnswers      = UserAnswers(userAnswersId)
+      val userAnswers      = UserAnswers(userAnswersId, applicationNumber)
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
-      val answersAfterPost = UserAnswers(userAnswersId)
+      val answersAfterPost = UserAnswers(userAnswersId, applicationNumber)
         .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
         .success
         .value
@@ -109,7 +109,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when 'no' is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = UserAnswers(userAnswersId)
+      val userAnswers           = UserAnswers(userAnswersId, applicationNumber)
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
