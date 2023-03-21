@@ -15,26 +15,32 @@
  */
 
 package config
-
 import java.time.{Clock, ZoneOffset}
 
-import com.google.inject.AbstractModule
+import play.api.{Configuration, Environment}
+import play.api.inject.{bind => binding}
+import play.api.inject.Binding
+
 import controllers.actions._
 import services.fileupload.{FileUploadService, UpscanFileUploadService}
 
-class Module extends AbstractModule {
+class Module extends play.api.inject.Module {
 
-  override def configure(): Unit = {
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
+    val authTokenInitialiserBindings: Seq[Binding[_]] =
+      if (configuration.get[Boolean]("create-internal-auth-token-on-start")) {
+        Seq(binding[InternalAuthTokenInitialiser].to[InternalAuthTokenInitialiserImpl].eagerly())
+      } else
+        Seq(binding[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
 
-    bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
-    bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
-
-    // For session based storage instead of cred based, change to SessionIdentifierAction
-    bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
-    bind(classOf[IdentifyIndividualAction]).to(classOf[IdentifyIndividual]).asEagerSingleton()
-    bind(classOf[IdentifyAgentAction]).to(classOf[IdentifyAgent]).asEagerSingleton()
-
-    bind(classOf[FileUploadService]).to(classOf[UpscanFileUploadService]).asEagerSingleton()
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
+    Seq(
+      binding[DataRetrievalAction].to[DataRetrievalActionImpl].eagerly(),
+      binding[DataRequiredAction].to[DataRequiredActionImpl].eagerly(),
+      binding[Clock].to(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)),
+      binding[IdentifierAction].to[AuthenticatedIdentifierAction].eagerly(),
+      binding[IdentifyIndividualAction].to[IdentifyIndividual].eagerly(),
+      binding[IdentifyAgentAction].to[IdentifyAgent].eagerly(),
+      binding[FileUploadService].to[UpscanFileUploadService].eagerly()
+    ) ++ authTokenInitialiserBindings
   }
 }
