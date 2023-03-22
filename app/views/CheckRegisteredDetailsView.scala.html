@@ -48,8 +48,10 @@
         @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
         @subheading(messages("checkRegisteredDetails.subheading.1"))
 
-        @paragraph(content=Html("<strong>" + messages("checkRegisteredDetails.paragraph.2") + "</strong>"))
-        @paragraph(content=Html(registeredDetails.name))
+        @if(registeredDetails.name.trim != "") {
+            @paragraph(content=Html("<strong>" + messages("checkRegisteredDetails.paragraph.2") + "</strong>"))
+            @paragraph(content=Html(registeredDetails.name))
+        }
 
         @paragraph(content=Html("<strong>" + messages("checkRegisteredDetails.paragraph.3") + "</strong>"))
         @paragraph(content=Html(
