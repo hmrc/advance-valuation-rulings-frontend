@@ -37,6 +37,7 @@ class BusinessContactDetailsController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
+  isAgent: IdentifyAgent,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   formProvider: BusinessContactDetailsFormProvider,
@@ -48,7 +49,7 @@ class BusinessContactDetailsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen isAgent andThen getData andThen requireData) {
     implicit request =>
       val preparedForm = request.userAnswers.get(BusinessContactDetailsPage) match {
         case None        => form
@@ -59,7 +60,7 @@ class BusinessContactDetailsController @Inject() (
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen isAgent andThen getData andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()

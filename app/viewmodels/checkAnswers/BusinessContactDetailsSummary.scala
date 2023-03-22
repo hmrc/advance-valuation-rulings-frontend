@@ -21,26 +21,96 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{BusinessContactDetails, CheckMode, UserAnswers}
 import pages.BusinessContactDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object BusinessContactDetailsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(BusinessContactDetailsPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "businessContactDetails.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("businessContactDetails.change.hidden"))
-          )
+  private def nameRow(answer: BusinessContactDetails)(implicit messages: Messages
+  ): SummaryListRow =
+  SummaryListRowViewModel(
+    key = "checkYourAnswers.business.name.label",
+    value = ValueViewModel(HtmlFormat.escape(answer.name).toString),
+    actions = Seq(
+      ActionItemViewModel(
+        "site.change",
+        routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+      )
+        .withVisuallyHiddenText(messages("businessContactDetails.name.change.hidden"))
+    )
+  )
+
+  private def emailRow(answer: BusinessContactDetails)(implicit messages: Messages
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswers.business.email.label",
+      value = ValueViewModel(HtmlFormat.escape(answer.email).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("businessContactDetails.email.change.hidden"))
+      )
+    )
+
+  private def contactNumberRow(answer: BusinessContactDetails)(implicit messages: Messages
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswers.business.phone.label",
+      value = ValueViewModel(HtmlFormat.escape(answer.phone).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+        )
+          .withVisuallyHiddenText(messages("businessContactDetails.phone.change.hidden"))
+      )
+    )
+
+  private def companyNameRow(answer: BusinessContactDetails)(implicit messages: Messages
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswers.business.companyName.label",
+      value = ValueViewModel(HtmlFormat.escape(answer.company).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+        )
+          .withVisuallyHiddenText(messages("businessContactDetails.companyName.change.hidden"))
+      )
+    )
+
+  def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+    for {
+      contactDetails <- userAnswer.get(BusinessContactDetailsPage)
+      name            = nameRow(contactDetails)
+      email           = emailRow(contactDetails)
+      contactNumber   = contactNumberRow(contactDetails)
+      companyName     = companyNameRow(contactDetails)
+      result          = Seq(name, email, contactNumber, companyName)
+    } yield result
+
+  def rows(
+            request: ApplicationRequest
+          )(implicit messages: Messages): Seq[SummaryListRow] = {
+    val details = Applicant.contactDetails(request.applicant)
+
+    val contactDetails = BusinessContactDetails(
+      name = details.name,
+      email = details.email,
+      phone = details.phone.getOrElse(""),
+      company = details.companyName
+    )
+
+    Seq(
+      nameRow(contactDetails),
+      emailRow(contactDetails),
+      contactNumberRow(contactDetails),
+      companyNameRow(contactDetails)
+    )
+  }
 }
