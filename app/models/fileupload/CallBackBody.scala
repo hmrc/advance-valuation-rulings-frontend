@@ -28,12 +28,6 @@ sealed trait CallbackBody {
   def reference: Reference
 }
 
-// case class CompletedCallbackBody(
-//   reference: Reference,
-//   location: String,
-//   uploadDetails: CallbackUploadDetails
-// ) extends CallbackBody
-
 case class ReadyCallbackBody(
   reference: Reference,
   downloadUrl: URL,

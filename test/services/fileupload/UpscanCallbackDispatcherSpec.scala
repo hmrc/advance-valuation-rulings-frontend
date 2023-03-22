@@ -58,7 +58,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
         UploadedSuccessfully(
           fileName,
           mimeType,
-          "/bucketName.s3.eu-west-2.amazonaws.com%3F123456",
+          objectLocation,
           Some(fileSize)
         )
       )
@@ -152,7 +152,7 @@ private trait Setup extends MockitoSugar {
   val lastUpdated = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
 
   val objectSummary = ObjectSummaryWithMd5(
-    location = Path.File(downloadUrl),
+    location = Path.File(objectLocation),
     contentLength = fileSize,
     contentMd5 = Md5Hash("contentMd5"),
     lastModified = lastUpdated
