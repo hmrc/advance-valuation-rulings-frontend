@@ -249,3 +249,8 @@ GET        /your-application-ruling/:id               controllers.ViewRulingCont
 
 
 GET        /cancel                                controllers.CancelApplicationController.onPageLoad()
+
+GET        /business-contact-details                        controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-business-contact-details                  controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-business-contact-details                  controllers.BusinessContactDetailsController.onSubmit(mode: Mode = CheckMode)
