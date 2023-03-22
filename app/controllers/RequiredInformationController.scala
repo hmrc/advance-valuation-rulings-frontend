@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.RequiredInformationFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.Navigator
 import pages.RequiredInformationPage
 import repositories.SessionRepository
@@ -39,7 +39,6 @@ class RequiredInformationController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  generateApplicationNumber: ApplicationNumberGenerationAction,
   formProvider: RequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: RequiredInformationView
@@ -50,13 +49,12 @@ class RequiredInformationController @Inject() (
   val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
-  def onPageLoad(): Action[AnyContent] =
-    (identify andThen getData andThen generateApplicationNumber) {
+  def onPageLoad: Action[AnyContent] =
+    (identify andThen getData andThen requireData) {
       implicit request =>
         logger.info("RequiredInformationController onPageLoad")
 
         val preparedForm = request.userAnswers
-          .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
           .get(RequiredInformationPage) match {
           case None        => form
           case Some(value) => form.fill(value)
@@ -66,7 +64,7 @@ class RequiredInformationController @Inject() (
     }
 
   def onSubmit(): Action[AnyContent] =
-    (identify andThen getData andThen generateApplicationNumber).async {
+    (identify andThen getData andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
@@ -76,9 +74,7 @@ class RequiredInformationController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(
-                    request.userAnswers
-                      .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
-                      .set(RequiredInformationPage, value)
+                    request.userAnswers.set(RequiredInformationPage, value)
                   )
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
