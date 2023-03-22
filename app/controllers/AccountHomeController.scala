@@ -48,13 +48,14 @@ class AccountHomeController @Inject() (
 
   def onPageLoad: Action[AnyContent]       = (identify andThen getData)(implicit request => Ok(view()))
   def startApplication: Action[AnyContent] =
-    (identify andThen getData andThen generateApplicationNumber) {
+    (identify andThen getData andThen generateApplicationNumber).async {
       implicit request =>
-        val ans = request.userAnswers.getOrElse(
-          UserAnswers(request.userId, request.applicationNumber.render)
-        )
-        Try(sessionRepository.set(ans))
-
-        Redirect(navigator.startApplicationRouting(request.affinityGroup))
+        for {
+          _ <- sessionRepository.set(
+                 request.userAnswers.getOrElse(
+                   UserAnswers(request.userId, request.applicationNumber.render)
+                 )
+               )
+        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
     }
 }
