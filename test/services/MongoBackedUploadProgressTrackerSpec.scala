@@ -43,7 +43,8 @@ class MongoBackedUploadProgressTrackerSpec
     "coordinate workflow" in {
       val reference      = Reference("reference")
       val id             = UploadId("upload-id")
-      val expectedStatus = UploadedSuccessfully("name", "mimeType", "downloadUrl", size = Some(123))
+      val expectedStatus =
+        UploadedSuccessfully("name", "mimeType", "downloadUrl", "checksum", size = Some(123))
 
       t.requestUpload(id, reference).futureValue
       t.registerUploadResult(reference, expectedStatus).futureValue

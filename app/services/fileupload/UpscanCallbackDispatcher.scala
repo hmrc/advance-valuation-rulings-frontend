@@ -60,6 +60,7 @@ class UpscanCallbackDispatcher @Inject() (
           callBack.uploadDetails.fileName,
           callBack.uploadDetails.fileMimeType,
           location,
+          callBack.uploadDetails.checksum,
           Some(callBack.uploadDetails.size)
         )
       case NotReady(f)               =>

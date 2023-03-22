@@ -39,7 +39,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
         downloadUrl = new URL(downloadUrl),
         uploadDetails = CallbackUploadDetails(
           uploadTimestamp = Instant.parse("2018-04-24T09:30:00Z"),
-          checksum = "396f101dd52e8b2ace0dcf5ed09b1d1f030e608938510ce46e7a5c7a4e775100",
+          checksum = checksum,
           fileMimeType = mimeType,
           fileName = fileName,
           size = fileSize
@@ -59,6 +59,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
           fileName,
           mimeType,
           objectLocation,
+          checksum,
           Some(fileSize)
         )
       )
@@ -142,6 +143,7 @@ private trait Setup extends MockitoSugar {
   val fileSize       = 12345L
   val downloadUrl    = s"https://bucketName.s3.eu-west-2.amazonaws.com$fileUrl"
   val objectLocation = s"directory/$fileName"
+  val checksum       = "396f101dd52e8b2ace0dcf5ed09b1d1f030e608938510ce46e7a5c7a4e775100"
 
   val progressTracker   = mock[UploadProgressTracker]
   import uk.gov.hmrc.objectstore.client._
