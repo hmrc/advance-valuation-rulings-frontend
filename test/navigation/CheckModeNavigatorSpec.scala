@@ -27,7 +27,7 @@ import queries.Modifiable
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers  = UserAnswers("id")
+  val EmptyUserAnswers: UserAnswers  = UserAnswers("id", applicationNumber)
   val navigator                      = new Navigator
   val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
   val uploadedFile: UploadedFile     = UploadedFile(
@@ -219,7 +219,10 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainHowPartiesAreRelatedPage,
               CheckMode,
-              UserAnswers("id").set(ExplainHowPartiesAreRelatedPage, "explain").success.value
+              UserAnswers("id", applicationNumber)
+                .set(ExplainHowPartiesAreRelatedPage, "explain")
+                .success
+                .value
             ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode)
           }
         }
@@ -881,7 +884,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               DoYouWantToUploadDocumentsPage,
               CheckMode,
               userAnswers
-            ) mustBe controllers.fileupload.routes.UploadSupportingDocumentsController.onPageLoad(
+            ) mustBe controllers.routes.UploadSupportingDocumentsController.onPageLoad(
               None,
               None,
               None,

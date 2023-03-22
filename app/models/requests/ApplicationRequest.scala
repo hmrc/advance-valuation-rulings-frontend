@@ -41,6 +41,16 @@ case class IndividualApplicant(
 object Applicant {
   import ApplicationRequest._
   implicit val roleFormat: OFormat[Applicant] = Json.configured(jsonConfig).format[Applicant]
+
+  def eoriHolder: Applicant => EORIDetails = (applicant: Applicant) =>
+    applicant match {
+      case IndividualApplicant(holder, _) => holder
+    }
+
+  def contactDetails: Applicant => ContactDetails = (applicant: Applicant) =>
+    applicant match {
+      case IndividualApplicant(_, contact) => contact
+    }
 }
 
 object IndividualApplicant {
@@ -182,6 +192,7 @@ object MethodSix {
 }
 
 case class ApplicationRequest(
+  applicationNumber: String,
   applicant: Applicant,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,

@@ -22,9 +22,11 @@ import javax.inject.Inject
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import navigation.Navigator
 import models.ApplicationsAndRulingsResponse
 import views.html.AccountHomeView
 
@@ -32,10 +34,17 @@ class AccountHomeController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Retrievals {
+
+  def startApplication: Action[AnyContent] =
+    (identify andThen getData) {
+      implicit request => Redirect(navigator.startApplicationRouting(request.affinityGroup))
+    }
 
 //  val dateFormatter = DateTimeFormatter
 //    .ofPattern("d MMMM yyyy")

@@ -27,21 +27,22 @@ import viewmodels.implicits._
 
 object WillYouCompareToSimilarGoodsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WillYouCompareToSimilarGoodsPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+  def row(answer: Boolean)(implicit messages: Messages): SummaryListRow = {
+    val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "willYouCompareToSimilarGoods.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.WillYouCompareToSimilarGoodsController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("willYouCompareToSimilarGoods.change.hidden"))
-          )
+    SummaryListRowViewModel(
+      key = "willYouCompareToSimilarGoods.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.WillYouCompareToSimilarGoodsController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("willYouCompareToSimilarGoods.change.hidden"))
+      )
+    )
+  }
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(WillYouCompareToSimilarGoodsPage).map(row)
 }

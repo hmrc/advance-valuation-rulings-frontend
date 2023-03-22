@@ -16,59 +16,73 @@
 
 package viewmodels.checkAnswers
 
+import cats.syntax.all._
+
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models._
+import models.requests.ApplicationRequest
 import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DoYouWantToUploadDocumentsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DoYouWantToUploadDocumentsPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+  private def makeRow(answer: Boolean)(implicit messages: Messages) = {
 
-        SummaryListRowViewModel(
-          key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
-          )
+    val value = if (answer) "site.yes" else "site.no"
+
+    SummaryListRowViewModel(
+      key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+      )
+    )
+  }
+
+  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    userAnswers
+      .get(DoYouWantToUploadDocumentsPage)
+      .map(makeRow)
+
+  def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
+    makeRow(request.attachments.nonEmpty).some
 }
 
 object UploadedDocumentsSummary {
 
+  private def makeRow(answer: Seq[String])(implicit messages: Messages) =
+    if (answer.isEmpty) {
+      None
+    } else {
+      Some(
+        SummaryListRowViewModel(
+          key = "uploadSupportingDocuments.checkYourAnswersLabel",
+          value = ValueViewModel(answer.mkString(", ")),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url
+            )
+              .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+          )
+        )
+      )
+    }
+
   def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     userAnswers
       .get(UploadSupportingDocumentPage)
-      .flatMap(
-        uploadedFiles =>
-          if (uploadedFiles.files.isEmpty) {
-            None
-          } else {
-            Some(
-              SummaryListRowViewModel(
-                key = "uploadSupportingDocuments.checkYourAnswersLabel",
-                value = ValueViewModel(uploadedFiles.files.map(_._2.fileName).mkString(", ")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    "site.change",
-                    routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url
-                  )
-                    .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
-                )
-              )
-            )
-          }
-      )
+      .map(_.files.map(_._2.fileName).toSeq)
+      .flatMap(makeRow)
+
+  def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
+    makeRow(request.attachments.map(_.name))
 }

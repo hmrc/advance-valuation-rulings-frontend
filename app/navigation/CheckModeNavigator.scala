@@ -18,8 +18,8 @@ package navigation
 
 import play.api.mvc.Call
 
-import controllers.fileupload.routes.UploadSupportingDocumentsController
 import controllers.routes._
+import controllers.routes.UploadSupportingDocumentsController
 import models._
 import models.CheckMode
 import models.ValuationMethod._
@@ -66,7 +66,7 @@ object CheckModeNavigator {
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode)
       case Some(true)  =>
-        controllers.fileupload.routes.UploadSupportingDocumentsController
+        controllers.routes.UploadSupportingDocumentsController
           .onPageLoad(None, None, None, CheckMode)
       case Some(false) => checkYourAnswers
     }

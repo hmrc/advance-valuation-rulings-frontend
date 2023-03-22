@@ -68,7 +68,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId)
+      val userAnswers = UserAnswers(userAnswersId, applicationNumber)
         .set(RequiredInformationPage, RequiredInformation.values.toSet)
         .success
         .value
@@ -178,20 +178,6 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" ignore {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, requiredInformationRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
     "must redirect to Journey Recovery for a POST if no existing data is found" ignore {
 
       val application = applicationBuilder(userAnswers = None).build()
@@ -199,7 +185,14 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, requiredInformationRoute)
-            .withFormUrlEncodedBody(("value[0]", RequiredInformation.values.head.toString))
+            .withFormUrlEncodedBody(
+              "value[0]" -> RequiredInformation.Option1.toString,
+              "value[1]" -> RequiredInformation.Option2.toString,
+              "value[2]" -> RequiredInformation.Option3.toString,
+              "value[3]" -> RequiredInformation.Option4.toString,
+              "value[4]" -> RequiredInformation.Option5.toString,
+              "value[5]" -> RequiredInformation.Option6.toString
+            )
 
         val result = route(application, request).value
 

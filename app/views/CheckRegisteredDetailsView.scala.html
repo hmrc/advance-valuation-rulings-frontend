@@ -24,6 +24,7 @@
     govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
+    headingH3: headingH3,
     warning: Warning,
     paragraph: Paragraph,
     subheading: Subheading,
@@ -43,18 +44,25 @@
 
 
         @caption(messages("checkRegisteredDetails.caption"))
-        @heading(messages("checkRegisteredDetails.heading", registeredDetails.eori))
+        @heading(messages("checkRegisteredDetails.heading.1", registeredDetails.eori))
         @warning(content=Html(messages("checkRegisteredDetails.warning")))
         @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
+        @subheading(messages("checkRegisteredDetails.subheading.1"))
+
+        @if(registeredDetails.name.trim != "") {
+            @headingH3(messages("checkRegisteredDetails.heading.2"), "s")
+            @paragraph(content=Html(registeredDetails.name))
+        }
+
+        @headingH3(messages("checkRegisteredDetails.heading.3"), "s")
         @paragraph(content=Html(
-            registeredDetails.name + "<br>" +
             registeredDetails.streetAndNumber + "<br>" +
             registeredDetails.city + "<br>" +
             registeredDetails.postalCode.map(_ + "<br>").getOrElse("") +
             registeredDetails.country
         ))
 
-        @subheading(messages("checkRegisteredDetails.subheading"))
+        @subheading(messages("checkRegisteredDetails.subheading.2"))
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),

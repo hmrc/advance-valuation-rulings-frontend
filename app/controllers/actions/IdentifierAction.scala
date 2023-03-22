@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import controllers.actions.IdentifierAction._
+import controllers.actions.IdentifyEori.EnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
 
@@ -60,11 +60,13 @@ class AuthenticatedIdentifierAction @Inject() (
       HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorise()
-      .retrieve(Retrievals.internalId and Retrievals.authorisedEnrolments) {
-        case ~(Some(internalId: String), allEnrolments: Enrolments) =>
-          IdentifierAction
+      .retrieve(
+        Retrievals.internalId and Retrievals.authorisedEnrolments and Retrievals.affinityGroup
+      ) {
+        case Some(internalId) ~ allEnrolments ~ Some(affinityGroup) =>
+          IdentifyEori
             .getEoriNumber(allEnrolments)
-            .map(eori => block(IdentifierRequest(request, internalId, eori)))
+            .map(eori => block(IdentifierRequest(request, internalId, eori, affinityGroup)))
             .getOrElse(throw InsufficientEnrolments())
 
         case _ =>
@@ -79,15 +81,4 @@ class AuthenticatedIdentifierAction @Inject() (
           Redirect(routes.UnauthorisedController.onPageLoad)
       }
   }
-}
-
-object IdentifierAction {
-  val EnrolmentKey: String   = "HMRC-ATAR-ORG"
-  val EnrolmentIdKey: String = "EORINumber"
-
-  def getEoriNumber(enrolments: Enrolments): Option[String] =
-    for {
-      enrolment  <- enrolments.getEnrolment(EnrolmentKey)
-      identifier <- enrolment.getIdentifier(EnrolmentIdKey)
-    } yield identifier.value
 }

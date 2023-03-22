@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.Mode
+import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.WhatIsYourRoleAsImporterPage
 import repositories.SessionRepository
@@ -39,6 +39,8 @@ class WhatIsYourRoleAsImporterController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  generateApplicationNumber: ApplicationNumberGenerationAction,
+  isAgent: IdentifyAgentAction,
   formProvider: WhatIsYourRoleAsImporterFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: WhatIsYourRoleAsImporterView
@@ -48,30 +50,33 @@ class WhatIsYourRoleAsImporterController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen isAgent andThen getData andThen generateApplicationNumber) {
+      implicit request =>
+        val preparedForm = request.userAnswers
+          .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
+          .get(WhatIsYourRoleAsImporterPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
-  }
+        Ok(view(preparedForm))
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
+  def onSubmit(): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
             value =>
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(WhatIsYourRoleAsImporterPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, updatedAnswers)
+                navigator.nextPage(WhatIsYourRoleAsImporterPage, NormalMode, updatedAnswers)
               )
           )
     }

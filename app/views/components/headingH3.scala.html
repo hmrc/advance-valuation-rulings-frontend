@@ -16,6 +16,6 @@
 
 @this()
 
-@(message: String)
+@(message: String, size: String = "m")
 
-<h3 class="govuk-heading-m">@message</h3>
+<h3 class="govuk-heading-@size">@message</h3>

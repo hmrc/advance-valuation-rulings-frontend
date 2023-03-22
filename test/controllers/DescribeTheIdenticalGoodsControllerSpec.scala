@@ -68,7 +68,10 @@ class DescribeTheIdenticalGoodsControllerSpec extends SpecBase with MockitoSugar
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(DescribeTheIdenticalGoodsPage, "answer").success.value
+        UserAnswers(userAnswersId, applicationNumber)
+          .set(DescribeTheIdenticalGoodsPage, "answer")
+          .success
+          .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

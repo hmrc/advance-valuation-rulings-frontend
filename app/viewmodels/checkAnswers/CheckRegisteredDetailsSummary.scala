@@ -23,6 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, CheckRegisteredDetails, UserAnswers}
+import models.requests._
 import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -93,4 +94,25 @@ object CheckRegisteredDetailsSummary {
       address         = registeredAddressRow(contactDetails)
       result          = Seq(number, name, address)
     } yield result
+
+  def rows(
+    request: ApplicationRequest
+  )(implicit messages: Messages): Seq[SummaryListRow] = {
+    val eoriHolder     = Applicant.eoriHolder(request.applicant)
+    val postCode       = if (eoriHolder.postcode.isEmpty) None else Some(eoriHolder.postcode)
+    val contactDetails = models.CheckRegisteredDetails(
+      value = true,
+      eori = eoriHolder.eori,
+      name = eoriHolder.businessName,
+      streetAndNumber = eoriHolder.addressLine1 + "\n" + eoriHolder.addressLine2,
+      city = eoriHolder.addressLine3,
+      country = eoriHolder.country,
+      postalCode = postCode
+    )
+    Seq(
+      registeredNumberRow(contactDetails),
+      registeredNameRow(contactDetails),
+      registeredAddressRow(contactDetails)
+    )
+  }
 }

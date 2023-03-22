@@ -22,6 +22,7 @@ GET        /account/signed-out                          controllers.auth.SignedO
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET        /applications-and-rulings                    controllers.AccountHomeController.onPageLoad()
+POST        /applications-and-rulings                    controllers.AccountHomeController.startApplication()
 
 GET        /select-valuation-method                     controllers.ValuationMethodController.onPageLoad(mode: Mode = NormalMode)
 POST       /select-valuation-method                     controllers.ValuationMethodController.onSubmit(mode: Mode = NormalMode)
@@ -94,8 +95,8 @@ GET        /change-supporting-document-uploaded/remove/:uploadId          contro
 GET        /change-supporting-document-uploaded                           controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-supporting-document-uploaded                           controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /upload-supporting-documents                                   controllers.fileupload.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = NormalMode)
-GET        /change-upload-supporting-documents                            controllers.fileupload.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = CheckMode)
+GET        /upload-supporting-documents                                   controllers.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = NormalMode)
+GET        /change-upload-supporting-documents                            controllers.UploadSupportingDocumentsController.onPageLoad(errorCode: Option[String], key: Option[String],  uploadId: Option[models.fileupload.UploadId], mode: Mode = CheckMode)
 
 GET        /explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = NormalMode)
 POST       /explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode)
@@ -156,10 +157,6 @@ GET        /conditions-circumstances                                      contro
 POST       /conditions-circumstances                                      controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = NormalMode)
 GET        /change-conditions-circumstances                                controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-conditions-circumstances                                controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = CheckMode)
-
-# upload file notification callback
-+ nocsrf
-POST       /upscan-callback                                               controllers.fileupload.UploadCallbackController.callback
 
 GET        /describe-identical-goods                                      controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
 POST       /describe-identical-goods                                      controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
@@ -239,18 +236,16 @@ POST       /method-1-import-similar-goods                        controllers.Hav
 GET        /change-method-1-import-similar-goods                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-method-1-import-similar-goods                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode: Mode = CheckMode)
 
-GET        /whatIsYourRoleAsImporter                        controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = NormalMode)
-POST       /whatIsYourRoleAsImporter                        controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = NormalMode)
-GET        /changeWhatIsYourRoleAsImporter                  controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeWhatIsYourRoleAsImporter                  controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = CheckMode)
+GET        /whatIsYourRoleAsImporter                        controllers.WhatIsYourRoleAsImporterController.onPageLoad()
+POST       /whatIsYourRoleAsImporter                        controllers.WhatIsYourRoleAsImporterController.onSubmit()
 
 GET        /whoAreYouAgent                        controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = NormalMode)
 POST       /whoAreYouAgent                        controllers.WhoAreYouAgentController.onSubmit(mode: Mode = NormalMode)
 GET        /changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = CheckMode)
 POST       /changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /application                           controllers.ViewApplicationController.onPageLoad()
+GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
+GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)
 
-GET        /your-application-ruling               controllers.ViewRulingController.onPageLoad()
 
 GET        /cancel                                controllers.CancelApplicationController.onPageLoad()

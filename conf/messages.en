@@ -13,6 +13,9 @@ site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
 site.cancel = Cancel application
+site.printApplication = Print your application
+site.saveApplication = Save your application
+site.page = Page {0} of {1}
 
 site.1 = one
 site.2 = two
@@ -215,14 +218,17 @@ accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
 
 checkRegisteredDetails.title = Check the name and address for EORI number
-checkRegisteredDetails.heading = Check the name and address for EORI number {0}
-checkRegisteredDetails.subheading = Are these details correct?
+checkRegisteredDetails.heading.1 = Check the name and address for EORI number {0}
+checkRegisteredDetails.heading.2 = Registered business name
+checkRegisteredDetails.heading.3 = Registered business address
+checkRegisteredDetails.subheading.1 = EORI registration details
+checkRegisteredDetails.subheading.2 = Are these details correct?
 checkRegisteredDetails.caption = About the applicant
 checkRegisteredDetails.paragraph.1 = You can provide your own contact details on the next page.
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
 checkRegisteredDetails.error.required = Select yes to confirm your EORI details
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
-checkRegisteredDetails.warning = These are the details we have on record. They should be the details used to register your EORI number.
+checkRegisteredDetails.warning = These are the details we have on record. They should be the details used to register your Economic Operator Registration and Identification (EORI) number.
 
 applicationContactDetails.title = Your contact details
 applicationContactDetails.heading = Your contact details
@@ -236,7 +242,7 @@ applicationContactDetails.fullName.error.required = Enter your full name
 applicationContactDetails.fullName.error.format = Must contain only letters, space and hyphens
 applicationContactDetails.fullName.length = Name must be 100 characters or less
 applicationContactDetails.email.error.required = Enter your email address
-applicationContactDetails.email.error.format = Email address must be in abe@email.com pattern
+applicationContactDetails.email.error.format = Enter an email address in the correct format, like name@example.com
 applicationContactDetails.telephoneNumber.error.required = Enter your telephone number
 applicationContactDetails.telephoneNumber.error.format = Must contain only digits
 applicationContactDetails.telephoneNumber.length = Phone number must be 24 characters or less
@@ -630,6 +636,16 @@ whoAreYouAgent.change.hidden = WhoAreYouAgent
 
 viewApplication.title = Your application
 viewApplication.heading = Your application
+viewApplication.forYourRecords = For your records
+viewApplication.whatHappensNext.heading = What happens next
+viewApplication.whatHappensNext.paragraph = We'll aim to review your application within 30 days, although it can take a further 90 days from the date your application was accepted to receive an Advance Valuation Ruling decision. You can sign in to Advance Valuation Rulings to check the status of your application.
+
+
+viewApplication.aboutTheGoods.heading = About the goods
+viewApplication.yourRuling = Your Advance Valuation Ruling application
+viewApplication.reference = Your application reference number is
+viewApplication.hmrc = HM Revenue & Customs 
+
 
 viewRuling.title = Your ruling documents for {0}
 viewRuling.heading = Your ruling documents for {0}

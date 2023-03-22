@@ -20,6 +20,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
 import base.SpecBase
 import models.UserAnswers
@@ -48,7 +49,9 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         val action            = new Harness(sessionRepository)
 
         val result =
-          action.callTransform(IdentifierRequest(FakeRequest(), "id", "eoriNumber")).futureValue
+          action
+            .callTransform(IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual))
+            .futureValue
 
         result.userAnswers must not be defined
       }
@@ -59,11 +62,15 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
       "must build a userAnswers object and add it to the request" in {
 
         val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))
+        when(sessionRepository.get("id")) thenReturn Future(
+          Some(UserAnswers("id", applicationNumber))
+        )
         val action            = new Harness(sessionRepository)
 
         val result =
-          action.callTransform(new IdentifierRequest(FakeRequest(), "id", "eoriNumber")).futureValue
+          action
+            .callTransform(new IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual))
+            .futureValue
 
         result.userAnswers mustBe defined
       }

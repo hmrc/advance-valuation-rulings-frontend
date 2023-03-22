@@ -41,5 +41,17 @@ class AccountHomeControllerSpec extends SpecBase {
         contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
+    "must REDIRECT on startApplication" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.AccountHomeController.startApplication().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+      }
+    }
   }
 }

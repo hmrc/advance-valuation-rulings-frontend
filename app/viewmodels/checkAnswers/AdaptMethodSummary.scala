@@ -23,31 +23,34 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
+import models.AdaptMethod
 import pages.AdaptMethodPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AdaptMethodSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdaptMethodPage).map {
-      answer =>
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"adaptMethod.$answer"))
-          )
-        )
+  def row(answer: AdaptMethod)(implicit messages: Messages): SummaryListRow = {
+    val value = ValueViewModel(
+      HtmlContent(
+        HtmlFormat.escape(messages(s"adaptMethod.$answer"))
+      )
+    )
 
-        SummaryListRowViewModel(
-          key = "adaptMethod.checkYourAnswersLabel",
-          value = value,
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.AdaptMethodController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("adaptMethod.change.hidden"))
-          )
+    SummaryListRowViewModel(
+      key = "adaptMethod.checkYourAnswersLabel",
+      value = value,
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.AdaptMethodController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("adaptMethod.change.hidden"))
+      )
+    )
+  }
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AdaptMethodPage).map(row)
+
 }

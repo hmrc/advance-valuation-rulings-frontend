@@ -27,21 +27,22 @@ import viewmodels.implicits._
 
 object IsThereASaleInvolvedSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(IsThereASaleInvolvedPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+  def row(answer: Boolean)(implicit messages: Messages): SummaryListRow = {
+    val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "isThereASaleInvolved.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.IsThereASaleInvolvedController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("isThereASaleInvolved.change.hidden"))
-          )
+    SummaryListRowViewModel(
+      key = "isThereASaleInvolved.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.IsThereASaleInvolvedController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("isThereASaleInvolved.change.hidden"))
+      )
+    )
+  }
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(IsThereASaleInvolvedPage).map(row(_))
 }

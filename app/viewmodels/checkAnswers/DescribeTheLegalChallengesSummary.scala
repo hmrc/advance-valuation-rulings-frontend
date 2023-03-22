@@ -22,25 +22,29 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
+import models.requests.ApplicationRequest
 import pages.DescribeTheLegalChallengesPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DescribeTheLegalChallengesSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DescribeTheLegalChallengesPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "describeTheLegalChallenges.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DescribeTheLegalChallengesController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("describeTheLegalChallenges.change.hidden"))
-          )
+  private def makeRow(answer: String)(implicit messages: Messages) =
+    SummaryListRowViewModel(
+      key = "describeTheLegalChallenges.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(answer).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.DescribeTheLegalChallengesController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("describeTheLegalChallenges.change.hidden"))
+      )
+    )
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(DescribeTheLegalChallengesPage).map(makeRow)
+
+  def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
+    request.goodsDetails.knownLegalProceedings.map(makeRow)
 }

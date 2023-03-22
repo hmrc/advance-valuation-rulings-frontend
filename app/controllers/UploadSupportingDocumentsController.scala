@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.fileupload
+package controllers
 
 import javax.inject.{Inject, Singleton}
 

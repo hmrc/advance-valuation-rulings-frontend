@@ -21,15 +21,21 @@ object AppDependencies {
   val HmrcMongoTestPlayVersion  = "0.74.0"
   val FlexmarkVersion           = "0.62.2"
   val EnumeratumVersion         = "1.6.3"
+  val QuicklensVersion          = "1.9.0"
+  val ObjectStoreVersion        = "1.0.0"
+  val InternalAuthVersion       = "1.2.0"
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
-    "uk.gov.hmrc"       %% "play-frontend-hmrc"            % PlayFrontendHmrcVersion,
-    "uk.gov.hmrc"       %% "play-conditional-form-mapping" % PlayConditionalFormMappingVersion,
-    "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % BootstrapFrontendPlayVersion,
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
-    "org.typelevel"     %% "cats-core"                     % CatsVersion,
-    "com.beachape"      %% "enumeratum-play-json"          % EnumeratumVersion
+    "uk.gov.hmrc"                %% "play-frontend-hmrc"            % PlayFrontendHmrcVersion,
+    "uk.gov.hmrc"                %% "play-conditional-form-mapping" % PlayConditionalFormMappingVersion,
+    "uk.gov.hmrc"                %% "bootstrap-frontend-play-28"    % BootstrapFrontendPlayVersion,
+    "uk.gov.hmrc"                %% "internal-auth-client-play-28"  % InternalAuthVersion,
+    "uk.gov.hmrc.objectstore"    %% "object-store-client-play-28"   % ObjectStoreVersion,
+    "uk.gov.hmrc.mongo"          %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
+    "org.typelevel"              %% "cats-core"                     % CatsVersion,
+    "com.beachape"               %% "enumeratum-play-json"          % EnumeratumVersion,
+    "com.softwaremill.quicklens" %% "quicklens"                     % QuicklensVersion
   )
 
   val test = Seq(

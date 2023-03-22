@@ -44,6 +44,7 @@ trait BaseIntegrationSpec
     GuiceApplicationBuilder()
       .configure("metrics.enabled" -> false)
       .configure("auditing.enabled" -> false)
+      .configure("create-internal-auth-token-on-start" -> false)
       .configure(
         "microservice.services.advance-valuation-rulings-backend.port" -> WireMockHelper.wireMockPort
       )

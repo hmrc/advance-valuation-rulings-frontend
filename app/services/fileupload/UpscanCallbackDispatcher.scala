@@ -24,7 +24,7 @@ import play.api.Logger
 
 import models.fileupload.{CallbackBody, Failed, FailedCallbackBody, Quarantine, ReadyCallbackBody, Rejected, UploadedSuccessfully}
 
-class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker) {
+class UpscanCallbackDispatcher @Inject() (progressTracker: UploadProgressTracker) {
 
   private val logger = Logger(this.getClass)
 
@@ -51,7 +51,7 @@ class UpscanCallbackDispatcher @Inject() (sessionStorage: UploadProgressTracker)
         }
     }
 
-    sessionStorage.registerUploadResult(callback.reference, uploadStatus)
+    progressTracker.registerUploadResult(callback.reference, uploadStatus)
   }
 
 }

@@ -40,6 +40,7 @@ class ImportGoodsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  generateApplicationNumber: ApplicationNumberGenerationAction,
   formProvider: ImportGoodsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ImportGoodsView
@@ -49,31 +50,36 @@ class ImportGoodsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
-    implicit request =>
-      val preparedForm =
-        request.userAnswers.getOrElse(UserAnswers(request.userId)).get(ImportGoodsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
-      Ok(view(preparedForm, mode))
-  }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen generateApplicationNumber) {
+      implicit request =>
+        val preparedForm =
+          request.userAnswers
+            .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
+            .get(ImportGoodsPage) match {
+            case None        => form
+            case Some(value) => form.fill(value)
+          }
+        Ok(view(preparedForm, mode))
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers
-                                    .getOrElse(UserAnswers(request.userId))
-                                    .set(ImportGoodsPage, value)
-                                )
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ImportGoodsPage, mode, updatedAnswers))
-        )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen generateApplicationNumber).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <-
+                  Future.fromTry(
+                    request.userAnswers
+                      .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
+                      .set(ImportGoodsPage, value)
+                  )
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(ImportGoodsPage, mode, updatedAnswers))
+          )
+    }
 }

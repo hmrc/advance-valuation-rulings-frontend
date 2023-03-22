@@ -16,32 +16,41 @@
 
 package viewmodels.checkAnswers
 
+import cats.implicits._
+
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
+import models.requests.ApplicationRequest
 import pages.HasConfidentialInformationPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object HasConfidentialInformationSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(HasConfidentialInformationPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+  private def makeRow(answer: Boolean)(implicit messages: Messages) = {
+    val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "hasConfidentialInformation.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.HasConfidentialInformationController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("hasConfidentialInformation.change.hidden"))
-          )
+    SummaryListRowViewModel(
+      key = "hasConfidentialInformation.checkYourAnswersLabel",
+      value = ValueViewModel(value),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.HasConfidentialInformationController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("hasConfidentialInformation.change.hidden"))
+      )
+    )
+  }
+
+  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    userAnswers
+      .get(HasConfidentialInformationPage)
+      .map(makeRow)
+
+  def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
+    makeRow(request.goodsDetails.confidentialInformation.isDefined).some
 }

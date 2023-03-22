@@ -22,25 +22,34 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
+import models.requests.ApplicationRequest
 import pages.DescriptionOfGoodsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DescriptionOfGoodsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DescriptionOfGoodsPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "descriptionOfGoods.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DescriptionOfGoodsController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("descriptionOfGoods.change.hidden"))
-          )
+  private def makeRow(answer: String)(implicit
+    messages: Messages
+  ) =
+    SummaryListRowViewModel(
+      key = "descriptionOfGoods.checkYourAnswersLabel",
+      value = ValueViewModel(HtmlFormat.escape(answer).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.DescriptionOfGoodsController.onPageLoad(CheckMode).url
         )
-    }
+          .withVisuallyHiddenText(messages("descriptionOfGoods.change.hidden"))
+      )
+    )
+  def row(answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    answers.get(DescriptionOfGoodsPage).map(makeRow)
+
+  def row(request: ApplicationRequest)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    Some(makeRow(request.goodsDetails.goodDescription))
 }

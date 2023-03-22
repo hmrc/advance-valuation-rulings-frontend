@@ -60,7 +60,7 @@ class IsThisFileConfidentialController @Inject() (
 
         result.getOrElse {
           Redirect(
-            controllers.fileupload.routes.UploadSupportingDocumentsController
+            controllers.routes.UploadSupportingDocumentsController
               .onPageLoad(None, None, None, mode)
           )
         }
