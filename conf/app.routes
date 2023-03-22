@@ -236,8 +236,8 @@ POST       /method-1-import-similar-goods                        controllers.Hav
 GET        /change-method-1-import-similar-goods                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-method-1-import-similar-goods                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode: Mode = CheckMode)
 
-GET        /whatIsYourRoleAsImporter                        controllers.WhatIsYourRoleAsImporterController.onPageLoad()
-POST       /whatIsYourRoleAsImporter                        controllers.WhatIsYourRoleAsImporterController.onSubmit()
+GET        /describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onPageLoad()
+POST       /describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onSubmit()
 
 GET        /whoAreYouAgent                        controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = NormalMode)
 POST       /whoAreYouAgent                        controllers.WhoAreYouAgentController.onSubmit(mode: Mode = NormalMode)
