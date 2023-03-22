@@ -22,10 +22,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.objectstore.client.{ObjectSummaryWithMd5, Path}
+import uk.gov.hmrc.objectstore.client.Md5Hash
+import uk.gov.hmrc.objectstore.client.play._
 
 import base.SpecBase
+import config.FrontendAppConfig
 import models.fileupload._
-import org.mockito.ArgumentMatchers.{any, anyString}
+import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 
@@ -50,7 +54,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       ) thenReturn Future.successful(())
 
       implicit val hc = HeaderCarrier()
-      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
+      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
       val result      = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -58,7 +62,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
         UploadedSuccessfully(
           fileName,
           mimeType,
-          objectLocation,
+          "rulings/ref/test.pdf",
           checksum,
           Some(fileSize)
         )
@@ -77,7 +81,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       )
 
       implicit val hc = HeaderCarrier()
-      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
+      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
       val result      = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -98,7 +102,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       )
       implicit val hc            = HeaderCarrier()
 
-      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
+      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
       val result     = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -119,7 +123,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       )
       implicit val hc            = HeaderCarrier()
 
-      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
+      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
       val result     = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -136,19 +140,18 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
 private trait Setup extends MockitoSugar {
   val referenceValue = "ref"
   val reference      = Reference(referenceValue)
-
+  val appName        = "advance-valuation-ruling-frontend"
   val fileName       = "test.pdf"
   val mimeType       = "application/pdf"
   val fileUrl        = "?123456"
   val fileSize       = 12345L
   val downloadUrl    = s"https://bucketName.s3.eu-west-2.amazonaws.com$fileUrl"
-  val objectLocation = s"directory/$fileName"
+
+  val objectLocation = s"$appName/rulings/$referenceValue/$fileName"
   val checksum       = "396f101dd52e8b2ace0dcf5ed09b1d1f030e608938510ce46e7a5c7a4e775100"
 
+  val config            = mock[FrontendAppConfig]
   val progressTracker   = mock[UploadProgressTracker]
-  import uk.gov.hmrc.objectstore.client._
-  import uk.gov.hmrc.objectstore.client.{ObjectSummaryWithMd5, Path}
-  import uk.gov.hmrc.objectstore.client.play._
   val objectStoreClient = mock[PlayObjectStoreClient]
 
   val lastUpdated = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
@@ -160,6 +163,7 @@ private trait Setup extends MockitoSugar {
     lastModified = lastUpdated
   )
 
+  when(config.appName) thenReturn appName
   when(
     progressTracker.registerUploadResult(Reference(anyString()), any())
   ) thenReturn Future.successful(())
@@ -170,7 +174,7 @@ private trait Setup extends MockitoSugar {
       any(),
       any[Option[String]](),
       any(),
-      anyString()
+      eqTo(appName)
     )(any())
   )
     .thenReturn(Future.successful(objectSummary))

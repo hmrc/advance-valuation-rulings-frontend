@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.{ObjectSummaryWithMd5, Path}
 import uk.gov.hmrc.objectstore.client.play._
 
+import config.FrontendAppConfig
 import models.fileupload._
 
 sealed trait FileStatus
@@ -34,12 +35,14 @@ case class NotReady(callback: FailedCallbackBody) extends FileStatus
 @Singleton()
 class UpscanCallbackDispatcher @Inject() (
   progressTracker: UploadProgressTracker,
-  objectStoreClient: PlayObjectStoreClient
+  objectStoreClient: PlayObjectStoreClient,
+  config: FrontendAppConfig
 ) {
 
   private lazy val logger                                     = Logger(this.getClass)
   private def directory(reference: Reference): Path.Directory =
     Path.Directory(s"rulings/${reference.value}")
+  lazy val owner                                              = config.appName
 
   def handleCallback(
     callback: CallbackBody
@@ -89,12 +92,12 @@ class UpscanCallbackDispatcher @Inject() (
             to = Path.File(filePath, body.uploadDetails.fileName),
             contentType = Some(body.uploadDetails.fileMimeType),
             contentMd5 = None,
-            owner = "advance-valuation-ruling-frontend"
+            owner = owner
           )
           .map {
-            (summary: ObjectSummaryWithMd5) =>
+            (_: ObjectSummaryWithMd5) =>
               logger.debug(s"Valuation application stored with reference: ${body.reference.value}")
-              Ready(body, summary.location.asUri)
+              Ready(body, Path.File(filePath, body.uploadDetails.fileName).asUri)
           }
       case f: FailedCallbackBody   =>
         Future.successful(NotReady(f))

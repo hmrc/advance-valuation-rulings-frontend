@@ -30,7 +30,10 @@ case class UploadedFiles(
       Some(upscanFileDetails),
       files
     )
-  def setConfidentiality(isConfidential: Boolean): UploadedFiles   =
+
+  def getFile(uploadId: UploadId): Option[UploadedFile] = files.get(uploadId)
+
+  def setConfidentiality(isConfidential: Boolean): UploadedFiles =
     this.lastUpload match {
       case Some(lastUpload) =>
         val newFile = UploadedFile(
