@@ -218,14 +218,17 @@ accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
 
 checkRegisteredDetails.title = Check the name and address for EORI number
-checkRegisteredDetails.heading = Check the name and address for EORI number {0}
-checkRegisteredDetails.subheading = Are these details correct?
+checkRegisteredDetails.heading.1 = Check the name and address for EORI number {0}
+checkRegisteredDetails.heading.2 = Registered business name
+checkRegisteredDetails.heading.3 = Registered business address
+checkRegisteredDetails.subheading.1 = EORI registration details
+checkRegisteredDetails.subheading.2 = Are these details correct?
 checkRegisteredDetails.caption = About the applicant
 checkRegisteredDetails.paragraph.1 = You can provide your own contact details on the next page.
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
 checkRegisteredDetails.error.required = Select yes to confirm your EORI details
 checkRegisteredDetails.change.hidden = CheckRegisteredDetails
-checkRegisteredDetails.warning = These are the details we have on record. They should be the details used to register your EORI number.
+checkRegisteredDetails.warning = These are the details we have on record. They should be the details used to register your Economic Operator Registration and Identification (EORI) number.
 
 applicationContactDetails.title = Your contact details
 applicationContactDetails.heading = Your contact details
