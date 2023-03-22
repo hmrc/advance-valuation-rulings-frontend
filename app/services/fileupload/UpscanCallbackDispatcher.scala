@@ -16,30 +16,58 @@
 
 package services.fileupload
 
-import javax.inject.Inject
+import java.net.URL
+import javax.inject.{Inject, Singleton}
+import javax.security.auth.callback.Callback
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logger
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.objectstore.client._
+import uk.gov.hmrc.objectstore.client.{ObjectSummaryWithMd5, Path}
+import uk.gov.hmrc.objectstore.client.play._
 
-import models.fileupload.{CallbackBody, Failed, FailedCallbackBody, Quarantine, ReadyCallbackBody, Rejected, UploadedSuccessfully}
+import com.google.inject.ImplementedBy
+import models.fileupload._
 
-class UpscanCallbackDispatcher @Inject() (progressTracker: UploadProgressTracker) {
+@Singleton()
+class UpscanCallbackDispatcher @Inject() (
+  progressTracker: UploadProgressTracker,
+  objectStoreClient: PlayObjectStoreClient
+) {
 
-  private val logger = Logger(this.getClass)
+  private lazy val logger                                     = Logger(this.getClass)
+  private def directory(reference: Reference): Path.Directory =
+    Path.Directory(s"rulings/${reference.value}")
 
-  def handleCallback(callback: CallbackBody): Future[Unit] = {
+  def handleCallback(
+    callback: CallbackBody
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] = {
+    // val sendFileFuture = sendFile(callback)
+    // for {
+    //   // callback <- sendFileFuture
+    //   // status    = makeStatus(callback)
+    //   res <- progressTracker.registerUploadResult(callback.reference, makeStatus(callback))
+    // } yield res
+    val newCallback: Future[CallbackBody] = sendFile(callback)
 
-    val uploadStatus = callback match {
-      case s: ReadyCallbackBody  =>
-        logger.info(s"Successful uploaded notification for file: ${s.uploadDetails.fileName}")
+    val status = newCallback.map(makeStatus(_))
+    status.flatMap(status => progressTracker.registerUploadResult(callback.reference, status))
+  }
+
+  private def makeStatus(callback: CallbackBody): UploadStatus =
+    callback match {
+      case body: ReadyCallbackBody =>
+        logger.info(s"Successful uploaded notification for file: ${body.uploadDetails.fileName}")
+
         UploadedSuccessfully(
-          s.uploadDetails.fileName,
-          s.uploadDetails.fileMimeType,
-          s.downloadUrl.getFile,
-          Some(s.uploadDetails.size)
+          body.uploadDetails.fileName,
+          body.uploadDetails.fileMimeType,
+          body.downloadUrl.getFile,
+          Some(body.uploadDetails.size)
         )
-      case f: FailedCallbackBody =>
+      case f: FailedCallbackBody   =>
         val upscanFailureDetails = f.failureDetails.failureReason
         logger.warn(
           s"File upload failed notification received from upscan: $upscanFailureDetails with reference: ${f.reference.value}"
@@ -49,9 +77,40 @@ class UpscanCallbackDispatcher @Inject() (progressTracker: UploadProgressTracker
           case "REJECTED"   => Rejected
           case _            => Failed
         }
+
     }
 
-    progressTracker.registerUploadResult(callback.reference, uploadStatus)
-  }
+  private def sendFile(callback: CallbackBody)(implicit
+    ec: ExecutionContext,
+    hc: HeaderCarrier
+  ): Future[CallbackBody] =
+    callback match {
+      case body: ReadyCallbackBody =>
+        val filePath = directory(body.reference)
+        objectStoreClient
+          .uploadFromUrl(
+            from = body.downloadUrl,
+            to = Path.File(filePath, body.uploadDetails.fileName),
+            contentType = Some(body.uploadDetails.fileMimeType),
+            contentMd5 = None,
+            owner = "advance-valuation-ruling-frontend"
+          )
+          .map {
+            (summary: ObjectSummaryWithMd5) =>
+              logger.debug(s"Valuation application stored with reference: ${body.reference.value}")
+              body.copy(downloadUrl = new URL(summary.location.asUri))
+          }
+      case _: FailedCallbackBody   =>
+        Future.successful(callback)
+    }
+  /* Error handling can be left to Bootstrap or customised */
+  // .recover {
+  //   case UpstreamErrorResponse(message, statusCode, _, _) =>
+  //     logger.error(s"Upstream error with status code '$statusCode' and message: $message")
+  //     InternalServerError("Upstream error encountered")
+  //   case e: Exception                                     =>
+  //     logger.error(s"An error was encountered saving the document.", e)
+  //     InternalServerError("Error saving the document")
+  // }
 
 }
