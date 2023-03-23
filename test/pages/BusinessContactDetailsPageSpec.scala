@@ -29,7 +29,7 @@ class BusinessContactDetailsPageSpec extends PageBehaviours {
     implicit val businessContactDetailsGen: Arbitrary[BusinessContactDetails] = Arbitrary(for {
 
       name    <- arbitraryString(Gen.alphaChar)
-      phone   <- arbitraryString(Gen.numChar, maxSize = 15)
+      phone   <- arbitraryString(Gen.numChar, maxSize = 24)
       email   <- arbitraryString(Gen.asciiChar)
       company <- arbitraryString(Gen.alphaChar)
     } yield BusinessContactDetails(name, phone, email, company))

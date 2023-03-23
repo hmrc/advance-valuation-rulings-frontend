@@ -30,7 +30,7 @@ class ApplicationContactDetailsPageSpec extends PageBehaviours {
       Arbitrary(for {
 
         name  <- arbitraryString(Gen.alphaChar)
-        phone <- arbitraryString(Gen.numChar, maxSize = 15)
+        phone <- arbitraryString(Gen.numChar, maxSize = 24)
         email <- arbitraryString(Gen.asciiChar)
       } yield ApplicationContactDetails(name, phone, email))
 
