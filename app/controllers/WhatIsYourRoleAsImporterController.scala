@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.Navigator
 import pages.WhatIsYourRoleAsImporterPage
 import repositories.SessionRepository
@@ -50,11 +50,10 @@ class WhatIsYourRoleAsImporterController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] =
-    (identify andThen isAgent andThen getData andThen generateApplicationNumber) {
+  def onPageLoad: Action[AnyContent] =
+    (identify andThen isAgent andThen getData andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers
-          .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
           .get(WhatIsYourRoleAsImporterPage) match {
           case None        => form
           case Some(value) => form.fill(value)
@@ -63,8 +62,9 @@ class WhatIsYourRoleAsImporterController @Inject() (
         Ok(view(preparedForm))
     }
 
-  def onSubmit(): Action[AnyContent] =
+  def onSubmit: Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
+
       implicit request =>
         form
           .bindFromRequest()

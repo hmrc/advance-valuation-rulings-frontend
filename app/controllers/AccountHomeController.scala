@@ -18,30 +18,44 @@ package controllers
 
 import javax.inject.Inject
 
+import scala.concurrent.ExecutionContext
+import scala.util.Try
+
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import models.UserAnswers
 import navigation.Navigator
+import repositories.SessionRepository
 import views.html.AccountHomeView
 
 class AccountHomeController @Inject() (
   override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  generateApplicationNumber: ApplicationNumberGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport
     with Retrievals {
 
   def onPageLoad: Action[AnyContent]       = (identify andThen getData)(implicit request => Ok(view()))
   def startApplication: Action[AnyContent] =
-    (identify andThen getData) {
-      implicit request => Redirect(navigator.startApplicationRouting(request.affinityGroup))
+    (identify andThen getData andThen generateApplicationNumber).async {
+      implicit request =>
+        for {
+          _ <- sessionRepository.set(
+                 request.userAnswers.getOrElse(
+                   UserAnswers(request.userId, request.applicationNumber.render)
+                 )
+               )
+        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
     }
-
 }

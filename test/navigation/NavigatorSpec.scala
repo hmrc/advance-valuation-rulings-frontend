@@ -22,6 +22,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup._
 import base.SpecBase
 import controllers.routes
 import models._
+import models.WhatIsYourRoleAsImporter.Employeeoforg
 import models.fileupload._
 import pages._
 import queries.Modifiable
@@ -66,6 +67,20 @@ class NavigatorSpec extends SpecBase {
     }
 
     "in Normal mode" - {
+
+      "WhatIsYourRoleAsImporterPage" - {
+
+        "must navigate to RequiredInformationPage page" in {
+          val userAnswers =
+            userAnswersWith(WhatIsYourRoleAsImporterPage, Employeeoforg)
+          navigator.nextPage(
+            WhatIsYourRoleAsImporterPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.RequiredInformationController.onPageLoad()
+
+        }
+      }
 
       "WhyTransactionValueOfSimilarGoods page" - {
 
