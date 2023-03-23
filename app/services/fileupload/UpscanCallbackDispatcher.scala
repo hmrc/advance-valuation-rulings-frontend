@@ -86,6 +86,7 @@ class UpscanCallbackDispatcher @Inject() (
     callback match {
       case body: ReadyCallbackBody =>
         val filePath = directory(body.reference)
+        logger.warn("ARS1234 File upload started: ${body.reference.value}")
         objectStoreClient
           .uploadFromUrl(
             from = body.downloadUrl,
@@ -96,8 +97,12 @@ class UpscanCallbackDispatcher @Inject() (
           )
           .map {
             (_: ObjectSummaryWithMd5) =>
-              logger.debug(s"Valuation application stored with reference: ${body.reference.value}")
+              logger.warn(s"File uploaded stored with reference: ${body.reference.value}")
               Ready(body, Path.File(filePath, body.uploadDetails.fileName).asUri)
+          }.recover {
+            case e: Throwable =>
+              logger.error(s"Failed to upload file with reference: ${body.reference.value}", e)
+              NotReady(FailedCallbackBody(body.reference, FailedCallbackBody.FailureDetails("REJECTED", "File upload failed")))
           }
       case f: FailedCallbackBody   =>
         Future.successful(NotReady(f))

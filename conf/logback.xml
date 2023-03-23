@@ -44,7 +44,7 @@
     <logger name="connectors" level="INFO"/>
     <logger name="controllers" level="INFO"/>
 
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>
