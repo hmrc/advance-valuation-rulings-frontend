@@ -48,6 +48,7 @@ class Navigator @Inject() () {
     case WhatIsYourRoleAsImporterPage                  => whatIsYourRoleAsImporterPage
     case CheckRegisteredDetailsPage                    => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                 => applicationContactDetailsPage
+    case BusinessContactDetailsPage                    => businessContactDetailsPage
     case DoYouWantToUploadDocumentsPage                => doYouWantToUploadDocumentsPage
     case IsThisFileConfidentialPage                    => isThisFileConfidentialPage
     case UploadAnotherSupportingDocumentPage           => uploadAnotherSupportingDocumentPage
@@ -384,6 +385,12 @@ class Navigator @Inject() () {
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ApplicationContactDetailsPage) match {
       case None    => ApplicationContactDetailsController.onPageLoad(NormalMode)
+      case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
+    }
+
+  private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(BusinessContactDetailsPage) match {
+      case None    => BusinessContactDetailsController.onPageLoad(NormalMode)
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
     }
 

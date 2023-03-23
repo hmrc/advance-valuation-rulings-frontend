@@ -456,6 +456,19 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "BusinessContactDetailsPage must" in {
+        val userAnswers =
+          userAnswersWith(
+            BusinessContactDetailsPage,
+            BusinessContactDetails("name", "email", "phone", "company")
+          )
+        navigator.nextPage(
+          BusinessContactDetailsPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+      }
+
       "ApplicationContactDetailsPage must" in {
         val userAnswers =
           userAnswersWith(
