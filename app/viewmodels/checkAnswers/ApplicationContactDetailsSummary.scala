@@ -88,16 +88,19 @@ object ApplicationContactDetailsSummary {
   )(implicit messages: Messages): Seq[SummaryListRow] = {
     val details = Applicant.contactDetails(request.applicant)
 
-    val contactDetails = ApplicationContactDetails(
-      name = details.name,
-      email = details.email,
-      phone = details.phone.getOrElse("")
-    )
-
-    Seq(
-      nameRow(contactDetails),
-      emailRow(contactDetails),
-      contactNumberRow(contactDetails)
-    )
+    details match {
+      case Some(details) =>
+        val contactDetails = ApplicationContactDetails(
+          name = details.name,
+          email = details.email,
+          phone = details.phone.getOrElse("")
+        )
+        Seq(
+          nameRow(contactDetails),
+          emailRow(contactDetails),
+          contactNumberRow(contactDetails)
+        )
+      case None          => Seq.empty
+    }
   }
 }

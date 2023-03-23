@@ -19,6 +19,7 @@ package models.requests
 import play.api.libs.json._
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import models.BusinessContactDetails
 
 case class UploadedDocument(
   id: String,
@@ -38,6 +39,15 @@ case class IndividualApplicant(
   contact: ContactDetails
 ) extends Applicant
 
+case class BusinessApplicant(
+  holder: EORIDetails,
+  businessContact: BusinessContactDetails
+) extends Applicant
+
+object BusinessApplicant {
+  implicit val format: OFormat[BusinessApplicant] = Json.format[BusinessApplicant]
+}
+
 object Applicant {
   import ApplicationRequest._
   implicit val roleFormat: OFormat[Applicant] = Json.configured(jsonConfig).format[Applicant]
@@ -45,12 +55,18 @@ object Applicant {
   def eoriHolder: Applicant => EORIDetails = (applicant: Applicant) =>
     applicant match {
       case IndividualApplicant(holder, _) => holder
+      case BusinessApplicant(holder, _)   => holder
     }
 
-  def contactDetails: Applicant => ContactDetails = (applicant: Applicant) =>
-    applicant match {
-      case IndividualApplicant(_, contact) => contact
-    }
+  def contactDetails: Applicant => Option[ContactDetails] = {
+    case IndividualApplicant(_, contact) => Some(contact)
+    case BusinessApplicant(_, _)         => None
+  }
+
+  def businessContactDetails: Applicant => Option[BusinessContactDetails] = {
+    case IndividualApplicant(_, _)     => None
+    case BusinessApplicant(_, contact) => Some(contact)
+  }
 }
 
 object IndividualApplicant {

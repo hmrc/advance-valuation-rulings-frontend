@@ -22,27 +22,28 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{BusinessContactDetails, CheckMode, UserAnswers}
+import models.requests._
 import pages.BusinessContactDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object BusinessContactDetailsSummary {
 
-  private def nameRow(answer: BusinessContactDetails)(implicit messages: Messages
-  ): SummaryListRow =
-  SummaryListRowViewModel(
-    key = "checkYourAnswers.business.name.label",
-    value = ValueViewModel(HtmlFormat.escape(answer.name).toString),
-    actions = Seq(
-      ActionItemViewModel(
-        "site.change",
-        routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+  private def nameRow(answer: BusinessContactDetails)(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswers.business.name.label",
+      value = ValueViewModel(HtmlFormat.escape(answer.name).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+        )
+          .withVisuallyHiddenText(messages("businessContactDetails.name.change.hidden"))
       )
-        .withVisuallyHiddenText(messages("businessContactDetails.name.change.hidden"))
     )
-  )
 
-  private def emailRow(answer: BusinessContactDetails)(implicit messages: Messages
+  private def emailRow(answer: BusinessContactDetails)(implicit
+    messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.business.email.label",
@@ -56,7 +57,8 @@ object BusinessContactDetailsSummary {
       )
     )
 
-  private def contactNumberRow(answer: BusinessContactDetails)(implicit messages: Messages
+  private def contactNumberRow(answer: BusinessContactDetails)(implicit
+    messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.business.phone.label",
@@ -70,7 +72,8 @@ object BusinessContactDetailsSummary {
       )
     )
 
-  private def companyNameRow(answer: BusinessContactDetails)(implicit messages: Messages
+  private def companyNameRow(answer: BusinessContactDetails)(implicit
+    messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.business.companyName.label",
@@ -95,22 +98,19 @@ object BusinessContactDetailsSummary {
     } yield result
 
   def rows(
-            request: ApplicationRequest
-          )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val details = Applicant.contactDetails(request.applicant)
+    request: ApplicationRequest
+  )(implicit messages: Messages): Seq[SummaryListRow] = {
+    val details = Applicant.businessContactDetails(request.applicant)
 
-    val contactDetails = BusinessContactDetails(
-      name = details.name,
-      email = details.email,
-      phone = details.phone.getOrElse(""),
-      company = details.companyName
-    )
-
-    Seq(
-      nameRow(contactDetails),
-      emailRow(contactDetails),
-      contactNumberRow(contactDetails),
-      companyNameRow(contactDetails)
-    )
+    details match {
+      case Some(contactDetails: BusinessContactDetails) =>
+        Seq(
+          nameRow(contactDetails),
+          emailRow(contactDetails),
+          contactNumberRow(contactDetails),
+          companyNameRow(contactDetails)
+        )
+      case None                                         => Seq.empty
+    }
   }
 }

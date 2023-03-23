@@ -49,15 +49,16 @@ class BusinessContactDetailsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen isAgent andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(BusinessContactDetailsPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(mode: Mode): Action[AnyContent] =
+    (identify andThen isAgent andThen getData andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(BusinessContactDetailsPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
-  }
+        Ok(view(preparedForm, mode))
+    }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen isAgent andThen getData andThen requireData).async {

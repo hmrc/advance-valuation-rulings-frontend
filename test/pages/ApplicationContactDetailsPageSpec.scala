@@ -26,12 +26,13 @@ class ApplicationContactDetailsPageSpec extends PageBehaviours {
     def arbitraryString(gen: Gen[Char], maxSize: Int = 100): Gen[String] =
       Gen.listOfN(maxSize, gen).map(_.mkString)
 
-    implicit val applicationContactDetailsGen = Arbitrary(for {
+    implicit val applicationContactDetailsGen: Arbitrary[ApplicationContactDetails] =
+      Arbitrary(for {
 
-      name  <- arbitraryString(Gen.alphaChar)
-      phone <- arbitraryString(Gen.numChar, maxSize = 15)
-      email <- arbitraryString(Gen.asciiChar)
-    } yield ApplicationContactDetails(name, phone, email))
+        name  <- arbitraryString(Gen.alphaChar)
+        phone <- arbitraryString(Gen.numChar, maxSize = 15)
+        email <- arbitraryString(Gen.asciiChar)
+      } yield ApplicationContactDetails(name, phone, email))
 
     beRetrievable[ApplicationContactDetails](ApplicationContactDetailsPage)
 

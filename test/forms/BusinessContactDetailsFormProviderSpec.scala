@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package forms
 
 import play.api.data.FormError
@@ -6,9 +22,9 @@ import forms.behaviours.StringFieldBehaviours
 
 class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val nameRequiredKey  = "businessContactDetails.fullName.error.required"
-  val emailRequiredKey = "businessContactDetails.email.error.required"
-  val phoneRequiredKey = "businessContactDetails.telephoneNumber.error.required"
+  val nameRequiredKey    = "businessContactDetails.fullName.error.required"
+  val emailRequiredKey   = "businessContactDetails.email.error.required"
+  val phoneRequiredKey   = "businessContactDetails.telephoneNumber.error.required"
   val companyRequiredKey = "businessContactDetails.companyName.error.required"
 
   val form = new BusinessContactDetailsFormProvider()()
@@ -70,9 +86,10 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       s"bind valid email: ${address}" in {
         val boundForm = form.bind(
           Map[String, String](
-            "name"  -> "Julius",
-            "email" -> address,
-            "phone" -> "07123456789"
+            "name"    -> "Julius",
+            "email"   -> address,
+            "phone"   -> "07123456789",
+            "company" -> "company"
           )
         )
         boundForm.errors mustBe Seq.empty
@@ -82,9 +99,10 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       s"not bind invalid email: ${address}" in {
         val boundForm = form.bind(
           Map[String, String](
-            "name"  -> "Julius",
-            "email" -> address,
-            "phone" -> "07123456789"
+            "name"    -> "Julius",
+            "email"   -> address,
+            "phone"   -> "07123456789",
+            "company" -> "company"
           )
         )
         boundForm.errors must not be Seq.empty
@@ -117,7 +135,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
   }
 
   ".companyNameField" - {
-    val companyNameField = "companyName"
+    val companyNameField = "company"
 
     behave like mandatoryField(
       form,
