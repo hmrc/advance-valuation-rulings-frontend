@@ -401,9 +401,15 @@ class Navigator @Inject() () {
         WhatIsYourRoleAsImporterController.onPageLoad()
     }
 
-  def contactDetailsRouting(affinityGroup: AffinityGroup): Call =
-    affinityGroup match {
-      case Individual => ApplicationContactDetailsController.onPageLoad(NormalMode)
-      case _          => BusinessContactDetailsController.onPageLoad(NormalMode)
+  def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =
+    userAnswers.get(CheckRegisteredDetailsPage) match {
+      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode)
+      case Some(registeredDetails) =>
+        if (registeredDetails.value) {
+          affinityGroup match {
+            case Individual => ApplicationContactDetailsController.onPageLoad(NormalMode)
+            case _          => BusinessContactDetailsController.onPageLoad(NormalMode)
+          }
+        } else EORIBeUpToDateController.onPageLoad()
     }
 }

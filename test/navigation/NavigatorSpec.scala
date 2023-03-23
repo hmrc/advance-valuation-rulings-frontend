@@ -426,7 +426,8 @@ class NavigatorSpec extends SpecBase {
             val userAnswers =
               userAnswersWith(CheckRegisteredDetailsPage, value = data)
             navigator.contactDetailsRouting(
-              aff: AffinityGroup
+              aff: AffinityGroup,
+              userAnswers
             ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
           }
 
@@ -448,7 +449,8 @@ class NavigatorSpec extends SpecBase {
             val userAnswers =
               userAnswersWith(CheckRegisteredDetailsPage, value = data)
             navigator.contactDetailsRouting(
-              aff: AffinityGroup
+              aff: AffinityGroup,
+              userAnswers
             ) mustBe routes.BusinessContactDetailsController.onPageLoad(mode = NormalMode)
           }
         }
