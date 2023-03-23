@@ -38,6 +38,7 @@ case class UploadedSuccessfully(
   name: String,
   mimeType: String,
   downloadUrl: String,
+  checksum: String,
   size: Option[Long]
 ) extends UploadStatus
 

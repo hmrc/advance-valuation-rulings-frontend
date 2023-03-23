@@ -102,7 +102,13 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
         ObjectId.get(),
         UploadId.generate,
         Reference("ABC"),
-        UploadedSuccessfully("foo.txt", "text/plain", "http:localhost:8080", size = None)
+        UploadedSuccessfully(
+          "foo.txt",
+          "text/plain",
+          "http:localhost:8080",
+          "checksum",
+          size = None
+        )
       )
 
       val serialized = UploadDetails.mongoFormat.writes(input)
@@ -116,7 +122,13 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
         ObjectId.get(),
         UploadId.generate,
         Reference("ABC"),
-        UploadedSuccessfully("foo.txt", "text/plain", "http:localhost:8080", size = Some(123456))
+        UploadedSuccessfully(
+          "foo.txt",
+          "text/plain",
+          "http:localhost:8080",
+          "checksum",
+          size = Some(123456)
+        )
       )
 
       val serialized = UploadDetails.mongoFormat.writes(input)

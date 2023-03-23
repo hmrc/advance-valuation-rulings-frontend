@@ -16,30 +16,57 @@
 
 package services.fileupload
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logger
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.objectstore.client.{ObjectSummaryWithMd5, Path}
+import uk.gov.hmrc.objectstore.client.play._
 
-import models.fileupload.{CallbackBody, Failed, FailedCallbackBody, Quarantine, ReadyCallbackBody, Rejected, UploadedSuccessfully}
+import config.FrontendAppConfig
+import models.fileupload._
 
-class UpscanCallbackDispatcher @Inject() (progressTracker: UploadProgressTracker) {
+sealed trait FileStatus
+case class Ready(callback: ReadyCallbackBody, location: String) extends FileStatus
+case class NotReady(callback: FailedCallbackBody) extends FileStatus
 
-  private val logger = Logger(this.getClass)
+@Singleton()
+class UpscanCallbackDispatcher @Inject() (
+  progressTracker: UploadProgressTracker,
+  objectStoreClient: PlayObjectStoreClient,
+  config: FrontendAppConfig
+) {
 
-  def handleCallback(callback: CallbackBody): Future[Unit] = {
+  private lazy val logger                                     = Logger(this.getClass)
+  private def directory(reference: Reference): Path.Directory =
+    Path.Directory(s"rulings/${reference.value}")
+  lazy val owner                                              = config.appName
 
-    val uploadStatus = callback match {
-      case s: ReadyCallbackBody  =>
-        logger.info(s"Successful uploaded notification for file: ${s.uploadDetails.fileName}")
-        UploadedSuccessfully(
-          s.uploadDetails.fileName,
-          s.uploadDetails.fileMimeType,
-          s.downloadUrl.getFile,
-          Some(s.uploadDetails.size)
+  def handleCallback(
+    callback: CallbackBody
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] =
+    for {
+      uploaded <- sendFile(callback)
+      status    = makeStatus(uploaded)
+      result   <- progressTracker.registerUploadResult(callback.reference, status)
+    } yield result
+
+  private def makeStatus(fileStatus: FileStatus): UploadStatus =
+    fileStatus match {
+      case Ready(callBack, location) =>
+        logger.info(
+          s"Successful uploaded notification for file: ${callBack.uploadDetails.fileName}"
         )
-      case f: FailedCallbackBody =>
+        UploadedSuccessfully(
+          callBack.uploadDetails.fileName,
+          callBack.uploadDetails.fileMimeType,
+          location,
+          callBack.uploadDetails.checksum,
+          Some(callBack.uploadDetails.size)
+        )
+      case NotReady(f)               =>
         val upscanFailureDetails = f.failureDetails.failureReason
         logger.warn(
           s"File upload failed notification received from upscan: $upscanFailureDetails with reference: ${f.reference.value}"
@@ -49,9 +76,30 @@ class UpscanCallbackDispatcher @Inject() (progressTracker: UploadProgressTracker
           case "REJECTED"   => Rejected
           case _            => Failed
         }
+
     }
 
-    progressTracker.registerUploadResult(callback.reference, uploadStatus)
-  }
-
+  private def sendFile(callback: CallbackBody)(implicit
+    ec: ExecutionContext,
+    hc: HeaderCarrier
+  ): Future[FileStatus] =
+    callback match {
+      case body: ReadyCallbackBody =>
+        val filePath = directory(body.reference)
+        objectStoreClient
+          .uploadFromUrl(
+            from = body.downloadUrl,
+            to = Path.File(filePath, body.uploadDetails.fileName),
+            contentType = Some(body.uploadDetails.fileMimeType),
+            contentMd5 = None,
+            owner = owner
+          )
+          .map {
+            (_: ObjectSummaryWithMd5) =>
+              logger.debug(s"Valuation application stored with reference: ${body.reference.value}")
+              Ready(body, Path.File(filePath, body.uploadDetails.fileName).asUri)
+          }
+      case f: FailedCallbackBody   =>
+        Future.successful(NotReady(f))
+    }
 }
