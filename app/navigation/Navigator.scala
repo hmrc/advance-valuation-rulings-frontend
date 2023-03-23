@@ -400,4 +400,10 @@ class Navigator @Inject() () {
       case _          =>
         WhatIsYourRoleAsImporterController.onPageLoad()
     }
+
+  def contactDetailsRouting(affinityGroup: AffinityGroup): Call =
+    affinityGroup match {
+      case Individual => ApplicationContactDetailsController.onPageLoad(NormalMode)
+      case _          => BusinessContactDetailsController.onPageLoad(NormalMode)
+    }
 }
