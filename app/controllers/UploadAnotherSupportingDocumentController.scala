@@ -26,6 +26,7 @@ import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions._
 import controllers.routes.DoYouWantToUploadDocumentsController
 import forms.UploadAnotherSupportingDocumentFormProvider
@@ -46,7 +47,8 @@ class UploadAnotherSupportingDocumentController @Inject() (
   requireData: DataRequiredAction,
   formProvider: UploadAnotherSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  objectStoreClient: PlayObjectStoreClient,
+  config: FrontendAppConfig,
+  osClient: PlayObjectStoreClient,
   link: views.html.components.Link,
   view: UploadAnotherSupportingDocumentView
 )(implicit ec: ExecutionContext)
@@ -95,7 +97,6 @@ class UploadAnotherSupportingDocumentController @Inject() (
     (identify andThen getData andThen requireData).async {
       implicit request =>
         val fileOpt = UploadSupportingDocumentPage.get().flatMap(_.getFile(UploadId(uploadId)))
-
         fileOpt match {
           case Some(file) =>
             for {
@@ -103,8 +104,9 @@ class UploadAnotherSupportingDocumentController @Inject() (
                 UploadSupportingDocumentPage.modify(
                   _.removeFile(UploadId(uploadId))
                 )
-              _              <- objectStoreClient.deleteObject(
-                                  path = Path.File(file.downloadUrl)
+              _              <- osClient.deleteObject(
+                                  path = Path.File(file.downloadUrl),
+                                  owner = config.appName
                                 )
               updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
               _              <- sessionRepository.set(updatedAnswers)
