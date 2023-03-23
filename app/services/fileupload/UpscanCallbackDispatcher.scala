@@ -99,10 +99,16 @@ class UpscanCallbackDispatcher @Inject() (
             (_: ObjectSummaryWithMd5) =>
               logger.warn(s"File uploaded stored with reference: ${body.reference.value}")
               Ready(body, Path.File(filePath, body.uploadDetails.fileName).asUri)
-          }.recover {
+          }
+          .recover {
             case e: Throwable =>
               logger.error(s"Failed to upload file with reference: ${body.reference.value}", e)
-              NotReady(FailedCallbackBody(body.reference, FailedCallbackBody.FailureDetails("REJECTED", "File upload failed")))
+              NotReady(
+                FailedCallbackBody(
+                  body.reference,
+                  ErrorDetails("error uploading to object store", e.getMessage)
+                )
+              )
           }
       case f: FailedCallbackBody   =>
         Future.successful(NotReady(f))
