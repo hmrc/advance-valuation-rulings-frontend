@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ImportGoodsFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
@@ -68,7 +68,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId, applicationNumber).set(ImportGoodsPage, true).success.value
+        emptyUserAnswers.set(ImportGoodsPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

@@ -27,7 +27,7 @@ import queries.Modifiable
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers  = UserAnswers("id", applicationNumber)
+  val EmptyUserAnswers: UserAnswers  = emptyUserAnswers
   val navigator                      = new Navigator
   val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
   val uploadedFile: UploadedFile     = UploadedFile(
@@ -219,7 +219,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainHowPartiesAreRelatedPage,
               CheckMode,
-              UserAnswers("id", applicationNumber)
+              emptyUserAnswers
                 .set(ExplainHowPartiesAreRelatedPage, "explain")
                 .success
                 .value
