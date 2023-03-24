@@ -35,14 +35,13 @@ case class NotReady(callback: FailedCallbackBody) extends FileStatus
 @Singleton()
 class UpscanCallbackDispatcher @Inject() (
   progressTracker: UploadProgressTracker,
-  objectStoreClient: PlayObjectStoreClient,
-  config: FrontendAppConfig
+  objectStoreClient: PlayObjectStoreClient
 ) {
 
   private lazy val logger                                     = Logger(this.getClass)
   private def directory(reference: Reference): Path.Directory =
     Path.Directory(s"rulings/${reference.value}")
-  lazy val owner                                              = config.appName
+  lazy val owner                                              = "advance-valuation-rulings-frontend"
 
   def handleCallback(
     callback: CallbackBody
@@ -86,6 +85,7 @@ class UpscanCallbackDispatcher @Inject() (
     callback match {
       case body: ReadyCallbackBody =>
         val filePath = directory(body.reference)
+        logger.info(s"Uploading to Object Store with reference: ${body.reference.value}")
         objectStoreClient
           .uploadFromUrl(
             from = body.downloadUrl,
@@ -96,8 +96,21 @@ class UpscanCallbackDispatcher @Inject() (
           )
           .map {
             (_: ObjectSummaryWithMd5) =>
-              logger.debug(s"Valuation application stored with reference: ${body.reference.value}")
+              logger.warn(s"File uploaded to Object Store with reference: ${body.reference.value}")
               Ready(body, Path.File(filePath, body.uploadDetails.fileName).asUri)
+          }
+          .recover {
+            case e: Throwable =>
+              logger.error(
+                s"Failed to upload to Object Store with reference: ${body.reference.value}",
+                e
+              )
+              NotReady(
+                FailedCallbackBody(
+                  body.reference,
+                  ErrorDetails("Error uploading to object store", e.getMessage)
+                )
+              )
           }
       case f: FailedCallbackBody   =>
         Future.successful(NotReady(f))

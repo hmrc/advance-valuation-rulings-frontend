@@ -27,7 +27,6 @@ import uk.gov.hmrc.objectstore.client.Md5Hash
 import uk.gov.hmrc.objectstore.client.play._
 
 import base.SpecBase
-import config.FrontendAppConfig
 import models.fileupload._
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
@@ -54,7 +53,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       ) thenReturn Future.successful(())
 
       implicit val hc = HeaderCarrier()
-      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
+      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
       val result      = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -81,7 +80,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       )
 
       implicit val hc = HeaderCarrier()
-      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
+      val dispatcher  = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
       val result      = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -102,7 +101,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       )
       implicit val hc            = HeaderCarrier()
 
-      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
+      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
       val result     = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -123,7 +122,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       )
       implicit val hc            = HeaderCarrier()
 
-      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient, config)
+      val dispatcher = new UpscanCallbackDispatcher(progressTracker, objectStoreClient)
       val result     = dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
@@ -140,7 +139,7 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
 private trait Setup extends MockitoSugar {
   val referenceValue = "ref"
   val reference      = Reference(referenceValue)
-  val appName        = "advance-valuation-ruling-frontend"
+  val appName        = "advance-valuation-rulings-frontend"
   val fileName       = "test.pdf"
   val mimeType       = "application/pdf"
   val fileUrl        = "?123456"
@@ -150,7 +149,6 @@ private trait Setup extends MockitoSugar {
   val objectLocation = s"$appName/rulings/$referenceValue/$fileName"
   val checksum       = "396f101dd52e8b2ace0dcf5ed09b1d1f030e608938510ce46e7a5c7a4e775100"
 
-  val config            = mock[FrontendAppConfig]
   val progressTracker   = mock[UploadProgressTracker]
   val objectStoreClient = mock[PlayObjectStoreClient]
 
@@ -163,7 +161,6 @@ private trait Setup extends MockitoSugar {
     lastModified = lastUpdated
   )
 
-  when(config.appName) thenReturn appName
   when(
     progressTracker.registerUploadResult(Reference(anyString()), any())
   ) thenReturn Future.successful(())
