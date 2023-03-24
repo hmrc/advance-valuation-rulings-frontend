@@ -106,7 +106,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
                 )
               _              <- osClient.deleteObject(
                                   path = Path.File(file.downloadUrl),
-                                  owner = config.appName
+                                  owner = config.objectStoreOwner
                                 )
               updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
               _              <- sessionRepository.set(updatedAnswers)
