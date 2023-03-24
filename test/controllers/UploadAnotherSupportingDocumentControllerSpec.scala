@@ -276,20 +276,17 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val config                = mock[FrontendAppConfig]
       val osClient              = mock[PlayObjectStoreClient]
       val mockSessionRepository = mock[SessionRepository]
-      val appName               = "testApp"
+
       when(mockSessionRepository.set(any()))
         .thenReturn(Future.successful(true))
       when(osClient.deleteObject(any(), anyString())(any()))
         .thenReturn(Future.successful(()))
 
-      when(config.appName).thenReturn(appName)
-
       val application =
         applicationBuilder(userAnswers = Some(ans))
           .overrides(
             bind[PlayObjectStoreClient].toInstance(osClient),
-            bind[SessionRepository].toInstance(mockSessionRepository),
-            bind[FrontendAppConfig].toInstance(config)
+            bind[SessionRepository].toInstance(mockSessionRepository)
           )
           .build()
       running(application) {
@@ -300,7 +297,9 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         status(result) mustEqual SEE_OTHER
 
         verify(mockSessionRepository, times(1)).set(any())
-        verify(osClient, times(1)).deleteObject(any(), eqTo(appName))(any())
+        verify(osClient, times(1)).deleteObject(any(), eqTo("advance-valuation-rulings-frontend"))(
+          any()
+        )
       }
     }
 

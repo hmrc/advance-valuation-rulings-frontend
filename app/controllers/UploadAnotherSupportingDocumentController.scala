@@ -106,7 +106,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
                 )
               _              <- osClient.deleteObject(
                                   path = Path.File(file.downloadUrl),
-                                  owner = config.appName
+                                  owner = "advance-valuation-rulings-frontend"
                                 )
               updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
               _              <- sessionRepository.set(updatedAnswers)
