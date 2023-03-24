@@ -122,7 +122,7 @@ object MethodSix {
 }
 
 object RequestedMethod {
-  private[models] val jsonConfig                   = JsonConfiguration(
+  private[models] val jsonConfig                = JsonConfiguration(
     discriminator = "_type",
     typeNaming =
       JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
