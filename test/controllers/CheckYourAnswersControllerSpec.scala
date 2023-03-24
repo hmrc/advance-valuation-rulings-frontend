@@ -20,7 +20,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.UserAnswers
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
@@ -40,7 +39,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
         val result = route(application, request).value
 
         val view        = application.injector.instanceOf[CheckYourAnswersView]
-        val userAnswers = UserAnswers("id", applicationNumber)
+        val userAnswers = emptyUserAnswers
         val list        = ApplicationSummary(userAnswers)
 
         status(result) mustEqual OK

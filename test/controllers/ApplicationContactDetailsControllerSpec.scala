@@ -19,15 +19,14 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ApplicationContactDetailsFormProvider
-import models.{NormalMode, UserAnswers}
 import models.ApplicationContactDetails
+import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -68,17 +67,16 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = UserAnswers(
-        userAnswersId,
-        applicationNumber,
-        Json.obj(
-          ApplicationContactDetailsPage.toString -> Json.obj(
-            "name"  -> "value 1",
-            "email" -> "value 2",
-            "phone" -> "value 3"
-          )
-        )
+      val applicationContactDetails = ApplicationContactDetails(
+        name = "my name",
+        email = "email@example.co.uk",
+        phone = "07123456789"
       )
+
+      val userAnswers = emptyUserAnswers
+        .set(ApplicationContactDetailsPage, applicationContactDetails)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -91,7 +89,7 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(ApplicationContactDetails("value 1", "value 2", "value 3")),
+          form.fill(applicationContactDetails),
           NormalMode
         )(request, messages(application)).toString
       }

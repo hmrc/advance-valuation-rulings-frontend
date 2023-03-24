@@ -23,7 +23,6 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
 import base.SpecBase
-import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
@@ -63,7 +62,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
         val sessionRepository = mock[SessionRepository]
         when(sessionRepository.get("id")) thenReturn Future(
-          Some(UserAnswers("id", applicationNumber))
+          Some(emptyUserAnswers)
         )
         val action            = new Harness(sessionRepository)
 
