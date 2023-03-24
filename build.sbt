@@ -46,7 +46,7 @@ lazy val root = (project in file("."))
       "-feature", // Emit warning and location for usages of features that should be imported explicitly.
       "-rootdir",
       baseDirectory.value.getCanonicalPath,
-      "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws",
+      "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s",
       // "-deprecation",                      // Emit warning when using deprecated APIs. cannot enable due to twirl...
       "-explaintypes", // Explain type errors in more detail.
       "-language:existentials", // Existential types (besides wildcard types) can be written and inferred

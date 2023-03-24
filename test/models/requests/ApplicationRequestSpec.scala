@@ -16,22 +16,25 @@
 
 package models.requests
 
+import cats.data.NonEmptyList
+import cats.data.Validated._
+
 import play.api.libs.json.{Json, JsSuccess}
 
 import generators._
+import models._
 import models.ApplicationNumber
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import pages._
 
 class ApplicationRequestSpec
     extends AnyWordSpec
     with Matchers
     with ScalaCheckPropertyChecks
     with ApplicationRequestGenerator {
-
   import ApplicationRequestSpec._
-
   "ApplicationRequest" should {
     "be able to deserialize successful body" in {
       ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
@@ -65,6 +68,78 @@ class ApplicationRequestSpec
           readsResult should be(JsSuccess(applicationRequest))
       }
     }
+
+    "return valid when built from correctly structured userAnswers" in {
+
+      val ua = UserAnswers("a", applicationNumber)
+
+      val userAnswers = (for {
+        ua <- ua.set(DescriptionOfGoodsPage, randomString)
+        ua <- ua.set(HasCommodityCodePage, false)
+        ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+        ua <- ua.set(HasConfidentialInformationPage, false)
+        ua <- ua.set(
+                CheckRegisteredDetailsPage,
+                CheckRegisteredDetails(
+                  value = true,
+                  eori = randomString,
+                  name = randomString,
+                  streetAndNumber = randomString,
+                  city = randomString,
+                  country = randomString,
+                  postalCode = Some(randomString)
+                )
+              )
+        ua <- ua.set(
+                ApplicationContactDetailsPage,
+                ApplicationContactDetails(
+                  name = randomString,
+                  email = randomString,
+                  phone = randomString
+                )
+              )
+        ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, true)
+        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+        ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+        ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+        ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+      } yield ua).success.get
+
+      val result = ApplicationRequest(userAnswers)
+
+      result shouldBe Valid(
+        ApplicationRequest(
+          applicationNumber = applicationNumber,
+          applicant = applicant,
+          requestedMethod = MethodOne(
+            Some("explainHowPartiesAreRelated"),
+            Some("describeTheRestrictions"),
+            None
+          ),
+          goodsDetails = goodsDetailsNoDetails,
+          attachments = Seq.empty
+        )
+      )
+    }
+
+    "return invalid when built from empty userAnswers" in {
+
+      val ua = UserAnswers("a", ApplicationNumber("GBAVR", 1).render)
+
+      val result = ApplicationRequest(ua)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(
+          DescriptionOfGoodsPage,
+          CheckRegisteredDetailsPage,
+          ApplicationContactDetailsPage,
+          BusinessContactDetailsPage,
+          ValuationMethodPage
+        )
+      )
+    }
   }
 }
 
@@ -78,8 +153,8 @@ object ApplicationRequestSpec extends Generators {
       eori = randomString,
       businessName = randomString,
       addressLine1 = randomString,
-      addressLine2 = randomString,
-      addressLine3 = "",
+      addressLine2 = "",
+      addressLine3 = randomString,
       postcode = randomString,
       country = randomString
     ),
@@ -103,6 +178,14 @@ object ApplicationRequestSpec extends Generators {
     confidentialInformation = Some(randomString)
   )
 
+  val goodsDetailsNoDetails = GoodsDetails(
+    goodName = randomString,
+    goodDescription = randomString,
+    envisagedCommodityCode = None,
+    knownLegalProceedings = None,
+    confidentialInformation = None
+  )
+
   val body =
     s"""{
     |"applicationNumber": "$applicationNumber",
@@ -111,8 +194,8 @@ object ApplicationRequestSpec extends Generators {
     |    "eori": "$randomString",
     |    "businessName": "$randomString",
     |    "addressLine1": "$randomString",
-    |    "addressLine2": "$randomString",
-    |    "addressLine3": "",
+    |    "addressLine2": "",
+    |    "addressLine3": "$randomString",
     |    "postcode": "$randomString",
     |    "country": "$randomString"
     |  },

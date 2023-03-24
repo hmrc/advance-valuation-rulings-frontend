@@ -34,34 +34,326 @@ class RequestedMethodSpec
 
   import RequestedMethodSpec._
 
-  "ApplicationRequest" should {
-    // "succeed for an individual applicant" in {
-    //   val ua = UserAnswers("a", applicationNumber)
+  "RequestedMethod" should {
 
-    //   val userAnswers = (for {
-    //     ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
-    //     ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
-    //   } yield ua).success.get
+    "return valid for method one - shortest path" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, true)
+        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, false)
+        ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, false)
+      } yield ua).success.get
 
-    //   val result = Applicant(userAnswers)
+      val result = RequestedMethod(userAnswers)
 
-    //   result shouldBe Valid(IndividualApplicant(applicant.holder, applicant.contact))
-    // }
+      result shouldBe Valid(
+        MethodOne(
+          None,
+          None,
+          None
+        )
+      )
+    }
 
-    // "succeed for a business applicant" in {
-    //   val ua = UserAnswers("a", applicationNumber)
+    "return valid for method one - long path" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, true)
+        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+        ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+        ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+        ua <- ua.set(IsTheSaleSubjectToConditionsPage, true)
+        ua <- ua.set(DescribeTheConditionsPage, "describeTheConditions")
+      } yield ua).success.get
 
-    //   val userAnswers = (for {
-    //     ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
-    //     ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
-    //   } yield ua).success.get
+      val result = RequestedMethod(userAnswers)
 
-    //   val result = Applicant(userAnswers)
+      result shouldBe Valid(
+        MethodOne(
+          Some("explainHowPartiesAreRelated"),
+          Some("describeTheRestrictions"),
+          Some("describeTheConditions")
+        )
+      )
+    }
 
-    //   result shouldBe Valid(
-    //     OrganisationApplicant(orgApplicant.holder, orgApplicant.businessContact)
-    //   )
-    // }
+    "return invalid for method one when there is no sale involved" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, false)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(
+          IsThereASaleInvolvedPage
+        )
+      )
+    }
+
+    "return valid when explanations are missing" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, true)
+        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+        ua <- ua.set(IsTheSaleSubjectToConditionsPage, true)
+        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(
+          ExplainHowPartiesAreRelatedPage,
+          DescribeTheRestrictionsPage,
+          DescribeTheConditionsPage
+        )
+      )
+    }
+
+    "return invalid for method one with no answers" in {
+      val userAnswers =
+        emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(
+          IsThereASaleInvolvedPage
+        )
+      )
+    }
+
+    "return valid for method two when has used method one in past" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+        ua <- ua.set(WhyIdenticalGoodsPage, randomString)
+        ua <- ua.set(HaveYouUsedMethodOneInPastPage, true)
+        ua <- ua.set(DescribeTheIdenticalGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Valid(
+        MethodTwo(
+          randomString,
+          PreviousIdenticalGoods(randomString)
+        )
+      )
+    }
+
+    "return valid for method two when has used method one long route" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+        ua <- ua.set(WhyIdenticalGoodsPage, randomString)
+        ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
+        ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
+        ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Valid(
+        MethodTwo(
+          randomString,
+          OtherUsersIdenticalGoods(randomString)
+        )
+      )
+    }
+
+    "return invalid when WhyIdenticalGoodsPage is not answered" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+        ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
+        ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
+        ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(
+          WhyIdenticalGoodsPage
+        )
+      )
+    }
+
+    "return invalid when ExplainYourGoodsComparingToIdenticalGoodsPage is not answered" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+        ua <- ua.set(WhyIdenticalGoodsPage, randomString)
+        ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
+        ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(
+          ExplainYourGoodsComparingToIdenticalGoodsPage
+        )
+      )
+    }
+
+    "return invalid if not comparing with identical goods" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+        ua <- ua.set(WhyIdenticalGoodsPage, randomString)
+        ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
+        ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, false)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(
+          WillYouCompareGoodsToIdenticalGoodsPage
+        )
+      )
+    }
+
+    "return invalid for method two with no answers" in {
+      val userAnswers =
+        emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(
+          HaveYouUsedMethodOneInPastPage,
+          WhyIdenticalGoodsPage
+        )
+      )
+    }
+
+    "return valid for method three with answers for all questions" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
+        ua <- ua.set(DescribeTheSimilarGoodsPage, randomString)
+        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Valid(
+        MethodThree(
+          randomString,
+          PreviousSimilarGoods(randomString)
+        )
+      )
+    }
+
+    "return valid for method three with answers for comparing with similar goods" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+        ua <- ua.set(WillYouCompareToSimilarGoodsPage, true)
+        ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, randomString)
+        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Valid(
+        MethodThree(
+          randomString,
+          OtherUsersSimilarGoods(randomString)
+        )
+      )
+    }
+
+    "return invalid for method three without ExplainYourGoodsComparingToSimilarGoodsPage" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+        ua <- ua.set(WillYouCompareToSimilarGoodsPage, true)
+        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(ExplainYourGoodsComparingToSimilarGoodsPage)
+      )
+    }
+
+    "return invalid for method three without WillYouCompareToSimilarGoodsPage" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+        ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, randomString)
+        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(WillYouCompareToSimilarGoodsPage)
+      )
+    }
+
+    "return invalid for method three with comparing with similar goods set to false" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+        ua <- ua.set(WillYouCompareToSimilarGoodsPage, false)
+        ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, randomString)
+        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(WillYouCompareToSimilarGoodsPage)
+      )
+    }
+
+    "return invalid for method three without HaveYouUsedMethodOneForSimilarGoodsInPastPage" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+        ua <- ua.set(DescribeTheSimilarGoodsPage, randomString)
+        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+      )
+    }
+
+    "return invalid for method three without DescribeTheSimilarGoodsPage" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+        ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
+        ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList.one(DescribeTheSimilarGoodsPage)
+      )
+    }
+
+    "return invalid for method three with no answers" in {
+      val userAnswers = (for {
+        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+      } yield ua).success.get
+
+      val result = RequestedMethod(userAnswers)
+
+      result shouldBe Invalid(
+        NonEmptyList(
+          HaveYouUsedMethodOneForSimilarGoodsInPastPage,
+          List(WhyTransactionValueOfSimilarGoodsPage)
+        )
+      )
+    }
 
     "return valid for method four with all answers" in {
       val userAnswers = (for {
@@ -180,23 +472,26 @@ class RequestedMethodSpec
     }
 
     "return valid for method six with all answers" in {
-      val userAnswers = (for {
-        ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method6)
-        ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, randomString)
-        ua <- ua.set(AdaptMethodPage, AdaptMethod.Method5)
-        ua <- ua.set(ExplainHowYouWillUseMethodSixPage, randomString)
+      forAll(arbitraryAdaptMethod.arbitrary) {
+        adaptMethod =>
+          val userAnswers = (for {
+            ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method6)
+            ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, randomString)
+            ua <- ua.set(AdaptMethodPage, adaptMethod)
+            ua <- ua.set(ExplainHowYouWillUseMethodSixPage, randomString)
 
-      } yield ua).success.get
+          } yield ua).success.get
 
-      val result = RequestedMethod(userAnswers)
+          val result = RequestedMethod(userAnswers)
 
-      result shouldBe Valid(
-        MethodSix(
-          randomString,
-          AdaptedMethod.MethodFive,
-          randomString
-        )
-      )
+          result shouldBe Valid(
+            MethodSix(
+              randomString,
+              AdaptedMethod(adaptMethod),
+              randomString
+            )
+          )
+      }
     }
 
     "return invalid for method six without ExplainWhyYouHaveNotSelectedMethodOneToFivePage" in {

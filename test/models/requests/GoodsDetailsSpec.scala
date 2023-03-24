@@ -21,13 +21,12 @@ import cats.data.Validated._
 
 import generators._
 import models.{ApplicationContactDetails, ApplicationNumber, BusinessContactDetails, CheckRegisteredDetails, UserAnswers}
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 
-class ApplicantSpec
+class GoodsDetailsSpec
     extends AnyWordSpec
     with Matchers
     with ScalaCheckPropertyChecks
@@ -35,68 +34,48 @@ class ApplicantSpec
 
   import ApplicantSpec._
 
-  "Applicant" should {
-    "succeed for an individual applicant" in {
+  "GoodsDetails" should {
+    "succeed when all fields set" in {
       val ua = UserAnswers("a", applicationNumber)
 
       val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
-        ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
+        ua <- ua.set(DescriptionOfGoodsPage, randomString)
+        ua <- ua.set(HasCommodityCodePage, true)
+        ua <- ua.set(CommodityCodePage, randomString)
+        ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, true)
+        ua <- ua.set(DescribeTheLegalChallengesPage, randomString)
+        ua <- ua.set(HasConfidentialInformationPage, true)
+        ua <- ua.set(ConfidentialInformationPage, randomString)
       } yield ua).success.get
 
-      val result = Applicant(userAnswers)
-
-      result shouldBe Valid(IndividualApplicant(applicant.holder, applicant.contact))
-    }
-
-    "succeed for a business applicant" in {
-      val ua = UserAnswers("a", applicationNumber)
-
-      val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
-        ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
-      } yield ua).success.get
-
-      val result = Applicant(userAnswers)
+      val result = GoodsDetails(userAnswers)
 
       result shouldBe Valid(
-        OrganisationApplicant(orgApplicant.holder, orgApplicant.businessContact)
-      )
-    }
-
-    "return invalid when user has no contact details" in {
-      val ua = UserAnswers("a", applicationNumber)
-
-      val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
-      } yield ua).success.get
-
-      val result = Applicant(userAnswers)
-
-      result shouldBe Invalid(
-        NonEmptyList(ApplicationContactDetailsPage, List(BusinessContactDetailsPage))
+        GoodsDetails(
+          goodName = randomString,
+          goodDescription = randomString,
+          envisagedCommodityCode = Some(randomString),
+          knownLegalProceedings = Some(randomString),
+          confidentialInformation = Some(randomString)
+        )
       )
     }
 
     "return invalid for empty UserAnswers" in {
       val userAnswers = UserAnswers("a", applicationNumber)
 
-      val result = Applicant(userAnswers)
+      val result = GoodsDetails(userAnswers)
 
       result shouldBe Invalid(
-        NonEmptyList(
-          CheckRegisteredDetailsPage,
-          List(
-            ApplicationContactDetailsPage,
-            BusinessContactDetailsPage
-          )
+        NonEmptyList.one(
+          DescriptionOfGoodsPage
         )
       )
     }
   }
 }
 
-object ApplicantSpec extends Generators {
+object GoodsDetailsSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
   val checkRegisteredDetails    = CheckRegisteredDetails(
@@ -106,7 +85,7 @@ object ApplicantSpec extends Generators {
     streetAndNumber = randomString,
     city = randomString,
     country = randomString,
-    postalCode = Some("abc")
+    postalCode = Some(randomString)
   )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
@@ -128,7 +107,7 @@ object ApplicantSpec extends Generators {
       addressLine1 = randomString,
       addressLine2 = "",
       addressLine3 = randomString,
-      postcode = "abc",
+      postcode = randomString,
       country = randomString
     ),
     contact = ContactDetails(
@@ -144,7 +123,7 @@ object ApplicantSpec extends Generators {
       addressLine1 = randomString,
       addressLine2 = "",
       addressLine3 = randomString,
-      postcode = "abc",
+      postcode = randomString,
       country = randomString
     ),
     businessContact = CompanyContactDetails(

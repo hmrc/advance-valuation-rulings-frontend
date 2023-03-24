@@ -16,7 +16,7 @@
 
 package models.requests
 
-import cats.data.ValidatedNel
+import cats.data.{NonEmptyList, ValidatedNel}
 import cats.implicits._
 
 import play.api.libs.json.{Format, Json, JsonConfiguration, JsonNaming, OFormat}
@@ -34,6 +34,40 @@ case class MethodOne(
 ) extends RequestedMethod
 object MethodOne {
   implicit val format: OFormat[MethodOne] = Json.format[MethodOne]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodOne] = {
+    val saleInvolved = userAnswers
+      .validated(IsThereASaleInvolvedPage)
+      .ensure(NonEmptyList.one(IsThereASaleInvolvedPage))(_ == true)
+
+    val betweenParties: ValidatedNel[Page, Option[String]] = userAnswers
+      .validated(IsSaleBetweenRelatedPartiesPage)
+      .andThen(
+        answer =>
+          if (answer) userAnswers.validated(ExplainHowPartiesAreRelatedPage).map(_.some)
+          else None.validNel
+      )
+
+    val restrictions = userAnswers
+      .validated(AreThereRestrictionsOnTheGoodsPage)
+      .andThen(
+        answer =>
+          if (answer) userAnswers.validated(DescribeTheRestrictionsPage).map(_.some)
+          else None.validNel
+      )
+
+    val subjectToConditions = userAnswers
+      .validated(IsTheSaleSubjectToConditionsPage)
+      .andThen(
+        answer =>
+          if (answer) userAnswers.validated(DescribeTheConditionsPage).map(_.some)
+          else None.validNel
+      )
+
+    saleInvolved.andThen(
+      _ => (betweenParties, restrictions, subjectToConditions).mapN(MethodOne.apply)
+    )
+  }
 }
 
 sealed trait IdenticalGoodsExplaination extends Any
@@ -60,6 +94,45 @@ case class MethodTwo(
 ) extends RequestedMethod
 object MethodTwo {
   implicit val format: OFormat[MethodTwo] = Json.format[MethodTwo]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodTwo] = {
+    val whyTransactionValue       = userAnswers.validated(WhyIdenticalGoodsPage)
+    val usedMethod                = userAnswers.validated(HaveYouUsedMethodOneInPastPage)
+    val describeTheIdenticalGoods = userAnswers.validated(DescribeTheIdenticalGoodsPage)
+    val willCompareIndentical     = userAnswers
+      .validated(WillYouCompareGoodsToIdenticalGoodsPage)
+      .ensure(NonEmptyList.one(WillYouCompareGoodsToIdenticalGoodsPage))(_ == true)
+
+    val explainComparison = userAnswers.validated(ExplainYourGoodsComparingToIdenticalGoodsPage)
+
+    (usedMethod, whyTransactionValue)
+      .mapN((method, why) => (method, why))
+      .andThen {
+        case (usedMethod, whyTransactionValue) =>
+          usedMethod match {
+            case true  =>
+              describeTheIdenticalGoods.map(
+                description =>
+                  MethodTwo(
+                    whyTransactionValue,
+                    PreviousIdenticalGoods(description)
+                  )
+              )
+            case false =>
+              willCompareIndentical.andThen(
+                _ =>
+                  explainComparison.map(
+                    explain =>
+                      MethodTwo(
+                        whyTransactionValue,
+                        OtherUsersIdenticalGoods(explain)
+                      )
+                  )
+              )
+          }
+      }
+
+  }
 }
 
 sealed trait SimilarGoodsExplaination extends Any
@@ -86,6 +159,41 @@ case class MethodThree(
 object MethodThree {
   implicit val format: Format[MethodThree] =
     Json.format[MethodThree]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodThree] = {
+    val usedMethod              = userAnswers.validated(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+    val whyTransactionValue     = userAnswers.validated(WhyTransactionValueOfSimilarGoodsPage)
+    val describeTheSimilarGoods = userAnswers.validated(DescribeTheSimilarGoodsPage)
+    val willCompareSimilar      = userAnswers
+      .validated(WillYouCompareToSimilarGoodsPage)
+      .ensure(NonEmptyList.one(WillYouCompareToSimilarGoodsPage))(_ == true)
+    val explainComparison       = userAnswers
+      .validated(ExplainYourGoodsComparingToSimilarGoodsPage)
+
+    (usedMethod, whyTransactionValue)
+      .mapN((method, why) => (method, why))
+      .andThen {
+        case (usedMethod, whyTransactionValue) =>
+          usedMethod match {
+            case true  =>
+              describeTheSimilarGoods.map(
+                description =>
+                  MethodThree(
+                    whyTransactionValue,
+                    PreviousSimilarGoods(description)
+                  )
+              )
+            case false =>
+              (willCompareSimilar, explainComparison).mapN(
+                (_, explainComparison) =>
+                  MethodThree(
+                    whyTransactionValue,
+                    OtherUsersSimilarGoods(explainComparison)
+                  )
+              )
+          }
+      }
+  }
 }
 
 case class MethodFour(
@@ -129,6 +237,15 @@ object AdaptedMethod extends Enum[AdaptedMethod] with PlayJsonEnum[AdaptedMethod
   case object MethodFour extends AdaptedMethod("MethodFour")
   case object MethodFive extends AdaptedMethod("MethodFive")
   case object Unable extends AdaptedMethod("Unable")
+
+  def apply(adaptMethod: AdaptMethod): AdaptedMethod = adaptMethod match {
+    case AdaptMethod.Method1       => MethodOne
+    case AdaptMethod.Method2       => MethodTwo
+    case AdaptMethod.Method3       => MethodThree
+    case AdaptMethod.Method4       => MethodFour
+    case AdaptMethod.Method5       => MethodFive
+    case AdaptMethod.NoOtherMethod => Unable
+  }
 }
 
 case class MethodSix(
@@ -142,14 +259,7 @@ object MethodSix {
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodSix] = {
     val whyNotOtherMethods   =
       userAnswers.validated(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
-    val adaptMethod          = userAnswers.validated(AdaptMethodPage).map {
-      case AdaptMethod.Method1       => AdaptedMethod.MethodOne
-      case AdaptMethod.Method2       => AdaptedMethod.MethodTwo
-      case AdaptMethod.Method3       => AdaptedMethod.MethodThree
-      case AdaptMethod.Method4       => AdaptedMethod.MethodFour
-      case AdaptMethod.Method5       => AdaptedMethod.MethodFive
-      case AdaptMethod.NoOtherMethod => AdaptedMethod.Unable
-    }
+    val adaptMethod          = userAnswers.validated(AdaptMethodPage).map(AdaptedMethod.apply)
     val valuationDescription =
       userAnswers.validated(ExplainHowYouWillUseMethodSixPage)
 
@@ -170,9 +280,9 @@ object RequestedMethod {
     val method = userAnswers.validated(ValuationMethodPage)
 
     method.andThen {
-      case ValuationMethod.Method1 => ???
-      case ValuationMethod.Method2 => ???
-      case ValuationMethod.Method3 => ???
+      case ValuationMethod.Method1 => MethodOne(userAnswers)
+      case ValuationMethod.Method2 => MethodTwo(userAnswers)
+      case ValuationMethod.Method3 => MethodThree(userAnswers)
       case ValuationMethod.Method4 => MethodFour(userAnswers)
       case ValuationMethod.Method5 => MethodFive(userAnswers)
       case ValuationMethod.Method6 => MethodSix(userAnswers)
