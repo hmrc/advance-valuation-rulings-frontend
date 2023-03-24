@@ -96,6 +96,7 @@ object ApplicationRequestSpec extends Generators {
   )
 
   val goodsDetails = GoodsDetails(
+    goodName = randomString,
     goodDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),
@@ -131,6 +132,7 @@ object ApplicationRequestSpec extends Generators {
     |  "_type" : "MethodThree"
     |},
     |"goodsDetails": {
+    |  "goodName": "$randomString",
     |  "goodDescription": "$randomString",
     |  "envisagedCommodityCode": "$randomString",
     |  "knownLegalProceedings": "$randomString",

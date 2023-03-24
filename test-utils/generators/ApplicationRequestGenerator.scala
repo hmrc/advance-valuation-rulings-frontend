@@ -85,11 +85,13 @@ trait ApplicationRequestGenerator extends Generators {
 
   implicit lazy val arbitraryGoodsDetails: Arbitrary[GoodsDetails] = Arbitrary {
     for {
+      goodName                <- stringsWithMaxLength(100)
       goodDescription         <- stringsWithMaxLength(100)
       envisagedCommodityCode  <- Gen.option(stringsWithMaxLength(10))
       knownLegalProceedings   <- Gen.option(stringsWithMaxLength(100))
       confidentialInformation <- Gen.option(stringsWithMaxLength(100))
     } yield GoodsDetails(
+      goodName,
       goodDescription,
       envisagedCommodityCode,
       knownLegalProceedings,

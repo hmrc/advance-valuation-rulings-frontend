@@ -16,10 +16,15 @@
 
 package models.requests
 
+import cats.data.EitherNel
+import cats.implicits._
+
 import play.api.libs.json._
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import enumeratum.Enum
 import models.BusinessContactDetails
+import models.UserAnswers
+import pages._
 
 case class UploadedDocument(
   id: String,
@@ -74,6 +79,7 @@ object IndividualApplicant {
 }
 
 case class GoodsDetails(
+  goodName: String,
   goodDescription: String,
   envisagedCommodityCode: Option[String],
   knownLegalProceedings: Option[String],
@@ -81,7 +87,35 @@ case class GoodsDetails(
 )
 
 object GoodsDetails {
-  implicit val format: OFormat[GoodsDetails] = Json.format[GoodsDetails]
+  implicit val format: OFormat[GoodsDetails]                                    = Json.format[GoodsDetails]
+
+  def apply(userAnswers: UserAnswers): EitherNel[QuestionPage[_], GoodsDetails] = {
+    val name        = userAnswers.get(DescriptionOfGoodsPage)
+    val description = userAnswers.get(DescriptionOfGoodsPage)
+
+    val envisagedCommodityCode = for {
+      hasCode <- userAnswers.get(HasCommodityCodePage)
+      code    <- userAnswers.get(CommodityCodePage)
+    } yield code
+
+    val knownLegalProceedings = for {
+      hasLegalProceedings <- userAnswers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage)
+      legalProceedings    <- userAnswers.get(DescribeTheLegalChallengesPage)
+    } yield legalProceedings
+
+    val confidentialInformation = for {
+      hasConfidentialInformation <- userAnswers.get(HasConfidentialInformationPage)
+      confidentialInformation    <- userAnswers.get(ConfidentialInformationPage)
+    } yield confidentialInformation
+
+    GoodsDetails(
+      goodName = name.getOrElse(""),
+      goodDescription = description.getOrElse(""),
+      envisagedCommodityCode = envisagedCommodityCode,
+      knownLegalProceedings = knownLegalProceedings,
+      confidentialInformation = confidentialInformation
+    ).asRight
+  }
 }
 
 case class EORIDetails(
@@ -106,107 +140,6 @@ object ContactDetails {
   implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
 }
 
-sealed trait RequestedMethod
-
-case class MethodOne(
-  saleBetweenRelatedParties: Option[String],
-  goodsRestrictions: Option[String],
-  saleConditions: Option[String]
-) extends RequestedMethod
-object MethodOne {
-  implicit val format: OFormat[MethodOne] = Json.format[MethodOne]
-}
-
-sealed trait IdenticalGoodsExplaination extends Any
-case class PreviousIdenticalGoods(val value: String) extends AnyVal with IdenticalGoodsExplaination
-object PreviousIdenticalGoods {
-  implicit val format: Format[PreviousIdenticalGoods] = Json.valueFormat[PreviousIdenticalGoods]
-}
-case class OtherUsersIdenticalGoods(val value: String)
-    extends AnyVal
-    with IdenticalGoodsExplaination
-object OtherUsersIdenticalGoods {
-  implicit val format = Json.valueFormat[OtherUsersIdenticalGoods]
-}
-
-object IdenticalGoodsExplaination {
-  import ApplicationRequest.jsonConfig
-  implicit val format: Format[IdenticalGoodsExplaination] =
-    Json.configured(jsonConfig).format[IdenticalGoodsExplaination]
-}
-
-case class MethodTwo(
-  whyNotOtherMethods: String,
-  detailedDescription: IdenticalGoodsExplaination
-) extends RequestedMethod
-object MethodTwo {
-  implicit val format: OFormat[MethodTwo] = Json.format[MethodTwo]
-}
-
-sealed trait SimilarGoodsExplaination extends Any
-case class PreviousSimilarGoods(val value: String) extends AnyVal with SimilarGoodsExplaination
-case class OtherUsersSimilarGoods(val value: String) extends AnyVal with SimilarGoodsExplaination
-
-object PreviousSimilarGoods {
-  implicit val format: Format[PreviousSimilarGoods] = Json.valueFormat[PreviousSimilarGoods]
-}
-object OtherUsersSimilarGoods {
-  implicit val format: Format[OtherUsersSimilarGoods] = Json.valueFormat[OtherUsersSimilarGoods]
-}
-
-object SimilarGoodsExplaination {
-  import ApplicationRequest.jsonConfig
-  implicit val format: OFormat[SimilarGoodsExplaination] =
-    Json.configured(jsonConfig).format[SimilarGoodsExplaination]
-}
-
-case class MethodThree(
-  whyNotOtherMethods: String,
-  detailedDescription: SimilarGoodsExplaination
-) extends RequestedMethod
-object MethodThree {
-  implicit val format: Format[MethodThree] =
-    Json.format[MethodThree]
-}
-
-case class MethodFour(
-  whyNotOtherMethods: String,
-  deductiveMethod: String
-) extends RequestedMethod
-object MethodFour {
-  implicit val format: OFormat[MethodFour] = Json.format[MethodFour]
-}
-
-case class MethodFive(
-  whyNotOtherMethods: String,
-  computedValue: String
-) extends RequestedMethod
-object MethodFive {
-  implicit val format: OFormat[MethodFive] = Json.format[MethodFive]
-}
-
-sealed abstract class AdaptedMethod(override val entryName: String) extends EnumEntry
-
-object AdaptedMethod extends Enum[AdaptedMethod] with PlayJsonEnum[AdaptedMethod] {
-  val values: IndexedSeq[AdaptedMethod] = findValues
-
-  case object MethodOne extends AdaptedMethod("MethodOne")
-  case object MethodTwo extends AdaptedMethod("MethodTwo")
-  case object MethodThree extends AdaptedMethod("MethodThree")
-  case object MethodFour extends AdaptedMethod("MethodFour")
-  case object MethodFive extends AdaptedMethod("MethodFive")
-  case object Unable extends AdaptedMethod("Unable")
-}
-
-case class MethodSix(
-  whyNotOtherMethods: String,
-  adoptMethod: AdaptedMethod,
-  valuationDescription: String
-) extends RequestedMethod
-object MethodSix {
-  implicit val format: OFormat[MethodSix] = Json.format[MethodSix]
-}
-
 case class ApplicationRequest(
   applicationNumber: String,
   applicant: Applicant,
@@ -214,11 +147,7 @@ case class ApplicationRequest(
   goodsDetails: GoodsDetails,
   attachments: Seq[UploadedDocument]
 )
-object RequestedMethod {
-  import ApplicationRequest.jsonConfig
-  implicit val format: OFormat[RequestedMethod] =
-    Json.configured(jsonConfig).format[RequestedMethod]
-}
+
 object ApplicationRequest {
   private[models] val jsonConfig                   = JsonConfiguration(
     discriminator = "_type",
@@ -227,4 +156,24 @@ object ApplicationRequest {
   )
   implicit val format: OFormat[ApplicationRequest] =
     Json.configured(jsonConfig).format[ApplicationRequest]
+
+  def apply(userAnswers: UserAnswers): EitherNel[Page[_], ApplicationRequest] = {
+    val applicationNumber = userAnswers.applicationNumber
+    val goodsDetails      = GoodsDetails(userAnswers)
+    // val applicationNumber = userAnswers.get(ApplicationNumberPage).get
+    // val applicant         = userAnswers.get(ApplicantPage).get
+    // val requestedMethod   = userAnswers.get(RequestedMethodPage).get
+    // val goodsDetails      = userAnswers.get(GoodsDetailsPage).get
+    // val attachments       = userAnswers.get(AttachmentsPage).getOrElse(Seq.empty)
+
+    for {
+      goodsDetails <- GoodsDetails(userAnswers)
+    } yield ApplicationRequest(
+      applicationNumber,
+      ???,
+      ???,
+      goodsDetails,
+      Seq.empty
+    )
+  }
 }
