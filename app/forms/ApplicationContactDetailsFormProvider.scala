@@ -60,7 +60,7 @@ object ApplicationContactDetailsFormProvider {
   private val phoneNumberMaxLength = 24
   private val phoneNumberRegex     = "^[0-9]*$".r
 
-  private val emailRegex = """[^”r-v\[ ]*+[^ ]++|(?<= )[a-zA-Z]@\w[^ ]++""".r
+  private val emailRegex = """^(.\S+)@(.\S+)$""".r
 
   private val nameRequiredError = "applicationContactDetails.fullName.error.required"
   private val nameFormatError   = "applicationContactDetails.fullName.error.format"
