@@ -38,12 +38,12 @@
 
     @subheading(messages("checkYourAnswers.applicant.heading"))
     
-    @govukSummaryList(applicationSummary.applicant.rows)
+    @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
     
     @subheading(messages("checkYourAnswers.goods.heading"))
 
     @govukSummaryList(applicationSummary.method.rows)
-    @govukSummaryList(applicationSummary.details.rows)
+    @govukSummaryList(applicationSummary.details.rows.withCssClass("govuk-!-margin-bottom-9"))
 
     @subheading(messages("checkYourAnswers.declaration.heading"))
 
