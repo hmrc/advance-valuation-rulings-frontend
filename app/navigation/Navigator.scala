@@ -48,6 +48,7 @@ class Navigator @Inject() () {
     case WhatIsYourRoleAsImporterPage                  => whatIsYourRoleAsImporterPage
     case CheckRegisteredDetailsPage                    => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                 => applicationContactDetailsPage
+    case BusinessContactDetailsPage                    => businessContactDetailsPage
     case DoYouWantToUploadDocumentsPage                => doYouWantToUploadDocumentsPage
     case IsThisFileConfidentialPage                    => isThisFileConfidentialPage
     case UploadAnotherSupportingDocumentPage           => uploadAnotherSupportingDocumentPage
@@ -387,6 +388,12 @@ class Navigator @Inject() () {
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
     }
 
+  private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(BusinessContactDetailsPage) match {
+      case None    => BusinessContactDetailsController.onPageLoad(NormalMode)
+      case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
+    }
+
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       routes(page)(userAnswers)
@@ -399,5 +406,17 @@ class Navigator @Inject() () {
       case Individual => RequiredInformationController.onPageLoad()
       case _          =>
         WhatIsYourRoleAsImporterController.onPageLoad()
+    }
+
+  def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =
+    userAnswers.get(CheckRegisteredDetailsPage) match {
+      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode)
+      case Some(registeredDetails) =>
+        if (registeredDetails.value) {
+          affinityGroup match {
+            case Individual => ApplicationContactDetailsController.onPageLoad(NormalMode)
+            case _          => BusinessContactDetailsController.onPageLoad(NormalMode)
+          }
+        } else EORIBeUpToDateController.onPageLoad()
     }
 }

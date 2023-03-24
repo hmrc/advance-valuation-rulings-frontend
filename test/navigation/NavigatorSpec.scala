@@ -17,6 +17,7 @@
 package navigation
 
 import play.api.libs.json.Writes
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup._
 
 import base.SpecBase
@@ -418,25 +419,54 @@ class NavigatorSpec extends SpecBase {
           country = "GB"
         )
 
-        "navigate to ApplicationContactDetailsPage when Yes" in {
-          val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, value = data)
-          navigator.nextPage(
-            CheckRegisteredDetailsPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+        "when Individual" - {
+          val aff: AffinityGroup = Individual
+
+          "navigate to ApplicationContactDetailsPage when Yes" in {
+            val userAnswers =
+              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+            navigator.contactDetailsRouting(
+              aff: AffinityGroup,
+              userAnswers
+            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+          }
+
+          "and navigate to EORIBeUpToDatePage when No" in {
+            val userAnswers =
+              userAnswersWith(CheckRegisteredDetailsPage, value = data.copy(value = false))
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              NormalMode,
+              userAnswers
+            ) mustBe routes.EORIBeUpToDateController.onPageLoad()
+          }
         }
 
-        "and navigate to EORIBeUpToDatePage when No" in {
-          val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, value = data.copy(value = false))
-          navigator.nextPage(
-            CheckRegisteredDetailsPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.EORIBeUpToDateController.onPageLoad()
+        "when Organisation" - {
+          val aff: AffinityGroup = Organisation
+
+          "navigate to BusinessContactDetailsPage when Yes" in {
+            val userAnswers =
+              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+            navigator.contactDetailsRouting(
+              aff: AffinityGroup,
+              userAnswers
+            ) mustBe routes.BusinessContactDetailsController.onPageLoad(mode = NormalMode)
+          }
         }
+      }
+
+      "BusinessContactDetailsPage must" in {
+        val userAnswers =
+          userAnswersWith(
+            BusinessContactDetailsPage,
+            BusinessContactDetails("name", "email", "phone", "company")
+          )
+        navigator.nextPage(
+          BusinessContactDetailsPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
       }
 
       "ApplicationContactDetailsPage must" in {

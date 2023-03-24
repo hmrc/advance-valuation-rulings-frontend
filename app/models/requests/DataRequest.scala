@@ -33,5 +33,6 @@ case class DataRequest[A](
   request: Request[A],
   userId: String,
   eoriNumber: String,
+  affinityGroup: AffinityGroup,
   userAnswers: UserAnswers
 ) extends WrappedRequest[A](request)
