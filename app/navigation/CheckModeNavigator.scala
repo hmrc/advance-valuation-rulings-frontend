@@ -28,7 +28,7 @@ import pages._
 object CheckModeNavigator {
   import controllers._
 
-  private val checkYourAnswers = routes.CheckYourAnswersController.onPageLoad
+  private def checkYourAnswers = routes.CheckYourAnswersController.onPageLoad
 
   // Pre nav
   private def checkRegisteredDetails(implicit userAnswers: UserAnswers): Call =
