@@ -102,7 +102,7 @@ trait FormBehaviours extends FormSpec {
 
     s"fail to bind when ${field.name} is invalid" in {
       val data          = validData + (field.name -> "invalid value")
-      val expectedError = error(field.name, field.errorKeys(Invalid))
+      val expectedError = error(field.name, field.errorKeys(InvalidData))
       checkForError(form, data, expectedError)
     }
   }

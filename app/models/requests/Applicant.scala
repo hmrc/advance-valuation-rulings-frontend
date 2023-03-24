@@ -120,14 +120,16 @@ object Applicant {
         )
 
     (contactDetails, businessContactDetails) match {
-      case (Valid(contact), Invalid(_)) =>
+      case (Valid(_), Invalid(_)) =>
         (eoriDetails, contactDetails).mapN {
           case (holder, contact) => IndividualApplicant(holder, contact)
         }
-      case (Invalid(_), Valid(contact)) =>
-        eoriDetails
-          .map(holder => OrganisationApplicant(holder, contact))
-      case _                            =>
+      case (Invalid(_), Valid(_)) =>
+        (eoriDetails, businessContactDetails).mapN {
+          case (holder, contact) =>
+            OrganisationApplicant(holder, contact)
+        }
+      case _                      =>
         eoriDetails match {
           case Valid(_)   =>
             Invalid(NonEmptyList.of(ApplicationContactDetailsPage, BusinessContactDetailsPage))

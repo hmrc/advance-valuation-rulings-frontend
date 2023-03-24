@@ -16,9 +16,14 @@
 
 package models.requests
 
-import play.api.libs.json._
+import cats.data.ValidatedNel
+import cats.implicits._
+
+import play.api.libs.json.{Format, Json, JsonConfiguration, JsonNaming, OFormat}
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import models.{AdaptMethod, UserAnswers, ValuationMethod}
+import pages._
 
 sealed trait RequestedMethod
 
@@ -89,6 +94,13 @@ case class MethodFour(
 ) extends RequestedMethod
 object MethodFour {
   implicit val format: OFormat[MethodFour] = Json.format[MethodFour]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodFour] = {
+    val whyNotOtherMethods = userAnswers.validated(ExplainWhyYouHaveNotSelectedMethodOneToThreePage)
+    val deductiveMethod    = userAnswers.validated(ExplainWhyYouChoseMethodFourPage)
+
+    (whyNotOtherMethods, deductiveMethod).mapN(MethodFour.apply)
+  }
 }
 
 case class MethodFive(
@@ -97,6 +109,13 @@ case class MethodFive(
 ) extends RequestedMethod
 object MethodFive {
   implicit val format: OFormat[MethodFive] = Json.format[MethodFive]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodFive] = {
+    val whyNotOtherMethods = userAnswers.validated(WhyComputedValuePage)
+    val computedValue      = userAnswers.validated(ExplainReasonComputedValuePage)
+
+    (whyNotOtherMethods, computedValue).mapN(MethodFive.apply)
+  }
 }
 
 sealed abstract class AdaptedMethod(override val entryName: String) extends EnumEntry
@@ -114,11 +133,28 @@ object AdaptedMethod extends Enum[AdaptedMethod] with PlayJsonEnum[AdaptedMethod
 
 case class MethodSix(
   whyNotOtherMethods: String,
-  adoptMethod: AdaptedMethod,
+  adaptMethod: AdaptedMethod,
   valuationDescription: String
 ) extends RequestedMethod
 object MethodSix {
   implicit val format: OFormat[MethodSix] = Json.format[MethodSix]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodSix] = {
+    val whyNotOtherMethods   =
+      userAnswers.validated(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
+    val adaptMethod          = userAnswers.validated(AdaptMethodPage).map {
+      case AdaptMethod.Method1       => AdaptedMethod.MethodOne
+      case AdaptMethod.Method2       => AdaptedMethod.MethodTwo
+      case AdaptMethod.Method3       => AdaptedMethod.MethodThree
+      case AdaptMethod.Method4       => AdaptedMethod.MethodFour
+      case AdaptMethod.Method5       => AdaptedMethod.MethodFive
+      case AdaptMethod.NoOtherMethod => AdaptedMethod.Unable
+    }
+    val valuationDescription =
+      userAnswers.validated(ExplainHowYouWillUseMethodSixPage)
+
+    (whyNotOtherMethods, adaptMethod, valuationDescription).mapN(MethodSix.apply)
+  }
 }
 
 object RequestedMethod {
@@ -129,4 +165,17 @@ object RequestedMethod {
   )
   implicit val format: OFormat[RequestedMethod] =
     Json.configured(jsonConfig).format[RequestedMethod]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, RequestedMethod] = {
+    val method = userAnswers.validated(ValuationMethodPage)
+
+    method.andThen {
+      case ValuationMethod.Method1 => ???
+      case ValuationMethod.Method2 => ???
+      case ValuationMethod.Method3 => ???
+      case ValuationMethod.Method4 => MethodFour(userAnswers)
+      case ValuationMethod.Method5 => MethodFive(userAnswers)
+      case ValuationMethod.Method6 => MethodSix(userAnswers)
+    }
+  }
 }

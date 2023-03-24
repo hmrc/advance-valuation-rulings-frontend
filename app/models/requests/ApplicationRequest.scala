@@ -16,7 +16,7 @@
 
 package models.requests
 
-import cats.data.{Validated, ValidatedNel}
+import cats.data.ValidatedNel
 import cats.implicits._
 
 import play.api.libs.json._
@@ -48,11 +48,10 @@ object GoodsDetails {
   implicit val format: OFormat[GoodsDetails] = Json.format[GoodsDetails]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[QuestionPage[_], GoodsDetails] = {
-    import cats.implicits._
     val goodsDescription: ValidatedNel[QuestionPage[_], String] =
       userAnswers.validated(DescriptionOfGoodsPage)
 
-    val name                   = goodsDescription // there is no name page?
+    // val name                   = goodsDescription // there is no name page?
     val envisagedCommodityCode = for {
       hasCode <- userAnswers.get(HasCommodityCodePage)
       code    <- userAnswers.get(CommodityCodePage)
@@ -102,28 +101,16 @@ object ApplicationRequest {
     val applicationNumber = userAnswers.applicationNumber
     val goodsDetails      = GoodsDetails(userAnswers)
     val applicant         = Applicant(userAnswers)
-    // val applicationNumber = userAnswers.get(ApplicationNumberPage).get
-    // val applicant         = userAnswers.get(ApplicantPage).get
-    // val requestedMethod   = userAnswers.get(RequestedMethodPage).get
-    // val goodsDetails      = userAnswers.get(GoodsDetailsPage).get
+    val requestedMethod   = RequestedMethod(userAnswers)
+
     // val attachments       = userAnswers.get(AttachmentsPage).getOrElse(Seq.empty)
 
-    // for {
-    //   goodsDetails <- GoodsDetails(userAnswers)
-    // } yield ApplicationRequest(
-    //   applicationNumber,
-    //   ???,
-    //   ???,
-    //   goodsDetails,
-    //   Seq.empty
-    // )
-
-    (goodsDetails, applicant).mapN(
-      (goodsDetails, applicant) =>
+    (goodsDetails, applicant, requestedMethod).mapN(
+      (goodsDetails, applicant, requestedMethod) =>
         ApplicationRequest(
           applicationNumber,
           applicant,
-          ???,
+          requestedMethod,
           goodsDetails,
           Seq.empty
         )
