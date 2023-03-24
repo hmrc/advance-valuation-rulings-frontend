@@ -35,13 +35,14 @@ case class NotReady(callback: FailedCallbackBody) extends FileStatus
 @Singleton()
 class UpscanCallbackDispatcher @Inject() (
   progressTracker: UploadProgressTracker,
-  objectStoreClient: PlayObjectStoreClient
+  objectStoreClient: PlayObjectStoreClient,
+  config: FrontendAppConfig
 ) {
 
   private lazy val logger                                     = Logger(this.getClass)
   private def directory(reference: Reference): Path.Directory =
     Path.Directory(s"rulings/${reference.value}")
-  lazy val owner                                              = "advance-valuation-rulings-frontend"
+  lazy val owner                                              = config.objectStoreOwner
 
   def handleCallback(
     callback: CallbackBody

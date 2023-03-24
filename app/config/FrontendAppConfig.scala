@@ -31,6 +31,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val appName: String = configuration.get[String]("appName")
 
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
+  private val internalAuthServiceName      = "advance-valuation-rulings-frontend"
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
 
   def feedbackUrl(implicit request: RequestHeader): String =
@@ -53,6 +54,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val importedGoodsValueGuideUrl: String = configuration.get[String]("urls.importedGoodsValueGuide")
   val applyForATRGuideUrl: String        = configuration.get[String]("urls.applyForATRGuide")
   val overviewForMethodsUrl: String      = configuration.get[String]("urls.overviewForMethods")
+  val createAuthTokenOnStart: Boolean    =
+    configuration.get[Boolean]("create-internal-auth-token-on-start")
+  val objectStoreOwner: String           = if (createAuthTokenOnStart) appName else internalAuthServiceName
 
   val arsSubscribeUrl = configuration
     .get[Service]("microservice.services.eoriCommonComponent")

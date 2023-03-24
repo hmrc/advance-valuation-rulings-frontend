@@ -281,12 +281,14 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         .thenReturn(Future.successful(true))
       when(osClient.deleteObject(any(), anyString())(any()))
         .thenReturn(Future.successful(()))
+      when(config.objectStoreOwner).thenReturn("advance-valuation-rulings-frontend")
 
       val application =
         applicationBuilder(userAnswers = Some(ans))
           .overrides(
             bind[PlayObjectStoreClient].toInstance(osClient),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[FrontendAppConfig].toInstance(config)
           )
           .build()
       running(application) {
