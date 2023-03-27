@@ -19,6 +19,8 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
+import uk.gov.hmrc.auth.core.AffinityGroup
+
 import generators._
 import models._
 import models.fileupload.UploadId
@@ -37,10 +39,8 @@ class AttachmentsSpec
 
   "Attachments" should {
     "succeed when has no files to upload" in {
-      val ua = UserAnswers("a", applicationNumber)
-
       val userAnswers = (for {
-        ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+        ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, false)
       } yield ua).success.get
 
       val result = Attachment(userAnswers)
@@ -49,7 +49,7 @@ class AttachmentsSpec
     }
 
     "succeed when has has files to upload" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(DoYouWantToUploadDocumentsPage, true)
@@ -73,7 +73,7 @@ class AttachmentsSpec
     }
 
     "ignore previous uploaded files when user does not want to upload" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
@@ -86,9 +86,7 @@ class AttachmentsSpec
     }
 
     "return invalid for empty UserAnswers" in {
-      val userAnswers = UserAnswers("a", applicationNumber)
-
-      val result = Attachment(userAnswers)
+      val result = Attachment(emptyUserAnswers)
 
       result shouldBe Invalid(
         NonEmptyList.one(
@@ -102,6 +100,8 @@ class AttachmentsSpec
 object AttachmentsSpec extends Generators {
   val randomString: String      = stringsWithMaxLength(8).sample.get
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber, AffinityGroup.Individual)
 
   val files = UploadedFiles(
     lastUpload = None,

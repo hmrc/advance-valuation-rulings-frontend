@@ -25,16 +25,34 @@ import models.UserAnswers
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
-case class ApplicantSummary(rows: SummaryList) extends AnyVal {
-  def removeActions(): ApplicantSummary =
-    ApplicantSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
+sealed trait ApplicantSummary {
+  def removeActions(): ApplicantSummary
+  def rows: SummaryList
 }
 
-object ApplicantSummary {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): ApplicantSummary = {
+case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummary {
+  def removeActions(): IndividualApplicantSummary =
+    IndividualApplicantSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
+}
 
-    val eoriRow: Seq[SummaryListRow] = CheckRegisteredDetailsSummary.rows(userAnswers).orEmpty
-    val userRows                     = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
-    ApplicantSummary(SummaryListViewModel(rows = eoriRow ++ userRows))
+object IndividualApplicantSummary {
+  def apply(userAnswers: UserAnswers)(implicit messages: Messages): IndividualApplicantSummary = {
+
+    val contactDetailsRows = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
+    IndividualApplicantSummary(SummaryListViewModel(contactDetailsRows))
+  }
+}
+
+case class AgentSummary(rows: SummaryList) extends ApplicantSummary {
+  def removeActions(): AgentSummary =
+    AgentSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
+}
+
+object AgentSummary {
+  def apply(userAnswers: UserAnswers)(implicit messages: Messages): AgentSummary = {
+
+    val contactDetailsRows = BusinessContactDetailsSummary.rows(userAnswers).orEmpty
+    val roleRow            = AgentRoleSummary.rows(userAnswers).orEmpty
+    AgentSummary(SummaryListViewModel(contactDetailsRows ++ roleRow))
   }
 }

@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import config.FrontendAppConfig
@@ -35,7 +36,13 @@ class SessionRepositorySpec
   val applicationNumber: String = s"$ApplicationNumberPrefix$ApplicationNumberSequence"
 
   private val userAnswers =
-    UserAnswers("id", applicationNumber, Json.obj("foo" -> "bar"), Instant.ofEpochSecond(1))
+    UserAnswers(
+      "id",
+      applicationNumber,
+      AffinityGroup.Individual,
+      Json.obj("foo" -> "bar"),
+      Instant.ofEpochSecond(1)
+    )
 
   private val mockAppConfig = mock[FrontendAppConfig]
   when(mockAppConfig.cacheTtl) thenReturn 1

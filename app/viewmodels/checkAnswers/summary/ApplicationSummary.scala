@@ -16,12 +16,14 @@
 
 package viewmodels.checkAnswers.summary
 
+import play.api.Logger
 import play.api.i18n.Messages
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import models.UserAnswers
-import viewmodels.checkAnswers.summary.DetailsSummary
 
 case class ApplicationSummary(
+  eoriDetails: EoriDetailsSummary,
   applicant: ApplicantSummary,
   details: DetailsSummary,
   method: MethodSummary
@@ -29,6 +31,7 @@ case class ApplicationSummary(
 
   def removeActions(): ApplicationSummary =
     copy(
+      eoriDetails = eoriDetails.removeActions(),
       applicant = applicant.removeActions(),
       details = details.removeActions(),
       method = method.removeActions()
@@ -36,10 +39,25 @@ case class ApplicationSummary(
 }
 
 object ApplicationSummary {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): ApplicationSummary =
+
+  private val logger = Logger(this.getClass)
+
+  def apply(userAnswers: UserAnswers)(implicit messages: Messages): ApplicationSummary = {
+    val (applicant, company) = userAnswers.affinityGroup match {
+      case AffinityGroup.Individual   =>
+        (IndividualApplicantSummary(userAnswers), IndividualEoriDetailsSummary(userAnswers))
+      case AffinityGroup.Organisation =>
+        (AgentSummary(userAnswers), BusinessEoriDetailsSummary(userAnswers))
+      case unexpected                 =>
+        logger.error(s"Unexpected affinity group [$unexpected] encountered")
+        throw new IllegalArgumentException("Unexpected affinity group")
+    }
+
     ApplicationSummary(
-      applicant = ApplicantSummary(userAnswers),
+      eoriDetails = company,
+      applicant = applicant,
       details = DetailsSummary(userAnswers),
       method = MethodSummary(userAnswers)
     )
+  }
 }

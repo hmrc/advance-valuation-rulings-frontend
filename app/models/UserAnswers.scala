@@ -23,6 +23,7 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 import play.api.libs.json._
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import models.ValuationMethod._
@@ -32,9 +33,9 @@ import queries.Modifiable
 final case class UserAnswers(
   id: String,
   applicationNumber: String,
+  affinityGroup: AffinityGroup,
   data: JsObject = Json.obj(),
   lastUpdated: Instant = Instant.now
-  // affinity group
 ) {
 
   def get[A](page: Modifiable[A])(implicit rds: Reads[A]): Option[A] =
@@ -136,6 +137,7 @@ object UserAnswers {
     (
       (__ \ "_id").read[String] and
         (__ \ "applicationNumber").read[String] and
+        (__ \ "affinityGroup").read[AffinityGroup] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
     )(UserAnswers.apply _)
@@ -148,6 +150,7 @@ object UserAnswers {
     (
       (__ \ "_id").write[String] and
         (__ \ "applicationNumber").write[String] and
+        (__ \ "affinityGroup").write[AffinityGroup] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
     )(unlift(UserAnswers.unapply))

@@ -30,14 +30,21 @@ object CheckModeNavigator {
 
   private def checkYourAnswers = routes.CheckYourAnswersController.onPageLoad
 
+  private def checkYourAnswersForAgents = routes.CheckYourAnswersForAgentsController.onPageLoad
+
   // Pre nav
   private def checkRegisteredDetails(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
       case None                    => CheckRegisteredDetailsController.onPageLoad(CheckMode)
       case Some(registeredDetails) =>
-        if (registeredDetails.value)
-          checkYourAnswers
-        else EORIBeUpToDateController.onPageLoad()
+        if (registeredDetails.value) {
+          resolveAffinityGroup(userAnswers.affinityGroup)(
+            checkYourAnswers,
+            checkYourAnswersForAgents
+          )
+        } else {
+          EORIBeUpToDateController.onPageLoad()
+        }
     }
 
   // Post navigation
@@ -45,21 +52,24 @@ object CheckModeNavigator {
     userAnswers.get(HasConfidentialInformationPage) match {
       case None        => HasConfidentialInformationController.onPageLoad(CheckMode)
       case Some(true)  => ConfidentialInformationController.onPageLoad(CheckMode)
-      case Some(false) => checkYourAnswers
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def haveBeenSubjectToLegalChallenges(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage) match {
       case None        => HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(CheckMode)
       case Some(true)  => DescribeTheLegalChallengesController.onPageLoad(CheckMode)
-      case Some(false) => checkYourAnswers
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def hasCommodityCode(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
       case None        => HasCommodityCodeController.onPageLoad(CheckMode)
       case Some(true)  => CommodityCodeController.onPageLoad(CheckMode)
-      case Some(false) => checkYourAnswers
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def doYouWantToUploadDocuments(implicit userAnswers: UserAnswers): Call =
@@ -68,7 +78,8 @@ object CheckModeNavigator {
       case Some(true)  =>
         controllers.routes.UploadSupportingDocumentsController
           .onPageLoad(None, None, None, CheckMode)
-      case Some(false) => checkYourAnswers
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def isThisFileConfidential(implicit userAnswers: UserAnswers): Call =
@@ -91,7 +102,8 @@ object CheckModeNavigator {
       case Some(true)  =>
         UploadSupportingDocumentsController
           .onPageLoad(None, None, None, CheckMode)
-      case Some(false) => checkYourAnswers
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   // Valuation Method
@@ -150,13 +162,15 @@ object CheckModeNavigator {
     userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
       case None        => IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode)
       case Some(true)  => nextPage(DescribeTheConditionsPage)
-      case Some(false) => checkYourAnswers
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def explainTheConditions(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheConditionsPage) match {
       case None    => DescribeTheConditionsController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   // Method 2----------------------------------------------------------------
@@ -176,7 +190,8 @@ object CheckModeNavigator {
   private def describeTheIdenticalGoods(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
       case None    => DescribeTheIdenticalGoodsController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def willYouCompareGoodsToIdenticalGoods(implicit userAnswers: UserAnswers): Call =
@@ -191,7 +206,8 @@ object CheckModeNavigator {
   ): Call =
     userAnswers.get(ExplainYourGoodsComparingToIdenticalGoodsPage) match {
       case None    => ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   // Method 3----------------------------------------------------------------
@@ -215,7 +231,8 @@ object CheckModeNavigator {
   private def describeTheSimilarGoods(implicit userAnswers: UserAnswers): Call                 =
     userAnswers.get(DescribeTheSimilarGoodsPage) match {
       case None    => DescribeTheSimilarGoodsController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
   private def willYouCompareToSimilarGoods(implicit userAnswers: UserAnswers): Call            =
     userAnswers.get(WillYouCompareToSimilarGoodsPage) match {
@@ -226,7 +243,8 @@ object CheckModeNavigator {
   private def explainYourGoodsComparingToSimilarGoods(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainYourGoodsComparingToSimilarGoodsPage) match {
       case None    => ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   // method 4 ----------------------------------------------------------------
@@ -242,7 +260,8 @@ object CheckModeNavigator {
   private def explainWhyYouChoseMethodFour(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouChoseMethodFourPage) match {
       case None    => ExplainWhyYouChoseMethodFourController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   // method 5----------------------------------------------------------------
@@ -255,7 +274,8 @@ object CheckModeNavigator {
   private def explainReasonComputedValue(implicit userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainReasonComputedValuePage) match {
       case None    => ExplainReasonComputedValueController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   // method 6----------------------------------------------------------------
@@ -281,7 +301,8 @@ object CheckModeNavigator {
   ): Call =
     userAnswers.get(ExplainHowYouWillUseMethodSixPage) match {
       case None    => ExplainHowYouWillUseMethodSixController.onPageLoad(CheckMode)
-      case Some(_) => checkYourAnswers
+      case Some(_) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   def nextPage(page: Page)(implicit userAnswers: UserAnswers): Call = page match {

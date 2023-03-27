@@ -25,17 +25,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import connectors.BackendConnector
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction, IdentifyAgentAction}
 import viewmodels.checkAnswers.summary.ApplicationSummary
-import views.html.CheckYourAnswersView
+import views.html.CheckYourAnswersForAgentsView
 
-class CheckYourAnswersController @Inject() (
+class CheckYourAnswersForAgentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  isAgent: IdentifyAgentAction,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView,
+  view: CheckYourAnswersForAgentsView,
   backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -43,14 +44,15 @@ class CheckYourAnswersController @Inject() (
 
   private val logger = Logger(this.getClass)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val applicationSummary = ApplicationSummary(request.userAnswers)
-      Ok(view(applicationSummary))
-  }
+  def onPageLoad(): Action[AnyContent] =
+    (identify andThen isAgent andThen getData andThen requireData) {
+      implicit request =>
+        val applicationSummary = ApplicationSummary(request.userAnswers)
+        Ok(view(applicationSummary))
+    }
 
   def onSubmit(): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen isAgent andThen getData andThen requireData).async {
       implicit request =>
         backendConnector
           .submitAnswers(request.userAnswers)

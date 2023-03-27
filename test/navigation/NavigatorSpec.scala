@@ -57,14 +57,14 @@ class NavigatorSpec extends SpecBase {
       }
       "should navigate to WhatIsYourRole page when Agent" in {
         navigator.startApplicationRouting(Agent) mustBe routes.WhatIsYourRoleAsImporterController
-          .onPageLoad()
+          .onPageLoad(NormalMode)
 
       }
       "should navigate to WhatIsYourRole page when Org" in {
         navigator.startApplicationRouting(
           Organisation
         ) mustBe routes.WhatIsYourRoleAsImporterController
-          .onPageLoad()
+          .onPageLoad(NormalMode)
       }
     }
 

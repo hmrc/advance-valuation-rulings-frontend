@@ -19,6 +19,8 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
+import uk.gov.hmrc.auth.core.AffinityGroup
+
 import generators._
 import models.{ApplicationContactDetails, ApplicationNumber, BusinessContactDetails, CheckRegisteredDetails, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
@@ -37,7 +39,7 @@ class ApplicantSpec
 
   "Applicant" should {
     "succeed for an individual applicant" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
@@ -50,7 +52,7 @@ class ApplicantSpec
     }
 
     "succeed for a business applicant" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers.copy(affinityGroup = AffinityGroup.Organisation)
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
@@ -65,7 +67,7 @@ class ApplicantSpec
     }
 
     "return invalid when user has no contact details" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
@@ -79,7 +81,7 @@ class ApplicantSpec
     }
 
     "return invalid for empty UserAnswers" in {
-      val userAnswers = UserAnswers("a", applicationNumber)
+      val userAnswers = emptyUserAnswers
 
       val result = Applicant(userAnswers)
 
@@ -109,6 +111,8 @@ object ApplicantSpec extends Generators {
     postalCode = Some("abc")
   )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber, AffinityGroup.Individual)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,

@@ -18,6 +18,7 @@ package controllers
 
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import viewmodels.checkAnswers.summary.ApplicationSummary
@@ -28,9 +29,11 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 
   "Check Your Answers Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET with affinityGroup Individual" in {
 
-      val application   = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = emptyUserAnswers.copy(affinityGroup = AffinityGroup.Individual)
+      val application = applicationBuilder(userAnswers = Option(userAnswers)).build()
+
       implicit val msgs = messages(application)
 
       running(application) {
@@ -38,9 +41,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 
         val result = route(application, request).value
 
-        val view        = application.injector.instanceOf[CheckYourAnswersView]
-        val userAnswers = emptyUserAnswers
-        val list        = ApplicationSummary(userAnswers)
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+        val list = ApplicationSummary(userAnswers)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list).toString

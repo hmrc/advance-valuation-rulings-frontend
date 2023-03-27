@@ -17,6 +17,7 @@
 package generators
 
 import play.api.libs.json.{Json, JsValue}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import models.UserAnswers
 import org.scalacheck.{Arbitrary, Gen}
@@ -81,6 +82,7 @@ trait UserAnswersGenerator extends TryValues {
       for {
         id                <- nonEmptyString
         applicationNumber <- Gen.chooseNum(0, 999999999)
+        affinityGroup     <- Gen.oneOf(Set(AffinityGroup.Individual, AffinityGroup.Organisation))
         data              <- generators match {
                                case Nil => Gen.const(Map[QuestionPage[_], JsValue]())
                                case _   => Gen.mapOf(oneOf(generators))
@@ -88,6 +90,7 @@ trait UserAnswersGenerator extends TryValues {
       } yield UserAnswers(
         id = id,
         applicationNumber = s"GBAVR$applicationNumber",
+        affinityGroup,
         data = data.foldLeft(Json.obj()) {
           case (obj, (path, value)) =>
             obj.setObject(path.path, value).get

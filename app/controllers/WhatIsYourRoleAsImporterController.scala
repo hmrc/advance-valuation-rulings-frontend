@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.NormalMode
+import models.Mode
 import navigation.Navigator
 import pages.WhatIsYourRoleAsImporterPage
 import repositories.SessionRepository
@@ -50,7 +50,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] =
+  def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen isAgent andThen getData andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers
@@ -59,24 +59,24 @@ class WhatIsYourRoleAsImporterController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm))
+        Ok(view(preparedForm, mode))
     }
 
-  def onSubmit: Action[AnyContent] =
+  def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
 
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(WhatIsYourRoleAsImporterPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(WhatIsYourRoleAsImporterPage, NormalMode, updatedAnswers)
+                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, updatedAnswers)
               )
           )
     }

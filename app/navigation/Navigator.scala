@@ -30,6 +30,10 @@ import pages._
 
 class Navigator @Inject() () {
 
+  private def checkYourAnswers: Call = CheckYourAnswersController.onPageLoad
+
+  private def checkYourAnswersForAgents: Call = CheckYourAnswersForAgentsController.onPageLoad
+
   private def routes: Page => UserAnswers => Call = {
     case ValuationMethodPage                           => valuationMethodPage
     case IsThereASaleInvolvedPage                      => isThereASaleInvolvedPage
@@ -330,7 +334,8 @@ class Navigator @Inject() () {
       case Some(true)  =>
         UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
-      case Some(false) => CheckYourAnswersController.onPageLoad
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def isThisFileConfidentialPage(userAnswers: UserAnswers): Call =
@@ -353,7 +358,8 @@ class Navigator @Inject() () {
       case Some(true)  =>
         UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
-      case Some(false) => CheckYourAnswersController.onPageLoad
+      case Some(false) =>
+        resolveAffinityGroup(userAnswers.affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
@@ -370,7 +376,7 @@ class Navigator @Inject() () {
     }
   private def whatIsYourRoleAsImporterPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case None    => WhatIsYourRoleAsImporterController.onPageLoad()
+      case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
       case Some(_) => RequiredInformationController.onPageLoad()
     }
   private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call   =
@@ -405,7 +411,7 @@ class Navigator @Inject() () {
     affinityGroup match {
       case Individual => RequiredInformationController.onPageLoad()
       case _          =>
-        WhatIsYourRoleAsImporterController.onPageLoad()
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
     }
 
   def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =

@@ -23,6 +23,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
@@ -45,12 +46,24 @@ trait SpecBase
     with ScalaFutures
     with IntegrationPatience {
 
+  val ContactName        = "some name"
+  val ContactEmail       = "test@email.com"
+  val ContactPhoneNumber = "01234567890"
+
+  val EoriNumber      = "GB123456789000"
+  val RegisteredName  = "My Test Company"
+  val StreetAndNumber = "1 Somewhere"
+  val City            = "London"
+  val Country         = "United Kingdom"
+  val Postcode        = "A12 2AB"
+
   val userAnswersId: String     = "id"
   val ApplicationNumberPrefix   = "GBAVR"
   val ApplicationNumberSequence = 123456789
   val applicationNumber: String = s"$ApplicationNumberPrefix$ApplicationNumberSequence"
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, applicationNumber)
+  def emptyUserAnswers: UserAnswers =
+    UserAnswers(userAnswersId, applicationNumber, AffinityGroup.Individual)
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
