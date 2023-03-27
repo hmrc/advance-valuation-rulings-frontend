@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package navigation
+package pages
 
-import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.AffinityGroup
+import play.api.libs.json.JsPath
 
-import models.{Mode, UserAnswers}
-import pages._
+import models.BusinessContactDetails
 
-class FakeNavigator(desiredRoute: Call) extends Navigator {
+case object BusinessContactDetailsPage extends QuestionPage[BusinessContactDetails] {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+  override def path: JsPath = JsPath \ toString
 
-  override def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =
-    desiredRoute
+  override def toString: String = "businessContactDetails"
 }

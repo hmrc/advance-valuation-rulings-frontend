@@ -25,61 +25,53 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import forms.RequiredInformationFormProvider
-import models.NormalMode
+import forms.BusinessContactDetailsFormProvider
+import models.Mode
 import navigation.Navigator
-import pages.RequiredInformationPage
+import pages.BusinessContactDetailsPage
 import repositories.SessionRepository
-import views.html.RequiredInformationView
+import views.html.BusinessContactDetailsView
 
-class RequiredInformationController @Inject() (
+class BusinessContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: RequiredInformationFormProvider,
+  formProvider: BusinessContactDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: RequiredInformationView
+  view: BusinessContactDetailsView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form           = formProvider()
-  private val logger = play.api.Logger(getClass)
+  val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] =
+  def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        logger.info("RequiredInformationController onPageLoad")
-
-        val preparedForm = request.userAnswers
-          .get(RequiredInformationPage) match {
+        val preparedForm = request.userAnswers.get(BusinessContactDetailsPage) match {
           case None        => form
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm))
+        Ok(view(preparedForm, mode))
     }
 
-  def onSubmit(): Action[AnyContent] =
+  def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
                 updatedAnswers <-
-                  Future.fromTry(
-                    request.userAnswers.set(RequiredInformationPage, value)
-                  )
+                  Future.fromTry(request.userAnswers.set(BusinessContactDetailsPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
-              )
+              } yield Redirect(navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers))
           )
     }
 }

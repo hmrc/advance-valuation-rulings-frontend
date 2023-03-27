@@ -22,14 +22,16 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import base.SpecBase
+import config.FrontendAppConfig
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import models.fileupload.{UploadId, UpscanFileDetails}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage
 import repositories.SessionRepository
@@ -51,6 +53,9 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
   lazy val uploadAnotherSupportingDocumentRoute =
     routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode).url
+
+  lazy val removeSupportingDocumentRoute =
+    routes.UploadAnotherSupportingDocumentController.onDelete("id", NormalMode).url
 
   val fullSetOfFiles = UploadedFiles(
     None,
@@ -263,6 +268,69 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect on files are delete" in {
+
+      val config                = mock[FrontendAppConfig]
+      val osClient              = mock[PlayObjectStoreClient]
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any()))
+        .thenReturn(Future.successful(true))
+      when(osClient.deleteObject(any(), anyString())(any()))
+        .thenReturn(Future.successful(()))
+      when(config.objectStoreOwner).thenReturn("advance-valuation-rulings-frontend")
+
+      val application =
+        applicationBuilder(userAnswers = Some(ans))
+          .overrides(
+            bind[PlayObjectStoreClient].toInstance(osClient),
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[FrontendAppConfig].toInstance(config)
+          )
+          .build()
+      running(application) {
+
+        val request = FakeRequest(GET, removeSupportingDocumentRoute)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        verify(mockSessionRepository, times(1)).set(any())
+        verify(osClient, times(1)).deleteObject(any(), eqTo("advance-valuation-rulings-frontend"))(
+          any()
+        )
+      }
+    }
+
+    "does not call object store if the file does not exist" in {
+
+      val osClient              = mock[PlayObjectStoreClient]
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any()))
+        .thenReturn(Future.successful(true))
+      when(osClient.deleteObject(any(), anyString())(any()))
+        .thenReturn(Future.successful(()))
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[PlayObjectStoreClient].toInstance(osClient),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+      running(application) {
+
+        val request = FakeRequest(GET, removeSupportingDocumentRoute)
+        val result  = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        verify(mockSessionRepository, times(0)).set(any())
+        verify(osClient, times(0)).deleteObject(any(), anyString())(any())
       }
     }
   }

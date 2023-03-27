@@ -20,13 +20,14 @@ import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
 
-class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
+class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val nameRequiredKey  = "applicationContactDetails.fullName.error.required"
-  val emailRequiredKey = "applicationContactDetails.email.error.required"
-  val phoneRequiredKey = "applicationContactDetails.telephoneNumber.error.required"
+  val nameRequiredKey    = "businessContactDetails.fullName.error.required"
+  val emailRequiredKey   = "businessContactDetails.email.error.required"
+  val phoneRequiredKey   = "businessContactDetails.telephoneNumber.error.required"
+  val companyRequiredKey = "businessContactDetails.companyName.error.required"
 
-  val form = new ApplicationContactDetailsFormProvider()()
+  val form = new BusinessContactDetailsFormProvider()()
 
   val validAddresses = Seq(
     "“email”@example.com",
@@ -37,8 +38,8 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     "\"very\\”.unusual@strange.example.com"
   )
 
-  val invalidAddresses = Seq(
-    "Abc..123example.com",
+  val invalidAddresses =
+    Seq("Abc..123example.com",
       "Abc..123",
       "email@111.222 .333.44444",
       "453235",
@@ -83,9 +84,10 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
       s"bind valid email: ${address}" in {
         val boundForm = form.bind(
           Map[String, String](
-            "name"  -> "Julius",
-            "email" -> address,
-            "phone" -> "07123456789"
+            "name"    -> "Julius",
+            "email"   -> address,
+            "phone"   -> "07123456789",
+            "company" -> "company"
           )
         )
         boundForm.errors mustBe Seq.empty
@@ -95,9 +97,10 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
       s"not bind invalid email: ${address}" in {
         val boundForm = form.bind(
           Map[String, String](
-            "name"  -> "Julius",
-            "email" -> address,
-            "phone" -> "07123456789"
+            "name"    -> "Julius",
+            "email"   -> address,
+            "phone"   -> "07123456789",
+            "company" -> "company"
           )
         )
         boundForm.errors must not be Seq.empty
@@ -126,6 +129,16 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
       form,
       phoneField,
       requiredError = FormError(phoneField, phoneRequiredKey)
+    )
+  }
+
+  ".companyNameField" - {
+    val companyNameField = "company"
+
+    behave like mandatoryField(
+      form,
+      companyNameField,
+      requiredError = FormError(companyNameField, companyRequiredKey)
     )
   }
 }

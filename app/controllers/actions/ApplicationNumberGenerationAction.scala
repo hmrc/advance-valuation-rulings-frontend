@@ -46,6 +46,7 @@ class ApplicationNumberGenerationActionImpl @Inject() (
           request.userId,
           request.eoriNumber,
           applicationNumber,
+          request.affinityGroup,
           updatedRequest.userAnswers
         )
     }

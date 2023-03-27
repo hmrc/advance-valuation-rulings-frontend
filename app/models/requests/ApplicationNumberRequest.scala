@@ -17,6 +17,7 @@
 package models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import models.{ApplicationNumber, UserAnswers}
 
@@ -25,5 +26,6 @@ case class ApplicationNumberRequest[A](
   userId: String,
   eoriNumber: String,
   applicationNumber: ApplicationNumber,
+  affinityGroup: AffinityGroup,
   userAnswers: Option[UserAnswers]
 ) extends WrappedRequest[A](request)

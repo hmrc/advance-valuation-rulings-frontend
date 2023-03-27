@@ -24,37 +24,38 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.WhyComputedValueFormProvider
-import models.NormalMode
+import forms.BusinessContactDetailsFormProvider
+import models.{BusinessContactDetails, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.WhyComputedValuePage
+import pages.BusinessContactDetailsPage
 import repositories.SessionRepository
-import views.html.WhyComputedValueView
+import views.html.BusinessContactDetailsView
 
-class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
+class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new WhyComputedValueFormProvider()
+  val formProvider = new BusinessContactDetailsFormProvider()
   val form         = formProvider()
 
-  lazy val whyComputedValueRoute = routes.WhyComputedValueController.onPageLoad(NormalMode).url
+  lazy val businessContactDetailsRoute =
+    routes.BusinessContactDetailsController.onPageLoad(NormalMode).url
 
-  "WhyComputedValue Controller" - {
+  "BusinessContactDetails Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, whyComputedValueRoute)
+        val request = FakeRequest(GET, businessContactDetailsRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[WhyComputedValueView]
+        val view = application.injector.instanceOf[BusinessContactDetailsView]
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(
@@ -66,22 +67,30 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
-        .set(WhyComputedValuePage, "answer")
-        .success
-        .value
+      val businessContactDetails = BusinessContactDetails(
+        name = "name",
+        email = "abc@email.com",
+        phone = "0123456789",
+        company = "companyName"
+      )
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val userAnswers =
+        UserAnswers(userAnswersId, applicationNumber)
+          .set(BusinessContactDetailsPage, businessContactDetails)
+          .success
+          .value
+
+      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, whyComputedValueRoute)
+        val request = FakeRequest(GET, businessContactDetailsRoute)
 
-        val view = application.injector.instanceOf[WhyComputedValueView]
+        val view = application.injector.instanceOf[BusinessContactDetailsView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(businessContactDetails), NormalMode)(
           request,
           messages(application)
         ).toString
@@ -95,7 +104,7 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -104,8 +113,13 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whyComputedValueRoute)
-            .withFormUrlEncodedBody(("value", "answer"))
+          FakeRequest(POST, businessContactDetailsRoute)
+            .withFormUrlEncodedBody(
+              ("name", "my name"),
+              ("email", "email@example.co.uk"),
+              ("phone", "07123456789"),
+              ("company", "company")
+            )
 
         val result = route(application, request).value
 
@@ -116,16 +130,16 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, whyComputedValueRoute)
+          FakeRequest(POST, businessContactDetailsRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[WhyComputedValueView]
+        val view = application.injector.instanceOf[BusinessContactDetailsView]
 
         val result = route(application, request).value
 
@@ -139,10 +153,10 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilderAsAgent(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, whyComputedValueRoute)
+        val request = FakeRequest(GET, businessContactDetailsRoute)
 
         val result = route(application, request).value
 
@@ -153,11 +167,11 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilderAsAgent(userAnswers = None).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, whyComputedValueRoute)
+          FakeRequest(POST, businessContactDetailsRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

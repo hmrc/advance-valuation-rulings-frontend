@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.AdaptMethodFormProvider
-import models.{AdaptMethod, NormalMode, UserAnswers}
+import models.{AdaptMethod, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -67,7 +67,7 @@ class AdaptMethodControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId, applicationNumber)
+        emptyUserAnswers
           .set(AdaptMethodPage, AdaptMethod.values.head)
           .success
           .value

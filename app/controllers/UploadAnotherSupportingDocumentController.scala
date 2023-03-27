@@ -22,8 +22,11 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.objectstore.client.Path
+import uk.gov.hmrc.objectstore.client.play._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions._
 import controllers.routes.DoYouWantToUploadDocumentsController
 import forms.UploadAnotherSupportingDocumentFormProvider
@@ -44,6 +47,8 @@ class UploadAnotherSupportingDocumentController @Inject() (
   requireData: DataRequiredAction,
   formProvider: UploadAnotherSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
+  config: FrontendAppConfig,
+  osClient: PlayObjectStoreClient,
   link: views.html.components.Link,
   view: UploadAnotherSupportingDocumentView
 )(implicit ec: ExecutionContext)
@@ -91,13 +96,31 @@ class UploadAnotherSupportingDocumentController @Inject() (
   def onDelete(uploadId: String, mode: Mode) =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        for {
-          updatedAnswers <- UploadSupportingDocumentPage.modify(_.removeFile(UploadId(uploadId)))
-          updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
-          _              <- sessionRepository.set(updatedAnswers)
-        } yield Redirect(
-          navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)
-        )
+        val fileOpt = UploadSupportingDocumentPage.get().flatMap(_.getFile(UploadId(uploadId)))
+        fileOpt match {
+          case Some(file) =>
+            for {
+              updatedAnswers <-
+                UploadSupportingDocumentPage.modify(
+                  _.removeFile(UploadId(uploadId))
+                )
+              _              <- osClient.deleteObject(
+                                  path = Path.File(file.downloadUrl),
+                                  owner = config.objectStoreOwner
+                                )
+              updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(
+              navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)
+            )
+
+          case None =>
+            Future.successful(
+              Redirect(
+                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, request.userAnswers)
+              )
+            )
+        }
     }
 
   private def makeDocumentRows(userAnswers: UserAnswers, mode: Mode)(implicit messages: Messages) =

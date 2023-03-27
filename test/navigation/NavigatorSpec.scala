@@ -17,18 +17,20 @@
 package navigation
 
 import play.api.libs.json.Writes
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup._
 
 import base.SpecBase
 import controllers.routes
 import models._
+import models.WhatIsYourRoleAsImporter.Employeeoforg
 import models.fileupload._
 import pages._
 import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers  = UserAnswers("id", applicationNumber)
+  val EmptyUserAnswers: UserAnswers  = emptyUserAnswers
   val navigator                      = new Navigator
   val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
 
@@ -66,6 +68,20 @@ class NavigatorSpec extends SpecBase {
     }
 
     "in Normal mode" - {
+
+      "WhatIsYourRoleAsImporterPage" - {
+
+        "must navigate to RequiredInformationPage page" in {
+          val userAnswers =
+            userAnswersWith(WhatIsYourRoleAsImporterPage, Employeeoforg)
+          navigator.nextPage(
+            WhatIsYourRoleAsImporterPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.RequiredInformationController.onPageLoad()
+
+        }
+      }
 
       "WhyTransactionValueOfSimilarGoods page" - {
 
@@ -403,25 +419,54 @@ class NavigatorSpec extends SpecBase {
           country = "GB"
         )
 
-        "navigate to ApplicationContactDetailsPage when Yes" in {
-          val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, value = data)
-          navigator.nextPage(
-            CheckRegisteredDetailsPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+        "when Individual" - {
+          val aff: AffinityGroup = Individual
+
+          "navigate to ApplicationContactDetailsPage when Yes" in {
+            val userAnswers =
+              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+            navigator.contactDetailsRouting(
+              aff: AffinityGroup,
+              userAnswers
+            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+          }
+
+          "and navigate to EORIBeUpToDatePage when No" in {
+            val userAnswers =
+              userAnswersWith(CheckRegisteredDetailsPage, value = data.copy(value = false))
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              NormalMode,
+              userAnswers
+            ) mustBe routes.EORIBeUpToDateController.onPageLoad()
+          }
         }
 
-        "and navigate to EORIBeUpToDatePage when No" in {
-          val userAnswers =
-            userAnswersWith(CheckRegisteredDetailsPage, value = data.copy(value = false))
-          navigator.nextPage(
-            CheckRegisteredDetailsPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.EORIBeUpToDateController.onPageLoad()
+        "when Organisation" - {
+          val aff: AffinityGroup = Organisation
+
+          "navigate to BusinessContactDetailsPage when Yes" in {
+            val userAnswers =
+              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+            navigator.contactDetailsRouting(
+              aff: AffinityGroup,
+              userAnswers
+            ) mustBe routes.BusinessContactDetailsController.onPageLoad(mode = NormalMode)
+          }
         }
+      }
+
+      "BusinessContactDetailsPage must" in {
+        val userAnswers =
+          userAnswersWith(
+            BusinessContactDetailsPage,
+            BusinessContactDetails("name", "email", "phone", "company")
+          )
+        navigator.nextPage(
+          BusinessContactDetailsPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
       }
 
       "ApplicationContactDetailsPage must" in {
@@ -439,17 +484,16 @@ class NavigatorSpec extends SpecBase {
 
       "DoYouWantToUploadDocumentsPage must" - {
         "self when no method is select" in {
-          val userAnswers = UserAnswers("id", applicationNumber)
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
-            userAnswers
+            emptyUserAnswers
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
         }
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
-            UserAnswers("id", applicationNumber).set(DoYouWantToUploadDocumentsPage, true).get
+            emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true).get
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
@@ -460,7 +504,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswers page when No is selected" in {
           val userAnswers =
-            UserAnswers("id", applicationNumber).set(DoYouWantToUploadDocumentsPage, false).get
+            emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, false).get
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
@@ -471,17 +515,16 @@ class NavigatorSpec extends SpecBase {
 
       "UploadAnotherSupportingDocumentPage must" - {
         "self when no answer is selected" in {
-          val userAnswers = UserAnswers("id", applicationNumber)
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
-            userAnswers
+            emptyUserAnswers
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(mode = NormalMode)
         }
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
-            UserAnswers("id", applicationNumber).set(UploadAnotherSupportingDocumentPage, true).get
+            emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, true).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -492,7 +535,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswers page when No is selected" in {
           val userAnswers =
-            UserAnswers("id", applicationNumber).set(UploadAnotherSupportingDocumentPage, false).get
+            emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -504,16 +547,15 @@ class NavigatorSpec extends SpecBase {
       "IsThisFileConfidentialPage must" - {
 
         "redirect to UploadSupportingDocumentsPage user has no files" in {
-          val userAnswers = UserAnswers("id", applicationNumber)
           navigator.nextPage(
             IsThisFileConfidentialPage,
             NormalMode,
-            userAnswers
+            emptyUserAnswers
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
         }
 
         "redirect to self when user has a file without confidentiality info" in {
-          val userAnswers = UserAnswers("id", applicationNumber)
+          val userAnswers = emptyUserAnswers
             .set(
               UploadSupportingDocumentPage,
               UploadedFiles.initialise(fileDetails)
@@ -527,7 +569,7 @@ class NavigatorSpec extends SpecBase {
         }
 
         "UploadSupportingDocumentsPage when an answer is selected" in {
-          val userAnswers = UserAnswers("id", applicationNumber)
+          val userAnswers = emptyUserAnswers
             .set(
               UploadSupportingDocumentPage,
               UploadedFiles.initialise(fileDetails).setConfidentiality(false)
@@ -620,14 +662,14 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            UserAnswers("id", applicationNumber).set(IsThereASaleInvolvedPage, true).success.value
+            emptyUserAnswers.set(IsThereASaleInvolvedPage, true).success.value
           ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
         }
         "navigate to valuationMethod page when no" in {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            UserAnswers("id", applicationNumber).set(IsThereASaleInvolvedPage, false).success.value
+            emptyUserAnswers.set(IsThereASaleInvolvedPage, false).success.value
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
         }
       }
@@ -637,7 +679,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsSaleBetweenRelatedPartiesPage,
             NormalMode,
-            UserAnswers("id", applicationNumber)
+            emptyUserAnswers
               .set(IsSaleBetweenRelatedPartiesPage, true)
               .success
               .value
@@ -647,7 +689,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsSaleBetweenRelatedPartiesPage,
             NormalMode,
-            UserAnswers("id", applicationNumber)
+            emptyUserAnswers
               .set(IsSaleBetweenRelatedPartiesPage, false)
               .success
               .value
@@ -660,7 +702,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             ExplainHowPartiesAreRelatedPage,
             NormalMode,
-            UserAnswers("id", applicationNumber)
+            emptyUserAnswers
               .set(ExplainHowPartiesAreRelatedPage, "explain")
               .success
               .value

@@ -16,28 +16,28 @@
 
 package pages
 
-import models.ApplicationContactDetails
+import models.{ApplicationContactDetails, BusinessContactDetails}
 import org.scalacheck.{Arbitrary, Gen}
 import pages.behaviours.PageBehaviours
 
-class ApplicationContactDetailsPageSpec extends PageBehaviours {
+class BusinessContactDetailsPageSpec extends PageBehaviours {
 
-  "ApplicationContactDetailsPage" - {
+  "BusinessContactDetailsPage" - {
     def arbitraryString(gen: Gen[Char], maxSize: Int = 100): Gen[String] =
       Gen.listOfN(maxSize, gen).map(_.mkString)
 
-    implicit val applicationContactDetailsGen: Arbitrary[ApplicationContactDetails] =
-      Arbitrary(for {
+    implicit val businessContactDetailsGen: Arbitrary[BusinessContactDetails] = Arbitrary(for {
 
-        name  <- arbitraryString(Gen.alphaChar)
-        phone <- arbitraryString(Gen.numChar, maxSize = 24)
-        email <- arbitraryString(Gen.asciiChar)
-      } yield ApplicationContactDetails(name, phone, email))
+      name    <- arbitraryString(Gen.alphaChar)
+      phone   <- arbitraryString(Gen.numChar, maxSize = 24)
+      email   <- arbitraryString(Gen.asciiChar)
+      company <- arbitraryString(Gen.alphaChar)
+    } yield BusinessContactDetails(name, phone, email, company))
 
-    beRetrievable[ApplicationContactDetails](ApplicationContactDetailsPage)
+    beRetrievable[BusinessContactDetails](BusinessContactDetailsPage)
 
-    beSettable[ApplicationContactDetails](ApplicationContactDetailsPage)
+    beSettable[BusinessContactDetails](BusinessContactDetailsPage)
 
-    beRemovable[ApplicationContactDetails](ApplicationContactDetailsPage)
+    beRemovable[BusinessContactDetails](BusinessContactDetailsPage)
   }
 }

@@ -110,7 +110,7 @@ class CheckRegisteredDetailsController @Inject() (
                       request.userAnswers.setFuture(CheckRegisteredDetailsPage, updatedAnswers)
                     updatedAnswers <- sessionRepository.update(answers)
                   } yield Redirect(
-                    navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
+                    navigator.contactDetailsRouting(request.affinityGroup, updatedAnswers)
                   )
                 case None              =>
                   logger.error(s"Failed to submit check registered details as user has no answers")

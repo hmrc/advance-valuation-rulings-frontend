@@ -99,7 +99,11 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        val payload = UpscanFileDetails(uploadId, uploadDetails.name, uploadDetails.downloadUrl)
+        val payload = UpscanFileDetails(
+          uploadId,
+          uploadDetails.name,
+          uploadDetails.downloadUrl
+        )
 
         for {
           answers <-

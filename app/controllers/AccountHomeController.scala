@@ -16,9 +16,9 @@
 
 package controllers
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+
+import scala.concurrent.ExecutionContext
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -26,41 +26,35 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import models.UserAnswers
 import navigation.Navigator
-import models.ApplicationsAndRulingsResponse
+import repositories.SessionRepository
 import views.html.AccountHomeView
 
 class AccountHomeController @Inject() (
   override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  generateApplicationNumber: ApplicationNumberGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport
     with Retrievals {
 
+  def onPageLoad: Action[AnyContent]       = (identify andThen getData)(implicit request => Ok(view()))
   def startApplication: Action[AnyContent] =
-    (identify andThen getData) {
-      implicit request => Redirect(navigator.startApplicationRouting(request.affinityGroup))
+    (identify andThen getData andThen generateApplicationNumber).async {
+      implicit request =>
+        for {
+          _ <- sessionRepository.set(
+                 request.userAnswers.getOrElse(
+                   UserAnswers(request.userId, request.applicationNumber.render)
+                 )
+               )
+        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
     }
-
-//  val dateFormatter = DateTimeFormatter
-//    .ofPattern("d MMMM yyyy")
-//    .format(dateFormatter)
-
-  val applicationsAndRulings: Option[ApplicationsAndRulingsResponse] = Some(
-    ApplicationsAndRulingsResponse(
-      ref = "s0m3R3f",
-      nameOfGoods = "daGoods",
-      dateSubmitted = LocalDate.now(),
-      status = "sumbitted"
-    )
-  )
-
-  val x                              = applicationsAndRulings.get.ref
-  def onPageLoad: Action[AnyContent] =
-    (identify andThen getData)(implicit request => Ok(view(applicationsAndRulings)))
-
 }

@@ -17,6 +17,7 @@ site.printApplication = Print your application
 site.saveApplication = Save your application
 site.page = Page {0} of {1}
 
+
 site.1 = one
 site.2 = two
 site.3 = three
@@ -57,6 +58,7 @@ index.heading = advance-valuation-ruling-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
 caption.prefix = This section is
+caption.applicant = About the applicant
 
 checkYourAnswers.title = Check your answers before sending your application
 checkYourAnswers.heading = Check your answers before sending your application
@@ -623,8 +625,13 @@ whatIsYourRoleAsImporter.title = How would you describe your role as an importer
 whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.employeeOfOrg = An employee of the organisation
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Agent acting on behalf of an organisation
+whatIsYourRoleAsImporter.details.label = Agents acting on behalf of traders
+whatIsYourRoleAsImporter.para.1 = Choose the option that best describes your role:
+whatIsYourRoleAsImporter.para.2 = We are currently developing this route through the Advance Valuation Ruling process and it will be made available soon.
+whatIsYourRoleAsImporter.employeeOfOrg.hint = Imports goods into the UK on behalf of their organisation.
+whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Imports goods into the UK on behalf of an organisation.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your role as an importer?
-whatIsYourRoleAsImporter.error.required = Select your role
+whatIsYourRoleAsImporter.error.required = Choose the option that describes your role
 whatIsYourRoleAsImporter.change.hidden = WhatIsYourRoleAsImporter
 
 whoAreYouAgent.title = whoAreYouAgent
@@ -651,3 +658,25 @@ viewRuling.title = Your ruling documents for {0}
 viewRuling.heading = Your ruling documents for {0}
 viewRuling.subHeading.1 = Your ruling cover letter
 viewRuling.subHeading.2 = Your ruling certificate
+
+businessContactDetails.title = Your contact details
+businessContactDetails.heading = Your contact details
+businessContactDetails.caption = About the applicant
+businessContactDetails.paragraph = We will only use these details if we need to contact you about the application you are submitting on behalf of the trader.
+businessContactDetails.checkYourAnswersLabel = businessContactDetails
+businessContactDetails.fullName.label = Your full name
+businessContactDetails.email.label = Your email address
+businessContactDetails.telephoneNumber.label = Your telephone number
+businessContactDetails.companyName.label = Your company name
+businessContactDetails.fullName.error.required = Enter your full name
+businessContactDetails.fullName.error.format = Must contain only letters, space and hyphens
+businessContactDetails.fullName.length = Name must be 100 characters or less
+businessContactDetails.email.error.required = Enter your email address
+businessContactDetails.email.error.format = Email address must be in abe@email.com pattern
+businessContactDetails.telephoneNumber.error.required = Enter your telephone number
+businessContactDetails.telephoneNumber.error.format = Must contain only digits
+businessContactDetails.telephoneNumber.length = Phone number must be 24 characters or less
+businessContactDetails.companyName.error.required = Enter your company name
+businessContactDetails.companyName.error.format = Enter your company name
+businessContactDetails.checkYourAnswersLabel = businessContactDetails
+businessContactDetails.change.hidden = BusinessContactDetails

@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.{CheckRegisteredDetails, UserAnswers}
+import models.CheckRegisteredDetails
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -71,11 +71,11 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      val userAnswers      = UserAnswers(userAnswersId, applicationNumber)
+      val userAnswers      = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
-      val answersAfterPost = UserAnswers(userAnswersId, applicationNumber)
+      val answersAfterPost = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
         .success
         .value
@@ -109,7 +109,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when 'no' is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = UserAnswers(userAnswersId, applicationNumber)
+      val userAnswers           = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value

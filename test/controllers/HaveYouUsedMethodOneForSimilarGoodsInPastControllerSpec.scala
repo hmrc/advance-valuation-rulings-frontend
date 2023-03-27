@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -67,7 +67,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastControllerSpec extends SpecBase w
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId, applicationNumber)
+      val userAnswers = emptyUserAnswers
         .set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
         .success
         .value
