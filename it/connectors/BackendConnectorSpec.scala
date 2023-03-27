@@ -128,7 +128,7 @@ class BackendConnectorSpec
     }
   }
 
-  ".submitApplication" - {
+  ".submitCase" - {
     "should submit application to backend" in {
       forAll {
         applicationRequest: ApplicationRequest =>
@@ -142,7 +142,7 @@ class BackendConnectorSpec
             requestBody = Option(requestBody)
           )
 
-          val result = connector.submitApplication(applicationRequest).futureValue.value
+          val result = connector.submitCase(applicationRequest).futureValue.value
 
           result.status mustBe Status.OK
       }

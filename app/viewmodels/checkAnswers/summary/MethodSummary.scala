@@ -170,26 +170,29 @@ object MethodSummary {
     userAnswers: UserAnswers
   )(implicit messages: Messages): MethodSummary = {
 
-    val methodRow = ValuationMethodSummary.row(userAnswers)
-
+    val methodRow  = ValuationMethodSummary.row(userAnswers)
     val usedMethod = userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+
+    val whyTransactionValue      = WhyTransactionValueOfSimilarGoodsSummary.row(userAnswers)
+    val previousMethodOneSummary = HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(userAnswers)
+    val describeSimilarGoods     = DescribeTheSimilarGoodsSummary.row(userAnswers)
 
     val rows = usedMethod match {
       case Some(true) =>
         Seq(
           methodRow,
-          WhyTransactionValueOfSimilarGoodsSummary.row(userAnswers),
-          HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(userAnswers),
-          DescribeTheSimilarGoodsSummary.row(userAnswers)
+          whyTransactionValue,
+          previousMethodOneSummary,
+          describeSimilarGoods
         ).flatten
       case _          =>
         Seq(
-          ValuationMethodSummary.row(userAnswers),
-          WhyTransactionValueOfSimilarGoodsSummary.row(userAnswers),
-          HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(userAnswers),
+          methodRow,
+          whyTransactionValue,
+          previousMethodOneSummary,
           WillYouCompareToSimilarGoodsSummary.row(userAnswers),
           ExplainYourGoodsComparingToSimilarGoodsSummary.row(userAnswers),
-          DescribeTheSimilarGoodsSummary.row(userAnswers)
+          describeSimilarGoods
         ).flatten
     }
 
@@ -290,7 +293,7 @@ object MethodSummary {
   }
 
   protected def methodSix(method: MethodSix)(implicit messages: Messages): MethodSummary = {
-    val adaptedMethod = method.adoptMethod match {
+    val adaptedMethod = method.adaptMethod match {
       case AdaptedMethod.MethodOne   => AdaptMethod.Method1
       case AdaptedMethod.MethodTwo   => AdaptMethod.Method2
       case AdaptedMethod.MethodThree => AdaptMethod.Method3

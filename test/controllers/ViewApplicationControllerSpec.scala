@@ -32,15 +32,11 @@ import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import viewmodels.checkAnswers._
-import viewmodels.checkAnswers.summary._
 import views.html.ViewApplicationView
 
 class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
   import ViewApplicationControllerSpec._
   "ViewApplication Controller" - {
-
-    val fakeId = randomString
 
     "must return OK and the correct view for a GET" in {
 
@@ -111,6 +107,7 @@ object ViewApplicationControllerSpec extends Generators {
   )
 
   val goodsDetails = GoodsDetails(
+    goodName = randomString,
     goodDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),

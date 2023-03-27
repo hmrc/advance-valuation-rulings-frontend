@@ -44,7 +44,8 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val isThisFileConfidentialRoute =
     routes.IsThisFileConfidentialController.onPageLoad(NormalMode).url
-  val fileDetails: UpscanFileDetails   = UpscanFileDetails(UploadId("id"), "name", "some.url")
+  val fileDetails: UpscanFileDetails   =
+    UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
 
   val userAnswers =
     emptyUserAnswers

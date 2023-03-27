@@ -21,7 +21,9 @@ import play.api.libs.json.{__, OFormat, OWrites, Reads}
 case class UpscanFileDetails(
   uploadId: UploadId,
   fileName: String,
-  downloadUrl: String
+  downloadUrl: String,
+  mimeType: String,
+  size: Long
 )
 
 object UpscanFileDetails {
@@ -33,7 +35,9 @@ object UpscanFileDetails {
     (
       (__ \ "uploadId").read[UploadId] and
         (__ \ "fileName").read[String] and
-        (__ \ "downloadUrl").read[String]
+        (__ \ "downloadUrl").read[String] and
+        (__ \ "mimeType").read[String] and
+        (__ \ "size").read[Long]
     )(UpscanFileDetails.apply _)
   }
 
@@ -44,7 +48,9 @@ object UpscanFileDetails {
     (
       (__ \ "uploadId").write[UploadId] and
         (__ \ "fileName").write[String] and
-        (__ \ "downloadUrl").write[String]
+        (__ \ "downloadUrl").write[String] and
+        (__ \ "mimeType").write[String] and
+        (__ \ "size").write[Long]
     )(unlift(UpscanFileDetails.unapply))
   }
 

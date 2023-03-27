@@ -42,7 +42,8 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
   def onwardRoute                        = Call("GET", "/foo")
   val maximumNumberOfFiles               = 10
   val numOfDocs                          = "one"
-  val upscanFileDeets: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
+  val upscanFileDeets: UpscanFileDetails =
+    UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
 
   val uploadedFiles                   = UploadedFiles.initialise(upscanFileDeets)
   val uploadedFileWithConfidentiality = uploadedFiles.setConfidentiality(true)
@@ -61,7 +62,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
     None,
     Map.from(
       Seq
-        .fill(maximumNumberOfFiles)(UploadedFile("filename", "www.website.com", false))
+        .fill(maximumNumberOfFiles)(UploadedFile("filename", "www.website.com", false, "txt", 1L))
         .zipWithIndex
         .map(x => (UploadId(s"id${x._2}"), x._1))
     )
