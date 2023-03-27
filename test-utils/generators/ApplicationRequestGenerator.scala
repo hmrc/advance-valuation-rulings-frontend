@@ -26,7 +26,7 @@ trait ApplicationRequestGenerator extends Generators {
     RegexpGen.from("^[A-Z]{2}[0-9A-Z]{12}$").map(EoriNumber)
   )
 
-  implicit lazy val arbitraryUploadedDocument: Arbitrary[UploadedDocument] = Arbitrary {
+  implicit lazy val arbitraryUploadedDocument: Arbitrary[Attachment] = Arbitrary {
     for {
       id       <- alphaStringsWithMaxLength(36)
       fileName <- stringsWithMaxLength(100)
@@ -41,7 +41,7 @@ trait ApplicationRequestGenerator extends Generators {
                     "text/plain"
                   )
       size     <- Gen.choose(1L, 1000000000000L)
-    } yield UploadedDocument(id, fileName, url, public, mimeType, size)
+    } yield Attachment(id, fileName, url, public, mimeType, size)
   }
 
   implicit lazy val arbitraryContactDetails: Arbitrary[ContactDetails] = Arbitrary {

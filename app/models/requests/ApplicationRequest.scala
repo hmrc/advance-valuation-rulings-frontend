@@ -24,18 +24,6 @@ import play.api.libs.json._
 import models.UserAnswers
 import pages._
 
-case class UploadedDocument(
-  id: String,
-  name: String,
-  url: String,
-  public: Boolean, // isConfidential
-  mimeType: String,
-  size: Long
-)
-object UploadedDocument {
-  implicit val format: OFormat[UploadedDocument] = Json.format[UploadedDocument]
-}
-
 case class GoodsDetails(
   goodName: String,
   goodDescription: String,
@@ -85,7 +73,7 @@ case class ApplicationRequest(
   applicant: Applicant,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
-  attachments: Seq[UploadedDocument]
+  attachments: Seq[Attachment]
 )
 
 object ApplicationRequest {
@@ -102,17 +90,16 @@ object ApplicationRequest {
     val goodsDetails      = GoodsDetails(userAnswers)
     val applicant         = Applicant(userAnswers)
     val requestedMethod   = RequestedMethod(userAnswers)
+    val attachments       = Attachment(userAnswers)
 
-    // val attachments       = userAnswers.get(AttachmentsPage).getOrElse(Seq.empty)
-
-    (goodsDetails, applicant, requestedMethod).mapN(
-      (goodsDetails, applicant, requestedMethod) =>
+    (goodsDetails, applicant, requestedMethod, attachments).mapN(
+      (goodsDetails, applicant, requestedMethod, attachments) =>
         ApplicationRequest(
           applicationNumber,
           applicant,
           requestedMethod,
           goodsDetails,
-          Seq.empty
+          attachments
         )
     )
   }

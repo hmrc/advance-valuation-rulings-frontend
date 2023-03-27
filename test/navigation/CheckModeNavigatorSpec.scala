@@ -29,11 +29,14 @@ class CheckModeNavigatorSpec extends SpecBase {
 
   val EmptyUserAnswers: UserAnswers  = emptyUserAnswers
   val navigator                      = new Navigator
-  val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
+  val fileDetails: UpscanFileDetails =
+    UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
   val uploadedFile: UploadedFile     = UploadedFile(
     fileDetails.fileName,
     fileDetails.downloadUrl,
-    isConfidential = false
+    isConfidential = false,
+    fileDetails.mimeType,
+    fileDetails.size
   )
   val checkYourAnswers               = routes.CheckYourAnswersController.onPageLoad
 

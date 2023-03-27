@@ -105,6 +105,7 @@ class ApplicationRequestSpec
         ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
         ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
         ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+        ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
       } yield ua).success.get
 
       val result = ApplicationRequest(userAnswers)
@@ -136,7 +137,8 @@ class ApplicationRequestSpec
           CheckRegisteredDetailsPage,
           ApplicationContactDetailsPage,
           BusinessContactDetailsPage,
-          ValuationMethodPage
+          ValuationMethodPage,
+          DoYouWantToUploadDocumentsPage
         )
       )
     }
