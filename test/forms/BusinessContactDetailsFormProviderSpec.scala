@@ -39,11 +39,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
   )
 
   val invalidAddresses =
-    Seq("Abc..123example.com",
-      "Abc..123",
-      "email@111.222 .333.44444",
-      "453235",
-      "@")
+    Seq("Abc..123example.com", "Abc..123", "email@111.222 .333.44444", "453235", "@", "test@")
 
   ".nameField" - {
     val nameField     = "name"
