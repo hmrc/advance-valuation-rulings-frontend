@@ -53,16 +53,4 @@ trait ModelGenerators {
       postalCode      <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
     } yield CheckRegisteredDetails(value, eori, name, streetAndNumber, city, country, postalCode)
   }
-
-//  implicit lazy val arbitraryBusinessContactDetails: Arbitrary[BusinessContactDetails] = Arbitrary {
-//    for {
-//      value           <- arbitrary[Boolean]
-//      eori            <- Gen.alphaStr.suchThat(_.nonEmpty)
-//      name            <- Gen.alphaStr.suchThat(_.nonEmpty)
-//      streetAndNumber <- Gen.alphaStr.suchThat(_.nonEmpty)
-//      city            <- Gen.alphaStr.suchThat(_.nonEmpty)
-//      country         <- Gen.alphaStr.suchThat(_.nonEmpty)
-//      postalCode      <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
-//    } yield CheckRegisteredDetails(value, eori, name, streetAndNumber, city, country, postalCode)
-//  }
 }
