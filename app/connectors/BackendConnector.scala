@@ -81,7 +81,7 @@ class BackendConnector @Inject() (
           onError(e)
       }
 
-  def submitApplication(
+  def submitCase(
     applicationRequest: ApplicationRequest
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
     httpClient
@@ -166,6 +166,7 @@ object BackendConnector {
   )
 
   val goodsDetails = GoodsDetails(
+    goodName = "goodName",
     goodDescription = "goodDescription",
     envisagedCommodityCode = Some("envisagedCommodityCode"),
     knownLegalProceedings = Some("knownLegalProceedings"),

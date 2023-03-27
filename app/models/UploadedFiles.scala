@@ -39,7 +39,9 @@ case class UploadedFiles(
         val newFile = UploadedFile(
           lastUpload.fileName,
           lastUpload.downloadUrl,
-          isConfidential
+          isConfidential,
+          lastUpload.mimeType,
+          lastUpload.size
         )
         UploadedFiles(
           None,
@@ -56,7 +58,13 @@ case class UploadedFiles(
   def fileCount: Int = files.size
 }
 
-case class UploadedFile(fileName: String, downloadUrl: String, isConfidential: Boolean)
+case class UploadedFile(
+  fileName: String,
+  downloadUrl: String,
+  isConfidential: Boolean,
+  mimeType: String,
+  size: Long
+)
 object UploadedFile {
   implicit val reads  = Json.reads[UploadedFile]
   implicit val writes = Json.writes[UploadedFile]

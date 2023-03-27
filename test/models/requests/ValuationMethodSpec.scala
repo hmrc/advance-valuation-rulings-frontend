@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package models
+package models.requests
 
 import play.api.libs.json.{JsError, Json, JsString}
 
+import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues

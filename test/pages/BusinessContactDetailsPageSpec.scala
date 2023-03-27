@@ -16,7 +16,7 @@
 
 package pages
 
-import models.{ApplicationContactDetails, BusinessContactDetails}
+import models.BusinessContactDetails
 import org.scalacheck.{Arbitrary, Gen}
 import pages.behaviours.PageBehaviours
 

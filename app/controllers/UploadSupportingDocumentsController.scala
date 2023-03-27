@@ -102,7 +102,9 @@ class UploadSupportingDocumentsController @Inject() (
         val payload = UpscanFileDetails(
           uploadId,
           uploadDetails.name,
-          uploadDetails.downloadUrl
+          uploadDetails.downloadUrl,
+          uploadDetails.mimeType,
+          uploadDetails.size.getOrElse(0L)
         )
 
         for {

@@ -103,14 +103,21 @@ object BusinessContactDetailsSummary {
     val details = Applicant.businessContactDetails(request.applicant)
 
     details match {
-      case Some(contactDetails: BusinessContactDetails) =>
-        Seq(
-          nameRow(contactDetails),
-          emailRow(contactDetails),
-          contactNumberRow(contactDetails),
-          companyNameRow(contactDetails)
+      case Some(contactDetails: CompanyContactDetails) =>
+        val businessContactDetails = BusinessContactDetails(
+          contactDetails.name,
+          contactDetails.email,
+          contactDetails.phone.getOrElse(""),
+          contactDetails.company
         )
-      case None                                         => Seq.empty
+        Seq(
+          nameRow(businessContactDetails),
+          emailRow(businessContactDetails),
+          contactNumberRow(businessContactDetails),
+          companyNameRow(businessContactDetails)
+        )
+
+      case None => Seq.empty
     }
   }
 }

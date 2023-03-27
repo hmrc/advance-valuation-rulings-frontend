@@ -32,7 +32,8 @@ class NavigatorSpec extends SpecBase {
 
   val EmptyUserAnswers: UserAnswers  = emptyUserAnswers
   val navigator                      = new Navigator
-  val fileDetails: UpscanFileDetails = UpscanFileDetails(UploadId("id"), "name", "some.url")
+  val fileDetails: UpscanFileDetails =
+    UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
 
   "Navigator" - {
 

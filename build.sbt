@@ -48,8 +48,6 @@ lazy val root = (project in file("."))
       baseDirectory.value.getCanonicalPath,
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s",
       // "-deprecation",                      // Emit warning when using deprecated APIs. cannot enable due to twirl...
-      "-encoding",
-      "utf-8", // Specify character encoding used by source files.
       "-explaintypes", // Explain type errors in more detail.
       "-language:existentials", // Existential types (besides wildcard types) can be written and inferred
       "-language:higherKinds", // Allow higher-kinded types
@@ -58,7 +56,6 @@ lazy val root = (project in file("."))
       "-Wunused:privates", // Warn if a private member is unused.
       "-Wunused:patvars", // Warn if a variable bound in a pattern is unused.
       "-Wvalue-discard", // Warn when non-Unit expression results are unused.
-
       "-Ycache-plugin-class-loader:last-modified", // Enables caching of classloaders for compiler plugins
       "-Ycache-macro-class-loader:last-modified" // and macro definitions. This can lead to performance improvements.
     ),

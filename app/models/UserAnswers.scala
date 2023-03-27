@@ -18,6 +18,7 @@ package models
 
 import java.time.Instant
 
+import cats.data.{Validated, ValidatedNel}
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
@@ -41,6 +42,21 @@ final case class UserAnswers(
 
   def getOrElse[A](page: Modifiable[A], default: => A)(implicit rds: Reads[A]): A =
     get(page).getOrElse(default)
+
+  def validated[A](
+    page: QuestionPage[A]
+  )(implicit rds: Reads[A]): ValidatedNel[QuestionPage[_], A] =
+    Validated
+      .fromOption(get(page), page)
+      .toValidatedNel
+
+  def validatedF[A, B](
+    page: QuestionPage[A],
+    f: A => B
+  )(implicit rds: Reads[A]): ValidatedNel[QuestionPage[_], B] =
+    Validated
+      .fromOption(get(page).map(f), page)
+      .toValidatedNel
 
   def set[A](page: Modifiable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
