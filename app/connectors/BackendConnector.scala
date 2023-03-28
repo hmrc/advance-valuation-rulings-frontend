@@ -81,7 +81,7 @@ class BackendConnector @Inject() (
           onError(e)
       }
 
-  def submitCase(
+  def submitApplication(
     applicationRequest: ApplicationRequest
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
     httpClient
