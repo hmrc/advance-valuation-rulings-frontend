@@ -37,6 +37,8 @@ class BackendConnector @Inject() (
   httpClient: HttpClient
 ) extends FrontendHeaderCarrierProvider {
 
+  private var db: Map[String, Application] = Map.empty
+
   type Result = Either[BackendError, TraderDetailsWithCountryCode]
 
   private val backendUrl = config.advanceValuationRulingsBackendURL
@@ -83,54 +85,69 @@ class BackendConnector @Inject() (
 
   def submitApplication(
     applicationRequest: ApplicationRequest
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
-    httpClient
-      .POST[ApplicationRequest, HttpResponse](
-        s"$backendUrl/application",
-        body = applicationRequest,
-        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
-      )
-      .map {
-        response =>
-          if (Status.isSuccessful(response.status)) {
-            response.asRight
-          } else {
-            BackendError(response.status, response.body).asLeft
-          }
-      }
-      .recover {
-        case e: Throwable =>
-          onError(e)
-      }
+  )(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Either[BackendError, ApplicationSubmissionResponse]] = {
+
+    val applicationId = ApplicationId(db.size)
+    val application   = Application(
+      id = applicationId,
+      lastUpdated = Instant.now(),
+      created = Instant.now(),
+      request = applicationRequest
+    )
+
+    db = db + (application.id.value.toString -> application)
+
+    ApplicationSubmissionResponse(applicationId).asRight[BackendError].pure[Future]
+  }
 
   def getApplication(
     applicationId: String
   )(implicit
     hc: HeaderCarrier,
     ec: ExecutionContext
-  ): Future[Either[BackendError, ValuationRulingsApplication]] = applicationId match {
-    case "TEST" =>
-      Future.successful(
-        Right(
-          ValuationRulingsApplication(
-            "TEST",
-            BackendConnector.applicationRequest,
-            Instant.parse("2020-01-01T00:00:00Z")
+  ): Future[Either[BackendError, Application]] =
+    db.get(applicationId) match {
+      case Some(application) =>
+        Future.successful(
+          Right(
+            application
           )
         )
-      )
-    case _      =>
-      httpClient
-        .GET[ValuationRulingsApplication](
-          s"$backendUrl/application/$applicationId",
-          headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
+      case None              =>
+        Future.successful(
+          Left(
+            BackendError(
+              Status.NOT_FOUND,
+              s"Application with id $applicationId not found"
+            )
+          )
         )
-        .map(_.asRight)
-        .recover {
-          case e: Throwable =>
-            onError(e)
-        }
-  }
+    }
+
+  def applicationSummaries(
+    request: ApplicationSummaryRequest
+  )(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Either[BackendError, ApplicationSummaryResponse]] =
+    db.values
+      .foldLeft(ApplicationSummaryResponse(Seq.empty)) {
+        case (acc, application) =>
+          if (application.request.eoriDetails.eori == request.holder.eori) {
+            val summary = models.requests.ApplicationSummary(
+              id = application.id,
+              holder = application.request.eoriDetails
+            )
+            acc.copy(summaries = acc.summaries :+ summary)
+          } else {
+            acc
+          }
+      }
+      .asRight[BackendError]
+      .pure[Future]
 
   private def onError(ex: Throwable): Left[BackendError, Nothing] = {
     val (code, message) = ex match {

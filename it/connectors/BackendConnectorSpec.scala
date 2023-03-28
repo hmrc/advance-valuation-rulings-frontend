@@ -4,9 +4,9 @@ import play.api.http.Status
 import play.api.libs.json.Json
 
 import com.github.tomakehurst.wiremock.http.RequestMethod._
-import generators.{TraderDetailsGenerator, UserAnswersGenerator, ValuationRulingApplicationGenerator}
-import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers, ValuationRulingsApplication}
-import models.requests.ApplicationRequest
+import generators.{ApplicationGenerator, TraderDetailsGenerator, UserAnswersGenerator}
+import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.requests._
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
 class BackendConnectorSpec
@@ -14,7 +14,7 @@ class BackendConnectorSpec
     with WireMockHelper
     with UserAnswersGenerator
     with TraderDetailsGenerator
-    with ValuationRulingApplicationGenerator {
+    with ApplicationGenerator {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -142,9 +142,9 @@ class BackendConnectorSpec
           //   requestBody = Option(requestBody)
           // )
 
-          val result = connector.submitApplication(applicationRequest).futureValue.value
+          val result = connector.submitApplication(applicationRequest).futureValue
 
-          result.status mustBe Status.OK
+          result mustBe a[Right[_, ApplicationSubmissionResponse]]
       }
     }
   }
@@ -153,7 +153,7 @@ class BackendConnectorSpec
     "should get application from backend" ignore {
       forAll {
         (
-          application: ValuationRulingsApplication,
+          application: Application,
         ) =>
           // val expectedResponse = Json.stringify(Json.toJson(application))
 
@@ -165,11 +165,7 @@ class BackendConnectorSpec
           // )
 
           val response =
-            connector
-              .submitApplication(application.data)
-              .flatMap(_ => connector.getApplication(application.applicationNumber))
-              .futureValue
-              .value
+            connector.getApplication(application.id.toString).futureValue.value
 
           response mustBe application
       }
