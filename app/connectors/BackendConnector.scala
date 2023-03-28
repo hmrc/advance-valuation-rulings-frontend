@@ -32,6 +32,7 @@ import config.FrontendAppConfig
 import models._
 import models.requests._
 
+@javax.inject.Singleton
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
   httpClient: HttpClient
@@ -97,9 +98,7 @@ class BackendConnector @Inject() (
       created = Instant.now(),
       request = applicationRequest
     )
-
-    db = db + (application.id.value.toString -> application)
-
+    db = db + (application.id.toString -> application)
     ApplicationSubmissionResponse(applicationId).asRight[BackendError].pure[Future]
   }
 
@@ -157,46 +156,4 @@ class BackendConnector @Inject() (
     }
     Left(BackendError(code, message))
   }
-}
-
-object BackendConnector {
-  val applicant = IndividualApplicant(
-    contact = ContactDetails(
-      name = "name",
-      email = "email@email.email",
-      phone = None
-    )
-  )
-
-  val requestedMethod = MethodThree(
-    whyNotOtherMethods = "whyNotOtherMethods",
-    detailedDescription = PreviousSimilarGoods("detailed description")
-  )
-
-  val goodsDetails = GoodsDetails(
-    goodName = "goodName",
-    goodDescription = "goodDescription",
-    envisagedCommodityCode = Some("envisagedCommodityCode"),
-    knownLegalProceedings = Some("knownLegalProceedings"),
-    confidentialInformation = Some("confidentialInformation")
-  )
-
-  val eoriDetails = EORIDetails(
-    eori = "eori",
-    businessName = "businessName",
-    addressLine1 = "addressLine1",
-    addressLine2 = "addressLine2",
-    addressLine3 = "addressLine3",
-    postcode = "postcode",
-    country = "country"
-  )
-
-  val applicationRequest = ApplicationRequest(
-    applicationNumber = ApplicationNumber("GBAVR", 1).render,
-    eoriDetails = eoriDetails,
-    applicant = applicant,
-    requestedMethod = requestedMethod,
-    goodsDetails = goodsDetails,
-    attachments = Seq.empty
-  )
 }
