@@ -12,10 +12,10 @@ GET        /refresh-session                             controllers.KeepAliveCon
 
 GET        /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
+GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad()
 POST       /check-your-answers                          controllers.CheckYourAnswersController.onSubmit
 
-GET        /check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onPageLoad
+GET        /check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onPageLoad()
 POST       /check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onSubmit
 
 GET        /account/sign-out-survey                     controllers.auth.AuthController.signOut
