@@ -55,9 +55,7 @@ class ImportGoodsController @Inject() (
       implicit request =>
         val preparedForm =
           request.userAnswers
-            .getOrElse(
-              UserAnswers(request.userId, request.applicationNumber.render, request.affinityGroup)
-            )
+            .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
             .get(ImportGoodsPage) match {
             case None        => form
             case Some(value) => form.fill(value)
@@ -77,17 +75,13 @@ class ImportGoodsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(
                     request.userAnswers
-                      .getOrElse(
-                        UserAnswers(
-                          request.userId,
-                          request.applicationNumber.render,
-                          request.affinityGroup
-                        )
-                      )
+                      .getOrElse(UserAnswers(request.userId, request.applicationNumber.render))
                       .set(ImportGoodsPage, value)
                   )
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(ImportGoodsPage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator.nextPage(ImportGoodsPage, mode, updatedAnswers)(request.affinityGroup)
+              )
           )
     }
 }

@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.summary
 
 import play.api.Logger
 import play.api.i18n.Messages
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, UnsupportedAffinityGroup}
 
 import models.UserAnswers
 
@@ -42,15 +42,17 @@ object ApplicationSummary {
 
   private val logger = Logger(this.getClass)
 
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): ApplicationSummary = {
-    val (applicant, company) = userAnswers.affinityGroup match {
-      case AffinityGroup.Individual   =>
+  def apply(userAnswers: UserAnswers, affinityGroup: AffinityGroup)(implicit
+    messages: Messages
+  ): ApplicationSummary = {
+    val (applicant, company) = affinityGroup match {
+      case AffinityGroup.Individual                         =>
         (IndividualApplicantSummary(userAnswers), IndividualEoriDetailsSummary(userAnswers))
-      case AffinityGroup.Organisation =>
+      case AffinityGroup.Organisation | AffinityGroup.Agent =>
         (AgentSummary(userAnswers), BusinessEoriDetailsSummary(userAnswers))
-      case unexpected                 =>
-        logger.error(s"Unexpected affinity group [$unexpected] encountered")
-        throw new IllegalArgumentException("Unexpected affinity group")
+      case unexpected                                       =>
+        logger.error(s"Unsupported affinity group [$unexpected] encountered")
+        throw UnsupportedAffinityGroup("Unexpected affinity group")
     }
 
     ApplicationSummary(

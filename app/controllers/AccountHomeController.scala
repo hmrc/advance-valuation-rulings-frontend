@@ -53,7 +53,7 @@ class AccountHomeController @Inject() (
           _ <-
             sessionRepository.set(
               request.userAnswers.getOrElse(
-                UserAnswers(request.userId, request.applicationNumber.render, request.affinityGroup)
+                UserAnswers(request.userId, request.applicationNumber.render)
               )
             )
         } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))

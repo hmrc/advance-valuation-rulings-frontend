@@ -73,7 +73,9 @@ class WillYouCompareGoodsToIdenticalGoodsController @Inject() (
                   )
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(WillYouCompareGoodsToIdenticalGoodsPage, mode, updatedAnswers)
+                navigator.nextPage(WillYouCompareGoodsToIdenticalGoodsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

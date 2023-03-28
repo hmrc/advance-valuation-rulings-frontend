@@ -19,8 +19,6 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import generators._
 import models.{ApplicationContactDetails, ApplicationNumber, BusinessContactDetails, CheckRegisteredDetails, UserAnswers}
 import org.scalatest.matchers.should.Matchers
@@ -89,7 +87,7 @@ object GoodsDetailsSpec extends Generators {
   )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber, AffinityGroup.Individual)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,

@@ -45,7 +45,7 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val applicationSummary = ApplicationSummary(request.userAnswers)
+      val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
       Ok(view(applicationSummary))
   }
 

@@ -70,7 +70,11 @@ class WhyComputedValueController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(WhyComputedValuePage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
+              )
           )
     }
 }

@@ -76,7 +76,9 @@ class WhatIsYourRoleAsImporterController @Inject() (
                   Future.fromTry(request.userAnswers.set(WhatIsYourRoleAsImporterPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, updatedAnswers)
+                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

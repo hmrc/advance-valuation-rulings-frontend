@@ -19,8 +19,6 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import generators._
 import models.{ApplicationContactDetails, ApplicationNumber, BusinessContactDetails, CheckRegisteredDetails, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
@@ -52,7 +50,7 @@ class ApplicantSpec
     }
 
     "succeed for a business applicant" in {
-      val ua = emptyUserAnswers.copy(affinityGroup = AffinityGroup.Organisation)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
@@ -112,7 +110,7 @@ object ApplicantSpec extends Generators {
   )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber, AffinityGroup.Individual)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,

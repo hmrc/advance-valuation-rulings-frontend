@@ -20,7 +20,6 @@ import cats.data.NonEmptyList
 import cats.data.Validated._
 
 import play.api.libs.json.{Json, JsSuccess}
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators._
 import models._
@@ -149,7 +148,7 @@ object ApplicationRequestSpec extends Generators {
 
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber, AffinityGroup.Individual)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
   val applicant = IndividualApplicant(
     holder = EORIDetails(

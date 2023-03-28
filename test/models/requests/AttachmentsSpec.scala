@@ -19,8 +19,6 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import generators._
 import models._
 import models.fileupload.UploadId
@@ -101,7 +99,7 @@ object AttachmentsSpec extends Generators {
   val randomString: String      = stringsWithMaxLength(8).sample.get
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber, AffinityGroup.Individual)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
   val files = UploadedFiles(
     lastUpload = None,

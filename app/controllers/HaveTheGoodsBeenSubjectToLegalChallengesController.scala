@@ -75,7 +75,9 @@ class HaveTheGoodsBeenSubjectToLegalChallengesController @Inject() (
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(HaveTheGoodsBeenSubjectToLegalChallengesPage, mode, updatedAnswers)
+                  .nextPage(HaveTheGoodsBeenSubjectToLegalChallengesPage, mode, updatedAnswers)(
+                    request.affinityGroup
+                  )
               )
           )
     }

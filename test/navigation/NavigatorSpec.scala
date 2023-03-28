@@ -40,6 +40,8 @@ class NavigatorSpec extends SpecBase {
     def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
       EmptyUserAnswers.set(page, value).success.value
 
+    implicit val affinityGroup: AffinityGroup.Individual.type = AffinityGroup.Individual
+
     "must go from a page that doesn't exist in the route map to Index" in {
       case object UnknownPage extends Page
       navigator.nextPage(

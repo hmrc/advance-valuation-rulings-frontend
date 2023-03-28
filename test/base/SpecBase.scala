@@ -23,7 +23,6 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
@@ -62,8 +61,7 @@ trait SpecBase
   val ApplicationNumberSequence = 123456789
   val applicationNumber: String = s"$ApplicationNumberPrefix$ApplicationNumberSequence"
 
-  def emptyUserAnswers: UserAnswers =
-    UserAnswers(userAnswersId, applicationNumber, AffinityGroup.Individual)
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, applicationNumber)
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())

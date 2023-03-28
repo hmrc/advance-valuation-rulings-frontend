@@ -31,7 +31,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 
     "must return OK and the correct view for a GET with affinityGroup Individual" in {
 
-      val userAnswers = emptyUserAnswers.copy(affinityGroup = AffinityGroup.Individual)
+      val userAnswers = emptyUserAnswers
       val application = applicationBuilder(userAnswers = Option(userAnswers)).build()
 
       implicit val msgs = messages(application)
@@ -42,7 +42,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
-        val list = ApplicationSummary(userAnswers)
+        val list = ApplicationSummary(userAnswers, AffinityGroup.Individual)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list).toString

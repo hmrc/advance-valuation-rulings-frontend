@@ -40,7 +40,7 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
 
   implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
 
-  private val userAnswers = emptyUserAnswers.copy(affinityGroup = AffinityGroup.Organisation)
+  private val userAnswers = emptyUserAnswers
 
   "Check Your Answers for Agents Controller" - {
 
@@ -57,7 +57,7 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-        val list = ApplicationSummary(userAnswers)
+        val list = ApplicationSummary(userAnswers, AffinityGroup.Organisation)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list).toString

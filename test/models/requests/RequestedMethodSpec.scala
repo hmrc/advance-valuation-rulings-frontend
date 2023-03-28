@@ -19,8 +19,6 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import generators._
 import models._
 import org.scalatest.matchers.should.Matchers
@@ -576,7 +574,7 @@ object RequestedMethodSpec extends Generators {
     postalCode = Some(randomString)
   )
   val applicationNumber: String     = ApplicationNumber("GBAVR", 1).render
-  val emptyUserAnswers: UserAnswers = UserAnswers("id", applicationNumber, AffinityGroup.Individual)
+  val emptyUserAnswers: UserAnswers = UserAnswers("id", applicationNumber)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,
