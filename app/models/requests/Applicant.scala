@@ -20,6 +20,8 @@ import cats.data._
 import cats.data.Validated._
 
 import play.api.libs.json._
+import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 
 import models._
 import pages._
@@ -70,8 +72,10 @@ object Applicant {
     case OrganisationApplicant(contact) => Some(contact)
   }
 
-  def apply(userAnswers: UserAnswers): ValidatedNel[Page, Applicant] = {
-
+  def apply(
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup
+  ): ValidatedNel[Page, Applicant] = {
     val contactDetails         = userAnswers
       .validatedF[ApplicationContactDetails, ContactDetails](
         ApplicationContactDetailsPage,
@@ -83,14 +87,11 @@ object Applicant {
           BusinessContactDetailsPage,
           cd => CompanyContactDetails(cd.name, cd.email, Some(cd.phone), cd.company)
         )
-
-    (contactDetails, businessContactDetails) match {
-      case (Valid(_), Invalid(_)) =>
-        contactDetails.map(IndividualApplicant(_))
-      case (Invalid(_), Valid(_)) =>
-        businessContactDetails.map(OrganisationApplicant(_))
-      case _                      =>
-        Invalid(NonEmptyList.of(ApplicationContactDetailsPage, BusinessContactDetailsPage))
+    affinityGroup match {
+      case Individual   => contactDetails.map(IndividualApplicant(_))
+      case Organisation => businessContactDetails.map(OrganisationApplicant(_))
+      case Agent        => Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
+      case _            => Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
     }
   }
 }

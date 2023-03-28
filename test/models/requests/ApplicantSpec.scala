@@ -19,6 +19,8 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
+import uk.gov.hmrc.auth.core.AffinityGroup
+
 import generators._
 import models.{ApplicationContactDetails, ApplicationNumber, BusinessContactDetails, CheckRegisteredDetails, UserAnswers}
 import org.scalacheck.Arbitrary.arbitrary
@@ -40,11 +42,10 @@ class ApplicantSpec
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
         ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
       } yield ua).success.get
 
-      val result = Applicant(userAnswers)
+      val result = Applicant(userAnswers, AffinityGroup.Individual)
 
       result shouldBe Valid(IndividualApplicant(applicant.contact))
     }
@@ -53,39 +54,50 @@ class ApplicantSpec
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
         ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
       } yield ua).success.get
 
-      val result = Applicant(userAnswers)
+      val result = Applicant(userAnswers, AffinityGroup.Organisation)
 
       result shouldBe Valid(
         OrganisationApplicant(orgApplicant.businessContact)
       )
     }
 
-    "return invalid when user has no contact details" in {
+    "return invalid when Organisation has no contact details" in {
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
       } yield ua).success.get
 
-      val result = Applicant(userAnswers)
+      val result = Applicant(userAnswers, AffinityGroup.Organisation)
 
       result shouldBe Invalid(
-        NonEmptyList(ApplicationContactDetailsPage, List(BusinessContactDetailsPage))
+        NonEmptyList.of(BusinessContactDetailsPage)
+      )
+    }
+
+    "return invalid when Individual has no contact details" in {
+      val ua = emptyUserAnswers
+
+      val userAnswers = (for {
+        ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
+      } yield ua).success.get
+
+      val result = Applicant(userAnswers, AffinityGroup.Individual)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(ApplicationContactDetailsPage)
       )
     }
 
     "return invalid for empty UserAnswers" in {
       val userAnswers = emptyUserAnswers
 
-      val result = Applicant(userAnswers)
+      val result = Applicant(userAnswers, AffinityGroup.Individual)
 
-      result shouldBe Invalid(
-        NonEmptyList.of(ApplicationContactDetailsPage, BusinessContactDetailsPage)
-      )
+      result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
     }
   }
 }
@@ -93,25 +105,6 @@ class ApplicantSpec
 object ApplicantSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val eoriDetails = EORIDetails(
-    eori = randomString,
-    businessName = randomString,
-    addressLine1 = randomString,
-    addressLine2 = "",
-    addressLine3 = randomString,
-    postcode = "abc",
-    country = randomString
-  )
-
-  val checkRegisteredDetails    = CheckRegisteredDetails(
-    value = true,
-    eori = randomString,
-    name = randomString,
-    streetAndNumber = randomString,
-    city = randomString,
-    country = randomString,
-    postalCode = Some("abc")
-  )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
@@ -126,6 +119,15 @@ object ApplicantSpec extends Generators {
     email = randomString,
     phone = randomString,
     company = randomString
+  )
+  val eoriDetails               = EORIDetails(
+    eori = randomString,
+    businessName = randomString,
+    addressLine1 = randomString,
+    addressLine2 = "",
+    addressLine3 = randomString,
+    postcode = "abc",
+    country = randomString
   )
   val applicant                 = IndividualApplicant(
     contact = ContactDetails(

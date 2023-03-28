@@ -20,6 +20,7 @@ import cats.data.NonEmptyList
 import cats.data.Validated._
 
 import play.api.libs.json.{Json, JsSuccess}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators._
 import models._
@@ -110,7 +111,7 @@ class ApplicationRequestSpec
         ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
       } yield ua).success.get
 
-      val result = ApplicationRequest(userAnswers)
+      val result = ApplicationRequest(userAnswers, AffinityGroup.Individual)
 
       result shouldBe Valid(
         ApplicationRequest(
@@ -128,17 +129,31 @@ class ApplicationRequestSpec
       )
     }
 
-    "return invalid when built from empty userAnswers" in {
+    "return invalid for an Individual when built from empty userAnswers" in {
 
-      val result = ApplicationRequest(emptyUserAnswers)
+      val result = ApplicationRequest(emptyUserAnswers, AffinityGroup.Individual)
 
       result shouldBe Invalid(
         NonEmptyList.of(
-          DescriptionOfGoodsPage,
           CheckRegisteredDetailsPage,
           ApplicationContactDetailsPage,
+          ValuationMethodPage,
+          DescriptionOfGoodsPage,
+          DoYouWantToUploadDocumentsPage
+        )
+      )
+    }
+
+    "return invalid for an Organisation when built from empty userAnswers" in {
+
+      val result = ApplicationRequest(emptyUserAnswers, AffinityGroup.Organisation)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(
+          CheckRegisteredDetailsPage,
           BusinessContactDetailsPage,
           ValuationMethodPage,
+          DescriptionOfGoodsPage,
           DoYouWantToUploadDocumentsPage
         )
       )
