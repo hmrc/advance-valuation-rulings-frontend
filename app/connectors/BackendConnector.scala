@@ -144,15 +144,6 @@ class BackendConnector @Inject() (
 
 object BackendConnector {
   val applicant = IndividualApplicant(
-    holder = EORIDetails(
-      eori = "eori",
-      businessName = "businessName",
-      addressLine1 = "addressLine1",
-      addressLine2 = "addressLine2",
-      addressLine3 = "addressLine3",
-      postcode = "postcode",
-      country = "country"
-    ),
     contact = ContactDetails(
       name = "name",
       email = "email@email.email",
@@ -173,8 +164,19 @@ object BackendConnector {
     confidentialInformation = Some("confidentialInformation")
   )
 
+  val eoriDetails = EORIDetails(
+    eori = "eori",
+    businessName = "businessName",
+    addressLine1 = "addressLine1",
+    addressLine2 = "addressLine2",
+    addressLine3 = "addressLine3",
+    postcode = "postcode",
+    country = "country"
+  )
+
   val applicationRequest = ApplicationRequest(
     applicationNumber = ApplicationNumber("GBAVR", 1).render,
+    eoriDetails = eoriDetails,
     applicant = applicant,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,

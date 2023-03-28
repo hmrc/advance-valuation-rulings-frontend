@@ -98,15 +98,15 @@ object CheckRegisteredDetailsForAgentsSummary {
   def rows(
     request: ApplicationRequest
   )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val eoriHolder     = Applicant.eoriHolder(request.applicant)
-    val postCode       = if (eoriHolder.postcode.isEmpty) None else Some(eoriHolder.postcode)
+    val postCode       =
+      if (request.eoriDetails.postcode.isEmpty) None else Some(request.eoriDetails.postcode)
     val contactDetails = models.CheckRegisteredDetails(
       value = true,
-      eori = eoriHolder.eori,
-      name = eoriHolder.businessName,
-      streetAndNumber = eoriHolder.addressLine1 + "\n" + eoriHolder.addressLine2,
-      city = eoriHolder.addressLine3,
-      country = eoriHolder.country,
+      eori = request.eoriDetails.eori,
+      name = request.eoriDetails.businessName,
+      streetAndNumber = request.eoriDetails.addressLine1 + "\n" + request.eoriDetails.addressLine2,
+      city = request.eoriDetails.addressLine3,
+      country = request.eoriDetails.country,
       postalCode = postCode
     )
     Seq(

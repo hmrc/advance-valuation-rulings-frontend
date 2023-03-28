@@ -46,7 +46,7 @@ class ApplicantSpec
 
       val result = Applicant(userAnswers)
 
-      result shouldBe Valid(IndividualApplicant(applicant.holder, applicant.contact))
+      result shouldBe Valid(IndividualApplicant(applicant.contact))
     }
 
     "succeed for a business applicant" in {
@@ -60,7 +60,7 @@ class ApplicantSpec
       val result = Applicant(userAnswers)
 
       result shouldBe Valid(
-        OrganisationApplicant(orgApplicant.holder, orgApplicant.businessContact)
+        OrganisationApplicant(orgApplicant.businessContact)
       )
     }
 
@@ -84,13 +84,7 @@ class ApplicantSpec
       val result = Applicant(userAnswers)
 
       result shouldBe Invalid(
-        NonEmptyList(
-          CheckRegisteredDetailsPage,
-          List(
-            ApplicationContactDetailsPage,
-            BusinessContactDetailsPage
-          )
-        )
+        NonEmptyList.of(ApplicationContactDetailsPage, BusinessContactDetailsPage)
       )
     }
   }
@@ -98,6 +92,16 @@ class ApplicantSpec
 
 object ApplicantSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
+
+  val eoriDetails = EORIDetails(
+    eori = randomString,
+    businessName = randomString,
+    addressLine1 = randomString,
+    addressLine2 = "",
+    addressLine3 = randomString,
+    postcode = "abc",
+    country = randomString
+  )
 
   val checkRegisteredDetails    = CheckRegisteredDetails(
     value = true,
@@ -124,15 +128,6 @@ object ApplicantSpec extends Generators {
     company = randomString
   )
   val applicant                 = IndividualApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = "abc",
-      country = randomString
-    ),
     contact = ContactDetails(
       name = randomString,
       email = randomString,
@@ -140,15 +135,6 @@ object ApplicantSpec extends Generators {
     )
   )
   val orgApplicant              = OrganisationApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = "abc",
-      country = randomString
-    ),
     businessContact = CompanyContactDetails(
       name = randomString,
       email = randomString,

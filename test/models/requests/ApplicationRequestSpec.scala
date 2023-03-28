@@ -40,6 +40,7 @@ class ApplicationRequestSpec
       ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
         ApplicationRequest(
           applicationNumber = applicationNumber,
+          eoriDetails = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails,
@@ -52,6 +53,7 @@ class ApplicationRequestSpec
       ApplicationRequest.format.writes(
         ApplicationRequest(
           applicationNumber = applicationNumber,
+          eoriDetails = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
@@ -113,6 +115,7 @@ class ApplicationRequestSpec
       result shouldBe Valid(
         ApplicationRequest(
           applicationNumber = applicationNumber,
+          eoriDetails = eoriDetails,
           applicant = applicant,
           requestedMethod = MethodOne(
             Some("explainHowPartiesAreRelated"),
@@ -150,16 +153,17 @@ object ApplicationRequestSpec extends Generators {
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
+  val eoriDetails = EORIDetails(
+    eori = randomString,
+    businessName = randomString,
+    addressLine1 = randomString,
+    addressLine2 = "",
+    addressLine3 = randomString,
+    postcode = randomString,
+    country = randomString
+  )
+
   val applicant = IndividualApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     contact = ContactDetails(
       name = randomString,
       email = randomString,
@@ -191,16 +195,16 @@ object ApplicationRequestSpec extends Generators {
   val body =
     s"""{
     |"applicationNumber": "$applicationNumber",
+    |"eoriDetails": {
+    |  "eori": "$randomString",
+    |  "businessName": "$randomString",
+    |  "addressLine1": "$randomString",
+    |  "addressLine2": "",
+    |  "addressLine3": "$randomString",
+    |  "postcode": "$randomString",
+    |  "country": "$randomString"
+    |},
     |"applicant": {
-    |  "holder": {
-    |    "eori": "$randomString",
-    |    "businessName": "$randomString",
-    |    "addressLine1": "$randomString",
-    |    "addressLine2": "",
-    |    "addressLine3": "$randomString",
-    |    "postcode": "$randomString",
-    |    "country": "$randomString"
-    |  },
     |  "contact": {
     |    "name": "$randomString",
     |    "email": "$randomString",
