@@ -60,7 +60,7 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request = FakeRequest(
           GET,
-          routes.ViewApplicationController.onPageLoad(ruling.applicationNumber).url
+          routes.ViewApplicationController.onPageLoad(ruling.id.toString).url
         )
 
         val applicationViewModel = ApplicationViewModel(applicationRequest)
@@ -70,7 +70,7 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           applicationViewModel,
-          ruling.applicationNumber,
+          ruling.id.toString,
           lastUpdatedString
         )(
           request,
@@ -125,11 +125,13 @@ object ViewApplicationControllerSpec extends Generators {
     goodsDetails = goodsDetails,
     attachments = Seq.empty
   )
+  val applicationId      = ApplicationId(0L)
   val ruling             =
-    ValuationRulingsApplication(
-      data = applicationRequest,
-      applicationNumber = randomString,
-      lastUpdated = lastUpdated
+    Application(
+      id = applicationId,
+      request = applicationRequest,
+      lastUpdated = lastUpdated,
+      created = lastUpdated
     )
 
   val body =

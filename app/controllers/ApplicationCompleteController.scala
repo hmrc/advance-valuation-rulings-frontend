@@ -22,6 +22,7 @@ import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.JsString
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
@@ -43,15 +44,29 @@ class ApplicationCompleteController @Inject() (
   def onPageLoad(applicationNumber: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        val answers            = request.userAnswers
+        val answers = request.userAnswers
+
         val applicationSummary = ApplicationSummary(answers, request.affinityGroup).removeActions()
 
-        (answers.data \ "applicationContactDetails" \ "email").toOption match {
-          case Some(JsString(applicantEmail)) =>
-            Ok(view(applicationNumber, applicantEmail, applicationSummary))
-          case _                              =>
-            logger.error(s"Applicant email is empty for id: ${request.userId}")
-            Redirect(routes.JourneyRecoveryController.onPageLoad())
+        request.affinityGroup match {
+          case AffinityGroup.Individual   =>
+            (answers.data \ "applicationContactDetails" \ "email").toOption match {
+              case Some(JsString(applicantEmail)) =>
+                Ok(view(applicationNumber, applicantEmail, applicationSummary))
+              case _                              =>
+                logger.error(s"Applicant email is empty for id: ${request.userId}")
+                Redirect(routes.JourneyRecoveryController.onPageLoad())
+            }
+          case AffinityGroup.Organisation =>
+            (answers.data \ "businessContactDetails" \ "email").toOption match {
+              case Some(JsString(applicantEmail)) =>
+                Ok(view(applicationNumber, applicantEmail, applicationSummary))
+              case _                              =>
+                logger.error(s"Applicant email is empty for id: ${request.userId}")
+                Redirect(routes.JourneyRecoveryController.onPageLoad())
+            }
+          case _                          => Redirect(routes.JourneyRecoveryController.onPageLoad())
         }
+
     }
 }

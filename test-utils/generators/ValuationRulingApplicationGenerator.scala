@@ -18,22 +18,23 @@ package generators
 
 import java.time.{LocalDate, ZoneOffset}
 
-import models._
+import models.requests._
 import org.scalacheck._
 
-trait ValuationRulingApplicationGenerator extends ApplicationRequestGenerator {
+trait ApplicationGenerator extends ApplicationRequestGenerator {
 
-  implicit lazy val arbitraryValuationRulingApplication: Arbitrary[ValuationRulingsApplication] =
+  implicit lazy val arbitraryApplication: Arbitrary[Application] =
     Arbitrary {
       for {
-        id        <- alphaStringsWithMaxLength(36)
+        id        <- applicationIdGen
         data      <- arbitraryApplicationRequest.arbitrary
         date      <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
         dateIntant = date.atStartOfDay(ZoneOffset.UTC).toInstant
-      } yield ValuationRulingsApplication(
-        applicationNumber = id,
-        data = data,
-        lastUpdated = dateIntant
+      } yield Application(
+        id = id,
+        request = data,
+        lastUpdated = dateIntant,
+        created = dateIntant
       )
     }
 }
