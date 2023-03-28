@@ -24,7 +24,6 @@ final case class ApplicationsAndRulingsResponse(
   ref: String,
   nameOfGoods: String,
   dateSubmitted: LocalDate,
-  status: String,
   application: Option[ValuationRulingsApplication] = None
 )
 

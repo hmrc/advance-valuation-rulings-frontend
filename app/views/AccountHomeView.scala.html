@@ -24,29 +24,30 @@
         govukButton: GovukButton,
         formHelper: FormWithCSRF,
         para: Paragraph,
-        table: GovukTable
+        table: GovukTable,
+        link: Link
 )
 
-@(applications: Option[ApplicationsAndRulingsResponse] = None)(implicit request: Request[_], messages: Messages)
+@(applications: Option[Seq[ApplicationsAndRulingsResponse]] = None)(implicit request: Request[_], messages: Messages)
 <!--one application for now, will eventually take a Option[Seq[ApplicationsAndRulingsResponse]] perhaps-->
 
 @dateFormatter = @{DateTimeFormatter.ofPattern("d MMM yyyy")}
+@theRows = @{for(app <- applications.get) yield Seq(
+                    TableRow(content = Text(app.ref),format = Some("text")),
+                    TableRow(content =  Text(app.nameOfGoods),format = Some("text")),
+                    TableRow(content =  Text(app.dateSubmitted.format(dateFormatter)),format = Some("text")),
+                    TableRow(content =  HtmlContent(link(   id = "application_link",
+                                                text = messages("View application"),
+                                                call = Call("GET", "https://www.staging.tax.service.gov.uk/advance-valuation-ruling/application/TEST")
+                                                )))
+                )}
 @appsTable = @{
 <!--application row to be a link making a call to view the application?-->
-
 
 <!--one application for now then find a way to loop row creation. -->
     table(
         Table(
-            rows = Seq(
-                Seq(
-                    TableRow(content = Text(applications.get.ref),format = Some("text")),
-                    TableRow(content =  Text(applications.get.nameOfGoods),format = Some("text")),
-                    TableRow(content =  Text(applications.get.dateSubmitted.format(dateFormatter)),format = Some("text")),
-                    TableRow(content =  Text(applications.get.status),format = Some("text")),
-                    TableRow(content =  Text(applications.get.application.toString), format = Some("text"))
-                )
-            ),
+            rows = theRows,
             head = Some(
                 Seq(
                     HeadCell(
@@ -57,9 +58,6 @@
                     ),
                     HeadCell(
                         content = Text(messages("Date submitted"))
-                    ),
-                    HeadCell(
-                        content = Text(messages("Status"))
                     ),
                     HeadCell(
                         content = Text("")
@@ -75,9 +73,9 @@
 
 @layout(pageTitle = titleNoForm(messages("accountHome.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("accountHome.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("accountHome.heading")</h1>
 
-    @para(Html(messages("accountHome.para")))
+    @{if(applications.isEmpty) para(Html(messages("accountHome.para"))) else appsTable }
 
     @formHelper(action = routes.AccountHomeController.startApplication()) {
         @govukButton(
@@ -85,6 +83,5 @@
         )
     }
 
-    @{if(applications.isEmpty) para(Html(messages("accountHome.para"))) else appsTable }
 
 }

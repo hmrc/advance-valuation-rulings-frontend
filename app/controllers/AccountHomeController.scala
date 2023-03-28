@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.time.LocalDate
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
@@ -26,7 +27,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import models.UserAnswers
+import models.{ApplicationsAndRulingsResponse, UserAnswers}
 import navigation.Navigator
 import repositories.SessionRepository
 import views.html.AccountHomeView
@@ -45,8 +46,26 @@ class AccountHomeController @Inject() (
     with I18nSupport
     with Retrievals {
 
-  def onPageLoad: Action[AnyContent]       = (identify andThen getData)(implicit request => Ok(view()))
-  def startApplication: Action[AnyContent] =
+  // represents the backend retrieval
+  val applications: Option[Seq[ApplicationsAndRulingsResponse]] = Some(
+    Seq(
+      ApplicationsAndRulingsResponse(
+        ref = "GBV01234567",
+        nameOfGoods = "Socks",
+        dateSubmitted = LocalDate.now(),
+        application = None
+      ),
+      ApplicationsAndRulingsResponse(
+        ref = "GBV01234568",
+        nameOfGoods = "Shirts",
+        dateSubmitted = LocalDate.now(),
+        application = None
+      )
+    )
+  )
+  def onPageLoad: Action[AnyContent]                            =
+    (identify andThen getData)(implicit request => Ok(view(applications)))
+  def startApplication: Action[AnyContent]                      =
     (identify andThen getData andThen generateApplicationNumber).async {
       implicit request =>
         for {
