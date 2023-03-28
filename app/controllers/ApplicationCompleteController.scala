@@ -38,7 +38,7 @@ class ApplicationCompleteController @Inject() (
   view: ApplicationCompleteView
 ) extends FrontendBaseController
     with I18nSupport {
-
+// hi world
   private val logger = Logger(this.getClass)
 
   def onPageLoad(applicationNumber: String): Action[AnyContent] =
