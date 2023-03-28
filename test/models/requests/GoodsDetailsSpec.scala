@@ -36,7 +36,7 @@ class GoodsDetailsSpec
 
   "GoodsDetails" should {
     "succeed when all fields set" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(DescriptionOfGoodsPage, randomString)
@@ -62,9 +62,7 @@ class GoodsDetailsSpec
     }
 
     "return invalid for empty UserAnswers" in {
-      val userAnswers = UserAnswers("a", applicationNumber)
-
-      val result = GoodsDetails(userAnswers)
+      val result = GoodsDetails(emptyUserAnswers)
 
       result shouldBe Invalid(
         NonEmptyList.one(
@@ -89,6 +87,18 @@ object GoodsDetailsSpec extends Generators {
   )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+
+  val eoriDetails = EORIDetails(
+    eori = randomString,
+    businessName = randomString,
+    addressLine1 = randomString,
+    addressLine2 = "",
+    addressLine3 = randomString,
+    postcode = randomString,
+    country = randomString
+  )
+
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,
     email = randomString,
@@ -101,15 +111,6 @@ object GoodsDetailsSpec extends Generators {
     company = randomString
   )
   val applicant                 = IndividualApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     contact = ContactDetails(
       name = randomString,
       email = randomString,
@@ -117,15 +118,6 @@ object GoodsDetailsSpec extends Generators {
     )
   )
   val orgApplicant              = OrganisationApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     businessContact = CompanyContactDetails(
       name = randomString,
       email = randomString,

@@ -45,6 +45,17 @@ trait SpecBase
     with ScalaFutures
     with IntegrationPatience {
 
+  val ContactName        = "some name"
+  val ContactEmail       = "test@email.com"
+  val ContactPhoneNumber = "01234567890"
+
+  val EoriNumber      = "GB123456789000"
+  val RegisteredName  = "My Test Company"
+  val StreetAndNumber = "1 Somewhere"
+  val City            = "London"
+  val Country         = "United Kingdom"
+  val Postcode        = "A12 2AB"
+
   val userAnswersId: String     = "id"
   val ApplicationNumberPrefix   = "GBAVR"
   val ApplicationNumberSequence = 123456789

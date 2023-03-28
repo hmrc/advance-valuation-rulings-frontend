@@ -588,15 +588,6 @@ object RequestedMethodSpec extends Generators {
     company = randomString
   )
   val applicant                 = IndividualApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     contact = ContactDetails(
       name = randomString,
       email = randomString,
@@ -604,15 +595,6 @@ object RequestedMethodSpec extends Generators {
     )
   )
   val orgApplicant              = OrganisationApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     businessContact = CompanyContactDetails(
       name = randomString,
       email = randomString,

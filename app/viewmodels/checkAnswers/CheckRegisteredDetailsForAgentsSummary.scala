@@ -28,13 +28,13 @@ import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object CheckRegisteredDetailsSummary {
+object CheckRegisteredDetailsForAgentsSummary {
 
   private def registeredNameRow(answer: CheckRegisteredDetails)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswers.eori.name.label",
+      key = "checkYourAnswersForAgents.business.name.label",
       value = ValueViewModel(HtmlFormat.escape(answer.name).body),
       actions = Seq(
         ActionItemViewModel(
@@ -49,7 +49,7 @@ object CheckRegisteredDetailsSummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswers.eori.address.label",
+      key = "checkYourAnswersForAgents.business.address.label",
       value = ValueViewModel(
         HtmlContent(
           Html(
@@ -75,7 +75,7 @@ object CheckRegisteredDetailsSummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswers.eori.number.label",
+      key = "checkYourAnswersForAgents.business.eori.number.label",
       value = ValueViewModel(HtmlFormat.escape(answer.eori).body),
       actions = Seq(
         ActionItemViewModel(

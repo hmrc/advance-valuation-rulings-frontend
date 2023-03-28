@@ -15,6 +15,9 @@ GET        /there-is-a-problem                          controllers.JourneyRecov
 GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
 POST       /check-your-answers                          controllers.CheckYourAnswersController.onSubmit
 
+GET        /check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onPageLoad
+POST       /check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onSubmit
+
 GET        /account/sign-out-survey                     controllers.auth.AuthController.signOut
 GET        /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey
 GET        /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
@@ -236,8 +239,10 @@ POST       /method-1-import-similar-goods                        controllers.Hav
 GET        /change-method-1-import-similar-goods                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-method-1-import-similar-goods                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode: Mode = CheckMode)
 
-GET        /describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onPageLoad()
-POST       /describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onSubmit()
+GET        /describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = NormalMode)
+POST       /describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = NormalMode)
+GET        /change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = CheckMode)
 
 GET        /whoAreYouAgent                        controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = NormalMode)
 POST       /whoAreYouAgent                        controllers.WhoAreYouAgentController.onSubmit(mode: Mode = NormalMode)

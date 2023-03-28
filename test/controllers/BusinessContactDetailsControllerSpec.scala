@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.BusinessContactDetailsFormProvider
-import models.{BusinessContactDetails, NormalMode, UserAnswers}
+import models.{BusinessContactDetails, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -75,7 +75,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
       )
 
       val userAnswers =
-        UserAnswers(userAnswersId, applicationNumber)
+        emptyUserAnswers
           .set(BusinessContactDetailsPage, businessContactDetails)
           .success
           .value

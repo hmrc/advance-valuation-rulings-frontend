@@ -75,7 +75,9 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, mode, updatedAnswers)
+                  .nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, mode, updatedAnswers)(
+                    request.affinityGroup
+                  )
               )
           )
     }

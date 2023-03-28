@@ -79,7 +79,11 @@ class IsThisFileConfidentialController @Inject() (
                                     (files: UploadedFiles) => files.setConfidentiality(value)
                                   )
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
+              )
           )
 
     }

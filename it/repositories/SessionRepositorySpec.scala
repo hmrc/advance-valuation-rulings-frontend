@@ -35,7 +35,12 @@ class SessionRepositorySpec
   val applicationNumber: String = s"$ApplicationNumberPrefix$ApplicationNumberSequence"
 
   private val userAnswers =
-    UserAnswers("id", applicationNumber, Json.obj("foo" -> "bar"), Instant.ofEpochSecond(1))
+    UserAnswers(
+      "id",
+      applicationNumber,
+      Json.obj("foo" -> "bar"),
+      Instant.ofEpochSecond(1)
+    )
 
   private val mockAppConfig = mock[FrontendAppConfig]
   when(mockAppConfig.cacheTtl) thenReturn 1

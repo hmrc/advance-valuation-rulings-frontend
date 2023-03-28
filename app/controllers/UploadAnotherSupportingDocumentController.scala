@@ -88,7 +88,9 @@ class UploadAnotherSupportingDocumentController @Inject() (
                 answers <- UploadAnotherSupportingDocumentPage.set(value)
                 _       <- sessionRepository.set(answers)
               } yield Redirect(
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
+                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)(
+                  request.affinityGroup
+                )
               )
           )
     }
@@ -111,13 +113,17 @@ class UploadAnotherSupportingDocumentController @Inject() (
               updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(
-              navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)
+              navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)(
+                request.affinityGroup
+              )
             )
 
           case None =>
             Future.successful(
               Redirect(
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, request.userAnswers)
+                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, request.userAnswers)(
+                  request.affinityGroup
+                )
               )
             )
         }

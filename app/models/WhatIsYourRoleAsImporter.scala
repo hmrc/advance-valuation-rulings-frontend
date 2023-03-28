@@ -27,6 +27,8 @@ sealed trait WhatIsYourRoleAsImporter
 
 object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
 
+  val MessagePrefix = "whatIsYourRoleAsImporter"
+
   case object Employeeoforg extends WithName("employeeOfOrg") with WhatIsYourRoleAsImporter
   case object Agentonbehalfoforg
       extends WithName("agentOnBehalfOfOrg")
@@ -41,12 +43,11 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
     case (value, index) =>
       RadioItem(
         content = HtmlContent(
-          Html(s"<b>${messages(s"whatIsYourRoleAsImporter.${value.toString}")}</b>")
+          Html(s"<b>${messages(s"$MessagePrefix.${value.toString}")}</b>")
         ),
         value = Some(value.toString),
         id = Some(s"value_$index"),
-        hint =
-          Some(Hint(content = Text(messages(s"whatIsYourRoleAsImporter.${value.toString}.hint"))))
+        hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint"))))
       )
   }
 

@@ -71,7 +71,9 @@ class ExplainWhyYouChoseMethodFourController @Inject() (
                   Future.fromTry(request.userAnswers.set(ExplainWhyYouChoseMethodFourPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ExplainWhyYouChoseMethodFourPage, mode, updatedAnswers)
+                navigator.nextPage(ExplainWhyYouChoseMethodFourPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

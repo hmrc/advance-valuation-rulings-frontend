@@ -67,7 +67,9 @@ class DoYouWantToUploadDocumentsController @Inject() (
                 updatedAnswers <- DoYouWantToUploadDocumentsPage.set(value)
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(DoYouWantToUploadDocumentsPage, mode, updatedAnswers)
+                navigator.nextPage(DoYouWantToUploadDocumentsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

@@ -75,7 +75,9 @@ class ExplainYourGoodsComparingToSimilarGoodsController @Inject() (
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(ExplainYourGoodsComparingToSimilarGoodsPage, mode, updatedAnswers)
+                  .nextPage(ExplainYourGoodsComparingToSimilarGoodsPage, mode, updatedAnswers)(
+                    request.affinityGroup
+                  )
               )
           )
     }

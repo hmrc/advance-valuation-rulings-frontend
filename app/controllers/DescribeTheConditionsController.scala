@@ -70,7 +70,11 @@ class DescribeTheConditionsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheConditionsPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DescribeTheConditionsPage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator.nextPage(DescribeTheConditionsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
+              )
           )
     }
 }

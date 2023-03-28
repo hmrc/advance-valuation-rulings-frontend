@@ -40,6 +40,7 @@ class ApplicationRequestSpec
       ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
         ApplicationRequest(
           applicationNumber = applicationNumber,
+          eoriDetails = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails,
@@ -52,6 +53,7 @@ class ApplicationRequestSpec
       ApplicationRequest.format.writes(
         ApplicationRequest(
           applicationNumber = applicationNumber,
+          eoriDetails = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
@@ -71,7 +73,7 @@ class ApplicationRequestSpec
 
     "return valid when built from correctly structured userAnswers" in {
 
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(DescriptionOfGoodsPage, randomString)
@@ -113,6 +115,7 @@ class ApplicationRequestSpec
       result shouldBe Valid(
         ApplicationRequest(
           applicationNumber = applicationNumber,
+          eoriDetails = eoriDetails,
           applicant = applicant,
           requestedMethod = MethodOne(
             Some("explainHowPartiesAreRelated"),
@@ -127,9 +130,7 @@ class ApplicationRequestSpec
 
     "return invalid when built from empty userAnswers" in {
 
-      val ua = UserAnswers("a", ApplicationNumber("GBAVR", 1).render)
-
-      val result = ApplicationRequest(ua)
+      val result = ApplicationRequest(emptyUserAnswers)
 
       result shouldBe Invalid(
         NonEmptyList.of(
@@ -150,16 +151,19 @@ object ApplicationRequestSpec extends Generators {
 
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+
+  val eoriDetails = EORIDetails(
+    eori = randomString,
+    businessName = randomString,
+    addressLine1 = randomString,
+    addressLine2 = "",
+    addressLine3 = randomString,
+    postcode = randomString,
+    country = randomString
+  )
+
   val applicant = IndividualApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     contact = ContactDetails(
       name = randomString,
       email = randomString,
@@ -191,16 +195,16 @@ object ApplicationRequestSpec extends Generators {
   val body =
     s"""{
     |"applicationNumber": "$applicationNumber",
+    |"eoriDetails": {
+    |  "eori": "$randomString",
+    |  "businessName": "$randomString",
+    |  "addressLine1": "$randomString",
+    |  "addressLine2": "",
+    |  "addressLine3": "$randomString",
+    |  "postcode": "$randomString",
+    |  "country": "$randomString"
+    |},
     |"applicant": {
-    |  "holder": {
-    |    "eori": "$randomString",
-    |    "businessName": "$randomString",
-    |    "addressLine1": "$randomString",
-    |    "addressLine2": "",
-    |    "addressLine3": "$randomString",
-    |    "postcode": "$randomString",
-    |    "country": "$randomString"
-    |  },
     |  "contact": {
     |    "name": "$randomString",
     |    "email": "$randomString",
