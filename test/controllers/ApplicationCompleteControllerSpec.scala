@@ -19,13 +19,13 @@ package controllers
 import play.api.libs.json._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 
 import base.SpecBase
 import generators.Generators
-import models.ValuationMethod
+import models.UserAnswers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.ValuationMethodPage
+import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
@@ -33,36 +33,67 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
 
   "ApplicationComplete Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET for Individual" in {
       ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
         ua =>
-          val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-          val Email             = "testEmail@mail.com"
-          val applicationNumber = userAnswers.applicationNumber
+          val answers =
+            addEmailToUserAnswers(ApplicationContactDetailsPage.toString, ua, ContactEmail)
 
-          val emailUpdate   = (__ \ "applicationContactDetails" \ "email").json.put(JsString(Email))
-          val dataWithEmail = userAnswers.data.transform(__.json.update(emailUpdate)).get
-          val answers       = userAnswers.copy(data = dataWithEmail)
-          val application   = applicationBuilder(userAnswers = Option(answers)).build()
+          val application = applicationBuilder(Option(answers)).build()
 
           running(application) {
-            val request       =
-              FakeRequest(
-                GET,
-                routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
-              )
             implicit val msgs = messages(application)
-            val result        = route(application, request).value
 
+            val url     = routes.ApplicationCompleteController.onPageLoad(ua.applicationNumber).url
+            val request = FakeRequest(GET, url)
             val view    = application.injector.instanceOf[ApplicationCompleteView]
-            val summary = ApplicationSummary(userAnswers, AffinityGroup.Individual).removeActions
+            val summary = ApplicationSummary(answers, Individual).removeActions()
+
+            val result = route(application, request).value
+
             status(result) mustEqual OK
-            contentAsString(result) mustEqual view(applicationNumber, Email, summary)(
+            contentAsString(result) mustEqual view(ua.applicationNumber, ContactEmail, summary)(
               request,
               messages(application)
             ).toString
           }
       }
     }
+
+    "must return OK and the correct view for a GET for Agent" in {
+      ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
+        ua =>
+          val answers = addEmailToUserAnswers(BusinessContactDetailsPage.toString, ua, ContactEmail)
+
+          val application = applicationBuilderAsAgent(Option(answers)).build()
+
+          running(application) {
+            implicit val msgs = messages(application)
+
+            val url     = routes.ApplicationCompleteController.onPageLoad(ua.applicationNumber).url
+            val request = FakeRequest(GET, url)
+            val view    = application.injector.instanceOf[ApplicationCompleteView]
+            val summary = ApplicationSummary(answers, Organisation).removeActions()
+
+            val result = route(application, request).value
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(ua.applicationNumber, ContactEmail, summary)(
+              request,
+              messages(application)
+            ).toString
+          }
+      }
+    }
+  }
+
+  private def addEmailToUserAnswers(
+    contactDetailsFieldName: String,
+    ua: UserAnswers,
+    Email: String
+  ) = {
+    val emailUpdate   = (__ \ contactDetailsFieldName \ "email").json.put(JsString(Email))
+    val dataWithEmail = ua.data.transform(__.json.update(emailUpdate)).get
+    ua.copy(data = dataWithEmail)
   }
 }

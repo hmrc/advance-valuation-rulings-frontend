@@ -20,11 +20,15 @@ import javax.inject.Inject
 
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.JsString
+import play.api.libs.json.{JsString, JsValue}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import models.UserAnswers
+import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
@@ -46,7 +50,7 @@ class ApplicationCompleteController @Inject() (
         val answers            = request.userAnswers
         val applicationSummary = ApplicationSummary(answers, request.affinityGroup).removeActions()
 
-        (answers.data \ "applicationContactDetails" \ "email").toOption match {
+        extractApplicantEmail(answers, request.affinityGroup) match {
           case Some(JsString(applicantEmail)) =>
             Ok(view(applicationNumber, applicantEmail, applicationSummary))
           case _                              =>
@@ -54,4 +58,17 @@ class ApplicationCompleteController @Inject() (
             Redirect(routes.JourneyRecoveryController.onPageLoad())
         }
     }
+
+  private def extractApplicantEmail(
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup
+  ): Option[JsValue] = {
+    val contactDetailsFieldName =
+      if (affinityGroup == Individual) {
+        ApplicationContactDetailsPage.toString
+      } else {
+        BusinessContactDetailsPage.toString
+      }
+    (userAnswers.data \ contactDetailsFieldName \ "email").toOption
+  }
 }
