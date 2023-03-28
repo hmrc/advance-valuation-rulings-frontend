@@ -30,9 +30,9 @@ import pages._
 
 class Navigator @Inject() () {
 
-  private def checkYourAnswers: Call = CheckYourAnswersController.onPageLoad
+  private def checkYourAnswers(): Call = CheckYourAnswersController.onPageLoad()
 
-  private def checkYourAnswersForAgents: Call = CheckYourAnswersForAgentsController.onPageLoad
+  private def checkYourAnswersForAgents(): Call = CheckYourAnswersForAgentsController.onPageLoad()
 
   private def routes(implicit affinityGroup: AffinityGroup): Page => UserAnswers => Call = {
     case ValuationMethodPage                           => valuationMethodPage
@@ -337,7 +337,7 @@ class Navigator @Inject() () {
         UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
       case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
+        resolveAffinityGroup(affinityGroup)(checkYourAnswers(), checkYourAnswersForAgents())
     }
 
   private def isThisFileConfidentialPage(
@@ -365,7 +365,7 @@ class Navigator @Inject() () {
         UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
       case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
+        resolveAffinityGroup(affinityGroup)(checkYourAnswers(), checkYourAnswersForAgents())
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
