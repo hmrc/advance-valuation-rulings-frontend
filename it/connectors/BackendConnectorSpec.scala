@@ -132,15 +132,6 @@ class BackendConnectorSpec
     "should submit application to backend" ignore {
       forAll {
         applicationRequest: ApplicationRequest =>
-          // val requestBody = Json.stringify(Json.toJson(applicationRequest))
-
-          // stub(
-          //   POST,
-          //   applicationEndpoint,
-          //   Status.OK,
-          //   responseBody = "some response",
-          //   requestBody = Option(requestBody)
-          // )
 
           val result = connector.submitApplication(applicationRequest).futureValue
 
@@ -155,14 +146,6 @@ class BackendConnectorSpec
         (
           application: Application,
         ) =>
-          // val expectedResponse = Json.stringify(Json.toJson(application))
-
-          // stub(
-          //   GET,
-          //   getApplicationRequestUrl(application.applicationNumber),
-          //   Status.OK,
-          //   expectedResponse
-          // )
 
           val response =
             connector.getApplication(application.id.toString).futureValue.value
