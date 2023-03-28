@@ -71,7 +71,9 @@ class DescribeTheSimilarGoodsController @Inject() (
                   Future.fromTry(request.userAnswers.set(DescribeTheSimilarGoodsPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(DescribeTheSimilarGoodsPage, mode, updatedAnswers)
+                navigator.nextPage(DescribeTheSimilarGoodsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

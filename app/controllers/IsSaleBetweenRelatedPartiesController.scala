@@ -71,7 +71,9 @@ class IsSaleBetweenRelatedPartiesController @Inject() (
                   Future.fromTry(request.userAnswers.set(IsSaleBetweenRelatedPartiesPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(IsSaleBetweenRelatedPartiesPage, mode, updatedAnswers)
+                navigator.nextPage(IsSaleBetweenRelatedPartiesPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

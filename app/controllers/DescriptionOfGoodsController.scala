@@ -70,7 +70,11 @@ class DescriptionOfGoodsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescriptionOfGoodsPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(DescriptionOfGoodsPage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator.nextPage(DescriptionOfGoodsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
+              )
           )
     }
 }

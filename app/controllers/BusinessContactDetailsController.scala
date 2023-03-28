@@ -71,7 +71,11 @@ class BusinessContactDetailsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(BusinessContactDetailsPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
+              )
           )
     }
 }

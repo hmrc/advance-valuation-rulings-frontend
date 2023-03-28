@@ -36,7 +36,7 @@ class GoodsDetailsSpec
 
   "GoodsDetails" should {
     "succeed when all fields set" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(DescriptionOfGoodsPage, randomString)
@@ -62,9 +62,7 @@ class GoodsDetailsSpec
     }
 
     "return invalid for empty UserAnswers" in {
-      val userAnswers = UserAnswers("a", applicationNumber)
-
-      val result = GoodsDetails(userAnswers)
+      val result = GoodsDetails(emptyUserAnswers)
 
       result shouldBe Invalid(
         NonEmptyList.one(
@@ -88,6 +86,8 @@ object GoodsDetailsSpec extends Generators {
     postalCode = Some(randomString)
   )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,

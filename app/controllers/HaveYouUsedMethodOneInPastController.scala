@@ -71,7 +71,9 @@ class HaveYouUsedMethodOneInPastController @Inject() (
                   Future.fromTry(request.userAnswers.set(HaveYouUsedMethodOneInPastPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(HaveYouUsedMethodOneInPastPage, mode, updatedAnswers)
+                navigator.nextPage(HaveYouUsedMethodOneInPastPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

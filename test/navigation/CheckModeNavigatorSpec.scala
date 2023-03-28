@@ -17,6 +17,7 @@
 package navigation
 
 import play.api.libs.json.Writes
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import controllers.routes
@@ -44,6 +45,8 @@ class CheckModeNavigatorSpec extends SpecBase {
 
     def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
       EmptyUserAnswers.set(page, value).success.value
+
+    implicit val affinityGroup: AffinityGroup.Individual.type = (AffinityGroup.Individual)
 
     "in Check mode" - {
 

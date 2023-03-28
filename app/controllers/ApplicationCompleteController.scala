@@ -43,12 +43,12 @@ class ApplicationCompleteController @Inject() (
   def onPageLoad(applicationNumber: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        val answers             = request.userAnswers
-        val applicationSummmary = ApplicationSummary(answers).removeActions()
+        val answers            = request.userAnswers
+        val applicationSummary = ApplicationSummary(answers, request.affinityGroup).removeActions()
 
         (answers.data \ "applicationContactDetails" \ "email").toOption match {
           case Some(JsString(applicantEmail)) =>
-            Ok(view(applicationNumber, applicantEmail, applicationSummmary))
+            Ok(view(applicationNumber, applicantEmail, applicationSummary))
           case _                              =>
             logger.error(s"Applicant email is empty for id: ${request.userId}")
             Redirect(routes.JourneyRecoveryController.onPageLoad())

@@ -69,7 +69,9 @@ class WhoAreYouAgentController @Inject() (
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(WhoAreYouAgentPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers))
+              } yield Redirect(
+                navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers)(request.affinityGroup)
+              )
           )
     }
 }

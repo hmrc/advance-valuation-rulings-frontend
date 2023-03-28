@@ -71,7 +71,9 @@ class ValuationMethodController @Inject() (
               for {
                 ua <- Future.fromTry(UserAnswers.updateValuationMethod(request.userAnswers, value))
                 _  <- sessionRepository.set(ua)
-              } yield Redirect(navigator.nextPage(ValuationMethodPage, mode, ua))
+              } yield Redirect(
+                navigator.nextPage(ValuationMethodPage, mode, ua)(request.affinityGroup)
+              )
           )
     }
 }

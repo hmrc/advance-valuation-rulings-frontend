@@ -37,7 +37,7 @@ class ApplicantSpec
 
   "Applicant" should {
     "succeed for an individual applicant" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
@@ -50,7 +50,7 @@ class ApplicantSpec
     }
 
     "succeed for a business applicant" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, checkRegisteredDetails)
@@ -65,7 +65,7 @@ class ApplicantSpec
     }
 
     "return invalid when user has no contact details" in {
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
@@ -79,7 +79,7 @@ class ApplicantSpec
     }
 
     "return invalid for empty UserAnswers" in {
-      val userAnswers = UserAnswers("a", applicationNumber)
+      val userAnswers = emptyUserAnswers
 
       val result = Applicant(userAnswers)
 
@@ -109,6 +109,8 @@ object ApplicantSpec extends Generators {
     postalCode = Some("abc")
   )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,

@@ -30,7 +30,11 @@ import pages._
 
 class Navigator @Inject() () {
 
-  private def routes: Page => UserAnswers => Call = {
+  private def checkYourAnswers: Call = CheckYourAnswersController.onPageLoad
+
+  private def checkYourAnswersForAgents: Call = CheckYourAnswersForAgentsController.onPageLoad
+
+  private def routes(implicit affinityGroup: AffinityGroup): Page => UserAnswers => Call = {
     case ValuationMethodPage                           => valuationMethodPage
     case IsThereASaleInvolvedPage                      => isThereASaleInvolvedPage
     case IsSaleBetweenRelatedPartiesPage               => isSaleBetweenRelatedPartiesPage
@@ -324,16 +328,21 @@ class Navigator @Inject() () {
       case Some(_) => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)
     }
 
-  private def doYouWantToUploadDocumentsPage(userAnswers: UserAnswers): Call =
+  private def doYouWantToUploadDocumentsPage(
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)
       case Some(true)  =>
         UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
-      case Some(false) => CheckYourAnswersController.onPageLoad
+      case Some(false) =>
+        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
-  private def isThisFileConfidentialPage(userAnswers: UserAnswers): Call =
+  private def isThisFileConfidentialPage(
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(UploadSupportingDocumentPage) match {
       case None                => doYouWantToUploadDocumentsPage(userAnswers)
       case Some(uploadedFiles) =>
@@ -347,13 +356,16 @@ class Navigator @Inject() () {
         }
     }
 
-  private def uploadAnotherSupportingDocumentPage(userAnswers: UserAnswers): Call =
+  private def uploadAnotherSupportingDocumentPage(
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(UploadAnotherSupportingDocumentPage) match {
       case None        => UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
       case Some(true)  =>
         UploadSupportingDocumentsController
           .onPageLoad(None, None, None, NormalMode)
-      case Some(false) => CheckYourAnswersController.onPageLoad
+      case Some(false) =>
+        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
@@ -370,7 +382,7 @@ class Navigator @Inject() () {
     }
   private def whatIsYourRoleAsImporterPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case None    => WhatIsYourRoleAsImporterController.onPageLoad()
+      case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
       case Some(_) => RequiredInformationController.onPageLoad()
     }
   private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call   =
@@ -394,18 +406,20 @@ class Navigator @Inject() () {
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
     }
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit
+    affinityGroup: AffinityGroup
+  ): Call = mode match {
     case NormalMode =>
-      routes(page)(userAnswers)
+      routes(affinityGroup)(page)(userAnswers)
     case CheckMode  =>
-      CheckModeNavigator.nextPage(page)(userAnswers)
+      CheckModeNavigator.nextPage(page)(userAnswers, affinityGroup)
   }
 
   def startApplicationRouting(affinityGroup: AffinityGroup): Call =
     affinityGroup match {
       case Individual => RequiredInformationController.onPageLoad()
       case _          =>
-        WhatIsYourRoleAsImporterController.onPageLoad()
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
     }
 
   def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =

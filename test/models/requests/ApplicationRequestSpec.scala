@@ -71,7 +71,7 @@ class ApplicationRequestSpec
 
     "return valid when built from correctly structured userAnswers" in {
 
-      val ua = UserAnswers("a", applicationNumber)
+      val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(DescriptionOfGoodsPage, randomString)
@@ -127,9 +127,7 @@ class ApplicationRequestSpec
 
     "return invalid when built from empty userAnswers" in {
 
-      val ua = UserAnswers("a", ApplicationNumber("GBAVR", 1).render)
-
-      val result = ApplicationRequest(ua)
+      val result = ApplicationRequest(emptyUserAnswers)
 
       result shouldBe Invalid(
         NonEmptyList.of(
@@ -149,6 +147,8 @@ object ApplicationRequestSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
   val applicant = IndividualApplicant(
     holder = EORIDetails(

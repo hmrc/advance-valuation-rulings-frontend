@@ -31,7 +31,7 @@ object BusinessContactDetailsSummary {
 
   private def nameRow(answer: BusinessContactDetails)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswers.business.name.label",
+      key = "checkYourAnswersForAgents.applicant.name.label",
       value = ValueViewModel(HtmlFormat.escape(answer.name).toString),
       actions = Seq(
         ActionItemViewModel(
@@ -46,7 +46,7 @@ object BusinessContactDetailsSummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswers.business.email.label",
+      key = "checkYourAnswersForAgents.applicant.email.label",
       value = ValueViewModel(HtmlFormat.escape(answer.email).toString),
       actions = Seq(
         ActionItemViewModel(
@@ -61,7 +61,7 @@ object BusinessContactDetailsSummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswers.business.phone.label",
+      key = "checkYourAnswersForAgents.applicant.phone.label",
       value = ValueViewModel(HtmlFormat.escape(answer.phone).toString),
       actions = Seq(
         ActionItemViewModel(
@@ -76,7 +76,7 @@ object BusinessContactDetailsSummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswers.business.companyName.label",
+      key = "checkYourAnswersForAgents.applicant.companyName.label",
       value = ValueViewModel(HtmlFormat.escape(answer.company).toString),
       actions = Seq(
         ActionItemViewModel(

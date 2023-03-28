@@ -32,42 +32,43 @@
 
 @(applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title"))) {
 
-    <h1 class="govuk-heading-l">@(messages("checkYourAnswers.heading"))</h1>
+    <h1 class="govuk-heading-l">@(messages("checkYourAnswersForAgents.heading"))</h1>
 
-    @subheading(messages("checkYourAnswers.applicant.heading"))
+    @subheading(messages("checkYourAnswersForAgents.company.heading"))
+    @govukSummaryList(applicationSummary.eoriDetails.rows.withCssClass("govuk-!-margin-bottom-9"))
 
-    @govukSummaryList(applicationSummary.eoriDetails.rows)
+    @subheading(messages("checkYourAnswersForAgents.agent.heading"))
     @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
-    
-    @subheading(messages("checkYourAnswers.goods.heading"))
 
+    @subheading(messages("checkYourAnswersForAgents.goods.heading"))
     @govukSummaryList(applicationSummary.method.rows)
     @govukSummaryList(applicationSummary.details.rows.withCssClass("govuk-!-margin-bottom-9"))
 
-    @subheading(messages("checkYourAnswers.declaration.heading"))
+    @subheading(messages("checkYourAnswersForAgents.declaration.heading"))
 
-    @paragraph(Html(messages("checkYourAnswers.declaration.paragraph1")))
+    @paragraph(Html(messages("checkYourAnswersForAgents.declaration.paragraph1")))
 
     @bulletList(Seq(
-        Html(messages("checkYourAnswers.declaration.bulletPoint.1")),
-        Html(messages("checkYourAnswers.declaration.bulletPoint.2")),
-        Html(messages("checkYourAnswers.declaration.bulletPoint.3")),
-        Html(messages("checkYourAnswers.declaration.bulletPoint.4"))
+        Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.1")),
+        Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.2")),
+        Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.3")),
+        Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.4")),
+        Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.5"))
     ))
 
-    @paragraph(Html(messages("checkYourAnswers.agreement.subheading")))
+    @paragraph(Html(messages("checkYourAnswersForAgents.agreement.subheading")))
     
     @bulletList(Seq(
-        Html(messages("checkYourAnswers.agreement.bulletPoint.1")),
-        Html(messages("checkYourAnswers.agreement.bulletPoint.2")),
-        Html(messages("checkYourAnswers.agreement.bulletPoint.3"))
+        Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.1")),
+        Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.2")),
+        Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.3"))
     ))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit) {
         @govukButton(
-            ButtonViewModel(messages("checkYourAnswers.button.continue"))
+            ButtonViewModel(messages("checkYourAnswersForAgents.button.continue"))
         )
     }
 

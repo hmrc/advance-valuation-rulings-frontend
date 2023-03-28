@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package navigation
-
+import play.api.Logger
 import play.api.mvc.Call
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-import models.{Mode, UserAnswers}
-import pages._
+import controllers.routes
 
-class FakeNavigator(desiredRoute: Call) extends Navigator {
+package object navigation {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit
-    affinityGroup: AffinityGroup
+  private val logger = Logger(this.getClass)
+
+  def resolveAffinityGroup(affinityGroup: AffinityGroup)(
+    isIndividual: Call,
+    isOrgAgent: Call
   ): Call =
-    desiredRoute
-
-  override def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =
-    desiredRoute
+    affinityGroup match {
+      case AffinityGroup.Individual                         =>
+        isIndividual
+      case AffinityGroup.Organisation | AffinityGroup.Agent =>
+        isOrgAgent
+      case unexpected                                       =>
+        logger.error(s"Unexpected affinity group [$unexpected] encountered")
+        routes.JourneyRecoveryController.onPageLoad()
+    }
 }
