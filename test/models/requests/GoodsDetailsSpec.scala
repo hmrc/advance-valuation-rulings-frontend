@@ -89,6 +89,16 @@ object GoodsDetailsSpec extends Generators {
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
+  val eoriDetails = EORIDetails(
+    eori = randomString,
+    businessName = randomString,
+    addressLine1 = randomString,
+    addressLine2 = "",
+    addressLine3 = randomString,
+    postcode = randomString,
+    country = randomString
+  )
+
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,
     email = randomString,
@@ -101,15 +111,6 @@ object GoodsDetailsSpec extends Generators {
     company = randomString
   )
   val applicant                 = IndividualApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     contact = ContactDetails(
       name = randomString,
       email = randomString,
@@ -117,15 +118,6 @@ object GoodsDetailsSpec extends Generators {
     )
   )
   val orgApplicant              = OrganisationApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = "",
-      addressLine3 = randomString,
-      postcode = randomString,
-      country = randomString
-    ),
     businessContact = CompanyContactDetails(
       name = randomString,
       email = randomString,

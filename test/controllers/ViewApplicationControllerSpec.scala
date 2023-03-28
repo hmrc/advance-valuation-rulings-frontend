@@ -84,16 +84,17 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
 object ViewApplicationControllerSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
+  val eoriDetails = EORIDetails(
+    eori = randomString,
+    businessName = randomString,
+    addressLine1 = randomString,
+    addressLine2 = randomString,
+    addressLine3 = "",
+    postcode = randomString,
+    country = randomString
+  )
+
   val applicant = IndividualApplicant(
-    holder = EORIDetails(
-      eori = randomString,
-      businessName = randomString,
-      addressLine1 = randomString,
-      addressLine2 = randomString,
-      addressLine3 = "",
-      postcode = randomString,
-      country = randomString
-    ),
     contact = ContactDetails(
       name = randomString,
       email = randomString,
@@ -118,6 +119,7 @@ object ViewApplicationControllerSpec extends Generators {
   val lastUpdatedString  = "22/08/2018"
   val applicationRequest = ApplicationRequest(
     applicationNumber = ApplicationNumber("GBAVR", 1).render,
+    eoriDetails = eoriDetails,
     applicant = applicant,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
@@ -133,16 +135,16 @@ object ViewApplicationControllerSpec extends Generators {
   val body =
     s"""{
     |"applicationNumber": "${applicationRequest.applicationNumber}",
+    |"eoriDetails": {
+    |  "eori": "$randomString",
+    |  "businessName": "$randomString",
+    |  "addressLine1": "$randomString",
+    |  "addressLine2": "$randomString",
+    |  "addressLine3": "",
+    |  "postcode": "$randomString",
+    |  "country": "$randomString"
+    |},
     |"applicant": {
-    |  "holder": {
-    |    "eori": "$randomString",
-    |    "businessName": "$randomString",
-    |    "addressLine1": "$randomString",
-    |    "addressLine2": "$randomString",
-    |    "addressLine3": "",
-    |    "postcode": "$randomString",
-    |    "country": "$randomString"
-    |  },
     |  "contact": {
     |    "name": "$randomString",
     |    "email": "$randomString",

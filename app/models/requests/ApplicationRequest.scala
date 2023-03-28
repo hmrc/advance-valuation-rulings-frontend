@@ -21,7 +21,7 @@ import cats.implicits._
 
 import play.api.libs.json._
 
-import models.UserAnswers
+import models.{CheckRegisteredDetails, UserAnswers}
 import pages._
 
 case class GoodsDetails(
@@ -68,8 +68,38 @@ object GoodsDetails {
   }
 }
 
+final case class EORIDetails(
+  eori: String,
+  businessName: String,
+  addressLine1: String,
+  addressLine2: String,
+  addressLine3: String,
+  postcode: String,
+  country: String
+)
+
+object EORIDetails {
+  implicit val format: OFormat[EORIDetails] = Json.format[EORIDetails]
+
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, EORIDetails] =
+    userAnswers.validatedF[CheckRegisteredDetails, EORIDetails](
+      CheckRegisteredDetailsPage,
+      (crd: CheckRegisteredDetails) =>
+        EORIDetails(
+          eori = crd.eori,
+          businessName = crd.name,
+          addressLine1 = crd.streetAndNumber,
+          addressLine2 = "",
+          addressLine3 = crd.city,
+          postcode = crd.postalCode.getOrElse(""),
+          country = crd.country
+        )
+    )
+}
+
 case class ApplicationRequest(
   applicationNumber: String,
+  eoriDetails: EORIDetails,
   applicant: Applicant,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
@@ -87,15 +117,17 @@ object ApplicationRequest {
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, ApplicationRequest] = {
     val applicationNumber = userAnswers.applicationNumber
+    val eoriDetails       = EORIDetails(userAnswers)
     val goodsDetails      = GoodsDetails(userAnswers)
     val applicant         = Applicant(userAnswers)
     val requestedMethod   = RequestedMethod(userAnswers)
     val attachments       = Attachment(userAnswers)
 
-    (goodsDetails, applicant, requestedMethod, attachments).mapN(
-      (goodsDetails, applicant, requestedMethod, attachments) =>
+    (goodsDetails, eoriDetails, applicant, requestedMethod, attachments).mapN(
+      (goodsDetails, eoriDetails, applicant, requestedMethod, attachments) =>
         ApplicationRequest(
           applicationNumber,
+          eoriDetails,
           applicant,
           requestedMethod,
           goodsDetails,
