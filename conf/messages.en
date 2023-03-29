@@ -706,3 +706,6 @@ businessContactDetails.companyName.error.required = Enter your company name
 businessContactDetails.companyName.error.format = Enter your company name
 businessContactDetails.checkYourAnswersLabel = businessContactDetails
 businessContactDetails.change.hidden = BusinessContactDetails
+
+cancelAreYouSure.title = cancelAreYouSure
+cancelAreYouSure.heading = cancelAreYouSure

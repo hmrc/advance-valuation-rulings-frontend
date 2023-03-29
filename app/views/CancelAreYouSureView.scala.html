@@ -14,15 +14,21 @@
  * limitations under the License.
  *@
 
-@import components._
+@this(
+        formHelper: FormWithCSRF,
+        layout: templates.Layout,
+        govukButton: GovukButton
+)
 
-@this(link: Link)
+@()(implicit request: Request[_], messages: Messages)
 
-@()(implicit messages: Messages)
+@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title"))) {
 
-    @link(
-        id = "cancel_application",
-        text = messages("site.cancel"),
-        newTab = false,
-        call = routes.CancelApplicationController.confirmCancel()
-    )
+    <h1 class="govuk-heading-xl">@messages("cancelAreYouSure.heading")</h1>
+
+ @formHelper(action = routes.CancelApplicationController.confirmCancel()) {
+        @govukButton(
+             ButtonViewModel(messages("cancelAreYouSure.button.text"))
+        )
+    }
+}

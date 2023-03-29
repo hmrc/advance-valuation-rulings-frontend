@@ -253,7 +253,8 @@ GET        /application/:id                            controllers.ViewApplicati
 GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)
 
 
-GET        /cancel                                controllers.CancelApplicationController.onPageLoad()
+GET        /cancel                                          controllers.CancelAreYouSureController.onPageLoad()
+GET        /confirm-cancel                                  controllers.CancelApplicationController.confirmCancel()
 
 GET        /business-contact-details                        controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = NormalMode)
 POST       /business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode)

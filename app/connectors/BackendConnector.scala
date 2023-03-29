@@ -87,7 +87,6 @@ class BackendConnector @Inject() (
   def submitApplication(
     applicationRequest: ApplicationRequest
   )(implicit
-    hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Either[BackendError, ApplicationSubmissionResponse]] = {
 
@@ -104,9 +103,6 @@ class BackendConnector @Inject() (
 
   def getApplication(
     applicationId: String
-  )(implicit
-    hc: HeaderCarrier,
-    ec: ExecutionContext
   ): Future[Either[BackendError, Application]] =
     db.get(applicationId) match {
       case Some(application) =>
@@ -129,7 +125,6 @@ class BackendConnector @Inject() (
   def applicationSummaries(
     request: ApplicationSummaryRequest
   )(implicit
-    hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Either[BackendError, ApplicationSummaryResponse]] =
     db.values
