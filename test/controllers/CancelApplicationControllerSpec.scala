@@ -24,6 +24,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import repositories.SessionRepository
@@ -35,6 +36,9 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
     "must clear answers and redirect" in {
 
       val mockSessionRepository = mock[SessionRepository]
+
+      Mockito.reset(mockSessionRepository)
+
       when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))

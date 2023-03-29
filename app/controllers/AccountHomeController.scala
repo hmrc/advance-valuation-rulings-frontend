@@ -20,13 +20,16 @@ import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
 
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.BackendConnector
 import controllers.actions._
-import models.UserAnswers
+import models.{ApplicationForAccountHome, UserAnswers}
+import models.requests.{ApplicationSummaryRequest, EORI}
 import navigation.Navigator
 import repositories.SessionRepository
 import views.html.AccountHomeView
@@ -36,6 +39,7 @@ class AccountHomeController @Inject() (
   sessionRepository: SessionRepository,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
+  backendConnector: BackendConnector,
   generateApplicationNumber: ApplicationNumberGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
@@ -45,7 +49,25 @@ class AccountHomeController @Inject() (
     with I18nSupport
     with Retrievals {
 
-  def onPageLoad: Action[AnyContent]       = (identify andThen getData)(implicit request => Ok(view()))
+  private val logger = Logger(this.getClass)
+
+  // represents the backend retrieval
+  def onPageLoad: Action[AnyContent]       =
+    (identify andThen getData).async {
+      implicit request =>
+        val appSumReq = ApplicationSummaryRequest(EORI(request.eoriNumber))
+
+        backendConnector
+          .applicationSummaries(appSumReq)
+          .map {
+            case Right(response)    =>
+              Ok(view(response.summaries.map(ApplicationForAccountHome(_))))
+            case Left(backendError) =>
+              logger.error(s"Failed to fetch applications from backend: $backendError")
+              Redirect(routes.JourneyRecoveryController.onPageLoad())
+          }
+
+    }
   def startApplication: Action[AnyContent] =
     (identify andThen getData andThen generateApplicationNumber).async {
       implicit request =>
