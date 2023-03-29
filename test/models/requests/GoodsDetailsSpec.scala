@@ -20,7 +20,7 @@ import cats.data.NonEmptyList
 import cats.data.Validated._
 
 import generators._
-import models.{ApplicationContactDetails, ApplicationNumber, BusinessContactDetails, CheckRegisteredDetails, UserAnswers}
+import models.{ApplicationNumber, UserAnswers}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -76,53 +76,7 @@ class GoodsDetailsSpec
 object GoodsDetailsSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val checkRegisteredDetails    = CheckRegisteredDetails(
-    value = true,
-    eori = randomString,
-    name = randomString,
-    streetAndNumber = randomString,
-    city = randomString,
-    country = randomString,
-    postalCode = Some(randomString)
-  )
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
-
-  val eoriDetails = EORIDetails(
-    eori = randomString,
-    businessName = randomString,
-    addressLine1 = randomString,
-    addressLine2 = "",
-    addressLine3 = randomString,
-    postcode = randomString,
-    country = randomString
-  )
-
-  val applicationContactDetails = ApplicationContactDetails(
-    name = randomString,
-    email = randomString,
-    phone = randomString
-  )
-  val businessContactDetails    = BusinessContactDetails(
-    name = randomString,
-    email = randomString,
-    phone = randomString,
-    company = randomString
-  )
-  val applicant                 = IndividualApplicant(
-    contact = ContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString)
-    )
-  )
-  val orgApplicant              = OrganisationApplicant(
-    businessContact = CompanyContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString),
-      company = randomString
-    )
-  )
 }

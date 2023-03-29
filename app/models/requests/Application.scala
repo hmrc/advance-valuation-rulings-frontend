@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package models
+package models.requests
 
 import java.time.Instant
 
-import play.api.libs.json.Json
-import play.api.libs.json.OFormat
+import play.api.libs.json.{Json, OFormat}
 
-final case class ValuationRulingsApplication(
-  applicationNumber: String,
-  data: requests.ApplicationRequest,
-  lastUpdated: Instant
+final case class Application(
+  id: ApplicationId,
+  created: Instant,
+  lastUpdated: Instant,
+  request: ApplicationRequest
 )
 
-object ValuationRulingsApplication {
-  implicit val format: OFormat[ValuationRulingsApplication] =
-    Json.format[ValuationRulingsApplication]
+object Application {
+
+  implicit lazy val format: OFormat[Application] = Json.format
 }

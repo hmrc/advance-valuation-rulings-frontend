@@ -20,6 +20,7 @@ import cats.data.ValidatedNel
 import cats.implicits._
 
 import play.api.libs.json._
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import models.{CheckRegisteredDetails, UserAnswers}
 import pages._
@@ -115,16 +116,19 @@ object ApplicationRequest {
   implicit val format: OFormat[ApplicationRequest] =
     Json.configured(jsonConfig).format[ApplicationRequest]
 
-  def apply(userAnswers: UserAnswers): ValidatedNel[Page, ApplicationRequest] = {
+  def apply(
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup
+  ): ValidatedNel[Page, ApplicationRequest] = {
     val applicationNumber = userAnswers.applicationNumber
     val eoriDetails       = EORIDetails(userAnswers)
     val goodsDetails      = GoodsDetails(userAnswers)
-    val applicant         = Applicant(userAnswers)
+    val applicant         = Applicant(userAnswers, affinityGroup)
     val requestedMethod   = RequestedMethod(userAnswers)
     val attachments       = Attachment(userAnswers)
 
-    (goodsDetails, eoriDetails, applicant, requestedMethod, attachments).mapN(
-      (goodsDetails, eoriDetails, applicant, requestedMethod, attachments) =>
+    (eoriDetails, applicant, requestedMethod, goodsDetails, attachments).mapN(
+      (eoriDetails, applicant, requestedMethod, goodsDetails, attachments) =>
         ApplicationRequest(
           applicationNumber,
           eoriDetails,

@@ -99,4 +99,17 @@ trait SpecBase
         bind[ApplicationNumberRepository].to(mockApplicationNumberRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+  protected def applicationBuilderAsOrg(
+    userAnswers: Option[UserAnswers] = None
+  ): GuiceApplicationBuilder =
+    new GuiceApplicationBuilder()
+      .overrides(
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifyAgentAction].to[FakeIdentifyOrgAction],
+        bind[FileUploadService].to[FakeFileUploadService],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[ApplicationNumberRepository].to(mockApplicationNumberRepo),
+        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
+      )
 }

@@ -23,15 +23,15 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import base.SpecBase
 import connectors.BackendConnector
-import models.{BackendError, UserAnswers}
-import org.mockito.ArgumentCaptor
+import models._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
+import pages._
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersForAgentsView
@@ -46,7 +46,7 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Option(userAnswers)).build()
+      val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers)).build()
 
       implicit val msgs: Messages = messages(application)
 
@@ -66,7 +66,7 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = None).build()
+      val application = applicationBuilderAsOrg(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
@@ -79,18 +79,45 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
     }
 
     "must redirect to Application Complete when application submission succeeds" in {
+      val answers = (for {
+        ua <- emptyUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
+        ua <- ua.set(HasCommodityCodePage, false)
+        ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+        ua <- ua.set(HasConfidentialInformationPage, false)
+        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.Employeeoforg)
+        ua <- ua.set(
+                CheckRegisteredDetailsPage,
+                CheckRegisteredDetails(
+                  value = true,
+                  eori = "eori",
+                  name = "name",
+                  streetAndNumber = "streetAndNumber",
+                  city = "city",
+                  country = "country",
+                  postalCode = Some("postalCode")
+                )
+              )
+        ua <- ua.set(
+                BusinessContactDetailsPage,
+                BusinessContactDetails(
+                  name = "name",
+                  email = "email",
+                  phone = "phone",
+                  company = "company"
+                )
+              )
+        ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, true)
+        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+        ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+        ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+        ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+        ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+      } yield ua).success.get
 
-      val mockBackendConnector = mock[BackendConnector]
-      val application          = applicationBuilderAsAgent(Option(userAnswers))
-        .overrides(bind[BackendConnector].to(mockBackendConnector))
+      val application = applicationBuilderAsOrg(Option(answers))
         .build()
-
-      val userAnswersCaptor: ArgumentCaptor[UserAnswers] =
-        ArgumentCaptor.forClass(classOf[UserAnswers])
-
-      when(
-        mockBackendConnector.submitAnswers(userAnswersCaptor.capture())(any(), any())
-      ) thenReturn Future.successful(Right(HttpResponse(status = OK, body = "success")))
 
       running(application) {
         val request = FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit.url)
@@ -99,16 +126,15 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.ApplicationCompleteController
-          .onPageLoad(userAnswers.applicationNumber)
+          .onPageLoad(models.requests.ApplicationId(0L).toString)
           .url
-        userAnswersCaptor.getValue mustEqual userAnswers
       }
     }
 
     "must redirect to Journey Recovery when application submission fails" in {
 
       val mockBackendConnector = mock[BackendConnector]
-      val application          = applicationBuilderAsAgent(Option(userAnswers))
+      val application          = applicationBuilderAsOrg(Option(userAnswers))
         .overrides(bind[BackendConnector].to(mockBackendConnector))
         .build()
 

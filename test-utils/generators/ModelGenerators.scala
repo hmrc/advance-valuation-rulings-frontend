@@ -17,6 +17,7 @@
 package generators
 
 import models._
+import models.requests.ApplicationId
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
 
@@ -53,4 +54,9 @@ trait ModelGenerators {
       postalCode      <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
     } yield CheckRegisteredDetails(value, eori, name, streetAndNumber, city, country, postalCode)
   }
+
+  implicit lazy val applicationIdGen: Gen[ApplicationId] =
+    for {
+      value <- Gen.choose(1, 999999999)
+    } yield ApplicationId(value)
 }

@@ -16,6 +16,7 @@
 
 package controllers
 
+import cats.data.Validated.{Invalid, Valid}
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logger
@@ -26,6 +27,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction, IdentifyAgentAction}
+import models.requests._
+import pages.Page
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
 
@@ -54,19 +57,25 @@ class CheckYourAnswersForAgentsController @Inject() (
   def onSubmit(): Action[AnyContent] =
     (identify andThen isAgent andThen getData andThen requireData).async {
       implicit request =>
-        backendConnector
-          .submitAnswers(request.userAnswers)
-          .flatMap {
-            case Right(_)           =>
-              Future.successful(
-                Redirect(
-                  routes.ApplicationCompleteController
-                    .onPageLoad(request.userAnswers.applicationNumber)
-                )
-              )
-            case Left(backendError) =>
-              logger.error(s"Failed to submit user answers to backend: $backendError")
-              Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-          }
+        ApplicationRequest(request.userAnswers, request.affinityGroup) match {
+          case Invalid(errors: cats.data.NonEmptyList[Page]) =>
+            logger.error(s"Failed to create application request: ${errors.toList.mkString(", ")}}")
+            Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+          case Valid(applicationRequest)                     =>
+            backendConnector
+              .submitApplication(applicationRequest)
+              .flatMap {
+                case Right(applicationResponse) =>
+                  Future.successful(
+                    Redirect(
+                      routes.ApplicationCompleteController
+                        .onPageLoad(applicationResponse.applicationId.toString)
+                    )
+                  )
+                case Left(backendError)         =>
+                  logger.error(s"Failed to submit user answers to backend: $backendError")
+                  Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+              }
+        }
     }
 }
