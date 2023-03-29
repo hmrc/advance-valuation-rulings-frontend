@@ -18,16 +18,13 @@ package models.requests
 
 import cats.data.NonEmptyList
 import cats.data.Validated._
-
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import generators._
 import models._
-import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ApplicantSpec
     extends AnyWordSpec
@@ -69,7 +66,7 @@ class ApplicantSpec
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
+        ua <- ua.set(CheckRegisteredDetailsPage, CheckRegDetails)
         ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
 
       } yield ua).success.get
@@ -85,7 +82,7 @@ class ApplicantSpec
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
+        ua <- ua.set(CheckRegisteredDetailsPage, CheckRegDetails)
       } yield ua).success.get
 
       val result = Applicant(userAnswers, AffinityGroup.Individual)
@@ -118,6 +115,17 @@ class ApplicantSpec
 }
 
 object ApplicantSpec extends Generators {
+
+  val CheckRegDetails = CheckRegisteredDetails(
+    true,
+    "eori",
+    "name",
+    "streetAndNumber",
+    "city",
+    "country",
+    Some("postalCode")
+  )
+
   val randomString: String = stringsWithMaxLength(8).sample.get
 
   val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
