@@ -23,7 +23,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup._
 import base.SpecBase
 import controllers.routes
 import models._
-import models.WhatIsYourRoleAsImporter.Employeeoforg
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.fileupload._
 import pages._
 import queries.Modifiable
@@ -76,7 +76,7 @@ class NavigatorSpec extends SpecBase {
 
         "must navigate to RequiredInformationPage page" in {
           val userAnswers =
-            userAnswersWith(WhatIsYourRoleAsImporterPage, Employeeoforg)
+            userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
           navigator.nextPage(
             WhatIsYourRoleAsImporterPage,
             NormalMode,

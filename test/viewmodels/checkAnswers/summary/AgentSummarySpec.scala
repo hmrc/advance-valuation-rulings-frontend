@@ -32,7 +32,7 @@ class AgentSummarySpec extends SpecBase {
 
   val answers: Try[UserAnswers] =
     emptyUserAnswers
-      .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.Agentonbehalfoforg)
+      .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
       .flatMap(
         _.set(
           BusinessContactDetailsPage,
@@ -94,7 +94,7 @@ class AgentSummarySpec extends SpecBase {
             Key(Text("checkYourAnswersForAgents.applicant.role.label")),
             Value(
               Text(
-                s"${WhatIsYourRoleAsImporter.MessagePrefix}.${WhatIsYourRoleAsImporter.Agentonbehalfoforg}"
+                s"${WhatIsYourRoleAsImporter.MessagePrefix}.${WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg}"
               )
             )
           )

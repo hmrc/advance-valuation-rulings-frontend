@@ -72,7 +72,7 @@
         )
     }
 
-@layout(pageTitle = titleNoForm(messages("applicationComplete.title"))) {
+@layout(pageTitle = titleNoForm(messages("applicationComplete.title")), showBackLink = false) {
 
 <!--confirmation panel-->
         @govukPanel(Panel(
@@ -93,6 +93,7 @@
 
     @govukButton(
         ButtonViewModel("Go to your applications and rulings")
+        .asLink(routes.AccountHomeController.onPageLoad().url)
     )
 
 <!--How to use the ruling-->

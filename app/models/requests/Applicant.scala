@@ -15,14 +15,15 @@
  */
 
 package models.requests
-
 import cats.data._
 import cats.data.Validated._
+import cats.implicits._
 
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models._
 import pages._
 
@@ -32,11 +33,26 @@ case class IndividualApplicant(
 ) extends Applicant
 
 case class OrganisationApplicant(
-  businessContact: CompanyContactDetails
+  businessContact: CompanyContactDetails,
+  role: ImporterRole
 ) extends Applicant
 
 object OrganisationApplicant {
   implicit val format: OFormat[OrganisationApplicant] = Json.format[OrganisationApplicant]
+}
+
+sealed abstract class ImporterRole(override val entryName: String) extends EnumEntry
+
+object ImporterRole extends Enum[ImporterRole] with PlayJsonEnum[ImporterRole] {
+  val values: IndexedSeq[ImporterRole] = findValues
+
+  case object AgentOnBehalf extends ImporterRole("AgentOnBehalf")
+  case object Employee extends ImporterRole("Employee")
+
+  def apply(role: WhatIsYourRoleAsImporter): ImporterRole = role match {
+    case WhatIsYourRoleAsImporter.EmployeeOfOrg      => Employee
+    case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg => AgentOnBehalf
+  }
 }
 
 case class CompanyContactDetails(
@@ -64,12 +80,12 @@ object Applicant {
 
   def contactDetails: Applicant => Option[ContactDetails] = {
     case IndividualApplicant(contact) => Some(contact)
-    case OrganisationApplicant(_)     => None
+    case OrganisationApplicant(_, _)  => None
   }
 
   def businessContactDetails: Applicant => Option[CompanyContactDetails] = {
-    case IndividualApplicant(_)         => None
-    case OrganisationApplicant(contact) => Some(contact)
+    case IndividualApplicant(_)            => None
+    case OrganisationApplicant(contact, _) => Some(contact)
   }
 
   def apply(
@@ -87,9 +103,16 @@ object Applicant {
           BusinessContactDetailsPage,
           cd => CompanyContactDetails(cd.name, cd.email, Some(cd.phone), cd.company)
         )
+    val role                   = userAnswers
+      .validatedF[WhatIsYourRoleAsImporter, ImporterRole](
+        WhatIsYourRoleAsImporterPage,
+        ImporterRole.apply
+      )
+
     affinityGroup match {
       case Individual   => contactDetails.map(IndividualApplicant(_))
-      case Organisation => businessContactDetails.map(OrganisationApplicant(_))
+      case Organisation =>
+        (businessContactDetails, role).mapN(OrganisationApplicant(_, _))
       case Agent        => Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
       case _            => Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
     }

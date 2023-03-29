@@ -438,6 +438,7 @@ object CheckModeNavigator {
         explainWhyYouHaveNotSelectedMethodOneToFivePage
       case ExplainHowYouWillUseMethodSixPage               => explainHowYouWillUseMethodSixPage
       case AdaptMethodPage                                 => adaptMethodPage
-      case _                                               => routes.CheckYourAnswersController.onPageLoad
+      case _                                               =>
+        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
 }
