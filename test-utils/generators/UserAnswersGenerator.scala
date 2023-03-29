@@ -31,15 +31,11 @@ trait UserAnswersGenerator extends TryValues {
     arbitrary[(BusinessContactDetailsPage.type, JsValue)] ::
       arbitrary[(HaveYouUsedMethodOneForSimilarGoodsInPastPage.type, JsValue)] ::
       arbitrary[(DescribeTheSimilarGoodsPage.type, JsValue)] ::
-      arbitrary[(WillYouCompareToSimilarGoodsPage.type, JsValue)] ::
-      arbitrary[(ExplainYourGoodsComparingToSimilarGoodsPage.type, JsValue)] ::
       arbitrary[(ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type, JsValue)] ::
       arbitrary[(ExplainHowYouWillUseMethodSixPage.type, JsValue)] ::
       arbitrary[(AdaptMethodPage.type, JsValue)] ::
       arbitrary[(ExplainWhyYouHaveNotSelectedMethodOneToThreePage.type, JsValue)] ::
       arbitrary[(ExplainWhyYouChoseMethodFourPage.type, JsValue)] ::
-      arbitrary[(WillYouCompareGoodsToIdenticalGoodsPage.type, JsValue)] ::
-      arbitrary[(ExplainYourGoodsComparingToIdenticalGoodsPage.type, JsValue)] ::
       arbitrary[(DescribeTheIdenticalGoodsPage.type, JsValue)] ::
       arbitrary[(IsTheSaleSubjectToConditionsPage.type, JsValue)] ::
       arbitrary[(HaveTheGoodsBeenSubjectToLegalChallengesPage.type, JsValue)] ::

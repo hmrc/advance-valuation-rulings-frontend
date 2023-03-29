@@ -339,21 +339,6 @@ class CheckModeNavigatorSpec extends SpecBase {
               userAnswers
             ) mustBe checkYourAnswers
           }
-
-          "navigate to checkYourAnswers when user has answers for remaining pages - route 2" in {
-            val userAnswers = (for {
-              ua <- EmptyUserAnswers.set(WhyIdenticalGoodsPage, "reason")
-              ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
-              ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
-              ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, "reason")
-            } yield ua).success.value
-
-            navigator.nextPage(
-              WhyIdenticalGoodsPage,
-              CheckMode,
-              userAnswers
-            ) mustBe checkYourAnswers
-          }
         }
 
         "HaveYouUsedMethodOneInPast page" - {
@@ -374,13 +359,13 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(CheckMode)
           }
 
-          "must navigate to willYouCompareGoodsToIdenticalGoods Page when False" in {
+          "must navigate to valuationMethod Page when False" in {
             val ans = userAnswersWith(HaveYouUsedMethodOneInPastPage, false)
             navigator.nextPage(
               HaveYouUsedMethodOneInPastPage,
               CheckMode,
               ans
-            ) mustBe routes.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(CheckMode)
+            ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode)
           }
         }
 
@@ -397,60 +382,6 @@ class CheckModeNavigatorSpec extends SpecBase {
               userAnswersWith(DescribeTheIdenticalGoodsPage, "describe goods")
             navigator.nextPage(
               DescribeTheIdenticalGoodsPage,
-              CheckMode,
-              userAnswers
-            ) mustBe checkYourAnswers
-          }
-        }
-
-        "WillYouCompareGoodsToIdenticalGoods page" - {
-          "must navigate to self when user has no data for the page" in {
-            navigator.nextPage(
-              WillYouCompareGoodsToIdenticalGoodsPage,
-              CheckMode,
-              EmptyUserAnswers
-            ) mustBe routes.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(mode =
-              CheckMode
-            )
-          }
-
-          "must navigate to explainYourGoodsComparingToIdenticalGoods Page when True" in {
-            val ans = userAnswersWith(WillYouCompareGoodsToIdenticalGoodsPage, true)
-            navigator.nextPage(
-              WillYouCompareGoodsToIdenticalGoodsPage,
-              CheckMode,
-              ans
-            ) mustBe routes.ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(
-              CheckMode
-            )
-          }
-
-          "must navigate to checkYourAnswers Page when False" in {
-            val ans = userAnswersWith(WillYouCompareGoodsToIdenticalGoodsPage, false)
-            navigator.nextPage(
-              WillYouCompareGoodsToIdenticalGoodsPage,
-              CheckMode,
-              ans
-            ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode)
-          }
-        }
-
-        "ExplainYourGoodsComparingToIdenticalGoods page" - {
-          "must navigate to self when user has no data for the page" in {
-            navigator.nextPage(
-              ExplainYourGoodsComparingToIdenticalGoodsPage,
-              CheckMode,
-              EmptyUserAnswers
-            ) mustBe routes.ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(
-              mode = CheckMode
-            )
-          }
-
-          "must navigate to checkYourAnswers Page when set" in {
-            val userAnswers =
-              userAnswersWith(ExplainYourGoodsComparingToIdenticalGoodsPage, "describe goods")
-            navigator.nextPage(
-              ExplainYourGoodsComparingToIdenticalGoodsPage,
               CheckMode,
               userAnswers
             ) mustBe checkYourAnswers
@@ -494,21 +425,6 @@ class CheckModeNavigatorSpec extends SpecBase {
               userAnswers
             ) mustBe checkYourAnswers
           }
-
-          "navigate to checkYourAnswers when user has answers for remaining pages - route 2" in {
-            val userAnswers = (for {
-              ua <- EmptyUserAnswers.set(WhyTransactionValueOfSimilarGoodsPage, "reason")
-              ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
-              ua <- ua.set(WillYouCompareToSimilarGoodsPage, true)
-              ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, "thoroughly")
-            } yield ua).success.value
-
-            navigator.nextPage(
-              WhyTransactionValueOfSimilarGoodsPage,
-              CheckMode,
-              userAnswers
-            ) mustBe checkYourAnswers
-          }
         }
 
         "HaveYouUsedMethodOneForSimilarGoodsInPast page" - {
@@ -531,13 +447,13 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(CheckMode)
           }
 
-          "must navigate to willYouCompareGoodsToSimilarGoods Page when False" in {
+          "must navigate to valuationMethod Page when False" in {
             val ans = userAnswersWith(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
             navigator.nextPage(
               HaveYouUsedMethodOneForSimilarGoodsInPastPage,
               CheckMode,
               ans
-            ) mustBe routes.WillYouCompareToSimilarGoodsController.onPageLoad(CheckMode)
+            ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode)
           }
         }
 
@@ -554,27 +470,6 @@ class CheckModeNavigatorSpec extends SpecBase {
               userAnswersWith(DescribeTheSimilarGoodsPage, "describe goods")
             navigator.nextPage(
               DescribeTheSimilarGoodsPage,
-              CheckMode,
-              userAnswers
-            ) mustBe checkYourAnswers
-          }
-        }
-
-        "ExplainYourGoodsComparingToSimilarGoods page" - {
-          "must navigate to self when user has no data for the page" in {
-            navigator.nextPage(
-              ExplainYourGoodsComparingToSimilarGoodsPage,
-              CheckMode,
-              EmptyUserAnswers
-            ) mustBe routes.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(
-              mode = CheckMode
-            )
-          }
-          "must navigate to checkYourAnswers Page when set" in {
-            val userAnswers =
-              userAnswersWith(ExplainYourGoodsComparingToSimilarGoodsPage, "describe goods")
-            navigator.nextPage(
-              ExplainYourGoodsComparingToSimilarGoodsPage,
               CheckMode,
               userAnswers
             ) mustBe checkYourAnswers

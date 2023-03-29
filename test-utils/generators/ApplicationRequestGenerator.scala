@@ -96,34 +96,17 @@ trait ApplicationRequestGenerator extends Generators {
     )
   }
 
-  implicit lazy val arbitraryOtherUsersIdenticalGoods: Arbitrary[OtherUsersIdenticalGoods] =
-    Arbitrary {
-      for {
-        value <- stringsWithMaxLength(100)
-      } yield OtherUsersIdenticalGoods(value)
-    }
-  implicit lazy val arbitraryPreviousIdenticalGoods: Arbitrary[PreviousIdenticalGoods]     = Arbitrary {
+  implicit lazy val arbitraryPreviousIdenticalGoods: Arbitrary[PreviousIdenticalGoods] = Arbitrary {
     for {
       value <- stringsWithMaxLength(100)
     } yield PreviousIdenticalGoods(value)
   }
 
-  implicit lazy val arbitraryOtherUsersSimilarGoods: Arbitrary[OtherUsersSimilarGoods] = Arbitrary {
-    for {
-      value <- stringsWithMaxLength(100)
-    } yield OtherUsersSimilarGoods(value)
-  }
-  implicit lazy val arbitraryPreviousSimilarGoods: Arbitrary[PreviousSimilarGoods]     = Arbitrary {
+  implicit lazy val arbitraryPreviousSimilarGoods: Arbitrary[PreviousSimilarGoods] = Arbitrary {
     for {
       value <- stringsWithMaxLength(100)
     } yield PreviousSimilarGoods(value)
   }
-
-  implicit lazy val arbitrarySimilarGoodsExplanation: Gen[SimilarGoodsExplaination] =
-    Gen.oneOf(
-      arbitraryOtherUsersSimilarGoods.arbitrary,
-      arbitraryPreviousSimilarGoods.arbitrary
-    )
 
   implicit lazy val arbitraryMethodOne: Arbitrary[MethodOne]     = Arbitrary {
     for {
@@ -134,17 +117,14 @@ trait ApplicationRequestGenerator extends Generators {
   }
   implicit lazy val arbitraryMethodTwo: Arbitrary[MethodTwo]     = Arbitrary {
     for {
-      whyNotOtherMethods  <- stringsWithMaxLength(100)
-      prevIdenticalGoods  <- arbitraryPreviousIdenticalGoods.arbitrary
-      otherIdenticalGoods <- arbitraryOtherUsersIdenticalGoods.arbitrary
-      identicalGoods      <- Gen.oneOf(prevIdenticalGoods, otherIdenticalGoods)
+      whyNotOtherMethods <- stringsWithMaxLength(100)
+      identicalGoods     <- arbitraryPreviousIdenticalGoods.arbitrary
     } yield MethodTwo(whyNotOtherMethods, identicalGoods)
   }
   implicit lazy val arbitraryMethodThree: Arbitrary[MethodThree] = Arbitrary {
     for {
       whyNotOtherMethods <- stringsWithMaxLength(100)
-
-      similarGoods <- arbitrarySimilarGoodsExplanation
+      similarGoods <- arbitraryPreviousSimilarGoods.arbitrary
     } yield MethodThree(whyNotOtherMethods, similarGoods)
   }
 

@@ -166,16 +166,6 @@ POST       /describe-identical-goods                                      contro
 GET        /change-describe-identical-goods                                controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-describe-identical-goods                                controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /explain-identical-goods-comparison                            controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /explain-identical-goods-comparison                            controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-explain-identical-goods-comparison                      controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-explain-identical-goods-comparison                      controllers.ExplainYourGoodsComparingToIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
-
-GET        /comparison-identical-goods                                    controllers.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /comparison-identical-goods                                    controllers.WillYouCompareGoodsToIdenticalGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-comparison-identical-goods                              controllers.WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-comparison-identical-goods                              controllers.WillYouCompareGoodsToIdenticalGoodsController.onSubmit(mode: Mode = CheckMode)
-
 GET        /describe-legal-challenges                                     controllers.DescribeTheLegalChallengesController.onPageLoad(mode: Mode = NormalMode)
 POST       /describe-legal-challenges                                     controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = NormalMode)
 GET        /change-describe-legal-challenges                               controllers.DescribeTheLegalChallengesController.onPageLoad(mode: Mode = CheckMode)
@@ -218,16 +208,6 @@ GET        /explain-why-not-methods-1-5                                   contro
 POST       /explain-why-not-methods-1-5                                   controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = NormalMode)
 GET        /change-explain-why-not-methods-1-5                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-explain-why-not-methods-1-5                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = CheckMode)
-
-GET        /explain-similar-goods-comparison                        controllers.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /explain-similar-goods-comparison                        controllers.ExplainYourGoodsComparingToSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-explain-similar-goods-comparison                  controllers.ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-explain-similar-goods-comparison                  controllers.ExplainYourGoodsComparingToSimilarGoodsController.onSubmit(mode: Mode = CheckMode)
-
-GET        /comparison-similar-goods                        controllers.WillYouCompareToSimilarGoodsController.onPageLoad(mode: Mode = NormalMode)
-POST       /comparison-similar-goods                        controllers.WillYouCompareToSimilarGoodsController.onSubmit(mode: Mode = NormalMode)
-GET        /change-comparison-similar-goods                 controllers.WillYouCompareToSimilarGoodsController.onPageLoad(mode: Mode = CheckMode)
-POST       /change-comparison-similar-goods                  controllers.WillYouCompareToSimilarGoodsController.onSubmit(mode: Mode = CheckMode)
 
 GET        /describe-similar-goods                        controllers.DescribeTheSimilarGoodsController.onPageLoad(mode: Mode = NormalMode)
 POST       /describe-similar-goods                        controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = NormalMode)

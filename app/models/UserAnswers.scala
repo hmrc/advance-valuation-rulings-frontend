@@ -174,16 +174,12 @@ object UserAnswers {
         Seq(
           WhyIdenticalGoodsPage.toString,
           HaveYouUsedMethodOneInPastPage.toString,
-          DescribeTheIdenticalGoodsPage.toString,
-          WillYouCompareGoodsToIdenticalGoodsPage.toString,
-          ExplainYourGoodsComparingToIdenticalGoodsPage.toString
+          DescribeTheIdenticalGoodsPage.toString
         )
       case Some(Method3) =>
         Seq(
           WhyTransactionValueOfSimilarGoodsPage.toString(),
           HaveYouUsedMethodOneForSimilarGoodsInPastPage.toString,
-          WillYouCompareToSimilarGoodsPage.toString,
-          ExplainYourGoodsComparingToSimilarGoodsPage.toString,
           DescribeTheSimilarGoodsPage.toString
         )
       case Some(Method4) =>

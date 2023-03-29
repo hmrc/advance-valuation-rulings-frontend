@@ -40,14 +40,6 @@ trait PageGenerators {
     : Arbitrary[DescribeTheSimilarGoodsPage.type] =
     Arbitrary(DescribeTheSimilarGoodsPage)
 
-  implicit lazy val arbitraryWillYouCompareToSimilarGoodsPage
-    : Arbitrary[WillYouCompareToSimilarGoodsPage.type] =
-    Arbitrary(WillYouCompareToSimilarGoodsPage)
-
-  implicit lazy val arbitraryExplainYourGoodsComparingToSimilarGoodsPage
-    : Arbitrary[ExplainYourGoodsComparingToSimilarGoodsPage.type] =
-    Arbitrary(ExplainYourGoodsComparingToSimilarGoodsPage)
-
   implicit lazy val arbitraryExplainWhyYouHaveNotSelectedMethodOneToFivePage
     : Arbitrary[ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type] =
     Arbitrary(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
@@ -66,14 +58,6 @@ trait PageGenerators {
   implicit lazy val arbitraryExplainWhyYouChoseMethodFourPage
     : Arbitrary[ExplainWhyYouChoseMethodFourPage.type] =
     Arbitrary(ExplainWhyYouChoseMethodFourPage)
-
-  implicit lazy val arbitraryWillYouCompareGoodsToIdenticalGoodsPage
-    : Arbitrary[WillYouCompareGoodsToIdenticalGoodsPage.type] =
-    Arbitrary(WillYouCompareGoodsToIdenticalGoodsPage)
-
-  implicit lazy val arbitraryExplainYourGoodsComparingToIdenticalGoodsPage
-    : Arbitrary[ExplainYourGoodsComparingToIdenticalGoodsPage.type] =
-    Arbitrary(ExplainYourGoodsComparingToIdenticalGoodsPage)
 
   implicit lazy val arbitraryDescribeTheIdenticalGoodsPage
     : Arbitrary[DescribeTheIdenticalGoodsPage.type] =
