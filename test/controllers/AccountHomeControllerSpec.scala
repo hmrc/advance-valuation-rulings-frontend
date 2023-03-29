@@ -69,7 +69,7 @@ class AccountHomeControllerSpec extends SpecBase {
         .build()
 
       when(
-        mockBackEndConnector.applicationSummaries(any())(any(), any())
+        mockBackEndConnector.applicationSummaries(any())(any())
       ) thenReturn Future
         .successful(Right(ApplicationSummaryResponse(appsSummary)))
 
