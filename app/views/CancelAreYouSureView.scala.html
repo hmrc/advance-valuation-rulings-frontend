@@ -14,21 +14,35 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         formHelper: FormWithCSRF,
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        para: InsetPara,
+        heading: Heading,
+        link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("cancelAreYouSure.heading")</h1>
+    @heading(messages("cancelAreYouSure.heading"))
+    @para(Html(messages("cancelAreYouSure.inset.text")))
 
- @formHelper(action = routes.CancelApplicationController.confirmCancel()) {
+    @formHelper(action = routes.CancelApplicationController.confirmCancel()) {
         @govukButton(
-             ButtonViewModel(messages("cancelAreYouSure.button.text"))
+             ButtonViewModel(messages("cancelAreYouSure.button"))
         )
     }
+
+    @link(
+            id = "return_to_application",
+            text = messages("cancelAreYouSure.return"),
+            newTab = false,
+            call = routes.CancelApplicationController.onPageLoad()
+        )
+
 }
