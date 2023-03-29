@@ -66,8 +66,6 @@ class UserAnswersSpec
           result.get(WhyIdenticalGoodsPage)                         must be(empty)
           result.get(HaveYouUsedMethodOneInPastPage)                must be(empty)
           result.get(DescribeTheIdenticalGoodsPage)                 must be(empty)
-          result.get(WillYouCompareGoodsToIdenticalGoodsPage)       must be(empty)
-          result.get(ExplainYourGoodsComparingToIdenticalGoodsPage) must be(empty)
       }
     }
 
@@ -83,8 +81,6 @@ class UserAnswersSpec
           result.get(ValuationMethodPage)                           must be(Some(Method4))
           result.get(WhyTransactionValueOfSimilarGoodsPage)         must be(empty)
           result.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage) must be(empty)
-          result.get(WillYouCompareToSimilarGoodsPage)              must be(empty)
-          result.get(ExplainYourGoodsComparingToSimilarGoodsPage)   must be(empty)
           result.get(DescribeTheSimilarGoodsPage)                   must be(empty)
       }
     }

@@ -70,24 +70,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryWillYouCompareToSimilarGoodsUserAnswersEntry
-    : Arbitrary[(WillYouCompareToSimilarGoodsPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[WillYouCompareToSimilarGoodsPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryExplainYourGoodsComparingToSimilarGoodsUserAnswersEntry
-    : Arbitrary[(ExplainYourGoodsComparingToSimilarGoodsPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[ExplainYourGoodsComparingToSimilarGoodsPage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
-      } yield (page, value)
-    }
-
   implicit lazy val arbitraryExplainWhyYouHaveNotSelectedMethodOneToFiveUserAnswersEntry
     : Arbitrary[(ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type, JsValue)] =
     Arbitrary {
@@ -129,24 +111,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     Arbitrary {
       for {
         page  <- arbitrary[ExplainWhyYouChoseMethodFourPage.type]
-        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryWillYouCompareGoodsToIdenticalGoodsUserAnswersEntry
-    : Arbitrary[(WillYouCompareGoodsToIdenticalGoodsPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[WillYouCompareGoodsToIdenticalGoodsPage.type]
-        value <- arbitrary[Boolean].map(Json.toJson(_))
-      } yield (page, value)
-    }
-
-  implicit lazy val arbitraryExplainYourGoodsComparingToIdenticalGoodsUserAnswersEntry
-    : Arbitrary[(ExplainYourGoodsComparingToIdenticalGoodsPage.type, JsValue)] =
-    Arbitrary {
-      for {
-        page  <- arbitrary[ExplainYourGoodsComparingToIdenticalGoodsPage.type]
         value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
       } yield (page, value)
     }

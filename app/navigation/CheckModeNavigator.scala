@@ -233,7 +233,7 @@ object CheckModeNavigator {
     userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
       case None        => HaveYouUsedMethodOneInPastController.onPageLoad(CheckMode)
       case Some(true)  => nextPage(DescribeTheIdenticalGoodsPage)
-      case Some(false) => nextPage(WillYouCompareGoodsToIdenticalGoodsPage)
+      case Some(false) => nextPage(ValuationMethodPage)
     }
 
   private def describeTheIdenticalGoods(implicit
@@ -242,26 +242,6 @@ object CheckModeNavigator {
   ): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
       case None    => DescribeTheIdenticalGoodsController.onPageLoad(CheckMode)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
-    }
-
-  private def willYouCompareGoodsToIdenticalGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
-    userAnswers.get(WillYouCompareGoodsToIdenticalGoodsPage) match {
-      case None        => WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(CheckMode)
-      case Some(true)  => nextPage(ExplainYourGoodsComparingToIdenticalGoodsPage)
-      case Some(false) => ValuationMethodController.onPageLoad(CheckMode)
-    }
-
-  private def explainYourGoodsComparingToIdenticalGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
-    userAnswers.get(ExplainYourGoodsComparingToIdenticalGoodsPage) match {
-      case None    => ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(CheckMode)
       case Some(_) =>
         resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
     }
@@ -285,35 +265,7 @@ object CheckModeNavigator {
       case None        =>
         HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(CheckMode)
       case Some(true)  => nextPage(DescribeTheSimilarGoodsPage)
-      case Some(false) => nextPage(WillYouCompareToSimilarGoodsPage)
-    }
-
-  private def describeTheSimilarGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
-    userAnswers.get(DescribeTheSimilarGoodsPage) match {
-      case None    => DescribeTheSimilarGoodsController.onPageLoad(CheckMode)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
-    }
-  private def willYouCompareToSimilarGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
-    userAnswers.get(WillYouCompareToSimilarGoodsPage) match {
-      case None        => WillYouCompareToSimilarGoodsController.onPageLoad(CheckMode)
-      case Some(true)  => nextPage(ExplainYourGoodsComparingToSimilarGoodsPage)
-      case Some(false) => ValuationMethodController.onPageLoad(CheckMode)
-    }
-  private def explainYourGoodsComparingToSimilarGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
-    userAnswers.get(ExplainYourGoodsComparingToSimilarGoodsPage) match {
-      case None    => ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(CheckMode)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
+      case Some(false) => nextPage(ValuationMethodPage)
     }
 
   // method 4 ----------------------------------------------------------------
@@ -409,20 +361,14 @@ object CheckModeNavigator {
       case DescribeTheConditionsPage          => explainTheConditions
 
       // method 2
-      case WhyIdenticalGoodsPage                         => whyIdenticalGoods
-      case HaveYouUsedMethodOneInPastPage                => haveYouUsedMethodOneInPast
-      case DescribeTheIdenticalGoodsPage                 => describeTheIdenticalGoods
-      case WillYouCompareGoodsToIdenticalGoodsPage       => willYouCompareGoodsToIdenticalGoods
-      case ExplainYourGoodsComparingToIdenticalGoodsPage =>
-        explainYourGoodsComparingToIdenticalGoods
+      case WhyIdenticalGoodsPage          => whyIdenticalGoods
+      case HaveYouUsedMethodOneInPastPage => haveYouUsedMethodOneInPast
+      case DescribeTheIdenticalGoodsPage  => describeTheIdenticalGoods
 
       // method 3
-      case WhyTransactionValueOfSimilarGoodsPage         => whyTransactionValueOfSimilarGoods
-      case HaveYouUsedMethodOneForSimilarGoodsInPastPage =>
+      case WhyTransactionValueOfSimilarGoodsPage            => whyTransactionValueOfSimilarGoods
+      case HaveYouUsedMethodOneForSimilarGoodsInPastPage    =>
         haveYouUsedMethodOneForSimilarGoodsInPast
-      case WillYouCompareToSimilarGoodsPage              => willYouCompareToSimilarGoods
-      case ExplainYourGoodsComparingToSimilarGoodsPage   => explainYourGoodsComparingToSimilarGoods
-      case DescribeTheSimilarGoodsPage                   => describeTheSimilarGoods
 
       // method 4
       case ExplainWhyYouHaveNotSelectedMethodOneToThreePage =>

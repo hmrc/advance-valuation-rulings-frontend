@@ -35,47 +35,40 @@ class Navigator @Inject() () {
   private def checkYourAnswersForAgents(): Call = CheckYourAnswersForAgentsController.onPageLoad()
 
   private def routes(implicit affinityGroup: AffinityGroup): Page => UserAnswers => Call = {
-    case ValuationMethodPage                           => valuationMethodPage
-    case IsThereASaleInvolvedPage                      => isThereASaleInvolvedPage
-    case IsSaleBetweenRelatedPartiesPage               => isSaleBetweenRelatedPartiesPage
-    case ExplainHowPartiesAreRelatedPage               => explainHowPartiesAreRelatedPage
-    case DescriptionOfGoodsPage                        => descriptionOfGoodsPage
-    case HasCommodityCodePage                          => hasCommodityCodePage
-    case CommodityCodePage                             => commodityCodePage
-    case HaveTheGoodsBeenSubjectToLegalChallengesPage  =>
+    case ValuationMethodPage                              => valuationMethodPage
+    case IsThereASaleInvolvedPage                         => isThereASaleInvolvedPage
+    case IsSaleBetweenRelatedPartiesPage                  => isSaleBetweenRelatedPartiesPage
+    case ExplainHowPartiesAreRelatedPage                  => explainHowPartiesAreRelatedPage
+    case DescriptionOfGoodsPage                           => descriptionOfGoodsPage
+    case HasCommodityCodePage                             => hasCommodityCodePage
+    case CommodityCodePage                                => commodityCodePage
+    case HaveTheGoodsBeenSubjectToLegalChallengesPage     =>
       haveTheGoodsBeenSubjectToLegalChallengesPage
-    case DescribeTheLegalChallengesPage                => describeTheLegalChallengesPage
-    case HasConfidentialInformationPage                => hasConfidentialInformationPage
-    case ConfidentialInformationPage                   => confidentialInformationPage
-    case ImportGoodsPage                               => importGoodsPage
-    case RequiredInformationPage                       => requiredInformationPage
-    case WhatIsYourRoleAsImporterPage                  => whatIsYourRoleAsImporterPage
-    case CheckRegisteredDetailsPage                    => checkRegisteredDetailsPage
-    case ApplicationContactDetailsPage                 => applicationContactDetailsPage
-    case BusinessContactDetailsPage                    => businessContactDetailsPage
-    case DoYouWantToUploadDocumentsPage                => doYouWantToUploadDocumentsPage
-    case IsThisFileConfidentialPage                    => isThisFileConfidentialPage
-    case UploadAnotherSupportingDocumentPage           => uploadAnotherSupportingDocumentPage
-    case WhyComputedValuePage                          => whyComputedValuePage
-    case ExplainReasonComputedValuePage                => explainReasonComputedValuePage
-    case WhyTransactionValueOfSimilarGoodsPage         => whyTransactionValueOfSimilarGoodsPage
-    case HaveYouUsedMethodOneForSimilarGoodsInPastPage =>
+    case DescribeTheLegalChallengesPage                   => describeTheLegalChallengesPage
+    case HasConfidentialInformationPage                   => hasConfidentialInformationPage
+    case ConfidentialInformationPage                      => confidentialInformationPage
+    case ImportGoodsPage                                  => importGoodsPage
+    case RequiredInformationPage                          => requiredInformationPage
+    case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
+    case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
+    case ApplicationContactDetailsPage                    => applicationContactDetailsPage
+    case BusinessContactDetailsPage                       => businessContactDetailsPage
+    case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
+    case IsThisFileConfidentialPage                       => isThisFileConfidentialPage
+    case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
+    case WhyComputedValuePage                             => whyComputedValuePage
+    case ExplainReasonComputedValuePage                   => explainReasonComputedValuePage
+    case WhyTransactionValueOfSimilarGoodsPage            => whyTransactionValueOfSimilarGoodsPage
+    case HaveYouUsedMethodOneForSimilarGoodsInPastPage    =>
       haveYouUsedMethodOneForSimilarGoodsInPastPage
-    case HaveYouUsedMethodOneInPastPage                => haveYouUsedMethodOneInPastPage
-    case WhyIdenticalGoodsPage                         => whyIdenticalGoodsPage
-    case AreThereRestrictionsOnTheGoodsPage            => areThereRestrictionsOnTheGoodsPage
-    case DescribeTheRestrictionsPage                   => describeTheRestrictionsPage
-    case IsTheSaleSubjectToConditionsPage              => isTheSaleSubjectToConditionsPage
-    case DescribeTheConditionsPage                     => describeTheConditionsPage
-    case DescribeTheIdenticalGoodsPage                 => describeTheIdenticalGoodsPage
-    case ExplainYourGoodsComparingToIdenticalGoodsPage =>
-      explainYourGoodsComparingToIdenticalGoodsPage
-    case WillYouCompareGoodsToIdenticalGoodsPage       => willYouCompareGoodsToIdenticalGoodsPage
-
-    case DescribeTheSimilarGoodsPage                 => describeTheSimilarGoodsPage
-    case WillYouCompareToSimilarGoodsPage            => willYouCompareToSimilarGoodsPage
-    case ExplainYourGoodsComparingToSimilarGoodsPage => explainYourGoodsComparingToSimilarGoodsPage
-
+    case HaveYouUsedMethodOneInPastPage                   => haveYouUsedMethodOneInPastPage
+    case WhyIdenticalGoodsPage                            => whyIdenticalGoodsPage
+    case AreThereRestrictionsOnTheGoodsPage               => areThereRestrictionsOnTheGoodsPage
+    case DescribeTheRestrictionsPage                      => describeTheRestrictionsPage
+    case IsTheSaleSubjectToConditionsPage                 => isTheSaleSubjectToConditionsPage
+    case DescribeTheConditionsPage                        => describeTheConditionsPage
+    case DescribeTheIdenticalGoodsPage                    => describeTheIdenticalGoodsPage
+    case DescribeTheSimilarGoodsPage                      => describeTheSimilarGoodsPage
     case ExplainWhyYouHaveNotSelectedMethodOneToThreePage =>
       explainWhyYouHaveNotSelectedMethodOneToThreePage
     case ExplainWhyYouChoseMethodFourPage                 => explainWhyYouChoseMethodFourPage
@@ -168,26 +161,12 @@ class Navigator @Inject() () {
       case Some(true)  =>
         DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
       case Some(false) =>
-        WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(NormalMode)
+        ValuationMethodController.onPageLoad(NormalMode)
     }
 
   private def describeTheIdenticalGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
       case None    => DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
-    }
-
-  private def willYouCompareGoodsToIdenticalGoodsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(WillYouCompareGoodsToIdenticalGoodsPage) match {
-      case None        => WillYouCompareGoodsToIdenticalGoodsController.onPageLoad(NormalMode)
-      case Some(true)  =>
-        ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(NormalMode)
-      case Some(false) => ValuationMethodController.onPageLoad(NormalMode)
-    }
-
-  private def explainYourGoodsComparingToIdenticalGoodsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(ExplainYourGoodsComparingToIdenticalGoodsPage) match {
-      case None    => ExplainYourGoodsComparingToIdenticalGoodsController.onPageLoad(NormalMode)
       case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
     }
 
@@ -206,27 +185,15 @@ class Navigator @Inject() () {
       case Some(true)  =>
         DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
       case Some(false) =>
-        WillYouCompareToSimilarGoodsController.onPageLoad(NormalMode)
+        ValuationMethodController.onPageLoad(NormalMode)
     }
 
-  private def describeTheSimilarGoodsPage(userAnswers: UserAnswers): Call                      =
+  private def describeTheSimilarGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheSimilarGoodsPage) match {
       case None    => DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
       case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
     }
-  private def willYouCompareToSimilarGoodsPage(userAnswers: UserAnswers): Call                 =
-    userAnswers.get(WillYouCompareToSimilarGoodsPage) match {
-      case None        => WillYouCompareToSimilarGoodsController.onPageLoad(NormalMode)
-      case Some(true)  =>
-        ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(NormalMode)
-      case Some(false) =>
-        ValuationMethodController.onPageLoad(NormalMode)
-    }
-  private def explainYourGoodsComparingToSimilarGoodsPage(userAnswers: UserAnswers): Call      =
-    userAnswers.get(ExplainYourGoodsComparingToSimilarGoodsPage) match {
-      case None    => ExplainYourGoodsComparingToSimilarGoodsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
-    }
+
   // method 4 ----------------------------------------------------------------
   private def explainWhyYouHaveNotSelectedMethodOneToThreePage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage) match {
