@@ -41,9 +41,6 @@ class ApplicationCompleteController @Inject() (
 
   private val logger = Logger(this.getClass)
 
-  private val agentHeading     = "checkYourAnswers.agent.heading"
-  private val applicantHeading = "checkYourAnswers.applicant.heading"
-
   def onPageLoad(applicationNumber: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>

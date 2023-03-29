@@ -544,6 +544,10 @@ applicationComplete.appeal.paragraph.1 = If you do not agree with the decision, 
 applicationComplete.appeal.paragraph.2 = Alternatively, you can appeal directly to the tribunal service, who are independent of HMRC. If you disagree with the outcome of an HMRC review, you can still appeal to the tribunal. To find more information about reviews and appeals see HMRCs {0}
 applicationComplete.appeal.paragraph.2.link = appeal directly to the tribunal service.
 applicationComplete.application.heading = Your Application
+applicationComplete.applicant.heading = About the applicant
+applicationComplete.agent.heading = About the agent
+applicationComplete.company.heading = About the company
+applicationComplete.goods.heading = About the goods
 applicationComplete.continue.button = Go to your applications and rulings
 
 explainWhyYouChoseMethodFour.title = Explain why you have selected Method 4 to value your goods

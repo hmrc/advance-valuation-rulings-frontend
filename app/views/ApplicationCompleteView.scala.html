@@ -40,11 +40,6 @@
 
 @(isIndividual: Boolean, applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
-@applicantHeading = {
-    if (isIndividual) {"checkYourAnswers.agent.heading"}
-    else "checkYourAnswers.applicant.heading"
-}
-
 @guideLink = {
     @link(
             id = "step_by_step_guide_link",
@@ -123,15 +118,20 @@ advanceValuationRulingServiceEmailLink)
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.2", appealLink)))
 
     @subheading(messages("applicationComplete.application.heading"),"l")
+    
+    @if(isIndividual) {
+        @subheading(messages("applicationComplete.applicant.heading"))
+        @govukSummaryList(applicationSummary.eoriDetails.rows)
+        @govukSummaryList(applicationSummary.applicant.rows)
+    } else {
+        @subheading(messages("applicationComplete.agent.heading"))
+        @govukSummaryList(applicationSummary.eoriDetails.rows)
 
-    @subheading(messages(applicantHeading))
-    @govukSummaryList(applicationSummary.eoriDetails.rows)
+        @subheading(messages("applicationComplete.company.heading"))
+        @govukSummaryList(applicationSummary.applicant.rows)
+    }
 
-    @subheading(messages(applicantHeading))
-
-    @govukSummaryList(applicationSummary.applicant.rows)
-
-    @subheading(messages("checkYourAnswers.goods.heading"))
+    @subheading(messages("applicationComplete.goods.heading"))
 
     @govukSummaryList(applicationSummary.method.rows)
     @govukSummaryList(applicationSummary.details.rows)
