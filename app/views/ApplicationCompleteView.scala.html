@@ -124,10 +124,10 @@ advanceValuationRulingServiceEmailLink)
         @govukSummaryList(applicationSummary.eoriDetails.rows)
         @govukSummaryList(applicationSummary.applicant.rows)
     } else {
-        @subheading(messages("applicationComplete.agent.heading"))
+        @subheading(messages("applicationComplete.company.heading"))
         @govukSummaryList(applicationSummary.eoriDetails.rows)
 
-        @subheading(messages("applicationComplete.company.heading"))
+        @subheading(messages("applicationComplete.agent.heading"))
         @govukSummaryList(applicationSummary.applicant.rows)
     }
 
