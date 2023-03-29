@@ -63,7 +63,7 @@ class AccountHomeController @Inject() (
             case Right(response)    =>
               Ok(view(response.summaries.map(ApplicationForAccountHome(_))))
             case Left(backendError) =>
-              logger.error(s"Failed to submit user answers to backend: $backendError")
+              logger.error(s"Failed to fetch applications from backend: $backendError")
               Redirect(routes.JourneyRecoveryController.onPageLoad())
           }
 
