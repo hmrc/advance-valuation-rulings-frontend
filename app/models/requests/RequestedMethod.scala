@@ -70,21 +70,14 @@ object MethodOne {
   }
 }
 
-sealed trait IdenticalGoodsExplaination extends Any
-case class PreviousIdenticalGoods(val value: String) extends AnyVal with IdenticalGoodsExplaination
+case class PreviousIdenticalGoods(val value: String) extends AnyVal
 object PreviousIdenticalGoods {
   implicit val format: Format[PreviousIdenticalGoods] = Json.valueFormat[PreviousIdenticalGoods]
 }
 
-object IdenticalGoodsExplaination {
-  import ApplicationRequest.jsonConfig
-  implicit val format: Format[IdenticalGoodsExplaination] =
-    Json.configured(jsonConfig).format[IdenticalGoodsExplaination]
-}
-
 case class MethodTwo(
   whyNotOtherMethods: String,
-  detailedDescription: IdenticalGoodsExplaination
+  previousIdenticalGoods: PreviousIdenticalGoods
 ) extends RequestedMethod
 object MethodTwo {
   implicit val format: OFormat[MethodTwo] = Json.format[MethodTwo]
@@ -107,21 +100,14 @@ object MethodTwo {
   }
 }
 
-sealed trait SimilarGoodsExplaination extends Any
-case class PreviousSimilarGoods(val value: String) extends AnyVal with SimilarGoodsExplaination
+case class PreviousSimilarGoods(val value: String) extends AnyVal
 object PreviousSimilarGoods {
   implicit val format: Format[PreviousSimilarGoods] = Json.valueFormat[PreviousSimilarGoods]
 }
 
-object SimilarGoodsExplaination {
-  import ApplicationRequest.jsonConfig
-  implicit val format: OFormat[SimilarGoodsExplaination] =
-    Json.configured(jsonConfig).format[SimilarGoodsExplaination]
-}
-
 case class MethodThree(
   whyNotOtherMethods: String,
-  detailedDescription: SimilarGoodsExplaination
+  previousSimilarGoods: PreviousSimilarGoods
 ) extends RequestedMethod
 object MethodThree {
   implicit val format: Format[MethodThree] =

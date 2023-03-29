@@ -108,9 +108,6 @@ trait ApplicationRequestGenerator extends Generators {
     } yield PreviousSimilarGoods(value)
   }
 
-  implicit lazy val arbitrarySimilarGoodsExplanation: Gen[SimilarGoodsExplaination] =
-    arbitraryPreviousSimilarGoods.arbitrary
-
   implicit lazy val arbitraryMethodOne: Arbitrary[MethodOne]     = Arbitrary {
     for {
       saleBetweenRelatedParties <- Gen.option(stringsWithMaxLength(100))
@@ -127,7 +124,7 @@ trait ApplicationRequestGenerator extends Generators {
   implicit lazy val arbitraryMethodThree: Arbitrary[MethodThree] = Arbitrary {
     for {
       whyNotOtherMethods <- stringsWithMaxLength(100)
-      similarGoods <- arbitrarySimilarGoodsExplanation
+      similarGoods <- arbitraryPreviousSimilarGoods.arbitrary
     } yield MethodThree(whyNotOtherMethods, similarGoods)
   }
 

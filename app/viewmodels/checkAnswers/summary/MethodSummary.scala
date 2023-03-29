@@ -126,18 +126,12 @@ object MethodSummary {
 
     val rows = Seq(
       ValuationMethodSummary.row(valuationMethod),
-      WhyIdenticalGoodsSummary.row(method.whyNotOtherMethods)
+      WhyIdenticalGoodsSummary.row(method.whyNotOtherMethods),
+      HaveYouUsedMethodOneInPastSummary.row(true),
+      DescribeTheIdenticalGoodsSummary.row(method.previousIdenticalGoods.value)
     )
 
-    val additionalRows = method.detailedDescription match {
-      case PreviousIdenticalGoods(answer) =>
-        Seq(
-          HaveYouUsedMethodOneInPastSummary.row(true),
-          DescribeTheIdenticalGoodsSummary.row(answer)
-        )
-    }
-
-    MethodSummary(SummaryListViewModel(rows ++ additionalRows))
+    MethodSummary(SummaryListViewModel(rows))
   }
 
   protected def methodThree(
@@ -166,15 +160,13 @@ object MethodSummary {
     val valuationMethod = toValuationMethod(method)
     val methodRow       = ValuationMethodSummary.row(valuationMethod)
 
-    val rows = method.detailedDescription match {
-      case PreviousSimilarGoods(answer) =>
-        Seq(
-          methodRow,
-          WhyTransactionValueOfSimilarGoodsSummary.row(method.whyNotOtherMethods),
-          HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(true),
-          DescribeTheSimilarGoodsSummary.row(answer)
-        )
-    }
+    val rows =
+      Seq(
+        methodRow,
+        WhyTransactionValueOfSimilarGoodsSummary.row(method.whyNotOtherMethods),
+        HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(true),
+        DescribeTheSimilarGoodsSummary.row(method.previousSimilarGoods.value)
+      )
 
     MethodSummary(SummaryListViewModel(rows))
   }

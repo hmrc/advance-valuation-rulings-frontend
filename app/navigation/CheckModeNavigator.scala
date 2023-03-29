@@ -268,6 +268,16 @@ object CheckModeNavigator {
       case Some(false) => nextPage(ValuationMethodPage)
     }
 
+  private def describeTheSimilarGoods(implicit
+     userAnswers: UserAnswers,
+     affinityGroup: AffinityGroup
+   ): Call =
+     userAnswers.get(DescribeTheSimilarGoodsPage) match {
+       case None    => DescribeTheSimilarGoodsController.onPageLoad(CheckMode)
+       case Some(_) =>
+         resolveAffinityGroup(affinityGroup)(checkYourAnswers, checkYourAnswersForAgents)
+     }
+
   // method 4 ----------------------------------------------------------------
   private def explainWhyYouHaveNotSelectedMethodOneToThree(implicit
     userAnswers: UserAnswers,
@@ -369,6 +379,7 @@ object CheckModeNavigator {
       case WhyTransactionValueOfSimilarGoodsPage            => whyTransactionValueOfSimilarGoods
       case HaveYouUsedMethodOneForSimilarGoodsInPastPage    =>
         haveYouUsedMethodOneForSimilarGoodsInPast
+      case DescribeTheSimilarGoodsPage  => describeTheSimilarGoods
 
       // method 4
       case ExplainWhyYouHaveNotSelectedMethodOneToThreePage =>

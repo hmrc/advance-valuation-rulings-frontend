@@ -186,8 +186,8 @@ class RequestedMethodSpec
 
       result shouldBe Invalid(
         NonEmptyList.of(
-          HaveYouUsedMethodOneInPastPage,
           WhyIdenticalGoodsPage,
+          HaveYouUsedMethodOneInPastPage,
           DescribeTheIdenticalGoodsPage
         )
       )
@@ -215,6 +215,7 @@ class RequestedMethodSpec
       val userAnswers = (for {
         ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
         ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
+        ua <- ua.set(DescribeTheSimilarGoodsPage, randomString)
         ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, randomString)
       } yield ua).success.get
 
@@ -261,9 +262,10 @@ class RequestedMethodSpec
       val result = RequestedMethod(userAnswers)
 
       result shouldBe Invalid(
-        NonEmptyList(
+        NonEmptyList.of(
+          WhyTransactionValueOfSimilarGoodsPage,
           HaveYouUsedMethodOneForSimilarGoodsInPastPage,
-          List(WhyTransactionValueOfSimilarGoodsPage)
+          DescribeTheSimilarGoodsPage
         )
       )
     }
