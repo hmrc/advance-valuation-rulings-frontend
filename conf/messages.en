@@ -489,7 +489,7 @@ willYouCompareGoodsToIdenticalGoods.title = Will you be comparing your goods to 
 willYouCompareGoodsToIdenticalGoods.caption = About the goods
 willYouCompareGoodsToIdenticalGoods.heading = Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days?
 willYouCompareGoodsToIdenticalGoods.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
-willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = willYouCompareGoodsToIdenticalGoods
+willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days?
 willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 willYouCompareGoodsToIdenticalGoods.change.hidden = WillYouCompareGoodsToIdenticalGoods
 
