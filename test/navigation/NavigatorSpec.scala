@@ -428,10 +428,11 @@ class NavigatorSpec extends SpecBase {
           "navigate to ApplicationContactDetailsPage when Yes" in {
             val userAnswers =
               userAnswersWith(CheckRegisteredDetailsPage, value = data)
-            navigator.contactDetailsRouting(
-              aff: AffinityGroup,
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              NormalMode,
               userAnswers
-            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
           }
 
           "and navigate to EORIBeUpToDatePage when No" in {
@@ -441,7 +442,7 @@ class NavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            ) mustBe routes.EORIBeUpToDateController.onPageLoad()
+            )(aff) mustBe routes.EORIBeUpToDateController.onPageLoad()
           }
         }
 
@@ -451,10 +452,11 @@ class NavigatorSpec extends SpecBase {
           "navigate to BusinessContactDetailsPage when Yes" in {
             val userAnswers =
               userAnswersWith(CheckRegisteredDetailsPage, value = data)
-            navigator.contactDetailsRouting(
-              aff: AffinityGroup,
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              NormalMode,
               userAnswers
-            ) mustBe routes.BusinessContactDetailsController.onPageLoad(mode = NormalMode)
+            )(aff) mustBe routes.BusinessContactDetailsController.onPageLoad(mode = NormalMode)
           }
         }
       }

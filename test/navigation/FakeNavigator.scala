@@ -28,7 +28,4 @@ class FakeNavigator(desiredRoute: Call) extends Navigator {
     affinityGroup: AffinityGroup
   ): Call =
     desiredRoute
-
-  override def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =
-    desiredRoute
 }
