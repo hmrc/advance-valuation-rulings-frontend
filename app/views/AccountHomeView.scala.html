@@ -16,7 +16,7 @@
 
 @import java.time.format.DateTimeFormatter
 @import components._
-@import models.ApplicationsAndRulingsResponse
+@import models.ApplicationForAccountHome
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 
 @this(
@@ -28,17 +28,15 @@
         link: Link
 )
 
-@(applications: Option[Seq[ApplicationsAndRulingsResponse]] = None)(implicit request: Request[_], messages: Messages)
-<!--one application for now, will eventually take a Option[Seq[ApplicationsAndRulingsResponse]] perhaps-->
+@(applications: Seq[ApplicationForAccountHome])(implicit request: Request[_], messages: Messages)
 
-@dateFormatter = @{DateTimeFormatter.ofPattern("d MMM yyyy")}
-@theRows = @{for(app <- applications.get) yield Seq(
+@theRows = @{for(app <- applications) yield Seq(
                     TableRow(content = Text(app.ref),format = Some("text")),
                     TableRow(content =  Text(app.nameOfGoods),format = Some("text")),
-                    TableRow(content =  Text(app.dateSubmitted.format(dateFormatter)),format = Some("text")),
+                    TableRow(content =  Text(app.dateSubmitted),format = Some("text")),
                     TableRow(content =  HtmlContent(link(   id = "application_link",
                                                 text = messages("View application"),
-                                                call = Call("GET", "https://www.staging.tax.service.gov.uk/advance-valuation-ruling/application/TEST")
+                                                call = Call("GET", routes.ViewApplicationController.onPageLoad(app.ref).url)
                                                 )))
                 )}
 @appsTable = @{
