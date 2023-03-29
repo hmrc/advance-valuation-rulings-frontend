@@ -132,7 +132,6 @@ class BackendConnectorSpec
     "should submit application to backend" ignore {
       forAll {
         applicationRequest: ApplicationRequest =>
-
           val result = connector.submitApplication(applicationRequest).futureValue
 
           result mustBe a[Right[_, ApplicationSubmissionResponse]]
@@ -146,7 +145,6 @@ class BackendConnectorSpec
         (
           application: Application,
         ) =>
-
           val response =
             connector.getApplication(application.id.toString).futureValue.value
 

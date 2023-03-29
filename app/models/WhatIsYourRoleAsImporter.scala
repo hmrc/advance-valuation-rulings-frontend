@@ -29,14 +29,14 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
 
   val MessagePrefix = "whatIsYourRoleAsImporter"
 
-  case object Employeeoforg extends WithName("employeeOfOrg") with WhatIsYourRoleAsImporter
-  case object Agentonbehalfoforg
+  case object EmployeeOfOrg extends WithName("employeeOfOrg") with WhatIsYourRoleAsImporter
+  case object AgentOnBehalfOfOrg
       extends WithName("agentOnBehalfOfOrg")
       with WhatIsYourRoleAsImporter
 
   val values: Seq[WhatIsYourRoleAsImporter] = Seq(
-    Employeeoforg,
-    Agentonbehalfoforg
+    EmployeeOfOrg,
+    AgentOnBehalfOfOrg
   )
 
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
