@@ -22,7 +22,7 @@ import cats.data.Validated._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators._
-import models.{ApplicationContactDetails, ApplicationNumber, BusinessContactDetails, CheckRegisteredDetails, UserAnswers}
+import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -55,12 +55,13 @@ class ApplicantSpec
 
       val userAnswers = (for {
         ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
+        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
       } yield ua).success.get
 
       val result = Applicant(userAnswers, AffinityGroup.Organisation)
 
       result shouldBe Valid(
-        OrganisationApplicant(orgApplicant.businessContact)
+        OrganisationApplicant(orgApplicant.businessContact, orgApplicant.role)
       )
     }
 
@@ -69,6 +70,8 @@ class ApplicantSpec
 
       val userAnswers = (for {
         ua <- ua.set(CheckRegisteredDetailsPage, arbitrary[CheckRegisteredDetails].sample.get)
+        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+
       } yield ua).success.get
 
       val result = Applicant(userAnswers, AffinityGroup.Organisation)
@@ -92,12 +95,24 @@ class ApplicantSpec
       )
     }
 
-    "return invalid for empty UserAnswers" in {
+    "return invalid for an Individual with empty UserAnswers" in {
       val userAnswers = emptyUserAnswers
 
       val result = Applicant(userAnswers, AffinityGroup.Individual)
 
-      result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
+      result shouldBe Invalid(
+        NonEmptyList.one(ApplicationContactDetailsPage)
+      )
+    }
+
+    "return invalid for an Org Applicant with empty UserAnswers" in {
+      val userAnswers = emptyUserAnswers
+
+      val result = Applicant(userAnswers, AffinityGroup.Organisation)
+
+      result shouldBe Invalid(
+        NonEmptyList.of(BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage)
+      )
     }
   }
 }
@@ -142,6 +157,7 @@ object ApplicantSpec extends Generators {
       email = randomString,
       phone = Some(randomString),
       company = randomString
-    )
+    ),
+    role = ImporterRole.AgentOnBehalf
   )
 }

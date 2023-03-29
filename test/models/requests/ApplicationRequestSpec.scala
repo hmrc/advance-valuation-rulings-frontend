@@ -152,6 +152,7 @@ class ApplicationRequestSpec
         NonEmptyList.of(
           CheckRegisteredDetailsPage,
           BusinessContactDetailsPage,
+          WhatIsYourRoleAsImporterPage,
           ValuationMethodPage,
           DescriptionOfGoodsPage,
           DoYouWantToUploadDocumentsPage

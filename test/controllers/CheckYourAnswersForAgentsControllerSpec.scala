@@ -84,7 +84,7 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
         ua <- ua.set(HasCommodityCodePage, false)
         ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
         ua <- ua.set(HasConfidentialInformationPage, false)
-        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.Employeeoforg)
+        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         ua <- ua.set(
                 CheckRegisteredDetailsPage,
                 CheckRegisteredDetails(
