@@ -63,6 +63,7 @@ caption.applicant = About the applicant
 checkYourAnswers.title = Check your answers before sending your application
 checkYourAnswers.heading = Check your answers before sending your application
 checkYourAnswers.applicant.heading = About the applicant
+checkYourAnswers.agent.heading = About the agent
 checkYourAnswers.goods.heading = About the goods
 checkYourAnswers.declaration.heading = Your declaration
 checkYourAnswers.declaration.paragraph1 = By applying for an Advance Valuation Ruling you confirm that:

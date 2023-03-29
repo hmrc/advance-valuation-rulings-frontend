@@ -38,7 +38,12 @@
 
 )
 
-@(applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
+@(isIndividual: Boolean, applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
+
+@applicantHeading = {
+    if (isIndividual) {"checkYourAnswers.agent.heading"}
+    else "checkYourAnswers.applicant.heading"
+}
 
 @guideLink = {
     @link(
@@ -119,7 +124,10 @@ advanceValuationRulingServiceEmailLink)
 
     @subheading(messages("applicationComplete.application.heading"),"l")
 
-    @subheading(messages("checkYourAnswers.applicant.heading"))
+    @subheading(messages(applicantHeading))
+    @govukSummaryList(applicationSummary.eoriDetails.rows)
+
+    @subheading(messages(applicantHeading))
 
     @govukSummaryList(applicationSummary.applicant.rows)
 
