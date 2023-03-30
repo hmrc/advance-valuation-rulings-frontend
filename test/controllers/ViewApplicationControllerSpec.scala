@@ -48,7 +48,7 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
         )
         .build()
 
-      when(mockBackendConnector.getApplication(any())(any(), any()))
+      when(mockBackendConnector.getApplication(any()))
         .thenReturn(
           Future.successful(
             Right(ruling)

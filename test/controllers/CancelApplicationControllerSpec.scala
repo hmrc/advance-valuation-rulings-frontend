@@ -28,11 +28,30 @@ import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import repositories.SessionRepository
+import views.html.CancelAreYouSureView
 
 class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
   "CancelApplication Controller" - {
 
+    "CancelAreYouSure Controller" - {
+
+      "must return OK and the correct view for a GET" in {
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[CancelAreYouSureView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view()(request, messages(application)).toString
+        }
+      }
+    }
     "must clear answers and redirect" in {
 
       val mockSessionRepository = mock[SessionRepository]
@@ -46,7 +65,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.CancelApplicationController.confirmCancel().url)
         val result  = route(application, request).value
 
         verify(mockSessionRepository, times(1)).clear(any())

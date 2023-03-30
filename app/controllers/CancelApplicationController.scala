@@ -19,23 +19,30 @@ package controllers
 import scala.concurrent.ExecutionContext
 
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import controllers.actions.IdentifierAction
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import repositories.SessionRepository
+import views.html.CancelAreYouSureView
 
 class CancelApplicationController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
   sessionRepository: SessionRepository,
-  val controllerComponents: MessagesControllerComponents
+  val controllerComponents: MessagesControllerComponents,
+  view: CancelAreYouSureView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] =
+  def onPageLoad: Action[AnyContent]    = (identify andThen getData andThen requireData) {
+    implicit request => Ok(view())
+  }
+  def confirmCancel: Action[AnyContent] =
     identify.async {
       implicit request =>
         for {
