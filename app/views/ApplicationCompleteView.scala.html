@@ -38,7 +38,7 @@
 
 )
 
-@(applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
+@(isIndividual: Boolean, applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
 @guideLink = {
     @link(
@@ -118,12 +118,20 @@ advanceValuationRulingServiceEmailLink)
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.2", appealLink)))
 
     @subheading(messages("applicationComplete.application.heading"),"l")
+    
+    @if(isIndividual) {
+        @subheading(messages("applicationComplete.applicant.heading"))
+        @govukSummaryList(applicationSummary.eoriDetails.rows)
+        @govukSummaryList(applicationSummary.applicant.rows)
+    } else {
+        @subheading(messages("applicationComplete.company.heading"))
+        @govukSummaryList(applicationSummary.eoriDetails.rows)
 
-    @subheading(messages("checkYourAnswers.applicant.heading"))
+        @subheading(messages("applicationComplete.agent.heading"))
+        @govukSummaryList(applicationSummary.applicant.rows)
+    }
 
-    @govukSummaryList(applicationSummary.applicant.rows)
-
-    @subheading(messages("checkYourAnswers.goods.heading"))
+    @subheading(messages("applicationComplete.goods.heading"))
 
     @govukSummaryList(applicationSummary.method.rows)
     @govukSummaryList(applicationSummary.details.rows)

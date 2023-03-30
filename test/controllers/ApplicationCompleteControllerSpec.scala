@@ -25,43 +25,129 @@ import base.SpecBase
 import generators.Generators
 import models.ValuationMethod
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.ValuationMethodPage
+import pages._
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
 class ApplicationCompleteControllerSpec extends SpecBase with Generators {
 
   "ApplicationComplete Controller" - {
+    "when an Individual completes an application" - {
+      "must return OK and the correct view for a GET" in {
+        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
+          ua =>
+            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val Email             = "testEmail@mail.com"
+            val applicationNumber = userAnswers.applicationNumber
 
-    "must return OK and the correct view for a GET" in {
-      ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
-        ua =>
-          val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-          val Email             = "testEmail@mail.com"
-          val applicationNumber = userAnswers.applicationNumber
+            val emailUpdate   =
+              (__ \ ApplicationContactDetailsPage.toString \ "email").json.put(JsString(Email))
+            val dataWithEmail = userAnswers.data.transform(__.json.update(emailUpdate)).get
+            val answers       = userAnswers.copy(data = dataWithEmail)
+            val application   = applicationBuilder(userAnswers = Option(answers)).build()
 
-          val emailUpdate   = (__ \ "applicationContactDetails" \ "email").json.put(JsString(Email))
-          val dataWithEmail = userAnswers.data.transform(__.json.update(emailUpdate)).get
-          val answers       = userAnswers.copy(data = dataWithEmail)
-          val application   = applicationBuilder(userAnswers = Option(answers)).build()
+            running(application) {
+              val request       =
+                FakeRequest(
+                  GET,
+                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                )
+              implicit val msgs = messages(application)
+              val result        = route(application, request).value
 
-          running(application) {
-            val request       =
-              FakeRequest(
-                GET,
-                routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
-              )
-            implicit val msgs = messages(application)
-            val result        = route(application, request).value
+              val view    = application.injector.instanceOf[ApplicationCompleteView]
+              val summary = ApplicationSummary(userAnswers, AffinityGroup.Individual).removeActions
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(true, applicationNumber, Email, summary)(
+                request,
+                messages(application)
+              ).toString
+            }
+        }
+      }
 
-            val view    = application.injector.instanceOf[ApplicationCompleteView]
-            val summary = ApplicationSummary(userAnswers, AffinityGroup.Individual).removeActions
-            status(result) mustEqual OK
-            contentAsString(result) mustEqual view(applicationNumber, Email, summary)(
-              request,
-              messages(application)
-            ).toString
-          }
+      "must redirect when the user has no contact email" in {
+        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
+          ua =>
+            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val applicationNumber = userAnswers.applicationNumber
+            val updatedAnswers    =
+              userAnswers.remove(pages.ApplicationContactDetailsPage).success.value
+
+            val application = applicationBuilder(userAnswers = Option(updatedAnswers)).build()
+
+            running(application) {
+              val request =
+                FakeRequest(
+                  GET,
+                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                )
+              val result  = route(application, request).value
+              status(result) mustEqual SEE_OTHER
+            }
+        }
+      }
+    }
+
+    "when an Organisation completes an application" - {
+      "must return OK and the correct view for a GET" in {
+        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
+          ua =>
+            val Email       = "testEmail@mail.com"
+            val userAnswers = (for {
+              ua <- ua.set(ValuationMethodPage, ValuationMethod.Method2)
+              ua <- ua.set(
+                      BusinessContactDetailsPage,
+                      models.BusinessContactDetails("test", Email, "test", "test")
+                    )
+            } yield ua).success.value
+
+            val applicationNumber = userAnswers.applicationNumber
+
+            val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers)).build()
+
+            running(application) {
+              val request       =
+                FakeRequest(
+                  GET,
+                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                )
+              implicit val msgs = messages(application)
+              val result        = route(application, request).value
+
+              val view    = application.injector.instanceOf[ApplicationCompleteView]
+              val summary =
+                ApplicationSummary(userAnswers, AffinityGroup.Organisation).removeActions
+
+              status(result) mustEqual OK
+              contentAsString(result) mustEqual view(false, applicationNumber, Email, summary)(
+                request,
+                messages(application)
+              ).toString
+            }
+        }
+      }
+
+      "must redirect when the company has no contact email" in {
+        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
+          ua =>
+            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val applicationNumber = userAnswers.applicationNumber
+            val updatedAnswers    =
+              userAnswers.remove(pages.BusinessContactDetailsPage).success.value
+
+            val application = applicationBuilderAsOrg(userAnswers = Option(updatedAnswers)).build()
+
+            running(application) {
+              val request =
+                FakeRequest(
+                  GET,
+                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                )
+              val result  = route(application, request).value
+              status(result) mustEqual SEE_OTHER
+            }
+        }
       }
     }
   }

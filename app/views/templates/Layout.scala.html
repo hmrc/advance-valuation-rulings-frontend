@@ -29,6 +29,8 @@
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     twoThirdsMainContent: TwoThirdsMainContent,
+    govukBackLink: GovukBackLink,
+    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
 )
  
  @(
@@ -64,13 +66,23 @@
         } else additionalHeadBlock
     }
 }
-    @content = {
-        @contentBlock
 
-        <div class="govuk-!-margin-top-8">
-            @hmrcReportTechnicalIssueHelper()
-        </div>
+@content = {
+    @contentBlock
+
+    <div class="govuk-!-margin-top-8">
+        @hmrcReportTechnicalIssueHelper()
+    </div>
+}
+
+@beforeContentBlock = {
+  <div class="govuk-!-display-none-print">
+    @hmrcLanguageSelectHelper()
+    @{
+        govukBackLink(BackLink(href = "#", attributes = Map("id" -> "back"), content = Text(messages("site.back"))))
     }
+  </div>
+}
 
  @hmrcLayout(
    pageTitle = Some(pageTitle),
@@ -79,9 +91,10 @@
    signOutUrl = if(showBackLink) Some(controllers.auth.routes.AuthController.signOut.url) else None,
    phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
    nonce = CSPNonce.get,
-   backLinkUrl = if(showBackLink) Some("#") else None,
+   backLinkUrl = None,
    additionalScriptsBlock = Some(additionalScripts),
    additionalHeadBlock = Some(headBlock),
+   beforeContentBlock = Some(beforeContentBlock),
    mainContentLayout = mainContentLayout
  )(content)
  
