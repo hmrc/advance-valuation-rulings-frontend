@@ -22,7 +22,8 @@
         govukButton: GovukButton,
         para: InsetPara,
         heading: Heading,
-        link: Link
+        link: Link,
+        govukBackLink: GovukBackLink
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -38,11 +39,9 @@
         )
     }
 
-    @link(
-            id = "return_to_application",
-            text = messages("cancelAreYouSure.return"),
-            newTab = false,
-            call = routes.RequiredInformationController.onPageLoad()
-        )
+    <a href = "javascript:history.back()" class="govuk-link" id = "return_to_application">
+        @messages("cancelAreYouSure.return")
+    </a>
+
 
 }
