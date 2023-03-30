@@ -474,6 +474,7 @@ describeTheIdenticalGoods.error.required = Enter an explanation of how you are c
 describeTheIdenticalGoods.error.length = Maximum allowed characters is 8168
 describeTheIdenticalGoods.change.hidden = DescribeTheIdenticalGoods
 
+
 explainYourGoodsComparingToIdenticalGoods.title = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 explainYourGoodsComparingToIdenticalGoods.caption = About the goods
 explainYourGoodsComparingToIdenticalGoods.heading = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
@@ -607,25 +608,6 @@ explainHowYouWillUseMethodSix.error.length = Maximum allowed characters is 8168
 explainHowYouWillUseMethodSix.change.hidden = ExplainHowYouWillUseMethodSix
 explainHowYouWillUseMethodSix.paragraph.1 = Method 6 (fall-back method) is the final valuation method you can try.
 explainHowYouWillUseMethodSix.paragraph.2 = Tell us how you plan to use Method 6. You should also let us know if you want to adapt another method for your circumstances.
-
-explainYourGoodsComparingToSimilarGoods.title = Explain how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
-explainYourGoodsComparingToSimilarGoods.heading = Explain how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
-explainYourGoodsComparingToSimilarGoods.caption = About the goods
-explainYourGoodsComparingToSimilarGoods.paragraph = You should use Method 4: Deductive method if:
-explainYourGoodsComparingToSimilarGoods.bulletPoint.1 = you do not think Method 3 is the correct way to value your goods
-explainYourGoodsComparingToSimilarGoods.bulletPoint.2 = you do not have any further information about the similar goods
-explainYourGoodsComparingToSimilarGoods.checkYourAnswersLabel = Explanation of how you are using another producer’s similar goods for comparison
-explainYourGoodsComparingToSimilarGoods.error.required = Enter an explanation of how you are comparing your goods to similar goods imported by another buyer or seller in the past 90 days
-explainYourGoodsComparingToSimilarGoods.error.length = Maximum allowed characters is 8168
-explainYourGoodsComparingToSimilarGoods.change.hidden = ExplainYourGoodsComparingToSimilarGoods
-
-willYouCompareToSimilarGoods.title = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
-willYouCompareToSimilarGoods.heading = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
-willYouCompareToSimilarGoods.caption = About the goods
-willYouCompareToSimilarGoods.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
-willYouCompareToSimilarGoods.checkYourAnswersLabel = Will you be comparing your goods to similar goods imported by another buyer or seller in the past 90 days?
-willYouCompareToSimilarGoods.error.required = Select yes if you will be be comparing your goods to similar goods imported by another buyer or seller in the past 90 days
-willYouCompareToSimilarGoods.change.hidden = WillYouCompareToSimilarGoods
 
 describeTheSimilarGoods.title = Describe the similar goods
 describeTheSimilarGoods.heading = Describe the similar goods

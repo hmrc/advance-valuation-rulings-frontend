@@ -189,7 +189,7 @@ object ApplicationRequestSpec extends Generators {
 
   val requestedMethod = MethodThree(
     whyNotOtherMethods = randomString,
-    detailedDescription = PreviousSimilarGoods(randomString)
+    previousSimilarGoods = PreviousSimilarGoods(randomString)
   )
 
   val goodsDetails = GoodsDetails(
@@ -230,10 +230,7 @@ object ApplicationRequestSpec extends Generators {
     |},
     |"requestedMethod" : {
     |  "whyNotOtherMethods" : "$randomString",
-    |  "detailedDescription" : {
-    |    "_value" : "$randomString",
-    |    "_type" : "PreviousSimilarGoods"
-    |  },
+    |  "previousSimilarGoods" : "$randomString",
     |  "_type" : "MethodThree"
     |},
     |"goodsDetails": {

@@ -104,7 +104,7 @@ object ViewApplicationControllerSpec extends Generators {
 
   val requestedMethod = MethodThree(
     whyNotOtherMethods = randomString,
-    detailedDescription = PreviousSimilarGoods(randomString)
+    previousSimilarGoods = PreviousSimilarGoods(randomString)
   )
 
   val goodsDetails = GoodsDetails(

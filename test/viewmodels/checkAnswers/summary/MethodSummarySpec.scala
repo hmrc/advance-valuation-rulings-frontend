@@ -151,36 +151,6 @@ class MethodSummarySpec extends MethodSummaryFixtureSpec {
       }
     }
 
-    "when the user has answers for method two stating describing to similar goods" - {
-      val summary: MethodSummary = MethodSummary(methodTwoNotUsedMethodOneInPast.success.value)
-      val rows                   = summary.rows.rows
-      val keys                   = rows.map(_.key)
-
-      "create details rows for all relavent pages" in {
-        rows.length mustBe 5
-      }
-
-      "create row for valuation method" in {
-        val key: Key = "valuationMethod.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-
-      "create row for why identical goods" in {
-        val key: Key = "whyIdenticalGoods.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-
-      "create row for have you used method one in past" in {
-        val key: Key = "haveYouUsedMethodOneInPast.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-
-      "create row for explain importing to identical goods" in {
-        val key: Key = "explainYourGoodsComparingToIdenticalGoods.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-    }
-
     "when the user has answers for all relevant pages for method three" - {
       val summary: MethodSummary = MethodSummary(methodThreeAllAnswersInput.success.value)
       val rows                   = summary.rows.rows
@@ -207,31 +177,6 @@ class MethodSummarySpec extends MethodSummaryFixtureSpec {
 
       "create row for describe similar goods" in {
         val key: Key = "describeTheSimilarGoods.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-    }
-
-    "when the user uses method three to compare with similar goods" - {
-      val summary: MethodSummary = MethodSummary(methodThreeCompareSimilarGoods.success.value)
-      val rows                   = summary.rows.rows
-      val keys                   = rows.map(_.key)
-
-      "create details rows for all relavent pages" in {
-        rows.length mustBe 6
-      }
-
-      "create row for valuation method" in {
-        val key: Key = "valuationMethod.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-
-      "create row for why transaction value of similar goods" in {
-        val key: Key = "whyTransactionValueOfSimilarGoods.checkYourAnswersLabel"
-        keys must contain(key)
-      }
-
-      "create row for have you used method one in past for similar goods" in {
-        val key: Key = "haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel"
         keys must contain(key)
       }
     }
@@ -351,33 +296,12 @@ trait MethodSummaryFixtureSpec extends SpecBase {
       ua <- ua.set(DescribeTheIdenticalGoodsPage, "test")
     } yield ua
 
-  val methodTwoNotUsedMethodOneInPast: Try[UserAnswers] =
-    for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
-      ua <- ua.set(WhyIdenticalGoodsPage, "test")
-      ua <- ua.set(HaveYouUsedMethodOneInPastPage, false)
-      ua <- ua.set(WillYouCompareGoodsToIdenticalGoodsPage, true)
-      ua <- ua.set(ExplainYourGoodsComparingToIdenticalGoodsPage, "test")
-    } yield ua
-
   val methodThreeAllAnswersInput: Try[UserAnswers] =
     for {
       ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
       ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, "test")
       ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
       ua <- ua.set(DescribeTheSimilarGoodsPage, "test")
-      ua <- ua.set(WillYouCompareToSimilarGoodsPage, true) // will not get asked
-      ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, "test") // will not get asked
-    } yield ua
-
-  val methodThreeCompareSimilarGoods: Try[UserAnswers] =
-    for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
-      ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, "test")
-      ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
-      ua <- ua.set(DescribeTheSimilarGoodsPage, "test")
-      ua <- ua.set(WillYouCompareToSimilarGoodsPage, true)
-      ua <- ua.set(ExplainYourGoodsComparingToSimilarGoodsPage, "test")
     } yield ua
 
   val methodFourAllAnswersInput: Try[UserAnswers] =

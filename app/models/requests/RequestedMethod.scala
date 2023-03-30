@@ -70,129 +70,58 @@ object MethodOne {
   }
 }
 
-sealed trait IdenticalGoodsExplaination extends Any
-case class PreviousIdenticalGoods(val value: String) extends AnyVal with IdenticalGoodsExplaination
+case class PreviousIdenticalGoods(val value: String) extends AnyVal
 object PreviousIdenticalGoods {
   implicit val format: Format[PreviousIdenticalGoods] = Json.valueFormat[PreviousIdenticalGoods]
-}
-case class OtherUsersIdenticalGoods(val value: String)
-    extends AnyVal
-    with IdenticalGoodsExplaination
-object OtherUsersIdenticalGoods {
-  implicit val format = Json.valueFormat[OtherUsersIdenticalGoods]
-}
-
-object IdenticalGoodsExplaination {
-  import ApplicationRequest.jsonConfig
-  implicit val format: Format[IdenticalGoodsExplaination] =
-    Json.configured(jsonConfig).format[IdenticalGoodsExplaination]
 }
 
 case class MethodTwo(
   whyNotOtherMethods: String,
-  detailedDescription: IdenticalGoodsExplaination
+  previousIdenticalGoods: PreviousIdenticalGoods
 ) extends RequestedMethod
 object MethodTwo {
   implicit val format: OFormat[MethodTwo] = Json.format[MethodTwo]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodTwo] = {
     val whyTransactionValue       = userAnswers.validated(WhyIdenticalGoodsPage)
-    val usedMethod                = userAnswers.validated(HaveYouUsedMethodOneInPastPage)
+    val usedMethod                = userAnswers
+      .validated(HaveYouUsedMethodOneInPastPage)
+      .ensure(NonEmptyList.one(HaveYouUsedMethodOneInPastPage))(_ == true)
     val describeTheIdenticalGoods = userAnswers.validated(DescribeTheIdenticalGoodsPage)
-    val willCompareIndentical     = userAnswers
-      .validated(WillYouCompareGoodsToIdenticalGoodsPage)
-      .ensure(NonEmptyList.one(WillYouCompareGoodsToIdenticalGoodsPage))(_ == true)
 
-    val explainComparison = userAnswers.validated(ExplainYourGoodsComparingToIdenticalGoodsPage)
-
-    (usedMethod, whyTransactionValue)
-      .mapN((method, why) => (method, why))
-      .andThen {
-        case (usedMethod, whyTransactionValue) =>
-          usedMethod match {
-            case true  =>
-              describeTheIdenticalGoods.map(
-                description =>
-                  MethodTwo(
-                    whyTransactionValue,
-                    PreviousIdenticalGoods(description)
-                  )
-              )
-            case false =>
-              willCompareIndentical.andThen(
-                _ =>
-                  explainComparison.map(
-                    explain =>
-                      MethodTwo(
-                        whyTransactionValue,
-                        OtherUsersIdenticalGoods(explain)
-                      )
-                  )
-              )
-          }
-      }
-
+    (whyTransactionValue, usedMethod, describeTheIdenticalGoods)
+      .mapN(
+        (why, _, describe) =>
+          MethodTwo(
+            why,
+            PreviousIdenticalGoods(describe)
+          )
+      )
   }
 }
 
-sealed trait SimilarGoodsExplaination extends Any
-case class PreviousSimilarGoods(val value: String) extends AnyVal with SimilarGoodsExplaination
-case class OtherUsersSimilarGoods(val value: String) extends AnyVal with SimilarGoodsExplaination
-
+case class PreviousSimilarGoods(val value: String) extends AnyVal
 object PreviousSimilarGoods {
   implicit val format: Format[PreviousSimilarGoods] = Json.valueFormat[PreviousSimilarGoods]
-}
-object OtherUsersSimilarGoods {
-  implicit val format: Format[OtherUsersSimilarGoods] = Json.valueFormat[OtherUsersSimilarGoods]
-}
-
-object SimilarGoodsExplaination {
-  import ApplicationRequest.jsonConfig
-  implicit val format: OFormat[SimilarGoodsExplaination] =
-    Json.configured(jsonConfig).format[SimilarGoodsExplaination]
 }
 
 case class MethodThree(
   whyNotOtherMethods: String,
-  detailedDescription: SimilarGoodsExplaination
+  previousSimilarGoods: PreviousSimilarGoods
 ) extends RequestedMethod
 object MethodThree {
   implicit val format: Format[MethodThree] =
     Json.format[MethodThree]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodThree] = {
-    val usedMethod              = userAnswers.validated(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+    val usedMethod              = userAnswers
+      .validated(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+      .ensure(NonEmptyList.one(HaveYouUsedMethodOneForSimilarGoodsInPastPage))(_ == true)
     val whyTransactionValue     = userAnswers.validated(WhyTransactionValueOfSimilarGoodsPage)
     val describeTheSimilarGoods = userAnswers.validated(DescribeTheSimilarGoodsPage)
-    val willCompareSimilar      = userAnswers
-      .validated(WillYouCompareToSimilarGoodsPage)
-      .ensure(NonEmptyList.one(WillYouCompareToSimilarGoodsPage))(_ == true)
-    val explainComparison       = userAnswers
-      .validated(ExplainYourGoodsComparingToSimilarGoodsPage)
 
-    (usedMethod, whyTransactionValue)
-      .mapN((method, why) => (method, why))
-      .andThen {
-        case (usedMethod, whyTransactionValue) =>
-          usedMethod match {
-            case true  =>
-              describeTheSimilarGoods.map(
-                description =>
-                  MethodThree(
-                    whyTransactionValue,
-                    PreviousSimilarGoods(description)
-                  )
-              )
-            case false =>
-              (willCompareSimilar, explainComparison).mapN(
-                (_, explainComparison) =>
-                  MethodThree(
-                    whyTransactionValue,
-                    OtherUsersSimilarGoods(explainComparison)
-                  )
-              )
-          }
-      }
+    (whyTransactionValue, usedMethod, describeTheSimilarGoods)
+      .mapN((why, _, describe) => MethodThree(why, PreviousSimilarGoods(describe)))
   }
 }
 
