@@ -40,7 +40,8 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
             val Email             = "testEmail@mail.com"
             val applicationNumber = userAnswers.applicationNumber
 
-            val emailUpdate   = (__ \ "applicationContactDetails" \ "email").json.put(JsString(Email))
+            val emailUpdate   =
+              (__ \ ApplicationContactDetailsPage.toString \ "email").json.put(JsString(Email))
             val dataWithEmail = userAnswers.data.transform(__.json.update(emailUpdate)).get
             val answers       = userAnswers.copy(data = dataWithEmail)
             val application   = applicationBuilder(userAnswers = Option(answers)).build()
