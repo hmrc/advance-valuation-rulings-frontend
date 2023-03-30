@@ -352,13 +352,18 @@ class Navigator @Inject() () {
       case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
       case Some(_) => RequiredInformationController.onPageLoad()
     }
-  private def checkRegisteredDetailsPage(userAnswers: UserAnswers): Call   =
+  private def checkRegisteredDetailsPage(
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
       case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode)
       case Some(registeredDetails) =>
-        if (registeredDetails.value)
-          ApplicationContactDetailsController.onPageLoad(NormalMode)
-        else EORIBeUpToDateController.onPageLoad()
+        if (registeredDetails.value) {
+          resolveAffinityGroup(affinityGroup)(
+            ApplicationContactDetailsController.onPageLoad(NormalMode),
+            BusinessContactDetailsController.onPageLoad(NormalMode)
+          )
+        } else EORIBeUpToDateController.onPageLoad()
     }
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
@@ -387,17 +392,5 @@ class Navigator @Inject() () {
       case Individual => RequiredInformationController.onPageLoad()
       case _          =>
         WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
-    }
-
-  def contactDetailsRouting(affinityGroup: AffinityGroup, userAnswers: UserAnswers): Call =
-    userAnswers.get(CheckRegisteredDetailsPage) match {
-      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode)
-      case Some(registeredDetails) =>
-        if (registeredDetails.value) {
-          affinityGroup match {
-            case Individual => ApplicationContactDetailsController.onPageLoad(NormalMode)
-            case _          => BusinessContactDetailsController.onPageLoad(NormalMode)
-          }
-        } else EORIBeUpToDateController.onPageLoad()
     }
 }
