@@ -94,7 +94,14 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
   val callbackEndpointTarget: String = loadConfig("upscan.callbackUrl")
-  val maximumFileSize: Int           = configuration.get[Int]("upscan.maxFileSize")
+  val maximumFileSizeBytes: Long     = configuration.underlying.getBytes("upscan.maxFileSize")
+  val maximumFilesAllowed: Int       = configuration.get[Int]("upscan.maxFiles")
+
+  val maxFileSizeHumanReadableMebiBytes: Int = {
+    val KebiByte = 1024
+    val BaseTwo  = 2
+    (maximumFileSizeBytes / Math.pow(KebiByte, BaseTwo)).toInt
+  }
 
   val advanceValuationRulingsBackendURL: String =
     s"${servicesConfig.baseUrl("advance-valuation-rulings-backend")}/advance-valuation-rulings"

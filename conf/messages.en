@@ -314,7 +314,7 @@ uploadAnotherSupportingDocument.subHeading = Do you want to upload another suppo
 uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.error.required = Select yes if you want to upload another document
-uploadAnotherSupportingDocument.error.fileCount = You can only upload up to 10 files
+uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} files
 uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Keep confidential
@@ -325,19 +325,19 @@ uploadSupportingDocuments.caption = About the goods
 uploadSupportingDocuments.paragraph.1 = You can upload:
 uploadSupportingDocuments.paragraph.2 = An individual file must be:
 uploadSupportingDocuments.bulletPoint.1 = one file at a time
-uploadSupportingDocuments.bulletPoint.2 = up to 10 files
-uploadSupportingDocuments.bulletPoint.3 = smaller than 10MB
-uploadSupportingDocuments.bulletPoint.4 = a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
+uploadSupportingDocuments.bulletPoint.2 = up to {0} files
+uploadSupportingDocuments.bulletPoint.3 = smaller than {0}MB
+uploadSupportingDocuments.bulletPoint.4 = a pdf or jpeg
 
 uploadSupportingDocuments.label = Upload a file
 uploadSupportingDocuments.button = Upload and continue
 uploadSupportingDocuments.button.inProgress=  Uploading file
 uploadSupportingDocuments.checkYourAnswersLabel = Supporting documents uploaded
 
-uploadSupportingDocuments.entitytoolarge = The selected file must be smaller than 10MB
+uploadSupportingDocuments.entitytoolarge = The selected file must be smaller than {0}MB
 uploadSupportingDocuments.entitytoosmall = The selected file is empty
 uploadSupportingDocuments.failed = The selected file failed to upload
-uploadSupportingDocuments.rejected = The selected file must be a pdf, doc, docx, xls, xlsx, png, jpg, jpeg or txt
+uploadSupportingDocuments.rejected = The selected file must be a pdf or jpeg
 uploadSupportingDocuments.quarantine = The selected file contains a virus
 uploadSupportingDocuments.nofileprovided = Select a file to upload
 

@@ -76,7 +76,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        validateFromRequest(form, request.userAnswers)
+        validateFromRequest(form)
           .fold(
             formWithErrors =>
               makeDocumentRows(request.userAnswers, mode) match {
@@ -95,7 +95,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
           )
     }
 
-  def onDelete(uploadId: String, mode: Mode) =
+  def onDelete(uploadId: String, mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         val fileOpt = UploadSupportingDocumentPage.get().flatMap(_.getFile(UploadId(uploadId)))
@@ -132,7 +132,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   private def makeDocumentRows(userAnswers: UserAnswers, mode: Mode)(implicit messages: Messages) =
     userAnswers
       .get(UploadSupportingDocumentPage) match {
-      case Some(uploadedFiles) if uploadedFiles.files.size > 0 =>
+      case Some(uploadedFiles) if uploadedFiles.files.nonEmpty =>
         Some(SupportingDocumentsRows(uploadedFiles, link, mode))
       case _                                                   => None
     }
@@ -140,7 +140,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   private def redirectToUpdateDocument(mode: Mode) =
     Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(mode)))
 
-  private def validateFromRequest(form: Form[Boolean], userAnswers: UserAnswers)(implicit
+  private def validateFromRequest(form: Form[Boolean])(implicit
     request: DataRequest[AnyContent]
   ): Form[Boolean] = {
     val docCount = UploadSupportingDocumentPage.get().map(_.files.size).getOrElse(0)
@@ -149,8 +149,14 @@ class UploadAnotherSupportingDocumentController @Inject() (
       .fold(
         formWithErrors => formWithErrors,
         value =>
-          if (value && docCount >= 10) {
-            form.fill(value).withError("value", "uploadAnotherSupportingDocument.error.fileCount")
+          if (value && docCount >= config.maximumFilesAllowed) {
+            form
+              .fill(value)
+              .withError(
+                "value",
+                "uploadAnotherSupportingDocument.error.fileCount",
+                config.maximumFilesAllowed
+              )
           } else {
             form.fill(value)
           }

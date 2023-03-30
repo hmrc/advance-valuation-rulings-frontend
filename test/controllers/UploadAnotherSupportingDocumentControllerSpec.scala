@@ -40,7 +40,7 @@ import views.html.UploadAnotherSupportingDocumentView
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute                        = Call("GET", "/foo")
-  val maximumNumberOfFiles               = 10
+  val maximumNumberOfFiles               = 5
   val numOfDocs                          = "one"
   val upscanFileDeets: UpscanFileDetails =
     UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
@@ -223,7 +223,11 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
         val boundForm = form
           .bind(Map("value" -> "true"))
-          .withError("value", "uploadAnotherSupportingDocument.error.fileCount")
+          .withError(
+            "value",
+            "uploadAnotherSupportingDocument.error.fileCount",
+            maximumNumberOfFiles
+          )
 
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 

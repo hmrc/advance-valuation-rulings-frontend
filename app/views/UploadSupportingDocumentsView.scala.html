@@ -83,14 +83,14 @@
         @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
         @list(Seq(
                 Html(messages("uploadSupportingDocuments.bulletPoint.1")),
-                Html(messages("uploadSupportingDocuments.bulletPoint.2")),
+                Html(messages("uploadSupportingDocuments.bulletPoint.2", appConfig.maximumFilesAllowed)),
             ),
             "govuk-list govuk-list--bullet",
         )
 
         @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
         @list(Seq(
-            Html(messages("uploadSupportingDocuments.bulletPoint.3")),
+            Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maxFileSizeHumanReadableMebiBytes)),
             Html(messages("uploadSupportingDocuments.bulletPoint.4"))
             ),
             "govuk-list govuk-list--bullet",
@@ -104,7 +104,7 @@
             <div class="@formGroupClass">
                 @if(UploadStatus.isError(status)) {
                     <p id="file-input-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @{messages(UploadStatus.message(status))}
+                        <span class="govuk-visually-hidden">Error:</span> @{messages(UploadStatus.message(status), appConfig.maxFileSizeHumanReadableMebiBytes)}
                     </p>
                 }
                 
