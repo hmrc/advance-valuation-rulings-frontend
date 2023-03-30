@@ -26,6 +26,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
@@ -50,7 +51,7 @@ class ApplicationCompleteController @Inject() (
 
         request.affinityGroup match {
           case AffinityGroup.Individual   =>
-            (answers.data \ "applicationContactDetails" \ "email").toOption match {
+            (answers.data \ ApplicationContactDetailsPage.toString \ "email").toOption match {
               case Some(JsString(applicantEmail)) =>
                 Ok(view(true, applicationNumber, applicantEmail, applicationSummary))
               case _                              =>
@@ -58,7 +59,7 @@ class ApplicationCompleteController @Inject() (
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
             }
           case AffinityGroup.Organisation =>
-            (answers.data \ "businessContactDetails" \ "email").toOption match {
+            (answers.data \ BusinessContactDetailsPage.toString \ "email").toOption match {
               case Some(JsString(applicantEmail)) =>
                 Ok(view(false, applicationNumber, applicantEmail, applicationSummary))
               case _                              =>
