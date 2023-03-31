@@ -62,10 +62,10 @@ class UserAnswersSpec
           val result     =
             UserAnswers.updateValuationMethod(withMethod, Method3).success.value
 
-          result.get(ValuationMethodPage)                           must be(Some(Method3))
-          result.get(WhyIdenticalGoodsPage)                         must be(empty)
-          result.get(HaveYouUsedMethodOneInPastPage)                must be(empty)
-          result.get(DescribeTheIdenticalGoodsPage)                 must be(empty)
+          result.get(ValuationMethodPage)            must be(Some(Method3))
+          result.get(WhyIdenticalGoodsPage)          must be(empty)
+          result.get(HaveYouUsedMethodOneInPastPage) must be(empty)
+          result.get(DescribeTheIdenticalGoodsPage)  must be(empty)
       }
     }
 
@@ -128,6 +128,20 @@ class UserAnswersSpec
           result.get(AdaptMethodPage)                                 must be(empty)
           result.get(ExplainHowYouWillUseMethodSixPage)               must be(empty)
           result.get(ValuationMethodPage)                             must be(Some(Method1))
+      }
+    }
+  }
+  "clear valuation method" - {
+    "must always clear answers for deadend questions" in {
+      val answers = arbitrary[UserAnswers]
+
+      forAll(answers) {
+        answers =>
+          val result = UserAnswers.clearValuationMethod(answers)
+
+          result.get(IsThereASaleInvolvedPage)                      must be(empty)
+          result.get(HaveYouUsedMethodOneInPastPage)                must be(empty)
+          result.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage) must be(empty)
       }
     }
   }

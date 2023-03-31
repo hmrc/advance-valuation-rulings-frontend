@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.HaveYouUsedMethodOneInPastFormProvider
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.Navigator
 import pages.HaveYouUsedMethodOneInPastPage
 import repositories.SessionRepository
@@ -65,16 +65,19 @@ class HaveYouUsedMethodOneInPastController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            value =>
+            value => {
+              val userAnswers =
+                if (value) request.userAnswers
+                else UserAnswers.clearValuationMethod(request.userAnswers)
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(HaveYouUsedMethodOneInPastPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                ua <- userAnswers.setFuture(HaveYouUsedMethodOneInPastPage, value)
+                _  <- sessionRepository.set(ua)
               } yield Redirect(
-                navigator.nextPage(HaveYouUsedMethodOneInPastPage, mode, updatedAnswers)(
+                navigator.nextPage(HaveYouUsedMethodOneInPastPage, mode, ua)(
                   request.affinityGroup
                 )
               )
+            }
           )
     }
 }

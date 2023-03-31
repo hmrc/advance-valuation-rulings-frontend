@@ -45,7 +45,8 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend()
+                legend = Legend(),
+                noText = messages("haveYouUsedMethodOneInPast.no.text")
             )
         )
 

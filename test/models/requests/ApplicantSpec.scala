@@ -18,13 +18,15 @@ package models.requests
 
 import cats.data.NonEmptyList
 import cats.data.Validated._
+
+import uk.gov.hmrc.auth.core.AffinityGroup
+
 import generators._
 import models._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ApplicantSpec
     extends AnyWordSpec
