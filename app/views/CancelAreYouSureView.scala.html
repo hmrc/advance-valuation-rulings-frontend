@@ -28,7 +28,7 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title"))) {
+@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title")), showBackLink = false) {
 
     @heading(messages("cancelAreYouSure.heading"))
     @para(Html(messages("cancelAreYouSure.inset.text")))
