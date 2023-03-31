@@ -47,7 +47,7 @@ class UpscanInitiateConnectorSpec extends SpecBase with MockitoSugar {
 
       when(appConfig.initiateV2Url).thenReturn(initiateUrl)
       when(appConfig.callbackEndpointTarget).thenReturn(callbackUrl)
-      when(appConfig.maximumFileSize).thenReturn(5000)
+      when(appConfig.maximumFileSizeBytes).thenReturn(5000)
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = callbackUrl,
