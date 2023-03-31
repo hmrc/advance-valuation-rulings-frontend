@@ -19,6 +19,8 @@ package viewmodels.checkAnswers
 import cats.syntax.all._
 
 import play.api.i18n.Messages
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
@@ -58,14 +60,20 @@ object DoYouWantToUploadDocumentsSummary {
 
 object UploadedDocumentsSummary {
 
-  private def makeRow(answer: Seq[String])(implicit messages: Messages) =
-    if (answer.isEmpty) {
+  private def makeRow(fileNames: Seq[String])(implicit messages: Messages) =
+    if (fileNames.isEmpty) {
       None
     } else {
       Some(
         SummaryListRowViewModel(
           key = "uploadSupportingDocuments.checkYourAnswersLabel",
-          value = ValueViewModel(answer.mkString(", ")),
+          value = ValueViewModel(
+            HtmlContent(
+              Html(
+                fileNames.map(fileName => Html(s"${HtmlFormat.escape(fileName).body}<br>")).mkString
+              )
+            )
+          ),
           actions = Seq(
             ActionItemViewModel(
               "site.change",
