@@ -42,5 +42,8 @@ package object controllers {
         case Some(data) => form.fill(data)
         case None       => form
       }
+
+    def remove()(implicit request: DataRequest[_]): Future[UserAnswers] =
+      request.userAnswers.removeFuture(page)
   }
 }

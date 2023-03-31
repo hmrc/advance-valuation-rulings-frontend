@@ -124,7 +124,7 @@ trait ApplicationRequestGenerator extends Generators {
   implicit lazy val arbitraryMethodThree: Arbitrary[MethodThree] = Arbitrary {
     for {
       whyNotOtherMethods <- stringsWithMaxLength(100)
-      similarGoods <- arbitraryPreviousSimilarGoods.arbitrary
+      similarGoods       <- arbitraryPreviousSimilarGoods.arbitrary
     } yield MethodThree(whyNotOtherMethods, similarGoods)
   }
 

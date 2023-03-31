@@ -154,16 +154,15 @@ object UserAnswers {
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
 
-  def updateValuationMethod(userAnswers: UserAnswers, value: ValuationMethod)(implicit
+  def clearValuationMethod(userAnswers: UserAnswers)(implicit
     format: Format[ValuationMethod]
-  ): Try[UserAnswers] = {
+  ): UserAnswers = {
     val currentMethod = userAnswers.get(ValuationMethodPage)
 
-    val pathsToClear = ValuationMethodPage.toString +: (currentMethod match {
+    val methodPaths = ValuationMethodPage.toString +: (currentMethod match {
       case None          => Seq.empty
       case Some(Method1) =>
         Seq(
-          IsThereASaleInvolvedPage.toString,
           IsSaleBetweenRelatedPartiesPage.toString,
           IsTheSaleSubjectToConditionsPage.toString,
           DescribeTheConditionsPage.toString,
@@ -173,13 +172,11 @@ object UserAnswers {
       case Some(Method2) =>
         Seq(
           WhyIdenticalGoodsPage.toString,
-          HaveYouUsedMethodOneInPastPage.toString,
           DescribeTheIdenticalGoodsPage.toString
         )
       case Some(Method3) =>
         Seq(
           WhyTransactionValueOfSimilarGoodsPage.toString(),
-          HaveYouUsedMethodOneForSimilarGoodsInPastPage.toString,
           DescribeTheSimilarGoodsPage.toString
         )
       case Some(Method4) =>
@@ -197,13 +194,23 @@ object UserAnswers {
         )
     })
 
-    val updatedData = pathsToClear.foldLeft(userAnswers.data) {
+    val deadEndPaths = Seq(
+      IsThereASaleInvolvedPage.toString,
+      HaveYouUsedMethodOneInPastPage.toString,
+      HaveYouUsedMethodOneForSimilarGoodsInPastPage.toString
+    )
+
+    val updatedData = (methodPaths ++ deadEndPaths).foldLeft(userAnswers.data) {
       case (data, path) =>
         data - path
     }
 
-    val updatedAnswers = userAnswers.copy(data = updatedData)
-
-    updatedAnswers.set(ValuationMethodPage, value)
+    userAnswers.copy(data = updatedData)
   }
+
+  def updateValuationMethod(userAnswers: UserAnswers, value: ValuationMethod)(implicit
+    format: Format[ValuationMethod]
+  ): Try[UserAnswers] =
+    clearValuationMethod(userAnswers)
+      .set(ValuationMethodPage, value)
 }
