@@ -18,7 +18,6 @@
 @import models.fileupload._
 @import components._
 @import controllers.routes.UploadSupportingDocumentsController
-@import views.html.helper.CSRF
 
 @this(  mainLayout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -97,10 +96,6 @@
             "govuk-list govuk-list--bullet",
         )
     <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
-
-        @if(play.filters.csrf.CSRF.getToken.isDefined) {
-            @CSRF.formField
-        }
 
         @for(field <- upscanInitiateResponse.formFields) {
             <input type="hidden" name="@field._1" value="@field._2"/>
