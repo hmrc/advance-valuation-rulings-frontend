@@ -75,26 +75,16 @@
     </div>
 }
 
-@beforeContentBlock = {
-  <div class="govuk-!-display-none-print">
-    @hmrcLanguageSelectHelper()
-    @{
-        govukBackLink(BackLink(href = "#", attributes = Map("id" -> "back"), content = Text(messages("site.back"))))
-    }
-  </div>
-}
-
  @hmrcLayout(
-   pageTitle = Some(pageTitle),
-   isWelshTranslationAvailable = false, /* false if your service has not been translated */
-   serviceUrl = Some(routes.IndexController.onPageLoad.url),
-   signOutUrl = if(showBackLink) Some(controllers.auth.routes.AuthController.signOut.url) else None,
-   phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
-   nonce = CSPNonce.get,
-   backLinkUrl = None,
-   additionalScriptsBlock = Some(additionalScripts),
-   additionalHeadBlock = Some(headBlock),
-   beforeContentBlock = Some(beforeContentBlock),
-   mainContentLayout = mainContentLayout
+    pageTitle = Some(pageTitle),
+    isWelshTranslationAvailable = false, /* false if your service has not been translated */
+    serviceUrl = Some(routes.IndexController.onPageLoad.url),
+    signOutUrl = if(showBackLink) Some(controllers.auth.routes.AuthController.signOut.url) else None,
+    phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
+    nonce = CSPNonce.get,
+    backLinkUrl = if(showBackLink) Some("#") else None,
+    additionalScriptsBlock = Some(additionalScripts),
+    additionalHeadBlock = Some(headBlock),
+    mainContentLayout = mainContentLayout
  )(content)
  
