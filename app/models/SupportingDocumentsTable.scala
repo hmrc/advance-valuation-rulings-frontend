@@ -18,11 +18,11 @@ package models
 
 import play.api.i18n.Messages
 import play.api.libs.json.{__, OFormat, OWrites, Reads}
+import uk.gov.hmrc.govukfrontend.views.Aliases.Table
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import viewmodels.govuk.TableFluency
 
 case class UploadAnotherSupportingDocument(
   value: Boolean,
@@ -62,39 +62,39 @@ object SupportingDocument {
     }.toSeq
 }
 
-object SupportingDocumentsRows {
+object SupportingDocumentsRows extends TableFluency {
   def apply(
     uploadedFiles: UploadedFiles,
     link: views.html.components.Link,
     mode: Mode
-  )(implicit messages: Messages): SummaryList = {
-    val rows =
+  )(implicit messages: Messages): Table = {
+    val rows: Seq[Seq[TableRow]] =
       uploadedFiles.files.map {
         case (fileId, fileDetails) =>
-          SummaryListRowViewModel(
-            key = KeyViewModel(
-              content = Text(fileDetails.fileName)
-            ),
-            value = ValueViewModel(
-              content = Text(
-                if (fileDetails.isConfidential)
-                  messages("uploadAnotherSupportingDocument.keepConfidential")
-                else ""
+          Seq(
+            TableRow(content = Text(fileDetails.fileName)),
+            TableRow(content = Text(confidentialLabel(fileDetails))),
+            TableRow(
+              HtmlContent(
+                link(
+                  id = fileId.value,
+                  text = messages("site.remove"),
+                  call = controllers.routes.UploadAnotherSupportingDocumentController
+                    .onDelete(fileId.value, mode),
+                  classes = "govuk-link govuk-link--no-visited-state"
+                )
               )
-            ),
-            actions = Seq(
-              ActionItemViewModel(
-                "site.remove",
-                controllers.routes.UploadAnotherSupportingDocumentController
-                  .onDelete(fileId.value, mode)
-                  .url
-              )
-                .withVisuallyHiddenText(messages("site.remove"))
             )
           )
       }.toSeq
 
-    SummaryList(rows).withoutBorders()
-
+    Table(rows.withCssClass("govuk-body-s"))
   }
+
+  private def confidentialLabel(fileDetails: UploadedFile)(implicit messages: Messages): String =
+    if (fileDetails.isConfidential) {
+      messages("uploadAnotherSupportingDocument.keepConfidential")
+    } else {
+      ""
+    }
 }
