@@ -16,11 +16,11 @@
 
 package models.fileupload
 
+import play.api.i18n.Messages
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
 
-import models.fileupload._
 import org.bson.types.ObjectId
 
 sealed trait UploadStatus
@@ -76,14 +76,17 @@ object UploadStatus {
       case _                 => None
     }
 
-  def toFormErrors(us: UploadStatus): Map[String, String] =
+  def toFormErrors(us: UploadStatus, maxFileSize: Int)(implicit
+    messages: Messages
+  ): Map[String, String] =
     us match {
       case InProgress | NotStarted | _: UploadedSuccessfully => Map.empty
       case Failed                                            => Map("file-input" -> message(Failed))
       case Rejected                                          => Map("file-input" -> message(Rejected))
       case Quarantine                                        => Map("file-input" -> message(Quarantine))
       case NoFileProvided                                    => Map("file-input" -> message(NoFileProvided))
-      case EntityTooLarge                                    => Map("file-input" -> message(EntityTooLarge))
+      case EntityTooLarge                                    =>
+        Map("file-input" -> messages(message(EntityTooLarge), maxFileSize))
       case EntityTooSmall                                    => Map("file-input" -> message(EntityTooSmall))
     }
 

@@ -316,6 +316,7 @@ uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.error.required = Select yes if you want to upload another document
 uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} files
+uploadAnotherSupportingDocument.error.duplicateFile = You can only upload distinct files
 uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Keep confidential

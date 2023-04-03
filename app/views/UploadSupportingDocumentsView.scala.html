@@ -73,7 +73,7 @@
     }) {
 
     @if(UploadStatus.isError(status)) {
-        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status)))
+        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status, appConfig.maxFileSizeHumanReadableMebiBytes)))
     }
 
 
