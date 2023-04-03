@@ -52,6 +52,15 @@ trait ApplicationRequestGenerator extends Generators {
     } yield ContactDetails(contactName, contactEmail, contactTelephone)
   }
 
+  implicit lazy val arbitraryCompanyContactDetails: Arbitrary[CompanyContactDetails] = Arbitrary {
+    for {
+      contactName      <- stringsWithMaxLength(70)
+      contactEmail     <- stringsWithMaxLength(70)
+      contactTelephone <- Gen.option(stringsWithMaxLength(9))
+      company          <- stringsWithMaxLength(70)
+    } yield CompanyContactDetails(contactName, contactEmail, contactTelephone, company)
+  }
+
   implicit lazy val arbitraryEoriDetails: Arbitrary[EORIDetails] = Arbitrary {
     for {
       eori         <- arbitraryEoriNumberGen.arbitrary
@@ -78,6 +87,17 @@ trait ApplicationRequestGenerator extends Generators {
 
   implicit lazy val arbitraryIndividualApplicant: Arbitrary[IndividualApplicant] = Arbitrary {
     arbitraryContactDetails.arbitrary.map(IndividualApplicant(_))
+  }
+
+  implicit lazy val arbitraryImporterRole: Arbitrary[ImporterRole] = Arbitrary {
+    Gen.oneOf(ImporterRole.Employee, ImporterRole.AgentOnBehalf)
+  }
+
+  implicit lazy val arbitraryOrgApplicant: Arbitrary[OrganisationApplicant] = Arbitrary {
+    for {
+      contactDetails <- arbitraryCompanyContactDetails.arbitrary
+      role           <- arbitraryImporterRole.arbitrary
+    } yield OrganisationApplicant(contactDetails, role)
   }
 
   implicit lazy val arbitraryGoodsDetails: Arbitrary[GoodsDetails] = Arbitrary {
@@ -162,7 +182,8 @@ trait ApplicationRequestGenerator extends Generators {
     for {
       applicationNumber <- arbitraryApplicationNumber.arbitrary
       eoriDetails       <- arbitraryEoriDetails.arbitrary
-      applicant         <- arbitraryIndividualApplicant.arbitrary
+      applicant         <-
+        Gen.oneOf(arbitraryIndividualApplicant.arbitrary, arbitraryOrgApplicant.arbitrary)
       goodsDetails      <- arbitraryGoodsDetails.arbitrary
       method            <- Gen.oneOf(
                              arbitraryMethodOne.arbitrary,

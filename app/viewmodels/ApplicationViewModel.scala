@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList

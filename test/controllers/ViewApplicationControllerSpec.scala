@@ -32,8 +32,8 @@ import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
-
 class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
   import ViewApplicationControllerSpec._
   "ViewApplication Controller" - {
@@ -65,8 +65,8 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
         val rulingApplication    = Application(
           id = ruling.id,
           request = applicationRequest,
-          lastUpdated = Instant.ofEpochSecond(1),
-          created = Instant.ofEpochSecond(0)
+          lastUpdated = lastUpdated,
+          created = lastUpdated
         )
         val applicationViewModel = ApplicationViewModel(rulingApplication)
         val result               = route(application, request).value

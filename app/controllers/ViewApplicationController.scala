@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
-import models.ApplicationViewModel
+import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
 
 class ViewApplicationController @Inject() (
