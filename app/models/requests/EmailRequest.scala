@@ -38,8 +38,7 @@ object EmailRequest {
 
   implicit val format: Format[EmailRequest] = new Format[EmailRequest] {
 
-    def reads(json: JsValue): JsResult[EmailRequest] = (
-      (__ \ "to").read[List[Email]] and
+    def reads(json: JsValue): JsResult[EmailRequest] = ((__ \ "to").read[List[Email]] and
       (__ \ "templateId").read[String] and
       ((__ \ "parameters").read[Map[String, String]] orElse Reads.pure(
         Map.empty[String, String]

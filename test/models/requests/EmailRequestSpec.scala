@@ -22,7 +22,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
-class EmailRequestSpec extends PlaySpec{
+class EmailRequestSpec extends PlaySpec {
 
   "EmailRequest" must {
     "read json to an EmailRequest model" in {
@@ -44,7 +44,7 @@ class EmailRequestSpec extends PlaySpec{
         force = true,
         Some("test-event-url"),
         Some("test-send-url"),
-        Map("tags"  -> "tagsVal")
+        Map("tags"      -> "tagsVal")
       )
     }
   }

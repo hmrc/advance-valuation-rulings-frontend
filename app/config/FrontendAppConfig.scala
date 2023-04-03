@@ -34,6 +34,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val internalAuthServiceName      = "advance-valuation-rulings-frontend"
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
 
+  lazy val emailBaseUrl = servicesConfig.baseUrl("email")
+
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
 
