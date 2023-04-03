@@ -22,12 +22,24 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
+import models.requests.{ApplicationRequest, IndividualApplicant, OrganisationApplicant}
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
 sealed trait ApplicantSummary {
   def removeActions(): ApplicantSummary
   def rows: SummaryList
+}
+
+object ApplicantSummary {
+  def apply(applicationRequest: ApplicationRequest)(implicit messages: Messages) =
+    applicationRequest.applicant match {
+      case IndividualApplicant(_)      =>
+        CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
+      case OrganisationApplicant(_, _) =>
+        CheckRegisteredDetailsForAgentsSummary.rows(applicationRequest).map(_.copy(actions = None))
+    }
+
 }
 
 case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummary {
@@ -49,10 +61,13 @@ case class AgentSummary(rows: SummaryList) extends ApplicantSummary {
 }
 
 object AgentSummary {
+  def apply(applicationRequest: ApplicationRequest)(implicit messages: Messages) =
+    CheckRegisteredDetailsForAgentsSummary.rows(applicationRequest).map(_.copy(actions = None))
+
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): AgentSummary = {
 
     val contactDetailsRows = BusinessContactDetailsSummary.rows(userAnswers).orEmpty
-    val roleRow            = AgentRoleSummary.rows(userAnswers).orEmpty
+    val roleRow            = AgentRoleSummary.row(userAnswers).orEmpty
     AgentSummary(SummaryListViewModel(contactDetailsRows ++ roleRow))
   }
 }

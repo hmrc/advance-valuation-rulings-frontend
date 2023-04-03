@@ -32,8 +32,8 @@ import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
-
 class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
   import ViewApplicationControllerSpec._
   "ViewApplication Controller" - {
@@ -58,12 +58,17 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
       implicit val msgs = messages(application)
 
       running(application) {
-        val request = FakeRequest(
+        val request              = FakeRequest(
           GET,
           routes.ViewApplicationController.onPageLoad(ruling.id.toString).url
         )
-
-        val applicationViewModel = ApplicationViewModel(applicationRequest)
+        val rulingApplication    = Application(
+          id = ruling.id,
+          request = applicationRequest,
+          lastUpdated = lastUpdated,
+          created = lastUpdated
+        )
+        val applicationViewModel = ApplicationViewModel(rulingApplication)
         val result               = route(application, request).value
         val view                 = application.injector.instanceOf[ViewApplicationView]
 

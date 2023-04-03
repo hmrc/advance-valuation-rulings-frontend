@@ -82,6 +82,17 @@ trait ApplicationRequestGenerator extends Generators {
     arbitraryContactDetails.arbitrary.map(IndividualApplicant(_))
   }
 
+  implicit lazy val arbitraryImporterRole: Arbitrary[ImporterRole] = Arbitrary {
+    Gen.oneOf(ImporterRole.Employee, ImporterRole.AgentOnBehalf)
+  }
+
+  implicit lazy val arbitraryOrgApplicant: Arbitrary[OrganisationApplicant] = Arbitrary {
+    for {
+      contactDetails <- arbitraryCompanyContactDetails.arbitrary
+      role           <- arbitraryImporterRole.arbitrary
+    } yield OrganisationApplicant(contactDetails, role)
+  }
+
   implicit lazy val arbitraryGoodsDetails: Arbitrary[GoodsDetails] = Arbitrary {
     for {
       goodName                <- stringsWithMaxLength(100)
@@ -192,7 +203,7 @@ trait ApplicationRequestGenerator extends Generators {
                           arbitraryMethodFive.arbitrary,
                           arbitraryMethodSix.arbitrary
                         )
-      numAttachments <- Gen.choose(0, 10)
+      numAttachments <- Gen.choose(0, 5)
       attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
     } yield ApplicationRequest(
       draftId.render,
