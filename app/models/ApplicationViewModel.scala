@@ -20,8 +20,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
 import models.requests._
-import viewmodels.checkAnswers.ApplicationContactDetailsSummary
-import viewmodels.checkAnswers.CheckRegisteredDetailsSummary
+import viewmodels.checkAnswers._
 import viewmodels.checkAnswers.summary._
 
 case class ApplicationViewModel(
@@ -32,19 +31,37 @@ case class ApplicationViewModel(
 )
 
 object ApplicationViewModel {
-  def apply(applicationRequest: ApplicationRequest)(implicit
+  def apply(application: Application)(implicit
     messages: Messages
   ): ApplicationViewModel = {
 
-    val eoriRow   = CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
-    val applicant =
-      ApplicationContactDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
+    val appRequest = application.request
+
+    val applicantRows = appRequest.applicant match {
+      case IndividualApplicant(_)         =>
+        val dateSubmitted = DateSubmittedSummary.row(application)
+        val contact       = ApplicationContactDetailsSummary.rows(appRequest).map(_.copy(actions = None))
+        contact :+ dateSubmitted
+      case OrganisationApplicant(_, role) =>
+        val contact       = BusinessContactDetailsSummary.rows(appRequest).map(_.copy(actions = None))
+        val agentRole     = AgentRoleSummary.row(role).copy(actions = None)
+        val dateSubmitted = DateSubmittedSummary.row(application)
+
+        contact :+ agentRole :+ dateSubmitted
+    }
+
+    val eoriRow = appRequest.applicant match {
+      case IndividualApplicant(_)      =>
+        CheckRegisteredDetailsSummary.rows(appRequest).map(_.copy(actions = None))
+      case OrganisationApplicant(_, _) =>
+        CheckRegisteredDetailsForAgentsSummary.rows(appRequest).map(_.copy(actions = None))
+    }
 
     ApplicationViewModel(
       eori = SummaryList(eoriRow),
-      applicant = SummaryList(applicant),
-      details = DetailsSummary(applicationRequest).removeActions(),
-      method = MethodSummary(applicationRequest).removeActions()
+      applicant = SummaryList(applicantRows),
+      details = DetailsSummary(appRequest).removeActions(),
+      method = MethodSummary(appRequest).removeActions()
     )
   }
 }

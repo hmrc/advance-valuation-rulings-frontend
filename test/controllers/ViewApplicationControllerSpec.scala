@@ -58,12 +58,17 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
       implicit val msgs = messages(application)
 
       running(application) {
-        val request = FakeRequest(
+        val request              = FakeRequest(
           GET,
           routes.ViewApplicationController.onPageLoad(ruling.id.toString).url
         )
-
-        val applicationViewModel = ApplicationViewModel(applicationRequest)
+        val rulingApplication    = Application(
+          id = ruling.id,
+          request = applicationRequest,
+          lastUpdated = Instant.ofEpochSecond(1),
+          created = Instant.ofEpochSecond(0)
+        )
+        val applicationViewModel = ApplicationViewModel(rulingApplication)
         val result               = route(application, request).value
         val view                 = application.injector.instanceOf[ViewApplicationView]
 
