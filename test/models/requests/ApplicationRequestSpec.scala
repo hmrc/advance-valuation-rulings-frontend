@@ -42,6 +42,7 @@ class ApplicationRequestSpec
         ApplicationRequest(
           draftId = draftId,
           trader = eoriDetails,
+          agent = None,
           contact = contact,
           requestedMethod = requestedMethod,
           goodsDetails,
@@ -55,6 +56,7 @@ class ApplicationRequestSpec
         ApplicationRequest(
           draftId = draftId,
           trader = eoriDetails,
+          agent = None,
           contact = contact,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
@@ -117,6 +119,7 @@ class ApplicationRequestSpec
         ApplicationRequest(
           draftId = draftId,
           trader = eoriDetails,
+          agent = None,
           contact = contact,
           requestedMethod = MethodOne(
             Some("explainHowPartiesAreRelated"),

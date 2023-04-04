@@ -103,6 +103,7 @@ object TraderDetail {
 case class ApplicationRequest(
   draftId: String,
   trader: TraderDetail,
+  agent: Option[TraderDetail],
   contact: ContactDetails,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
@@ -122,17 +123,18 @@ object ApplicationRequest {
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val eoriDetails     = TraderDetail(userAnswers)
+    val traderDetail    = TraderDetail(userAnswers)
     val goodsDetails    = GoodsDetails(userAnswers)
     val contact         = ContactDetails(userAnswers, affinityGroup)
     val requestedMethod = RequestedMethod(userAnswers)
     val attachments     = Attachment(userAnswers)
 
-    (eoriDetails, contact, requestedMethod, goodsDetails, attachments).mapN(
-      (eoriDetails, contact, requestedMethod, goodsDetails, attachments) =>
+    (traderDetail, contact, requestedMethod, goodsDetails, attachments).mapN(
+      (traderDetail, contact, requestedMethod, goodsDetails, attachments) =>
         ApplicationRequest(
           userAnswers.draftId,
-          eoriDetails,
+          traderDetail,
+          None,
           contact,
           requestedMethod,
           goodsDetails,

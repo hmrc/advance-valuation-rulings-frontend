@@ -119,6 +119,7 @@ object ViewApplicationControllerSpec extends Generators {
   val applicationRequest = ApplicationRequest(
     draftId = draftId,
     trader = eoriDetails,
+    agent = None,
     contact = contact,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,

@@ -52,7 +52,7 @@ trait ApplicationRequestGenerator extends Generators {
     } yield ContactDetails(contactName, contactEmail, contactTelephone)
   }
 
-  implicit lazy val arbitraryEoriDetails: Arbitrary[TraderDetail] = Arbitrary {
+  implicit lazy val arbitraryTraderDetail: Arbitrary[TraderDetail] = Arbitrary {
     for {
       eori         <- arbitraryEoriNumberGen.arbitrary
       businessName <- stringsWithMaxLength(100)
@@ -163,7 +163,7 @@ trait ApplicationRequestGenerator extends Generators {
   implicit lazy val arbitraryApplicationRequest: Arbitrary[ApplicationRequest] = Arbitrary {
     for {
       draftId        <- arbitraryDraftId.arbitrary
-      eoriDetails    <- arbitraryEoriDetails.arbitrary
+      traderDetail   <- arbitraryTraderDetail.arbitrary
       contact        <- arbitraryContactDetails.arbitrary
       goodsDetails   <- arbitraryGoodsDetails.arbitrary
       method         <- Gen.oneOf(
@@ -178,7 +178,8 @@ trait ApplicationRequestGenerator extends Generators {
       attachments    <- Gen.listOfN(numAttachments, arbitraryUploadedDocument.arbitrary)
     } yield ApplicationRequest(
       draftId.render,
-      eoriDetails,
+      traderDetail,
+      None,
       contact,
       method,
       goodsDetails,
