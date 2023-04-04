@@ -29,9 +29,9 @@ case class EmailRequest(
   templateId: String,
   parameters: Map[String, String],
   force: Boolean,
-  eventUrl: Option[String],
-  onSendUrl: Option[String],
-  auditData: Map[String, String]
+  eventUrl: Option[String] = None,
+  onSendUrl: Option[String] = None,
+  auditData: Map[String, String] = Map.empty
 )
 
 object EmailRequest {

@@ -16,11 +16,12 @@
 
 package connectors
 
+import play.api.http.Status.ACCEPTED
+import play.api.libs.json.Json
+
 import com.github.tomakehurst.wiremock.client.WireMock.{postRequestedFor, urlEqualTo, verify}
 import com.github.tomakehurst.wiremock.http.RequestMethod.POST
 import models.requests.EmailRequest
-import play.api.http.Status.ACCEPTED
-import play.api.libs.json.Json
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
 class EmailConnectorSpec extends BaseIntegrationSpec with WireMockHelper {
