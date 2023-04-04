@@ -99,14 +99,14 @@ object CheckRegisteredDetailsSummary {
     request: ApplicationRequest
   )(implicit messages: Messages): Seq[SummaryListRow] = {
     val postCode       =
-      if (request.eoriDetails.postcode.isEmpty) None else Some(request.eoriDetails.postcode)
+      if (request.trader.postcode.isEmpty) None else Some(request.trader.postcode)
     val contactDetails = models.CheckRegisteredDetails(
       value = true,
-      eori = request.eoriDetails.eori,
-      name = request.eoriDetails.businessName,
-      streetAndNumber = request.eoriDetails.addressLine1 + "\n" + request.eoriDetails.addressLine2,
-      city = request.eoriDetails.addressLine3,
-      country = request.eoriDetails.country,
+      eori = request.trader.eori,
+      name = request.trader.businessName,
+      streetAndNumber = request.trader.addressLine1 + "\n" + request.trader.addressLine2,
+      city = request.trader.addressLine2.getOrElse(""),
+      country = request.trader.countryCode,
       postalCode = postCode
     )
     Seq(

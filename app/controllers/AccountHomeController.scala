@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import connectors.BackendConnector
 import controllers.actions._
 import models.{ApplicationForAccountHome, UserAnswers}
-import models.requests.{ApplicationSummaryRequest, EORI}
+import models.requests.ApplicationSummaryRequest
 import navigation.Navigator
 import repositories.SessionRepository
 import views.html.AccountHomeView
@@ -40,7 +40,7 @@ class AccountHomeController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   backendConnector: BackendConnector,
-  generateApplicationNumber: ApplicationNumberGenerationAction,
+  generateDraftId: DraftIdGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
@@ -55,7 +55,7 @@ class AccountHomeController @Inject() (
   def onPageLoad: Action[AnyContent]       =
     (identify andThen getData).async {
       implicit request =>
-        val appSumReq = ApplicationSummaryRequest(EORI(request.eoriNumber))
+        val appSumReq = ApplicationSummaryRequest(request.eoriNumber)
 
         backendConnector
           .applicationSummaries(appSumReq)
@@ -69,11 +69,11 @@ class AccountHomeController @Inject() (
 
     }
   def startApplication: Action[AnyContent] =
-    (identify andThen getData andThen generateApplicationNumber).async {
+    (identify andThen getData andThen generateDraftId).async {
       implicit request =>
         for {
           _ <-
-            sessionRepository.set(UserAnswers(request.userId, request.applicationNumber.render))
+            sessionRepository.set(UserAnswers(request.userId, request.draftId.render))
         } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
     }
 }

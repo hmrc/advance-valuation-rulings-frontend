@@ -24,34 +24,33 @@ import play.api.mvc.ActionTransformer
 
 import com.google.inject.ImplementedBy
 import com.softwaremill.quicklens._
-import models.requests.{ApplicationNumberRequest, OptionalDataRequest}
-import repositories.ApplicationNumberRepository
+import models.requests.{DraftIdRequest, OptionalDataRequest}
+import repositories.DraftIdRepository
 
 @Singleton
-class ApplicationNumberGenerationActionImpl @Inject() (
-  val applicationNumberRepository: ApplicationNumberRepository
+class DraftIdGenerationActionImpl @Inject() (
+  val draftIdRepository: DraftIdRepository
 )(implicit val executionContext: ExecutionContext)
-    extends ApplicationNumberGenerationAction {
+    extends DraftIdGenerationAction {
 
   override protected def transform[A](
     request: OptionalDataRequest[A]
-  ): Future[ApplicationNumberRequest[A]] =
-    applicationNumberRepository.generate("GBAVR").map {
-      applicationNumber =>
+  ): Future[DraftIdRequest[A]] =
+    draftIdRepository.generate("DRAFT").map {
+      draftId =>
         val updatedRequest =
-          request.modify(_.userAnswers.each.applicationNumber).setTo(applicationNumber.render)
+          request.modify(_.userAnswers.each.draftId).setTo(draftId.render)
 
-        ApplicationNumberRequest(
+        DraftIdRequest(
           updatedRequest,
           request.userId,
           request.eoriNumber,
-          applicationNumber,
+          draftId,
           request.affinityGroup,
           updatedRequest.userAnswers
         )
     }
 }
 
-@ImplementedBy(classOf[ApplicationNumberGenerationActionImpl])
-trait ApplicationNumberGenerationAction
-    extends ActionTransformer[OptionalDataRequest, ApplicationNumberRequest]
+@ImplementedBy(classOf[DraftIdGenerationActionImpl])
+trait DraftIdGenerationAction extends ActionTransformer[OptionalDataRequest, DraftIdRequest]

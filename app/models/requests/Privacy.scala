@@ -16,16 +16,14 @@
 
 package models.requests
 
-import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 
-import models.{ApplicationNumber, UserAnswers}
+sealed abstract class Privacy(override val entryName: String) extends EnumEntry
 
-case class ApplicationNumberRequest[A](
-  request: Request[A],
-  userId: String,
-  eoriNumber: String,
-  applicationNumber: ApplicationNumber,
-  affinityGroup: AffinityGroup,
-  userAnswers: Option[UserAnswers]
-) extends WrappedRequest[A](request)
+object Privacy extends Enum[Privacy] with PlayJsonEnum[Privacy] {
+  val values: IndexedSeq[Privacy] = findValues
+
+  case object Public extends Privacy("Public")
+  case object HmrcOnly extends Privacy("HmrcOnly")
+  case object Confidential extends Privacy("Confidential")
+}

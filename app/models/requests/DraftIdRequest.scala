@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package models.requests
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
-final case class ApplicationNumber(prefix: String, value: Long) {
-  def render: String = s"${prefix.toUpperCase()}%09d".format(value)
-}
+import models.{DraftId, UserAnswers}
 
-object ApplicationNumber {
-  implicit val format: OFormat[ApplicationNumber] = Json.format[ApplicationNumber]
-}
+case class DraftIdRequest[A](
+  request: Request[A],
+  userId: String,
+  eoriNumber: String,
+  draftId: DraftId,
+  affinityGroup: AffinityGroup,
+  userAnswers: Option[UserAnswers]
+) extends WrappedRequest[A](request)

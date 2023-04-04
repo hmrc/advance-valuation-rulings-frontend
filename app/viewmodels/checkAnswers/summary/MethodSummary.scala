@@ -236,7 +236,7 @@ object MethodSummary {
   }
 
   protected def methodSix(method: MethodSix)(implicit messages: Messages): MethodSummary = {
-    val adaptedMethod = method.adaptMethod match {
+    val adaptedMethod = method.adaptedMethod match {
       case AdaptedMethod.MethodOne   => AdaptMethod.Method1
       case AdaptedMethod.MethodTwo   => AdaptMethod.Method2
       case AdaptedMethod.MethodThree => AdaptMethod.Method3

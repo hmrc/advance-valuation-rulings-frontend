@@ -84,22 +84,21 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
 object ViewApplicationControllerSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val eoriDetails = EORIDetails(
+  val eoriDetails = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
-    addressLine2 = randomString,
-    addressLine3 = "",
+    addressLine2 = Some(randomString),
+    addressLine3 = None,
     postcode = randomString,
-    country = randomString
+    countryCode = randomString,
+    phoneNumber = None
   )
 
-  val applicant = IndividualApplicant(
-    contact = ContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString)
-    )
+  val contact = ContactDetails(
+    name = randomString,
+    email = randomString,
+    phone = Some(randomString)
   )
 
   val requestedMethod = MethodThree(
@@ -108,8 +107,8 @@ object ViewApplicationControllerSpec extends Generators {
   )
 
   val goodsDetails = GoodsDetails(
-    goodName = randomString,
-    goodDescription = randomString,
+    goodsName = randomString,
+    goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),
     confidentialInformation = Some(randomString)
@@ -118,13 +117,15 @@ object ViewApplicationControllerSpec extends Generators {
   val lastUpdated        = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
   val lastUpdatedString  = "22/08/2018"
   val applicationRequest = ApplicationRequest(
-    applicationNumber = ApplicationNumber("GBAVR", 1).render,
-    eoriDetails = eoriDetails,
-    applicant = applicant,
+    draftId = draftId,
+    trader = eoriDetails,
+    agent = None,
+    contact = contact,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
     attachments = Seq.empty
   )
+  val draftId            = DraftId("DRAFT", 0L).render
   val applicationId      = ApplicationId(0L)
   val ruling             =
     Application(
@@ -136,7 +137,7 @@ object ViewApplicationControllerSpec extends Generators {
 
   val body =
     s"""{
-    |"applicationNumber": "${applicationRequest.applicationNumber}",
+    |"draftId": "$draftId",
     |"eoriDetails": {
     |  "eori": "$randomString",
     |  "businessName": "$randomString",
@@ -146,13 +147,10 @@ object ViewApplicationControllerSpec extends Generators {
     |  "postcode": "$randomString",
     |  "country": "$randomString"
     |},
-    |"applicant": {
-    |  "contact": {
-    |    "name": "$randomString",
-    |    "email": "$randomString",
-    |    "phone": "$randomString"
-    |  },
-    |  "_type": "IndividualApplicant"
+    |"contact": {
+    |  "name": "$randomString",
+    |  "email": "$randomString",
+    |  "phone": "$randomString"
     |},
     |"requestedMethod" : {
     |  "whyNotOtherMethods" : "$randomString",

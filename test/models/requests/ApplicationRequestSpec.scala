@@ -24,7 +24,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators._
 import models._
-import models.ApplicationNumber
+import models.DraftId
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -40,9 +40,10 @@ class ApplicationRequestSpec
     "be able to deserialize successful body" in {
       ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
         ApplicationRequest(
-          applicationNumber = applicationNumber,
-          eoriDetails = eoriDetails,
-          applicant = applicant,
+          draftId = draftId,
+          trader = eoriDetails,
+          agent = None,
+          contact = contact,
           requestedMethod = requestedMethod,
           goodsDetails,
           attachments = Seq.empty
@@ -53,9 +54,10 @@ class ApplicationRequestSpec
     "should be able to write body" in {
       ApplicationRequest.format.writes(
         ApplicationRequest(
-          applicationNumber = applicationNumber,
-          eoriDetails = eoriDetails,
-          applicant = applicant,
+          draftId = draftId,
+          trader = eoriDetails,
+          agent = None,
+          contact = contact,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
           attachments = Seq.empty
@@ -115,9 +117,10 @@ class ApplicationRequestSpec
 
       result shouldBe Valid(
         ApplicationRequest(
-          applicationNumber = applicationNumber,
-          eoriDetails = eoriDetails,
-          applicant = applicant,
+          draftId = draftId,
+          trader = eoriDetails,
+          agent = None,
+          contact = contact,
           requestedMethod = MethodOne(
             Some("explainHowPartiesAreRelated"),
             Some("describeTheRestrictions"),
@@ -152,7 +155,6 @@ class ApplicationRequestSpec
         NonEmptyList.of(
           CheckRegisteredDetailsPage,
           BusinessContactDetailsPage,
-          WhatIsYourRoleAsImporterPage,
           ValuationMethodPage,
           DescriptionOfGoodsPage,
           DoYouWantToUploadDocumentsPage
@@ -165,26 +167,25 @@ class ApplicationRequestSpec
 object ApplicationRequestSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+  val draftId: String = DraftId("DRAFT", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
-  val eoriDetails = EORIDetails(
+  val eoriDetails = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
-    addressLine2 = "",
-    addressLine3 = randomString,
+    addressLine2 = Some(randomString),
+    addressLine3 = None,
     postcode = randomString,
-    country = randomString
+    countryCode = randomString,
+    phoneNumber = None
   )
 
-  val applicant = IndividualApplicant(
-    contact = ContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString)
-    )
+  val contact = ContactDetails(
+    name = randomString,
+    email = randomString,
+    phone = Some(randomString)
   )
 
   val requestedMethod = MethodThree(
@@ -193,16 +194,16 @@ object ApplicationRequestSpec extends Generators {
   )
 
   val goodsDetails = GoodsDetails(
-    goodName = randomString,
-    goodDescription = randomString,
+    goodsName = randomString,
+    goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),
     confidentialInformation = Some(randomString)
   )
 
   val goodsDetailsNoDetails = GoodsDetails(
-    goodName = randomString,
-    goodDescription = randomString,
+    goodsName = randomString,
+    goodsDescription = randomString,
     envisagedCommodityCode = None,
     knownLegalProceedings = None,
     confidentialInformation = None
@@ -210,23 +211,19 @@ object ApplicationRequestSpec extends Generators {
 
   val body =
     s"""{
-    |"applicationNumber": "$applicationNumber",
-    |"eoriDetails": {
+    |"draftId": "$draftId",
+    |"trader": {
     |  "eori": "$randomString",
     |  "businessName": "$randomString",
     |  "addressLine1": "$randomString",
-    |  "addressLine2": "",
-    |  "addressLine3": "$randomString",
+    |  "addressLine2": "$randomString",
     |  "postcode": "$randomString",
-    |  "country": "$randomString"
+    |  "countryCode": "$randomString"
     |},
-    |"applicant": {
-    |  "contact": {
-    |    "name": "$randomString",
-    |    "email": "$randomString",
-    |    "phone": "$randomString"
-    |  },
-    |  "_type": "IndividualApplicant"
+    |"contact": {
+    |  "name": "$randomString",
+    |  "email": "$randomString",
+    |  "phone": "$randomString"
     |},
     |"requestedMethod" : {
     |  "whyNotOtherMethods" : "$randomString",
@@ -234,8 +231,8 @@ object ApplicationRequestSpec extends Generators {
     |  "_type" : "MethodThree"
     |},
     |"goodsDetails": {
-    |  "goodName": "$randomString",
-    |  "goodDescription": "$randomString",
+    |  "goodsName": "$randomString",
+    |  "goodsDescription": "$randomString",
     |  "envisagedCommodityCode": "$randomString",
     |  "knownLegalProceedings": "$randomString",
     |  "confidentialInformation": "$randomString"

@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package repositories
+package models
 
-import scala.concurrent.Future
+import play.api.libs.json.{Json, OFormat}
 
-import com.google.inject.ImplementedBy
-import models.ApplicationNumber
+final case class DraftId(prefix: String, value: Long) {
+  def render: String = s"${prefix.toUpperCase()}%09d".format(value)
+}
 
-@ImplementedBy(classOf[ApplicationNumberRepositoryImpl])
-trait ApplicationNumberRepository {
-
-  def generate(prefix: String): Future[ApplicationNumber]
-
+object DraftId {
+  implicit val format: OFormat[DraftId] = Json.format[DraftId]
 }

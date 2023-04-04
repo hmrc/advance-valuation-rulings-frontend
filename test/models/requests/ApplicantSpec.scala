@@ -114,6 +114,49 @@ class ApplicantSpec
       )
     }
   }
+
+  "ContactDetails" should {
+
+    "succeed for an individual" in {
+
+      val ua = emptyUserAnswers
+
+      val userAnswers = (for {
+        ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
+      } yield ua).success.get
+
+      val result = ContactDetails(userAnswers, AffinityGroup.Individual)
+
+      result shouldBe Valid(applicant.contact)
+    }
+
+    "succeed for an organisation" in {
+
+      val ua = emptyUserAnswers
+
+      val userAnswers = (for {
+        ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
+      } yield ua).success.get
+
+      val result = ContactDetails(userAnswers, AffinityGroup.Organisation)
+
+      result shouldBe Valid(applicant.contact)
+    }
+
+    "fail when individual contact details are missing" in {
+
+      val result = ContactDetails(emptyUserAnswers, AffinityGroup.Individual)
+
+      result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
+    }
+
+    "fail when organisation contact details are missing" in {
+
+      val result = ContactDetails(emptyUserAnswers, AffinityGroup.Organisation)
+
+      result shouldBe Invalid(NonEmptyList.one(BusinessContactDetailsPage))
+    }
+  }
 }
 
 object ApplicantSpec extends Generators {
@@ -130,9 +173,9 @@ object ApplicantSpec extends Generators {
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+  val draftId: String = DraftId("DRAFT", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,
@@ -145,14 +188,15 @@ object ApplicantSpec extends Generators {
     phone = randomString,
     company = randomString
   )
-  val eoriDetails               = EORIDetails(
+  val eoriDetails               = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
-    addressLine2 = "",
-    addressLine3 = randomString,
+    addressLine2 = Some(randomString),
+    addressLine3 = None,
     postcode = "abc",
-    country = randomString
+    countryCode = randomString,
+    phoneNumber = None
   )
   val applicant                 = IndividualApplicant(
     contact = ContactDetails(

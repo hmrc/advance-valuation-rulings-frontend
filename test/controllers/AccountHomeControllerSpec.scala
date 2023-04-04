@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import connectors.BackendConnector
 import models.ApplicationForAccountHome
-import models.requests.{ApplicationId, ApplicationSummary, ApplicationSummaryResponse, EORI}
+import models.requests.{ApplicationId, ApplicationSummary, ApplicationSummaryResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -58,8 +58,8 @@ class AccountHomeControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET with some applications" in {
       val appsSummary: Seq[ApplicationSummary]               =
         Seq(
-          ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, EORI("eoriStr")),
-          ApplicationSummary(ApplicationId(1235L), "shoes", Instant.now, EORI("eoriStr"))
+          ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, "eoriStr"),
+          ApplicationSummary(ApplicationId(1235L), "shoes", Instant.now, "eoriStr")
         )
       val appsForAccountHome: Seq[ApplicationForAccountHome] =
         for (app <- appsSummary) yield ApplicationForAccountHome(app)

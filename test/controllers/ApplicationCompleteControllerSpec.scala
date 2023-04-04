@@ -36,9 +36,9 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
       "must return OK and the correct view for a GET" in {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
-            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val Email             = "testEmail@mail.com"
-            val applicationNumber = userAnswers.applicationNumber
+            val userAnswers   = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val Email         = "testEmail@mail.com"
+            val applicationId = userAnswers.draftId
 
             val emailUpdate   =
               (__ \ ApplicationContactDetailsPage.toString \ "email").json.put(JsString(Email))
@@ -50,7 +50,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               val request       =
                 FakeRequest(
                   GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
                 )
               implicit val msgs = messages(application)
               val result        = route(application, request).value
@@ -58,7 +58,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               val view    = application.injector.instanceOf[ApplicationCompleteView]
               val summary = ApplicationSummary(userAnswers, AffinityGroup.Individual).removeActions
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(true, applicationNumber, Email, summary)(
+              contentAsString(result) mustEqual view(true, applicationId, Email, summary)(
                 request,
                 messages(application)
               ).toString
@@ -69,9 +69,9 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
       "must redirect when the user has no contact email" in {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
-            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationNumber = userAnswers.applicationNumber
-            val updatedAnswers    =
+            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val applicationId  = userAnswers.draftId
+            val updatedAnswers =
               userAnswers.remove(pages.ApplicationContactDetailsPage).success.value
 
             val application = applicationBuilder(userAnswers = Option(updatedAnswers)).build()
@@ -80,7 +80,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               val request =
                 FakeRequest(
                   GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
                 )
               val result  = route(application, request).value
               status(result) mustEqual SEE_OTHER
@@ -102,7 +102,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
                     )
             } yield ua).success.value
 
-            val applicationNumber = userAnswers.applicationNumber
+            val applicationId = userAnswers.draftId
 
             val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers)).build()
 
@@ -110,7 +110,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               val request       =
                 FakeRequest(
                   GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
                 )
               implicit val msgs = messages(application)
               val result        = route(application, request).value
@@ -120,7 +120,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
                 ApplicationSummary(userAnswers, AffinityGroup.Organisation).removeActions
 
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(false, applicationNumber, Email, summary)(
+              contentAsString(result) mustEqual view(false, applicationId, Email, summary)(
                 request,
                 messages(application)
               ).toString
@@ -131,9 +131,9 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
       "must redirect when the company has no contact email" in {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
-            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationNumber = userAnswers.applicationNumber
-            val updatedAnswers    =
+            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val applicationId  = userAnswers.draftId
+            val updatedAnswers =
               userAnswers.remove(pages.BusinessContactDetailsPage).success.value
 
             val application = applicationBuilderAsOrg(userAnswers = Option(updatedAnswers)).build()
@@ -142,7 +142,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               val request =
                 FakeRequest(
                   GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationNumber).url
+                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
                 )
               val result  = route(application, request).value
               status(result) mustEqual SEE_OTHER
