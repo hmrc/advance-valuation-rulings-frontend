@@ -119,7 +119,6 @@ object ViewApplicationControllerSpec extends Generators {
   val lastUpdated        = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
   val lastUpdatedString  = "22/08/2018"
   val applicationRequest = ApplicationRequest(
-    applicationNumber = ApplicationNumber("GBAVR", 1).render,
     trader = eoriDetails,
     applicant = applicant,
     requestedMethod = requestedMethod,
@@ -137,7 +136,6 @@ object ViewApplicationControllerSpec extends Generators {
 
   val body =
     s"""{
-    |"applicationNumber": "${applicationRequest.applicationNumber}",
     |"eoriDetails": {
     |  "eori": "$randomString",
     |  "businessName": "$randomString",

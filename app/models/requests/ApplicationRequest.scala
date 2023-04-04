@@ -101,7 +101,6 @@ object TraderDetail {
 }
 
 case class ApplicationRequest(
-  applicationNumber: String,
   trader: TraderDetail,
   applicant: Applicant,
   requestedMethod: RequestedMethod,
@@ -122,17 +121,15 @@ object ApplicationRequest {
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val applicationNumber = userAnswers.applicationNumber
-    val eoriDetails       = TraderDetail(userAnswers)
-    val goodsDetails      = GoodsDetails(userAnswers)
-    val applicant         = Applicant(userAnswers, affinityGroup)
-    val requestedMethod   = RequestedMethod(userAnswers)
-    val attachments       = Attachment(userAnswers)
+    val eoriDetails     = TraderDetail(userAnswers)
+    val goodsDetails    = GoodsDetails(userAnswers)
+    val applicant       = Applicant(userAnswers, affinityGroup)
+    val requestedMethod = RequestedMethod(userAnswers)
+    val attachments     = Attachment(userAnswers)
 
     (eoriDetails, applicant, requestedMethod, goodsDetails, attachments).mapN(
       (eoriDetails, applicant, requestedMethod, goodsDetails, attachments) =>
         ApplicationRequest(
-          applicationNumber,
           eoriDetails,
           applicant,
           requestedMethod,

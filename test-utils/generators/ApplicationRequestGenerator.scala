@@ -162,22 +162,20 @@ trait ApplicationRequestGenerator extends Generators {
 
   implicit lazy val arbitraryApplicationRequest: Arbitrary[ApplicationRequest] = Arbitrary {
     for {
-      applicationNumber <- arbitraryApplicationNumber.arbitrary
-      eoriDetails       <- arbitraryEoriDetails.arbitrary
-      applicant         <- arbitraryIndividualApplicant.arbitrary
-      goodsDetails      <- arbitraryGoodsDetails.arbitrary
-      method            <- Gen.oneOf(
-                             arbitraryMethodOne.arbitrary,
-                             arbitraryMethodTwo.arbitrary,
-                             arbitraryMethodThree.arbitrary,
-                             arbitraryMethodFour.arbitrary,
-                             arbitraryMethodFive.arbitrary,
-                             arbitraryMethodSix.arbitrary
-                           )
-      numAttachments    <- Gen.choose(0, 10)
-      attachments       <- Gen.listOfN(numAttachments, arbitraryUploadedDocument.arbitrary)
+      eoriDetails    <- arbitraryEoriDetails.arbitrary
+      applicant      <- arbitraryIndividualApplicant.arbitrary
+      goodsDetails   <- arbitraryGoodsDetails.arbitrary
+      method         <- Gen.oneOf(
+                          arbitraryMethodOne.arbitrary,
+                          arbitraryMethodTwo.arbitrary,
+                          arbitraryMethodThree.arbitrary,
+                          arbitraryMethodFour.arbitrary,
+                          arbitraryMethodFive.arbitrary,
+                          arbitraryMethodSix.arbitrary
+                        )
+      numAttachments <- Gen.choose(0, 10)
+      attachments    <- Gen.listOfN(numAttachments, arbitraryUploadedDocument.arbitrary)
     } yield ApplicationRequest(
-      applicationNumber.render,
       eoriDetails,
       applicant,
       method,
