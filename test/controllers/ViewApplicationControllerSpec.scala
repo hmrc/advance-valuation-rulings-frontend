@@ -95,12 +95,10 @@ object ViewApplicationControllerSpec extends Generators {
     phoneNumber = None
   )
 
-  val applicant = IndividualApplicant(
-    contact = ContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString)
-    )
+  val contact = ContactDetails(
+    name = randomString,
+    email = randomString,
+    phone = Some(randomString)
   )
 
   val requestedMethod = MethodThree(
@@ -121,7 +119,7 @@ object ViewApplicationControllerSpec extends Generators {
   val applicationRequest = ApplicationRequest(
     draftId = draftId,
     trader = eoriDetails,
-    applicant = applicant,
+    contact = contact,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
     attachments = Seq.empty
@@ -148,13 +146,10 @@ object ViewApplicationControllerSpec extends Generators {
     |  "postcode": "$randomString",
     |  "country": "$randomString"
     |},
-    |"applicant": {
-    |  "contact": {
-    |    "name": "$randomString",
-    |    "email": "$randomString",
-    |    "phone": "$randomString"
-    |  },
-    |  "_type": "IndividualApplicant"
+    |"contact": {
+    |  "name": "$randomString",
+    |  "email": "$randomString",
+    |  "phone": "$randomString"
     |},
     |"requestedMethod" : {
     |  "whyNotOtherMethods" : "$randomString",

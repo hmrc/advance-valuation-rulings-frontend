@@ -42,7 +42,7 @@ class ApplicationRequestSpec
         ApplicationRequest(
           draftId = draftId,
           trader = eoriDetails,
-          applicant = applicant,
+          contact = contact,
           requestedMethod = requestedMethod,
           goodsDetails,
           attachments = Seq.empty
@@ -55,7 +55,7 @@ class ApplicationRequestSpec
         ApplicationRequest(
           draftId = draftId,
           trader = eoriDetails,
-          applicant = applicant,
+          contact = contact,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
           attachments = Seq.empty
@@ -117,7 +117,7 @@ class ApplicationRequestSpec
         ApplicationRequest(
           draftId = draftId,
           trader = eoriDetails,
-          applicant = applicant,
+          contact = contact,
           requestedMethod = MethodOne(
             Some("explainHowPartiesAreRelated"),
             Some("describeTheRestrictions"),
@@ -152,7 +152,6 @@ class ApplicationRequestSpec
         NonEmptyList.of(
           CheckRegisteredDetailsPage,
           BusinessContactDetailsPage,
-          WhatIsYourRoleAsImporterPage,
           ValuationMethodPage,
           DescriptionOfGoodsPage,
           DoYouWantToUploadDocumentsPage
@@ -180,12 +179,10 @@ object ApplicationRequestSpec extends Generators {
     phoneNumber = None
   )
 
-  val applicant = IndividualApplicant(
-    contact = ContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString)
-    )
+  val contact = ContactDetails(
+    name = randomString,
+    email = randomString,
+    phone = Some(randomString)
   )
 
   val requestedMethod = MethodThree(
@@ -220,13 +217,10 @@ object ApplicationRequestSpec extends Generators {
     |  "postcode": "$randomString",
     |  "countryCode": "$randomString"
     |},
-    |"applicant": {
-    |  "contact": {
-    |    "name": "$randomString",
-    |    "email": "$randomString",
-    |    "phone": "$randomString"
-    |  },
-    |  "_type": "IndividualApplicant"
+    |"contact": {
+    |  "name": "$randomString",
+    |  "email": "$randomString",
+    |  "phone": "$randomString"
     |},
     |"requestedMethod" : {
     |  "whyNotOtherMethods" : "$randomString",

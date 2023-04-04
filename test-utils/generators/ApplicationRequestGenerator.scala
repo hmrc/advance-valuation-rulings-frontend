@@ -164,7 +164,7 @@ trait ApplicationRequestGenerator extends Generators {
     for {
       draftId        <- arbitraryDraftId.arbitrary
       eoriDetails    <- arbitraryEoriDetails.arbitrary
-      applicant      <- arbitraryIndividualApplicant.arbitrary
+      contact        <- arbitraryContactDetails.arbitrary
       goodsDetails   <- arbitraryGoodsDetails.arbitrary
       method         <- Gen.oneOf(
                           arbitraryMethodOne.arbitrary,
@@ -179,7 +179,7 @@ trait ApplicationRequestGenerator extends Generators {
     } yield ApplicationRequest(
       draftId.render,
       eoriDetails,
-      applicant,
+      contact,
       method,
       goodsDetails,
       attachments
