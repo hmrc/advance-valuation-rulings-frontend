@@ -16,32 +16,21 @@
 
 package connectors
 
-import javax.inject.Inject
-
-import cats.data.EitherT
-import scala.concurrent.{ExecutionContext, Future}
-
-import uk.gov.hmrc.http._
-import uk.gov.hmrc.http.HttpReads.Implicits._
-
 import config.FrontendAppConfig
-import models.requests.{EmailRequest, HttpClientResponse}
+import models.requests.EmailRequest
+import uk.gov.hmrc.http._
+
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class EmailConnector @Inject() (
   http: HttpClient,
-  frontendAppConfig: FrontendAppConfig,
-  httpClientResponse: HttpClientResponse
+  appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext) {
 
   def sendEmail(
     emailRequest: EmailRequest
-  )(implicit hc: HeaderCarrier): EitherT[Future, UpstreamErrorResponse, HttpResponse] =
-    httpClientResponse.read(
-      http
-        .POST[EmailRequest, Either[UpstreamErrorResponse, HttpResponse]](
-          s"${frontendAppConfig.emailBaseUrl}/email",
-          emailRequest
-        )
-    )
-
+  )(implicit hc: HeaderCarrier) =
+    http
+      .POST[EmailRequest, HttpResponse](s"${appConfig.emailBaseUrl}/email", emailRequest)
 }
