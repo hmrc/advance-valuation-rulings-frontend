@@ -73,7 +73,7 @@
     }) {
 
     @if(UploadStatus.isError(status)) {
-        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status)))
+        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status, appConfig.maxFileSizeHumanReadableMebiBytes)))
     }
 
 
@@ -119,7 +119,7 @@
                                 type="file"
                                 id="file-input"
                                 name="file"
-                                accept=".pdf,.doc,.docx,.xlsx,.xls,.png,.jpeg,.jpg,.txt"
+                                accept=".pdf,.jpeg,.jpg"
                         />
                     </div>
                 }

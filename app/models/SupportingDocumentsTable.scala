@@ -78,6 +78,7 @@ object SupportingDocumentsRows extends TableFluency {
               HtmlContent(
                 link(
                   id = fileId.value,
+                  newTab = false,
                   text = messages("site.remove"),
                   call = controllers.routes.UploadAnotherSupportingDocumentController
                     .onDelete(fileId.value, mode),
