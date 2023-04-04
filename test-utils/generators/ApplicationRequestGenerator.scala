@@ -75,7 +75,7 @@ trait ApplicationRequestGenerator extends Generators {
   }
 
   implicit lazy val arbitraryDraftId: Arbitrary[DraftId] = Arbitrary {
-    intsBelowValue(Int.MaxValue).map(DraftId(prefix = "GBAVR", _))
+    intsBelowValue(Int.MaxValue).map(DraftId(prefix = "DRAFT", _))
   }
 
   implicit lazy val arbitraryIndividualApplicant: Arbitrary[IndividualApplicant] = Arbitrary {

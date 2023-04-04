@@ -36,7 +36,7 @@ class DraftIdGenerationActionImpl @Inject() (
   override protected def transform[A](
     request: OptionalDataRequest[A]
   ): Future[DraftIdRequest[A]] =
-    draftIdRepository.generate("GBAVR").map {
+    draftIdRepository.generate("DRAFT").map {
       draftId =>
         val updatedRequest =
           request.modify(_.userAnswers.each.draftId).setTo(draftId.render)

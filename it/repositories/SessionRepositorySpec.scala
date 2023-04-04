@@ -30,7 +30,7 @@ class SessionRepositorySpec
   private val instant          = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
-  val DraftIdPrefix   = "GBAVR"
+  val DraftIdPrefix   = "DRAFT"
   val DraftIdSequence = 123456789
   val draftId: String = s"$DraftIdPrefix$DraftIdSequence"
 

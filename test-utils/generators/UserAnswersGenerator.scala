@@ -83,7 +83,7 @@ trait UserAnswersGenerator extends TryValues {
                    }
       } yield UserAnswers(
         id = id,
-        draftId = s"GBAVR$draftId",
+        draftId = s"DRAFT$draftId",
         data = data.foldLeft(Json.obj()) {
           case (obj, (path, value)) =>
             obj.setObject(path.path, value).get

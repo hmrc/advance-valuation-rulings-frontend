@@ -57,7 +57,7 @@ trait SpecBase
   val Postcode        = "A12 2AB"
 
   val userAnswersId: String = "id"
-  val DraftIdPrefix         = "GBAVR"
+  val DraftIdPrefix         = "DRAFT"
   val DraftIdSequence       = 123456789
   val draftId: String       = s"$DraftIdPrefix$DraftIdSequence"
 

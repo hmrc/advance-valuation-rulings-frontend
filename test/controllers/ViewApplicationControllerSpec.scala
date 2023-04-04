@@ -125,7 +125,7 @@ object ViewApplicationControllerSpec extends Generators {
     goodsDetails = goodsDetails,
     attachments = Seq.empty
   )
-  val draftId            = DraftId("GBAVR", 0L).render
+  val draftId            = DraftId("DRAFT", 0L).render
   val applicationId      = ApplicationId(0L)
   val ruling             =
     Application(

@@ -167,7 +167,7 @@ class ApplicationRequestSpec
 object ApplicationRequestSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val draftId: String = DraftId("GBAVR", 1).render
+  val draftId: String = DraftId("DRAFT", 1).render
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 

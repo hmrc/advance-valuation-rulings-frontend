@@ -20,7 +20,7 @@ class DraftIdRepositorySpec
   override protected def checkTtlIndex = false
   override protected val repository    = new DraftIdRepositoryImpl(mongoComponent)
 
-  private val draftIdPrefix = "GBAVR"
+  private val draftIdPrefix = "DRAFT"
 
   "generate" - {
     "should generate an incremental draftId from a zero state" in {
