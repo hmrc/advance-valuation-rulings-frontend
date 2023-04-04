@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import connectors.BackendConnector
 import controllers.actions._
 import models.{ApplicationForAccountHome, UserAnswers}
-import models.requests.{ApplicationSummaryRequest, EORI}
+import models.requests.ApplicationSummaryRequest
 import navigation.Navigator
 import repositories.SessionRepository
 import views.html.AccountHomeView
@@ -55,7 +55,7 @@ class AccountHomeController @Inject() (
   def onPageLoad: Action[AnyContent]       =
     (identify andThen getData).async {
       implicit request =>
-        val appSumReq = ApplicationSummaryRequest(EORI(request.eoriNumber))
+        val appSumReq = ApplicationSummaryRequest(request.eoriNumber)
 
         backendConnector
           .applicationSummaries(appSumReq)

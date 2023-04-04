@@ -130,12 +130,12 @@ class BackendConnector @Inject() (
     db.values
       .foldLeft(ApplicationSummaryResponse(Seq.empty)) {
         case (acc, application) =>
-          if (application.request.trader.eori == request.eoriNumber.value) {
+          if (application.request.trader.eori == request.eoriNumber) {
             val summary = models.requests.ApplicationSummary(
               id = application.id,
-              nameOfGoods = application.request.goodsDetails.goodsName,
+              goodsName = application.request.goodsDetails.goodsName,
               dateSubmitted = application.created,
-              eoriNumber = EORI(application.request.trader.eori)
+              eoriNumber = application.request.trader.eori
             )
             acc.copy(summaries = acc.summaries :+ summary)
           } else {

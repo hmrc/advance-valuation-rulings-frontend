@@ -35,7 +35,7 @@ object ApplicationForAccountHome {
   def apply(applicationSummary: ApplicationSummary): ApplicationForAccountHome =
     ApplicationForAccountHome(
       applicationSummary.id.toString,
-      applicationSummary.nameOfGoods,
+      applicationSummary.goodsName,
       formatter.format(applicationSummary.dateSubmitted)
     )
 
