@@ -26,9 +26,9 @@ object Email {
 
 case class EmailRequest(
   to: List[Email],
-  templateId: String,
+  templateId: String = "ars_notification_template",
   parameters: Map[String, String],
-  force: Boolean,
+  force: Boolean = false,
   eventUrl: Option[String] = None,
   onSendUrl: Option[String] = None,
   auditData: Map[String, String] = Map.empty
