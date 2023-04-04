@@ -36,13 +36,12 @@
                     TableRow(content =  Text(app.dateSubmitted),format = Some("text")),
                     TableRow(content =  HtmlContent(link(   id = "application_link",
                                                 text = messages("View application"),
-                                                call = Call("GET", routes.ViewApplicationController.onPageLoad(app.ref).url)
+                                                call = Call("GET", routes.ViewApplicationController.onPageLoad(app.ref).url),
+                                                newTab = false
                                                 )))
                 )}
 @appsTable = @{
-<!--application row to be a link making a call to view the application?-->
 
-<!--one application for now then find a way to loop row creation. -->
     table(
         Table(
             rows = theRows,
