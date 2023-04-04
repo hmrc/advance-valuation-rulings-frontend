@@ -179,7 +179,7 @@ object AdaptedMethod extends Enum[AdaptedMethod] with PlayJsonEnum[AdaptedMethod
 
 case class MethodSix(
   whyNotOtherMethods: String,
-  adaptMethod: AdaptedMethod,
+  adaptedMethod: AdaptedMethod,
   valuationDescription: String
 ) extends RequestedMethod
 object MethodSix {

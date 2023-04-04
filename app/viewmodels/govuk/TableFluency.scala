@@ -14,14 +14,30 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels.govuk
 
-import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 
-final case class ApplicationNumber(prefix: String, value: Long) {
-  def render: String = s"${prefix.toUpperCase()}%09d".format(value)
-}
+trait TableFluency {
 
-object ApplicationNumber {
-  implicit val format: OFormat[ApplicationNumber] = Json.format[ApplicationNumber]
+  implicit class FluentTableRow(row: TableRow) {
+
+    def withCssClass(className: String): TableRow =
+      row.copy(classes = s"${row.classes} $className")
+
+  }
+
+  implicit class FluentTableRows(rows: Seq[TableRow]) {
+
+    def withCssClass(className: String): Seq[TableRow] =
+      rows.map(_.withCssClass(className))
+
+  }
+
+  implicit class FluentTable(rows: Seq[Seq[TableRow]]) {
+
+    def withCssClass(className: String): Seq[Seq[TableRow]] =
+      rows.map(_.withCssClass(className))
+
+  }
 }

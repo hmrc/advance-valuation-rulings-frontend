@@ -16,6 +16,8 @@
 
 package models.fileupload
 
+import play.api.i18n.Messages
+
 import base.SpecBase
 
 class UploadStatusSpec extends SpecBase {
@@ -64,51 +66,60 @@ class UploadStatusSpec extends SpecBase {
     }
 
     "toFormErrors must" - {
+      val MaxFileSize            = 10
+      implicit val msg: Messages = messages(applicationBuilder().build())
+
       "create empty error map for not started" in {
-        UploadStatus.toFormErrors(NotStarted) mustBe Map.empty
+        UploadStatus.toFormErrors(NotStarted, MaxFileSize) mustBe Map.empty
       }
 
       "create empty error map for in progress" in {
-        UploadStatus.toFormErrors(InProgress) mustBe Map.empty
+        UploadStatus.toFormErrors(InProgress, MaxFileSize) mustBe Map.empty
       }
 
       "create empty error map for uploaded successfully" in {
-        UploadStatus.toFormErrors(successStatus) mustBe Map.empty
+        UploadStatus.toFormErrors(successStatus, MaxFileSize) mustBe Map.empty
       }
 
       "create form error map with failed message for failed" in {
-        UploadStatus.toFormErrors(Failed) mustBe Map(
+        UploadStatus.toFormErrors(Failed, MaxFileSize) mustBe Map(
           "file-input" -> "uploadSupportingDocuments.failed"
         )
       }
 
       "create map with rejected message for rejected" in {
-        UploadStatus.toFormErrors(Rejected) mustBe Map(
+        UploadStatus.toFormErrors(Rejected, MaxFileSize) mustBe Map(
           "file-input" -> "uploadSupportingDocuments.rejected"
         )
       }
 
       "create map with quarantine message for quarantine" in {
-        UploadStatus.toFormErrors(Quarantine) mustBe Map(
+        UploadStatus.toFormErrors(Quarantine, MaxFileSize) mustBe Map(
           "file-input" -> "uploadSupportingDocuments.quarantine"
         )
       }
 
       "create map with no file provided message for no file provided" in {
-        UploadStatus.toFormErrors(NoFileProvided) mustBe Map(
+        UploadStatus.toFormErrors(NoFileProvided, MaxFileSize) mustBe Map(
           "file-input" -> "uploadSupportingDocuments.nofileprovided"
         )
       }
 
       "create map with entity too large message for entity too large" in {
-        UploadStatus.toFormErrors(EntityTooLarge) mustBe Map(
-          "file-input" -> "uploadSupportingDocuments.entitytoolarge"
+        UploadStatus.toFormErrors(EntityTooLarge, MaxFileSize) mustBe Map(
+          "file-input" -> msg("uploadSupportingDocuments.entitytoolarge", MaxFileSize)
         )
       }
 
       "create map with entity too small message for entity too small" in {
-        UploadStatus.toFormErrors(EntityTooSmall) mustBe Map(
+        UploadStatus.toFormErrors(EntityTooSmall, MaxFileSize) mustBe Map(
           "file-input" -> "uploadSupportingDocuments.entitytoosmall"
+        )
+      }
+
+      "create map with duplicate file message for duplicate file" in {
+        UploadStatus.toFormErrors(DuplicateFile, MaxFileSize) mustBe Map(
+          "file-input" -> "uploadSupportingDocuments.duplicatefile"
         )
       }
     }

@@ -16,7 +16,7 @@
 
 package generators
 
-import models.{ApplicationNumber, EoriNumber}
+import models.{DraftId, EoriNumber}
 import models.requests._
 import org.scalacheck._
 import wolfendale.scalacheck.regexp.RegexpGen
@@ -52,28 +52,30 @@ trait ApplicationRequestGenerator extends Generators {
     } yield ContactDetails(contactName, contactEmail, contactTelephone)
   }
 
-  implicit lazy val arbitraryEoriDetails: Arbitrary[EORIDetails] = Arbitrary {
+  implicit lazy val arbitraryTraderDetail: Arbitrary[TraderDetail] = Arbitrary {
     for {
       eori         <- arbitraryEoriNumberGen.arbitrary
       businessName <- stringsWithMaxLength(100)
       addressLine1 <- stringsWithMaxLength(100)
-      addressLine2 <- stringsWithMaxLength(100)
-      addressLine3 <- stringsWithMaxLength(100)
+      addressLine2 <- Gen.option(stringsWithMaxLength(100))
+      addressLine3 <- Gen.option(stringsWithMaxLength(100))
       postCode     <- stringsWithMaxLength(10)
       countryCode  <- Gen.oneOf("UK", "JP", "FR", "DE", "IT", "ES", "US")
-    } yield EORIDetails(
+      phoneNumber  <- Gen.option(stringsWithMaxLength(25))
+    } yield TraderDetail(
       eori.value,
       businessName,
       addressLine1,
       addressLine2,
       addressLine3,
       postCode,
-      countryCode
+      countryCode,
+      phoneNumber
     )
   }
 
-  implicit lazy val arbitraryApplicationNumber: Arbitrary[ApplicationNumber] = Arbitrary {
-    intsBelowValue(Int.MaxValue).map(ApplicationNumber(prefix = "GBAVR", _))
+  implicit lazy val arbitraryDraftId: Arbitrary[DraftId] = Arbitrary {
+    intsBelowValue(Int.MaxValue).map(DraftId(prefix = "DRAFT", _))
   }
 
   implicit lazy val arbitraryIndividualApplicant: Arbitrary[IndividualApplicant] = Arbitrary {
@@ -158,26 +160,45 @@ trait ApplicationRequestGenerator extends Generators {
     } yield MethodSix(whyNotOtherMethods, adaptedMethod, valuationDescription)
   }
 
+  implicit lazy val arbitraryAttachmentRequest: Arbitrary[AttachmentRequest] = Arbitrary {
+    for {
+      name        <- alphaStringsWithMaxLength(36)
+      description <- Gen.option(stringsWithMaxLength(100))
+      url         <- stringsWithMaxLength(100)
+      public      <- Gen.oneOf(Privacy.Public, Privacy.Confidential)
+      mimeType    <- Gen.oneOf(
+                       "application/pdf",
+                       "application/msword",
+                       "application/vnd.ms-excel",
+                       "image/jpeg",
+                       "image/png",
+                       "text/plain"
+                     )
+      size        <- Gen.choose(1L, 1000000000000L)
+    } yield AttachmentRequest(name, description, url, public, mimeType, size)
+  }
+
   implicit lazy val arbitraryApplicationRequest: Arbitrary[ApplicationRequest] = Arbitrary {
     for {
-      applicationNumber <- arbitraryApplicationNumber.arbitrary
-      eoriDetails       <- arbitraryEoriDetails.arbitrary
-      applicant         <- arbitraryIndividualApplicant.arbitrary
-      goodsDetails      <- arbitraryGoodsDetails.arbitrary
-      method            <- Gen.oneOf(
-                             arbitraryMethodOne.arbitrary,
-                             arbitraryMethodTwo.arbitrary,
-                             arbitraryMethodThree.arbitrary,
-                             arbitraryMethodFour.arbitrary,
-                             arbitraryMethodFive.arbitrary,
-                             arbitraryMethodSix.arbitrary
-                           )
-      numAttachments    <- Gen.choose(0, 10)
-      attachments       <- Gen.listOfN(numAttachments, arbitraryUploadedDocument.arbitrary)
+      draftId        <- arbitraryDraftId.arbitrary
+      traderDetail   <- arbitraryTraderDetail.arbitrary
+      contact        <- arbitraryContactDetails.arbitrary
+      goodsDetails   <- arbitraryGoodsDetails.arbitrary
+      method         <- Gen.oneOf(
+                          arbitraryMethodOne.arbitrary,
+                          arbitraryMethodTwo.arbitrary,
+                          arbitraryMethodThree.arbitrary,
+                          arbitraryMethodFour.arbitrary,
+                          arbitraryMethodFive.arbitrary,
+                          arbitraryMethodSix.arbitrary
+                        )
+      numAttachments <- Gen.choose(0, 10)
+      attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
     } yield ApplicationRequest(
-      applicationNumber.render,
-      eoriDetails,
-      applicant,
+      draftId.render,
+      traderDetail,
+      None,
+      contact,
       method,
       goodsDetails,
       attachments

@@ -38,7 +38,7 @@
 
 )
 
-@(isIndividual: Boolean, applicationNumber: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
+@(isIndividual: Boolean, applicationId: String, email: String, applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
 
 @guideLink = {
     @link(
@@ -80,7 +80,7 @@
                         content = HtmlContent(Html(
                             messages("applicationComplete.reference.message")
                             +"<br>"
-                            +s"<strong>$applicationNumber</strong>"
+                            +s"<strong>$applicationId</strong>"
                         ))
         ))
 <!--what happens next-->

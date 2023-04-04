@@ -38,7 +38,7 @@ object ApplicationViewModel {
 
     val eoriRow   = CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
     val applicant =
-      ApplicationContactDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
+      ApplicationContactDetailsSummary.rows(applicationRequest.contact).map(_.copy(actions = None))
 
     ApplicationViewModel(
       eori = SummaryList(eoriRow),

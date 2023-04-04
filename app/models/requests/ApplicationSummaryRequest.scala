@@ -20,14 +20,7 @@ import java.time.Instant
 
 import play.api.libs.json.{Format, Json, OFormat}
 
-final case class EORI(value: String) extends AnyVal
-
-object EORI {
-  implicit val format: Format[EORI] = Json.valueFormat[EORI]
-
-}
-
-final case class ApplicationSummaryRequest(eoriNumber: EORI)
+final case class ApplicationSummaryRequest(eoriNumber: String)
 
 object ApplicationSummaryRequest {
 
@@ -43,9 +36,9 @@ object ApplicationSummaryResponse {
 
 final case class ApplicationSummary(
   id: ApplicationId,
-  nameOfGoods: String,
+  goodsName: String,
   dateSubmitted: Instant,
-  eoriNumber: EORI
+  eoriNumber: String
 )
 
 object ApplicationSummary {

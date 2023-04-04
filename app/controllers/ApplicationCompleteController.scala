@@ -42,7 +42,7 @@ class ApplicationCompleteController @Inject() (
 
   private val logger = Logger(this.getClass)
 
-  def onPageLoad(applicationNumber: String): Action[AnyContent] =
+  def onPageLoad(applicationId: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
         val answers = request.userAnswers
@@ -53,7 +53,7 @@ class ApplicationCompleteController @Inject() (
           case AffinityGroup.Individual   =>
             (answers.data \ ApplicationContactDetailsPage.toString \ "email").toOption match {
               case Some(JsString(applicantEmail)) =>
-                Ok(view(true, applicationNumber, applicantEmail, applicationSummary))
+                Ok(view(true, applicationId, applicantEmail, applicationSummary))
               case _                              =>
                 logger.error(s"Applicant email is empty for id: ${request.userId}")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
@@ -61,7 +61,7 @@ class ApplicationCompleteController @Inject() (
           case AffinityGroup.Organisation =>
             (answers.data \ BusinessContactDetailsPage.toString \ "email").toOption match {
               case Some(JsString(applicantEmail)) =>
-                Ok(view(false, applicationNumber, applicantEmail, applicationSummary))
+                Ok(view(false, applicationId, applicantEmail, applicationSummary))
               case _                              =>
                 logger.error(s"Applicant email is empty for id: ${request.userId}")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())

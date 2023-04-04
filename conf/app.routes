@@ -181,7 +181,7 @@ POST       /any-legal-challenges                                          contro
 GET        /change-any-legal-challenges                                    controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-any-legal-challenges                                    controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode: Mode = CheckMode)
 
-GET        /application-complete                                          controllers.ApplicationCompleteController.onPageLoad(applicationNumber: String)
+GET        /application-complete                                          controllers.ApplicationCompleteController.onPageLoad(draftId: String)
 
 
 GET        /explain-why-method-4                                          controllers.ExplainWhyYouChoseMethodFourController.onPageLoad(mode: Mode = NormalMode)

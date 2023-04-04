@@ -292,7 +292,7 @@ doYouWantToUploadDocuments.heading = Do you want to upload any supporting docume
 doYouWantToUploadDocuments.caption = About the goods
 doYouWantToUploadDocuments.para = You can upload any documents that will support your application, for example:
 doYouWantToUploadDocuments.bulletPoint.1 = evidence of price paid or payable for the goods (commercial invoices, purchase orders)
-doYouWantToUploadDocuments.bulletPoint.2 = copies of previous import entries
+doYouWantToUploadDocuments.bulletPoint.2 = copies of previous import declarations
 doYouWantToUploadDocuments.bulletPoint.3 = breakdowns of manufacturing costs
 doYouWantToUploadDocuments.checkYourAnswersLabel = Do you want to upload any supporting documents?
 doYouWantToUploadDocuments.error.required = Select yes if you want to upload any supporting documents
@@ -320,8 +320,8 @@ uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Keep confidential
 
-uploadSupportingDocuments.title = Upload supporting documents for the goods
-uploadSupportingDocuments.heading = Upload supporting documents for the goods
+uploadSupportingDocuments.title = Upload supporting documents
+uploadSupportingDocuments.heading = Upload supporting documents
 uploadSupportingDocuments.caption = About the goods
 uploadSupportingDocuments.paragraph.1 = You can upload:
 uploadSupportingDocuments.paragraph.2 = An individual file must be:
@@ -341,6 +341,7 @@ uploadSupportingDocuments.failed = The selected file failed to upload
 uploadSupportingDocuments.rejected = The selected file must be a pdf or jpeg
 uploadSupportingDocuments.quarantine = The selected file contains a virus
 uploadSupportingDocuments.nofileprovided = Select a file to upload
+uploadSupportingDocuments.duplicatefile = You can only upload distinct files
 
 explainReasonComputedValue.title = Explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods

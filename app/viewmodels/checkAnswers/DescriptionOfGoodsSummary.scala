@@ -51,5 +51,5 @@ object DescriptionOfGoodsSummary {
   def row(request: ApplicationRequest)(implicit
     messages: Messages
   ): Option[SummaryListRow] =
-    Some(makeRow(request.goodsDetails.goodDescription))
+    Some(makeRow(request.goodsDetails.goodsDescription))
 }

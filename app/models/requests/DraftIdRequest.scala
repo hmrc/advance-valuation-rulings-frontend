@@ -19,13 +19,13 @@ package models.requests
 import play.api.mvc.{Request, WrappedRequest}
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-import models.{ApplicationNumber, UserAnswers}
+import models.{DraftId, UserAnswers}
 
-case class ApplicationNumberRequest[A](
+case class DraftIdRequest[A](
   request: Request[A],
   userId: String,
   eoriNumber: String,
-  applicationNumber: ApplicationNumber,
+  draftId: DraftId,
   affinityGroup: AffinityGroup,
   userAnswers: Option[UserAnswers]
 ) extends WrappedRequest[A](request)

@@ -72,6 +72,29 @@ case class ContactDetails(
 )
 object ContactDetails {
   implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
+
+  def apply(
+    answers: UserAnswers,
+    affinityGroup: AffinityGroup
+  ): ValidatedNel[Page, ContactDetails] =
+    affinityGroup match {
+      case Individual =>
+        answers
+          .validatedF[ApplicationContactDetails, ContactDetails](
+            ApplicationContactDetailsPage,
+            cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+          )
+
+      case Organisation =>
+        answers
+          .validatedF[BusinessContactDetails, ContactDetails](
+            BusinessContactDetailsPage,
+            cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+          )
+
+      case _ =>
+        Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
+    }
 }
 
 object Applicant {

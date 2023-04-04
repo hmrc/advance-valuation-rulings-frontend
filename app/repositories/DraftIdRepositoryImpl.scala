@@ -23,17 +23,17 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
-import models.ApplicationNumber
+import models.DraftId
 import org.mongodb.scala.model._
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.ascending
 
 @Singleton
-class ApplicationNumberRepositoryImpl @Inject() (mongoComponent: MongoComponent)(implicit
+class DraftIdRepositoryImpl @Inject() (mongoComponent: MongoComponent)(implicit
   ec: ExecutionContext
-) extends PlayMongoRepository[ApplicationNumber](
-      collectionName = "application-number-generator",
-      domainFormat = ApplicationNumber.format,
+) extends PlayMongoRepository[DraftId](
+      collectionName = "draft-id-generator",
+      domainFormat = DraftId.format,
       mongoComponent = mongoComponent,
       indexes = Seq(
         IndexModel(
@@ -42,9 +42,9 @@ class ApplicationNumberRepositoryImpl @Inject() (mongoComponent: MongoComponent)
         )
       )
     )
-    with ApplicationNumberRepository {
+    with DraftIdRepository {
 
-  override def generate(prefix: String): Future[ApplicationNumber] =
+  override def generate(prefix: String): Future[DraftId] =
     collection
       .findOneAndUpdate(
         filter = equal("prefix", prefix),
