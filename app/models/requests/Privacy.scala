@@ -27,4 +27,3 @@ object Privacy extends Enum[Privacy] with PlayJsonEnum[Privacy] {
   case object HmrcOnly extends Privacy("HmrcOnly")
   case object Confidential extends Privacy("Confidential")
 }
-

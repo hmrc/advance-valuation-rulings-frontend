@@ -20,7 +20,7 @@ import cats.data.NonEmptyList
 import cats.data.Validated._
 
 import generators._
-import models.{ApplicationNumber, UserAnswers}
+import models.{DraftId, UserAnswers}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -76,7 +76,7 @@ class GoodsDetailsSpec
 object GoodsDetailsSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+  val draftId: String = DraftId("GBAVR", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 }

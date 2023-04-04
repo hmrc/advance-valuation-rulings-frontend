@@ -75,15 +75,15 @@ trait UserAnswersGenerator extends TryValues {
 
     Arbitrary {
       for {
-        id                <- nonEmptyString
-        applicationNumber <- Gen.chooseNum(0, 999999999)
-        data              <- generators match {
-                               case Nil => Gen.const(Map[QuestionPage[_], JsValue]())
-                               case _   => Gen.mapOf(oneOf(generators))
-                             }
+        id      <- nonEmptyString
+        draftId <- Gen.chooseNum(0, 999999999)
+        data    <- generators match {
+                     case Nil => Gen.const(Map[QuestionPage[_], JsValue]())
+                     case _   => Gen.mapOf(oneOf(generators))
+                   }
       } yield UserAnswers(
         id = id,
-        applicationNumber = s"GBAVR$applicationNumber",
+        draftId = s"GBAVR$draftId",
         data = data.foldLeft(Json.obj()) {
           case (obj, (path, value)) =>
             obj.setObject(path.path, value).get

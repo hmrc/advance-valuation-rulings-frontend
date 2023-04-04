@@ -16,7 +16,7 @@
 
 package generators
 
-import models.{ApplicationNumber, EoriNumber}
+import models.{DraftId, EoriNumber}
 import models.requests._
 import org.scalacheck._
 import wolfendale.scalacheck.regexp.RegexpGen
@@ -74,8 +74,8 @@ trait ApplicationRequestGenerator extends Generators {
     )
   }
 
-  implicit lazy val arbitraryApplicationNumber: Arbitrary[ApplicationNumber] = Arbitrary {
-    intsBelowValue(Int.MaxValue).map(ApplicationNumber(prefix = "GBAVR", _))
+  implicit lazy val arbitraryDraftId: Arbitrary[DraftId] = Arbitrary {
+    intsBelowValue(Int.MaxValue).map(DraftId(prefix = "GBAVR", _))
   }
 
   implicit lazy val arbitraryIndividualApplicant: Arbitrary[IndividualApplicant] = Arbitrary {

@@ -18,8 +18,9 @@ package models.requests
 
 import cats.data.NonEmptyList
 import cats.data.Validated.{Invalid, Valid}
+
+import models.{DraftId, UploadedFile, UploadedFiles, UserAnswers}
 import models.fileupload.UploadId
-import models.{ApplicationNumber, UploadedFile, UploadedFiles, UserAnswers}
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -27,8 +28,8 @@ import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
 
 class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues with OptionValues {
 
-  private val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
-  private val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+  private val draftId: String               = DraftId("GBAVR", 1).render
+  private val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
   ".apply" must {
 
@@ -58,21 +59,27 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
 
       val answers =
         emptyUserAnswers
-          .set(DoYouWantToUploadDocumentsPage, true).success.value
-          .set(UploadSupportingDocumentPage, files).success.value
+          .set(DoYouWantToUploadDocumentsPage, true)
+          .success
+          .value
+          .set(UploadSupportingDocumentPage, files)
+          .success
+          .value
 
       val result = AttachmentRequest(answers)
 
-      result mustEqual Valid(Seq(
-        AttachmentRequest(
-          name = "name",
-          description = None,
-          url = "url",
-          privacy = Privacy.Confidential,
-          mimeType = "mime",
-          size = 1337
+      result mustEqual Valid(
+        Seq(
+          AttachmentRequest(
+            name = "name",
+            description = None,
+            url = "url",
+            privacy = Privacy.Confidential,
+            mimeType = "mime",
+            size = 1337
+          )
         )
-      ))
+      )
     }
 
     "fail when the user says they want to upload files but none are present" in {

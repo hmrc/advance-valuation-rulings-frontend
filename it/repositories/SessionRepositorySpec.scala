@@ -30,14 +30,14 @@ class SessionRepositorySpec
   private val instant          = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
-  val ApplicationNumberPrefix   = "GBAVR"
-  val ApplicationNumberSequence = 123456789
-  val applicationNumber: String = s"$ApplicationNumberPrefix$ApplicationNumberSequence"
+  val DraftIdPrefix   = "GBAVR"
+  val DraftIdSequence = 123456789
+  val draftId: String = s"$DraftIdPrefix$DraftIdSequence"
 
   private val userAnswers =
     UserAnswers(
       "id",
-      applicationNumber,
+      draftId,
       Json.obj("foo" -> "bar"),
       Instant.ofEpochSecond(1)
     )

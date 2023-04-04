@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package models.requests
+package repositories
 
-import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
+import scala.concurrent.Future
 
-import models.{ApplicationNumber, UserAnswers}
+import com.google.inject.ImplementedBy
+import models.DraftId
 
-case class ApplicationNumberRequest[A](
-  request: Request[A],
-  userId: String,
-  eoriNumber: String,
-  applicationNumber: ApplicationNumber,
-  affinityGroup: AffinityGroup,
-  userAnswers: Option[UserAnswers]
-) extends WrappedRequest[A](request)
+@ImplementedBy(classOf[DraftIdRepositoryImpl])
+trait DraftIdRepository {
+
+  def generate(prefix: String): Future[DraftId]
+
+}

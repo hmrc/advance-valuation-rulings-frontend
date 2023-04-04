@@ -17,18 +17,20 @@
 package models.requests
 
 import cats.data.{Validated, ValidatedNel}
-import models.UserAnswers
-import pages.{DoYouWantToUploadDocumentsPage, Page, UploadSupportingDocumentPage}
+
 import play.api.libs.json.{Json, OFormat}
 
+import models.UserAnswers
+import pages.{DoYouWantToUploadDocumentsPage, Page, UploadSupportingDocumentPage}
+
 final case class AttachmentRequest(
-                                    name: String,
-                                    description: Option[String],
-                                    url: String,
-                                    privacy: Privacy,
-                                    mimeType: String,
-                                    size: Long
-                                  )
+  name: String,
+  description: Option[String],
+  url: String,
+  privacy: Privacy,
+  mimeType: String,
+  size: Long
+)
 
 object AttachmentRequest {
 
@@ -39,14 +41,15 @@ object AttachmentRequest {
       .validated(DoYouWantToUploadDocumentsPage)
       .andThen {
         case true =>
-          answers.validated(UploadSupportingDocumentPage)
+          answers
+            .validated(UploadSupportingDocumentPage)
             .map(_.files.toSeq.map {
               case (_, file) =>
                 AttachmentRequest(
                   name = file.fileName,
                   description = None,
                   url = file.downloadUrl,
-                  privacy = if(file.isConfidential) Privacy.Confidential else Privacy.Public,
+                  privacy = if (file.isConfidential) Privacy.Confidential else Privacy.Public,
                   mimeType = file.mimeType,
                   size = file.size
                 )

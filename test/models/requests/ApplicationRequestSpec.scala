@@ -24,7 +24,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators._
 import models._
-import models.ApplicationNumber
+import models.DraftId
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -162,9 +162,9 @@ class ApplicationRequestSpec
 object ApplicationRequestSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+  val draftId: String = DraftId("GBAVR", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
   val eoriDetails = TraderDetail(
     eori = randomString,

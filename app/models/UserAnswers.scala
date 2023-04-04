@@ -31,7 +31,7 @@ import queries.Modifiable
 
 final case class UserAnswers(
   id: String,
-  applicationNumber: String,
+  draftId: String,
   data: JsObject = Json.obj(),
   lastUpdated: Instant = Instant.now
 ) {
@@ -134,7 +134,7 @@ object UserAnswers {
 
     (
       (__ \ "_id").read[String] and
-        (__ \ "applicationNumber").read[String] and
+        (__ \ "draftId").read[String] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
     )(UserAnswers.apply _)
@@ -146,7 +146,7 @@ object UserAnswers {
 
     (
       (__ \ "_id").write[String] and
-        (__ \ "applicationNumber").write[String] and
+        (__ \ "draftId").write[String] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
     )(unlift(UserAnswers.unapply))

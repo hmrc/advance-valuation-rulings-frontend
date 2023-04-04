@@ -39,7 +39,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  generateApplicationNumber: ApplicationNumberGenerationAction,
+  generateDraftId: DraftIdGenerationAction,
   isAgent: IdentifyAgentAction,
   formProvider: WhatIsYourRoleAsImporterFormProvider,
   val controllerComponents: MessagesControllerComponents,

@@ -72,7 +72,7 @@ class CheckRegisteredDetailsController @Inject() (
               .getTraderDetails(
                 AcknowledgementReference(
                   StringUtils
-                    .rightPad(request.userAnswers.applicationNumber, AckRefLength, AckRefPad)
+                    .rightPad(request.userAnswers.draftId, AckRefLength, AckRefPad)
                 ),
                 EoriNumber(request.eoriNumber)
               )

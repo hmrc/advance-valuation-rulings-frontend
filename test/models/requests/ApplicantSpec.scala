@@ -130,9 +130,9 @@ object ApplicantSpec extends Generators {
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val applicationNumber: String = ApplicationNumber("GBAVR", 1).render
+  val draftId: String = DraftId("GBAVR", 1).render
 
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
+  val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
   val applicationContactDetails = ApplicationContactDetails(
     name = randomString,

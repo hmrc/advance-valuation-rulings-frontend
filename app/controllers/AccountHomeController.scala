@@ -40,7 +40,7 @@ class AccountHomeController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   backendConnector: BackendConnector,
-  generateApplicationNumber: ApplicationNumberGenerationAction,
+  generateDraftId: DraftIdGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
@@ -69,11 +69,11 @@ class AccountHomeController @Inject() (
 
     }
   def startApplication: Action[AnyContent] =
-    (identify andThen getData andThen generateApplicationNumber).async {
+    (identify andThen getData andThen generateDraftId).async {
       implicit request =>
         for {
           _ <-
-            sessionRepository.set(UserAnswers(request.userId, request.applicationNumber.render))
+            sessionRepository.set(UserAnswers(request.userId, request.draftId.render))
         } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
     }
 }
