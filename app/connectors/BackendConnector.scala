@@ -23,8 +23,9 @@ import cats.implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 
 import com.google.inject.Inject
@@ -35,7 +36,7 @@ import models.requests._
 @javax.inject.Singleton
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
-  httpClient: HttpClient
+  httpClient: HttpClientV2
 ) extends FrontendHeaderCarrierProvider {
 
   private var db: Map[String, Application] = Map.empty
@@ -52,33 +53,10 @@ class BackendConnector @Inject() (
     ec: ExecutionContext
   ): Future[Either[BackendError, TraderDetailsWithCountryCode]] =
     httpClient
-      .GET[TraderDetailsWithCountryCode](
-        s"$backendUrl/trader-details/${acknowledgementReference.value}/${eoriNumber.value}",
-        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
-      )
+      .get(url"$backendUrl/trader-details/${acknowledgementReference.value}/${eoriNumber.value}")
+      .setHeader("X-Correlation-ID" -> UUID.randomUUID().toString)
+      .execute[TraderDetailsWithCountryCode]
       .map(response => Right(response))
-      .recover {
-        case e: Throwable =>
-          onError(e)
-      }
-
-  def submitAnswers(
-    userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
-    httpClient
-      .POST[UserAnswers, HttpResponse](
-        s"$backendUrl/submit-answers",
-        body = userAnswers,
-        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
-      )
-      .map {
-        response =>
-          if (Status.isSuccessful(response.status)) {
-            response.asRight
-          } else {
-            BackendError(response.status, response.body).asLeft
-          }
-      }
       .recover {
         case e: Throwable =>
           onError(e)

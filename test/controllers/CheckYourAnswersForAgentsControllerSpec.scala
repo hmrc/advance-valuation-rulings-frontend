@@ -131,26 +131,5 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
           .url
       }
     }
-
-    "must redirect to Journey Recovery when application submission fails" in {
-
-      val mockBackendConnector = mock[BackendConnector]
-      val application          = applicationBuilderAsOrg(Option(userAnswers))
-        .overrides(bind[BackendConnector].to(mockBackendConnector))
-        .build()
-
-      when(
-        mockBackendConnector.submitAnswers(any())(any(), any())
-      ) thenReturn Future.successful(Left(BackendError(INTERNAL_SERVER_ERROR, "backend error")))
-
-      running(application) {
-        val request = FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit.url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
   }
 }

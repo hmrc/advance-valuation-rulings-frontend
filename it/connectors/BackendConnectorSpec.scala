@@ -107,27 +107,6 @@ class BackendConnectorSpec
     }
   }
 
-  ".submit" - {
-    "should submit user answers to backend" in {
-      forAll {
-        userAnswers: UserAnswers =>
-          val requestBody = Json.stringify(Json.toJson(userAnswers))
-
-          stub(
-            POST,
-            submitAnswersEndpoint,
-            Status.OK,
-            responseBody = "some response",
-            requestBody = Option(requestBody)
-          )
-
-          val result = connector.submitAnswers(userAnswers).futureValue.value
-
-          result.status mustBe Status.OK
-      }
-    }
-  }
-
   ".submitApplication" - {
     "should submit application to backend" ignore {
       forAll {
