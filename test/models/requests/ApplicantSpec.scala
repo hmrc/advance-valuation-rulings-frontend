@@ -114,6 +114,49 @@ class ApplicantSpec
       )
     }
   }
+
+  "ContactDetails" should {
+
+    "succeed for an individual" in {
+
+      val ua = emptyUserAnswers
+
+      val userAnswers = (for {
+        ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
+      } yield ua).success.get
+
+      val result = ContactDetails(userAnswers, AffinityGroup.Individual)
+
+      result shouldBe Valid(applicant.contact)
+    }
+
+    "succeed for an organisation" in {
+
+      val ua = emptyUserAnswers
+
+      val userAnswers = (for {
+        ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
+      } yield ua).success.get
+
+      val result = ContactDetails(userAnswers, AffinityGroup.Organisation)
+
+      result shouldBe Valid(applicant.contact)
+    }
+
+    "fail when individual contact details are missing" in {
+
+      val result = ContactDetails(emptyUserAnswers, AffinityGroup.Individual)
+
+      result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
+    }
+
+    "fail when organisation contact details are missing" in {
+
+      val result = ContactDetails(emptyUserAnswers, AffinityGroup.Organisation)
+
+      result shouldBe Invalid(NonEmptyList.one(BusinessContactDetailsPage))
+    }
+  }
 }
 
 object ApplicantSpec extends Generators {
