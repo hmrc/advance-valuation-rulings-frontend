@@ -51,7 +51,6 @@ class UploadSupportingDocumentsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
   private val logger = play.api.Logger(this.getClass)
-  import controllers.PageOps
 
   def onPageLoad(
     error: Option[String],
@@ -84,12 +83,31 @@ class UploadSupportingDocumentsController @Inject() (
                               case None                               =>
                                 Future(BadRequest(s"Upload with id $uploadId not found"))
                               case Some(status: UploadedSuccessfully) =>
-                                continueToIsFileConfidential(existingFileId, status, mode)(request)
+                                checkForDuplicateUploads(mode, existingFileId, status)
                               case Some(result)                       =>
                                 showUploadForm(fileUploadIds, result, mode)
                             }
           } yield result
       }
+  }
+
+  private def checkForDuplicateUploads(
+    mode: Mode,
+    existingFileId: UploadId,
+    status: UploadedSuccessfully
+  )(implicit request: DataRequest[AnyContent]): Future[Result] = {
+    val uploadedFiles = UploadSupportingDocumentPage.get().toSet
+    val fileNames     = uploadedFiles.flatMap(_.files.values.map(_.fileName))
+    if (fileNames.contains(status.name)) {
+      fileUploadService
+        .initiateUpload(mode)
+        .map {
+          result =>
+            Ok(uploadSupportingDocumentsView(result.upscanResponse, existingFileId, DuplicateFile))
+        }
+    } else {
+      continueToIsFileConfidential(existingFileId, status, mode)(request)
+    }
   }
 
   private def continueToIsFileConfidential(

@@ -116,6 +116,12 @@ class UploadStatusSpec extends SpecBase {
           "file-input" -> "uploadSupportingDocuments.entitytoosmall"
         )
       }
+
+      "create map with duplicate file message for duplicate file" in {
+        UploadStatus.toFormErrors(DuplicateFile, MaxFileSize) mustBe Map(
+          "file-input" -> "uploadSupportingDocuments.duplicatefile"
+        )
+      }
     }
   }
 }

@@ -143,11 +143,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   private def validateFromRequest(form: Form[Boolean])(implicit
     request: DataRequest[AnyContent]
   ): Form[Boolean] = {
-    val uploadedFiles = UploadSupportingDocumentPage.get()
-
-    val docCount  = uploadedFiles.map(_.files.size).getOrElse(0)
-    val fileNames = uploadedFiles.toSeq.flatMap(_.files.values.map(_.fileName))
-
+    val docCount = UploadSupportingDocumentPage.get().map(_.files.size).getOrElse(0)
     form
       .bindFromRequest()
       .fold(
@@ -161,10 +157,6 @@ class UploadAnotherSupportingDocumentController @Inject() (
                 "uploadAnotherSupportingDocument.error.fileCount",
                 config.maximumFilesAllowed
               )
-          } else if (value && fileNames.distinct.size != fileNames.size) {
-            form
-              .fill(value)
-              .withError("value", "uploadAnotherSupportingDocument.error.duplicateFile")
           } else {
             form.fill(value)
           }

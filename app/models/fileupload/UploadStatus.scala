@@ -33,6 +33,7 @@ case object Quarantine extends UploadStatus
 case object NoFileProvided extends UploadStatus
 case object EntityTooLarge extends UploadStatus
 case object EntityTooSmall extends UploadStatus
+case object DuplicateFile extends UploadStatus
 
 case class UploadedSuccessfully(
   name: String,
@@ -59,12 +60,14 @@ object UploadStatus {
       case NoFileProvided                                    => "uploadSupportingDocuments.nofileprovided"
       case EntityTooLarge                                    => "uploadSupportingDocuments.entitytoolarge"
       case EntityTooSmall                                    => "uploadSupportingDocuments.entitytoosmall"
+      case DuplicateFile                                     => "uploadSupportingDocuments.duplicatefile"
     }
   def isError(us: UploadStatus): Boolean                     =
     us match {
       case InProgress | NotStarted | _: UploadedSuccessfully => false
       case Failed | Rejected | Quarantine | NoFileProvided   => true
       case EntityTooSmall | EntityTooLarge                   => true
+      case DuplicateFile                                     => true
     }
   def fromErrorCode(errorCode: String): Option[UploadStatus] =
     errorCode.toLowerCase match {
@@ -73,6 +76,7 @@ object UploadStatus {
       case "invalidargument" => Some(NoFileProvided)
       case "entitytoolarge"  => Some(EntityTooLarge)
       case "entitytoosmall"  => Some(EntityTooSmall)
+      case "duplicatefile"   => Some(DuplicateFile)
       case _                 => None
     }
 
@@ -88,6 +92,7 @@ object UploadStatus {
       case EntityTooLarge                                    =>
         Map("file-input" -> messages(message(EntityTooLarge), maxFileSize))
       case EntityTooSmall                                    => Map("file-input" -> message(EntityTooSmall))
+      case DuplicateFile                                     => Map("file-input" -> message(DuplicateFile))
     }
 
   implicit val uploadStatusFormat: Format[UploadStatus] = {
@@ -105,6 +110,7 @@ object UploadStatus {
           case Some(JsString("NoFileProvided"))       => JsSuccess(NoFileProvided)
           case Some(JsString("EntityTooLarge"))       => JsSuccess(EntityTooLarge)
           case Some(JsString("EntityTooSmall"))       => JsSuccess(EntityTooSmall)
+          case Some(JsString("DuplicateFile"))        => JsSuccess(DuplicateFile)
           case Some(JsString("UploadedSuccessfully")) =>
             Json.fromJson[UploadedSuccessfully](jsObject)(uploadedSuccessfullyFormat)
           case Some(value)                            => JsError(s"Unexpected value of _type: $value")
@@ -124,6 +130,7 @@ object UploadStatus {
           case NoFileProvided          => JsObject(Map("_type" -> JsString("NoFileProvided")))
           case EntityTooLarge          => JsObject(Map("_type" -> JsString("EntityTooLarge")))
           case EntityTooSmall          => JsObject(Map("_type" -> JsString("EntityTooSmall")))
+          case DuplicateFile           => JsObject(Map("_type" -> JsString("DuplicateFile")))
           case s: UploadedSuccessfully =>
             Json.toJson(s)(uploadedSuccessfullyFormat).as[JsObject] + ("_type" -> JsString(
               "UploadedSuccessfully"
