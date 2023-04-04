@@ -107,7 +107,7 @@ case class ApplicationRequest(
   contact: ContactDetails,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
-  attachments: Seq[Attachment]
+  attachments: Seq[AttachmentRequest]
 )
 
 object ApplicationRequest {
@@ -127,7 +127,7 @@ object ApplicationRequest {
     val goodsDetails    = GoodsDetails(userAnswers)
     val contact         = ContactDetails(userAnswers, affinityGroup)
     val requestedMethod = RequestedMethod(userAnswers)
-    val attachments     = Attachment(userAnswers)
+    val attachments     = AttachmentRequest(userAnswers)
 
     (traderDetail, contact, requestedMethod, goodsDetails, attachments).mapN(
       (traderDetail, contact, requestedMethod, goodsDetails, attachments) =>

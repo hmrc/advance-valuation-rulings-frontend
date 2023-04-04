@@ -160,6 +160,24 @@ trait ApplicationRequestGenerator extends Generators {
     } yield MethodSix(whyNotOtherMethods, adaptedMethod, valuationDescription)
   }
 
+  implicit lazy val arbitraryAttachmentRequest: Arbitrary[AttachmentRequest] = Arbitrary {
+    for {
+      name        <- alphaStringsWithMaxLength(36)
+      description <- Gen.option(stringsWithMaxLength(100))
+      url         <- stringsWithMaxLength(100)
+      public      <- Gen.oneOf(Privacy.Public, Privacy.Confidential)
+      mimeType    <- Gen.oneOf(
+                       "application/pdf",
+                       "application/msword",
+                       "application/vnd.ms-excel",
+                       "image/jpeg",
+                       "image/png",
+                       "text/plain"
+                     )
+      size        <- Gen.choose(1L, 1000000000000L)
+    } yield AttachmentRequest(name, description, url, public, mimeType, size)
+  }
+
   implicit lazy val arbitraryApplicationRequest: Arbitrary[ApplicationRequest] = Arbitrary {
     for {
       draftId        <- arbitraryDraftId.arbitrary
@@ -175,7 +193,7 @@ trait ApplicationRequestGenerator extends Generators {
                           arbitraryMethodSix.arbitrary
                         )
       numAttachments <- Gen.choose(0, 10)
-      attachments    <- Gen.listOfN(numAttachments, arbitraryUploadedDocument.arbitrary)
+      attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
     } yield ApplicationRequest(
       draftId.render,
       traderDetail,
