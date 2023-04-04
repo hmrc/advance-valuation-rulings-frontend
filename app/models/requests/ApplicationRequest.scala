@@ -22,7 +22,7 @@ import cats.implicits._
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-import models.{CheckRegisteredDetails, UserAnswers}
+import models.{CheckRegisteredDetails, DraftId, UserAnswers}
 import pages._
 
 case class GoodsDetails(
@@ -101,6 +101,7 @@ object TraderDetail {
 }
 
 case class ApplicationRequest(
+  draftId: String,
   trader: TraderDetail,
   applicant: Applicant,
   requestedMethod: RequestedMethod,
@@ -130,6 +131,7 @@ object ApplicationRequest {
     (eoriDetails, applicant, requestedMethod, goodsDetails, attachments).mapN(
       (eoriDetails, applicant, requestedMethod, goodsDetails, attachments) =>
         ApplicationRequest(
+          userAnswers.draftId,
           eoriDetails,
           applicant,
           requestedMethod,

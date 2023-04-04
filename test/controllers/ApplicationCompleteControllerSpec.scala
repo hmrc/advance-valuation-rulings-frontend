@@ -36,8 +36,8 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
       "must return OK and the correct view for a GET" in {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
-            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val Email             = "testEmail@mail.com"
+            val userAnswers   = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val Email         = "testEmail@mail.com"
             val applicationId = userAnswers.draftId
 
             val emailUpdate   =
@@ -69,9 +69,9 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
       "must redirect when the user has no contact email" in {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
-            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationId = userAnswers.draftId
-            val updatedAnswers    =
+            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val applicationId  = userAnswers.draftId
+            val updatedAnswers =
               userAnswers.remove(pages.ApplicationContactDetailsPage).success.value
 
             val application = applicationBuilder(userAnswers = Option(updatedAnswers)).build()
@@ -131,9 +131,9 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
       "must redirect when the company has no contact email" in {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
-            val userAnswers       = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationId = userAnswers.draftId
-            val updatedAnswers    =
+            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val applicationId  = userAnswers.draftId
+            val updatedAnswers =
               userAnswers.remove(pages.BusinessContactDetailsPage).success.value
 
             val application = applicationBuilderAsOrg(userAnswers = Option(updatedAnswers)).build()

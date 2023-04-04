@@ -40,6 +40,7 @@ class ApplicationRequestSpec
     "be able to deserialize successful body" in {
       ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
         ApplicationRequest(
+          draftId = draftId,
           trader = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
@@ -52,6 +53,7 @@ class ApplicationRequestSpec
     "should be able to write body" in {
       ApplicationRequest.format.writes(
         ApplicationRequest(
+          draftId = draftId,
           trader = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
@@ -113,6 +115,7 @@ class ApplicationRequestSpec
 
       result shouldBe Valid(
         ApplicationRequest(
+          draftId = draftId,
           trader = eoriDetails,
           applicant = applicant,
           requestedMethod = MethodOne(
@@ -208,6 +211,7 @@ object ApplicationRequestSpec extends Generators {
 
   val body =
     s"""{
+    |"draftId": "$draftId",
     |"trader": {
     |  "eori": "$randomString",
     |  "businessName": "$randomString",
