@@ -84,14 +84,15 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
 object ViewApplicationControllerSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val eoriDetails = EORIDetails(
+  val eoriDetails = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
-    addressLine2 = randomString,
-    addressLine3 = "",
+    addressLine2 = Some(randomString),
+    addressLine3 = None,
     postcode = randomString,
-    country = randomString
+    countryCode = randomString,
+    phoneNumber = None
   )
 
   val applicant = IndividualApplicant(
@@ -108,8 +109,8 @@ object ViewApplicationControllerSpec extends Generators {
   )
 
   val goodsDetails = GoodsDetails(
-    goodName = randomString,
-    goodDescription = randomString,
+    goodsName = randomString,
+    goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),
     confidentialInformation = Some(randomString)
@@ -119,7 +120,7 @@ object ViewApplicationControllerSpec extends Generators {
   val lastUpdatedString  = "22/08/2018"
   val applicationRequest = ApplicationRequest(
     applicationNumber = ApplicationNumber("GBAVR", 1).render,
-    eoriDetails = eoriDetails,
+    trader = eoriDetails,
     applicant = applicant,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,

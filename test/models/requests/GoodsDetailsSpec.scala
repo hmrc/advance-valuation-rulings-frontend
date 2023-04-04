@@ -52,8 +52,8 @@ class GoodsDetailsSpec
 
       result shouldBe Valid(
         GoodsDetails(
-          goodName = randomString,
-          goodDescription = randomString,
+          goodsName = randomString,
+          goodsDescription = randomString,
           envisagedCommodityCode = Some(randomString),
           knownLegalProceedings = Some(randomString),
           confidentialInformation = Some(randomString)

@@ -41,7 +41,7 @@ class ApplicationRequestSpec
       ApplicationRequest.format.reads(Json.parse(body)) shouldBe JsSuccess(
         ApplicationRequest(
           applicationNumber = applicationNumber,
-          eoriDetails = eoriDetails,
+          trader = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails,
@@ -54,7 +54,7 @@ class ApplicationRequestSpec
       ApplicationRequest.format.writes(
         ApplicationRequest(
           applicationNumber = applicationNumber,
-          eoriDetails = eoriDetails,
+          trader = eoriDetails,
           applicant = applicant,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
@@ -116,7 +116,7 @@ class ApplicationRequestSpec
       result shouldBe Valid(
         ApplicationRequest(
           applicationNumber = applicationNumber,
-          eoriDetails = eoriDetails,
+          trader = eoriDetails,
           applicant = applicant,
           requestedMethod = MethodOne(
             Some("explainHowPartiesAreRelated"),
@@ -169,14 +169,15 @@ object ApplicationRequestSpec extends Generators {
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", applicationNumber)
 
-  val eoriDetails = EORIDetails(
+  val eoriDetails = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
-    addressLine2 = "",
-    addressLine3 = randomString,
+    addressLine2 = Some(randomString),
+    addressLine3 = None,
     postcode = randomString,
-    country = randomString
+    countryCode = randomString,
+    phoneNumber = None
   )
 
   val applicant = IndividualApplicant(
@@ -193,16 +194,16 @@ object ApplicationRequestSpec extends Generators {
   )
 
   val goodsDetails = GoodsDetails(
-    goodName = randomString,
-    goodDescription = randomString,
+    goodsName = randomString,
+    goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),
     confidentialInformation = Some(randomString)
   )
 
   val goodsDetailsNoDetails = GoodsDetails(
-    goodName = randomString,
-    goodDescription = randomString,
+    goodsName = randomString,
+    goodsDescription = randomString,
     envisagedCommodityCode = None,
     knownLegalProceedings = None,
     confidentialInformation = None
@@ -211,14 +212,13 @@ object ApplicationRequestSpec extends Generators {
   val body =
     s"""{
     |"applicationNumber": "$applicationNumber",
-    |"eoriDetails": {
+    |"trader": {
     |  "eori": "$randomString",
     |  "businessName": "$randomString",
     |  "addressLine1": "$randomString",
-    |  "addressLine2": "",
-    |  "addressLine3": "$randomString",
+    |  "addressLine2": "$randomString",
     |  "postcode": "$randomString",
-    |  "country": "$randomString"
+    |  "countryCode": "$randomString"
     |},
     |"applicant": {
     |  "contact": {
@@ -234,8 +234,8 @@ object ApplicationRequestSpec extends Generators {
     |  "_type" : "MethodThree"
     |},
     |"goodsDetails": {
-    |  "goodName": "$randomString",
-    |  "goodDescription": "$randomString",
+    |  "goodsName": "$randomString",
+    |  "goodsDescription": "$randomString",
     |  "envisagedCommodityCode": "$randomString",
     |  "knownLegalProceedings": "$randomString",
     |  "confidentialInformation": "$randomString"

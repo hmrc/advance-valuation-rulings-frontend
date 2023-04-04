@@ -26,8 +26,8 @@ import models.{CheckRegisteredDetails, UserAnswers}
 import pages._
 
 case class GoodsDetails(
-  goodName: String,
-  goodDescription: String,
+  goodsName: String,
+  goodsDescription: String,
   envisagedCommodityCode: Option[String],
   knownLegalProceedings: Option[String],
   confidentialInformation: Option[String]
@@ -59,8 +59,8 @@ object GoodsDetails {
     goodsDescription.map(
       description =>
         GoodsDetails(
-          goodName = description,
-          goodDescription = description,
+          goodsName = description,
+          goodsDescription = description,
           envisagedCommodityCode = envisagedCommodityCode,
           knownLegalProceedings = knownLegalProceedings,
           confidentialInformation = confidentialInformation
@@ -69,38 +69,40 @@ object GoodsDetails {
   }
 }
 
-final case class EORIDetails(
+final case class TraderDetail(
   eori: String,
   businessName: String,
   addressLine1: String,
-  addressLine2: String,
-  addressLine3: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String],
   postcode: String,
-  country: String
+  countryCode: String,
+  phoneNumber: Option[String]
 )
 
-object EORIDetails {
-  implicit val format: OFormat[EORIDetails] = Json.format[EORIDetails]
+object TraderDetail {
+  implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
-  def apply(userAnswers: UserAnswers): ValidatedNel[Page, EORIDetails] =
-    userAnswers.validatedF[CheckRegisteredDetails, EORIDetails](
+  def apply(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
+    userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
       CheckRegisteredDetailsPage,
       (crd: CheckRegisteredDetails) =>
-        EORIDetails(
+        TraderDetail(
           eori = crd.eori,
           businessName = crd.name,
           addressLine1 = crd.streetAndNumber,
-          addressLine2 = "",
-          addressLine3 = crd.city,
+          addressLine2 = Some(crd.city),
+          addressLine3 = None,
           postcode = crd.postalCode.getOrElse(""),
-          country = crd.country
+          countryCode = crd.country,
+          phoneNumber = None
         )
     )
 }
 
 case class ApplicationRequest(
   applicationNumber: String,
-  eoriDetails: EORIDetails,
+  trader: TraderDetail,
   applicant: Applicant,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
@@ -121,7 +123,7 @@ object ApplicationRequest {
     affinityGroup: AffinityGroup
   ): ValidatedNel[Page, ApplicationRequest] = {
     val applicationNumber = userAnswers.applicationNumber
-    val eoriDetails       = EORIDetails(userAnswers)
+    val eoriDetails       = TraderDetail(userAnswers)
     val goodsDetails      = GoodsDetails(userAnswers)
     val applicant         = Applicant(userAnswers, affinityGroup)
     val requestedMethod   = RequestedMethod(userAnswers)

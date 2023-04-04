@@ -145,14 +145,15 @@ object ApplicantSpec extends Generators {
     phone = randomString,
     company = randomString
   )
-  val eoriDetails               = EORIDetails(
+  val eoriDetails               = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
-    addressLine2 = "",
-    addressLine3 = randomString,
+    addressLine2 = Some(randomString),
+    addressLine3 = None,
     postcode = "abc",
-    country = randomString
+    countryCode = randomString,
+    phoneNumber = None
   )
   val applicant                 = IndividualApplicant(
     contact = ContactDetails(
