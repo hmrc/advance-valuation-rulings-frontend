@@ -24,7 +24,7 @@ object AppDependencies {
   val QuicklensVersion          = "1.9.0"
   val ObjectStoreVersion        = "1.0.0"
   val InternalAuthVersion       = "1.2.0"
-  val libPhoneNumberVersion     = "8.10.2"
+//  val LibPhoneNumberVersion     = "8.12.31"
 
 
   val compile = Seq(
@@ -38,7 +38,7 @@ object AppDependencies {
     "org.typelevel"              %% "cats-core"                     % CatsVersion,
     "com.beachape"               %% "enumeratum-play-json"          % EnumeratumVersion,
     "com.softwaremill.quicklens" %% "quicklens"                     % QuicklensVersion,
-    "com.googlecode.libphonenumber" %% "libphonenumber"             % libPhoneNumberVersion
+    "com.googlecode.libphonenumber" %% "libphonenumber"             % "8.12.31"
   )
 
   val test = Seq(
