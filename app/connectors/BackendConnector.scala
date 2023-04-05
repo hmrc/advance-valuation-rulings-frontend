@@ -23,6 +23,7 @@ import cats.implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -37,7 +38,8 @@ import models.requests._
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
   httpClient: HttpClientV2
-) extends FrontendHeaderCarrierProvider {
+)(implicit ec: ExecutionContext)
+    extends FrontendHeaderCarrierProvider {
 
   private var db: Map[String, Application] = Map.empty
 
@@ -62,22 +64,13 @@ class BackendConnector @Inject() (
           onError(e)
       }
 
-  def submitApplication(
-    applicationRequest: ApplicationRequest
-  )(implicit
-    ec: ExecutionContext
-  ): Future[Either[BackendError, ApplicationSubmissionResponse]] = {
-
-    val applicationId = ApplicationId(db.size)
-    val application   = Application(
-      id = applicationId,
-      lastUpdated = Instant.now(),
-      created = Instant.now(),
-      request = applicationRequest
-    )
-    db = db + (application.id.toString -> application)
-    ApplicationSubmissionResponse(applicationId).asRight[BackendError].pure[Future]
-  }
+  def submitApplication(applicationRequest: ApplicationRequest)(implicit
+    hc: HeaderCarrier
+  ): Future[ApplicationSubmissionResponse] =
+    httpClient
+      .post(url"$backendUrl/applications")
+      .withBody(Json.toJson(applicationRequest))
+      .execute[ApplicationSubmissionResponse]
 
   def getApplication(
     applicationId: String

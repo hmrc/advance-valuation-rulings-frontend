@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.time.Instant
+
 import scala.concurrent.Future
 
 import play.api.i18n.Messages
@@ -28,19 +30,34 @@ import uk.gov.hmrc.http.HeaderCarrier
 import base.SpecBase
 import connectors.BackendConnector
 import models._
+import models.requests.{Application, ApplicationId, ApplicationRequest, ApplicationSubmissionResponse}
+import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
+import org.scalatest.{BeforeAndAfterEach, EitherValues}
 import pages._
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersForAgentsView
 
-class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListFluency {
+class CheckYourAnswersForAgentsControllerSpec
+    extends SpecBase
+    with SummaryListFluency
+    with MockitoSugar
+    with BeforeAndAfterEach
+    with EitherValues {
 
   implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   private val userAnswers = emptyUserAnswers
+
+  private val mockConnector = mock[BackendConnector]
+
+  override def beforeEach(): Unit = {
+    Mockito.reset(mockConnector)
+    super.beforeEach()
+  }
 
   "Check Your Answers for Agents Controller" - {
 
@@ -79,6 +96,7 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
     }
 
     "must redirect to Application Complete when application submission succeeds" in {
+
       val answers = (for {
         ua <- emptyUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
         ua <- ua.set(HasCommodityCodePage, false)
@@ -117,7 +135,13 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
         ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
       } yield ua).success.get
 
+      val applicationId = ApplicationId(1)
+      val response      = ApplicationSubmissionResponse(applicationId)
+
+      when(mockConnector.submitApplication(any())(any())).thenReturn(Future.successful(response))
+
       val application = applicationBuilderAsOrg(Option(answers))
+        .overrides(bind[BackendConnector].toInstance(mockConnector))
         .build()
 
       running(application) {
@@ -127,7 +151,7 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.ApplicationCompleteController
-          .onPageLoad(models.requests.ApplicationId(0L).toString)
+          .onPageLoad(applicationId.toString)
           .url
       }
     }
