@@ -92,7 +92,8 @@ class ApplicationRequestSpec
                   streetAndNumber = randomString,
                   city = randomString,
                   country = randomString,
-                  postalCode = Some(randomString)
+                  postalCode = Some(randomString),
+                  phoneNumber = Some(randomString)
                 )
               )
         ua <- ua.set(
@@ -179,7 +180,7 @@ object ApplicationRequestSpec extends Generators {
     addressLine3 = None,
     postcode = randomString,
     countryCode = randomString,
-    phoneNumber = None
+    phoneNumber = Some(randomString)
   )
 
   val contact = ContactDetails(
@@ -218,7 +219,8 @@ object ApplicationRequestSpec extends Generators {
     |  "addressLine1": "$randomString",
     |  "addressLine2": "$randomString",
     |  "postcode": "$randomString",
-    |  "countryCode": "$randomString"
+    |  "countryCode": "$randomString",
+    |  "phoneNumber": "$randomString"
     |},
     |"contact": {
     |  "name": "$randomString",

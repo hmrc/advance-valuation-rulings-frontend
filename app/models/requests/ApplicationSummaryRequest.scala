@@ -18,7 +18,7 @@ package models.requests
 
 import java.time.Instant
 
-import play.api.libs.json.{Format, Json, OFormat}
+import play.api.libs.json.{Json, OFormat}
 
 final case class ApplicationSummaryRequest(eoriNumber: String)
 

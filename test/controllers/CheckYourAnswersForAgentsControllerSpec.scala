@@ -94,7 +94,8 @@ class CheckYourAnswersForAgentsControllerSpec extends SpecBase with SummaryListF
                   streetAndNumber = "streetAndNumber",
                   city = "city",
                   country = "country",
-                  postalCode = Some("postalCode")
+                  postalCode = Some("postalCode"),
+                  phoneNumber = Some("phoneNumber")
                 )
               )
         ua <- ua.set(

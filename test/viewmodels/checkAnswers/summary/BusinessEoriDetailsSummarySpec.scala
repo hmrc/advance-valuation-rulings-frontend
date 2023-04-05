@@ -40,7 +40,8 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
           StreetAndNumber,
           City,
           Country,
-          Some(Postcode)
+          Some(Postcode),
+          Some(phoneNumber)
         )
       )
 

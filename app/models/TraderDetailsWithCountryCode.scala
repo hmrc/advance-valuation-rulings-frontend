@@ -32,7 +32,8 @@ final case class TraderDetailsWithCountryCode(
       streetAndNumber = CDSEstablishmentAddress.streetAndNumber,
       city = CDSEstablishmentAddress.city,
       country = CountrySelectOptions.countryCodeToCountry(CDSEstablishmentAddress.countryCode),
-      postalCode = CDSEstablishmentAddress.postalCode
+      postalCode = CDSEstablishmentAddress.postalCode,
+      phoneNumber = contactInformation.flatMap(_.telephoneNumber)
     )
 }
 

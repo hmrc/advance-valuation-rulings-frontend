@@ -22,7 +22,7 @@ import cats.implicits._
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-import models.{CheckRegisteredDetails, DraftId, UserAnswers}
+import models.{CheckRegisteredDetails, UserAnswers}
 import pages._
 
 case class GoodsDetails(
@@ -95,7 +95,7 @@ object TraderDetail {
           addressLine3 = None,
           postcode = crd.postalCode.getOrElse(""),
           countryCode = crd.country,
-          phoneNumber = None
+          phoneNumber = crd.phoneNumber
         )
     )
 }

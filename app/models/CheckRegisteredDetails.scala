@@ -25,7 +25,8 @@ case class CheckRegisteredDetails(
   streetAndNumber: String,
   city: String,
   country: String,
-  postalCode: Option[String]
+  postalCode: Option[String],
+  phoneNumber: Option[String]
 )
 
 object CheckRegisteredDetails {

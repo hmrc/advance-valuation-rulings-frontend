@@ -351,7 +351,8 @@ class NavigatorSpec extends SpecBase {
           streetAndNumber = "street",
           city = "city",
           postalCode = Some("postcode"),
-          country = "GB"
+          country = "GB",
+          phoneNumber = Some("1234567890")
         )
 
         "when Individual" - {
