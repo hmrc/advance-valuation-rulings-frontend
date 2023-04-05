@@ -24,6 +24,8 @@ object AppDependencies {
   val QuicklensVersion          = "1.9.0"
   val ObjectStoreVersion        = "1.0.0"
   val InternalAuthVersion       = "1.2.0"
+  val libPhoneNumberVersion     = "8.10.2"
+
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
@@ -35,7 +37,8 @@ object AppDependencies {
     "uk.gov.hmrc.mongo"          %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
     "org.typelevel"              %% "cats-core"                     % CatsVersion,
     "com.beachape"               %% "enumeratum-play-json"          % EnumeratumVersion,
-    "com.softwaremill.quicklens" %% "quicklens"                     % QuicklensVersion
+    "com.softwaremill.quicklens" %% "quicklens"                     % QuicklensVersion,
+    "com.googlecode.libphonenumber" %% "libphonenumber"             % libPhoneNumberVersion
   )
 
   val test = Seq(

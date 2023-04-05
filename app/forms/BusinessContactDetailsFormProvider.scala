@@ -22,6 +22,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.BusinessContactDetailsFormProvider._
 import forms.mappings.Mappings
 import models.BusinessContactDetails
@@ -32,13 +33,13 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         "name"    -> text(nameRequiredError)
-          .verifying(Constraints.pattern(nameRegex, error = nameFormatError))
+          .verifying(Constraints.pattern(nameInputPattern, error = nameFormatError))
           .verifying(maxLength(nameMaxLength, nameLengthError)),
         "email"   -> text(emailRequiredError)
           .verifying(maxLength(emailMaxLength, emailLengthError))
           .verifying(Constraints.pattern(emailRegex, error = emailFormatError)),
         "phone"   -> text(phoneRequiredError)
-          .verifying(Constraints.pattern(phoneNumberRegex, error = phoneFormatError))
+          .verifying(phoneFormatError, isValid(_))
           .verifying(maxLength(phoneNumberMaxLength, phoneLengthError)),
         "company" -> text(companyRequiredError)
       )(BusinessContactDetails.apply)(
@@ -57,8 +58,8 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
 object BusinessContactDetailsFormProvider {
 
-  private val nameMaxLength = 70
-  private val nameRegex     = "^[a-zA-Z -]*$".r
+  private val nameMaxLength    = 70
+  private val nameInputPattern = "[A-Za-zÀ-ÖØ-öø-ÿĀ-ňŊ-ſ'’ -]+".r
 
   private val phoneNumberMaxLength = 25
   private val phoneNumberRegex     = "^[0-9]*$".r
