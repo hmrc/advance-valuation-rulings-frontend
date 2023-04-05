@@ -135,4 +135,37 @@ trait Generators
       millis => Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).toLocalDate
     }
   }
+
+  def safeNameInputs: Gen[Char] = Gen.oneOf(
+    Gen.alphaChar,
+    Gen.const('-'),
+    Gen.const(' '),
+    Gen.const('’'),
+    Gen.const('\''),
+    Gen.oneOf('À' to 'Ö'),
+    Gen.oneOf('Ø' to 'ö'),
+    Gen.oneOf('ø' to 'ÿ'),
+    Gen.oneOf('Ā' to 'ň'),
+    Gen.oneOf('Ŋ' to 'ſ')
+  )
+
+  def unsafeInputs: Gen[Char] = Gen.oneOf(
+    Gen.const('<'),
+    Gen.const('>'),
+    Gen.const('='),
+    Gen.const('|')
+  )
+
+  def safeNameInputsWithMaxLength(length: Int): Gen[String] =
+    (for {
+      length <- Gen.choose(1, length)
+      chars  <- Gen.listOfN(length, safeNameInputs)
+    } yield chars.mkString).suchThat(_.trim.nonEmpty)
+
+  def unsafeInputsWithMaxLength(maxLength: Int): Gen[String] = (for {
+    length      <- choose(2, maxLength)
+    invalidChar <- unsafeInputs
+    validChars  <- listOfN(length - 1, unsafeInputs)
+  } yield (validChars :+ invalidChar).mkString).suchThat(_.trim.nonEmpty)
+
 }

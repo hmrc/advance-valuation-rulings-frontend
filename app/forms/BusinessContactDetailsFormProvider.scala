@@ -27,6 +27,8 @@ import play.api.data.validation.Constraints
 import com.google._
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.BusinessContactDetailsFormProvider._
+import forms.Validation.emailPattern
+import forms.Validation.nameInputPattern
 import forms.mappings.Mappings
 import models.BusinessContactDetails
 
@@ -37,14 +39,14 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         "name"    -> text(nameRequiredError)
-          .verifying(Constraints.pattern(nameInputPattern, error = nameFormatError))
-          .verifying(maxLength(nameMaxLength, nameLengthError)),
+          .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
+          .verifying(maxLength(Validation.nameMaxLength, nameLengthError)),
         "email"   -> text(emailRequiredError)
-          .verifying(maxLength(emailMaxLength, emailLengthError))
-          .verifying(Constraints.pattern(emailRegex, error = emailFormatError)),
+          .verifying(maxLength(Validation.emailMaxLength, emailLengthError))
+          .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError)),
         "phone"   -> text(phoneRequiredError)
           .verifying(phoneFormatError, isValid(_))
-          .verifying(maxLength(phoneNumberMaxLength, phoneLengthError)),
+          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError)),
         "company" -> text(companyRequiredError)
       )(BusinessContactDetails.apply)(
         (businessContactDetails: BusinessContactDetails) =>
@@ -65,15 +67,6 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 }
 
 object BusinessContactDetailsFormProvider {
-
-  private val nameMaxLength    = 70
-  private val nameInputPattern = "[A-Za-zÀ-ÖØ-öø-ÿĀ-ňŊ-ſ'’ -]+".r
-
-  private val phoneNumberMaxLength = 25
-  private val phoneNumberRegex     = "^[0-9]*$".r
-
-  private val emailMaxLength = 50
-  private val emailRegex     = """^(.\S+)@(.\S+)$""".r
 
   private val nameRequiredError = "businessContactDetails.fullName.error.required"
   private val nameFormatError   = "businessContactDetails.fullName.error.format"

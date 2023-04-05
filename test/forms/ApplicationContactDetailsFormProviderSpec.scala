@@ -19,6 +19,7 @@ package forms
 import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
+import org.scalacheck.Gen
 
 class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -43,12 +44,20 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
   ".nameField" - {
     val nameField     = "name"
     val lengthKey     = "applicationContactDetails.fullName.length"
-    val nameMaxLength = 100
+    val invalidKey    = "applicationContactDetails.fullName.error.format"
+    val nameMaxLength = 70
 
     behave like fieldThatBindsValidData(
       form,
       nameField,
-      alphaStringsWithMaxLength(100)
+      alphaStringsWithMaxLength(nameMaxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      nameField,
+      unsafeInputsWithMaxLength(nameMaxLength),
+      FormError(nameField, invalidKey, Seq(Validation.nameInputPattern))
     )
 
     behave like alphaStringWithMaxLength(
@@ -67,12 +76,21 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
   }
 
   ".emailField" - {
-    val emailField = "email"
+    val emailField     = "email"
+    val emailMaxLength = 50
+    val lengthKey      = "businessContactDetails.email.length"
 
     behave like mandatoryField(
       form,
       emailField,
       requiredError = FormError(emailField, emailRequiredKey)
+    )
+
+    behave like alphaStringWithMaxLength(
+      form,
+      emailField,
+      emailMaxLength,
+      FormError(emailField, lengthKey)
     )
 
     for (address <- validAddresses)
@@ -104,6 +122,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     val phoneField     = "phone"
     val lengthKey      = "applicationContactDetails.fullName.length"
     val phoneMaxLength = 24
+    val invalidKey     = "applicationContactDetails.telephoneNumber.error.format"
 
     behave like numericStringWithMaxLength(
       form,
@@ -115,7 +134,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       phoneField,
-      numericStringsBetweenRange(0, phoneMaxLength)
+      Gen.oneOf("07777777777", "+447777777777", "07777777777  ")
     )
 
     behave like mandatoryField(
@@ -123,5 +142,11 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
       phoneField,
       requiredError = FormError(phoneField, phoneRequiredKey)
     )
+
+    "fail to bind an invalid phone number" in {
+      val result       = form.bind(Map(phoneField -> "invalid")).apply(phoneField)
+      val errorMessage = result.error.value.message
+      errorMessage mustEqual invalidKey
+    }
   }
 }

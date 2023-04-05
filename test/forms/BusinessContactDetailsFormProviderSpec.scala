@@ -45,12 +45,20 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
   ".nameField" - {
     val nameField     = "name"
     val lengthKey     = "applicationContactDetails.fullName.length"
+    val invalidKey    = "businessContactDetails.fullName.error.format"
     val nameMaxLength = 70
 
     behave like fieldThatBindsValidData(
       form,
       nameField,
-      alphaStringsWithMaxLength(nameMaxLength)
+      safeNameInputsWithMaxLength(nameMaxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      nameField,
+      unsafeInputsWithMaxLength(nameMaxLength),
+      FormError(nameField, invalidKey, Seq(Validation.nameInputPattern))
     )
 
     behave like alphaStringWithMaxLength(

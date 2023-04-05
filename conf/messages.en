@@ -269,12 +269,13 @@ applicationContactDetails.email.label = Email address
 applicationContactDetails.telephoneNumber.label = Telephone number
 applicationContactDetails.fullName.error.required = Enter your full name
 applicationContactDetails.fullName.error.format = Must contain only letters, space and hyphens
-applicationContactDetails.fullName.length = Name must be 100 characters or less
+applicationContactDetails.fullName.length = Name must be 70 characters or less
 applicationContactDetails.email.error.required = Enter your email address
 applicationContactDetails.email.error.format = Enter an email address in the correct format, like name@example.com
+applicationContactDetails.email.length = Email address must be 50 characters or less
 applicationContactDetails.telephoneNumber.error.required = Enter your telephone number
 applicationContactDetails.telephoneNumber.error.format = Must contain only digits
-applicationContactDetails.telephoneNumber.length = Phone number must be 24 characters or less
+applicationContactDetails.telephoneNumber.length = Phone number must be 25 characters or less
 applicationContactDetails.change.hidden = ApplicationContactDetails
 
 eoriBeUpToDate.title = Your EORI number details must be correct to use this service
