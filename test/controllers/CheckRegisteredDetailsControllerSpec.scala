@@ -56,6 +56,19 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
       postalCode = Some("Test Postal Code")
     )
 
+    val contactInformation = ContactInformation(
+      personOfContact = Some("Test Person"),
+      sepCorrAddrIndicator = Some(false),
+      streetAndNumber = Some("Test Street 1"),
+      city = Some("Test City"),
+      postalCode = Some("Test Postal Code"),
+      countryCode = Some("GB"),
+      telephoneNumber = Some("Test Telephone Number"),
+      faxNumber = Some("Test Fax Number"),
+      emailAddress = Some("Test Email Address"),
+      emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
+    )
+
     val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
       EORINo = registeredDetails.eori,
       CDSFullName = registeredDetails.name,
@@ -64,7 +77,8 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
         city = registeredDetails.city,
         countryCode = "GB",
         postalCode = registeredDetails.postalCode
-      )
+      ),
+      contactInformation = Some(contactInformation)
     )
 
     val userAnswers = emptyUserAnswers

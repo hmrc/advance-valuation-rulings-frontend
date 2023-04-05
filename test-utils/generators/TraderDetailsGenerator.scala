@@ -16,9 +16,12 @@
 
 package generators
 
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
 import play.api.http.Status
 
-import models.{AcknowledgementReference, BackendError, CDSEstablishmentAddress, EoriNumber, TraderDetailsWithCountryCode}
+import models._
 import org.scalacheck.{Arbitrary, Gen}
 import wolfendale.scalacheck.regexp.RegexpGen
 
@@ -28,19 +31,46 @@ trait TraderDetailsGenerator extends Generators {
     RegexpGen.from("^[A-Z]{2}[0-9A-Z]{12}$").map(EoriNumber)
   )
 
+  def contactInformationGen: Gen[ContactInformation] = for {
+    personOfContact           <- Gen.option(stringsWithMaxLength(70))
+    streetAndNumber           <- Gen.option(stringsWithMaxLength(70))
+    sepCorrAddrIndicator      <- Gen.option(Gen.oneOf(true, false))
+    city                      <- Gen.option(stringsWithMaxLength(35))
+    postalCode                <- Gen.option(stringsWithMaxLength(9))
+    countryCode               <- Gen.option(stringsWithMaxLength(2))
+    telephoneNumber           <- Gen.option(stringsWithMaxLength(50))
+    faxNumber                 <- Gen.option(stringsWithMaxLength(50))
+    emailAddress              <- Gen.option(stringsWithMaxLength(50))
+    instant                   <- Gen.option(localDateTimeGen.map(_.toInstant(ZoneOffset.UTC)))
+    emailVerificationTimestamp = instant.map(DateTimeFormatter.ISO_INSTANT.format(_))
+  } yield ContactInformation(
+    personOfContact,
+    sepCorrAddrIndicator,
+    streetAndNumber,
+    city,
+    postalCode,
+    countryCode,
+    telephoneNumber,
+    faxNumber,
+    emailAddress,
+    emailVerificationTimestamp
+  )
+
   implicit lazy val arbitraryTraderDetailsWithCountryCode: Arbitrary[TraderDetailsWithCountryCode] =
     Arbitrary {
       for {
-        eoriNumber      <- arbitraryEoriNumberGen.arbitrary
-        cdsFullName     <- stringsWithMaxLength(512)
-        streetAndNumber <- stringsWithMaxLength(70)
-        city            <- stringsWithMaxLength(35)
-        country         <- stringsWithMaxLength(2)
-        postalCode      <- Gen.option(stringsWithMaxLength(9))
+        eoriNumber         <- arbitraryEoriNumberGen.arbitrary
+        cdsFullName        <- stringsWithMaxLength(512)
+        streetAndNumber    <- stringsWithMaxLength(70)
+        city               <- stringsWithMaxLength(35)
+        country            <- stringsWithMaxLength(2)
+        postalCode         <- Gen.option(stringsWithMaxLength(9))
+        contactInformation <- Gen.option(contactInformationGen)
       } yield TraderDetailsWithCountryCode(
         eoriNumber.value,
         cdsFullName,
-        CDSEstablishmentAddress(streetAndNumber, city, country, postalCode)
+        CDSEstablishmentAddress(streetAndNumber, city, country, postalCode),
+        contactInformation
       )
     }
 
