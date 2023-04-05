@@ -19,9 +19,9 @@ package models.requests
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class Email(value: String)
+case class Email(value: String) extends AnyVal
 object Email {
-  implicit val format: Format[Email] = implicitly[Format[String]].inmap(Email(_), _.value)
+  implicit val format: Format[Email] = Json.valueFormat[Email]
 }
 
 case class EmailRequest(
