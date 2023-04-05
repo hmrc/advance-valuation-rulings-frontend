@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
 
-import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -29,7 +28,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import connectors.BackendConnector
 import controllers.actions._
 import models.{ApplicationForAccountHome, UserAnswers}
-import models.requests.ApplicationSummaryRequest
 import navigation.Navigator
 import repositories.SessionRepository
 import views.html.AccountHomeView
@@ -49,25 +47,13 @@ class AccountHomeController @Inject() (
     with I18nSupport
     with Retrievals {
 
-  private val logger = Logger(this.getClass)
-
-  // represents the backend retrieval
-  def onPageLoad: Action[AnyContent]       =
+  def onPageLoad: Action[AnyContent] =
     (identify andThen getData).async {
       implicit request =>
-        val appSumReq = ApplicationSummaryRequest(request.eoriNumber)
-
-        backendConnector
-          .applicationSummaries(appSumReq)
-          .map {
-            case Right(response)    =>
-              Ok(view(response.summaries.map(ApplicationForAccountHome(_))))
-            case Left(backendError) =>
-              logger.error(s"Failed to fetch applications from backend: $backendError")
-              Redirect(routes.JourneyRecoveryController.onPageLoad())
-          }
-
+        backendConnector.applicationSummaries
+          .map(response => Ok(view(response.summaries.map(ApplicationForAccountHome(_)))))
     }
+
   def startApplication: Action[AnyContent] =
     (identify andThen getData andThen generateDraftId).async {
       implicit request =>

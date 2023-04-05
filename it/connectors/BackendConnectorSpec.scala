@@ -1,12 +1,14 @@
 package connectors
 
+import java.time.Instant
+
 import play.api.http.Status
 import play.api.libs.json.Json
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.RequestMethod._
 import generators.{ApplicationGenerator, TraderDetailsGenerator, UserAnswersGenerator}
-import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode}
 import models.requests._
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
@@ -142,6 +144,35 @@ class BackendConnectorSpec
       )
 
       connector.submitApplication(applicationRequest).failed.futureValue
+    }
+  }
+
+  ".applicationSummaries" - {
+
+    "must return a list of summaries" in {
+
+      val response = ApplicationSummaryResponse(
+        Seq(ApplicationSummary(ApplicationId(1), "name", Instant.now, "eori"))
+      )
+
+      wireMockServer.stubFor(
+        get(urlEqualTo("/advance-valuation-rulings/applications"))
+          .willReturn(ok(Json.toJson(response).toString))
+      )
+
+      val result = connector.applicationSummaries.futureValue
+
+      result mustEqual response
+    }
+
+    "must return a failed future when an error is returned" in {
+
+      wireMockServer.stubFor(
+        get(urlEqualTo("/advance-valuation-rulings/applications"))
+          .willReturn(serverError())
+      )
+
+      connector.applicationSummaries.failed.futureValue
     }
   }
 

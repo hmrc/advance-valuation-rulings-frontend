@@ -16,10 +16,8 @@
 
 package connectors
 
-import java.time.Instant
 import java.util.UUID
 
-import cats.implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
@@ -93,28 +91,10 @@ class BackendConnector @Inject() (
         )
     }
 
-  def applicationSummaries(
-    request: ApplicationSummaryRequest
-  )(implicit
-    ec: ExecutionContext
-  ): Future[Either[BackendError, ApplicationSummaryResponse]] =
-    db.values
-      .foldLeft(ApplicationSummaryResponse(Seq.empty)) {
-        case (acc, application) =>
-          if (application.request.trader.eori == request.eoriNumber) {
-            val summary = models.requests.ApplicationSummary(
-              id = application.id,
-              goodsName = application.request.goodsDetails.goodsName,
-              dateSubmitted = application.created,
-              eoriNumber = application.request.trader.eori
-            )
-            acc.copy(summaries = acc.summaries :+ summary)
-          } else {
-            acc
-          }
-      }
-      .asRight[BackendError]
-      .pure[Future]
+  def applicationSummaries(implicit hc: HeaderCarrier): Future[ApplicationSummaryResponse] =
+    httpClient
+      .get(url"$backendUrl/applications")
+      .execute[ApplicationSummaryResponse]
 
   private def onError(ex: Throwable): Left[BackendError, Nothing] = {
     val (code, message) = ex match {
