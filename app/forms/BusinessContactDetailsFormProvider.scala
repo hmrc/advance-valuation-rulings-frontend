@@ -18,10 +18,13 @@ package forms
 
 import javax.inject.Inject
 
+import scala.util.Try
+
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
+import com.google._
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.BusinessContactDetailsFormProvider._
 import forms.mappings.Mappings
@@ -29,6 +32,7 @@ import models.BusinessContactDetails
 
 class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
+  private val util                          = PhoneNumberUtil.getInstance
   def apply(): Form[BusinessContactDetails] =
     Form(
       mapping(
@@ -54,6 +58,10 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
           )
       )
     )
+
+  private def isValid(string: String): Boolean =
+    Try(util.isPossibleNumber(util.parse(string, "GB")))
+      .getOrElse(false)
 }
 
 object BusinessContactDetailsFormProvider {

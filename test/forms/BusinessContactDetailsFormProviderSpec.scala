@@ -19,6 +19,7 @@ package forms
 import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
+import org.scalacheck.Gen
 
 class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -116,6 +117,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     val phoneField     = "phone"
     val lengthKey      = "applicationContactDetails.fullName.length"
     val phoneMaxLength = 25
+    val invalidKey     = "businessContactDetails.telephoneNumber.error.format"
 
     behave like numericStringWithMaxLength(
       form,
@@ -127,7 +129,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       phoneField,
-      numericStringsBetweenRange(0, phoneMaxLength)
+      Gen.oneOf("07777777777", "+447777777777", "07777777777  ")
     )
 
     behave like mandatoryField(
@@ -135,6 +137,12 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       phoneField,
       requiredError = FormError(phoneField, phoneRequiredKey)
     )
+
+    "fail to bind an invalid phone number" in {
+      val result       = form.bind(Map(phoneField -> "invalid")).apply(phoneField)
+      val errorMessage = result.error.value.message
+      errorMessage mustEqual invalidKey
+    }
   }
 
   ".companyNameField" - {
