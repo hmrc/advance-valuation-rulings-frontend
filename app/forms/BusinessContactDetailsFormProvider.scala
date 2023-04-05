@@ -35,6 +35,7 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
           .verifying(Constraints.pattern(nameRegex, error = nameFormatError))
           .verifying(maxLength(nameMaxLength, nameLengthError)),
         "email"   -> text(emailRequiredError)
+          .verifying(maxLength(emailMaxLength, emailLengthError))
           .verifying(Constraints.pattern(emailRegex, error = emailFormatError)),
         "phone"   -> text(phoneRequiredError)
           .verifying(Constraints.pattern(phoneNumberRegex, error = phoneFormatError))
@@ -56,13 +57,14 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
 object BusinessContactDetailsFormProvider {
 
-  private val nameMaxLength = 100
+  private val nameMaxLength = 70
   private val nameRegex     = "^[a-zA-Z -]*$".r
 
-  private val phoneNumberMaxLength = 24
+  private val phoneNumberMaxLength = 25
   private val phoneNumberRegex     = "^[0-9]*$".r
 
-  private val emailRegex = """^(.\S+)@(.\S+)$""".r
+  private val emailMaxLength = 50
+  private val emailRegex     = """^(.\S+)@(.\S+)$""".r
 
   private val nameRequiredError = "businessContactDetails.fullName.error.required"
   private val nameFormatError   = "businessContactDetails.fullName.error.format"
@@ -70,6 +72,7 @@ object BusinessContactDetailsFormProvider {
 
   private val emailRequiredError = "businessContactDetails.email.error.required"
   private val emailFormatError   = "businessContactDetails.email.error.format"
+  private val emailLengthError   = "businessContactDetails.email.fullName.length"
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"

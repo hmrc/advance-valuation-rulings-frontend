@@ -44,12 +44,12 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
   ".nameField" - {
     val nameField     = "name"
     val lengthKey     = "applicationContactDetails.fullName.length"
-    val nameMaxLength = 100
+    val nameMaxLength = 70
 
     behave like fieldThatBindsValidData(
       form,
       nameField,
-      alphaStringsWithMaxLength(100)
+      alphaStringsWithMaxLength(nameMaxLength)
     )
 
     behave like alphaStringWithMaxLength(
@@ -68,12 +68,21 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
   }
 
   ".emailField" - {
-    val emailField = "email"
+    val emailField     = "email"
+    val emailMaxLength = 50
+    val lengthKey      = "businessContactDetails.email.length"
 
     behave like mandatoryField(
       form,
       emailField,
       requiredError = FormError(emailField, emailRequiredKey)
+    )
+
+    behave like alphaStringWithMaxLength(
+      form,
+      emailField,
+      emailMaxLength,
+      FormError(emailField, lengthKey)
     )
 
     for (address <- validAddresses)
@@ -106,7 +115,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
   ".phoneField" - {
     val phoneField     = "phone"
     val lengthKey      = "applicationContactDetails.fullName.length"
-    val phoneMaxLength = 24
+    val phoneMaxLength = 25
 
     behave like numericStringWithMaxLength(
       form,
