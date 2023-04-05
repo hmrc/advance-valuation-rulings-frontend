@@ -16,7 +16,8 @@
 
 package generators
 
-import java.time.{Instant, LocalDate, ZoneOffset}
+import java.time.{Instant, LocalDate, LocalDateTime, ZoneOffset}
+import java.time.Clock
 
 import org.scalacheck.{Gen, Shrink}
 import org.scalacheck.Arbitrary._
@@ -125,6 +126,13 @@ trait Generators
       val vector = xs.toVector
       choose(0, vector.size - 1).flatMap(vector(_))
     }
+
+  def localDateTimeGen: Gen[LocalDateTime] = {
+    val rangeEnd = LocalDateTime.now(Clock.systemUTC()).toEpochSecond(ZoneOffset.UTC)
+    Gen
+      .choose(0, rangeEnd)
+      .map(second => LocalDateTime.ofEpochSecond(second, 0, ZoneOffset.UTC))
+  }
 
   def datesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
 

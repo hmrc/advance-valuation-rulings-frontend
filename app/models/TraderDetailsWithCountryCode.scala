@@ -21,7 +21,8 @@ import play.api.libs.json.{Json, OFormat}
 final case class TraderDetailsWithCountryCode(
   EORINo: String,
   CDSFullName: String,
-  CDSEstablishmentAddress: CDSEstablishmentAddress
+  CDSEstablishmentAddress: CDSEstablishmentAddress,
+  contactInformation: Option[ContactInformation]
 ) {
   def details: CheckRegisteredDetails =
     CheckRegisteredDetails(
@@ -38,4 +39,20 @@ final case class TraderDetailsWithCountryCode(
 object TraderDetailsWithCountryCode {
   implicit val format: OFormat[TraderDetailsWithCountryCode] =
     Json.format[TraderDetailsWithCountryCode]
+}
+
+case class ContactInformation(
+  personOfContact: Option[String],
+  sepCorrAddrIndicator: Option[Boolean],
+  streetAndNumber: Option[String],
+  city: Option[String],
+  postalCode: Option[String],
+  countryCode: Option[String],
+  telephoneNumber: Option[String],
+  faxNumber: Option[String],
+  emailAddress: Option[String],
+  emailVerificationTimestamp: Option[String]
+)
+object ContactInformation {
+  implicit val format: OFormat[ContactInformation] = Json.format[ContactInformation]
 }
