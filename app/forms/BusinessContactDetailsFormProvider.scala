@@ -18,27 +18,35 @@ package forms
 
 import javax.inject.Inject
 
+import scala.util.Try
+
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
+import com.google._
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.BusinessContactDetailsFormProvider._
+import forms.Validation.emailPattern
+import forms.Validation.nameInputPattern
 import forms.mappings.Mappings
 import models.BusinessContactDetails
 
 class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
+  private val util                          = PhoneNumberUtil.getInstance
   def apply(): Form[BusinessContactDetails] =
     Form(
       mapping(
         "name"    -> text(nameRequiredError)
-          .verifying(Constraints.pattern(nameRegex, error = nameFormatError))
-          .verifying(maxLength(nameMaxLength, nameLengthError)),
+          .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
+          .verifying(maxLength(Validation.nameMaxLength, nameLengthError)),
         "email"   -> text(emailRequiredError)
-          .verifying(Constraints.pattern(emailRegex, error = emailFormatError)),
+          .verifying(maxLength(Validation.emailMaxLength, emailLengthError))
+          .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError)),
         "phone"   -> text(phoneRequiredError)
-          .verifying(Constraints.pattern(phoneNumberRegex, error = phoneFormatError))
-          .verifying(maxLength(phoneNumberMaxLength, phoneLengthError)),
+          .verifying(phoneFormatError, isValid(_))
+          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError)),
         "company" -> text(companyRequiredError)
       )(BusinessContactDetails.apply)(
         (businessContactDetails: BusinessContactDetails) =>
@@ -52,17 +60,13 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
           )
       )
     )
+
+  private def isValid(string: String): Boolean =
+    Try(util.isPossibleNumber(util.parse(string, "GB")))
+      .getOrElse(false)
 }
 
 object BusinessContactDetailsFormProvider {
-
-  private val nameMaxLength = 100
-  private val nameRegex     = "^[a-zA-Z -]*$".r
-
-  private val phoneNumberMaxLength = 24
-  private val phoneNumberRegex     = "^[0-9]*$".r
-
-  private val emailRegex = """^(.\S+)@(.\S+)$""".r
 
   private val nameRequiredError = "businessContactDetails.fullName.error.required"
   private val nameFormatError   = "businessContactDetails.fullName.error.format"
@@ -70,6 +74,7 @@ object BusinessContactDetailsFormProvider {
 
   private val emailRequiredError = "businessContactDetails.email.error.required"
   private val emailFormatError   = "businessContactDetails.email.error.format"
+  private val emailLengthError   = "businessContactDetails.email.length"
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
