@@ -56,22 +56,29 @@ class ApplicationCompleteController @Inject() (
           case AffinityGroup.Individual   =>
             (
               (answers.data \ ApplicationContactDetailsPage.toString \ "email").toOption,
-//              (answers.data \ ApplicationContactDetailsPage.toString \ "name").toOption
+              (answers.data \ ApplicationContactDetailsPage.toString \ "name").toOption
             ) match {
-              case (Some(JsString(applicantEmail))) =>
-//                emailConnector.sendEmail(
-//                  emailService.makeEmailRequest(applicantEmail, applicantName)
-//                )
+              case (Some(JsString(applicantEmail)), Some(JsString(applicantName))) =>
+                emailConnector.sendEmail(
+                  emailService.makeEmailRequest(applicantEmail, applicantName)
+                )
+
                 Ok(view(true, applicationId, applicantEmail, applicationSummary))
-              case _                                =>
+              case _                                                               =>
                 logger.error(s"Applicant email is empty for id: ${request.userId}")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
             }
           case AffinityGroup.Organisation =>
-            (answers.data \ BusinessContactDetailsPage.toString \ "email").toOption match {
-              case Some(JsString(applicantEmail)) =>
+            (
+              (answers.data \ BusinessContactDetailsPage.toString \ "email").toOption,
+              (answers.data \ BusinessContactDetailsPage.toString \ "name").toOption
+            ) match {
+              case (Some(JsString(applicantEmail)), Some(JsString(applicantName))) =>
+                emailConnector.sendEmail(
+                  emailService.makeEmailRequest(applicantEmail, applicantName)
+                )
                 Ok(view(false, applicationId, applicantEmail, applicationSummary))
-              case _                              =>
+              case _                                                               =>
                 logger.error(s"Applicant email is empty for id: ${request.userId}")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
             }

@@ -18,7 +18,7 @@ package connectors
 
 import javax.inject.Inject
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 import uk.gov.hmrc.http._
 
@@ -32,7 +32,7 @@ class EmailConnector @Inject() (
 
   def sendEmail(
     emailRequest: EmailRequest
-  )(implicit hc: HeaderCarrier) =
+  )(implicit hc: HeaderCarrier): Future[HttpResponse] =
     http
       .POST[EmailRequest, HttpResponse](s"${appConfig.emailBaseUrl}/email", emailRequest)
 }
