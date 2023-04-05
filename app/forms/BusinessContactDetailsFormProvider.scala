@@ -74,7 +74,7 @@ object BusinessContactDetailsFormProvider {
 
   private val emailRequiredError = "businessContactDetails.email.error.required"
   private val emailFormatError   = "businessContactDetails.email.error.format"
-  private val emailLengthError   = "businessContactDetails.email.fullName.length"
+  private val emailLengthError   = "businessContactDetails.email.length"
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
