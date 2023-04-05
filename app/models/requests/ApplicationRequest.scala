@@ -95,7 +95,7 @@ object TraderDetail {
           addressLine3 = None,
           postcode = crd.postalCode.getOrElse(""),
           countryCode = crd.country,
-          phoneNumber = None
+          phoneNumber = crd.phoneNumber
         )
     )
 }
