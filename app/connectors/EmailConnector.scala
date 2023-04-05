@@ -16,12 +16,14 @@
 
 package connectors
 
-import config.FrontendAppConfig
-import models.requests.EmailRequest
+import javax.inject.Inject
+
+import scala.concurrent.ExecutionContext
+
 import uk.gov.hmrc.http._
 
-import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import config.FrontendAppConfig
+import models.requests.EmailRequest
 
 class EmailConnector @Inject() (
   http: HttpClient,

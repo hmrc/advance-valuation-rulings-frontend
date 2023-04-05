@@ -15,9 +15,11 @@
  */
 
 package services.email
+import models.requests.{Email, EmailRequest}
 
 class EmailService() {
 
-  def makeEmailRequest(email: String, name: String) = ???
+  def makeEmailRequest(email: String, name: String): EmailRequest =
+    EmailRequest(to = List(Email(email)), parameters = Map("name" -> name))
 
 }

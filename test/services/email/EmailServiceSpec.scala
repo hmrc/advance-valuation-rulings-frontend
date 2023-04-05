@@ -22,10 +22,19 @@ import models.requests.{Email, EmailRequest}
 class EmailServiceSpec extends SpecBase {
 
   val sut = new EmailService
-  "creates a request" in {
-    val expectedReq =
-      EmailRequest(to = List(Email("vicky@cakes.com")), parameters = Map("name" -> "Vick Sponge"))
-    val req         = sut.makeEmailRequest("vicky@cakes.com", "Victoria Sponge")
-    assert(expectedReq === req)
+  "constructs a request" in {
+    val req = EmailRequest(
+      to = List(Email("john@gmail.com")),
+      parameters = Map("name" -> "John")
+    )
+    sut.makeEmailRequest("john@gmail.com", "John") mustBe req
+  }
+
+  "constructs request from different information" in {
+    val req = EmailRequest(
+      to = List(Email("joana@gmail.com")),
+      parameters = Map("name" -> "Joana")
+    )
+    sut.makeEmailRequest("joana@gmail.com", "Joana") mustBe req
   }
 }
