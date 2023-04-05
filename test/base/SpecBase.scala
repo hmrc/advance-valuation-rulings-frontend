@@ -55,6 +55,7 @@ trait SpecBase
   val City            = "London"
   val Country         = "United Kingdom"
   val Postcode        = "A12 2AB"
+  val phoneNumber     = "01234567890"
 
   val userAnswersId: String = "id"
   val DraftIdPrefix         = "DRAFT"

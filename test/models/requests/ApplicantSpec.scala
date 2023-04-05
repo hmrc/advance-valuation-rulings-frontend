@@ -168,7 +168,8 @@ object ApplicantSpec extends Generators {
     "streetAndNumber",
     "city",
     "country",
-    Some("postalCode")
+    Some("postalCode"),
+    Some("phoneNumber")
   )
 
   val randomString: String = stringsWithMaxLength(8).sample.get

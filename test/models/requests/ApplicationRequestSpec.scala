@@ -92,7 +92,8 @@ class ApplicationRequestSpec
                   streetAndNumber = randomString,
                   city = randomString,
                   country = randomString,
-                  postalCode = Some(randomString)
+                  postalCode = Some(randomString),
+                  phoneNumber = Some(randomString)
                 )
               )
         ua <- ua.set(

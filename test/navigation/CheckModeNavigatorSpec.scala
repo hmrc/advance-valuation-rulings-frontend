@@ -694,7 +694,8 @@ class CheckModeNavigatorSpec extends SpecBase {
             streetAndNumber = "streetAndNumber",
             city = "city",
             country = "country",
-            postalCode = None
+            postalCode = None,
+            phoneNumber = Some("phoneNumber")
           )
           "navigate to CheckYourAnswers when Yes" in {
             val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, registeredDetails(true))

@@ -107,7 +107,8 @@ object CheckRegisteredDetailsForAgentsSummary {
       streetAndNumber = request.trader.addressLine1 + "\n" + request.trader.addressLine2,
       city = request.trader.addressLine2.getOrElse(""),
       country = request.trader.countryCode,
-      postalCode = postCode
+      postalCode = postCode,
+      phoneNumber = request.trader.phoneNumber
     )
     Seq(
       registeredNumberRow(contactDetails),

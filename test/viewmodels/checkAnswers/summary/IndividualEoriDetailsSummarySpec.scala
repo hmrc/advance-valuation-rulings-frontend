@@ -39,7 +39,8 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
           StreetAndNumber,
           City,
           Country,
-          Some(Postcode)
+          Some(Postcode),
+          Some(phoneNumber)
         )
       )
 

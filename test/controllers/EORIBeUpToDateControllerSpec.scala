@@ -46,7 +46,8 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
     streetAndNumber = "Test Street 1",
     city = "Test City",
     country = "Test Country",
-    postalCode = Some("Test Postal Code")
+    postalCode = Some("Test Postal Code"),
+    phoneNumber = Some("Test Telephone Number")
   )
 
   "EORIBeUpToDate Controller" - {

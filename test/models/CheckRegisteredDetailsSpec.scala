@@ -41,7 +41,8 @@ class CheckRegisteredDetailsSpec
                       |  "streetAndNumber": "streetAndNumber",
                       |  "city": "city",
                       |  "country": "country",
-                      |  "postalCode": "postalCode"
+                      |  "postalCode": "postalCode",
+                      |  "phoneNumber": "phoneNumber"
                       |}
       """.stripMargin)
 
@@ -52,7 +53,8 @@ class CheckRegisteredDetailsSpec
       streetAndNumber = "streetAndNumber",
       city = "city",
       country = "country",
-      postalCode = Some("postalCode")
+      postalCode = Some("postalCode"),
+      phoneNumber = Some("phoneNumber")
     )
 
     "must deserialise" in {

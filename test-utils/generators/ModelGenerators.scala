@@ -52,7 +52,17 @@ trait ModelGenerators {
       city            <- Gen.alphaStr.suchThat(_.nonEmpty)
       country         <- Gen.alphaStr.suchThat(_.nonEmpty)
       postalCode      <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
-    } yield CheckRegisteredDetails(value, eori, name, streetAndNumber, city, country, postalCode)
+      phoneNumber     <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
+    } yield CheckRegisteredDetails(
+      value,
+      eori,
+      name,
+      streetAndNumber,
+      city,
+      country,
+      postalCode,
+      phoneNumber
+    )
   }
 
   implicit lazy val applicationIdGen: Gen[ApplicationId] =
