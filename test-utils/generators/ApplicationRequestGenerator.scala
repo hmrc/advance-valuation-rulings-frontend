@@ -78,10 +78,6 @@ trait ApplicationRequestGenerator extends Generators {
     intsBelowValue(Int.MaxValue).map(DraftId(prefix = "DRAFT", _))
   }
 
-  implicit lazy val arbitraryIndividualApplicant: Arbitrary[IndividualApplicant] = Arbitrary {
-    arbitraryContactDetails.arbitrary.map(IndividualApplicant(_))
-  }
-
   implicit lazy val arbitraryGoodsDetails: Arbitrary[GoodsDetails] = Arbitrary {
     for {
       goodName                <- stringsWithMaxLength(100)
@@ -192,7 +188,7 @@ trait ApplicationRequestGenerator extends Generators {
                           arbitraryMethodFive.arbitrary,
                           arbitraryMethodSix.arbitrary
                         )
-      numAttachments <- Gen.choose(0, 10)
+      numAttachments <- Gen.choose(0, 5)
       attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
     } yield ApplicationRequest(
       draftId.render,

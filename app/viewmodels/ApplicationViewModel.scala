@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
 import models.requests._
-import viewmodels.checkAnswers.ApplicationContactDetailsSummary
-import viewmodels.checkAnswers.CheckRegisteredDetailsSummary
+import viewmodels.checkAnswers._
 import viewmodels.checkAnswers.summary._
 
 case class ApplicationViewModel(
@@ -32,12 +31,12 @@ case class ApplicationViewModel(
 )
 
 object ApplicationViewModel {
-  def apply(applicationRequest: ApplicationRequest)(implicit
+  def apply(application: Application)(implicit
     messages: Messages
   ): ApplicationViewModel = {
-
-    val eoriRow   = CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
-    val applicant =
+    val applicationRequest = application.request
+    val eoriRow            = CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
+    val applicant          =
       ApplicationContactDetailsSummary.rows(applicationRequest.contact).map(_.copy(actions = None))
 
     ApplicationViewModel(

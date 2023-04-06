@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object AgentRoleSummary {
 
-  private def roleRow(role: WhatIsYourRoleAsImporter)(implicit messages: Messages): SummaryListRow =
+  def row(role: WhatIsYourRoleAsImporter)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.applicant.role.label",
       value =
@@ -42,6 +42,6 @@ object AgentRoleSummary {
       )
     )
 
-  def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    userAnswer.get(WhatIsYourRoleAsImporterPage).map(role => Seq(roleRow(role)))
+  def row(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+    userAnswer.get(WhatIsYourRoleAsImporterPage).map(role => Seq(row(role)))
 }

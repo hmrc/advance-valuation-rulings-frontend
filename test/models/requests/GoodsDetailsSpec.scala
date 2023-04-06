@@ -32,7 +32,7 @@ class GoodsDetailsSpec
     with ScalaCheckPropertyChecks
     with ApplicationRequestGenerator {
 
-  import ApplicantSpec._
+  import GoodsDetailsSpec._
 
   "GoodsDetails" should {
     "succeed when all fields set" in {

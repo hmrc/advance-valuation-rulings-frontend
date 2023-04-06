@@ -28,92 +28,13 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 
-class ApplicantSpec
+class ContactDetailsSpec
     extends AnyWordSpec
     with Matchers
     with ScalaCheckPropertyChecks
     with ApplicationRequestGenerator {
 
-  import ApplicantSpec._
-
-  "Applicant" should {
-    "succeed for an individual applicant" in {
-      val ua = emptyUserAnswers
-
-      val userAnswers = (for {
-        ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
-      } yield ua).success.get
-
-      val result = Applicant(userAnswers, AffinityGroup.Individual)
-
-      result shouldBe Valid(IndividualApplicant(applicant.contact))
-    }
-
-    "succeed for a business applicant" in {
-      val ua = emptyUserAnswers
-
-      val userAnswers = (for {
-        ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
-        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
-      } yield ua).success.get
-
-      val result = Applicant(userAnswers, AffinityGroup.Organisation)
-
-      result shouldBe Valid(
-        OrganisationApplicant(orgApplicant.businessContact, orgApplicant.role)
-      )
-    }
-
-    "return invalid when Organisation has no contact details" in {
-      val ua = emptyUserAnswers
-
-      val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, CheckRegDetails)
-        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-
-      } yield ua).success.get
-
-      val result = Applicant(userAnswers, AffinityGroup.Organisation)
-
-      result shouldBe Invalid(
-        NonEmptyList.of(BusinessContactDetailsPage)
-      )
-    }
-
-    "return invalid when Individual has no contact details" in {
-      val ua = emptyUserAnswers
-
-      val userAnswers = (for {
-        ua <- ua.set(CheckRegisteredDetailsPage, CheckRegDetails)
-      } yield ua).success.get
-
-      val result = Applicant(userAnswers, AffinityGroup.Individual)
-
-      result shouldBe Invalid(
-        NonEmptyList.of(ApplicationContactDetailsPage)
-      )
-    }
-
-    "return invalid for an Individual with empty UserAnswers" in {
-      val userAnswers = emptyUserAnswers
-
-      val result = Applicant(userAnswers, AffinityGroup.Individual)
-
-      result shouldBe Invalid(
-        NonEmptyList.one(ApplicationContactDetailsPage)
-      )
-    }
-
-    "return invalid for an Org Applicant with empty UserAnswers" in {
-      val userAnswers = emptyUserAnswers
-
-      val result = Applicant(userAnswers, AffinityGroup.Organisation)
-
-      result shouldBe Invalid(
-        NonEmptyList.of(BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage)
-      )
-    }
-  }
+  import ContactDetailsSpec._
 
   "ContactDetails" should {
 
@@ -127,7 +48,7 @@ class ApplicantSpec
 
       val result = ContactDetails(userAnswers, AffinityGroup.Individual)
 
-      result shouldBe Valid(applicant.contact)
+      result shouldBe Valid(contactDetails)
     }
 
     "succeed for an organisation" in {
@@ -140,7 +61,7 @@ class ApplicantSpec
 
       val result = ContactDetails(userAnswers, AffinityGroup.Organisation)
 
-      result shouldBe Valid(applicant.contact)
+      result shouldBe Valid(contactDetails)
     }
 
     "fail when individual contact details are missing" in {
@@ -159,7 +80,7 @@ class ApplicantSpec
   }
 }
 
-object ApplicantSpec extends Generators {
+object ContactDetailsSpec extends Generators {
 
   val CheckRegDetails = CheckRegisteredDetails(
     true,
@@ -189,6 +110,11 @@ object ApplicantSpec extends Generators {
     phone = randomString,
     company = randomString
   )
+  val contactDetails            = ContactDetails(
+    name = randomString,
+    email = randomString,
+    phone = Some(randomString)
+  )
   val eoriDetails               = TraderDetail(
     eori = randomString,
     businessName = randomString,
@@ -198,21 +124,5 @@ object ApplicantSpec extends Generators {
     postcode = "abc",
     countryCode = randomString,
     phoneNumber = None
-  )
-  val applicant                 = IndividualApplicant(
-    contact = ContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString)
-    )
-  )
-  val orgApplicant              = OrganisationApplicant(
-    businessContact = CompanyContactDetails(
-      name = randomString,
-      email = randomString,
-      phone = Some(randomString),
-      company = randomString
-    ),
-    role = ImporterRole.AgentOnBehalf
   )
 }

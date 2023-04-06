@@ -20,6 +20,13 @@ import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 
+final case class ApplicationSummaryRequest(eoriNumber: String)
+
+object ApplicationSummaryRequest {
+
+  implicit lazy val format: OFormat[ApplicationSummaryRequest] = Json.format
+}
+
 final case class ApplicationSummaryResponse(summaries: Seq[ApplicationSummary])
 
 object ApplicationSummaryResponse {
