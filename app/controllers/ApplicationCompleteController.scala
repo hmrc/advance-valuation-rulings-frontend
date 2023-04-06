@@ -25,8 +25,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.EmailConnector
 import controllers.actions._
 import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
+import services.email.EmailService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
@@ -36,7 +38,9 @@ class ApplicationCompleteController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: ApplicationCompleteView
+  view: ApplicationCompleteView,
+  emailConnector: EmailConnector,
+  emailService: EmailService
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -45,24 +49,36 @@ class ApplicationCompleteController @Inject() (
   def onPageLoad(applicationId: String): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
-        val answers = request.userAnswers
-
+        val answers            = request.userAnswers
         val applicationSummary = ApplicationSummary(answers, request.affinityGroup).removeActions()
 
         request.affinityGroup match {
           case AffinityGroup.Individual   =>
-            (answers.data \ ApplicationContactDetailsPage.toString \ "email").toOption match {
-              case Some(JsString(applicantEmail)) =>
+            (
+              (answers.data \ ApplicationContactDetailsPage.toString \ "email").toOption,
+              (answers.data \ ApplicationContactDetailsPage.toString \ "name").toOption
+            ) match {
+              case (Some(JsString(applicantEmail)), Some(JsString(applicantName))) =>
+                emailConnector.sendEmail(
+                  emailService.makeEmailRequest(applicantEmail, applicantName)
+                )
+
                 Ok(view(true, applicationId, applicantEmail, applicationSummary))
-              case _                              =>
+              case _                                                               =>
                 logger.error(s"Applicant email is empty for id: ${request.userId}")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
             }
           case AffinityGroup.Organisation =>
-            (answers.data \ BusinessContactDetailsPage.toString \ "email").toOption match {
-              case Some(JsString(applicantEmail)) =>
+            (
+              (answers.data \ BusinessContactDetailsPage.toString \ "email").toOption,
+              (answers.data \ BusinessContactDetailsPage.toString \ "name").toOption
+            ) match {
+              case (Some(JsString(applicantEmail)), Some(JsString(applicantName))) =>
+                emailConnector.sendEmail(
+                  emailService.makeEmailRequest(applicantEmail, applicantName)
+                )
                 Ok(view(false, applicationId, applicantEmail, applicationSummary))
-              case _                              =>
+              case _                                                               =>
                 logger.error(s"Applicant email is empty for id: ${request.userId}")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
             }

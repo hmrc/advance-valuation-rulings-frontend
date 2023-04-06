@@ -37,14 +37,21 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
             val userAnswers   = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val Email         = "testEmail@mail.com"
+            val email         = "testEmail@mail.com"
+            val name          = "Jonny"
             val applicationId = userAnswers.draftId
 
-            val emailUpdate   =
-              (__ \ ApplicationContactDetailsPage.toString \ "email").json.put(JsString(Email))
-            val dataWithEmail = userAnswers.data.transform(__.json.update(emailUpdate)).get
-            val answers       = userAnswers.copy(data = dataWithEmail)
-            val application   = applicationBuilder(userAnswers = Option(answers)).build()
+            val emailUpdate          =
+              (__ \ ApplicationContactDetailsPage.toString \ "email").json.put(JsString(email))
+            val nameUpdate           =
+              (__ \ ApplicationContactDetailsPage.toString \ "name").json.put(JsString(name))
+            val dataWithEmail        = userAnswers.data.transform(__.json.update(emailUpdate)).get
+            val dataWithEmailAndName = dataWithEmail
+              .transform(__.json.update(nameUpdate))
+              .get
+
+            val answers     = userAnswers.copy(data = dataWithEmailAndName)
+            val application = applicationBuilder(userAnswers = Option(answers)).build()
 
             running(application) {
               val request       =
@@ -58,7 +65,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               val view    = application.injector.instanceOf[ApplicationCompleteView]
               val summary = ApplicationSummary(userAnswers, AffinityGroup.Individual).removeActions
               status(result) mustEqual OK
-              contentAsString(result) mustEqual view(true, applicationId, Email, summary)(
+              contentAsString(result) mustEqual view(true, applicationId, email, summary)(
                 request,
                 messages(application)
               ).toString

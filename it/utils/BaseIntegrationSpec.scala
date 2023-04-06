@@ -48,6 +48,9 @@ trait BaseIntegrationSpec
       .configure(
         "microservice.services.advance-valuation-rulings-backend.port" -> WireMockHelper.wireMockPort
       )
+      .configure(
+        "microservice.services.email.port" -> WireMockHelper.wireMockPort
+      )
       .build()
 
   implicit lazy val ec: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
