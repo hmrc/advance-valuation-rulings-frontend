@@ -27,8 +27,6 @@ import play.api.data.validation.Constraints
 import com.google._
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.BusinessContactDetailsFormProvider._
-import forms.Validation.emailPattern
-import forms.Validation.nameInputPattern
 import forms.mappings.Mappings
 import models.BusinessContactDetails
 
