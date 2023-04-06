@@ -40,7 +40,6 @@ object GoodsDetails {
     val goodsDescription: ValidatedNel[QuestionPage[_], String] =
       userAnswers.validated(DescriptionOfGoodsPage)
 
-    // val name                   = goodsDescription // there is no name page?
     val envisagedCommodityCode = for {
       hasCode <- userAnswers.get(HasCommodityCodePage)
       code    <- userAnswers.get(CommodityCodePage)
@@ -98,6 +97,26 @@ object TraderDetail {
           phoneNumber = crd.phoneNumber
         )
     )
+
+  def agent(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] = {
+    val role    = userAnswers.validated(WhatIsYourRoleAsImporterPage)
+    val details = userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
+      CheckRegisteredDetailsPage,
+      (crd) =>
+        TraderDetail(
+          eori = crd.eori,
+          businessName = crd.name,
+          addressLine1 = crd.streetAndNumber,
+          addressLine2 = Some(crd.city),
+          addressLine3 = None,
+          postcode = crd.postalCode.getOrElse(""),
+          countryCode = crd.country,
+          phoneNumber = crd.phoneNumber
+        )
+    )
+
+    role.andThen(_ => details)
+  }
 }
 
 case class ApplicationRequest(
