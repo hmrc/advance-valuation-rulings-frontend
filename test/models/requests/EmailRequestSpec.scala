@@ -20,7 +20,6 @@ import play.api.libs.json.Json
 
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 class EmailRequestSpec extends PlaySpec {
 

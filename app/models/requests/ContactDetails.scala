@@ -20,7 +20,7 @@ import cats.data.Validated._
 
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 
 import models._
 import pages._
