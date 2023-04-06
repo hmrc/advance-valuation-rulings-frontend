@@ -20,19 +20,23 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.libs.json.Json
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import config.FrontendAppConfig
 import models.requests.EmailRequest
 
 class EmailConnector @Inject() (
-  http: HttpClient,
+  httpClient: HttpClientV2,
   appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext) {
 
   def sendEmail(
     emailRequest: EmailRequest
   )(implicit hc: HeaderCarrier): Future[HttpResponse] =
-    http
-      .POST[EmailRequest, HttpResponse](s"${appConfig.emailBaseUrl}/email", emailRequest)
+    httpClient
+      .post(url"${appConfig.emailBaseUrl}/email")
+      .withBody(Json.toJson(emailRequest))
+      .execute[HttpResponse]
 }
