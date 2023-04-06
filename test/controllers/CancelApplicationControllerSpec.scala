@@ -68,8 +68,8 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         val request = FakeRequest(GET, routes.CancelApplicationController.confirmCancel().url)
         val result  = route(application, request).value
 
-        verify(mockSessionRepository, times(1)).clear(any())
         status(result) mustEqual SEE_OTHER
+        verify(mockSessionRepository, times(1)).clear(any())
       }
     }
   }

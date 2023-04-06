@@ -16,15 +16,15 @@
 
 package connectors
 
-import java.time.Instant
 import java.util.UUID
 
-import cats.implicits._
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 
 import com.google.inject.Inject
@@ -35,8 +35,9 @@ import models.requests._
 @javax.inject.Singleton
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
-  httpClient: HttpClient
-) extends FrontendHeaderCarrierProvider {
+  httpClient: HttpClientV2
+)(implicit ec: ExecutionContext)
+    extends FrontendHeaderCarrierProvider {
 
   private var db: Map[String, Application] = Map.empty
 
@@ -52,54 +53,22 @@ class BackendConnector @Inject() (
     ec: ExecutionContext
   ): Future[Either[BackendError, TraderDetailsWithCountryCode]] =
     httpClient
-      .GET[TraderDetailsWithCountryCode](
-        s"$backendUrl/trader-details/${acknowledgementReference.value}/${eoriNumber.value}",
-        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
-      )
+      .get(url"$backendUrl/trader-details/${acknowledgementReference.value}/${eoriNumber.value}")
+      .setHeader("X-Correlation-ID" -> UUID.randomUUID().toString)
+      .execute[TraderDetailsWithCountryCode]
       .map(response => Right(response))
       .recover {
         case e: Throwable =>
           onError(e)
       }
 
-  def submitAnswers(
-    userAnswers: UserAnswers
-  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[BackendError, HttpResponse]] =
+  def submitApplication(applicationRequest: ApplicationRequest)(implicit
+    hc: HeaderCarrier
+  ): Future[ApplicationSubmissionResponse] =
     httpClient
-      .POST[UserAnswers, HttpResponse](
-        s"$backendUrl/submit-answers",
-        body = userAnswers,
-        headers = Seq("X-Correlation-ID" -> UUID.randomUUID().toString)
-      )
-      .map {
-        response =>
-          if (Status.isSuccessful(response.status)) {
-            response.asRight
-          } else {
-            BackendError(response.status, response.body).asLeft
-          }
-      }
-      .recover {
-        case e: Throwable =>
-          onError(e)
-      }
-
-  def submitApplication(
-    applicationRequest: ApplicationRequest
-  )(implicit
-    ec: ExecutionContext
-  ): Future[Either[BackendError, ApplicationSubmissionResponse]] = {
-
-    val applicationId = ApplicationId(db.size)
-    val application   = Application(
-      id = applicationId,
-      lastUpdated = Instant.now(),
-      created = Instant.now(),
-      request = applicationRequest
-    )
-    db = db + (application.id.toString -> application)
-    ApplicationSubmissionResponse(applicationId).asRight[BackendError].pure[Future]
-  }
+      .post(url"$backendUrl/applications")
+      .withBody(Json.toJson(applicationRequest))
+      .execute[ApplicationSubmissionResponse]
 
   def getApplication(
     applicationId: String
@@ -122,28 +91,10 @@ class BackendConnector @Inject() (
         )
     }
 
-  def applicationSummaries(
-    request: ApplicationSummaryRequest
-  )(implicit
-    ec: ExecutionContext
-  ): Future[Either[BackendError, ApplicationSummaryResponse]] =
-    db.values
-      .foldLeft(ApplicationSummaryResponse(Seq.empty)) {
-        case (acc, application) =>
-          if (application.request.trader.eori == request.eoriNumber) {
-            val summary = models.requests.ApplicationSummary(
-              id = application.id,
-              goodsName = application.request.goodsDetails.goodsName,
-              dateSubmitted = application.created,
-              eoriNumber = application.request.trader.eori
-            )
-            acc.copy(summaries = acc.summaries :+ summary)
-          } else {
-            acc
-          }
-      }
-      .asRight[BackendError]
-      .pure[Future]
+  def applicationSummaries(implicit hc: HeaderCarrier): Future[ApplicationSummaryResponse] =
+    httpClient
+      .get(url"$backendUrl/applications")
+      .execute[ApplicationSummaryResponse]
 
   private def onError(ex: Throwable): Left[BackendError, Nothing] = {
     val (code, message) = ex match {

@@ -1,11 +1,14 @@
 package connectors
 
+import java.time.Instant
+
 import play.api.http.Status
 import play.api.libs.json.Json
 
+import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.RequestMethod._
 import generators.{ApplicationGenerator, TraderDetailsGenerator, UserAnswersGenerator}
-import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode}
 import models.requests._
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
@@ -107,35 +110,69 @@ class BackendConnectorSpec
     }
   }
 
-  ".submit" - {
-    "should submit user answers to backend" in {
-      forAll {
-        userAnswers: UserAnswers =>
-          val requestBody = Json.stringify(Json.toJson(userAnswers))
+  ".submitApplication" - {
 
-          stub(
-            POST,
-            submitAnswersEndpoint,
-            Status.OK,
-            responseBody = "some response",
-            requestBody = Option(requestBody)
-          )
+    val applicationId      = ApplicationId(1)
+    val response           = ApplicationSubmissionResponse(applicationId)
+    val applicationRequest = ApplicationRequest(
+      draftId = "draft",
+      trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
+      agent = None,
+      contact = ContactDetails("name", "email", None),
+      requestedMethod = MethodOne(None, None, None),
+      goodsDetails = GoodsDetails("name", "description", None, None, None),
+      attachments = Nil
+    )
 
-          val result = connector.submitAnswers(userAnswers).futureValue.value
+    "must submit applications to the backend" in {
 
-          result.status mustBe Status.OK
-      }
+      wireMockServer.stubFor(
+        post(urlEqualTo("/advance-valuation-rulings/applications"))
+          .willReturn(ok(Json.toJson(response).toString))
+      )
+
+      val result = connector.submitApplication(applicationRequest).futureValue
+
+      result mustEqual response
+    }
+
+    "must return a failed future when an error is returned" in {
+
+      wireMockServer.stubFor(
+        post(urlEqualTo("/advance-valuation-rulings/applications"))
+          .willReturn(serverError())
+      )
+
+      connector.submitApplication(applicationRequest).failed.futureValue
     }
   }
 
-  ".submitApplication" - {
-    "should submit application to backend" ignore {
-      forAll {
-        applicationRequest: ApplicationRequest =>
-          val result = connector.submitApplication(applicationRequest).futureValue
+  ".applicationSummaries" - {
 
-          result mustBe a[Right[_, ApplicationSubmissionResponse]]
-      }
+    "must return a list of summaries" in {
+
+      val response = ApplicationSummaryResponse(
+        Seq(ApplicationSummary(ApplicationId(1), "name", Instant.now, "eori"))
+      )
+
+      wireMockServer.stubFor(
+        get(urlEqualTo("/advance-valuation-rulings/applications"))
+          .willReturn(ok(Json.toJson(response).toString))
+      )
+
+      val result = connector.applicationSummaries.futureValue
+
+      result mustEqual response
+    }
+
+    "must return a failed future when an error is returned" in {
+
+      wireMockServer.stubFor(
+        get(urlEqualTo("/advance-valuation-rulings/applications"))
+          .willReturn(serverError())
+      )
+
+      connector.applicationSummaries.failed.futureValue
     }
   }
 

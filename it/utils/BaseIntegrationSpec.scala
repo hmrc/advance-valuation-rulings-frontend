@@ -8,6 +8,7 @@ import scala.concurrent.ExecutionContext
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.{HttpClientV2, HttpClientV2Impl}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
 import akka.actor.ActorSystem
@@ -51,7 +52,7 @@ trait BaseIntegrationSpec
       .build()
 
   implicit lazy val ec: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
-  lazy val httpClient: DefaultHttpClient = fakeApplication().injector.instanceOf[DefaultHttpClient]
+  lazy val httpClient: HttpClientV2      = fakeApplication().injector.instanceOf[HttpClientV2]
   lazy val appConfig: FrontendAppConfig  = fakeApplication().injector.instanceOf[FrontendAppConfig]
 
   def traderDetailsRequestUrl(

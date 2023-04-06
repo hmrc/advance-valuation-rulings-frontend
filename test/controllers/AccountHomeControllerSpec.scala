@@ -16,32 +16,40 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import connectors.BackendConnector
 import models.ApplicationForAccountHome
 import models.requests.{ApplicationId, ApplicationSummary, ApplicationSummaryResponse}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.{Mockito, MockitoSugar}
+import org.scalatest.BeforeAndAfterEach
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.AccountHomeView
 
-class AccountHomeControllerSpec extends SpecBase {
+import java.time.Instant
+import scala.concurrent.Future
 
-  val mockBackEndConnector = mock[BackendConnector]
+class AccountHomeControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+
+  private val mockBackEndConnector = mock[BackendConnector]
+
+  override def beforeEach(): Unit = {
+    Mockito.reset(mockBackEndConnector)
+    super.beforeEach()
+  }
 
   "AccountHome Controller" - {
 
     "must return OK and the correct view for a GET with no applications" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val response = ApplicationSummaryResponse(Nil)
+      when(mockBackEndConnector.applicationSummaries(any())).thenReturn(Future.successful(response))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[BackendConnector].toInstance(mockBackEndConnector))
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
@@ -69,9 +77,9 @@ class AccountHomeControllerSpec extends SpecBase {
         .build()
 
       when(
-        mockBackEndConnector.applicationSummaries(any())(any())
+        mockBackEndConnector.applicationSummaries(any())
       ) thenReturn Future
-        .successful(Right(ApplicationSummaryResponse(appsSummary)))
+        .successful(ApplicationSummaryResponse(appsSummary))
 
       running(application) {
         val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)

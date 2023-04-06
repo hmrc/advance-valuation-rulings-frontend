@@ -62,17 +62,11 @@ class CheckYourAnswersController @Inject() (
           case Valid(applicationRequest)                     =>
             backendConnector
               .submitApplication(applicationRequest)
-              .flatMap {
-                case Right(applicationResponse) =>
-                  Future.successful(
-                    Redirect(
-                      routes.ApplicationCompleteController
-                        .onPageLoad(applicationResponse.applicationId.toString)
-                    )
+              .map {
+                response =>
+                  Redirect(
+                    routes.ApplicationCompleteController.onPageLoad(response.applicationId.toString)
                   )
-                case Left(backendError)         =>
-                  logger.error(s"Failed to submit user answers to backend: $backendError")
-                  Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
               }
         }
     }
