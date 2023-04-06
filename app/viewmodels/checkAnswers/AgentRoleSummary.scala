@@ -22,9 +22,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers, WhatIsYourRoleAsImporter}
-import models.requests.ImporterRole
-import models.requests.ImporterRole.AgentOnBehalf
-import models.requests.ImporterRole.Employee
 import pages.WhatIsYourRoleAsImporterPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -44,12 +41,6 @@ object AgentRoleSummary {
           .withVisuallyHiddenText(messages("businessContactDetails.role.change.hidden"))
       )
     )
-
-  def row(role: ImporterRole)(implicit messages: Messages): SummaryListRow =
-    role match {
-      case AgentOnBehalf => row(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
-      case Employee      => row(WhatIsYourRoleAsImporter.EmployeeOfOrg)
-    }
 
   def row(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     userAnswer.get(WhatIsYourRoleAsImporterPage).map(role => Seq(row(role)))
