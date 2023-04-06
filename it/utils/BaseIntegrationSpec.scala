@@ -8,8 +8,7 @@ import scala.concurrent.ExecutionContext
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.client.{HttpClientV2, HttpClientV2Impl}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import akka.actor.ActorSystem
 import config.FrontendAppConfig

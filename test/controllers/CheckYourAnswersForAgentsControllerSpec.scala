@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.time.Instant
-
 import scala.concurrent.Future
 
 import play.api.i18n.Messages
@@ -30,11 +28,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import base.SpecBase
 import connectors.BackendConnector
 import models._
-import models.requests.{Application, ApplicationId, ApplicationRequest, ApplicationSubmissionResponse}
+import models.requests.{ApplicationId, ApplicationSubmissionResponse}
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
 import org.scalatest.{BeforeAndAfterEach, EitherValues}
 import pages._
 import viewmodels.checkAnswers.summary.ApplicationSummary
