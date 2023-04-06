@@ -16,20 +16,22 @@
 
 package controllers
 
+import java.time.Instant
+
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import connectors.BackendConnector
 import models.ApplicationForAccountHome
 import models.requests.{ApplicationId, ApplicationSummary, ApplicationSummaryResponse}
-import org.mockito.ArgumentMatchers.any
 import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.BeforeAndAfterEach
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import views.html.AccountHomeView
-
-import java.time.Instant
-import scala.concurrent.Future
 
 class AccountHomeControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 

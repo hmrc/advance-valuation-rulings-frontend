@@ -110,10 +110,10 @@ object ContactDetailsSpec extends Generators {
     phone = randomString,
     company = randomString
   )
-  val contactDetails = ContactDetails(
+  val contactDetails            = ContactDetails(
     name = randomString,
     email = randomString,
-    phone = Some(randomString),
+    phone = Some(randomString)
   )
   val eoriDetails               = TraderDetail(
     eori = randomString,
