@@ -47,17 +47,17 @@ object DetailsSummary {
     DetailsSummary(SummaryListViewModel(rows))
   }
 
-  def apply(request: ApplicationRequest)(implicit messages: Messages): DetailsSummary = {
+  def apply(application: Application)(implicit messages: Messages): DetailsSummary = {
     val rows = Seq(
-      DescriptionOfGoodsSummary.row(request),
-      HasCommodityCodeSummary.row(request),
-      CommodityCodeSummary.row(request),
-      HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(request),
-      DescribeTheLegalChallengesSummary.row(request),
-      HasConfidentialInformationSummary.row(request),
-      ConfidentialInformationSummary.row(request),
-      DoYouWantToUploadDocumentsSummary.row(request),
-      UploadedDocumentsSummary.row(request)
+      DescriptionOfGoodsSummary.row(application),
+      HasCommodityCodeSummary.row(application),
+      CommodityCodeSummary.row(application),
+      HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(application),
+      DescribeTheLegalChallengesSummary.row(application),
+      HasConfidentialInformationSummary.row(application),
+      ConfidentialInformationSummary.row(application),
+      DoYouWantToUploadDocumentsSummary.row(application),
+      UploadedDocumentsSummary.row(application)
     ).flatten
 
     DetailsSummary(SummaryListViewModel(rows))

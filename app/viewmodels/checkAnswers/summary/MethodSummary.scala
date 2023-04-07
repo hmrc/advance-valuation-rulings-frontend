@@ -257,8 +257,8 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows))
   }
 
-  def apply(request: ApplicationRequest)(implicit messages: Messages): MethodSummary =
-    request.requestedMethod match {
+  def apply(application: Application)(implicit messages: Messages): MethodSummary =
+    application.requestedMethod match {
       case method: MethodOne   => methodOne(method)
       case method: MethodTwo   => methodTwo(method)
       case method: MethodThree => methodThree(method)

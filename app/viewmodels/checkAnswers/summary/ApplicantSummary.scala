@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
-import models.requests.ApplicationRequest
+import models.requests.{Application, ApplicationRequest}
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
@@ -32,8 +32,8 @@ sealed trait ApplicantSummary {
 }
 
 object ApplicantSummary {
-  def apply(applicationRequest: ApplicationRequest)(implicit messages: Messages) =
-    CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
+  def apply(application: Application)(implicit messages: Messages) =
+    CheckRegisteredDetailsSummary.rows(application).map(_.copy(actions = None))
 }
 
 case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummary {

@@ -24,7 +24,12 @@ final case class Application(
   id: ApplicationId,
   created: Instant,
   lastUpdated: Instant,
-  request: ApplicationRequest
+  trader: TraderDetail,
+  agent: Option[TraderDetail],
+  contact: ContactDetails,
+  requestedMethod: RequestedMethod,
+  goodsDetails: GoodsDetails,
+  attachments: Seq[AttachmentRequest]
 )
 
 object Application {

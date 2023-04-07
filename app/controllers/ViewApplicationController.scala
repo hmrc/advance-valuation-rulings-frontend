@@ -34,8 +34,6 @@ import views.html.ViewApplicationView
 class ViewApplicationController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
   view: ViewApplicationView
@@ -45,16 +43,13 @@ class ViewApplicationController @Inject() (
   import ViewApplicationController._
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
-    (identify).async {
+    identify.async {
       implicit request =>
-        val result = backendConnector.getApplication(applicationId)
-
-        result.map {
-          case Right(application) =>
+        backendConnector.getApplication(applicationId).map {
+          application =>
             val viewModel   = ApplicationViewModel(application)
             val lastUpdated = formatter.format(application.lastUpdated)
             Ok(view(viewModel, applicationId, lastUpdated))
-          case Left(_)            => Redirect(routes.JourneyRecoveryController.onPageLoad())
         }
     }
 }

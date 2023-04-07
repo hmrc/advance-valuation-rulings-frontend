@@ -10,6 +10,8 @@ import com.github.tomakehurst.wiremock.http.RequestMethod._
 import generators.{ApplicationGenerator, TraderDetailsGenerator, UserAnswersGenerator}
 import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode}
 import models.requests._
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalatest.OptionValues
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
 class BackendConnectorSpec
@@ -17,7 +19,8 @@ class BackendConnectorSpec
     with WireMockHelper
     with UserAnswersGenerator
     with TraderDetailsGenerator
-    with ApplicationGenerator {
+    with ApplicationGenerator
+    with OptionValues {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -176,17 +179,32 @@ class BackendConnectorSpec
     }
   }
 
-  ".application" - {
-    "should get application from backend" ignore {
-      forAll {
-        (
-          application: Application,
-        ) =>
-          val response =
-            connector.getApplication(application.id.toString).futureValue.value
+  ".getApplication" - {
 
-          response mustBe application
-      }
+    "must get an application from the backend" in {
+
+      val application = arbitrary[Application].sample.value
+
+      wireMockServer.stubFor(
+        get(urlEqualTo(s"/advance-valuation-rulings/applications/${application.id.toString}"))
+          .willReturn(ok(Json.toJson(application).toString))
+      )
+
+      val result = connector.getApplication(application.id.toString).futureValue
+
+      result mustEqual application
+    }
+
+    "must return a failed future when an error is returned" in {
+
+      val application = arbitrary[Application].sample.value
+
+      wireMockServer.stubFor(
+        get(urlEqualTo(s"/advance-valuation-rulings/applications${application.id.toString}"))
+          .willReturn(serverError())
+      )
+
+      connector.getApplication(application.id.toString).failed.futureValue
     }
   }
 }
