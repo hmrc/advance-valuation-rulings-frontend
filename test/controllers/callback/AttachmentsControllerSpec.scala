@@ -64,7 +64,7 @@ class AttachmentsControllerSpec
         location = Path.Directory("some").file("location"),
         content = Source.single(bytes),
         metadata = ObjectMetadata(
-          contentType = "text/plain",
+          contentType = "application/pdf",
           contentLength = bytes.length,
           contentMd5 = Md5Hash("somemd5"),
           lastModified = Instant.now(),
@@ -79,6 +79,8 @@ class AttachmentsControllerSpec
       val result  = route(app, request).value
 
       status(result) mustBe OK
+      header("Content-Type", result).value mustBe "application/pdf"
+      header("Digest", result).value mustBe "md5=somemd5"
       contentAsString(result) mustBe "Hello, World!"
     }
 

@@ -16,10 +16,6 @@
 
 package controllers.callback
 
-import javax.inject.{Inject, Singleton}
-
-import scala.concurrent.ExecutionContext
-
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, RequestHeader}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.Path
@@ -27,6 +23,9 @@ import uk.gov.hmrc.objectstore.client.play.Implicits._
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class AttachmentsController @Inject() (
@@ -41,7 +40,13 @@ class AttachmentsController @Inject() (
   def get(path: String): Action[AnyContent] = Action.async {
     implicit request =>
       objectStoreClient.getObject(Path.File(path)).map {
-        o => o.map(o => Ok.chunked(o.content)).getOrElse(NotFound)
+        _.map { o =>
+          Ok.chunked(o.content)
+            .withHeaders(
+              "Content-Type" -> o.metadata.contentType,
+              "Digest" -> s"md5=${o.metadata.contentMd5.value}"
+            )
+        }.getOrElse(NotFound)
       }
   }
 }
