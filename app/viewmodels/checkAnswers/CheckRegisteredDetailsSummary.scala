@@ -96,20 +96,20 @@ object CheckRegisteredDetailsSummary {
     } yield result
 
   def rows(
-    request: ApplicationRequest
+    application: Application
   )(implicit messages: Messages): Seq[SummaryListRow] = {
 
     val postCode       =
-      if (request.trader.postcode.isEmpty) None else Some(request.trader.postcode)
+      if (application.trader.postcode.isEmpty) None else Some(application.trader.postcode)
     val contactDetails = models.CheckRegisteredDetails(
       value = true,
-      eori = request.trader.eori,
-      name = request.trader.businessName,
-      streetAndNumber = request.trader.addressLine1 + "\n" + request.trader.addressLine2,
-      city = request.trader.addressLine2.getOrElse(""),
-      country = request.trader.countryCode,
+      eori = application.trader.eori,
+      name = application.trader.businessName,
+      streetAndNumber = application.trader.addressLine1,
+      city = application.trader.addressLine2.getOrElse(""),
+      country = application.trader.countryCode,
       postalCode = postCode,
-      phoneNumber = request.trader.phoneNumber
+      phoneNumber = application.trader.phoneNumber
     )
     Seq(
       registeredNumberRow(contactDetails),

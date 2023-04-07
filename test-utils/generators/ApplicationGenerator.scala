@@ -32,9 +32,14 @@ trait ApplicationGenerator extends ApplicationRequestGenerator {
         dateIntant = date.atStartOfDay(ZoneOffset.UTC).toInstant
       } yield Application(
         id = id,
-        request = data,
         lastUpdated = dateIntant,
-        created = dateIntant
+        created = dateIntant,
+        trader = data.trader,
+        agent = data.agent,
+        contact = data.contact,
+        requestedMethod = data.requestedMethod,
+        goodsDetails = data.goodsDetails,
+        attachments = data.attachments
       )
     }
 }

@@ -39,8 +39,6 @@ class BackendConnector @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendHeaderCarrierProvider {
 
-  private var db: Map[String, Application] = Map.empty
-
   type Result = Either[BackendError, TraderDetailsWithCountryCode]
 
   private val backendUrl = config.advanceValuationRulingsBackendURL
@@ -72,24 +70,10 @@ class BackendConnector @Inject() (
 
   def getApplication(
     applicationId: String
-  ): Future[Either[BackendError, Application]] =
-    db.get(applicationId) match {
-      case Some(application) =>
-        Future.successful(
-          Right(
-            application
-          )
-        )
-      case None              =>
-        Future.successful(
-          Left(
-            BackendError(
-              Status.NOT_FOUND,
-              s"Application with id $applicationId not found"
-            )
-          )
-        )
-    }
+  )(implicit hc: HeaderCarrier): Future[Application] =
+    httpClient
+      .get(url"$backendUrl/applications/$applicationId")
+      .execute[Application]
 
   def applicationSummaries(implicit hc: HeaderCarrier): Future[ApplicationSummaryResponse] =
     httpClient

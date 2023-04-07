@@ -23,6 +23,7 @@ import scala.concurrent.Future
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -48,27 +49,18 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
         )
         .build()
 
-      when(mockBackendConnector.getApplication(any()))
-        .thenReturn(
-          Future.successful(
-            Right(ruling)
-          )
-        )
+      when(mockBackendConnector.getApplication(any())(any()))
+        .thenReturn(Future.successful(ruling))
 
       implicit val msgs = messages(application)
 
       running(application) {
-        val request              = FakeRequest(
+        val request = FakeRequest(
           GET,
           routes.ViewApplicationController.onPageLoad(ruling.id.toString).url
         )
-        val rulingApplication    = Application(
-          id = ruling.id,
-          request = applicationRequest,
-          lastUpdated = lastUpdated,
-          created = lastUpdated
-        )
-        val applicationViewModel = ApplicationViewModel(rulingApplication)
+
+        val applicationViewModel = ApplicationViewModel(ruling)
         val result               = route(application, request).value
         val view                 = application.injector.instanceOf[ViewApplicationView]
 
@@ -87,6 +79,9 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
 }
 
 object ViewApplicationControllerSpec extends Generators {
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+
   val randomString: String = stringsWithMaxLength(8).sample.get
 
   val eoriDetails = TraderDetail(
@@ -135,9 +130,14 @@ object ViewApplicationControllerSpec extends Generators {
   val ruling             =
     Application(
       id = applicationId,
-      request = applicationRequest,
       lastUpdated = lastUpdated,
-      created = lastUpdated
+      created = lastUpdated,
+      trader = applicationRequest.trader,
+      agent = applicationRequest.agent,
+      contact = applicationRequest.contact,
+      requestedMethod = applicationRequest.requestedMethod,
+      goodsDetails = applicationRequest.goodsDetails,
+      attachments = applicationRequest.attachments
     )
 
   val body =

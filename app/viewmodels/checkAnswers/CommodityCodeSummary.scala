@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import models.requests.ApplicationRequest
+import models.requests.Application
 import pages.CommodityCodePage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -49,8 +49,8 @@ object CommodityCodeSummary {
   ): Option[SummaryListRow] =
     answers.get(CommodityCodePage).map(makeRow)
 
-  def row(request: ApplicationRequest)(implicit
+  def row(application: Application)(implicit
     messages: Messages
   ): Option[SummaryListRow] =
-    request.goodsDetails.envisagedCommodityCode.map(makeRow)
+    application.goodsDetails.envisagedCommodityCode.map(makeRow)
 }

@@ -34,16 +34,15 @@ object ApplicationViewModel {
   def apply(application: Application)(implicit
     messages: Messages
   ): ApplicationViewModel = {
-    val applicationRequest = application.request
-    val eoriRow            = CheckRegisteredDetailsSummary.rows(applicationRequest).map(_.copy(actions = None))
-    val applicant          =
-      ApplicationContactDetailsSummary.rows(applicationRequest.contact).map(_.copy(actions = None))
+    val eoriRow   = CheckRegisteredDetailsSummary.rows(application).map(_.copy(actions = None))
+    val applicant =
+      ApplicationContactDetailsSummary.rows(application.contact).map(_.copy(actions = None))
 
     ApplicationViewModel(
       eori = SummaryList(eoriRow),
       applicant = SummaryList(applicant),
-      details = DetailsSummary(applicationRequest).removeActions(),
-      method = MethodSummary(applicationRequest).removeActions()
+      details = DetailsSummary(application).removeActions(),
+      method = MethodSummary(application).removeActions()
     )
   }
 }

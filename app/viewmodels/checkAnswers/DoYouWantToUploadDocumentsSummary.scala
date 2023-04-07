@@ -25,7 +25,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models._
-import models.requests.ApplicationRequest
+import models.requests.Application
 import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -54,8 +54,8 @@ object DoYouWantToUploadDocumentsSummary {
       .get(DoYouWantToUploadDocumentsPage)
       .map(makeRow)
 
-  def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
-    makeRow(request.attachments.nonEmpty).some
+  def row(application: Application)(implicit messages: Messages): Option[SummaryListRow] =
+    makeRow(application.attachments.nonEmpty).some
 }
 
 object UploadedDocumentsSummary {
@@ -91,6 +91,6 @@ object UploadedDocumentsSummary {
       .map(_.files.map(_._2.fileName).toSeq)
       .flatMap(makeRow)
 
-  def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
-    makeRow(request.attachments.map(_.name))
+  def row(application: Application)(implicit messages: Messages): Option[SummaryListRow] =
+    makeRow(application.attachments.map(_.name))
 }

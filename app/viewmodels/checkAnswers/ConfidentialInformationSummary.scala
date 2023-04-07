@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import models.requests.ApplicationRequest
+import models.requests.{Application, ApplicationRequest}
 import pages.ConfidentialInformationPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -45,7 +45,7 @@ object ConfidentialInformationSummary {
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ConfidentialInformationPage).map(makeRow)
 
-  def row(request: ApplicationRequest)(implicit messages: Messages): Option[SummaryListRow] =
-    request.goodsDetails.confidentialInformation.map(makeRow)
+  def row(application: Application)(implicit messages: Messages): Option[SummaryListRow] =
+    application.goodsDetails.confidentialInformation.map(makeRow)
 
 }
