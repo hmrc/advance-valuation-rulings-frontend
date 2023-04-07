@@ -42,10 +42,12 @@
 
         @paragraph(content = Html(messages("contactPage.paragraph.2")))
 
-        @govukButton(
-            ButtonViewModel(messages("site.acceptContinue"))
-        )
+
+        @components.ButtonLink(messages("site.acceptContinue"), routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode).url)
+
     }
+
+
 
     @cancelApplicationLink()
 }
