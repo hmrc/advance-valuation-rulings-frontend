@@ -17,7 +17,7 @@
 package models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 
 import models.UserAnswers
 
@@ -26,6 +26,7 @@ case class OptionalDataRequest[A](
   userId: String,
   eoriNumber: String,
   affinityGroup: AffinityGroup,
+  credentialRole: Option[CredentialRole],
   userAnswers: Option[UserAnswers]
 ) extends WrappedRequest[A](request)
 
@@ -34,5 +35,6 @@ case class DataRequest[A](
   userId: String,
   eoriNumber: String,
   affinityGroup: AffinityGroup,
-  userAnswers: UserAnswers
+  userAnswers: UserAnswers,
+  credentialRole: Option[CredentialRole]
 ) extends WrappedRequest[A](request)

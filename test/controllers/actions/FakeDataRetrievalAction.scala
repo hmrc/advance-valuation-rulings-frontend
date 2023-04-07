@@ -32,6 +32,7 @@ class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRet
         request.userId,
         request.eoriNumber,
         request.affinityGroup,
+        request.credentialRole,
         dataToReturn
       )
     )

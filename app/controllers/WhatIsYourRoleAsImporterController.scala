@@ -24,6 +24,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import audit.AuditService
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
 import models.Mode
@@ -41,6 +42,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
   requireData: DataRequiredAction,
   generateDraftId: DraftIdGenerationAction,
   isAgent: IdentifyAgentAction,
+  auditService: AuditService,
   formProvider: WhatIsYourRoleAsImporterFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: WhatIsYourRoleAsImporterView
@@ -70,7 +72,8 @@ class WhatIsYourRoleAsImporterController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            value =>
+            value => {
+              auditService.sendAgentIndicatorEvent(value)
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(WhatIsYourRoleAsImporterPage, value))
@@ -80,6 +83,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
                   request.affinityGroup
                 )
               )
+            }
           )
     }
 }

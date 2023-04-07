@@ -32,7 +32,7 @@ class FakeIdentifyIndividualAction @Inject() (bodyParsers: PlayBodyParsers)
     request: Request[A],
     block: IdentifierRequest[A] => Future[Result]
   ): Future[Result] =
-    block(IdentifierRequest(request, "id", "eoriNumber", AffinityGroup.Individual))
+    block(IdentifierRequest(request, "id", "eoriNumber", AffinityGroup.Individual, None))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

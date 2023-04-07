@@ -66,7 +66,7 @@ class IdentifyIndividual @Inject() (
         case Some(internalId) ~ allEnrolments ~ Some(Individual) =>
           IdentifyEori
             .getEoriNumber(allEnrolments)
-            .map(eori => block(IdentifierRequest(request, internalId, eori, Individual)))
+            .map(eori => block(IdentifierRequest(request, internalId, eori, Individual, None)))
             .getOrElse(throw InsufficientEnrolments())
 
         case Some(_) ~ _ ~ Some(_) =>

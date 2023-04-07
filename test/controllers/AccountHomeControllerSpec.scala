@@ -24,21 +24,23 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
+import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
 import models.ApplicationForAccountHome
 import models.requests.{ApplicationId, ApplicationSummary, ApplicationSummaryResponse}
-import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
-import org.scalatest.BeforeAndAfterEach
+import org.mockito.MockitoSugar.{reset, times, verify, when}
+import org.scalatestplus.mockito.MockitoSugar
 import views.html.AccountHomeView
 
-class AccountHomeControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
   private val mockBackEndConnector = mock[BackendConnector]
+  private val mockAuditService     = mock[AuditService]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockBackEndConnector)
+    reset(mockBackEndConnector, mockAuditService)
     super.beforeEach()
   }
 
@@ -50,7 +52,10 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar with BeforeAn
       when(mockBackEndConnector.applicationSummaries(any())).thenReturn(Future.successful(response))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[BackendConnector].toInstance(mockBackEndConnector))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackEndConnector),
+          bind[AuditService].to(mockAuditService)
+        )
         .build()
 
       running(application) {
@@ -63,6 +68,8 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar with BeforeAn
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(Seq.empty)(request, messages(application)).toString
       }
+
+      verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
     }
 
     "must return OK and the correct view for a GET with some applications" in {
@@ -75,7 +82,10 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar with BeforeAn
         for (app <- appsSummary) yield ApplicationForAccountHome(app)
 
       val application = applicationBuilder()
-        .overrides(bind[BackendConnector].toInstance(mockBackEndConnector))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackEndConnector),
+          bind[AuditService].to(mockAuditService)
+        )
         .build()
 
       when(
@@ -96,6 +106,8 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar with BeforeAn
           messages(application)
         ).toString
       }
+
+      verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
     }
 
     "must REDIRECT on startApplication" in {

@@ -21,7 +21,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, User}
 
 import models.requests.IdentifierRequest
 
@@ -31,7 +31,7 @@ class FakeIdentifyOrgAction @Inject() (bodyParsers: PlayBodyParsers) extends Ide
     request: Request[A],
     block: IdentifierRequest[A] => Future[Result]
   ): Future[Result] =
-    block(IdentifierRequest(request, "id", "eoriNumber", AffinityGroup.Organisation))
+    block(IdentifierRequest(request, "id", "eoriNumber", AffinityGroup.Organisation, Option(User)))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

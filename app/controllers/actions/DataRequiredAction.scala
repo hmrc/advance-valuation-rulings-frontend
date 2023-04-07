@@ -43,7 +43,8 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
               request.userId,
               request.eoriNumber,
               request.affinityGroup,
-              data
+              data,
+              request.credentialRole
             )
           )
         )

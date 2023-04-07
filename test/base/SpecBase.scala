@@ -29,7 +29,7 @@ import controllers.actions._
 import models.{DraftId, UserAnswers}
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
-import org.scalatest.{OptionValues, TryValues}
+import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -43,7 +43,8 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience {
+    with IntegrationPatience
+    with BeforeAndAfterEach {
 
   val ContactName        = "some name"
   val ContactEmail       = "test@email.com"

@@ -49,7 +49,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
         val result =
           action
-            .callTransform(IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual))
+            .callTransform(IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual, None))
             .futureValue
 
         result.userAnswers must not be defined
@@ -68,7 +68,9 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
         val result =
           action
-            .callTransform(new IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual))
+            .callTransform(
+              new IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual, None)
+            )
             .futureValue
 
         result.userAnswers mustBe defined
