@@ -167,8 +167,6 @@ private trait Setup extends MockitoSugar {
     lastModified = lastUpdated
   )
 
-  when(frontendAppConfig.objectStoreOwner)
-    .thenReturn(appName)
   when(
     progressTracker.registerUploadResult(Reference(anyString()), any())
   ) thenReturn Future.successful(())
@@ -179,7 +177,7 @@ private trait Setup extends MockitoSugar {
       any(),
       any[Option[String]](),
       any(),
-      eqTo(appName)
+      any()
     )(any())
   )
     .thenReturn(Future.successful(objectSummary))

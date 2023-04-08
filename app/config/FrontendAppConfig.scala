@@ -58,7 +58,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val overviewForMethodsUrl: String      = configuration.get[String]("urls.overviewForMethods")
   val createAuthTokenOnStart: Boolean    =
     configuration.get[Boolean]("create-internal-auth-token-on-start")
-  val objectStoreOwner: String           = if (createAuthTokenOnStart) appName else internalAuthServiceName
 
   val arsSubscribeUrl = configuration
     .get[Service]("microservice.services.eoriCommonComponent")
