@@ -61,7 +61,7 @@ class InternalAuthInitialiserSpec
         "permissions" -> Seq(
           Json.obj(
             "resourceType"     -> "object-store",
-            "resourceLocation" -> "advance-valuation-ruling-frontend",
+            "resourceLocation" -> "advance-valuation-rulings-frontend",
             "actions"          -> List("READ", "WRITE", "DELETE")
           )
         )

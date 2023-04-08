@@ -42,7 +42,6 @@ class UpscanCallbackDispatcher @Inject() (
   private lazy val logger                                     = Logger(this.getClass)
   private def directory(reference: Reference): Path.Directory =
     Path.Directory(s"rulings/${reference.value}")
-  lazy val owner                                              = config.objectStoreOwner
 
   def handleCallback(
     callback: CallbackBody
@@ -92,8 +91,7 @@ class UpscanCallbackDispatcher @Inject() (
             from = body.downloadUrl,
             to = Path.File(filePath, body.uploadDetails.fileName),
             contentType = Some(body.uploadDetails.fileMimeType),
-            contentMd5 = None,
-            owner = owner
+            contentMd5 = None
           )
           .map {
             (_: ObjectSummaryWithMd5) =>

@@ -284,9 +284,8 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
       when(mockSessionRepository.set(any()))
         .thenReturn(Future.successful(true))
-      when(osClient.deleteObject(any(), anyString())(any()))
+      when(osClient.deleteObject(any(), any())(any()))
         .thenReturn(Future.successful(()))
-      when(config.objectStoreOwner).thenReturn("advance-valuation-rulings-frontend")
 
       val application =
         applicationBuilder(userAnswers = Some(ans))
@@ -304,7 +303,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         status(result) mustEqual SEE_OTHER
 
         verify(mockSessionRepository, times(1)).set(any())
-        verify(osClient, times(1)).deleteObject(any(), eqTo("advance-valuation-rulings-frontend"))(
+        verify(osClient, times(1)).deleteObject(any(), any())(
           any()
         )
       }
