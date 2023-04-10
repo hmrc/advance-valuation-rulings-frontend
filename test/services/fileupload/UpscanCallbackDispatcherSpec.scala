@@ -28,6 +28,7 @@ import uk.gov.hmrc.objectstore.client.play._
 
 import base.SpecBase
 import config.FrontendAppConfig
+import models.Done
 import models.fileupload._
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
@@ -51,12 +52,12 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       )
       when(
         progressTracker.registerUploadResult(Reference(anyString()), any())
-      ) thenReturn Future.successful(())
+      ) thenReturn Future.successful(Done)
 
       implicit val hc = HeaderCarrier()
       val dispatcher  =
         new UpscanCallbackDispatcher(progressTracker, objectStoreClient, frontendAppConfig)
-      val result      = dispatcher.handleCallback(callback).futureValue
+      dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
         Reference(referenceValue),
@@ -68,8 +69,6 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
           Some(fileSize)
         )
       )
-
-      result mustEqual ()
     }
 
     "handles quarantine callback" in new Setup {
@@ -84,14 +83,12 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
       implicit val hc = HeaderCarrier()
       val dispatcher  =
         new UpscanCallbackDispatcher(progressTracker, objectStoreClient, frontendAppConfig)
-      val result      = dispatcher.handleCallback(callback).futureValue
+      dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
         Reference(referenceValue),
         Quarantine
       )
-
-      result mustEqual ()
     }
 
     "handles rejected callback" in new Setup {
@@ -106,14 +103,12 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
 
       val dispatcher =
         new UpscanCallbackDispatcher(progressTracker, objectStoreClient, frontendAppConfig)
-      val result     = dispatcher.handleCallback(callback).futureValue
+      dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
         Reference(referenceValue),
         Rejected
       )
-
-      result mustEqual ()
     }
 
     "handles failed callback" in new Setup {
@@ -128,14 +123,12 @@ class UpscanCallbackDispatcherSpec extends SpecBase {
 
       val dispatcher =
         new UpscanCallbackDispatcher(progressTracker, objectStoreClient, frontendAppConfig)
-      val result     = dispatcher.handleCallback(callback).futureValue
+      dispatcher.handleCallback(callback).futureValue
 
       verify(progressTracker, times(1)).registerUploadResult(
         Reference(referenceValue),
         Failed
       )
-
-      result mustEqual ()
     }
   }
 
@@ -169,7 +162,7 @@ private trait Setup extends MockitoSugar {
 
   when(
     progressTracker.registerUploadResult(Reference(anyString()), any())
-  ) thenReturn Future.successful(())
+  ) thenReturn Future.successful(Done)
   when(
     objectStoreClient.uploadFromUrl(
       any(),

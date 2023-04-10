@@ -26,6 +26,7 @@ import uk.gov.hmrc.objectstore.client.{ObjectSummaryWithMd5, Path}
 import uk.gov.hmrc.objectstore.client.play._
 
 import config.FrontendAppConfig
+import models.Done
 import models.fileupload._
 
 sealed trait FileStatus
@@ -45,12 +46,12 @@ class UpscanCallbackDispatcher @Inject() (
 
   def handleCallback(
     callback: CallbackBody
-  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Unit] =
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Done] =
     for {
       uploaded <- sendFile(callback)
       status    = makeStatus(uploaded)
       result   <- progressTracker.registerUploadResult(callback.reference, status)
-    } yield result
+    } yield Done
 
   private def makeStatus(fileStatus: FileStatus): UploadStatus =
     fileStatus match {

@@ -16,8 +16,9 @@
 
 package services
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import models.fileupload._
@@ -33,11 +34,16 @@ class MongoBackedUploadProgressTrackerSpec
     with DefaultPlayMongoRepositorySupport[UploadDetails]
     with IntegrationPatience {
 
-  override val checkTtlIndex: Boolean = false
+  private lazy val app = GuiceApplicationBuilder()
+    .overrides(
+      bind[MongoComponent].toInstance(mongoComponent)
+    )
+    .build()
 
-  override lazy val repository = new FileUploadRepository(mongoComponent)
+  override lazy val repository: FileUploadRepository =
+    app.injector.instanceOf[FileUploadRepository]
 
-  val t = new MongoBackedUploadProgressTracker(repository)
+  private lazy val tracker = app.injector.instanceOf[MongoBackedUploadProgressTracker]
 
   "MongoBackedUploadProgressTracker" should {
     "coordinate workflow" in {
@@ -46,10 +52,10 @@ class MongoBackedUploadProgressTrackerSpec
       val expectedStatus =
         UploadedSuccessfully("name", "mimeType", "downloadUrl", "checksum", size = Some(123))
 
-      t.requestUpload(id, reference).futureValue
-      t.registerUploadResult(reference, expectedStatus).futureValue
+      tracker.requestUpload(id, reference).futureValue
+      tracker.registerUploadResult(reference, expectedStatus).futureValue
 
-      val result = t.getUploadResult(id).futureValue
+      val result = tracker.getUploadResult(id).futureValue
 
       result shouldBe Some(expectedStatus)
     }
