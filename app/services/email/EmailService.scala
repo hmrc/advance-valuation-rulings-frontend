@@ -26,7 +26,7 @@ import connectors.EmailConnector
 import models.Done
 import models.requests.{Email, EmailRequest}
 
-class EmailService @Inject()(emailConnector: EmailConnector)(implicit ec: ExecutionContext) {
+class EmailService @Inject() (emailConnector: EmailConnector)(implicit ec: ExecutionContext) {
 
   def makeEmailRequest(email: String, name: String): EmailRequest =
     EmailRequest(to = List(Email(email)), parameters = Map("name" -> name))
