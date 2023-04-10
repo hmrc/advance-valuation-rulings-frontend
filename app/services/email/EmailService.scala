@@ -15,11 +15,29 @@
  */
 
 package services.email
+
+import javax.inject.Inject
+
+import scala.concurrent.{ExecutionContext, Future}
+
+import uk.gov.hmrc.http.HeaderCarrier
+
+import connectors.EmailConnector
+import models.Done
 import models.requests.{Email, EmailRequest}
 
-class EmailService() {
+class EmailService @Inject()(emailConnector: EmailConnector)(implicit ec: ExecutionContext) {
 
   def makeEmailRequest(email: String, name: String): EmailRequest =
     EmailRequest(to = List(Email(email)), parameters = Map("name" -> name))
 
+  def sendConfirmationEmail(emailAddress: String, name: String)(implicit
+    hc: HeaderCarrier
+  ): Future[Done] = {
+    val emailRequest = makeEmailRequest(emailAddress, name)
+
+    emailConnector
+      .sendEmail(emailRequest)
+      .map(_ => Done)
+  }
 }
