@@ -183,29 +183,29 @@ class BackendConnectorSpec
 
     "must get an application from the backend" in {
 
-      forAll(arbitrary[Application], minSuccessful(1)) { application =>
+      forAll(arbitrary[Application], minSuccessful(1)) {
+        application =>
+          wireMockServer.stubFor(
+            get(urlEqualTo(s"/advance-valuation-rulings/applications/${application.id.toString}"))
+              .willReturn(ok(Json.toJson(application).toString))
+          )
 
-        wireMockServer.stubFor(
-          get(urlEqualTo(s"/advance-valuation-rulings/applications/${application.id.toString}"))
-            .willReturn(ok(Json.toJson(application).toString))
-        )
+          val result = connector.getApplication(application.id.toString).futureValue
 
-        val result = connector.getApplication(application.id.toString).futureValue
-
-        result mustEqual application
+          result mustEqual application
       }
     }
 
     "must return a failed future when an error is returned" in {
 
-      forAll(arbitrary[Application], minSuccessful(1)) { application =>
+      forAll(arbitrary[Application], minSuccessful(1)) {
+        application =>
+          wireMockServer.stubFor(
+            get(urlEqualTo(s"/advance-valuation-rulings/applications${application.id.toString}"))
+              .willReturn(serverError())
+          )
 
-        wireMockServer.stubFor(
-          get(urlEqualTo(s"/advance-valuation-rulings/applications${application.id.toString}"))
-            .willReturn(serverError())
-        )
-
-        connector.getApplication(application.id.toString).failed.futureValue
+          connector.getApplication(application.id.toString).failed.futureValue
       }
     }
   }

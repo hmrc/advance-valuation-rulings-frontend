@@ -16,17 +16,22 @@
 
 package models.fileupload
 
-import models.fileupload._
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+
 import org.bson.types.ObjectId
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class UploadDetailsTest extends AnyWordSpec with Matchers {
 
+  private val now = Instant.now().truncatedTo(ChronoUnit.MILLIS)
+
   "Serialization and deserialization of UploadDetails" should {
 
     "serialize and deserialize InProgress status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), InProgress)
+      val input =
+        UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), InProgress, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -35,7 +40,7 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
     }
 
     "serialize and deserialize Failed status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Failed)
+      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Failed, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -44,7 +49,7 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
     }
 
     "serialize and deserialize Rejected status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Rejected)
+      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Rejected, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -53,7 +58,8 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
     }
 
     "serialize and deserialize Quarantine status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Quarantine)
+      val input =
+        UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), Quarantine, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -62,7 +68,8 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
     }
 
     "serialize and deserialize NotStarted status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), NotStarted)
+      val input =
+        UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), NotStarted, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -71,7 +78,8 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
     }
 
     "serialize and deserialize NoFileProvided status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), NoFileProvided)
+      val input =
+        UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), NoFileProvided, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -80,7 +88,8 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
     }
 
     "serialize and deserialize EntityTooLarge status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), EntityTooLarge)
+      val input =
+        UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), EntityTooLarge, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -89,7 +98,8 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
     }
 
     "serialize and deserialize EntityTooSmall status" in {
-      val input = UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), EntityTooSmall)
+      val input =
+        UploadDetails(ObjectId.get(), UploadId.generate, Reference("ABC"), EntityTooSmall, now)
 
       val serialized = UploadDetails.mongoFormat.writes(input)
       val output     = UploadDetails.mongoFormat.reads(serialized)
@@ -108,7 +118,8 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
           "http:localhost:8080",
           "checksum",
           size = None
-        )
+        ),
+        now
       )
 
       val serialized = UploadDetails.mongoFormat.writes(input)
@@ -128,7 +139,8 @@ class UploadDetailsTest extends AnyWordSpec with Matchers {
           "http:localhost:8080",
           "checksum",
           size = Some(123456)
-        )
+        ),
+        now
       )
 
       val serialized = UploadDetails.mongoFormat.writes(input)

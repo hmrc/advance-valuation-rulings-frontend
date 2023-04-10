@@ -16,10 +16,12 @@
 
 package models.fileupload
 
+import java.time.Instant
+
 import play.api.i18n.Messages
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
+import uk.gov.hmrc.mongo.play.json.formats.{MongoFormats, MongoJavatimeFormats}
 
 import org.bson.types.ObjectId
 
@@ -47,7 +49,8 @@ case class UploadDetails(
   id: ObjectId,
   uploadId: UploadId,
   reference: Reference,
-  status: UploadStatus
+  status: UploadStatus,
+  lastUpdated: Instant
 )
 
 object UploadStatus {
@@ -145,11 +148,13 @@ object UploadStatus {
 object UploadDetails {
   implicit val mongoFormat: OFormat[UploadDetails] = {
     implicit val objectIdFormats: Format[ObjectId] = MongoFormats.objectIdFormat
-    ((__ \ "_id").format[ObjectId]
-      ~ (__ \ "uploadId").format[UploadId]
-      ~ (__ \ "reference").format[Reference]
-      ~ (__ \ "status")
-        .format[UploadStatus])(UploadDetails.apply _, unlift(UploadDetails.unapply _))
+    implicit val instantFormats: Format[Instant]   = MongoJavatimeFormats.instantFormat
+    (
+      (__ \ "_id").format[ObjectId]
+        ~ (__ \ "uploadId").format[UploadId]
+        ~ (__ \ "reference").format[Reference]
+        ~ (__ \ "status").format[UploadStatus]
+        ~ (__ \ "lastUpdated").format[Instant]
+    )(UploadDetails.apply, unlift(UploadDetails.unapply))
   }
-
 }

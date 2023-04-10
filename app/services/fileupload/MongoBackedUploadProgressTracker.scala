@@ -16,6 +16,7 @@
 
 package services.fileupload
 
+import java.time.Clock
 import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -24,12 +25,17 @@ import models.fileupload._
 import org.bson.types.ObjectId
 import repositories.FileUploadRepository
 
-class MongoBackedUploadProgressTracker @Inject() (repository: FileUploadRepository)(implicit
+class MongoBackedUploadProgressTracker @Inject() (
+  repository: FileUploadRepository,
+  clock: Clock
+)(implicit
   ec: ExecutionContext
 ) extends UploadProgressTracker {
 
   override def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Unit] =
-    repository.insert(UploadDetails(ObjectId.get(), uploadId, fileReference, InProgress))
+    repository.insert(
+      UploadDetails(ObjectId.get(), uploadId, fileReference, InProgress, clock.instant())
+    )
 
   override def registerUploadResult(
     fileReference: Reference,
