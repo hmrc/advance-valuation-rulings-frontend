@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import models.Done
 import models.fileupload._
 import org.bson.types.ObjectId
 import repositories.FileUploadRepository
@@ -32,7 +33,7 @@ class MongoBackedUploadProgressTracker @Inject() (
   ec: ExecutionContext
 ) extends UploadProgressTracker {
 
-  override def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Unit] =
+  override def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Done] =
     repository.insert(
       UploadDetails(ObjectId.get(), uploadId, fileReference, InProgress, clock.instant())
     )
@@ -40,7 +41,7 @@ class MongoBackedUploadProgressTracker @Inject() (
   override def registerUploadResult(
     fileReference: Reference,
     uploadStatus: UploadStatus
-  ): Future[Unit] =
+  ): Future[Done] =
     repository.updateStatus(fileReference, uploadStatus)
 
   override def getUploadResult(id: UploadId): Future[Option[UploadStatus]] =

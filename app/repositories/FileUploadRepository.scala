@@ -27,6 +27,7 @@ import play.api.Configuration
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 
+import models.Done
 import models.fileupload._
 import org.mongodb.scala.model.{Indexes, IndexModel, IndexOptions, Updates}
 import org.mongodb.scala.model.Filters.equal
@@ -60,16 +61,16 @@ class FileUploadRepository @Inject() (
       replaceIndexes = true
     ) {
 
-  def insert(details: UploadDetails): Future[Unit] =
+  def insert(details: UploadDetails): Future[Done] =
     collection
       .insertOne(details)
       .toFuture()
-      .map(_ => ())
+      .map(_ => Done)
 
   def findByUploadId(uploadId: UploadId): Future[Option[UploadDetails]] =
     collection.find(equal("uploadId", uploadId)).headOption()
 
-  def updateStatus(reference: Reference, newStatus: UploadStatus): Future[Unit] =
+  def updateStatus(reference: Reference, newStatus: UploadStatus): Future[Done] =
     collection
       .findOneAndUpdate(
         filter = equal("reference", reference),
@@ -80,7 +81,7 @@ class FileUploadRepository @Inject() (
       )
       .headOption()
       .flatMap {
-        _.map(_ => Future.unit)
+        _.map(_ => Future.successful(Done))
           .getOrElse(Future.failed(NothingToUpdateException))
       }
 }

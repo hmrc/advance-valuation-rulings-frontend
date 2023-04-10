@@ -35,14 +35,15 @@ package services.fileupload
 import scala.concurrent.Future
 
 import com.google.inject.ImplementedBy
+import models.Done
 import models.fileupload.{Reference, UploadId, UploadStatus}
 
 @ImplementedBy(classOf[MongoBackedUploadProgressTracker])
 trait UploadProgressTracker {
 
-  def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Unit]
+  def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Done]
 
-  def registerUploadResult(reference: Reference, uploadStatus: UploadStatus): Future[Unit]
+  def registerUploadResult(reference: Reference, uploadStatus: UploadStatus): Future[Done]
 
   def getUploadResult(id: UploadId): Future[Option[UploadStatus]]
 
