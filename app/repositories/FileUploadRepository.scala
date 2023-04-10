@@ -41,6 +41,9 @@ class FileUploadRepository @Inject() (mongoComponent: MongoComponent)(implicit e
       replaceIndexes = true
     ) {
 
+  // TODO REMOVE
+  override lazy val requiresTtlIndex: Boolean = false
+
   def insert(details: UploadDetails): Future[Unit] =
     collection
       .insertOne(details)
@@ -50,7 +53,7 @@ class FileUploadRepository @Inject() (mongoComponent: MongoComponent)(implicit e
   def findByUploadId(uploadId: UploadId): Future[Option[UploadDetails]] =
     collection.find(equal("uploadId", Codecs.toBson(uploadId))).headOption()
 
-  def updateStatus(reference: Reference, newStatus: UploadStatus): Future[UploadStatus] =
+  def updateStatus(reference: Reference, newStatus: UploadStatus): Future[Unit] =
     collection
       .findOneAndUpdate(
         filter = equal("reference", Codecs.toBson(reference)),
