@@ -63,7 +63,7 @@ class ApplicationCompleteController @Inject() (
                   )
               }
               .getOrElse {
-                logger.warn(s"Applicant email (individual) is empty")
+                logger.warn(s"Applicant contact details (individual) missing")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
               }
 
@@ -82,7 +82,7 @@ class ApplicationCompleteController @Inject() (
                   )
               }
               .getOrElse {
-                logger.warn(s"Applicant email (organisation) is empty")
+                logger.warn(s"Applicant contact details (organisation) missing")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
               }
 
