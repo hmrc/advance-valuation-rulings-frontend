@@ -25,10 +25,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction, IdentifyAgentAction}
 import models.requests._
 import pages.Page
+import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
 
@@ -40,7 +40,7 @@ class CheckYourAnswersForAgentsController @Inject() (
   isAgent: IdentifyAgentAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersForAgentsView,
-  backendConnector: BackendConnector
+  submissionService: SubmissionService
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -62,7 +62,7 @@ class CheckYourAnswersForAgentsController @Inject() (
             logger.error(s"Failed to create application request: ${errors.toList.mkString(", ")}}")
             Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
           case Valid(applicationRequest)                     =>
-            backendConnector
+            submissionService
               .submitApplication(applicationRequest)
               .map {
                 response =>
