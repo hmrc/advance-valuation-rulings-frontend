@@ -23,7 +23,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import generators.Generators
-import models.ValuationMethod
+import models.{ApplicationContactDetails, ValuationMethod}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 import viewmodels.checkAnswers.summary.ApplicationSummary
@@ -36,21 +36,15 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
       "must return OK and the correct view for a GET" in {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
-            val userAnswers   = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val email         = "testEmail@mail.com"
-            val name          = "Jonny"
-            val applicationId = userAnswers.draftId
+            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
+            val email          = "test@test.com"
+            val name           = "Test"
+            val phone          = "07777 777777"
+            val applicationId  = userAnswers.draftId
+            val contactDetails = ApplicationContactDetails(name, email, phone)
 
-            val emailUpdate          =
-              (__ \ ApplicationContactDetailsPage.toString \ "email").json.put(JsString(email))
-            val nameUpdate           =
-              (__ \ ApplicationContactDetailsPage.toString \ "name").json.put(JsString(name))
-            val dataWithEmail        = userAnswers.data.transform(__.json.update(emailUpdate)).get
-            val dataWithEmailAndName = dataWithEmail
-              .transform(__.json.update(nameUpdate))
-              .get
-
-            val answers     = userAnswers.copy(data = dataWithEmailAndName)
+            val answers     =
+              userAnswers.set(ApplicationContactDetailsPage, contactDetails).success.value
             val application = applicationBuilder(userAnswers = Option(answers)).build()
 
             running(application) {
@@ -63,7 +57,8 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               val result        = route(application, request).value
 
               val view    = application.injector.instanceOf[ApplicationCompleteView]
-              val summary = ApplicationSummary(userAnswers, AffinityGroup.Individual).removeActions
+              val summary =
+                ApplicationSummary(answers, AffinityGroup.Individual).removeActions()
               status(result) mustEqual OK
               contentAsString(result) mustEqual view(true, applicationId, email, summary)(
                 request,

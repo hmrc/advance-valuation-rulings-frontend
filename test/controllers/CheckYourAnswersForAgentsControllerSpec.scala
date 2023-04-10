@@ -26,13 +26,13 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 
 import base.SpecBase
-import connectors.BackendConnector
 import models._
 import models.requests.{ApplicationId, ApplicationSubmissionResponse}
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.{BeforeAndAfterEach, EitherValues}
 import pages._
+import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersForAgentsView
@@ -48,10 +48,10 @@ class CheckYourAnswersForAgentsControllerSpec
 
   private val userAnswers = emptyUserAnswers
 
-  private val mockConnector = mock[BackendConnector]
+  private val mockSubmissionService = mock[SubmissionService]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockConnector)
+    Mockito.reset(mockSubmissionService)
     super.beforeEach()
   }
 
@@ -134,10 +134,11 @@ class CheckYourAnswersForAgentsControllerSpec
       val applicationId = ApplicationId(1)
       val response      = ApplicationSubmissionResponse(applicationId)
 
-      when(mockConnector.submitApplication(any())(any())).thenReturn(Future.successful(response))
+      when(mockSubmissionService.submitApplication(any())(any()))
+        .thenReturn(Future.successful(response))
 
       val application = applicationBuilderAsOrg(Option(answers))
-        .overrides(bind[BackendConnector].toInstance(mockConnector))
+        .overrides(bind[SubmissionService].toInstance(mockSubmissionService))
         .build()
 
       running(application) {

@@ -43,23 +43,40 @@ class EmailConnectorSpec extends BaseIntegrationSpec with WireMockHelper {
   private val connector = new EmailConnector(httpClient, appConfig)
 
   "Email Connector" - {
-    "sends and email" in {
 
-      val req         = EmailRequest(
+    "must send an email" in {
+
+      val emailRequest = EmailRequest(
         to = List(),
         templateId = "???",
         parameters = Map.empty,
-        force = false,
         eventUrl = None,
         onSendUrl = None,
         auditData = Map.empty
       )
-      val requestBody = Json.stringify(Json.toJson(req))
+      val requestBody  = Json.stringify(Json.toJson(emailRequest))
 
       stub(POST, "/email", 202, "", Some(requestBody))
 
-      assert(connector.sendEmail(req).futureValue.status === ACCEPTED)
+      assert(connector.sendEmail(emailRequest).futureValue.status === ACCEPTED)
       verify(1, postRequestedFor(urlEqualTo(s"/email")))
+    }
+
+    "must return a failed future when the server response with an error" in {
+
+      val emailRequest = EmailRequest(
+        to = List(),
+        templateId = "???",
+        parameters = Map.empty,
+        eventUrl = None,
+        onSendUrl = None,
+        auditData = Map.empty
+      )
+      val requestBody  = Json.stringify(Json.toJson(emailRequest))
+
+      stub(POST, "/email", 500, "", Some(requestBody))
+
+      connector.sendEmail(emailRequest).failed.futureValue
     }
   }
 }

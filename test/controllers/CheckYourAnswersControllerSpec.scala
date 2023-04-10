@@ -16,16 +16,39 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.http.HeaderCarrier
 
 import base.SpecBase
+import models._
+import models.requests._
+import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.ArgumentMatchers.any
+import org.scalatest.BeforeAndAfterEach
+import pages._
+import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
+class CheckYourAnswersControllerSpec
+    extends SpecBase
+    with SummaryListFluency
+    with MockitoSugar
+    with BeforeAndAfterEach {
+
+  private implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
+  private val mockSubmissionService                      = mock[SubmissionService]
+
+  override def beforeEach(): Unit = {
+    Mockito.reset(mockSubmissionService)
+    super.beforeEach()
+  }
 
   "Check Your Answers Controller" - {
 
@@ -60,6 +83,68 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Application Complete when application submission succeeds" in {
+
+      val answers = (for {
+        ua <- emptyUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
+        ua <- ua.set(HasCommodityCodePage, false)
+        ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+        ua <- ua.set(HasConfidentialInformationPage, false)
+        ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+        ua <- ua.set(
+                CheckRegisteredDetailsPage,
+                CheckRegisteredDetails(
+                  value = true,
+                  eori = "eori",
+                  name = "name",
+                  streetAndNumber = "streetAndNumber",
+                  city = "city",
+                  country = "country",
+                  postalCode = Some("postalCode"),
+                  phoneNumber = Some("phoneNumber")
+                )
+              )
+        ua <- ua.set(
+                BusinessContactDetailsPage,
+                BusinessContactDetails(
+                  name = "name",
+                  email = "email",
+                  phone = "phone",
+                  company = "company"
+                )
+              )
+        ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+        ua <- ua.set(IsThereASaleInvolvedPage, true)
+        ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+        ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+        ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+        ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+        ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+        ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+      } yield ua).success.get
+
+      val applicationId = ApplicationId(1)
+      val response      = ApplicationSubmissionResponse(applicationId)
+
+      when(mockSubmissionService.submitApplication(any())(any()))
+        .thenReturn(Future.successful(response))
+
+      val application = applicationBuilderAsOrg(Option(answers))
+        .overrides(bind[SubmissionService].toInstance(mockSubmissionService))
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.ApplicationCompleteController
+          .onPageLoad(applicationId.toString)
+          .url
       }
     }
   }

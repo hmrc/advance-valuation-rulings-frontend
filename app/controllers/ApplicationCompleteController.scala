@@ -20,15 +20,12 @@ import javax.inject.Inject
 
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.JsString
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import connectors.EmailConnector
 import controllers.actions._
 import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
-import services.email.EmailService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.ApplicationCompleteView
 
@@ -38,9 +35,7 @@ class ApplicationCompleteController @Inject() (
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: ApplicationCompleteView,
-  emailConnector: EmailConnector,
-  emailService: EmailService
+  view: ApplicationCompleteView
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -53,37 +48,45 @@ class ApplicationCompleteController @Inject() (
         val applicationSummary = ApplicationSummary(answers, request.affinityGroup).removeActions()
 
         request.affinityGroup match {
-          case AffinityGroup.Individual   =>
-            (
-              (answers.data \ ApplicationContactDetailsPage.toString \ "email").toOption,
-              (answers.data \ ApplicationContactDetailsPage.toString \ "name").toOption
-            ) match {
-              case (Some(JsString(applicantEmail)), Some(JsString(applicantName))) =>
-                emailConnector.sendEmail(
-                  emailService.makeEmailRequest(applicantEmail, applicantName)
-                )
-
-                Ok(view(true, applicationId, applicantEmail, applicationSummary))
-              case _                                                               =>
-                logger.error(s"Applicant email is empty for id: ${request.userId}")
+          case AffinityGroup.Individual =>
+            answers
+              .get(ApplicationContactDetailsPage)
+              .map {
+                contactDetails =>
+                  Ok(
+                    view(
+                      isIndividual = true,
+                      applicationId,
+                      contactDetails.email,
+                      applicationSummary
+                    )
+                  )
+              }
+              .getOrElse {
+                logger.warn(s"Applicant contact details (individual) missing")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
-            }
+              }
+
           case AffinityGroup.Organisation =>
-            (
-              (answers.data \ BusinessContactDetailsPage.toString \ "email").toOption,
-              (answers.data \ BusinessContactDetailsPage.toString \ "name").toOption
-            ) match {
-              case (Some(JsString(applicantEmail)), Some(JsString(applicantName))) =>
-                emailConnector.sendEmail(
-                  emailService.makeEmailRequest(applicantEmail, applicantName)
-                )
-                Ok(view(false, applicationId, applicantEmail, applicationSummary))
-              case _                                                               =>
-                logger.error(s"Applicant email is empty for id: ${request.userId}")
+            answers
+              .get(BusinessContactDetailsPage)
+              .map {
+                contactDetails =>
+                  Ok(
+                    view(
+                      isIndividual = false,
+                      applicationId,
+                      contactDetails.email,
+                      applicationSummary
+                    )
+                  )
+              }
+              .getOrElse {
+                logger.warn(s"Applicant contact details (organisation) missing")
                 Redirect(routes.JourneyRecoveryController.onPageLoad())
-            }
-          case _                          => Redirect(routes.JourneyRecoveryController.onPageLoad())
-        }
+              }
 
+          case _ => Redirect(routes.JourneyRecoveryController.onPageLoad())
+        }
     }
 }
