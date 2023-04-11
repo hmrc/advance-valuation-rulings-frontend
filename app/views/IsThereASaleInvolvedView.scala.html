@@ -37,8 +37,9 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @heading(messages("isThereASaleInvolved.heading"))
+
         @caption(messages("isThereASaleInvolved.caption"))
+        @heading(messages("isThereASaleInvolved.heading"))
 
         @govukRadios(
             RadiosViewModel.yesNo(
