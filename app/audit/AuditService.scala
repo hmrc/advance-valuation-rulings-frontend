@@ -49,6 +49,6 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
 
     val isAgent = Option(role == AgentOnBehalfOfOrg)
     val detail  = AgentIndicatorEvent(userId, eoriNumber, affinityGroup, credentialRole, isAgent)
-    auditConnector.sendExplicitAudit("IndicatesIsAgentEvent", detail)
+    auditConnector.sendExplicitAudit("IndicatesIsAgent", detail)
   }
 }
