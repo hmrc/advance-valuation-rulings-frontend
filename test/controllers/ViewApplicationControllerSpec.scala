@@ -35,6 +35,7 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
+
 class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
   import ViewApplicationControllerSpec._
   "ViewApplication Controller" - {
