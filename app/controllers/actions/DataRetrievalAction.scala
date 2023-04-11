@@ -39,6 +39,7 @@ class DataRetrievalActionImpl @Inject() (
         request.userId,
         request.eoriNumber,
         request.affinityGroup,
+        request.credentialRole,
         _
       )
     }

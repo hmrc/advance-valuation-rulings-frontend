@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package models.requests
+package models.events
 
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 
-case class IdentifierRequest[A](
-  request: Request[A],
-  userId: String,
-  eoriNumber: String,
+final case class AgentIndicatorEvent(
+  internalId: String,
+  eori: String,
   affinityGroup: AffinityGroup,
-  credentialRole: Option[CredentialRole]
-) extends WrappedRequest[A](request)
+  credentialRole: Option[CredentialRole],
+  isAgent: Option[Boolean]
+)
+
+object AgentIndicatorEvent {
+  implicit val format: OFormat[AgentIndicatorEvent] = Json.format[AgentIndicatorEvent]
+}

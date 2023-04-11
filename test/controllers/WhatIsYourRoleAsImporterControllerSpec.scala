@@ -23,18 +23,26 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
+import audit.AuditService
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
 import models.{NormalMode, WhatIsYourRoleAsImporter}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhatIsYourRoleAsImporterPage
 import repositories.SessionRepository
 import views.html.WhatIsYourRoleAsImporterView
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
+
+  private val mockAuditService: AuditService = mock[AuditService]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockAuditService)
+  }
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -48,7 +56,9 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[AuditService].to(mockAuditService))
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
@@ -72,7 +82,9 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .success
         .value
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+        .overrides(bind[AuditService].to(mockAuditService))
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, whatIsYourRoleAsImporterRoute)
@@ -99,7 +111,8 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[AuditService].to(mockAuditService)
           )
           .build()
 
@@ -113,11 +126,15 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
+
+      verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[AuditService].to(mockAuditService))
+        .build()
 
       running(application) {
         val request =
@@ -136,11 +153,15 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
           messages(application)
         ).toString
       }
+
+      verifyZeroInteractions(mockAuditService)
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(bind[AuditService].to(mockAuditService))
+        .build()
 
       running(application) {
         val request =
@@ -153,6 +174,8 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
+
+      verifyZeroInteractions(mockAuditService)
     }
   }
 }

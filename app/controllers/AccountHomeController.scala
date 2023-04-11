@@ -25,6 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import audit.AuditService
 import connectors.BackendConnector
 import controllers.actions._
 import models.{ApplicationForAccountHome, UserAnswers}
@@ -38,6 +39,7 @@ class AccountHomeController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   backendConnector: BackendConnector,
+  auditService: AuditService,
   generateDraftId: DraftIdGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
@@ -50,6 +52,7 @@ class AccountHomeController @Inject() (
   def onPageLoad: Action[AnyContent] =
     (identify andThen getData).async {
       implicit request =>
+        auditService.sendUserTypeEvent()
         backendConnector.applicationSummaries
           .map(response => Ok(view(response.summaries.map(ApplicationForAccountHome(_)))))
     }

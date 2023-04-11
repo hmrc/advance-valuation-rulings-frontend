@@ -62,15 +62,18 @@ class IdentifyAgent @Inject() (
 
     authorise()
       .retrieve(
-        Retrievals.internalId and Retrievals.authorisedEnrolments and Retrievals.affinityGroup
+        Retrievals.internalId and Retrievals.authorisedEnrolments and Retrievals.affinityGroup and Retrievals.credentialRole
       ) {
-        case Some(_) ~ _ ~ Some(Individual) =>
+        case Some(_) ~ _ ~ Some(Individual) ~ _ =>
           throw UnsupportedAffinityGroup("User has wrong affinity group")
 
-        case Some(internalId) ~ allEnrolments ~ Some(affinityGroup) =>
+        case Some(internalId) ~ allEnrolments ~ Some(affinityGroup) ~ credentialRole =>
           IdentifyEori
             .getEoriNumber(allEnrolments)
-            .map(eori => block(IdentifierRequest(request, internalId, eori, affinityGroup)))
+            .map {
+              eori =>
+                block(IdentifierRequest(request, internalId, eori, affinityGroup, credentialRole))
+            }
             .getOrElse(throw InsufficientEnrolments())
 
         case _ =>
