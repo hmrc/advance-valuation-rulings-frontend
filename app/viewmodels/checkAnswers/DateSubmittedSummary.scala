@@ -18,6 +18,7 @@ package viewmodels.checkAnswers
 
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -32,6 +33,7 @@ object DateSubmittedSummary {
   private val formatter = DateTimeFormatter
     .ofPattern("dd MMMM yyyy")
     .withZone(ZoneId.systemDefault())
+    .withLocale(Locale.UK)
 
   def row(application: Application)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
