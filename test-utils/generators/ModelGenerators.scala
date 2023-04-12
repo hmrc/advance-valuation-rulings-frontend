@@ -23,6 +23,26 @@ import org.scalacheck.Arbitrary.arbitrary
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryAgentCompanyDetails: Arbitrary[AgentCompanyDetails] =
+    Arbitrary {
+      for {
+        agentEori            <- arbitrary[String]
+        agentCompanyName     <- arbitrary[String]
+        agentStreetAndNumber <- arbitrary[String]
+        agentCity            <- arbitrary[String]
+        agentCountry         <- arbitrary[String]
+        agentPostalCode      <- arbitrary[Option[String]]
+
+      } yield AgentCompanyDetails(
+        agentEori,
+        agentCompanyName,
+        agentStreetAndNumber,
+        agentCity,
+        agentCountry,
+        agentPostalCode
+      )
+    }
+
   implicit lazy val arbitraryWhatIsYourRoleAsImporter: Arbitrary[WhatIsYourRoleAsImporter] =
     Arbitrary {
       Gen.oneOf(WhatIsYourRoleAsImporter.values.toSeq)

@@ -134,4 +134,16 @@ trait Constraints {
 
   protected def setEquals[A](expected: Set[_], errorKey: String): Constraint[Set[_]] =
     Constraint(set => if (set == expected) Valid else Invalid(errorKey))
+
+  private val postCodeMaxLength = 19
+
+  protected def optionalPostCodeMaxLength(errorKey: String): Constraint[Option[String]] =
+    optionalMaxLength(postCodeMaxLength, errorKey)
+
+  protected def optionalMaxLength(maximum: Int, errorKey: String): Constraint[Option[String]] =
+    Constraint {
+      case None                                       => Valid
+      case Some(str: String) if str.length <= maximum => Valid
+      case _                                          => Invalid(errorKey, maximum)
+    }
 }
