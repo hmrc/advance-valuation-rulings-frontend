@@ -62,7 +62,7 @@ class AccountHomeController @Inject() (
       implicit request =>
         for {
           _ <-
-            sessionRepository.set(UserAnswers(request.userId, request.draftId.render))
+            sessionRepository.set(UserAnswers(request.userId, request.draftId.toString))
         } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
     }
 }

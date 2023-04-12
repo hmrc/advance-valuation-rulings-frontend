@@ -26,14 +26,15 @@ import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{DraftId, UserAnswers}
+import models.{CounterId, DraftId, UserAnswers}
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
 import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import repositories.DraftIdRepository
+import repositories.CounterRepository
 import services.FakeFileUploadService
 import services.fileupload.FileUploadService
 
@@ -60,19 +61,19 @@ trait SpecBase
 
   val userAnswersId: String = "id"
   val DraftIdPrefix         = "DRAFT"
-  val DraftIdSequence       = 123456789
-  val draftId: String       = s"$DraftIdPrefix$DraftIdSequence"
+  val DraftIdSequence       = 123456789L
+  val draftId               = DraftId(DraftIdSequence)
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId.toString)
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
-  val mockDraftIdRepo: DraftIdRepository =
-    mock[DraftIdRepository]
+  val mockDraftIdRepo: CounterRepository =
+    mock[CounterRepository]
 
-  when(mockDraftIdRepo.generate(DraftIdPrefix)) thenReturn Future.successful(
-    DraftId(DraftIdPrefix, DraftIdSequence)
+  when(mockDraftIdRepo.nextId(eqTo(CounterId.DraftId))) thenReturn Future.successful(
+    DraftIdSequence
   )
 
   protected def applicationBuilder(
@@ -85,7 +86,7 @@ trait SpecBase
         bind[IdentifyIndividualAction].to[FakeIdentifyIndividualAction],
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[DraftIdRepository].to(mockDraftIdRepo),
+        bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
   protected def applicationBuilderAsAgent(
@@ -98,7 +99,7 @@ trait SpecBase
         bind[IdentifyAgentAction].to[FakeIdentifyAgentAction],
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[DraftIdRepository].to(mockDraftIdRepo),
+        bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
   protected def applicationBuilderAsOrg(
@@ -111,7 +112,7 @@ trait SpecBase
         bind[IdentifyAgentAction].to[FakeIdentifyOrgAction],
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[DraftIdRepository].to(mockDraftIdRepo),
+        bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
 }

@@ -18,8 +18,9 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class DraftId(prefix: String, value: Long) {
-  def render: String = s"${prefix.toUpperCase()}%09d".format(value)
+final case class DraftId(value: Long) {
+
+  override def toString: String = s"DRAFT%09d".format(value)
 }
 
 object DraftId {
