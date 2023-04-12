@@ -82,9 +82,9 @@ class ApplicationViewModelSpec extends SpecBase {
               Value(Text(randomString))
             ),
             SummaryListRow(
-            Key(Text("viewApplication.dateSubmitted")),
-            Value(Text("22 August 2018"))
-          )
+              Key(Text("viewApplication.dateSubmitted")),
+              Value(Text("22 August 2018"))
+            )
           )
         )
       }

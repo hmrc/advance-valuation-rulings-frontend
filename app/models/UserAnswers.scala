@@ -128,7 +128,7 @@ final case class UserAnswers(
 
 object UserAnswers {
 
-  val reads: Reads[UserAnswers] = {
+  private val mongoReads: Reads[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
 
@@ -140,7 +140,7 @@ object UserAnswers {
     )(UserAnswers.apply _)
   }
 
-  val writes: OWrites[UserAnswers] = {
+  private val mongoWrites: OWrites[UserAnswers] = {
 
     import play.api.libs.functional.syntax._
 
@@ -149,6 +149,32 @@ object UserAnswers {
         (__ \ "draftId").write[String] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
+    )(unlift(UserAnswers.unapply))
+  }
+
+  val mongoFormat: OFormat[UserAnswers] = OFormat(mongoReads, mongoWrites)
+
+  private val reads: Reads[UserAnswers] = {
+
+    import play.api.libs.functional.syntax._
+
+    (
+      (__ \ "userId").read[String] and
+        (__ \ "draftId").read[String] and
+        (__ \ "data").read[JsObject] and
+        (__ \ "lastUpdated").read[Instant]
+    )(UserAnswers.apply _)
+  }
+
+  private val writes: OWrites[UserAnswers] = {
+
+    import play.api.libs.functional.syntax._
+
+    (
+      (__ \ "userId").write[String] and
+        (__ \ "draftId").write[String] and
+        (__ \ "data").write[JsObject] and
+        (__ \ "lastUpdated").write[Instant]
     )(unlift(UserAnswers.unapply))
   }
 
