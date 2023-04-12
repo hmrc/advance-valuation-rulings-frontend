@@ -87,15 +87,6 @@ class SessionRepository @Inject() (
       .map(_ => true)
   }
 
-  def update(update: UserAnswers): Future[UserAnswers] =
-    for {
-      maybeAnswers <- this.get(update.id)
-      merged        = maybeAnswers
-                        .map(answers => answers.copy(data = answers.data ++ update.data))
-                        .getOrElse(update)
-      _            <- this.set(merged)
-    } yield merged
-
   def clear(id: String): Future[Boolean] =
     collection
       .deleteOne(byId(id))

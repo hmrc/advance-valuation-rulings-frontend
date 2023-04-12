@@ -103,19 +103,19 @@ class CheckRegisteredDetailsController @Inject() (
               ),
             value =>
               request.userAnswers.get(CheckRegisteredDetailsPage) match {
-                case Some(userAnswers) =>
-                  val updatedAnswers = userAnswers.copy(value = value)
+                case Some(details) =>
+                  val updatedDetails = details.copy(value = value)
                   for {
-                    answers        <-
-                      request.userAnswers.setFuture(CheckRegisteredDetailsPage, updatedAnswers)
-                    updatedAnswers <- sessionRepository.update(answers)
+                    updatedAnswers <-
+                      request.userAnswers.setFuture(CheckRegisteredDetailsPage, updatedDetails)
+                    _              <- sessionRepository.set(updatedAnswers)
                   } yield Redirect(
                     navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)(
                       request.affinityGroup
                     )
                   )
-                case None              =>
-                  logger.error(s"Failed to submit check registered details as user has no answers")
+                case None          =>
+                  logger.warn(s"Failed to submit check registered details as user has no answers")
                   Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
               }
           )
