@@ -230,7 +230,7 @@ object ApplicationRequestSpec extends Generators {
     |"requestedMethod" : {
     |  "whyNotOtherMethods" : "$randomString",
     |  "previousSimilarGoods" : "$randomString",
-    |  "_type" : "MethodThree"
+    |  "type" : "MethodThree"
     |},
     |"goodsDetails": {
     |  "goodsName": "$randomString",
