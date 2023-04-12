@@ -24,28 +24,29 @@ import play.api.mvc.ActionTransformer
 
 import com.google.inject.ImplementedBy
 import com.softwaremill.quicklens._
+import models.{CounterId, DraftId}
 import models.requests.{DraftIdRequest, OptionalDataRequest}
-import repositories.DraftIdRepository
+import repositories.CounterRepository
 
 @Singleton
 class DraftIdGenerationActionImpl @Inject() (
-  val draftIdRepository: DraftIdRepository
+  val draftIdRepository: CounterRepository
 )(implicit val executionContext: ExecutionContext)
     extends DraftIdGenerationAction {
 
   override protected def transform[A](
     request: OptionalDataRequest[A]
   ): Future[DraftIdRequest[A]] =
-    draftIdRepository.generate("DRAFT").map {
+    draftIdRepository.nextId(CounterId.DraftId).map {
       draftId =>
         val updatedRequest =
-          request.modify(_.userAnswers.each.draftId).setTo(draftId.render)
+          request.modify(_.userAnswers.each.draftId).setTo(DraftId(draftId).toString)
 
         DraftIdRequest(
           updatedRequest,
           request.userId,
           request.eoriNumber,
-          draftId,
+          DraftId(draftId),
           request.affinityGroup,
           updatedRequest.userAnswers
         )

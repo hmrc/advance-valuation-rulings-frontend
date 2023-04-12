@@ -76,7 +76,7 @@ class GoodsDetailsSpec
 object GoodsDetailsSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val draftId: String = DraftId("DRAFT", 1).render
+  val draftId: String = DraftId(1).toString
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 }
