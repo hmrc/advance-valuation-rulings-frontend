@@ -162,9 +162,9 @@ object ViewApplicationControllerSpec extends Generators {
     |  "whyNotOtherMethods" : "$randomString",
     |  "detailedDescription" : {
     |    "_value" : "$randomString",
-    |    "_type" : "PreviousSimilarGoods"
+    |    "type" : "PreviousSimilarGoods"
     |  },
-    |  "_type" : "MethodThree"
+    |  "type" : "MethodThree"
     |},
     |"goodsDetails": {
     |  "goodDescription": "$randomString",

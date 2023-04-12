@@ -131,7 +131,7 @@ case class ApplicationRequest(
 
 object ApplicationRequest {
   private[models] val jsonConfig                   = JsonConfiguration(
-    discriminator = "_type",
+    discriminator = "type",
     typeNaming =
       JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
   )

@@ -104,7 +104,7 @@ object UploadStatus {
     val read: Reads[UploadStatus]                                          = new Reads[UploadStatus] {
       override def reads(json: JsValue): JsResult[UploadStatus] = {
         val jsObject = json.asInstanceOf[JsObject]
-        jsObject.value.get("_type") match {
+        jsObject.value.get("type") match {
           case Some(JsString("NotStarted"))           => JsSuccess(NotStarted)
           case Some(JsString("InProgress"))           => JsSuccess(InProgress)
           case Some(JsString("Failed"))               => JsSuccess(Failed)
@@ -116,8 +116,8 @@ object UploadStatus {
           case Some(JsString("DuplicateFile"))        => JsSuccess(DuplicateFile)
           case Some(JsString("UploadedSuccessfully")) =>
             Json.fromJson[UploadedSuccessfully](jsObject)(uploadedSuccessfullyFormat)
-          case Some(value)                            => JsError(s"Unexpected value of _type: $value")
-          case None                                   => JsError("Missing _type field")
+          case Some(value)                            => JsError(s"Unexpected value of type: $value")
+          case None                                   => JsError("Missing type field")
         }
       }
     }
@@ -125,17 +125,17 @@ object UploadStatus {
     val write: Writes[UploadStatus] = new Writes[UploadStatus] {
       override def writes(p: UploadStatus): JsValue =
         p match {
-          case NotStarted              => JsObject(Map("_type" -> JsString("NotStarted")))
-          case InProgress              => JsObject(Map("_type" -> JsString("InProgress")))
-          case Failed                  => JsObject(Map("_type" -> JsString("Failed")))
-          case Quarantine              => JsObject(Map("_type" -> JsString("Quarantine")))
-          case Rejected                => JsObject(Map("_type" -> JsString("Rejected")))
-          case NoFileProvided          => JsObject(Map("_type" -> JsString("NoFileProvided")))
-          case EntityTooLarge          => JsObject(Map("_type" -> JsString("EntityTooLarge")))
-          case EntityTooSmall          => JsObject(Map("_type" -> JsString("EntityTooSmall")))
-          case DuplicateFile           => JsObject(Map("_type" -> JsString("DuplicateFile")))
+          case NotStarted              => JsObject(Map("type" -> JsString("NotStarted")))
+          case InProgress              => JsObject(Map("type" -> JsString("InProgress")))
+          case Failed                  => JsObject(Map("type" -> JsString("Failed")))
+          case Quarantine              => JsObject(Map("type" -> JsString("Quarantine")))
+          case Rejected                => JsObject(Map("type" -> JsString("Rejected")))
+          case NoFileProvided          => JsObject(Map("type" -> JsString("NoFileProvided")))
+          case EntityTooLarge          => JsObject(Map("type" -> JsString("EntityTooLarge")))
+          case EntityTooSmall          => JsObject(Map("type" -> JsString("EntityTooSmall")))
+          case DuplicateFile           => JsObject(Map("type" -> JsString("DuplicateFile")))
           case s: UploadedSuccessfully =>
-            Json.toJson(s)(uploadedSuccessfullyFormat).as[JsObject] + ("_type" -> JsString(
+            Json.toJson(s)(uploadedSuccessfullyFormat).as[JsObject] + ("type" -> JsString(
               "UploadedSuccessfully"
             ))
         }
