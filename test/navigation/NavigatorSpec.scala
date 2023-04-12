@@ -17,6 +17,9 @@
 package navigation
 
 import play.api.libs.json.Writes
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup._
 
@@ -42,7 +45,24 @@ class NavigatorSpec extends SpecBase {
 
     implicit val affinityGroup: AffinityGroup.Individual.type = AffinityGroup.Individual
 
-    "must go from a page that doesn't exist in the route map to Index" in {
+    "/ must navigate to AccountHome" in {
+
+      def onwardRoute = Call("GET", "/applications-and-rulings")
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, "/advance-valuation-ruling")
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe onwardRoute.url
+
+      }
+    }
+
+    "must go from a page that doesn't exist in the route map to AccountHome" in {
       case object UnknownPage extends Page
       navigator.nextPage(
         UnknownPage,
