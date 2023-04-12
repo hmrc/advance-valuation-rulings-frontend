@@ -30,7 +30,7 @@ import pages._
 import queries.Modifiable
 
 final case class UserAnswers(
-  id: String,
+  userId: String,
   draftId: String,
   data: JsObject = Json.obj(),
   lastUpdated: Instant = Instant.now

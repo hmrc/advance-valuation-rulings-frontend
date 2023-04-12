@@ -125,7 +125,7 @@ class CheckRegisteredDetailsController @Inject() (
     detailsToResult: CheckRegisteredDetails => Result
   )(implicit request: DataRequest[AnyContent]): Future[Result] =
     for {
-      userAnswers <- sessionRepository.get(request.userAnswers.id)
+      userAnswers <- sessionRepository.get(request.userAnswers.userId)
       details      = userAnswers.flatMap(_.get(CheckRegisteredDetailsPage))
       result       = details match {
                        case Some(registrationDetails) =>
