@@ -41,7 +41,7 @@ class SessionRepository @Inject() (
     extends PlayMongoRepository[UserAnswers](
       collectionName = "user-answers",
       mongoComponent = mongoComponent,
-      domainFormat = UserAnswers.format,
+      domainFormat = UserAnswers.mongoFormat,
       indexes = Seq(
         IndexModel(
           Indexes.ascending("lastUpdated"),
@@ -79,22 +79,13 @@ class SessionRepository @Inject() (
 
     collection
       .replaceOne(
-        filter = byId(updatedAnswers.id),
+        filter = byId(updatedAnswers.userId),
         replacement = updatedAnswers,
         options = ReplaceOptions().upsert(true)
       )
       .toFuture()
       .map(_ => true)
   }
-
-  def update(update: UserAnswers): Future[UserAnswers] =
-    for {
-      maybeAnswers <- this.get(update.id)
-      merged        = maybeAnswers
-                        .map(answers => answers.copy(data = answers.data ++ update.data))
-                        .getOrElse(update)
-      _            <- this.set(merged)
-    } yield merged
 
   def clear(id: String): Future[Boolean] =
     collection

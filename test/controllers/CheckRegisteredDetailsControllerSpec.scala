@@ -134,9 +134,7 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with MockitoSugar {
         .success
         .value
 
-      when(mockSessionRepository.update(any())) thenReturn Future.successful(
-        answersAfterPost
-      )
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
