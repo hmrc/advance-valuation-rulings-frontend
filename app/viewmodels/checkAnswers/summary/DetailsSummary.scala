@@ -33,6 +33,7 @@ object DetailsSummary {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): DetailsSummary = {
 
     val rows = Seq(
+      NameOfGoodsSummary.row(userAnswers),
       DescriptionOfGoodsSummary.row(userAnswers),
       HasCommodityCodeSummary.row(userAnswers),
       CommodityCodeSummary.row(userAnswers),
@@ -49,6 +50,7 @@ object DetailsSummary {
 
   def apply(application: Application)(implicit messages: Messages): DetailsSummary = {
     val rows = Seq(
+      NameOfGoodsSummary.row(application),
       DescriptionOfGoodsSummary.row(application),
       HasCommodityCodeSummary.row(application),
       CommodityCodeSummary.row(application),

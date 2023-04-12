@@ -39,6 +39,7 @@ class Navigator @Inject() () {
     case IsThereASaleInvolvedPage                         => isThereASaleInvolvedPage
     case IsSaleBetweenRelatedPartiesPage                  => isSaleBetweenRelatedPartiesPage
     case ExplainHowPartiesAreRelatedPage                  => explainHowPartiesAreRelatedPage
+    case NameOfGoodsPage                                  => nameOfGoodsPage
     case DescriptionOfGoodsPage                           => descriptionOfGoodsPage
     case HasCommodityCodePage                             => hasCommodityCodePage
     case CommodityCodePage                                => commodityCodePage
@@ -114,13 +115,13 @@ class Navigator @Inject() () {
     userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
       case None        => IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
       case Some(true)  => DescribeTheConditionsController.onPageLoad(NormalMode)
-      case Some(false) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case Some(false) => NameOfGoodsController.onPageLoad(NormalMode)
     }
 
   private def describeTheConditionsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheConditionsPage) match {
       case None    => DescribeTheConditionsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(NormalMode)
     }
 
   // Method 1----------------------------------------------------------------
@@ -167,7 +168,7 @@ class Navigator @Inject() () {
   private def describeTheIdenticalGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
       case None    => DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(NormalMode)
     }
 
   // Method 3----------------------------------------------------------------
@@ -191,7 +192,7 @@ class Navigator @Inject() () {
   private def describeTheSimilarGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheSimilarGoodsPage) match {
       case None    => DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(NormalMode)
     }
 
   // method 4 ----------------------------------------------------------------
@@ -205,7 +206,7 @@ class Navigator @Inject() () {
   private def explainWhyYouChoseMethodFourPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouChoseMethodFourPage) match {
       case None    => ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(NormalMode)
     }
 
   // method 5----------------------------------------------------------------
@@ -218,7 +219,7 @@ class Navigator @Inject() () {
   private def explainReasonComputedValuePage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainReasonComputedValuePage) match {
       case None    => ExplainReasonComputedValueController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(NormalMode)
     }
 
   // method 6----------------------------------------------------------------
@@ -244,10 +245,16 @@ class Navigator @Inject() () {
   ): Call =
     userAnswers.get(ExplainHowYouWillUseMethodSixPage) match {
       case None    => ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case Some(_) => NameOfGoodsController.onPageLoad(NormalMode)
     }
 
   // ----------------------------------------------------------------
+  private def nameOfGoodsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(NameOfGoodsPage) match {
+      case None    => NameOfGoodsController.onPageLoad(NormalMode)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+    }
+
   private def descriptionOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescriptionOfGoodsPage) match {
       case None    => DescriptionOfGoodsController.onPageLoad(NormalMode)

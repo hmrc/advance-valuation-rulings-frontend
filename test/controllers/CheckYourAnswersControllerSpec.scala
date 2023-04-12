@@ -22,7 +22,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 
 import base.SpecBase
 import models._
@@ -42,8 +41,7 @@ class CheckYourAnswersControllerSpec
     with MockitoSugar
     with BeforeAndAfterEach {
 
-  private implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
-  private val mockSubmissionService                      = mock[SubmissionService]
+  private val mockSubmissionService = mock[SubmissionService]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockSubmissionService)
@@ -89,7 +87,8 @@ class CheckYourAnswersControllerSpec
     "must redirect to Application Complete when application submission succeeds" in {
 
       val answers = (for {
-        ua <- emptyUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
+        ua <- emptyUserAnswers.set(NameOfGoodsPage, "NameOfGoodsPage")
+        ua <- ua.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
         ua <- ua.set(HasCommodityCodePage, false)
         ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
         ua <- ua.set(HasConfidentialInformationPage, false)

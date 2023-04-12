@@ -39,6 +39,7 @@ class GoodsDetailsSpec
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
+        ua <- ua.set(NameOfGoodsPage, randomString)
         ua <- ua.set(DescriptionOfGoodsPage, randomString)
         ua <- ua.set(HasCommodityCodePage, true)
         ua <- ua.set(CommodityCodePage, randomString)
@@ -65,7 +66,8 @@ class GoodsDetailsSpec
       val result = GoodsDetails(emptyUserAnswers)
 
       result shouldBe Invalid(
-        NonEmptyList.one(
+        NonEmptyList.of(
+          NameOfGoodsPage,
           DescriptionOfGoodsPage
         )
       )

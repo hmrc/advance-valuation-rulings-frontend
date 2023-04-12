@@ -37,6 +37,9 @@ object GoodsDetails {
   implicit val format: OFormat[GoodsDetails] = Json.format[GoodsDetails]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[QuestionPage[_], GoodsDetails] = {
+    val goodsName: ValidatedNel[QuestionPage[_], String] =
+      userAnswers.validated(NameOfGoodsPage)
+
     val goodsDescription: ValidatedNel[QuestionPage[_], String] =
       userAnswers.validated(DescriptionOfGoodsPage)
 
@@ -55,10 +58,10 @@ object GoodsDetails {
       confidentialInformation    <- userAnswers.get(ConfidentialInformationPage)
     } yield confidentialInformation
 
-    goodsDescription.map(
-      description =>
+    (goodsName, goodsDescription).mapN(
+      (goodsName, description) =>
         GoodsDetails(
-          goodsName = description,
+          goodsName = goodsName,
           goodsDescription = description,
           envisagedCommodityCode = envisagedCommodityCode,
           knownLegalProceedings = knownLegalProceedings,

@@ -144,26 +144,26 @@ class NavigatorSpec extends SpecBase {
       }
 
       "DescribeTheSimilarGoods page" - {
-        "must navigate to WillYouCompareToSimilarGoods Page" in {
+        "must navigate to NameOfGoods Page" in {
           val userAnswers =
             userAnswersWith(DescribeTheSimilarGoodsPage, "similar goods")
           navigator.nextPage(
             DescribeTheSimilarGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
         }
       }
 
       "DescribeTheIdenticalGoods page" - {
-        "must navigate to DescriptionOfGoods Page" in {
+        "must navigate to NameOfGoods Page" in {
           val userAnswers =
             userAnswersWith(DescribeTheIdenticalGoodsPage, "describe goods")
           navigator.nextPage(
             DescribeTheIdenticalGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
         }
       }
 
@@ -200,14 +200,14 @@ class NavigatorSpec extends SpecBase {
       }
 
       "ExplainWhyYouChoseMethodFour page" - {
-        "must navigate to DescriptionOfGoods Page" in {
+        "must navigate to NameOfGoods Page" in {
           val userAnswers =
             userAnswersWith(ExplainWhyYouChoseMethodFourPage, "explain method four")
           navigator.nextPage(
             ExplainWhyYouChoseMethodFourPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
         }
       }
 
@@ -721,12 +721,12 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
         }
 
-        "navigate to DescriptionOfGoods when False" in {
+        "navigate to NameOfGoods when False" in {
           navigator.nextPage(
             IsTheSaleSubjectToConditionsPage,
             NormalMode,
             userAnswersWith(IsTheSaleSubjectToConditionsPage, false)
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
         }
 
         "navigate to itself when user has no data for the page" in {
@@ -747,12 +747,12 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
         }
 
-        "navigate to DescriptionOfGoods when answers has data" in {
+        "navigate to NameOfGoods when answers has data" in {
           navigator.nextPage(
             DescribeTheConditionsPage,
             NormalMode,
             userAnswersWith(DescribeTheConditionsPage, "Some conditions")
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.NameOfGoodsController.onPageLoad(NormalMode)
         }
       }
 
@@ -837,10 +837,29 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(mode = NormalMode)
         }
 
-        "navigate to descriptionOfTheGoodsPage when user has data for the page" in {
+        "navigate to NameOfGoods when user has data for the page" in {
           val userAnswers = userAnswersWith(ExplainHowYouWillUseMethodSixPage, "banana")
           navigator.nextPage(
             ExplainHowYouWillUseMethodSixPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+        }
+      }
+
+      "nameOfGoods Page must" - {
+        "navigate to self when user has no data for the page" in {
+          navigator.nextPage(
+            NameOfGoodsPage,
+            NormalMode,
+            EmptyUserAnswers
+          ) mustBe routes.NameOfGoodsController.onPageLoad(mode = NormalMode)
+        }
+
+        "navigate to DescriptionOfGoods when user has data for the page" in {
+          val userAnswers = userAnswersWith(NameOfGoodsPage, "banana")
+          navigator.nextPage(
+            NameOfGoodsPage,
             NormalMode,
             userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)

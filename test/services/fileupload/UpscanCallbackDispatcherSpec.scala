@@ -30,7 +30,7 @@ import base.SpecBase
 import config.FrontendAppConfig
 import models.Done
 import models.fileupload._
-import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 

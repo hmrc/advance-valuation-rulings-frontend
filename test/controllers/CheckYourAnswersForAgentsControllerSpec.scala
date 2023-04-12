@@ -94,7 +94,8 @@ class CheckYourAnswersForAgentsControllerSpec
     "must redirect to Application Complete when application submission succeeds" in {
 
       val answers = (for {
-        ua <- emptyUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
+        ua <- emptyUserAnswers.set(NameOfGoodsPage, "NameOfGoodsPage")
+        ua <- ua.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
         ua <- ua.set(HasCommodityCodePage, false)
         ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
         ua <- ua.set(HasConfidentialInformationPage, false)

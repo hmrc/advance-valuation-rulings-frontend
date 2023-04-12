@@ -79,6 +79,7 @@ class ApplicationRequestSpec
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
+        ua <- ua.set(NameOfGoodsPage, randomString)
         ua <- ua.set(DescriptionOfGoodsPage, randomString)
         ua <- ua.set(HasCommodityCodePage, false)
         ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
@@ -142,6 +143,7 @@ class ApplicationRequestSpec
           CheckRegisteredDetailsPage,
           ApplicationContactDetailsPage,
           ValuationMethodPage,
+          NameOfGoodsPage,
           DescriptionOfGoodsPage,
           DoYouWantToUploadDocumentsPage
         )
@@ -157,6 +159,7 @@ class ApplicationRequestSpec
           CheckRegisteredDetailsPage,
           BusinessContactDetailsPage,
           ValuationMethodPage,
+          NameOfGoodsPage,
           DescriptionOfGoodsPage,
           DoYouWantToUploadDocumentsPage
         )

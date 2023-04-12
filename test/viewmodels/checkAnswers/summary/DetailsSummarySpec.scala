@@ -48,7 +48,12 @@ class DetailsSummarySpec extends DetailsSummaryFixtureSpec {
 
     "when the user has answers for all relevant pages" - {
       "create rows for each pages" in {
-        rows.length mustBe 8
+        rows.length mustBe 9
+      }
+
+      "create row for name of goods" in {
+        val key: Key = "nameOfGoods.checkYourAnswersLabel"
+        keys must contain(key)
       }
 
       "create row for description of goods" in {
@@ -93,14 +98,15 @@ class DetailsSummarySpec extends DetailsSummaryFixtureSpec {
 
 trait DetailsSummaryFixtureSpec extends SpecBase with Generators {
 
-  val allAnswersInput: Try[UserAnswers] =
-    emptyUserAnswers
-      .set(DescriptionOfGoodsPage, "test")
-      .flatMap(_.set(HasCommodityCodePage, true))
-      .flatMap(_.set(CommodityCodePage, "test"))
-      .flatMap(_.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, true))
-      .flatMap(_.set(DescribeTheLegalChallengesPage, "test"))
-      .flatMap(_.set(HasConfidentialInformationPage, true))
-      .flatMap(_.set(ConfidentialInformationPage, "test"))
-      .flatMap(_.set(DoYouWantToUploadDocumentsPage, true))
+  val allAnswersInput: Try[UserAnswers] = for {
+    ua <- emptyUserAnswers.set(NameOfGoodsPage, "test")
+    ua <- ua.set(DescriptionOfGoodsPage, "test")
+    ua <- ua.set(HasCommodityCodePage, true)
+    ua <- ua.set(CommodityCodePage, "test")
+    ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, true)
+    ua <- ua.set(DescribeTheLegalChallengesPage, "test")
+    ua <- ua.set(HasConfidentialInformationPage, true)
+    ua <- ua.set(ConfidentialInformationPage, "test")
+    ua <- ua.set(DoYouWantToUploadDocumentsPage, true)
+  } yield ua
 }

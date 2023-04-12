@@ -25,6 +25,15 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
+  implicit lazy val arbitraryNameOfGoodsUserAnswersEntry
+    : Arbitrary[(NameOfGoodsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[NameOfGoodsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
+
   implicit lazy val arbitraryBusinessContactDetailsUserAnswersEntry
     : Arbitrary[(BusinessContactDetailsPage.type, JsValue)] =
     Arbitrary {

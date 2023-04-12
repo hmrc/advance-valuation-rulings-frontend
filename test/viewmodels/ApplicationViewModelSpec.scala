@@ -18,8 +18,6 @@ package viewmodels
 
 import java.time.{Clock, Instant, ZoneOffset}
 
-import scala.util.Try
-
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
@@ -29,9 +27,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import base.SpecBase
 import generators.Generators
 import models._
-import models.{BusinessContactDetails, UserAnswers, WhatIsYourRoleAsImporter}
 import models.requests._
-import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 
 class ApplicationViewModelSpec extends SpecBase {
   import ApplicationViewModelSpec._
@@ -82,9 +78,52 @@ class ApplicationViewModelSpec extends SpecBase {
               Value(Text(randomString))
             ),
             SummaryListRow(
-            Key(Text("viewApplication.dateSubmitted")),
-            Value(Text("22 August 2018"))
+              Key(Text("viewApplication.dateSubmitted")),
+              Value(Text("22 August 2018"))
+            )
           )
+        )
+      }
+
+      "must create row for the details" in {
+        result.details.rows.rows must be(
+          Seq(
+            SummaryListRow(
+              Key(Text("nameOfGoods.checkYourAnswersLabel")),
+              Value(Text(randomString))
+            ),
+            SummaryListRow(
+              Key(Text("descriptionOfGoods.checkYourAnswersLabel")),
+              Value(Text(randomString))
+            ),
+            SummaryListRow(
+              Key(Text("hasCommodityCode.checkYourAnswersLabel")),
+              Value(Text("site.yes"))
+            ),
+            SummaryListRow(
+              Key(Text("commodityCode.checkYourAnswersLabel")),
+              Value(Text(randomString))
+            ),
+            SummaryListRow(
+              Key(Text("haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel")),
+              Value(Text("site.yes"))
+            ),
+            SummaryListRow(
+              Key(Text("describeTheLegalChallenges.checkYourAnswersLabel")),
+              Value(Text(randomString))
+            ),
+            SummaryListRow(
+              Key(Text("hasConfidentialInformation.checkYourAnswersLabel")),
+              Value(Text("site.yes"))
+            ),
+            SummaryListRow(
+              Key(Text("confidentialInformation.checkYourAnswersLabel")),
+              Value(Text(randomString))
+            ),
+            SummaryListRow(
+              Key(Text("doYouWantToUploadDocuments.checkYourAnswersLabel")),
+              Value(Text("site.no"))
+            )
           )
         )
       }
