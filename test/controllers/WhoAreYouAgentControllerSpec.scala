@@ -44,8 +44,21 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
   lazy val whoAreYouAgentRoute = routes.WhoAreYouAgentController.onPageLoad(NormalMode).url
 
   "WhoAreYouAgent Controller" - {
+    "must redirect to account home" in {
+      // TODO: this test and ignored tests related to redirecting away from unfinished page - agent details page to be revisited after MVP
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-    "must return OK and the correct view for a GET" in {
+      val request = FakeRequest(GET, whoAreYouAgentRoute)
+
+      val result = route(application, request).value
+
+      def redirectRoute = routes.AccountHomeController.onPageLoad()
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe redirectRoute.url
+    }
+
+    "must return OK and the correct view for a GET" ignore {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -64,7 +77,7 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
+    "must populate the view correctly on a GET when the question has previously been answered" ignore {
 
       val userAnswers = emptyUserAnswers
         .set(WhoAreYouAgentPage, "answer")
