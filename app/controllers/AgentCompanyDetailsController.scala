@@ -67,9 +67,14 @@ class AgentCompanyDetailsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(AgentCompanyDetailsPage, value))
+                updatedAnswers <-
+                  Future.fromTry(request.userAnswers.set(AgentCompanyDetailsPage, value))
                 _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(AgentCompanyDetailsPage, mode, updatedAnswers)(request.affinityGroup))
+              } yield Redirect(
+                navigator.nextPage(AgentCompanyDetailsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
+              )
           )
     }
 }

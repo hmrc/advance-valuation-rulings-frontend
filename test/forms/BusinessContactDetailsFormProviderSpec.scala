@@ -23,10 +23,9 @@ import org.scalacheck.Gen
 
 class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val nameRequiredKey    = "businessContactDetails.fullName.error.required"
-  val emailRequiredKey   = "businessContactDetails.email.error.required"
-  val phoneRequiredKey   = "businessContactDetails.telephoneNumber.error.required"
-  val companyRequiredKey = "businessContactDetails.companyName.error.required"
+  val nameRequiredKey  = "businessContactDetails.fullName.error.required"
+  val emailRequiredKey = "businessContactDetails.email.error.required"
+  val phoneRequiredKey = "businessContactDetails.telephoneNumber.error.required"
 
   val form = new BusinessContactDetailsFormProvider()()
 
@@ -153,13 +152,4 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     }
   }
 
-  ".companyNameField" - {
-    val companyNameField = "company"
-
-    behave like mandatoryField(
-      form,
-      companyNameField,
-      requiredError = FormError(companyNameField, companyRequiredKey)
-    )
-  }
 }

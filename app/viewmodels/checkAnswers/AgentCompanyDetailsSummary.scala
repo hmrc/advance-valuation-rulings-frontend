@@ -16,34 +16,37 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.AgentCompanyDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, UserAnswers}
+import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AgentCompanyDetailsSummary  {
+object AgentCompanyDetailsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(AgentCompanyDetailsPage).map {
       answer =>
-
-      val value = HtmlFormat.escape(answer.agentEori).toString +
-        "<br/>" + HtmlFormat.escape(answer.agentCompanyName).toString +
-        "<br/>" + HtmlFormat.escape(answer.agentStreetAndNumber).toString +
-        "<br/>" + HtmlFormat.escape(answer.agentCity).toString +
-        "<br/>" + HtmlFormat.escape(answer.agentCountry).toString +
-        "<br/>" + HtmlFormat.escape(answer.agentPostalCode.getOrElse("")).toString
+        val value = HtmlFormat.escape(answer.agentEori).toString +
+          "<br/>" + HtmlFormat.escape(answer.agentCompanyName).toString +
+          "<br/>" + HtmlFormat.escape(answer.agentStreetAndNumber).toString +
+          "<br/>" + HtmlFormat.escape(answer.agentCity).toString +
+          "<br/>" + HtmlFormat.escape(answer.agentCountry).toString +
+          "<br/>" + HtmlFormat.escape(answer.agentPostalCode.getOrElse("")).toString
 
         SummaryListRowViewModel(
-          key     = "agentCompanyDetails.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
+          key = "agentCompanyDetails.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlContent(value)),
           actions = Seq(
-            ActionItemViewModel("site.change", routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url)
+            ActionItemViewModel(
+              "site.change",
+              routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+            )
               .withVisuallyHiddenText(messages("agentCompanyDetails.change.hidden"))
           )
         )

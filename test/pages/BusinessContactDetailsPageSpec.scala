@@ -28,11 +28,10 @@ class BusinessContactDetailsPageSpec extends PageBehaviours {
 
     implicit val businessContactDetailsGen: Arbitrary[BusinessContactDetails] = Arbitrary(for {
 
-      name    <- arbitraryString(Gen.alphaChar)
-      phone   <- arbitraryString(Gen.numChar, maxSize = 24)
-      email   <- arbitraryString(Gen.asciiChar)
-      company <- arbitraryString(Gen.alphaChar)
-    } yield BusinessContactDetails(name, phone, email, company))
+      name  <- arbitraryString(Gen.alphaChar)
+      phone <- arbitraryString(Gen.numChar, maxSize = 24)
+      email <- arbitraryString(Gen.asciiChar)
+    } yield BusinessContactDetails(name, phone, email))
 
     beRetrievable[BusinessContactDetails](BusinessContactDetailsPage)
 

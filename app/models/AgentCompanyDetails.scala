@@ -18,12 +18,14 @@ package models
 
 import play.api.libs.json._
 
-case class AgentCompanyDetails(agentEori : String,
-                               agentCompanyName : String,
-                               agentStreetAndNumber: String,
-                               agentCity: String,
-                               agentCountry: String,
-                               agentPostalCode: Option[String])
+case class AgentCompanyDetails(
+  agentEori: String,
+  agentCompanyName: String,
+  agentStreetAndNumber: String,
+  agentCity: String,
+  agentCountry: String,
+  agentPostalCode: Option[String]
+)
 //EORI (mandatory), business name (mandatory), business address (same pattern as the others, e.g. line 1 mandatory etc.
 object AgentCompanyDetails {
   implicit val format = Json.format[AgentCompanyDetails]

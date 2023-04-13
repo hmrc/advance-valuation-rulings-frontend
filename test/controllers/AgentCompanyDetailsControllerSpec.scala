@@ -16,40 +16,45 @@
 
 package controllers
 
-import base.SpecBase
-import forms.AgentCompanyDetailsFormProvider
-import models.{NormalMode, AgentCompanyDetails, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.AgentCompanyDetailsPage
+import scala.concurrent.Future
+
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
+import base.SpecBase
+import forms.AgentCompanyDetailsFormProvider
+import models.{AgentCompanyDetails, NormalMode, UserAnswers}
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
+import pages.AgentCompanyDetailsPage
 import repositories.SessionRepository
 import views.html.AgentCompanyDetailsView
-
-import scala.concurrent.Future
 
 class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new AgentCompanyDetailsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val agentCompanyDetailsRoute = routes.AgentCompanyDetailsController.onPageLoad(NormalMode).url
+  lazy val agentCompanyDetailsRoute =
+    routes.AgentCompanyDetailsController.onPageLoad(NormalMode).url
 
   val userAnswers = UserAnswers(
     userAnswersId,
     draftId,
     Json.obj(
       AgentCompanyDetailsPage.toString -> Json.obj(
-        "AgentEori" -> "value 1",
-        "AgentCompanyName" -> "value 2"
+        "agentEori"            -> "value 1",
+        "agentCompanyName"     -> "value 2",
+        "agentStreetAndNumber" -> "streetandNumber",
+        "agentCity"            -> "city",
+        "agentCountry"         -> "country"
       )
     )
   )
@@ -68,7 +73,10 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -84,8 +92,12 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        val agentCompanyDetails = AgentCompanyDetails("eori", "companyName","streetandNumber","city","country", None)
-        contentAsString(result) mustEqual view(form.fill(agentCompanyDetails), NormalMode)(request, messages(application)).toString
+        val agentCompanyDetails =
+          AgentCompanyDetails("eori", "companyName", "streetandNumber", "city", "country", None)
+        contentAsString(result) mustEqual view(form.fill(agentCompanyDetails), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -106,7 +118,13 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, agentCompanyDetailsRoute)
-            .withFormUrlEncodedBody(("AgentEori", "value 1"), ("AgentCompanyName", "value 2"))
+            .withFormUrlEncodedBody(
+              ("agentEori", "value 1"),
+              ("agentCompanyName", "value 2"),
+              ("agentStreetAndNumber", "streetandNumber"),
+              ("agentCity", "city"),
+              ("agentCountry", "country")
+            )
 
         val result = route(application, request).value
 
@@ -131,7 +149,10 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

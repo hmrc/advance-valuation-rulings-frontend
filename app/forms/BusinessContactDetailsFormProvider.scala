@@ -36,24 +36,22 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[BusinessContactDetails] =
     Form(
       mapping(
-        "name"    -> text(nameRequiredError)
+        "name"  -> text(nameRequiredError)
           .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
           .verifying(maxLength(Validation.nameMaxLength, nameLengthError)),
-        "email"   -> text(emailRequiredError)
+        "email" -> text(emailRequiredError)
           .verifying(maxLength(Validation.emailMaxLength, emailLengthError))
           .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError)),
-        "phone"   -> text(phoneRequiredError)
+        "phone" -> text(phoneRequiredError)
           .verifying(phoneFormatError, isValid(_))
-          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError)),
-        "company" -> text(companyRequiredError)
+          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError))
       )(BusinessContactDetails.apply)(
         (businessContactDetails: BusinessContactDetails) =>
           Some(
             (
               businessContactDetails.name,
               businessContactDetails.email,
-              businessContactDetails.phone,
-              businessContactDetails.company
+              businessContactDetails.phone
             )
           )
       )
@@ -78,5 +76,4 @@ object BusinessContactDetailsFormProvider {
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
   private val phoneLengthError   = "businessContactDetails.telephoneNumber.length"
 
-  private val companyRequiredError = "businessContactDetails.companyName.error.required"
 }

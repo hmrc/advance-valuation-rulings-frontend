@@ -16,8 +16,9 @@
 
 package forms
 
-import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+
+import forms.behaviours.StringFieldBehaviours
 
 class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -25,10 +26,10 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".agentEori" - {
 
-    val fieldName = "agentEori"
+    val fieldName   = "agentEori"
     val requiredKey = "agentCompanyDetails.error.agentEori.required"
-    val lengthKey = "agentCompanyDetails.error.agentEori.length"
-    val maxLength = 20
+    val lengthKey   = "agentCompanyDetails.error.agentEori.length"
+    val maxLength   = 20
 
     behave like fieldThatBindsValidData(
       form,
@@ -52,10 +53,10 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".agentCompanyName" - {
 
-    val fieldName = "agentCompanyName"
+    val fieldName   = "agentCompanyName"
     val requiredKey = "agentCompanyDetails.error.agentCompanyName.required"
-    val lengthKey = "agentCompanyDetails.error.agentCompanyName.length"
-    val maxLength = 50
+    val lengthKey   = "agentCompanyDetails.error.agentCompanyName.length"
+    val maxLength   = 50
 
     behave like fieldThatBindsValidData(
       form,
@@ -79,10 +80,10 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".agentStreetAndNumber" - {
 
-    val fieldName = "agentStreetAndNumber"
+    val fieldName   = "agentStreetAndNumber"
     val requiredKey = "agentCompanyDetails.error.agentStreetAndNumber.required"
-    val lengthKey = "agentCompanyDetails.error.agentStreetAndNumber.length"
-    val maxLength = 50
+    val lengthKey   = "agentCompanyDetails.error.agentStreetAndNumber.length"
+    val maxLength   = 50
 
     behave like fieldThatBindsValidData(
       form,
@@ -106,10 +107,10 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".agentCity" - {
 
-    val fieldName = "agentCity"
+    val fieldName   = "agentCity"
     val requiredKey = "agentCompanyDetails.error.agentCity.required"
-    val lengthKey = "agentCompanyDetails.error.agentCity.length"
-    val maxLength = 50
+    val lengthKey   = "agentCompanyDetails.error.agentCity.length"
+    val maxLength   = 50
 
     behave like fieldThatBindsValidData(
       form,
@@ -133,10 +134,10 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".agentCountry" - {
 
-    val fieldName = "agentCountry"
+    val fieldName   = "agentCountry"
     val requiredKey = "agentCompanyDetails.error.agentCountry.required"
-    val lengthKey = "agentCompanyDetails.error.agentCountry.length"
-    val maxLength = 50
+    val lengthKey   = "agentCompanyDetails.error.agentCountry.length"
+    val maxLength   = 50
 
     behave like fieldThatBindsValidData(
       form,
@@ -160,11 +161,11 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".agentPostalCode" - {
 
-    val fieldName = "agentPostalCode"
-    val lengthKey = "agentCompanyDetails.error.agentPostalCode.length"
+    val fieldName          = "agentPostalCode"
+    val lengthKey          = "agentCompanyDetails.error.agentPostalCode.length"
     val requirePostcodeKey = "agentCompanyDetails.error.agentPostalCode.required"
     val invalidPostcodeKey = "agentCompanyDetails.error.agentPostalCode.gb"
-    val maxLength = 19
+    val maxLength          = 19
 
     behave like fieldThatBindsValidData(
       form,

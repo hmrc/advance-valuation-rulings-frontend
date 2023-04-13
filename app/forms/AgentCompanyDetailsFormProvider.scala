@@ -18,29 +18,31 @@ package forms
 
 import javax.inject.Inject
 
-import forms.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
+
+import forms.mappings.Mappings
 import models.AgentCompanyDetails
 
 class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[AgentCompanyDetails] = Form(
-     mapping(
-      "agentEori" -> text("agentCompanyDetails.error.agentEori.required")
+  def apply(): Form[AgentCompanyDetails] = Form(
+    mapping(
+      "agentEori"            -> text("agentCompanyDetails.error.agentEori.required")
         .verifying(maxLength(20, "agentCompanyDetails.error.agentEori.length")),
-      "agentCompanyName" -> text("agentCompanyDetails.error.agentCompanyName.required")
+      "agentCompanyName"     -> text("agentCompanyDetails.error.agentCompanyName.required")
         .verifying(maxLength(50, "agentCompanyDetails.error.agentCompanyName.length")),
-       "agentStreetAndNumber" -> text("agentCompanyDetails.error.agentStreetAndNumber.required")
-         .verifying(maxLength(50, "agentCompanyDetails.error.agentStreetAndNumber.length")),
-       "agentCity" -> text("agentCompanyDetails.error.agentCity.required")
-         .verifying(maxLength(50, "agentCompanyDetails.error.agentCity.length")),
-       "agentCountry" -> text("agentCompanyDetails.error.agentCountry.required")
-         .verifying(maxLength(50, "agentCompanyDetails.error.agentCountry.length")),
-       "agentPostalCode" -> postcodeText(
-         "agentCompanyDetails.error.agentPostalCode.required",
-         "agentCompanyDetails.error.agentPostalCode.gb")
-         .verifying(optionalPostCodeMaxLength("agentCompanyDetails.error.agentPostalCode.length"))
+      "agentStreetAndNumber" -> text("agentCompanyDetails.error.agentStreetAndNumber.required")
+        .verifying(maxLength(50, "agentCompanyDetails.error.agentStreetAndNumber.length")),
+      "agentCity"            -> text("agentCompanyDetails.error.agentCity.required")
+        .verifying(maxLength(50, "agentCompanyDetails.error.agentCity.length")),
+      "agentCountry"         -> text("agentCompanyDetails.error.agentCountry.required")
+        .verifying(maxLength(50, "agentCompanyDetails.error.agentCountry.length")),
+      "agentPostalCode"      -> postcodeText(
+        "agentCompanyDetails.error.agentPostalCode.required",
+        "agentCompanyDetails.error.agentPostalCode.gb"
+      )
+        .verifying(optionalPostCodeMaxLength("agentCompanyDetails.error.agentPostalCode.length"))
     )(AgentCompanyDetails.apply)(AgentCompanyDetails.unapply)
-   )
- }
+  )
+}

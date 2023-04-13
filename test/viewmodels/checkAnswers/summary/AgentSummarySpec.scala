@@ -28,15 +28,13 @@ import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 
 class AgentSummarySpec extends SpecBase {
 
-  private val ContactCompany = "Test Agent Company"
-
   val answers: Try[UserAnswers] =
     emptyUserAnswers
       .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
       .flatMap(
         _.set(
           BusinessContactDetailsPage,
-          BusinessContactDetails(ContactName, ContactEmail, ContactPhoneNumber, ContactCompany)
+          BusinessContactDetails(ContactName, ContactEmail, ContactPhoneNumber)
         )
       )
 
@@ -58,7 +56,7 @@ class AgentSummarySpec extends SpecBase {
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
-        rows.length mustBe 5
+        rows.length mustBe 4
       }
 
       "create row for business applicant name" in {
@@ -75,15 +73,6 @@ class AgentSummarySpec extends SpecBase {
           (
             Key(Text("checkYourAnswersForAgents.applicant.email.label")),
             Value(Text(ContactEmail))
-          )
-        )
-      }
-
-      "create row for business applicant company name" in {
-        rows must contain(
-          (
-            Key(Text("checkYourAnswersForAgents.applicant.companyName.label")),
-            Value(Text(ContactCompany))
           )
         )
       }

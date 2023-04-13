@@ -70,8 +70,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
       val businessContactDetails = BusinessContactDetails(
         name = "name",
         email = "abc@email.com",
-        phone = "0123456789",
-        company = "companyName"
+        phone = "0123456789"
       )
 
       val userAnswers =

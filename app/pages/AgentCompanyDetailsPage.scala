@@ -16,8 +16,9 @@
 
 package pages
 
-import models.AgentCompanyDetails
 import play.api.libs.json.JsPath
+
+import models.AgentCompanyDetails
 
 case object AgentCompanyDetailsPage extends QuestionPage[AgentCompanyDetails] {
 
