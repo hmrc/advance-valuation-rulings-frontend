@@ -721,7 +721,9 @@ agentCompanyDetails.error.agentStreetAndNumber.required = Enter address line 1
 agentCompanyDetails.error.agentCity.required = Enter the town or city
 agentCompanyDetails.error.agentCountry.required = Enter the country
 agentCompanyDetails.error.agentPostalCode.required = Enter the postcode
-agentCompanyDetails.error.agentEori.length = Your company’s registered EORI number must be 20 characters or less
+
+agentCompanyDetails.error.agentEori.format = Enter an EORI number in the correct format
+
 agentCompanyDetails.error.agentCompanyName.length = Your company’s registered business name must be 50 characters or less
 agentCompanyDetails.error.agentStreetAndNumber.length = Address line 1 must be 50 characters or less
 agentCompanyDetails.error.agentCity.length = Town or city must be 50 characters or less

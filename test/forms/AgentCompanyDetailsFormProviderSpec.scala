@@ -19,6 +19,7 @@ package forms
 import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
+import org.scalacheck.Arbitrary.arbitrary
 
 class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -28,20 +29,11 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "agentEori"
     val requiredKey = "agentCompanyDetails.error.agentEori.required"
-    val lengthKey   = "agentCompanyDetails.error.agentEori.length"
-    val maxLength   = 20
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      arbitrary[String]
     )
 
     behave like mandatoryField(
@@ -55,20 +47,11 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "agentCompanyName"
     val requiredKey = "agentCompanyDetails.error.agentCompanyName.required"
-    val lengthKey   = "agentCompanyDetails.error.agentCompanyName.length"
-    val maxLength   = 50
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      arbitrary[String]
     )
 
     behave like mandatoryField(
@@ -83,7 +66,7 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "agentStreetAndNumber"
     val requiredKey = "agentCompanyDetails.error.agentStreetAndNumber.required"
     val lengthKey   = "agentCompanyDetails.error.agentStreetAndNumber.length"
-    val maxLength   = 50
+    val maxLength   = 70
 
     behave like fieldThatBindsValidData(
       form,
@@ -110,7 +93,7 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "agentCity"
     val requiredKey = "agentCompanyDetails.error.agentCity.required"
     val lengthKey   = "agentCompanyDetails.error.agentCity.length"
-    val maxLength   = 50
+    val maxLength   = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -136,20 +119,11 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "agentCountry"
     val requiredKey = "agentCompanyDetails.error.agentCountry.required"
-    val lengthKey   = "agentCompanyDetails.error.agentCountry.length"
-    val maxLength   = 50
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      arbitrary[String]
     )
 
     behave like mandatoryField(

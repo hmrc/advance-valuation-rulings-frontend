@@ -26,18 +26,23 @@ import models.AgentCompanyDetails
 
 class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
 
+  private val maximumValueForAddress    = 70
+  private val maximumValueForTownOrCity = 35
+
   def apply(): Form[AgentCompanyDetails] = Form(
     mapping(
       "agentEori"            -> text("agentCompanyDetails.error.agentEori.required")
-        .verifying(maxLength(20, "agentCompanyDetails.error.agentEori.length")),
-      "agentCompanyName"     -> text("agentCompanyDetails.error.agentCompanyName.required")
-        .verifying(maxLength(50, "agentCompanyDetails.error.agentCompanyName.length")),
+        .verifying(eoriCodeConstraint),
+      "agentCompanyName"     -> text("agentCompanyDetails.error.agentCompanyName.required"),
       "agentStreetAndNumber" -> text("agentCompanyDetails.error.agentStreetAndNumber.required")
-        .verifying(maxLength(50, "agentCompanyDetails.error.agentStreetAndNumber.length")),
+        .verifying(
+          maxLength(maximumValueForAddress, "agentCompanyDetails.error.agentStreetAndNumber.length")
+        ),
       "agentCity"            -> text("agentCompanyDetails.error.agentCity.required")
-        .verifying(maxLength(50, "agentCompanyDetails.error.agentCity.length")),
-      "agentCountry"         -> text("agentCompanyDetails.error.agentCountry.required")
-        .verifying(maxLength(50, "agentCompanyDetails.error.agentCountry.length")),
+        .verifying(
+          maxLength(maximumValueForTownOrCity, "agentCompanyDetails.error.agentCity.length")
+        ),
+      "agentCountry"         -> text("agentCompanyDetails.error.agentCountry.required"),
       "agentPostalCode"      -> postcodeText(
         "agentCompanyDetails.error.agentPostalCode.required",
         "agentCompanyDetails.error.agentPostalCode.gb"

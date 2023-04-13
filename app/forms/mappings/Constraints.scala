@@ -146,4 +146,13 @@ trait Constraints {
       case Some(str: String) if str.length <= maximum => Valid
       case _                                          => Invalid(errorKey, maximum)
     }
+
+  private val eoriCodeRegex = "^[a-zA-Z0-9]{1,17}"
+  private val eoriCodeError = "agentCompanyDetails.error.agentEori.format"
+
+  val eoriCodeConstraint: Constraint[String] = Constraint("constraints.eoriFormat") {
+    case s: String if s.isEmpty                => Valid
+    case s: String if s.matches(eoriCodeRegex) => Valid
+    case _: String                             => Invalid(eoriCodeError)
+  }
 }
