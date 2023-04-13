@@ -38,16 +38,48 @@
 
         @govukInput(
             InputViewModel(
-                field = form("AgentEori"),
-                label = LabelViewModel(messages("agentCompanyDetails.AgentEori"))
+                field = form("agentEori"),
+                label = LabelViewModel(messages("agentCompanyDetails.agentEori"))
             )
             .withWidth(Full)
         )
 
         @govukInput(
             InputViewModel(
-                field = form("AgentCompanyName"),
-                label = LabelViewModel(messages("agentCompanyDetails.AgentCompanyName"))
+                field = form("agentCompanyName"),
+                label = LabelViewModel(messages("agentCompanyDetails.agentCompanyName"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("agentStreetAndNumber"),
+                label = LabelViewModel(messages("agentCompanyDetails.agentStreetAndNumber"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("agentCity"),
+                label = LabelViewModel(messages("agentCompanyDetails.agentCity"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("agentCountry"),
+                label = LabelViewModel(messages("agentCompanyDetails.agentCountry"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("agentPostalCode"),
+                label = LabelViewModel(messages("agentCompanyDetails.agentPostalCode"))
             )
             .withWidth(Full)
         )

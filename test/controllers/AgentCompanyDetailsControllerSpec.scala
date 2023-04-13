@@ -50,8 +50,8 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
     draftId,
     Json.obj(
       AgentCompanyDetailsPage.toString -> Json.obj(
-        "agentEori"            -> "value 1",
-        "agentCompanyName"     -> "value 2",
+        "agentEori"            -> "eori",
+        "agentCompanyName"     -> "companyName",
         "agentStreetAndNumber" -> "streetandNumber",
         "agentCity"            -> "city",
         "agentCountry"         -> "country"
