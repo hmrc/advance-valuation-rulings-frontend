@@ -16,20 +16,18 @@
 
 package navigation
 
-import play.api.libs.json.Writes
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup._
-
 import base.SpecBase
 import controllers.routes
-import models._
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
+import models._
 import models.fileupload._
 import pages._
+import play.api.libs.json.Writes
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import queries.Modifiable
+import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.AffinityGroup._
 
 class NavigatorSpec extends SpecBase {
 
@@ -47,19 +45,17 @@ class NavigatorSpec extends SpecBase {
 
     "/ must navigate to AccountHome" in {
 
-      def redirectRoute = Call("GET", "/advance-valuation-ruling/applications-and-rulings")
+      def redirectRoute = routes.AccountHomeController.onPageLoad()
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      running(application) {
-        val request = FakeRequest(GET, "/advance-valuation-ruling/")
+      val request = FakeRequest(GET, "/advance-valuation-ruling/")
 
-        val result = route(application, request).value
+      val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe redirectRoute.url
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe redirectRoute.url
 
-      }
     }
 
     "must go from a page that doesn't exist in the route map to AccountHome" in {
