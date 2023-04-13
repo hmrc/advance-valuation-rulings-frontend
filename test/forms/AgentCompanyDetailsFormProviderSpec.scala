@@ -19,9 +19,13 @@ package forms
 import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
+import generators.TraderDetailsGenerator
+import models.EoriNumber
 import org.scalacheck.Arbitrary.arbitrary
 
-class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
+class AgentCompanyDetailsFormProviderSpec
+    extends StringFieldBehaviours
+    with TraderDetailsGenerator {
 
   val form = new AgentCompanyDetailsFormProvider()()
 
@@ -33,7 +37,7 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      arbitrary[String]
+      arbitrary[EoriNumber].map(_.value)
     )
 
     behave like mandatoryField(
@@ -51,7 +55,7 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      arbitrary[String]
+      arbitrary[String].suchThat(_.nonEmpty)
     )
 
     behave like mandatoryField(
@@ -123,7 +127,7 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      arbitrary[String]
+      arbitrary[String].suchThat(_.nonEmpty)
     )
 
     behave like mandatoryField(
