@@ -50,7 +50,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
     draftId,
     Json.obj(
       AgentCompanyDetailsPage.toString -> Json.obj(
-        "agentEori"            -> "eori",
+        "agentEori"            -> "GB12341234123",
         "agentCompanyName"     -> "companyName",
         "agentStreetAndNumber" -> "streetandNumber",
         "agentCity"            -> "city",
@@ -93,7 +93,14 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         val agentCompanyDetails =
-          AgentCompanyDetails("eori", "companyName", "streetandNumber", "city", "country", None)
+          AgentCompanyDetails(
+            "GB12341234123",
+            "companyName",
+            "streetandNumber",
+            "city",
+            "country",
+            None
+          )
         contentAsString(result) mustEqual view(form.fill(agentCompanyDetails), NormalMode)(
           request,
           messages(application)
@@ -119,7 +126,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val request =
           FakeRequest(POST, agentCompanyDetailsRoute)
             .withFormUrlEncodedBody(
-              ("agentEori", "value 1"),
+              ("agentEori", "GB12341234123"),
               ("agentCompanyName", "value 2"),
               ("agentStreetAndNumber", "streetandNumber"),
               ("agentCity", "city"),
@@ -177,7 +184,13 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, agentCompanyDetailsRoute)
-            .withFormUrlEncodedBody(("AgentEori", "value 1"), ("AgentCompanyName", "value 2"))
+            .withFormUrlEncodedBody(
+              ("agentEori", "GB12341234123"),
+              ("agentCompanyName", "value 2"),
+              ("agentStreetAndNumber", "streetandNumber"),
+              ("agentCity", "city"),
+              ("agentCountry", "country")
+            )
 
         val result = route(application, request).value
 
