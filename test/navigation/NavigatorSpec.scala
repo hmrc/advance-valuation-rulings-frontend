@@ -16,17 +16,18 @@
 
 package navigation
 
-import play.api.libs.json.Writes
-import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup._
-
 import base.SpecBase
 import controllers.routes
-import models._
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
+import models._
 import models.fileupload._
 import pages._
+import play.api.libs.json.Writes
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import queries.Modifiable
+import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.AffinityGroup._
 
 class NavigatorSpec extends SpecBase {
 
@@ -42,13 +43,28 @@ class NavigatorSpec extends SpecBase {
 
     implicit val affinityGroup: AffinityGroup.Individual.type = AffinityGroup.Individual
 
-    "must go from a page that doesn't exist in the route map to Index" in {
+    "/ must navigate to AccountHome" in {
+
+      def redirectRoute = routes.AccountHomeController.onPageLoad()
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, "/advance-valuation-ruling/")
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe redirectRoute.url
+
+    }
+
+    "must go from a page that doesn't exist in the route map to AccountHome" in {
       case object UnknownPage extends Page
       navigator.nextPage(
         UnknownPage,
         NormalMode,
         EmptyUserAnswers
-      ) mustBe routes.IndexController.onPageLoad
+      ) mustBe routes.AccountHomeController.onPageLoad
     }
 
     "Account Home" - {
