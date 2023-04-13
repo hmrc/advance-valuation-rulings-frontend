@@ -32,6 +32,7 @@ import models._
 import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
@@ -85,8 +86,11 @@ object ViewApplicationControllerSpec extends Generators {
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 
+  val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
+
   val eoriDetails = TraderDetail(
     eori = randomString,
+    consentToDisclosureOfPersonalData = randomBoolean,
     businessName = randomString,
     addressLine1 = randomString,
     addressLine2 = Some(randomString),
@@ -146,6 +150,7 @@ object ViewApplicationControllerSpec extends Generators {
     |"draftId": "$draftId",
     |"eoriDetails": {
     |  "eori": "$randomString",
+    |  "consentToDisclosureOfPersonalData": $randomBoolean
     |  "businessName": "$randomString",
     |  "addressLine1": "$randomString",
     |  "addressLine2": "$randomString",

@@ -57,7 +57,7 @@ class SubmissionServiceSpec
   private val applicationId      = ApplicationId(1)
   private val applicationRequest = ApplicationRequest(
     draftId = DraftId(0),
-    trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
+    trader = TraderDetail("eori", true, "name", "line1", None, None, "postcode", "GB", None),
     agent = None,
     contact = ContactDetails("name", "email", None),
     requestedMethod = MethodOne(None, None, None),

@@ -23,6 +23,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators._
 import models._
+import org.scalacheck.Arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -85,6 +86,7 @@ object ContactDetailsSpec extends Generators {
   val CheckRegDetails = CheckRegisteredDetails(
     true,
     "eori",
+    true,
     "name",
     "streetAndNumber",
     "city",
@@ -94,6 +96,8 @@ object ContactDetailsSpec extends Generators {
   )
 
   val randomString: String = stringsWithMaxLength(8).sample.get
+
+  val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
 
   val draftId: DraftId = DraftId(1)
 
@@ -117,6 +121,7 @@ object ContactDetailsSpec extends Generators {
   )
   val eoriDetails               = TraderDetail(
     eori = randomString,
+    consentToDisclosureOfPersonalData = randomBoolean,
     businessName = randomString,
     addressLine1 = randomString,
     addressLine2 = Some(randomString),

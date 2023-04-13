@@ -21,6 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 case class CheckRegisteredDetails(
   value: Boolean,
   eori: String,
+  consentToDisclosureOfPersonalData: Boolean,
   name: String,
   streetAndNumber: String,
   city: String,

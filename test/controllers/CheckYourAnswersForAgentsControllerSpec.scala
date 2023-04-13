@@ -104,6 +104,7 @@ class CheckYourAnswersForAgentsControllerSpec
                 CheckRegisteredDetails(
                   value = true,
                   eori = "eori",
+                  consentToDisclosureOfPersonalData = true,
                   name = "name",
                   streetAndNumber = "streetAndNumber",
                   city = "city",

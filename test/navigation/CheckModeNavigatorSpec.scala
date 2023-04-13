@@ -690,6 +690,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           def registeredDetails(value: Boolean) = CheckRegisteredDetails(
             value,
             eori = "eori",
+            consentToDisclosureOfPersonalData = true,
             name = "name",
             streetAndNumber = "streetAndNumber",
             city = "city",

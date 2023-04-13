@@ -90,10 +90,7 @@ object CheckRegisteredDetailsSummary {
     for {
       contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
       number          = registeredNumberRow(contactDetails)
-      name            = registeredNameRow(contactDetails)
-      address         = registeredAddressRow(contactDetails)
-      result          = Seq(number, name, address)
-    } yield result
+    } yield number +: getPersonalDetails(contactDetails)
 
   def rows(
     application: Application
@@ -109,12 +106,21 @@ object CheckRegisteredDetailsSummary {
       city = application.trader.addressLine2.getOrElse(""),
       country = application.trader.countryCode,
       postalCode = postCode,
-      phoneNumber = application.trader.phoneNumber
+      phoneNumber = application.trader.phoneNumber,
+      consentToDisclosureOfPersonalData = application.trader.consentToDisclosureOfPersonalData
     )
-    Seq(
-      registeredNumberRow(contactDetails),
-      registeredNameRow(contactDetails),
-      registeredAddressRow(contactDetails)
-    )
+
+    registeredNumberRow(contactDetails) +: getPersonalDetails(contactDetails)
   }
+
+  private def getPersonalDetails(
+    registeredDetails: CheckRegisteredDetails
+  )(implicit messages: Messages) =
+    if (registeredDetails.consentToDisclosureOfPersonalData) {
+      val name    = registeredNameRow(registeredDetails)
+      val address = registeredAddressRow(registeredDetails)
+      Seq(name, address)
+    } else {
+      Nil
+    }
 }
