@@ -21,7 +21,6 @@ object AppDependencies {
   val HmrcMongoTestPlayVersion  = "0.74.0"
   val FlexmarkVersion           = "0.62.2"
   val EnumeratumVersion         = "1.6.3"
-  val QuicklensVersion          = "1.9.0"
   val ObjectStoreVersion        = "1.0.0"
   val InternalAuthVersion       = "1.2.0"
   val LibPhoneNumberVersion     = "8.12.47"
@@ -37,7 +36,6 @@ object AppDependencies {
     "uk.gov.hmrc.mongo"          %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
     "org.typelevel"              %% "cats-core"                     % CatsVersion,
     "com.beachape"               %% "enumeratum-play-json"          % EnumeratumVersion,
-    "com.softwaremill.quicklens" %% "quicklens"                     % QuicklensVersion,
     "com.googlecode.libphonenumber" % "libphonenumber"             % LibPhoneNumberVersion
   )
 

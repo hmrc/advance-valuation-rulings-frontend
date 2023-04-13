@@ -23,7 +23,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.ActionTransformer
 
 import com.google.inject.ImplementedBy
-import com.softwaremill.quicklens._
 import models.{CounterId, DraftId}
 import models.requests.{DraftIdRequest, OptionalDataRequest}
 import repositories.CounterRepository
@@ -39,16 +38,17 @@ class DraftIdGenerationActionImpl @Inject() (
   ): Future[DraftIdRequest[A]] =
     draftIdRepository.nextId(CounterId.DraftId).map {
       draftId =>
-        val updatedRequest =
-          request.modify(_.userAnswers.each.draftId).setTo(DraftId(draftId).toString)
+        val updatedAnswers =
+          request.userAnswers
+            .map(x => x.copy(draftId = DraftId(draftId)))
 
         DraftIdRequest(
-          updatedRequest,
+          request.request,
           request.userId,
           request.eoriNumber,
           DraftId(draftId),
           request.affinityGroup,
-          updatedRequest.userAnswers
+          updatedAnswers
         )
     }
 }
