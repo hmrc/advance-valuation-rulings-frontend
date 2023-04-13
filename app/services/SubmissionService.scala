@@ -45,9 +45,10 @@ class SubmissionService @Inject() (backendConnector: BackendConnector, emailServ
             )
             .map(_ => submissionResponse)
             .recover {
-              case _: Throwable =>
+              case err: Throwable =>
                 logger.warn(
-                  s"Failed to send an email for application ${submissionResponse.applicationId.toString}"
+                  s"Failed to send an email for application ${submissionResponse.applicationId.toString}",
+                  err
                 )
                 submissionResponse
             }

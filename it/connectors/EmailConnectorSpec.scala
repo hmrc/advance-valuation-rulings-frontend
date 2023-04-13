@@ -56,10 +56,10 @@ class EmailConnectorSpec extends BaseIntegrationSpec with WireMockHelper {
       )
       val requestBody  = Json.stringify(Json.toJson(emailRequest))
 
-      stub(POST, "/email", 202, "", Some(requestBody))
+      stub(POST, "/hmrc/email", 202, "", Some(requestBody))
 
       assert(connector.sendEmail(emailRequest).futureValue.status === ACCEPTED)
-      verify(1, postRequestedFor(urlEqualTo(s"/email")))
+      verify(1, postRequestedFor(urlEqualTo(s"/hmrc/email")))
     }
 
     "must return a failed future when the server response with an error" in {
@@ -74,7 +74,7 @@ class EmailConnectorSpec extends BaseIntegrationSpec with WireMockHelper {
       )
       val requestBody  = Json.stringify(Json.toJson(emailRequest))
 
-      stub(POST, "/email", 500, "", Some(requestBody))
+      stub(POST, "/hmrc/email", 500, "", Some(requestBody))
 
       connector.sendEmail(emailRequest).failed.futureValue
     }

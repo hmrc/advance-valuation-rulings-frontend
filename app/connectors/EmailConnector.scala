@@ -36,7 +36,7 @@ class EmailConnector @Inject() (
     emailRequest: EmailRequest
   )(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
-      .post(url"${appConfig.emailBaseUrl}/email")
+      .post(url"${appConfig.emailBaseUrl}/hmrc/email")
       .withBody(Json.toJson(emailRequest))
       .execute[HttpResponse]
 }
