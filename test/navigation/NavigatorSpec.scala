@@ -47,17 +47,17 @@ class NavigatorSpec extends SpecBase {
 
     "/ must navigate to AccountHome" in {
 
-      def onwardRoute = Call("GET", "/applications-and-rulings")
+      def redirectRoute = Call("GET", "/advance-valuation-ruling/applications-and-rulings")
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, "/advance-valuation-ruling")
+        val request = FakeRequest(GET, "/advance-valuation-ruling/")
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe onwardRoute.url
+        redirectLocation(result).value mustBe redirectRoute.url
 
       }
     }
