@@ -22,6 +22,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import forms.RequiredInformationFormProvider
@@ -59,7 +60,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form)(
+        contentAsString(result) mustEqual view(form, AffinityGroup.Individual)(
           request,
           messages(application)
         ).toString
@@ -84,7 +85,8 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form.fill(RequiredInformation.values.toSet)
+          form.fill(RequiredInformation.values.toSet),
+          AffinityGroup.Individual
         )(request, messages(application)).toString
       }
     }
@@ -148,7 +150,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
           form.bind(Map("value[0]" -> RequiredInformation.values.head.toString))
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm)(
+        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual)(
           request,
           messages(application)
         ).toString
@@ -171,7 +173,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm)(
+        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual)(
           request,
           messages(application)
         ).toString

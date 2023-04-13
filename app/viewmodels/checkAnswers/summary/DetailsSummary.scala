@@ -30,7 +30,9 @@ case class DetailsSummary(rows: SummaryList) extends AnyVal {
 }
 
 object DetailsSummary {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): DetailsSummary = {
+  def apply(userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): DetailsSummary = {
 
     val rows = Seq(
       DescriptionOfGoodsSummary.row(userAnswers),
@@ -57,7 +59,8 @@ object DetailsSummary {
       HasConfidentialInformationSummary.row(application),
       ConfidentialInformationSummary.row(application),
       DoYouWantToUploadDocumentsSummary.row(application),
-      UploadedDocumentsSummary.row(application)
+      UploadedDocumentsSummary.row(application),
+      Some(DateSubmittedSummary.row(application))
     ).flatten
 
     DetailsSummary(SummaryListViewModel(rows))
