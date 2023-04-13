@@ -64,7 +64,7 @@ trait SpecBase
   val DraftIdSequence       = 123456789L
   val draftId               = DraftId(DraftIdSequence)
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId.toString)
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())

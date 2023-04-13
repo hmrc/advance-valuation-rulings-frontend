@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import config.FrontendAppConfig
-import models.UserAnswers
+import models.{DraftId, UserAnswers}
 import org.mockito.Mockito.when
 import org.mongodb.scala.model.Filters
 import org.scalatest.OptionValues
@@ -30,9 +30,7 @@ class SessionRepositorySpec
   private val instant          = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   private val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
-  val DraftIdPrefix   = "DRAFT"
-  val DraftIdSequence = 123456789
-  val draftId: String = s"$DraftIdPrefix$DraftIdSequence"
+  private val draftId = DraftId(0)
 
   private val userAnswers =
     UserAnswers(

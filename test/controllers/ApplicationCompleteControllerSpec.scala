@@ -16,7 +16,6 @@
 
 package controllers
 
-import play.api.libs.json._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -40,7 +39,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
             val email          = "test@test.com"
             val name           = "Test"
             val phone          = "07777 777777"
-            val applicationId  = userAnswers.draftId
+            val applicationId  = "GBAVR000000001"
             val contactDetails = ApplicationContactDetails(name, email, phone)
 
             val answers     =
@@ -72,7 +71,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
             val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationId  = userAnswers.draftId
+            val applicationId  = "GBAVR000000001"
             val updatedAnswers =
               userAnswers.remove(pages.ApplicationContactDetailsPage).success.value
 
@@ -104,7 +103,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
                     )
             } yield ua).success.value
 
-            val applicationId = userAnswers.draftId
+            val applicationId = "GBAVR000000001"
 
             val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers)).build()
 
@@ -134,7 +133,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
         ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
           ua =>
             val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationId  = userAnswers.draftId
+            val applicationId  = "GBAVR000000001"
             val updatedAnswers =
               userAnswers.remove(pages.BusinessContactDetailsPage).success.value
 

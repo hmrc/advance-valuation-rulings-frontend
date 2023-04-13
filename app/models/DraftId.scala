@@ -16,13 +16,60 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import scala.util.Try
+
+import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
+import play.api.mvc.PathBindable
 
 final case class DraftId(value: Long) {
-
-  override def toString: String = s"DRAFT%09d".format(value)
+  override val toString: String = s"DRAFT%09d".format(value)
 }
 
 object DraftId {
-  implicit val format: OFormat[DraftId] = Json.format[DraftId]
+
+  def apply(valueString: String): Try[DraftId] =
+    Try(DraftId(valueString.toInt))
+
+  def fromString(string: String): Option[DraftId] = {
+
+    val pattern = "DRAFT(\\d{9})".r.anchored
+
+    string match {
+      case pattern(value) =>
+        DraftId(value).toOption
+
+      case _ =>
+        None
+    }
+  }
+
+  implicit def pathBindable: PathBindable[DraftId] =
+    new PathBindable[DraftId] {
+
+      override def bind(key: String, value: String): Either[String, DraftId] =
+        fromString(value) match {
+          case Some(draftId) => Right(draftId)
+          case None          => Left("Invalid draft Id")
+        }
+
+      override def unbind(key: String, value: DraftId): String =
+        value.toString
+    }
+
+  implicit lazy val format: Format[DraftId] = new Format[DraftId] {
+    override def reads(json: JsValue): JsResult[DraftId] =
+      json match {
+        case string: JsString =>
+          fromString(string.value) match {
+            case Some(draftId) => JsSuccess(draftId)
+            case None          => JsError("Invalid draft Id")
+          }
+
+        case _ =>
+          JsError("Invalid draft Id")
+      }
+
+    override def writes(o: DraftId): JsValue =
+      JsString(o.toString)
+  }
 }

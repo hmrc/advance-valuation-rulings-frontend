@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.RequestMethod._
 import generators.{ApplicationGenerator, TraderDetailsGenerator, UserAnswersGenerator}
-import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode}
+import models.{AcknowledgementReference, DraftId, EoriNumber, TraderDetailsWithCountryCode}
 import models.requests._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
@@ -118,7 +118,7 @@ class BackendConnectorSpec
     val applicationId      = ApplicationId(1)
     val response           = ApplicationSubmissionResponse(applicationId)
     val applicationRequest = ApplicationRequest(
-      draftId = "draft",
+      draftId = DraftId(0),
       trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
       agent = None,
       contact = ContactDetails("name", "email", None),

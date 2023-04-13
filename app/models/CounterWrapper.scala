@@ -37,7 +37,7 @@ object CounterId {
     override def reads(json: JsValue): JsResult[CounterId] =
       json match {
         case JsString(DraftId.toString) => JsSuccess(DraftId)
-        case _ => JsError("Invalid counter id")
+        case _                          => JsError("Invalid counter id")
       }
 
     override def writes(o: CounterId): JsValue =

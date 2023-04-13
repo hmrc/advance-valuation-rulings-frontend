@@ -28,7 +28,7 @@ import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
 
 class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues with OptionValues {
 
-  private val draftId: String               = DraftId(1).toString
+  private val draftId: DraftId              = DraftId(1)
   private val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
   ".apply" must {
