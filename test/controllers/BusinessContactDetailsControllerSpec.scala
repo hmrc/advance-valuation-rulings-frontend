@@ -116,8 +116,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(
               ("name", "my name"),
               ("email", "email@example.co.uk"),
-              ("phone", "07123456789"),
-              ("company", "company")
+              ("phone", "07123456789")
             )
 
         val result = route(application, request).value

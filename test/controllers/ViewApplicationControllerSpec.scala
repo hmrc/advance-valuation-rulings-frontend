@@ -32,6 +32,7 @@ import models._
 import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
@@ -117,7 +118,7 @@ object ViewApplicationControllerSpec extends Generators {
 
   val lastUpdated        = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
   val lastUpdatedString  = "22/08/2018"
-  val draftId            = DraftId("DRAFT", 0L).render
+  val draftId            = DraftId(0L)
   val applicationRequest = ApplicationRequest(
     draftId = draftId,
     trader = eoriDetails,

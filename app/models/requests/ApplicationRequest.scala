@@ -22,7 +22,7 @@ import cats.implicits._
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-import models.{AgentCompanyDetails, CheckRegisteredDetails, UserAnswers}
+import models.{AgentCompanyDetails, CheckRegisteredDetails, DraftId, UserAnswers}
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
 import pages._
 
@@ -128,7 +128,7 @@ object TraderDetail {
 }
 
 case class ApplicationRequest(
-  draftId: String,
+  draftId: DraftId,
   trader: TraderDetail,
   agent: Option[TraderDetail],
   contact: ContactDetails,

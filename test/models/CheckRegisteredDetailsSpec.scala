@@ -37,6 +37,7 @@ class CheckRegisteredDetailsSpec
                       |{
                       |  "value": true,
                       |  "eori": "GB123456789012",
+                      |  "consentToDisclosureOfPersonalData": true,
                       |  "name": "name",
                       |  "streetAndNumber": "streetAndNumber",
                       |  "city": "city",
@@ -49,6 +50,7 @@ class CheckRegisteredDetailsSpec
     val validDetails = CheckRegisteredDetails(
       value = true,
       eori = "GB123456789012",
+      consentToDisclosureOfPersonalData = true,
       name = "name",
       streetAndNumber = "streetAndNumber",
       city = "city",

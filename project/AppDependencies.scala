@@ -21,40 +21,37 @@ object AppDependencies {
   val HmrcMongoTestPlayVersion  = "0.74.0"
   val FlexmarkVersion           = "0.62.2"
   val EnumeratumVersion         = "1.6.3"
-  val QuicklensVersion          = "1.9.0"
   val ObjectStoreVersion        = "1.0.0"
   val InternalAuthVersion       = "1.2.0"
   val LibPhoneNumberVersion     = "8.12.47"
 
-
   val compile = Seq(
     play.sbt.PlayImport.ws,
-    "uk.gov.hmrc"                %% "play-frontend-hmrc"            % PlayFrontendHmrcVersion,
-    "uk.gov.hmrc"                %% "play-conditional-form-mapping" % PlayConditionalFormMappingVersion,
-    "uk.gov.hmrc"                %% "bootstrap-frontend-play-28"    % BootstrapFrontendPlayVersion,
-    "uk.gov.hmrc"                %% "internal-auth-client-play-28"  % InternalAuthVersion,
-    "uk.gov.hmrc.objectstore"    %% "object-store-client-play-28"   % ObjectStoreVersion,
-    "uk.gov.hmrc.mongo"          %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
-    "org.typelevel"              %% "cats-core"                     % CatsVersion,
-    "com.beachape"               %% "enumeratum-play-json"          % EnumeratumVersion,
-    "com.softwaremill.quicklens" %% "quicklens"                     % QuicklensVersion,
-    "com.googlecode.libphonenumber" % "libphonenumber"             % LibPhoneNumberVersion
+    "uk.gov.hmrc"                  %% "play-frontend-hmrc"            % PlayFrontendHmrcVersion,
+    "uk.gov.hmrc"                  %% "play-conditional-form-mapping" % PlayConditionalFormMappingVersion,
+    "uk.gov.hmrc"                  %% "bootstrap-frontend-play-28"    % BootstrapFrontendPlayVersion,
+    "uk.gov.hmrc"                  %% "internal-auth-client-play-28"  % InternalAuthVersion,
+    "uk.gov.hmrc.objectstore"      %% "object-store-client-play-28"   % ObjectStoreVersion,
+    "uk.gov.hmrc.mongo"            %% "hmrc-mongo-play-28"            % HmrcMongoPlayVersion,
+    "org.typelevel"                %% "cats-core"                     % CatsVersion,
+    "com.beachape"                 %% "enumeratum-play-json"          % EnumeratumVersion,
+    "com.googlecode.libphonenumber" % "libphonenumber"                % LibPhoneNumberVersion
   )
 
   val test = Seq(
-    "org.scalatest"          %% "scalatest"               % ScalaTestVersion,
-    "org.scalatestplus"      %% "scalacheck-1-15"         % ScalaTestPlusVersion,
-    "org.scalatestplus"      %% "mockito-3-4"             % ScalaTestPlusVersion,
-    "org.scalatestplus.play" %% "scalatestplus-play"      % ScalaTestPlusPlayVersion,
-    "org.pegdown"             % "pegdown"                 % PegdownVersion,
-    "org.jsoup"               % "jsoup"                   % JsoupVersion,
-    "com.typesafe.play"      %% "play-test"               % PlayVersion.current,
-    "org.mockito"            %% "mockito-scala"           % MockitoScalaVersion,
-    "org.scalacheck"         %% "scalacheck"              % ScalaCheckVersion,
-    "wolfendale"             %% "scalacheck-gen-regexp"   % ScalaCheckRegexGenVersion,
-    "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
-    "uk.gov.hmrc"            %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
-    "com.vladsch.flexmark"    % "flexmark-all"            % FlexmarkVersion
+    "org.scalatest"              %% "scalatest"               % ScalaTestVersion,
+    "org.scalatestplus"          %% "scalacheck-1-15"         % ScalaTestPlusVersion,
+    "org.scalatestplus"          %% "mockito-3-4"             % ScalaTestPlusVersion,
+    "org.scalatestplus.play"     %% "scalatestplus-play"      % ScalaTestPlusPlayVersion,
+    "org.pegdown"                 % "pegdown"                 % PegdownVersion,
+    "org.jsoup"                   % "jsoup"                   % JsoupVersion,
+    "com.typesafe.play"          %% "play-test"               % PlayVersion.current,
+    "org.mockito"                %% "mockito-scala"           % MockitoScalaVersion,
+    "org.scalacheck"             %% "scalacheck"              % ScalaCheckVersion,
+    "wolfendale"                 %% "scalacheck-gen-regexp"   % ScalaCheckRegexGenVersion,
+    "uk.gov.hmrc.mongo"          %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
+    "uk.gov.hmrc"                %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
+    "com.vladsch.flexmark"        % "flexmark-all"            % FlexmarkVersion
   ).map(_ % "test, it")
 
   def apply(): Seq[ModuleID] = compile ++ test

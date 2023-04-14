@@ -54,8 +54,7 @@ object ApplicationContactDetailsSummary {
         ActionItemViewModel(
           "site.change",
           routes.ApplicationContactDetailsController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("applicationContactDetails.email.change.hidden"))
+        ).withVisuallyHiddenText(messages("applicationContactDetails.email.change.hidden"))
       )
     )
 

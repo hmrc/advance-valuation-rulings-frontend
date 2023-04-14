@@ -16,22 +16,22 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.requests.ApplicationRequest
-import models.{AgentCompanyDetails, CheckMode, UserAnswers}
-import pages.AgentCompanyDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{AgentCompanyDetails, CheckMode, UserAnswers}
+import models.requests.ApplicationRequest
+import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AgentCompanySummary {
 
-
   private def registeredNameRow(answer: AgentCompanyDetails)(implicit
-                                                                messages: Messages
+    messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.business.name.label",
@@ -46,7 +46,7 @@ object AgentCompanySummary {
     )
 
   private def registeredAddressRow(answer: AgentCompanyDetails)(implicit
-                                                                   messages: Messages
+    messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.business.address.label",
@@ -72,7 +72,7 @@ object AgentCompanySummary {
     )
 
   private def registeredEoriNumberRow(answer: AgentCompanyDetails)(implicit
-                                                                  messages: Messages
+    messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.business.eori.number.label",
@@ -89,16 +89,16 @@ object AgentCompanySummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(AgentCompanyDetailsPage)
-      eori = registeredEoriNumberRow(contactDetails)
-      name = registeredNameRow(contactDetails)
-      address = registeredAddressRow(contactDetails)
-      result = Seq(eori, name, address)
+      eori            = registeredEoriNumberRow(contactDetails)
+      name            = registeredNameRow(contactDetails)
+      address         = registeredAddressRow(contactDetails)
+      result          = Seq(eori, name, address)
     } yield result
 
   def rows(
-            request: ApplicationRequest
-          )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val postCode =
+    request: ApplicationRequest
+  )(implicit messages: Messages): Seq[SummaryListRow] = {
+    val postCode       =
       if (request.trader.postcode.isEmpty) None else Some(request.trader.postcode)
     val contactDetails = models.AgentCompanyDetails(
       agentEori = request.trader.eori,

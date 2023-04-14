@@ -17,6 +17,8 @@
 package navigation
 
 import play.api.libs.json.Writes
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup._
 
@@ -42,13 +44,28 @@ class NavigatorSpec extends SpecBase {
 
     implicit val affinityGroup: AffinityGroup.Individual.type = AffinityGroup.Individual
 
-    "must go from a page that doesn't exist in the route map to Index" in {
+    "/ must navigate to AccountHome" in {
+
+      def redirectRoute = routes.AccountHomeController.onPageLoad()
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, "/advance-valuation-ruling/")
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe redirectRoute.url
+
+    }
+
+    "must go from a page that doesn't exist in the route map to AccountHome" in {
       case object UnknownPage extends Page
       navigator.nextPage(
         UnknownPage,
         NormalMode,
         EmptyUserAnswers
-      ) mustBe routes.IndexController.onPageLoad
+      ) mustBe routes.AccountHomeController.onPageLoad
     }
 
     "Account Home" - {
@@ -347,6 +364,7 @@ class NavigatorSpec extends SpecBase {
         val data = CheckRegisteredDetails(
           value = true,
           eori = "GB1234567890",
+          consentToDisclosureOfPersonalData = true,
           name = "name",
           streetAndNumber = "street",
           city = "city",
@@ -403,16 +421,18 @@ class NavigatorSpec extends SpecBase {
 
         "when Agent" - {
           "navigate to AgentCompanyDetailsPage when Yes" in {
+            val ua = userAnswers
+              .set(WhatIsYourRoleAsImporterPage, value = AgentOnBehalfOfOrg)
+              .success
+              .value
             navigator.nextPage(
               BusinessContactDetailsPage,
               NormalMode,
-              userAnswers
-                .set(WhatIsYourRoleAsImporterPage, value = AgentOnBehalfOfOrg)
-                .success
-                .value
+              ua
             ) mustBe routes.AgentCompanyDetailsController.onPageLoad(mode = NormalMode)
           }
         }
+
         "when an Employee" - {
           "navigate to valuation method page" in {
 

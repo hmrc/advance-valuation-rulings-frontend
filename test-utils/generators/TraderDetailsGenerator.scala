@@ -23,6 +23,7 @@ import play.api.http.Status
 
 import models._
 import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary.arbitrary
 import wolfendale.scalacheck.regexp.RegexpGen
 
 trait TraderDetailsGenerator extends Generators {
@@ -59,15 +60,17 @@ trait TraderDetailsGenerator extends Generators {
   implicit lazy val arbitraryTraderDetailsWithCountryCode: Arbitrary[TraderDetailsWithCountryCode] =
     Arbitrary {
       for {
-        eoriNumber         <- arbitraryEoriNumberGen.arbitrary
-        cdsFullName        <- stringsWithMaxLength(512)
-        streetAndNumber    <- stringsWithMaxLength(70)
-        city               <- stringsWithMaxLength(35)
-        country            <- stringsWithMaxLength(2)
-        postalCode         <- Gen.option(stringsWithMaxLength(9))
-        contactInformation <- Gen.option(contactInformationGen)
+        eoriNumber                        <- arbitraryEoriNumberGen.arbitrary
+        consentToDisclosureOfPersonalData <- arbitrary[Boolean]
+        cdsFullName                       <- stringsWithMaxLength(512)
+        streetAndNumber                   <- stringsWithMaxLength(70)
+        city                              <- stringsWithMaxLength(35)
+        country                           <- stringsWithMaxLength(2)
+        postalCode                        <- Gen.option(stringsWithMaxLength(9))
+        contactInformation                <- Gen.option(contactInformationGen)
       } yield TraderDetailsWithCountryCode(
         eoriNumber.value,
+        consentToDisclosureOfPersonalData,
         cdsFullName,
         CDSEstablishmentAddress(streetAndNumber, city, country, postalCode),
         contactInformation

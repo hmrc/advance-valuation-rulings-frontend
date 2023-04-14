@@ -2,7 +2,7 @@
 
 ->         /hmrc-frontend                               hmrcfrontend.Routes
 
-GET        /                                            controllers.IndexController.onPageLoad
+GET        /                                            controllers.Default.redirect(to = "/advance-valuation-ruling/applications-and-rulings")
 
 GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
 
@@ -25,7 +25,7 @@ GET        /account/signed-out                          controllers.auth.SignedO
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET        /applications-and-rulings                    controllers.AccountHomeController.onPageLoad()
-POST        /applications-and-rulings                    controllers.AccountHomeController.startApplication()
+POST       /applications-and-rulings                    controllers.AccountHomeController.startApplication()
 
 GET        /select-valuation-method                     controllers.ValuationMethodController.onPageLoad(mode: Mode = NormalMode)
 POST       /select-valuation-method                     controllers.ValuationMethodController.onSubmit(mode: Mode = NormalMode)

@@ -85,6 +85,7 @@ object ContactDetailsSpec extends Generators {
   val CheckRegDetails = CheckRegisteredDetails(
     true,
     "eori",
+    true,
     "name",
     "streetAndNumber",
     "city",
@@ -95,7 +96,7 @@ object ContactDetailsSpec extends Generators {
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val draftId: String = DraftId("DRAFT", 1).render
+  val draftId: DraftId = DraftId(1)
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 

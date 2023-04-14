@@ -16,33 +16,27 @@
 
 package viewmodels.checkAnswers.summary
 
-import scala.util.Try
-
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 import base.SpecBase
-import models.{CheckRegisteredDetails, UserAnswers}
+import models.CheckRegisteredDetails
 import pages.CheckRegisteredDetailsPage
 
 class IndividualEoriDetailsSummarySpec extends SpecBase {
 
-  val allAnswersInput: Try[UserAnswers] =
-    emptyUserAnswers
-      .set(
-        CheckRegisteredDetailsPage,
-        CheckRegisteredDetails(
-          value = true,
-          EoriNumber,
-          RegisteredName,
-          StreetAndNumber,
-          City,
-          Country,
-          Some(Postcode),
-          Some(phoneNumber)
-        )
-      )
+  private val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
+    value = true,
+    EoriNumber,
+    consentToDisclosureOfPersonalData = true,
+    RegisteredName,
+    StreetAndNumber,
+    City,
+    Country,
+    Some(Postcode),
+    Some(phoneNumber)
+  )
 
   "IndividualEoriDetailsSummary" - {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
@@ -57,8 +51,10 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
     }
 
     "when the user has answers for all relevant pages" - {
-      val summary = IndividualEoriDetailsSummary(allAnswersInput.success.value)
-      val rows    = summary.rows.rows.map(row => (row.key, row.value))
+      val userAnswers =
+        emptyUserAnswers.set(CheckRegisteredDetailsPage, registeredDetails).success.value
+      val summary     = IndividualEoriDetailsSummary(userAnswers)
+      val rows        = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
         rows.length mustBe 3
@@ -87,6 +83,27 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
           (
             Key(Text("checkYourAnswers.eori.address.label")),
             Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$Country"))
+          )
+        )
+      }
+    }
+
+    "when consentToDisclosureOfPersonalData is false" - {
+      val userAnswers = emptyUserAnswers
+        .set(
+          CheckRegisteredDetailsPage,
+          registeredDetails.copy(consentToDisclosureOfPersonalData = false)
+        )
+        .success
+        .value
+      val summary     = IndividualEoriDetailsSummary(userAnswers)
+      val rows        = summary.rows.rows.map(row => (row.key, row.value))
+
+      "create only EORI number row" in {
+        rows must contain theSameElementsAs Seq(
+          (
+            Key(Text("checkYourAnswers.eori.number.label")),
+            Value(Text(EoriNumber))
           )
         )
       }

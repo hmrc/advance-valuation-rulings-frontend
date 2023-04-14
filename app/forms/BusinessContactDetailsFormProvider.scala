@@ -24,7 +24,6 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
-import com.google._
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.BusinessContactDetailsFormProvider._
 import forms.mappings.Mappings
@@ -75,5 +74,4 @@ object BusinessContactDetailsFormProvider {
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
   private val phoneLengthError   = "businessContactDetails.telephoneNumber.length"
-
 }

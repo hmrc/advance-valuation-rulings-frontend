@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, CheckRegisteredDetails, UserAnswers}
+import models.{CheckMode, CheckRegisteredDetails, EoriNumber, UserAnswers}
 import models.requests._
 import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
@@ -41,7 +41,7 @@ object CheckRegisteredDetailsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.name.change.hidden"))
       )
     )
 
@@ -67,54 +67,43 @@ object CheckRegisteredDetailsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.address.change.hidden"))
       )
     )
 
-  private def registeredNumberRow(answer: CheckRegisteredDetails)(implicit
-    messages: Messages
-  ): SummaryListRow =
+  private def registeredNumberRow(eoriNumber: EoriNumber)(implicit messages: Messages) =
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.number.label",
-      value = ValueViewModel(HtmlFormat.escape(answer.eori).body),
+      value = ValueViewModel(HtmlFormat.escape(eoriNumber.value).body),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.eori.change.hidden"))
       )
     )
 
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
-      number          = registeredNumberRow(contactDetails)
-      name            = registeredNameRow(contactDetails)
-      address         = registeredAddressRow(contactDetails)
-      result          = Seq(number, name, address)
-    } yield result
+      number          = registeredNumberRow(EoriNumber(contactDetails.eori))
+    } yield number +: getPersonalDetails(contactDetails)
 
   def rows(
     application: Application
-  )(implicit messages: Messages): Seq[SummaryListRow] = {
+  )(implicit messages: Messages): Seq[SummaryListRow] = Seq(
+    registeredNumberRow(EoriNumber(application.trader.eori))
+  )
 
-    val postCode       =
-      if (application.trader.postcode.isEmpty) None else Some(application.trader.postcode)
-    val contactDetails = models.CheckRegisteredDetails(
-      value = true,
-      eori = application.trader.eori,
-      name = application.trader.businessName,
-      streetAndNumber = application.trader.addressLine1,
-      city = application.trader.addressLine2.getOrElse(""),
-      country = application.trader.countryCode,
-      postalCode = postCode,
-      phoneNumber = application.trader.phoneNumber
-    )
-    Seq(
-      registeredNumberRow(contactDetails),
-      registeredNameRow(contactDetails),
-      registeredAddressRow(contactDetails)
-    )
-  }
+  private def getPersonalDetails(
+    registeredDetails: CheckRegisteredDetails
+  )(implicit messages: Messages) =
+    if (registeredDetails.consentToDisclosureOfPersonalData) {
+      val name    = registeredNameRow(registeredDetails)
+      val address = registeredAddressRow(registeredDetails)
+      Seq(name, address)
+    } else {
+      Nil
+    }
 }

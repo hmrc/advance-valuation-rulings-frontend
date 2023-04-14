@@ -26,6 +26,7 @@ import generators._
 import models._
 import models.DraftId
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import org.scalacheck.Arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -114,6 +115,7 @@ class ApplicationRequestSpec
                   CheckRegisteredDetails(
                     value = true,
                     eori = randomString,
+                    consentToDisclosureOfPersonalData = randomBoolean,
                     name = randomString,
                     streetAndNumber = randomString,
                     city = randomString,
@@ -188,6 +190,7 @@ class ApplicationRequestSpec
                   CheckRegisteredDetails(
                     value = true,
                     eori = randomString,
+                    consentToDisclosureOfPersonalData = randomBoolean,
                     name = randomString,
                     streetAndNumber = randomString,
                     city = randomString,
@@ -264,6 +267,7 @@ class ApplicationRequestSpec
                   CheckRegisteredDetails(
                     value = true,
                     eori = randomString,
+                    consentToDisclosureOfPersonalData = randomBoolean,
                     name = randomString,
                     streetAndNumber = randomString,
                     city = randomString,
@@ -344,7 +348,9 @@ object ApplicationRequestSpec extends Generators {
   //       where the data from the json are mapped to the wrong fields in the models.
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val draftId: String = DraftId("DRAFT", 1).render
+  val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
+
+  val draftId: DraftId = DraftId(1)
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 

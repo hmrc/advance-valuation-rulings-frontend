@@ -31,7 +31,7 @@ import queries.Modifiable
 
 final case class UserAnswers(
   userId: String,
-  draftId: String,
+  draftId: DraftId,
   data: JsObject = Json.obj(),
   lastUpdated: Instant = Instant.now
 ) {
@@ -134,7 +134,7 @@ object UserAnswers {
 
     (
       (__ \ "_id").read[String] and
-        (__ \ "draftId").read[String] and
+        (__ \ "draftId").read[DraftId] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
     )(UserAnswers.apply _)
@@ -146,7 +146,7 @@ object UserAnswers {
 
     (
       (__ \ "_id").write[String] and
-        (__ \ "draftId").write[String] and
+        (__ \ "draftId").write[DraftId] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
     )(unlift(UserAnswers.unapply))
@@ -160,7 +160,7 @@ object UserAnswers {
 
     (
       (__ \ "userId").read[String] and
-        (__ \ "draftId").read[String] and
+        (__ \ "draftId").read[DraftId] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read[Instant]
     )(UserAnswers.apply _)
@@ -172,7 +172,7 @@ object UserAnswers {
 
     (
       (__ \ "userId").write[String] and
-        (__ \ "draftId").write[String] and
+        (__ \ "draftId").write[DraftId] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write[Instant]
     )(unlift(UserAnswers.unapply))

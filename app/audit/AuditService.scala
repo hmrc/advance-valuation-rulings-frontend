@@ -38,7 +38,8 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
   ): Unit = {
     import dataRequest._
 
-    val detail = UserTypeEvent(userId, eoriNumber, affinityGroup, credentialRole)
+    val referrer = dataRequest.headers.get("Referer")
+    val detail   = UserTypeEvent(userId, eoriNumber, affinityGroup, credentialRole, referrer)
     auditConnector.sendExplicitAudit("UserEntersService", detail)
   }
 

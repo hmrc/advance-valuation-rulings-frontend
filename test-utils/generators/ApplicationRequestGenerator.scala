@@ -57,7 +57,7 @@ trait ApplicationRequestGenerator extends Generators {
   }
 
   implicit lazy val arbitraryDraftId: Arbitrary[DraftId] = Arbitrary {
-    intsBelowValue(Int.MaxValue).map(DraftId(prefix = "DRAFT", _))
+    Gen.choose(1, 999999999).map(DraftId(_))
   }
 
   implicit lazy val arbitraryGoodsDetails: Arbitrary[GoodsDetails] = Arbitrary {
@@ -173,7 +173,7 @@ trait ApplicationRequestGenerator extends Generators {
       numAttachments <- Gen.choose(0, 5)
       attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
     } yield ApplicationRequest(
-      draftId.render,
+      draftId,
       traderDetail,
       None,
       contact,
