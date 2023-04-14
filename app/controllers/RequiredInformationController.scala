@@ -60,7 +60,7 @@ class RequiredInformationController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm))
+        Ok(view(preparedForm, request.affinityGroup))
     }
 
   def onSubmit(): Action[AnyContent] =
@@ -69,7 +69,8 @@ class RequiredInformationController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, request.affinityGroup))),
             value =>
               for {
                 updatedAnswers <-
