@@ -22,6 +22,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
+import models.requests.Application
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
@@ -41,6 +42,12 @@ object IndividualApplicantSummary {
     val contactDetailsRows = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
     IndividualApplicantSummary(SummaryListViewModel(contactDetailsRows))
   }
+
+  def apply(application: Application)(implicit messages: Messages): IndividualApplicantSummary = {
+
+    val contactDetailsRows = ApplicationContactDetailsSummary.rows(application.contact)
+    IndividualApplicantSummary(SummaryListViewModel(contactDetailsRows))
+  }
 }
 
 case class AgentSummary(rows: SummaryList) extends ApplicantSummary {
@@ -55,5 +62,12 @@ object AgentSummary {
     val roleRow            = AgentRoleSummary.row(userAnswers).orEmpty
 
     AgentSummary(SummaryListViewModel(contactDetailsRows ++ roleRow))
+  }
+
+  def apply(application: Application)(implicit messages: Messages): AgentSummary = {
+
+    val contactDetailsRows = BusinessContactDetailsSummary.rows(application.contact)
+
+    AgentSummary(SummaryListViewModel(contactDetailsRows))
   }
 }

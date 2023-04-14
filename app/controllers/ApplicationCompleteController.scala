@@ -18,15 +18,18 @@ package controllers
 
 import javax.inject.Inject
 
+import scala.concurrent.ExecutionContext
+import scala.util.control.NonFatal
+
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.BackendConnector
 import controllers.actions._
-import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import viewmodels.checkAnswers.summary.ApplicationCompleteSummary
 import views.html.ApplicationCompleteView
 
 class ApplicationCompleteController @Inject() (
@@ -34,59 +37,30 @@ class ApplicationCompleteController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
   view: ApplicationCompleteView
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   private val logger = Logger(this.getClass)
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+    identify.async {
       implicit request =>
-        val answers            = request.userAnswers
-        val applicationSummary = ApplicationSummary(answers, request.affinityGroup).removeActions()
-
-        request.affinityGroup match {
-          case AffinityGroup.Individual =>
-            answers
-              .get(ApplicationContactDetailsPage)
-              .map {
-                contactDetails =>
-                  Ok(
-                    view(
-                      isIndividual = true,
-                      applicationId,
-                      contactDetails.email,
-                      applicationSummary
-                    )
-                  )
-              }
-              .getOrElse {
-                logger.warn(s"Applicant contact details (individual) missing")
-                Redirect(routes.JourneyRecoveryController.onPageLoad())
-              }
-
-          case AffinityGroup.Organisation =>
-            answers
-              .get(BusinessContactDetailsPage)
-              .map {
-                contactDetails =>
-                  Ok(
-                    view(
-                      isIndividual = false,
-                      applicationId,
-                      contactDetails.email,
-                      applicationSummary
-                    )
-                  )
-              }
-              .getOrElse {
-                logger.warn(s"Applicant contact details (organisation) missing")
-                Redirect(routes.JourneyRecoveryController.onPageLoad())
-              }
-
-          case _ => Redirect(routes.JourneyRecoveryController.onPageLoad())
-        }
+        backendConnector
+          .getApplication(applicationId)
+          .map {
+            application =>
+              val isIndividual = request.affinityGroup == AffinityGroup.Individual
+              val summary      = ApplicationCompleteSummary(application, request.affinityGroup)
+              Ok(view(isIndividual, application.id.toString, application.contact.email, summary))
+          }
+          .recover {
+            case NonFatal(ex) =>
+              logger.error(s"Failed to get application [$applicationId] from backend", ex)
+              Redirect(routes.JourneyRecoveryController.onPageLoad())
+          }
     }
 }

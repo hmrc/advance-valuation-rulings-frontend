@@ -95,7 +95,7 @@ trait SpecBase
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifierAction].to[FakeAgentIdentifierAction],
         bind[IdentifyAgentAction].to[FakeIdentifyAgentAction],
         bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),

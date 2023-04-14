@@ -16,139 +16,118 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.i18n.Messages
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
-import generators.Generators
-import models.{ApplicationContactDetails, ValuationMethod}
+import connectors.BackendConnector
+import generators.ApplicationGenerator
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.Mockito.{verify, when}
+import org.mockito.MockitoSugar.{reset, times}
+import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages._
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import viewmodels.checkAnswers.summary.ApplicationCompleteSummary
 import views.html.ApplicationCompleteView
 
-class ApplicationCompleteControllerSpec extends SpecBase with Generators {
+class ApplicationCompleteControllerSpec
+    extends SpecBase
+    with MockitoSugar
+    with ApplicationGenerator
+    with TableDrivenPropertyChecks {
+
+  private val mockBackendConnector = mock[BackendConnector]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockBackendConnector)
+  }
 
   "ApplicationComplete Controller" - {
-    "when an Individual completes an application" - {
-      "must return OK and the correct view for a GET" in {
-        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
-          ua =>
-            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val email          = "test@test.com"
-            val name           = "Test"
-            val phone          = "07777 777777"
-            val applicationId  = "GBAVR000000001"
-            val contactDetails = ApplicationContactDetails(name, email, phone)
 
-            val answers     =
-              userAnswers.set(ApplicationContactDetailsPage, contactDetails).success.value
-            val application = applicationBuilder(userAnswers = Option(answers)).build()
+    val affinityGroupScenarios = Table(
+      ("affinityGroup", "applicationBuilder", "isIndividual"),
+      (AffinityGroup.Individual, applicationBuilder(), true),
+      (AffinityGroup.Organisation, applicationBuilderAsOrg(), false),
+      (AffinityGroup.Agent, applicationBuilderAsAgent(), false)
+    )
 
-            running(application) {
-              val request       =
-                FakeRequest(
-                  GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
-                )
-              implicit val msgs = messages(application)
-              val result        = route(application, request).value
+    forAll(affinityGroupScenarios) {
+      (affinityGroup, applicationBuilder, isIndividual) =>
+        s"must return OK and the correct view for a GET when affinity group is $affinityGroup" in {
 
-              val view    = application.injector.instanceOf[ApplicationCompleteView]
-              val summary =
-                ApplicationSummary(answers, AffinityGroup.Individual).removeActions()
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(true, applicationId, email, summary)(
-                request,
-                messages(application)
-              ).toString
-            }
+          ScalaCheckPropertyChecks.forAll(arbitraryApplication.arbitrary) {
+            rulingsApplication =>
+              val applicationId = rulingsApplication.id.toString
+              val email         = rulingsApplication.contact.email
+              val application   = applicationBuilder
+                .overrides(bind[BackendConnector].toInstance(mockBackendConnector))
+                .build()
+
+              implicit val msgs: Messages = messages(application)
+
+              when(mockBackendConnector.getApplication(any())(any()))
+                .thenReturn(Future.successful(rulingsApplication))
+
+              running(application) {
+                val request =
+                  FakeRequest(
+                    GET,
+                    routes.ApplicationCompleteController.onPageLoad(applicationId).url
+                  )
+
+                val result = route(application, request).value
+
+                val view    = application.injector.instanceOf[ApplicationCompleteView]
+                val summary = ApplicationCompleteSummary(rulingsApplication, affinityGroup)
+                  .removeActions()
+
+                status(result) mustEqual OK
+                contentAsString(result) mustEqual view(
+                  isIndividual,
+                  applicationId,
+                  email,
+                  summary
+                )(
+                  request,
+                  messages(application)
+                ).toString
+              }
+
+              verify(mockBackendConnector, times(1)).getApplication(eqTo(applicationId))(any())
+          }
         }
-      }
-
-      "must redirect when the user has no contact email" in {
-        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
-          ua =>
-            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationId  = "GBAVR000000001"
-            val updatedAnswers =
-              userAnswers.remove(pages.ApplicationContactDetailsPage).success.value
-
-            val application = applicationBuilder(userAnswers = Option(updatedAnswers)).build()
-
-            running(application) {
-              val request =
-                FakeRequest(
-                  GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
-                )
-              val result  = route(application, request).value
-              status(result) mustEqual SEE_OTHER
-            }
-        }
-      }
     }
 
-    "when an Organisation completes an application" - {
-      "must return OK and the correct view for a GET" in {
-        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
-          ua =>
-            val Email       = "testEmail@mail.com"
-            val userAnswers = (for {
-              ua <- ua.set(ValuationMethodPage, ValuationMethod.Method2)
-              ua <- ua.set(
-                      BusinessContactDetailsPage,
-                      models.BusinessContactDetails("test", Email, "test")
-                    )
-            } yield ua).success.value
+    "must redirect to Journey Recovery for a GET when unable to retrieve submitted application" in {
+      ScalaCheckPropertyChecks.forAll(arbitraryApplication.arbitrary) {
+        rulingsApplication =>
+          val applicationId = rulingsApplication.id.toString
+          val application   = applicationBuilder()
+            .overrides(bind[BackendConnector].toInstance(mockBackendConnector))
+            .build()
 
-            val applicationId = "GBAVR000000001"
+          when(mockBackendConnector.getApplication(any())(any()))
+            .thenReturn(Future.failed(new Exception("Backend error")))
 
-            val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers)).build()
+          running(application) {
+            val request =
+              FakeRequest(GET, routes.ApplicationCompleteController.onPageLoad(applicationId).url)
 
-            running(application) {
-              val request       =
-                FakeRequest(
-                  GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
-                )
-              implicit val msgs = messages(application)
-              val result        = route(application, request).value
+            val result = route(application, request).value
 
-              val view    = application.injector.instanceOf[ApplicationCompleteView]
-              val summary =
-                ApplicationSummary(userAnswers, AffinityGroup.Organisation).removeActions
-
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(false, applicationId, Email, summary)(
-                request,
-                messages(application)
-              ).toString
-            }
-        }
-      }
-
-      "must redirect when the company has no contact email" in {
-        ScalaCheckPropertyChecks.forAll(arbitraryUserData.arbitrary) {
-          ua =>
-            val userAnswers    = ua.set(ValuationMethodPage, ValuationMethod.Method2).success.value
-            val applicationId  = "GBAVR000000001"
-            val updatedAnswers =
-              userAnswers.remove(pages.BusinessContactDetailsPage).success.value
-
-            val application = applicationBuilderAsOrg(userAnswers = Option(updatedAnswers)).build()
-
-            running(application) {
-              val request =
-                FakeRequest(
-                  GET,
-                  routes.ApplicationCompleteController.onPageLoad(applicationId).url
-                )
-              val result  = route(application, request).value
-              status(result) mustEqual SEE_OTHER
-            }
-        }
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.JourneyRecoveryController
+              .onPageLoad()
+              .url
+          }
       }
     }
   }
