@@ -178,7 +178,6 @@ object ApplicationRequestSpec extends Generators {
 
   val eoriDetails = TraderDetail(
     eori = randomString,
-    consentToDisclosureOfPersonalData = randomBoolean,
     businessName = randomString,
     addressLine1 = randomString,
     addressLine2 = Some(randomString),
@@ -220,7 +219,6 @@ object ApplicationRequestSpec extends Generators {
     |"draftId": "$draftId",
     |"trader": {
     |  "eori": "$randomString",
-    |  "consentToDisclosureOfPersonalData": $randomBoolean,
     |  "businessName": "$randomString",
     |  "addressLine1": "$randomString",
     |  "addressLine2": "$randomString",

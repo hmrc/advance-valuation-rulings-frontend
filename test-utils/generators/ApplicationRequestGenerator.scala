@@ -36,18 +36,16 @@ trait ApplicationRequestGenerator extends Generators {
 
   implicit lazy val arbitraryTraderDetail: Arbitrary[TraderDetail] = Arbitrary {
     for {
-      eori                              <- arbitraryEoriNumberGen.arbitrary
-      consentToDisclosureOfPersonalData <- Arbitrary.arbitrary[Boolean]
-      businessName                      <- stringsWithMaxLength(100)
-      addressLine1                      <- stringsWithMaxLength(100)
-      addressLine2                      <- Gen.option(stringsWithMaxLength(100))
-      addressLine3                      <- Gen.option(stringsWithMaxLength(100))
-      postCode                          <- stringsWithMaxLength(10)
-      countryCode                       <- Gen.oneOf("UK", "JP", "FR", "DE", "IT", "ES", "US")
-      phoneNumber                       <- Gen.option(stringsWithMaxLength(25))
+      eori         <- arbitraryEoriNumberGen.arbitrary
+      businessName <- stringsWithMaxLength(100)
+      addressLine1 <- stringsWithMaxLength(100)
+      addressLine2 <- Gen.option(stringsWithMaxLength(100))
+      addressLine3 <- Gen.option(stringsWithMaxLength(100))
+      postCode     <- stringsWithMaxLength(10)
+      countryCode  <- Gen.oneOf("UK", "JP", "FR", "DE", "IT", "ES", "US")
+      phoneNumber  <- Gen.option(stringsWithMaxLength(25))
     } yield TraderDetail(
       eori.value,
-      consentToDisclosureOfPersonalData,
       businessName,
       addressLine1,
       addressLine2,
