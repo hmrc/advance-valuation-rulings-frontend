@@ -83,7 +83,6 @@ final case class TraderDetail(
 object TraderDetail {
   implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
-  // TODO: one day in the distant future, make a different model for agents...
   def agent(userAnswers: UserAnswers): ValidatedNel[Page, Option[TraderDetail]] = {
     val isAgent = userAnswers.get(WhatIsYourRoleAsImporterPage).contains(AgentOnBehalfOfOrg)
 
@@ -98,7 +97,7 @@ object TraderDetail {
               addressLine1 = acd.agentStreetAndNumber,
               addressLine2 = Some(acd.agentCity),
               addressLine3 = None,
-              postcode = acd.agentPostalCode.getOrElse(""), // TODO: Make Postcode mandatory
+              postcode = acd.agentPostalCode.getOrElse(""),
               countryCode = acd.agentCountry,
               phoneNumber = None
             )
@@ -119,7 +118,7 @@ object TraderDetail {
           addressLine1 = crd.streetAndNumber,
           addressLine2 = Some(crd.city),
           addressLine3 = None,
-          postcode = crd.postalCode.getOrElse(""), // TODO: Make Postcode mandatory
+          postcode = crd.postalCode.getOrElse(""),
           countryCode = crd.country,
           phoneNumber = crd.phoneNumber
         )
