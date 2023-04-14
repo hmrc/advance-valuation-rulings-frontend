@@ -42,6 +42,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
   val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
     value = false,
     eori = "GB123456789012345",
+    consentToDisclosureOfPersonalData = true,
     name = "Test Name",
     streetAndNumber = "Test Street 1",
     city = "Test City",

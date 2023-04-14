@@ -364,6 +364,7 @@ class NavigatorSpec extends SpecBase {
         val data = CheckRegisteredDetails(
           value = true,
           eori = "GB1234567890",
+          consentToDisclosureOfPersonalData = true,
           name = "name",
           streetAndNumber = "street",
           city = "city",
@@ -415,7 +416,7 @@ class NavigatorSpec extends SpecBase {
         val userAnswers =
           userAnswersWith(
             BusinessContactDetailsPage,
-            BusinessContactDetails("name", "email", "phone", "company")
+            BusinessContactDetails("name", "email", "phone")
           )
         navigator.nextPage(
           BusinessContactDetailsPage,

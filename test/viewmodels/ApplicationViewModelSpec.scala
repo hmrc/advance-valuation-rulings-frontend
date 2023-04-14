@@ -18,20 +18,14 @@ package viewmodels
 
 import java.time.{Clock, Instant, ZoneOffset}
 
-import scala.util.Try
-
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
 import base.SpecBase
 import generators.Generators
 import models._
-import models.{BusinessContactDetails, UserAnswers, WhatIsYourRoleAsImporter}
 import models.requests._
-import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 
 class ApplicationViewModelSpec extends SpecBase {
   import ApplicationViewModelSpec._
@@ -41,7 +35,8 @@ class ApplicationViewModelSpec extends SpecBase {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given a valid application" - {
-      val result: ApplicationViewModel = ApplicationViewModel(application)
+
+      val result = ApplicationViewModel(application)
 
       "must create rows for the eori details" in {
         result.eori.rows must be(
@@ -49,18 +44,6 @@ class ApplicationViewModelSpec extends SpecBase {
             SummaryListRow(
               Key(Text("checkYourAnswers.eori.number.label")),
               Value(Text(randomString))
-            ),
-            SummaryListRow(
-              Key(Text("checkYourAnswers.eori.name.label")),
-              Value(Text(randomString))
-            ),
-            SummaryListRow(
-              Key(Text("checkYourAnswers.eori.address.label")),
-              Value(
-                HtmlContent(
-                  s"${randomString}<br>${randomString}<br>${randomString}<br>${randomString}"
-                )
-              )
             )
           )
         )

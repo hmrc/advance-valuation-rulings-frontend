@@ -85,6 +85,7 @@ object ContactDetailsSpec extends Generators {
   val CheckRegDetails = CheckRegisteredDetails(
     true,
     "eori",
+    true,
     "name",
     "streetAndNumber",
     "city",
@@ -107,8 +108,7 @@ object ContactDetailsSpec extends Generators {
   val businessContactDetails    = BusinessContactDetails(
     name = randomString,
     email = randomString,
-    phone = randomString,
-    company = randomString
+    phone = randomString
   )
   val contactDetails            = ContactDetails(
     name = randomString,

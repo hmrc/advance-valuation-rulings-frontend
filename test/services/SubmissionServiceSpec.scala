@@ -54,7 +54,6 @@ class SubmissionServiceSpec
 
   private val service = app.injector.instanceOf[SubmissionService]
 
-  private val applicationId      = ApplicationId(1)
   private val applicationRequest = ApplicationRequest(
     draftId = DraftId(0),
     trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
@@ -114,8 +113,6 @@ class SubmissionServiceSpec
     }
 
     "must return a failed future when submitting the application fails" in {
-
-      val response = ApplicationSubmissionResponse(ApplicationId(1))
 
       when(mockBackendConnector.submitApplication(any())(any()))
         .thenReturn(Future.failed(new RuntimeException("foo")))

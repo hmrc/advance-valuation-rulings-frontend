@@ -70,14 +70,6 @@
             .withWidth(OneHalf)
         )
 
-        @govukInput(
-            InputViewModel(
-                field = form("company"),
-                label = LabelViewModel(messages("businessContactDetails.companyName.label"))
-            )
-            .withWidth(ThreeQuarters)
-        )
-
         @govukButton(
             ButtonViewModel(messages("site.continue"))
         )

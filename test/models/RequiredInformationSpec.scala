@@ -16,8 +16,13 @@
 
 package models
 
+import play.api.i18n.Messages
 import play.api.libs.json.{JsError, Json, JsString}
+import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 
+import base.SpecBase
 import generators.ModelGenerators
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
@@ -25,12 +30,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class RequiredInformationSpec
-    extends AnyFreeSpec
-    with Matchers
-    with ScalaCheckPropertyChecks
-    with OptionValues
-    with ModelGenerators {
+class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
 
   "RequiredInformation" - {
 
@@ -45,6 +45,48 @@ class RequiredInformationSpec
             .asOpt
             .value mustEqual requiredInformation
       }
+    }
+
+    "must display individual checkbox items" in {
+
+      implicit val m: Messages = play.api.test.Helpers.stubMessages()
+
+      val result  = RequiredInformation.checkboxItems(AffinityGroup.Individual)(m)
+      val content = result.map(_.content)
+      content must contain(Text("requiredInformation.option1.individual"))
+      content must contain(Text("requiredInformation.option2.individual"))
+      content must contain(Text("requiredInformation.option3.individual"))
+      content must contain(Text("requiredInformation.option4.individual"))
+      content must contain(Text("requiredInformation.option5.individual"))
+      content must contain(Text("requiredInformation.option6.individual"))
+    }
+
+    "must display organisation checkbox items" in {
+
+      implicit val m: Messages = play.api.test.Helpers.stubMessages()
+
+      val result  = RequiredInformation.checkboxItems(AffinityGroup.Organisation)(m)
+      val content = result.map(_.content)
+      content must contain(Text("requiredInformation.option1.organisation"))
+      content must contain(Text("requiredInformation.option2.organisation"))
+      content must contain(Text("requiredInformation.option3.organisation"))
+      content must contain(Text("requiredInformation.option4.organisation"))
+      content must contain(Text("requiredInformation.option5.organisation"))
+      content must contain(Text("requiredInformation.option6.organisation"))
+    }
+
+    "must display agent checkbox items" in {
+
+      implicit val m: Messages = play.api.test.Helpers.stubMessages()
+
+      val result  = RequiredInformation.checkboxItems(AffinityGroup.Organisation)(m)
+      val content = result.map(_.content)
+      content must contain(Text("requiredInformation.option1.organisation"))
+      content must contain(Text("requiredInformation.option2.organisation"))
+      content must contain(Text("requiredInformation.option3.organisation"))
+      content must contain(Text("requiredInformation.option4.organisation"))
+      content must contain(Text("requiredInformation.option5.organisation"))
+      content must contain(Text("requiredInformation.option6.organisation"))
     }
 
     "must fail to deserialise invalid values" in {

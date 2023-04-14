@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import uk.gov.hmrc.auth.core.AffinityGroup
 
 @this(
     layout: templates.Layout,
@@ -28,7 +29,7 @@
     paragraph: Paragraph
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("requiredInformation.title"))) {
 
@@ -47,7 +48,7 @@
                 form   = form,
                 name   = "value",
                 legend = Legend(),
-                items  = RequiredInformation.checkboxItems
+                items  = RequiredInformation.checkboxItems(affinityGroup)
             ).withHint(Hint(content=Text(messages("requiredInformation.hint"))))
         )
 

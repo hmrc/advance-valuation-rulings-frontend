@@ -23,7 +23,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, CheckRegisteredDetails, UserAnswers}
-import models.requests._
 import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -90,30 +89,14 @@ object CheckRegisteredDetailsForAgentsSummary {
     for {
       contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
       number          = registeredNumberRow(contactDetails)
-      name            = registeredNameRow(contactDetails)
-      address         = registeredAddressRow(contactDetails)
-      result          = Seq(number, name, address)
-    } yield result
-
-  def rows(
-    request: ApplicationRequest
-  )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val postCode       =
-      if (request.trader.postcode.isEmpty) None else Some(request.trader.postcode)
-    val contactDetails = models.CheckRegisteredDetails(
-      value = true,
-      eori = request.trader.eori,
-      name = request.trader.businessName,
-      streetAndNumber = request.trader.addressLine1 + "\n" + request.trader.addressLine2,
-      city = request.trader.addressLine2.getOrElse(""),
-      country = request.trader.countryCode,
-      postalCode = postCode,
-      phoneNumber = request.trader.phoneNumber
-    )
-    Seq(
-      registeredNumberRow(contactDetails),
-      registeredNameRow(contactDetails),
-      registeredAddressRow(contactDetails)
-    )
-  }
+    } yield {
+      val personalDetails = if (contactDetails.consentToDisclosureOfPersonalData) {
+        val name    = registeredNameRow(contactDetails)
+        val address = registeredAddressRow(contactDetails)
+        Seq(name, address)
+      } else {
+        Nil
+      }
+      number +: personalDetails
+    }
 }

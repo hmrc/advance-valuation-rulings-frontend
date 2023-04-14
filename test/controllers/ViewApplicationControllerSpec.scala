@@ -32,6 +32,7 @@ import models._
 import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView

@@ -104,6 +104,7 @@ class CheckYourAnswersForAgentsControllerSpec
                 CheckRegisteredDetails(
                   value = true,
                   eori = "eori",
+                  consentToDisclosureOfPersonalData = true,
                   name = "name",
                   streetAndNumber = "streetAndNumber",
                   city = "city",
@@ -117,8 +118,7 @@ class CheckYourAnswersForAgentsControllerSpec
                 BusinessContactDetails(
                   name = "name",
                   email = "email",
-                  phone = "phone",
-                  company = "company"
+                  phone = "phone"
                 )
               )
         ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
