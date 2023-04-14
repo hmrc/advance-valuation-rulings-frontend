@@ -237,8 +237,12 @@ class ApplicationRequestSpec
         )
       }
 
-      "return invalid when built from empty userAnswers" in {
-        val result = ApplicationRequest(emptyUserAnswers, AffinityGroup.Organisation)
+      "return invalid when only answered is an employee on behalf of an org" in {
+        val userAnswers = emptyUserAnswers
+          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+          .get
+
+        val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -249,7 +253,6 @@ class ApplicationRequestSpec
             DoYouWantToUploadDocumentsPage
           )
         )
-
       }
     }
 
@@ -325,12 +328,17 @@ class ApplicationRequestSpec
         )
       }
 
-      "return invalid for an Organisation when built from empty userAnswers" in {
-        val result = ApplicationRequest(emptyUserAnswers, AffinityGroup.Organisation)
+      "return invalid when only page answered is the agent on behalf of an org" in {
+        val userAnswers = emptyUserAnswers
+          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+          .get
+
+        val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
 
         result shouldBe Invalid(
           NonEmptyList.of(
             CheckRegisteredDetailsPage,
+            AgentCompanyDetailsPage,
             BusinessContactDetailsPage,
             ValuationMethodPage,
             DescriptionOfGoodsPage,

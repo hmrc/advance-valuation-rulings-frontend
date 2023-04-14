@@ -84,6 +84,7 @@ object TraderDetail {
   implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
   def agent(userAnswers: UserAnswers): ValidatedNel[Page, Option[TraderDetail]] = {
+    // TODO: Refactor this to so that we use `validateF` instead of `get`
     val isAgent = userAnswers.get(WhatIsYourRoleAsImporterPage).contains(AgentOnBehalfOfOrg)
 
     if (isAgent) {
