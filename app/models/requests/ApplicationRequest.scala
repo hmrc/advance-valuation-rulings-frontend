@@ -16,13 +16,14 @@
 
 package models.requests
 
-import cats.data.ValidatedNel
+import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
 
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-import models.{CheckRegisteredDetails, UserAnswers}
+import models.{AgentCompanyDetails, CheckRegisteredDetails, UserAnswers}
+import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
 import pages._
 
 case class GoodsDetails(
@@ -82,6 +83,24 @@ final case class TraderDetail(
 object TraderDetail {
   implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
+  // TODO: one day in the distant future, make a different model for agents...
+  def agent(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
+    userAnswers.validatedF[AgentCompanyDetails, TraderDetail](
+      AgentCompanyDetailsPage,
+      acd =>
+        TraderDetail(
+          eori = acd.agentEori,
+          businessName = acd.agentCompanyName,
+          addressLine1 = acd.agentStreetAndNumber,
+          addressLine2 = Some(acd.agentCity),
+          addressLine3 = None,
+          postcode = acd.agentPostalCode.getOrElse(""), // TODO: Make Postcode mandatory
+          countryCode = acd.agentCountry,
+          phoneNumber = None
+        )
+    )
+
+  // TODO: rename to forIndividual
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
     userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
       CheckRegisteredDetailsPage,
@@ -92,31 +111,11 @@ object TraderDetail {
           addressLine1 = crd.streetAndNumber,
           addressLine2 = Some(crd.city),
           addressLine3 = None,
-          postcode = crd.postalCode.getOrElse(""),
+          postcode = crd.postalCode.getOrElse(""), // TODO: Make Postcode mandatory
           countryCode = crd.country,
           phoneNumber = crd.phoneNumber
         )
     )
-
-  def agent(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] = {
-    val role    = userAnswers.validated(WhatIsYourRoleAsImporterPage)
-    val details = userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
-      CheckRegisteredDetailsPage,
-      (crd) =>
-        TraderDetail(
-          eori = crd.eori,
-          businessName = crd.name,
-          addressLine1 = crd.streetAndNumber,
-          addressLine2 = Some(crd.city),
-          addressLine3 = None,
-          postcode = crd.postalCode.getOrElse(""),
-          countryCode = crd.country,
-          phoneNumber = crd.phoneNumber
-        )
-    )
-
-    role.andThen(_ => details)
-  }
 }
 
 case class ApplicationRequest(
@@ -130,11 +129,13 @@ case class ApplicationRequest(
 )
 
 object ApplicationRequest {
-  private[models] val jsonConfig                   = JsonConfiguration(
+  private[models] val jsonConfig = JsonConfiguration(
     discriminator = "type",
     typeNaming =
       JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
   )
+
+  // TODO: Make this an OWrites as we don't need to read this model from JSON
   implicit val format: OFormat[ApplicationRequest] =
     Json.configured(jsonConfig).format[ApplicationRequest]
 
@@ -142,18 +143,29 @@ object ApplicationRequest {
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val traderDetail    = TraderDetail(userAnswers)
+    val traderDetail = TraderDetail(userAnswers)
+
+    val agentDetails: Validated[NonEmptyList[Page], Option[TraderDetail]] = {
+      val isAgent = userAnswers.get(WhatIsYourRoleAsImporterPage).contains(AgentOnBehalfOfOrg)
+
+      if (isAgent) {
+        TraderDetail.agent(userAnswers).map(Option(_))
+      } else {
+        Validated.Valid(None)
+      }
+    }
+
     val goodsDetails    = GoodsDetails(userAnswers)
     val contact         = ContactDetails(userAnswers, affinityGroup)
     val requestedMethod = RequestedMethod(userAnswers)
     val attachments     = AttachmentRequest(userAnswers)
 
-    (traderDetail, contact, requestedMethod, goodsDetails, attachments).mapN(
-      (traderDetail, contact, requestedMethod, goodsDetails, attachments) =>
+    (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments).mapN(
+      (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments) =>
         ApplicationRequest(
           userAnswers.draftId,
           traderDetail,
-          None,
+          agentDetails,
           contact,
           requestedMethod,
           goodsDetails,

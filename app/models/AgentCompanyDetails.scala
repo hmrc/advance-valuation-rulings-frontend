@@ -24,8 +24,9 @@ case class AgentCompanyDetails(
   agentStreetAndNumber: String,
   agentCity: String,
   agentCountry: String,
-  agentPostalCode: Option[String]
+  agentPostalCode: Option[String] // TODO: Make Postcode mandatory
 )
+
 //EORI (mandatory), business name (mandatory), business address (same pattern as the others, e.g. line 1 mandatory etc.
 object AgentCompanyDetails {
   implicit val format = Json.format[AgentCompanyDetails]

@@ -29,6 +29,7 @@ class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
   private val maximumValueForAddress    = 70
   private val maximumValueForTownOrCity = 35
 
+  // TODO: Make Postcode mandatory
   def apply(): Form[AgentCompanyDetails] = Form(
     mapping(
       "agentEori"            -> text("agentCompanyDetails.error.agentEori.required")
