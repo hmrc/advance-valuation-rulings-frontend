@@ -13,7 +13,8 @@ class CounterRepositorySpec
   override def beforeEach(): Unit = {
     super.beforeEach()
     SharedMetricRegistries.clear()
-    repository.seed.futureValue
+    val _: models.Done = repository.seed.futureValue
+    ()
   }
 
   override protected def checkTtlIndex = false

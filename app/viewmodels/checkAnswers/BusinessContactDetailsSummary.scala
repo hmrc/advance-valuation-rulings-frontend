@@ -72,29 +72,13 @@ object BusinessContactDetailsSummary {
       )
     )
 
-  private def companyNameRow(answer: BusinessContactDetails)(implicit
-    messages: Messages
-  ): SummaryListRow =
-    SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.applicant.companyName.label",
-      value = ValueViewModel(HtmlFormat.escape(answer.company).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("businessContactDetails.companyName.change.hidden"))
-      )
-    )
-
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(BusinessContactDetailsPage)
       name            = nameRow(contactDetails)
       email           = emailRow(contactDetails)
       contactNumber   = contactNumberRow(contactDetails)
-      companyName     = companyNameRow(contactDetails)
-      result          = Seq(name, email, contactNumber, companyName)
+      result          = Seq(name, email, contactNumber)
     } yield result
 
   def rows(
@@ -103,14 +87,12 @@ object BusinessContactDetailsSummary {
     val businessContactDetails = BusinessContactDetails(
       contactDetails.name,
       contactDetails.email,
-      contactDetails.phone.getOrElse(""),
-      ""
+      contactDetails.phone.getOrElse("")
     )
     Seq(
       nameRow(businessContactDetails),
       emailRow(businessContactDetails),
-      contactNumberRow(businessContactDetails),
-      companyNameRow(businessContactDetails)
+      contactNumberRow(businessContactDetails)
     )
   }
 }

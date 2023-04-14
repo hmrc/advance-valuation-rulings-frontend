@@ -99,7 +99,7 @@ class ApplicationCompleteControllerSpec extends SpecBase with Generators {
               ua <- ua.set(ValuationMethodPage, ValuationMethod.Method2)
               ua <- ua.set(
                       BusinessContactDetailsPage,
-                      models.BusinessContactDetails("test", Email, "test", "test")
+                      models.BusinessContactDetails("test", Email, "test")
                     )
             } yield ua).success.value
 

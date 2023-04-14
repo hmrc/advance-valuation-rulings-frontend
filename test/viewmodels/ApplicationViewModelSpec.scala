@@ -18,8 +18,6 @@ package viewmodels
 
 import java.time.{Clock, Instant, ZoneOffset}
 
-import scala.util.Try
-
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
@@ -29,7 +27,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import base.SpecBase
 import generators.Generators
 import models._
-import models.{BusinessContactDetails, UserAnswers, WhatIsYourRoleAsImporter}
 import models.requests._
 import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 

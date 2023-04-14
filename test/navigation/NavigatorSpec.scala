@@ -415,7 +415,7 @@ class NavigatorSpec extends SpecBase {
         val userAnswers =
           userAnswersWith(
             BusinessContactDetailsPage,
-            BusinessContactDetails("name", "email", "phone", "company")
+            BusinessContactDetails("name", "email", "phone")
           )
         navigator.nextPage(
           BusinessContactDetailsPage,

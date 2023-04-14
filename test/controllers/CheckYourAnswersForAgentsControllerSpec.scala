@@ -117,8 +117,7 @@ class CheckYourAnswersForAgentsControllerSpec
                 BusinessContactDetails(
                   name = "name",
                   email = "email",
-                  phone = "phone",
-                  company = "company"
+                  phone = "phone"
                 )
               )
         ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
