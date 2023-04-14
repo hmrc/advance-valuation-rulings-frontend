@@ -84,21 +84,30 @@ object TraderDetail {
   implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
   // TODO: one day in the distant future, make a different model for agents...
-  def agent(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
-    userAnswers.validatedF[AgentCompanyDetails, TraderDetail](
-      AgentCompanyDetailsPage,
-      acd =>
-        TraderDetail(
-          eori = acd.agentEori,
-          businessName = acd.agentCompanyName,
-          addressLine1 = acd.agentStreetAndNumber,
-          addressLine2 = Some(acd.agentCity),
-          addressLine3 = None,
-          postcode = acd.agentPostalCode.getOrElse(""), // TODO: Make Postcode mandatory
-          countryCode = acd.agentCountry,
-          phoneNumber = None
-        )
-    )
+  def agent(userAnswers: UserAnswers): ValidatedNel[Page, Option[TraderDetail]] = {
+    val isAgent = userAnswers.get(WhatIsYourRoleAsImporterPage).contains(AgentOnBehalfOfOrg)
+
+    if (isAgent) {
+      userAnswers.validatedF[AgentCompanyDetails, Option[TraderDetail]](
+        AgentCompanyDetailsPage,
+        acd =>
+          Some(
+            TraderDetail(
+              eori = acd.agentEori,
+              businessName = acd.agentCompanyName,
+              addressLine1 = acd.agentStreetAndNumber,
+              addressLine2 = Some(acd.agentCity),
+              addressLine3 = None,
+              postcode = acd.agentPostalCode.getOrElse(""), // TODO: Make Postcode mandatory
+              countryCode = acd.agentCountry,
+              phoneNumber = None
+            )
+          )
+      )
+    } else {
+      Validated.Valid(None)
+    }
+  }
 
   // TODO: rename to forIndividual
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
@@ -143,18 +152,8 @@ object ApplicationRequest {
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val traderDetail = TraderDetail(userAnswers)
-
-    val agentDetails: Validated[NonEmptyList[Page], Option[TraderDetail]] = {
-      val isAgent = userAnswers.get(WhatIsYourRoleAsImporterPage).contains(AgentOnBehalfOfOrg)
-
-      if (isAgent) {
-        TraderDetail.agent(userAnswers).map(Option(_))
-      } else {
-        Validated.Valid(None)
-      }
-    }
-
+    val traderDetail    = TraderDetail(userAnswers)
+    val agentDetails    = TraderDetail.agent(userAnswers)
     val goodsDetails    = GoodsDetails(userAnswers)
     val contact         = ContactDetails(userAnswers, affinityGroup)
     val requestedMethod = RequestedMethod(userAnswers)
