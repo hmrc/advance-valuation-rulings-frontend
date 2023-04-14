@@ -148,7 +148,7 @@ valuationMethod.method6 = Method 6: Fall-back method
 valuationMethod.method6.hint = This is based on adapting methods 1 to 5 flexibly to fit unusual circumstances.
 valuationMethod.checkYourAnswersLabel = Proposed method of Valuation
 valuationMethod.error.required = Select a method to value the goods
-valuationMethod.change.hidden = ValuationMethod
+valuationMethod.change.hidden = select valuation method
 
 commodityCode.title = What is the commodity code for the goods?
 commodityCode.heading = What is the commodity code for the goods?
@@ -159,17 +159,17 @@ commodityCode.error.required = Commodity code can only include digits
 commodityCode.error.nonNumeric = Commodity can only include digits
 commodityCode.error.length.max = Commodity code must be between 4 and 10 digits
 commodityCode.error.length.min = Commodity code must be between 4 and 10 digits
-commodityCode.change.hidden = CommodityCode
+commodityCode.change.hidden = what is commodity code
 
 hasCommodityCode.title = Do you have a commodity code for the goods?
 hasCommodityCode.heading = Do you have a commodity code for the goods?
 hasCommodityCode.caption = About the goods
 hasCommodityCode.checkYourAnswersLabel = Do you have a commodity code for the goods?
 hasCommodityCode.error.required = Select yes if you know the commodity code
-hasCommodityCode.change.hidden = HasCommodityCode
 hasCommodityCode.details.label = Help finding your commodity code
 hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. If you are unable to find a commodity code you can select ’No’.<br><br>{0}
 hasCommodityCode.paragraph.1.link = Find your commodity code
+hasCommodityCode.change.hidden = do you have a commodity code
 
 
 contactPage.title = If we need to contact you about your application
@@ -183,7 +183,7 @@ importGoods.heading = Are you planning to import goods into Great Britain?
 importGoods.caption = About the applicant
 importGoods.checkYourAnswersLabel = importGoods
 importGoods.error.required = Select yes if there is a sale involved for the goods being imported to Great Britain
-importGoods.change.hidden = ImportGoods
+importGoods.change.hidden = are you importing goods
 
 requiredInformation.title = Before you start your application
 requiredInformation.heading = Before you start your application
@@ -203,7 +203,7 @@ requiredInformation.hint = You need to tick each item to continue. If you do not
 requiredInformation.checkYourAnswersLabel = Before you start your application
 requiredInformation.error.required = Select each item in the checklist to start your application
 requiredInformation.error.selectAll = Select each item in the checklist to start your application
-requiredInformation.change.hidden = RequiredInformation
+requiredInformation.change.hidden = required information
 requiredInformation.caption = Starter checklist
 
 confidentialInformation.title = Describe any confidential information you would like to add about the goods
@@ -212,7 +212,7 @@ confidentialInformation.caption = About the goods
 confidentialInformation.checkYourAnswersLabel = Description of confidential information	
 confidentialInformation.error.required = Enter a description of the confidential information you would like to add about the goods
 confidentialInformation.error.length = Maximum allowed characters is 8168
-confidentialInformation.change.hidden = ConfidentialInformation
+confidentialInformation.change.hidden = describe confidential information
 confidentialInformation.paragraph.1 = Confidential information can include:
 confidentialInformation.paragraph.2 = We will not publish confidential information.
 confidentialInformation.bulletPoint.1 = the name of the supplier
@@ -228,7 +228,7 @@ hasConfidentialInformation.paragraph.2 = We will not publish confidential inform
 hasConfidentialInformation.paragraph.inset = You will be able to upload files later in the application.
 hasConfidentialInformation.checkYourAnswersLabel = Do you want to add any confidential information about the goods?
 hasConfidentialInformation.error.required = Select yes if you want to add any confidential information about the goods
-hasConfidentialInformation.change.hidden = HasConfidentialInformation
+hasConfidentialInformation.change.hidden = do you want to add confidential information
 
 importingGoods.title = This service is for importing goods into Great Britain
 importingGoods.heading = This service is for importing goods into Great Britain
@@ -263,8 +263,10 @@ checkRegisteredDetails.paragraph.1 = You can provide your own contact details on
 checkRegisteredDetails.private.paragraph.1 = The business this number is registered to has not consented to their name and address being shared.
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
 checkRegisteredDetails.error.required = Select yes to confirm your EORI details
-checkRegisteredDetails.change.hidden = CheckRegisteredDetails
 checkRegisteredDetails.warning = These are the details we have on record. They should be the details used to register your Economic Operator Registration and Identification (EORI) number.
+checkRegisteredDetails.name.change.hidden = registered name
+checkRegisteredDetails.address.change.hidden = registered address
+checkRegisteredDetails.eori.change.hidden = registered number
 
 applicationContactDetails.title = Your contact details
 applicationContactDetails.heading = Your contact details
@@ -283,7 +285,9 @@ applicationContactDetails.email.length = Email address must be 50 characters or 
 applicationContactDetails.telephoneNumber.error.required = Enter your telephone number
 applicationContactDetails.telephoneNumber.error.format = Must contain only digits
 applicationContactDetails.telephoneNumber.length = Phone number must be 25 characters or less
-applicationContactDetails.change.hidden = ApplicationContactDetails
+applicationContactDetails.name.change.hidden = contact name
+applicationContactDetails.email.change.hidden = contact email address
+applicationContactDetails.phone.change.hidden = contact phone number
 
 eoriBeUpToDate.title = Your EORI number details must be correct to use this service
 eoriBeUpToDate.heading = Your EORI number details must be correct to use this service
@@ -304,7 +308,7 @@ doYouWantToUploadDocuments.bulletPoint.2 = copies of previous import declaration
 doYouWantToUploadDocuments.bulletPoint.3 = breakdowns of manufacturing costs
 doYouWantToUploadDocuments.checkYourAnswersLabel = Do you want to upload any supporting documents?
 doYouWantToUploadDocuments.error.required = Select yes if you want to upload any supporting documents
-doYouWantToUploadDocuments.change.hidden = DoYouWantToUploadDocuments
+doYouWantToUploadDocuments.change.hidden = do you want to upload documents
 
 isThisFileConfidential.title = Do you want this file to be marked as confidential?
 isThisFileConfidential.heading = Do you want this file to be marked as confidential?
@@ -313,7 +317,7 @@ isThisFileConfidential.para.1 = This could include any information about contrac
 isThisFileConfidential.para.2 = We will not publish confidential information.
 isThisFileConfidential.error.required = Select yes if you want to mark this file as confidential
 isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
-isThisFileConfidential.change.hidden = IsThisFileConfidential
+isThisFileConfidential.change.hidden = is this file confidential
 
 uploadAnotherSupportingDocument.title.one = You have uploaded one supporting document
 uploadAnotherSupportingDocument.heading.one = You have uploaded one supporting document
@@ -324,7 +328,7 @@ uploadAnotherSupportingDocument.caption = About the goods
 uploadAnotherSupportingDocument.checkYourAnswersLabel = uploadAnotherSupportingDocument
 uploadAnotherSupportingDocument.error.required = Select yes if you want to upload another document
 uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} files
-uploadAnotherSupportingDocument.change.hidden = UploadAnotherSupportingDocument
+uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Keep confidential
 
@@ -342,6 +346,7 @@ uploadSupportingDocuments.label = Upload a file
 uploadSupportingDocuments.button = Upload and continue
 uploadSupportingDocuments.button.inProgress=  Uploading file
 uploadSupportingDocuments.checkYourAnswersLabel = Supporting documents uploaded
+uploadSupportingDocuments.change.hidden = upload a document
 
 uploadSupportingDocuments.entitytoolarge = The selected file must be smaller than {0}MB
 uploadSupportingDocuments.entitytoosmall = The selected file is empty
@@ -358,7 +363,7 @@ explainReasonComputedValue.paragraph = Method 5 (computed value) is based on the
 explainReasonComputedValue.checkYourAnswersLabel = Reason for selecting Method 5 to value your goods	
 explainReasonComputedValue.error.required = Enter an explanation about why you have selected Method 5 to value your goods
 explainReasonComputedValue.error.length = Maximum allowed characters is 8168
-explainReasonComputedValue.change.hidden = ExplainReasonComputedValue
+explainReasonComputedValue.change.hidden = why have you selected method 5
 
 whyComputedValue.title = Explain why you have not selected Methods 1-4 to value your goods
 whyComputedValue.caption = About the goods
@@ -372,7 +377,7 @@ whyComputedValue.paragraph.2 = Explain why you believe Methods 1-4 are not suita
 whyComputedValue.checkYourAnswersLabel = Reason for not selecting Methods 1-4 to value your goods
 whyComputedValue.error.required = Enter an explanation about why you have not selected methods 1 to 4 to value your goods
 whyComputedValue.error.length = Maximum allowed characters is 8168
-whyComputedValue.change.hidden = WhyComputedValue
+whyComputedValue.change.hidden = why have you not selected other methods
 
 haveYouUsedMethodOneInPast.title = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods identical to those being valued
 haveYouUsedMethodOneInPast.heading = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods identical to those being valued
@@ -381,7 +386,7 @@ haveYouUsedMethodOneInPast.paragraph.1 = Method 2 is based on the transaction va
 haveYouUsedMethodOneInPast.error.required = Select yes if you can provide evidence of a Method 1 declaration
 haveYouUsedMethodOneInPast.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
 haveYouUsedMethodOneInPast.checkYourAnswersLabel = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods identical to those being valued
-haveYouUsedMethodOneInPast.change.hidden = HaveYouUsedMethodOneInPast
+haveYouUsedMethodOneInPast.change.hidden = have you used method one in past
 
 whyTransactionValueOfSimilarGoods.title = Explain why you have not selected Methods 1 or 2 to value your goods
 whyTransactionValueOfSimilarGoods.heading = Explain why you have not selected Methods 1 or 2 to value your goods
@@ -393,7 +398,7 @@ whyTransactionValueOfSimilarGoods.bulletPoint.2 = Method 2 (transaction value of
 whyTransactionValueOfSimilarGoods.error.required = Enter an explanation about why you have not selected Method 1 or 2 to value your goods
 whyTransactionValueOfSimilarGoods.error.length = Maximum allowed characters is 8168
 whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = Reason for not selecting Methods 1 or 2 to value your goods
-whyTransactionValueOfSimilarGoods.change.hidden = WhyTransactionValueOfSimilarGoods
+whyTransactionValueOfSimilarGoods.change.hidden = why have you not selected other methods
 
 whyIdenticalGoods.title = Explain why you have not selected Method 1 to value your goods
 whyIdenticalGoods.caption = About the goods
@@ -404,7 +409,7 @@ whyIdenticalGoods.paragraph.2 = Explain why you believe Method 1 is not suitable
 whyIdenticalGoods.checkYourAnswersLabel = Reason for not selecting Method 1 to value your goods
 whyIdenticalGoods.error.required = Enter an explanation of why you have not selected Method 1 to value your goods
 whyIdenticalGoods.error.length = Maximum allowed characters is 8168
-whyIdenticalGoods.change.hidden = WhyIdenticalGoods
+whyIdenticalGoods.change.hidden = why have you not selected other method one
 
 explainHowPartiesAreRelated.title = Describe how the parties are related
 explainHowPartiesAreRelated.heading = Describe how the parties are related
@@ -414,7 +419,7 @@ explainHowPartiesAreRelated.para.2 = Giving a detailed description of the relati
 explainHowPartiesAreRelated.error.required = Enter a description of how the parties are related
 explainHowPartiesAreRelated.checkYourAnswersLabel = explainHowPartiesAreRelated
 explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
-explainHowPartiesAreRelated.change.hidden = ExplainHowPartiesAreRelated
+explainHowPartiesAreRelated.change.hidden = describe how parties are related
 
 isSaleBetweenRelatedParties.title = Is the sale between related parties?
 isSaleBetweenRelatedParties.heading = Is the sale between related parties?
@@ -422,7 +427,7 @@ isSaleBetweenRelatedParties.caption = About the goods
 isSaleBetweenRelatedParties.para = ‘Related parties’ means there is an existing relationship or common interest between two companies.
 isSaleBetweenRelatedParties.checkYourAnswersLabel = Is the sale between related parties?
 isSaleBetweenRelatedParties.error.required = Select yes if the sale is between related parties
-isSaleBetweenRelatedParties.change.hidden = IsSaleBetweenRelatedParties
+isSaleBetweenRelatedParties.change.hidden = is sale between related parties
 
 isThereASaleInvolved.title = Is there a sale involved?
 isThereASaleInvolved.heading = Is there a sale involved?
@@ -431,18 +436,18 @@ isThereASaleInvolved.no.text = No - you will have to choose a different method
 isThereASaleInvolved.no.hint = Method 1: Transaction value can only be used if a sale is involved.
 isThereASaleInvolved.error.required = Select yes if a sale is involved
 isThereASaleInvolved.checkYourAnswersLabel = Is there a sale involved?
-isThereASaleInvolved.change.hidden = IsThereASaleInvolved
+isThereASaleInvolved.change.hidden = is there a sale involved
 
 areThereRestrictionsOnTheGoods.title = Are there any restrictions on the use or resale of the goods?
 areThereRestrictionsOnTheGoods.heading = Are there any restrictions on the use or resale of the goods?
 areThereRestrictionsOnTheGoods.caption = About the goods
 areThereRestrictionsOnTheGoods.checkYourAnswersLabel = Are there restrictions on the use/resale of the goods?
 areThereRestrictionsOnTheGoods.error.required = Select yes if there are any restrictions involved
-areThereRestrictionsOnTheGoods.change.hidden = AreThereRestrictionsOnTheGoods
 areThereRestrictionsOnTheGoods.paragraph.1 = We can only accept restrictions that:
 areThereRestrictionsOnTheGoods.bulletPoint.1 = are imposed or required by law or by public authorities in the UK
 areThereRestrictionsOnTheGoods.bulletPoint.2 = limit the geographical area where the goods can be resold
 areThereRestrictionsOnTheGoods.bulletPoint.3 = do not substantially affect the value of the goods
+areThereRestrictionsOnTheGoods.change.hidden = are there restrictions on the goods
 
 describeTheRestrictions.title =  Describe any restrictions on the use or resale of goods
 describeTheRestrictions.heading = Describe any restrictions on the use or resale of goods
@@ -450,19 +455,19 @@ describeTheRestrictions.caption = About the goods
 describeTheRestrictions.checkYourAnswersLabel = Description of restrictions
 describeTheRestrictions.error.required = Enter a description of the restrictions involved
 describeTheRestrictions.error.length = Maximum allowed characters is 8168
-describeTheRestrictions.change.hidden = DescribeTheRestrictions
 describeTheRestrictions.paragraph.1 = Giving a detailed description of any restrictions helps us process your application as quickly as possible
+describeTheRestrictions.change.hidden = describe the restrictions
 
 isTheSaleSubjectToConditions.title = Is the sale subject to any conditions or circumstances that could restrict you from valuing the goods?
 isTheSaleSubjectToConditions.heading = Is the sale subject to any conditions or circumstances that could restrict you from valuing the goods?
 isTheSaleSubjectToConditions.caption = About the goods
 isTheSaleSubjectToConditions.checkYourAnswersLabel = Is the sale subject to conditions or circumstances which cannot be calculated?
 isTheSaleSubjectToConditions.error.required = Select yes if the sale is subject to any conditions or circumstances that could restrict you from valuing the goods
-isTheSaleSubjectToConditions.change.hidden = IsTheSaleSubjectToConditions
 isTheSaleSubjectToConditions.paragraph.1 = A sale or price must not be based on conditions or circumstances which cannot be calculated in relation to the goods. Examples include:
 isTheSaleSubjectToConditions.bulletPoint.1 = the seller setting the price on condition that you buy other goods from them in specified quantities
 isTheSaleSubjectToConditions.bulletPoint.2 = the price you charge the seller for other goods determining the price you pay for the imported goods
 isTheSaleSubjectToConditions.bulletPoint.3 = an agreement between yourself and the seller determining the price you pay for the imported goods
+isTheSaleSubjectToConditions.change.hidden = is the sale subject to conditions
 
 describeTheConditions.title = Describe the conditions or circumstances which cannot be calculated
 describeTheConditions.heading = Describe the conditions or circumstances which cannot be calculated
@@ -470,8 +475,8 @@ describeTheConditions.caption = About the goods
 describeTheConditions.checkYourAnswersLabel = Description of conditions/circumstances
 describeTheConditions.error.required = Enter a description of any conditions or circumstances that cannot be calculated
 describeTheConditions.error.length = Maximum allowed characters is 8168
-describeTheConditions.change.hidden = DescribeTheConditions
 describeTheConditions.paragraph.1 = Giving a detailed description of any conditions or circumstances helps us process your application as quickly as possible.
+describeTheConditions.change.hidden = describe the conditions
 
 describeTheIdenticalGoods.title = Describe the identical goods
 describeTheIdenticalGoods.caption = About the goods
@@ -483,7 +488,7 @@ describeTheIdenticalGoods.bulletPoint.3 = the same in all respects including phy
 describeTheIdenticalGoods.checkYourAnswersLabel = Description of identical goods
 describeTheIdenticalGoods.error.required = Enter a description of the identical goods
 describeTheIdenticalGoods.error.length = Maximum allowed characters is 8168
-describeTheIdenticalGoods.change.hidden = DescribeTheIdenticalGoods
+describeTheIdenticalGoods.change.hidden = describe the identical goods
 
 
 explainYourGoodsComparingToIdenticalGoods.title = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
@@ -495,7 +500,7 @@ explainYourGoodsComparingToIdenticalGoods.bulletPoint.2 = you do not have any fu
 explainYourGoodsComparingToIdenticalGoods.checkYourAnswersLabel = Explanation of how you are using another producer’s identical goods for comparison
 explainYourGoodsComparingToIdenticalGoods.error.required = Enter an explanation about how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 explainYourGoodsComparingToIdenticalGoods.error.length = Maximum allowed characters is 8168
-explainYourGoodsComparingToIdenticalGoods.change.hidden = ExplainYourGoodsComparingToIdenticalGoods
+explainYourGoodsComparingToIdenticalGoods.change.hidden = explain how you are comparing identical goods
 
 willYouCompareGoodsToIdenticalGoods.title = Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days?
 willYouCompareGoodsToIdenticalGoods.caption = About the goods
@@ -503,7 +508,7 @@ willYouCompareGoodsToIdenticalGoods.heading = Will you be comparing your goods t
 willYouCompareGoodsToIdenticalGoods.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
 willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days?
 willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
-willYouCompareGoodsToIdenticalGoods.change.hidden = WillYouCompareGoodsToIdenticalGoods
+willYouCompareGoodsToIdenticalGoods.change.hidden = will you be comparing identical goods
 
 describeTheLegalChallenges.title = Describe the legal challenges relating to the goods
 describeTheLegalChallenges.heading = Describe the legal challenges relating to the goods
@@ -512,6 +517,8 @@ describeTheLegalChallenges.para = Giving a detailed description of legal challen
 describeTheLegalChallenges.checkYourAnswersLabel = Description of legal challenges
 describeTheLegalChallenges.error.required = Enter a description of the legal challenges relating to the goods
 describeTheLegalChallenges.error.length = Maximum allowed characters is 8168
+describeTheLegalChallenges.change.hidden = describe legal challenges
+
 
 descriptionOfGoods.title = Give a short description of the goods
 descriptionOfGoods.heading = Give a short description of the goods
@@ -521,7 +528,7 @@ descriptionOfGoods.hint = For example, silicone smartphone case
 descriptionOfGoods.checkYourAnswersLabel = Short description of the goods
 descriptionOfGoods.error.required = Enter a short description of the goods
 descriptionOfGoods.error.length = Short description of the goods must be 100 characters or less
-descriptionOfGoods.change.hidden = DescriptionOfGoods
+descriptionOfGoods.change.hidden = description of goods
 
 haveTheGoodsBeenSubjectToLegalChallenges.title = Have the goods been subject to any legal challenges?
 haveTheGoodsBeenSubjectToLegalChallenges.heading = Have the goods been subject to any legal challenges?
@@ -530,7 +537,7 @@ haveTheGoodsBeenSubjectToLegalChallenges.para.1 = A legal challenge could relate
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Providing this information can help to identify goods with similar rulings.
 haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = Have the goods been subject to any legal challenges?
 haveTheGoodsBeenSubjectToLegalChallenges.error.required = Select yes if the goods have been subject to any legal challenges
-haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = HaveTheGoodsBeenSubjectToLegalChallenges
+haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = have goods been subject to legal challenges
 
 applicationComplete.title = Application complete
 applicationComplete.heading = Application complete
@@ -570,7 +577,7 @@ explainWhyYouChoseMethodFour.hint = ‘Unrelated’ means there isn’t an exist
 explainWhyYouChoseMethodFour.checkYourAnswersLabel = Reason for selecting Method 4 to value your goods
 explainWhyYouChoseMethodFour.error.required = Enter an explanation about why you have selected Method 4 to value your goods
 explainWhyYouChoseMethodFour.error.length = Maximum allowed characters is 8168
-explainWhyYouChoseMethodFour.change.hidden = ExplainWhyYouChoseMethodFour
+explainWhyYouChoseMethodFour.change.hidden = why have you selected method four
 
 explainWhyYouHaveNotSelectedMethodOneToThree.title = Explain why you have not selected Methods 1-3 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToThree.caption = About the goods
@@ -583,7 +590,7 @@ explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2 = Explain why you belie
 explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel = Reason for not selecting Methods 1-3 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Enter an explanation about why you have not selected methods 1 to 3 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Maximum allowed characters is 8168
-explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = ExplainWhyYouHaveNotSelectedMethodOneToThree
+explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = why have you not selected other methods
 
 adaptMethod.title = Which method would you like to adapt?
 adaptMethod.heading = Which method would you like to adapt?
@@ -597,7 +604,7 @@ adaptMethod.method5 = Method 5: Computed value
 adaptMethod.method6 = None: I am unable to use another method
 adaptMethod.checkYourAnswersLabel = Which method would you like to adapt?
 adaptMethod.error.required = Select the method you would like flexibility on
-adaptMethod.change.hidden = AdaptMethod
+adaptMethod.change.hidden = which method are you adapting
 
 explainWhyYouHaveNotSelectedMethodOneToFive.title = Explain why you have not selected Methods 1-5 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToFive.heading = Explain why you have not selected Methods 1-5 to value your goods
@@ -605,7 +612,6 @@ explainWhyYouHaveNotSelectedMethodOneToFive.caption = About the goods
 explainWhyYouHaveNotSelectedMethodOneToFive.checkYourAnswersLabel = Reason for not selecting Methods 1-5 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToFive.error.required = Enter an explanation about why you have not selected methods 1 to 5 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToFive.error.length = Maximum allowed characters is 8168
-explainWhyYouHaveNotSelectedMethodOneToFive.change.hidden = ExplainWhyYouHaveNotSeletedMethodOneToFive
 explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1 = Method 6 is the ‘fall-back’ method to use when you are unable to use any of the other methods. Before you try Method 6 you must first have used:
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.1 = Method 1 (transaction value of imported goods)
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.2 = Method 2 (transaction value of identical goods)
@@ -613,6 +619,7 @@ explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.3 = Method 3 (transactio
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.4 = Method 4 (deductive method)
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.5 = Method 5 (computed value)
 explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.2 = Explain why you believe Methods 1-5 are not suitable to work out the customs value of your goods.
+explainWhyYouHaveNotSelectedMethodOneToFive.change.hidden = why have you not selected other methods
 
 explainHowYouWillUseMethodSix.title = Explain how you have used Method 6 to value your goods
 explainHowYouWillUseMethodSix.heading = Explain how you have used Method 6 to value your goods
@@ -620,9 +627,9 @@ explainHowYouWillUseMethodSix.caption = About the goods
 explainHowYouWillUseMethodSix.checkYourAnswersLabel = Explanation of how you have used Method 6 to value your goods
 explainHowYouWillUseMethodSix.error.required = Enter an explanation about how you have used Method 6 to value your goods
 explainHowYouWillUseMethodSix.error.length = Maximum allowed characters is 8168
-explainHowYouWillUseMethodSix.change.hidden = ExplainHowYouWillUseMethodSix
 explainHowYouWillUseMethodSix.paragraph.1 = Method 6 (fall-back method) is the final valuation method you can try.
 explainHowYouWillUseMethodSix.paragraph.2 = Tell us how you plan to use Method 6. You should also let us know if you want to adapt another method for your circumstances.
+explainHowYouWillUseMethodSix.change.hidden = how will you use method six
 
 describeTheSimilarGoods.title = Describe the similar goods
 describeTheSimilarGoods.heading = Describe the similar goods
@@ -634,7 +641,7 @@ describeTheSimilarGoods.bulletPoint.3 = are commercially interchangeable
 describeTheSimilarGoods.checkYourAnswersLabel = Description of similar goods
 describeTheSimilarGoods.error.required = Enter a description of the similar goods
 describeTheSimilarGoods.error.length = Maximum allowed characters is 8168
-describeTheSimilarGoods.change.hidden = DescribeTheSimilarGoods
+describeTheSimilarGoods.change.hidden = describe similar goods
 
 haveYouUsedMethodOneForSimilarGoodsInPast.title = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued?
 haveYouUsedMethodOneForSimilarGoodsInPast.heading = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued?
@@ -643,7 +650,7 @@ haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Method 3 is based on the
 haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = Can you provide evidence of a Method 1 declaration you have made, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued?
 haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if you can provide evidence of a Method 1 declaration
 haveYouUsedMethodOneForSimilarGoodsInPast.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
-haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = HaveYouUsedMethodOneForSimilarGoodsInPast
+haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = have you used method one in past
 
 whatIsYourRoleAsImporter.title = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?
@@ -656,7 +663,7 @@ whatIsYourRoleAsImporter.employeeOfOrg.hint = Imports goods into the UK on behal
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Imports goods into the UK on behalf of another organisation.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.error.required = Choose the option that describes your role
-whatIsYourRoleAsImporter.change.hidden = WhatIsYourRoleAsImporter
+whatIsYourRoleAsImporter.change.hidden = what is your role
 
 whoAreYouAgent.title = whoAreYouAgent
 whoAreYouAgent.heading = whoAreYouAgent

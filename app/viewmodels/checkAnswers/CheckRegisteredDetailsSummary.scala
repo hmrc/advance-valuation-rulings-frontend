@@ -41,7 +41,7 @@ object CheckRegisteredDetailsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.name.change.hidden"))
       )
     )
 
@@ -67,7 +67,7 @@ object CheckRegisteredDetailsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.address.change.hidden"))
       )
     )
 
@@ -80,7 +80,7 @@ object CheckRegisteredDetailsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.eori.change.hidden"))
       )
     )
 
