@@ -16,15 +16,17 @@
 
 package audit
 
+import javax.inject.{Inject, Singleton}
+
+import scala.concurrent.ExecutionContext
+
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+
 import models.WhatIsYourRoleAsImporter
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
 import models.events.{AgentIndicatorEvent, UserTypeEvent}
 import models.requests.{DataRequest, OptionalDataRequest}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
 
 @Singleton
 class AuditService @Inject() (auditConnector: AuditConnector) {
@@ -37,7 +39,7 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
     import dataRequest._
 
     val referrer = dataRequest.headers.get("Referer")
-    val detail = UserTypeEvent(userId, eoriNumber, affinityGroup, credentialRole, referrer)
+    val detail   = UserTypeEvent(userId, eoriNumber, affinityGroup, credentialRole, referrer)
     auditConnector.sendExplicitAudit("UserEntersService", detail)
   }
 

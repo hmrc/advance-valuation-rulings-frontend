@@ -54,18 +54,19 @@ class CheckRegisteredDetailsController @Inject() (
 
   private val logger = Logger(this.getClass)
 
-  val form: Form[Boolean] = formProvider()
-
   private val AckRefLength = 32
   private val AckRefPad    = "0"
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
+        val form = formProvider(request.affinityGroup)
+
         request.userAnswers.get(CheckRegisteredDetailsPage) match {
           case Some(value) =>
             handleForm(
-              (details: CheckRegisteredDetails) => Ok(view(form.fill(value.value), mode, details))
+              (details: CheckRegisteredDetails) =>
+                Ok(view(form.fill(value.value), mode, details, request.affinityGroup))
             )
           case None        =>
             backendConnector
@@ -83,7 +84,7 @@ class CheckRegisteredDetailsController @Inject() (
                       request.userAnswers
                         .setFuture(CheckRegisteredDetailsPage, traderDetails.details)
                     _       <- sessionRepository.set(answers)
-                  } yield Ok(view(form, mode, traderDetails.details))
+                  } yield Ok(view(form, mode, traderDetails.details, request.affinityGroup))
                 case Left(backendError)   =>
                   logger.error(s"Failed to get trader details from backend: $backendError")
                   Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
@@ -94,12 +95,15 @@ class CheckRegisteredDetailsController @Inject() (
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
+        val form: Form[Boolean] = formProvider(request.affinityGroup)
+
         form
           .bindFromRequest()
           .fold(
             formWithErrors =>
               handleForm(
-                (details: CheckRegisteredDetails) => BadRequest(view(formWithErrors, mode, details))
+                (details: CheckRegisteredDetails) =>
+                  BadRequest(view(formWithErrors, mode, details, request.affinityGroup))
               ),
             value =>
               request.userAnswers.get(CheckRegisteredDetailsPage) match {
