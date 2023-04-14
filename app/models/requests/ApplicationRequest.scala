@@ -16,7 +16,7 @@
 
 package models.requests
 
-import cats.data.{NonEmptyList, Validated, ValidatedNel}
+import cats.data.{Validated, ValidatedNel}
 import cats.implicits._
 
 import play.api.libs.json._
@@ -109,8 +109,7 @@ object TraderDetail {
     }
   }
 
-  // TODO: rename to forIndividual
-  def apply(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
+  def trader(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
     userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
       CheckRegisteredDetailsPage,
       (crd: CheckRegisteredDetails) =>
@@ -152,7 +151,7 @@ object ApplicationRequest {
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val traderDetail    = TraderDetail(userAnswers)
+    val traderDetail    = TraderDetail.trader(userAnswers)
     val agentDetails    = TraderDetail.agent(userAnswers)
     val goodsDetails    = GoodsDetails(userAnswers)
     val contact         = ContactDetails(userAnswers, affinityGroup)
