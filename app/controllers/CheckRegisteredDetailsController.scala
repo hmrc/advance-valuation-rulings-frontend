@@ -30,6 +30,7 @@ import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
 import models.{AcknowledgementReference, CheckRegisteredDetails, EoriNumber, Mode}
+import models.TraderDetails
 import models.requests.DataRequest
 import navigation.Navigator
 import org.apache.commons.lang3.StringUtils
@@ -60,14 +61,14 @@ class CheckRegisteredDetailsController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        val form = formProvider(request.affinityGroup)
-
         request.userAnswers.get(CheckRegisteredDetailsPage) match {
           case Some(value) =>
-            handleForm(
+            handleForm {
               (details: CheckRegisteredDetails) =>
+                val form =
+                  formProvider(request.affinityGroup, details.consentToDisclosureOfPersonalData)
                 Ok(view(form.fill(value.value), mode, details, request.affinityGroup))
-            )
+            }
           case None        =>
             backendConnector
               .getTraderDetails(
@@ -84,6 +85,10 @@ class CheckRegisteredDetailsController @Inject() (
                       request.userAnswers
                         .setFuture(CheckRegisteredDetailsPage, traderDetails.details)
                     _       <- sessionRepository.set(answers)
+                    form     = formProvider(
+                                 request.affinityGroup,
+                                 traderDetails.details.consentToDisclosureOfPersonalData
+                               )
                   } yield Ok(view(form, mode, traderDetails.details, request.affinityGroup))
                 case Left(backendError)   =>
                   logger.error(s"Failed to get trader details from backend: $backendError")
@@ -95,20 +100,29 @@ class CheckRegisteredDetailsController @Inject() (
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        val form: Form[Boolean] = formProvider(request.affinityGroup)
+        val checkRegisteredDetails: Option[CheckRegisteredDetails] =
+          request.userAnswers.get(CheckRegisteredDetailsPage)
 
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              handleForm(
-                (details: CheckRegisteredDetails) =>
-                  BadRequest(view(formWithErrors, mode, details, request.affinityGroup))
-              ),
-            value =>
-              request.userAnswers.get(CheckRegisteredDetailsPage) match {
-                case Some(details) =>
-                  val updatedDetails = details.copy(value = value)
+        checkRegisteredDetails match {
+          case None                    =>
+            logger.warn(s"Failed to submit check registered details as user has no answers")
+            Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+          case Some(registeredDetails) =>
+            val form: Form[Boolean] = formProvider(
+              request.affinityGroup,
+              registeredDetails.consentToDisclosureOfPersonalData
+            )
+
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors =>
+                  handleForm(
+                    (details: CheckRegisteredDetails) =>
+                      BadRequest(view(formWithErrors, mode, details, request.affinityGroup))
+                  ),
+                value => {
+                  val updatedDetails = registeredDetails.copy(value = value)
                   for {
                     updatedAnswers <-
                       request.userAnswers.setFuture(CheckRegisteredDetailsPage, updatedDetails)
@@ -118,11 +132,9 @@ class CheckRegisteredDetailsController @Inject() (
                       request.affinityGroup
                     )
                   )
-                case None          =>
-                  logger.warn(s"Failed to submit check registered details as user has no answers")
-                  Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-              }
-          )
+                }
+              )
+        }
     }
 
   private def handleForm(

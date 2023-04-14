@@ -47,7 +47,7 @@ class CheckRegisteredDetailsControllerSpec
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode).url
 
   val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider(AffinityGroup.Individual)
+  val form         = formProvider(AffinityGroup.Individual, true)
 
   "CheckRegisteredDetails Controller" - {
 
@@ -153,11 +153,6 @@ class CheckRegisteredDetailsControllerSpec
 
       val mockSessionRepository = mock[SessionRepository]
 
-      val answersAfterPost = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
-        .success
-        .value
-
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
@@ -181,6 +176,25 @@ class CheckRegisteredDetailsControllerSpec
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+      val userAnswers = emptyUserAnswers
+        .set(CheckRegisteredDetailsPage, registeredDetails)
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, checkRegisteredDetailsRoute)
+            .withFormUrlEncodedBody(("value", "invalid value"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+      }
+    }
+
+    "must redirect to Journey Recovery on submit when user has no answers" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -191,7 +205,8 @@ class CheckRegisteredDetailsControllerSpec
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

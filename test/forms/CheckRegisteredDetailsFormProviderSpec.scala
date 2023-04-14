@@ -25,7 +25,7 @@ class CheckRegisteredDetailsFormProviderSpec extends BooleanFieldBehaviours {
 
   "for individuals" - {
 
-    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Individual)
+    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Individual, true)
 
     ".value" - {
 
@@ -49,7 +49,7 @@ class CheckRegisteredDetailsFormProviderSpec extends BooleanFieldBehaviours {
 
   "for organisations" - {
 
-    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Organisation)
+    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Organisation, true)
 
     ".value" - {
 
@@ -73,12 +73,36 @@ class CheckRegisteredDetailsFormProviderSpec extends BooleanFieldBehaviours {
 
   "for agents" - {
 
-    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Agent)
+    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Agent, true)
 
     ".value" - {
 
       val fieldName   = "value"
       val requiredKey = "checkRegisteredDetails.error.required.agent"
+      val invalidKey  = "error.boolean"
+
+      behave like booleanField(
+        form,
+        fieldName,
+        invalidError = FormError(fieldName, invalidKey)
+      )
+
+      behave like mandatoryField(
+        form,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKey)
+      )
+    }
+  }
+
+  "without consent to disclosure of personal data" - {
+
+    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Agent, false)
+
+    ".value" - {
+
+      val fieldName   = "value"
+      val requiredKey = "checkRegisteredDetails.error.required.consent"
       val invalidKey  = "error.boolean"
 
       behave like booleanField(

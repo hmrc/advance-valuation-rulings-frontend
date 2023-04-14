@@ -265,6 +265,7 @@ checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EO
 checkRegisteredDetails.error.required.individual = Select yes to confirm your EORI details
 checkRegisteredDetails.error.required.organisation = Select yes to confirm the organisation's EORI details
 checkRegisteredDetails.error.required.agent = Select yes to confirm your EORI details
+checkRegisteredDetails.error.required.consent = Select yes to proceed with the application
 checkRegisteredDetails.warning.individual = These are the details we have on record. They should be the details used to register your Economic Operator Registration and Identification (EORI) number.
 checkRegisteredDetails.warning.organisation = These are the EORI details we have on record for the organisation you are representing. They should be the details used to register their EORI number.
 checkRegisteredDetails.warning.agent = These are the details we have on record. They should be the details used to register your Economic Operator Registration and Identification (EORI) number.
