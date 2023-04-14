@@ -23,7 +23,8 @@ final case class UserTypeEvent(
   internalId: String,
   eori: String,
   affinityGroup: AffinityGroup,
-  credentialRole: Option[CredentialRole]
+  credentialRole: Option[CredentialRole],
+  referrer: Option[String]
 )
 
 object UserTypeEvent {

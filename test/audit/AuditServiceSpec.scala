@@ -48,7 +48,7 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
   "sendUserTypeEvent" - {
 
     implicit val optionalDataRequest: OptionalDataRequest[_] = OptionalDataRequest(
-      request = FakeRequest(),
+      request = FakeRequest().withHeaders("Referer" -> "some referer"),
       userId = userAnswersId,
       eoriNumber = EoriNumber,
       affinityGroup = AffinityGroup.Individual,
@@ -60,7 +60,8 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
       optionalDataRequest.userId,
       optionalDataRequest.eoriNumber,
       optionalDataRequest.affinityGroup,
-      optionalDataRequest.credentialRole
+      optionalDataRequest.credentialRole,
+      Some("some referer")
     )
 
     "must send userTypeEvent to auditConnector" in {
