@@ -248,92 +248,93 @@ class ApplicationRequestSpec
         )
 
       }
+    }
 
-      "when the user is an agent acting on behalf of an organisation" when {
-        "return valid when built from correctly structured userAnswers" in {
-          val ua = emptyUserAnswers
+    "when the user is an agent acting on behalf of an organisation" when {
+      "return valid when built from correctly structured userAnswers" in {
+        val ua = emptyUserAnswers
 
-          val userAnswers = (for {
-            ua <- ua.set(DescriptionOfGoodsPage, randomString)
-            ua <- ua.set(HasCommodityCodePage, false)
-            ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-            ua <- ua.set(HasConfidentialInformationPage, false)
-            ua <- ua.set(
-                    CheckRegisteredDetailsPage,
-                    CheckRegisteredDetails(
-                      value = true,
-                      eori = randomString,
-                      name = randomString,
-                      streetAndNumber = randomString,
-                      city = randomString,
-                      country = randomString,
-                      postalCode = Some(randomString),
-                      phoneNumber = Some(randomString)
-                    )
+        val userAnswers = (for {
+          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(
+                  CheckRegisteredDetailsPage,
+                  CheckRegisteredDetails(
+                    value = true,
+                    eori = randomString,
+                    name = randomString,
+                    streetAndNumber = randomString,
+                    city = randomString,
+                    country = randomString,
+                    postalCode = Some(randomString),
+                    phoneNumber = Some(randomString)
                   )
-            ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
-            ua <- ua.set(IsThereASaleInvolvedPage, true)
-            ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-            ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-            ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-            ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-            ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
-            ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-            ua <- ua.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
-            ua <- ua.set(
-                    BusinessContactDetailsPage,
-                    BusinessContactDetails(
-                      name = randomString,
-                      email = randomString,
-                      phone = randomString
-                    )
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
+          ua <- ua.set(
+                  BusinessContactDetailsPage,
+                  BusinessContactDetails(
+                    name = randomString,
+                    email = randomString,
+                    phone = randomString
                   )
-            ua <- ua.set(
-                    AgentCompanyDetailsPage,
-                    AgentCompanyDetails(
-                      agentEoriDetails.eori,
-                      agentEoriDetails.businessName,
-                      agentEoriDetails.addressLine1,
-                      agentEoriDetails.addressLine2.getOrElse(""),
-                      agentEoriDetails.countryCode,
-                      Some(agentEoriDetails.postcode)
-                    )
+                )
+          ua <- ua.set(
+                  AgentCompanyDetailsPage,
+                  AgentCompanyDetails(
+                    agentEoriDetails.eori,
+                    agentEoriDetails.businessName,
+                    agentEoriDetails.addressLine1,
+                    agentEoriDetails.addressLine2.getOrElse(""),
+                    agentEoriDetails.countryCode,
+                    Some(agentEoriDetails.postcode)
                   )
-          } yield ua).success.get
+                )
+        } yield ua).success.get
 
-          val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
+        val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
 
-          result shouldBe Valid(
-            ApplicationRequest(
-              draftId = draftId,
-              trader = eoriDetails,
-              agent = Some(agentEoriDetails),
-              contact = contact,
-              requestedMethod = MethodOne(
-                Some("explainHowPartiesAreRelated"),
-                Some("describeTheRestrictions"),
-                None
-              ),
-              goodsDetails = goodsDetailsNoDetails,
-              attachments = Seq.empty
-            )
+        result shouldBe Valid(
+          ApplicationRequest(
+            draftId = draftId,
+            trader = eoriDetails,
+            agent = Some(agentEoriDetails),
+            contact = contact,
+            requestedMethod = MethodOne(
+              Some("explainHowPartiesAreRelated"),
+              Some("describeTheRestrictions"),
+              None
+            ),
+            goodsDetails = goodsDetailsNoDetails,
+            attachments = Seq.empty
           )
-        }
-
-        "return invalid for an Organisation when built from empty userAnswers" in {
-          val result = ApplicationRequest(emptyUserAnswers, AffinityGroup.Organisation)
-
-          result shouldBe Invalid(
-            NonEmptyList.of(
-              CheckRegisteredDetailsPage,
-              BusinessContactDetailsPage,
-              ValuationMethodPage,
-              DescriptionOfGoodsPage,
-              DoYouWantToUploadDocumentsPage
-            )
-          )
-        }
+        )
       }
+
+      "return invalid for an Organisation when built from empty userAnswers" in {
+        val result = ApplicationRequest(emptyUserAnswers, AffinityGroup.Organisation)
+
+        result shouldBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage,
+            BusinessContactDetailsPage,
+            ValuationMethodPage,
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
+          )
+        )
+      }
+
     }
   }
 }

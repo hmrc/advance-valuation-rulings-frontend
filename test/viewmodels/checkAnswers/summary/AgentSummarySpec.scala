@@ -19,24 +19,39 @@ package viewmodels.checkAnswers.summary
 import scala.util.Try
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 import base.SpecBase
-import models.{BusinessContactDetails, UserAnswers, WhatIsYourRoleAsImporter}
-import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
+import models.{AgentCompanyDetails, BusinessContactDetails, UserAnswers, WhatIsYourRoleAsImporter}
+import pages.{AgentCompanyDetailsPage, BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 
 class AgentSummarySpec extends SpecBase {
 
-  val answers: Try[UserAnswers] =
+  val answers: UserAnswers =
     emptyUserAnswers
       .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
-      .flatMap(
-        _.set(
-          BusinessContactDetailsPage,
-          BusinessContactDetails(ContactName, ContactEmail, ContactPhoneNumber)
+      .success
+      .value
+      .set(
+        BusinessContactDetailsPage,
+        BusinessContactDetails(ContactName, ContactEmail, ContactPhoneNumber)
+      )
+      .success
+      .value
+      .set(
+        AgentCompanyDetailsPage,
+        AgentCompanyDetails(
+          agentEori = EoriNumber,
+          agentCompanyName = RegisteredName,
+          agentStreetAndNumber = StreetAndNumber,
+          agentCity = City,
+          agentCountry = Country,
+          agentPostalCode = Some(Postcode)
         )
       )
+      .success
+      .value
 
   "AgentSummary" - {
 
@@ -52,14 +67,14 @@ class AgentSummarySpec extends SpecBase {
     }
 
     "when the user has answers for all relevant pages" - {
-      val summary = AgentSummary(answers.success.value)
+      val summary = AgentSummary(answers)
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
-        rows.length mustBe 4
+        rows.length mustBe 7
       }
 
-      "create row for business applicant name" in {
+      "create row for agent applicant name" in {
         rows must contain(
           (
             Key(Text("checkYourAnswersForAgents.applicant.name.label")),
@@ -68,7 +83,7 @@ class AgentSummarySpec extends SpecBase {
         )
       }
 
-      "create row for business applicant email" in {
+      "create row for agent applicant email" in {
         rows must contain(
           (
             Key(Text("checkYourAnswersForAgents.applicant.email.label")),
@@ -77,7 +92,7 @@ class AgentSummarySpec extends SpecBase {
         )
       }
 
-      "create row for business applicant role" in {
+      "create row for agent applicant role" in {
         rows must contain(
           (
             Key(Text("checkYourAnswersForAgents.applicant.role.label")),
@@ -86,6 +101,33 @@ class AgentSummarySpec extends SpecBase {
                 s"${WhatIsYourRoleAsImporter.MessagePrefix}.${WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg}"
               )
             )
+          )
+        )
+      }
+
+      "create row for agent EORI number" in {
+        rows must contain(
+          (
+            Key(Text("checkYourAnswersForAgents.business.eori.number.label")),
+            Value(Text(EoriNumber))
+          )
+        )
+      }
+
+      "create row for agent registered name" in {
+        rows must contain(
+          (
+            Key(Text("checkYourAnswersForAgents.business.name.label")),
+            Value(Text(RegisteredName))
+          )
+        )
+      }
+
+      "create row for agent registered address" in {
+        rows must contain(
+          (
+            Key(Text("checkYourAnswersForAgents.business.address.label")),
+            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$Country"))
           )
         )
       }
