@@ -27,7 +27,8 @@
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
-        list: BulletList
+        list: BulletList,
+        detailsDrop: DetailsDrop
     )
 
 @(upscanInitiateResponse : UpscanInitiateResponse, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
@@ -76,9 +77,13 @@
         @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status, appConfig.maxFileSizeHumanReadableMebiBytes)))
     }
 
-
         @caption(messages("uploadSupportingDocuments.caption"))
         @heading(messages("uploadSupportingDocuments.heading"))
+
+
+        @detailsDrop(messages("uploadSupportingDocuments.details.label"),
+            Html(messages("uploadSupportingDocuments.details.paragraph"))
+        )
 
         @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
         @list(Seq(
