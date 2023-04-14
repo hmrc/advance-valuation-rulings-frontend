@@ -16,18 +16,19 @@
 
 package navigation
 
-import base.SpecBase
-import controllers.routes
-import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
-import models._
-import models.fileupload._
-import pages._
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import queries.Modifiable
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup._
+
+import base.SpecBase
+import controllers.routes
+import models._
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
+import models.fileupload._
+import pages._
+import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
