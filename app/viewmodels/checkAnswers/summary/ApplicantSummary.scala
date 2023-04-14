@@ -22,18 +22,12 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
-import models.requests.Application
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
 sealed trait ApplicantSummary {
   def removeActions(): ApplicantSummary
   def rows: SummaryList
-}
-
-object ApplicantSummary {
-  def apply(application: Application)(implicit messages: Messages) =
-    CheckRegisteredDetailsSummary.rows(application).map(_.copy(actions = None))
 }
 
 case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummary {

@@ -20,15 +20,12 @@ import java.time.{Clock, Instant, ZoneOffset}
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
 import base.SpecBase
-import com.softwaremill.quicklens._
 import generators.Generators
 import models._
 import models.requests._
-import org.scalacheck.Arbitrary
 
 class ApplicationViewModelSpec extends SpecBase {
   import ApplicationViewModelSpec._
@@ -39,55 +36,20 @@ class ApplicationViewModelSpec extends SpecBase {
 
     "when given a valid application" - {
 
-      "when trader's consentToDisclosureOfPersonalData = true" - {
-        val result = ApplicationViewModel(
-          application.modify(_.trader.consentToDisclosureOfPersonalData).setTo(true)
-        )
+      val result = ApplicationViewModel(application)
 
-        "must create rows for the eori details" in {
-          result.eori.rows must be(
-            Seq(
-              SummaryListRow(
-                Key(Text("checkYourAnswers.eori.number.label")),
-                Value(Text(randomString))
-              ),
-              SummaryListRow(
-                Key(Text("checkYourAnswers.eori.name.label")),
-                Value(Text(randomString))
-              ),
-              SummaryListRow(
-                Key(Text("checkYourAnswers.eori.address.label")),
-                Value(
-                  HtmlContent(
-                    s"${randomString}<br>${randomString}<br>${randomString}<br>${randomString}"
-                  )
-                )
-              )
+      "must create rows for the eori details" in {
+        result.eori.rows must be(
+          Seq(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.eori.number.label")),
+              Value(Text(randomString))
             )
           )
-        }
-      }
-
-      "when trader's consentToDisclosureOfPersonalData = false" - {
-        val result = ApplicationViewModel(
-          application.modify(_.trader.consentToDisclosureOfPersonalData).setTo(false)
         )
-
-        "must create rows for the eori details" in {
-          result.eori.rows must be(
-            Seq(
-              SummaryListRow(
-                Key(Text("checkYourAnswers.eori.number.label")),
-                Value(Text(randomString))
-              )
-            )
-          )
-        }
       }
 
       "must create row for the applicant" in {
-        val result = ApplicationViewModel(application)
-
         result.applicant.rows must be(
           Seq(
             SummaryListRow(
@@ -116,11 +78,8 @@ class ApplicationViewModelSpec extends SpecBase {
 object ApplicationViewModelSpec extends Generators {
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
-
   val eoriDetails = TraderDetail(
     eori = randomString,
-    consentToDisclosureOfPersonalData = randomBoolean,
     businessName = randomString,
     addressLine1 = randomString,
     addressLine2 = Some(randomString),

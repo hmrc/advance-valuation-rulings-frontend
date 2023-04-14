@@ -16,16 +16,20 @@
 
 package connectors
 
-import config.FrontendAppConfig
-import models.{Done, DraftId, UserAnswers}
+import javax.inject.Inject
+
+import scala.concurrent.{ExecutionContext, Future}
+
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
 
-import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import config.FrontendAppConfig
+import models.{Done, DraftId, UserAnswers}
 
-class UserAnswersConnector @Inject()(config: FrontendAppConfig, httpClient: HttpClientV2)(implicit ec: ExecutionContext) {
+class UserAnswersConnector @Inject() (config: FrontendAppConfig, httpClient: HttpClientV2)(implicit
+  ec: ExecutionContext
+) {
 
   private val backendUrl = config.advanceValuationRulingsBackendURL
 

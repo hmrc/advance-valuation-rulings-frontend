@@ -86,11 +86,8 @@ object ViewApplicationControllerSpec extends Generators {
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
-
   val eoriDetails = TraderDetail(
     eori = randomString,
-    consentToDisclosureOfPersonalData = randomBoolean,
     businessName = randomString,
     addressLine1 = randomString,
     addressLine2 = Some(randomString),
@@ -150,7 +147,6 @@ object ViewApplicationControllerSpec extends Generators {
     |"draftId": "$draftId",
     |"eoriDetails": {
     |  "eori": "$randomString",
-    |  "consentToDisclosureOfPersonalData": $randomBoolean
     |  "businessName": "$randomString",
     |  "addressLine1": "$randomString",
     |  "addressLine2": "$randomString",

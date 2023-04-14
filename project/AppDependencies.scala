@@ -21,7 +21,6 @@ object AppDependencies {
   val HmrcMongoTestPlayVersion  = "0.74.0"
   val FlexmarkVersion           = "0.62.2"
   val EnumeratumVersion         = "1.6.3"
-  val QuicklensVersion          = "1.9.1"
   val ObjectStoreVersion        = "1.0.0"
   val InternalAuthVersion       = "1.2.0"
   val LibPhoneNumberVersion     = "8.12.47"
@@ -52,8 +51,7 @@ object AppDependencies {
     "wolfendale"                 %% "scalacheck-gen-regexp"   % ScalaCheckRegexGenVersion,
     "uk.gov.hmrc.mongo"          %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
     "uk.gov.hmrc"                %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
-    "com.vladsch.flexmark"        % "flexmark-all"            % FlexmarkVersion,
-    "com.softwaremill.quicklens" %% "quicklens"               % QuicklensVersion
+    "com.vladsch.flexmark"        % "flexmark-all"            % FlexmarkVersion
   ).map(_ % "test, it")
 
   def apply(): Seq[ModuleID] = compile ++ test

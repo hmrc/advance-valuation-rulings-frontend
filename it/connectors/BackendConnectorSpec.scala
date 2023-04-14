@@ -119,7 +119,7 @@ class BackendConnectorSpec
     val response           = ApplicationSubmissionResponse(applicationId)
     val applicationRequest = ApplicationRequest(
       draftId = DraftId(0),
-      trader = TraderDetail("eori", true, "name", "line1", None, None, "postcode", "GB", None),
+      trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
       agent = None,
       contact = ContactDetails("name", "email", None),
       requestedMethod = MethodOne(None, None, None),

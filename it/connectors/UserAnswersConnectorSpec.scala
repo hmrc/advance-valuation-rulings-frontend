@@ -1,17 +1,15 @@
 package connectors
 
+import java.time.Instant
+
+import play.api.libs.json.Json
+
 import com.github.tomakehurst.wiremock.client.WireMock._
 import models.{DraftId, UserAnswers}
 import org.scalatest.OptionValues
-import play.api.libs.json.Json
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
-import java.time.Instant
-
-class UserAnswersConnectorSpec
-  extends BaseIntegrationSpec
-    with WireMockHelper
-    with OptionValues {
+class UserAnswersConnectorSpec extends BaseIntegrationSpec with WireMockHelper with OptionValues {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
