@@ -743,10 +743,10 @@ agentCompanyDetails.error.agentPostalCode.required = Enter the postcode
 agentCompanyDetails.error.agentEori.format = Enter an EORI number in the correct format
 
 agentCompanyDetails.error.agentCompanyName.length = Your company’s registered business name must be 50 characters or less
-agentCompanyDetails.error.agentStreetAndNumber.length = Address line 1 must be 50 characters or less
-agentCompanyDetails.error.agentCity.length = Town or city must be 50 characters or less
+agentCompanyDetails.error.agentStreetAndNumber.length = Address line 1 must be 70 characters or less
+agentCompanyDetails.error.agentCity.length = Town or city must be 35 characters or less
 agentCompanyDetails.error.agentCountry.length = Country must be 50 characters or less
-agentCompanyDetails.error.agentPostalCode.length = Postcode must be 50 characters or less
+agentCompanyDetails.error.agentPostalCode.length = Postcode must be 9 characters or less
 agentCompanyDetails.agentEori.change.hidden = Your company’s registered EORI number
 agentCompanyDetails.agentCompanyName.change.hidden = Your company’s registered business name
 agentCompanyDetails.agentStreetAndNumber.change.hidden = Address line 1

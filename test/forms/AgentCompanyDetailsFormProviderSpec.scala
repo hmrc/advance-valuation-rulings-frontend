@@ -143,7 +143,7 @@ class AgentCompanyDetailsFormProviderSpec
     val lengthKey          = "agentCompanyDetails.error.agentPostalCode.length"
     val requirePostcodeKey = "agentCompanyDetails.error.agentPostalCode.required"
     val invalidPostcodeKey = "agentCompanyDetails.error.agentPostalCode.gb"
-    val maxLength          = 19
+    val maxLength          = 9
 
     behave like fieldThatBindsValidData(
       form,
