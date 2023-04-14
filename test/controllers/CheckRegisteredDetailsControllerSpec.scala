@@ -22,6 +22,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -46,7 +47,7 @@ class CheckRegisteredDetailsControllerSpec
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode).url
 
   val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider()
+  val form         = formProvider(AffinityGroup.Individual)
 
   "CheckRegisteredDetails Controller" - {
 

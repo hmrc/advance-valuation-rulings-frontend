@@ -19,13 +19,27 @@ package forms
 import javax.inject.Inject
 
 import play.api.data.Form
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import forms.mappings.Mappings
 
 class CheckRegisteredDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
-    Form(
-      "value" -> boolean("checkRegisteredDetails.error.required")
-    )
+  def apply(affinityGroup: AffinityGroup): Form[Boolean] =
+    affinityGroup match {
+      case AffinityGroup.Organisation =>
+        Form(
+          "value" -> boolean("checkRegisteredDetails.error.required.organisation")
+        )
+      case AffinityGroup.Individual   =>
+        Form(
+          "value" -> boolean("checkRegisteredDetails.error.required.individual")
+        )
+      case AffinityGroup.Agent        =>
+        Form(
+          "value" -> boolean("checkRegisteredDetails.error.required.agent")
+        )
+      case _                          => throw new IllegalArgumentException("Affinity group not supported")
+    }
+
 }

@@ -17,29 +17,81 @@
 package forms
 
 import play.api.data.FormError
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import forms.behaviours.BooleanFieldBehaviours
 
 class CheckRegisteredDetailsFormProviderSpec extends BooleanFieldBehaviours {
 
-  val form = new CheckRegisteredDetailsFormProvider()()
+  "for individuals" - {
 
-  ".value" - {
+    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Individual)
 
-    val fieldName   = "value"
-    val requiredKey = "checkRegisteredDetails.error.required"
-    val invalidKey  = "error.boolean"
+    ".value" - {
 
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
-    )
+      val fieldName   = "value"
+      val requiredKey = "checkRegisteredDetails.error.required.individual"
+      val invalidKey  = "error.boolean"
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+      behave like booleanField(
+        form,
+        fieldName,
+        invalidError = FormError(fieldName, invalidKey)
+      )
+
+      behave like mandatoryField(
+        form,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKey)
+      )
+    }
+  }
+
+  "for organisations" - {
+
+    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Organisation)
+
+    ".value" - {
+
+      val fieldName   = "value"
+      val requiredKey = "checkRegisteredDetails.error.required.organisation"
+      val invalidKey  = "error.boolean"
+
+      behave like booleanField(
+        form,
+        fieldName,
+        invalidError = FormError(fieldName, invalidKey)
+      )
+
+      behave like mandatoryField(
+        form,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKey)
+      )
+    }
+  }
+
+  "for agents" - {
+
+    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Agent)
+
+    ".value" - {
+
+      val fieldName   = "value"
+      val requiredKey = "checkRegisteredDetails.error.required.agent"
+      val invalidKey  = "error.boolean"
+
+      behave like booleanField(
+        form,
+        fieldName,
+        invalidError = FormError(fieldName, invalidKey)
+      )
+
+      behave like mandatoryField(
+        form,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKey)
+      )
+    }
   }
 }

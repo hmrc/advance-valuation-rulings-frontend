@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import uk.gov.hmrc.auth.core.AffinityGroup
 
 @this(
     layout: templates.Layout,
@@ -31,7 +32,7 @@
     cancelApplicationLink: CancelApplicationLink
 )
 
-@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
 
@@ -52,7 +53,14 @@
         }
 
         @if(registeredDetails.consentToDisclosureOfPersonalData) {
-            @warning(content=Html(messages("checkRegisteredDetails.warning")))
+            @if(affinityGroup == AffinityGroup.Individual) {
+                @warning(content=Html(messages("checkRegisteredDetails.warning.individual")))
+            } else if(affinityGroup == AffinityGroup.Organisation) {
+                @warning(content=Html(messages("checkRegisteredDetails.warning.organisation")))
+            } else if(affinityGroup == AffinityGroup.Agent) {
+                @warning(content=Html(messages("checkRegisteredDetails.warning.agent")))
+            }
+            
             @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
 
             @subheading(messages("checkRegisteredDetails.subheading.1"))
