@@ -45,17 +45,19 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryCheckRegisteredDetails: Arbitrary[CheckRegisteredDetails] = Arbitrary {
     for {
-      value           <- arbitrary[Boolean]
-      eori            <- Gen.alphaStr.suchThat(_.nonEmpty)
-      name            <- Gen.alphaStr.suchThat(_.nonEmpty)
-      streetAndNumber <- Gen.alphaStr.suchThat(_.nonEmpty)
-      city            <- Gen.alphaStr.suchThat(_.nonEmpty)
-      country         <- Gen.alphaStr.suchThat(_.nonEmpty)
-      postalCode      <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
-      phoneNumber     <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
+      value                             <- arbitrary[Boolean]
+      eori                              <- Gen.alphaStr.suchThat(_.nonEmpty)
+      consentToDisclosureOfPersonalData <- arbitrary[Boolean]
+      name                              <- Gen.alphaStr.suchThat(_.nonEmpty)
+      streetAndNumber                   <- Gen.alphaStr.suchThat(_.nonEmpty)
+      city                              <- Gen.alphaStr.suchThat(_.nonEmpty)
+      country                           <- Gen.alphaStr.suchThat(_.nonEmpty)
+      postalCode                        <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
+      phoneNumber                       <- Gen.option(Gen.alphaStr.suchThat(_.nonEmpty))
     } yield CheckRegisteredDetails(
       value,
       eori,
+      consentToDisclosureOfPersonalData,
       name,
       streetAndNumber,
       city,

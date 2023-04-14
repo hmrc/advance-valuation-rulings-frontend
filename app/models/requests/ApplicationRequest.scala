@@ -70,6 +70,7 @@ object GoodsDetails {
 
 final case class TraderDetail(
   eori: String,
+  consentToDisclosureOfPersonalData: Boolean,
   businessName: String,
   addressLine1: String,
   addressLine2: Option[String],
@@ -88,6 +89,7 @@ object TraderDetail {
       (crd: CheckRegisteredDetails) =>
         TraderDetail(
           eori = crd.eori,
+          consentToDisclosureOfPersonalData = crd.consentToDisclosureOfPersonalData,
           businessName = crd.name,
           addressLine1 = crd.streetAndNumber,
           addressLine2 = Some(crd.city),
@@ -105,6 +107,7 @@ object TraderDetail {
       (crd) =>
         TraderDetail(
           eori = crd.eori,
+          consentToDisclosureOfPersonalData = crd.consentToDisclosureOfPersonalData,
           businessName = crd.name,
           addressLine1 = crd.streetAndNumber,
           addressLine2 = Some(crd.city),

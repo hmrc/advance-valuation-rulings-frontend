@@ -44,23 +44,32 @@
 
 
         @caption(messages("checkRegisteredDetails.caption"))
-        @heading(messages("checkRegisteredDetails.heading.1", registeredDetails.eori))
-        @warning(content=Html(messages("checkRegisteredDetails.warning")))
-        @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
-        @subheading(messages("checkRegisteredDetails.subheading.1"))
 
-        @if(registeredDetails.name.trim != "") {
-            @headingH3(messages("checkRegisteredDetails.heading.2"), "s")
-            @paragraph(content=Html(registeredDetails.name))
+        @if(registeredDetails.consentToDisclosureOfPersonalData) {
+            @heading(messages("checkRegisteredDetails.heading.1", registeredDetails.eori))
+        } else {
+            @heading(messages("checkRegisteredDetails.heading.4", registeredDetails.eori))
         }
 
-        @headingH3(messages("checkRegisteredDetails.heading.3"), "s")
-        @paragraph(content=Html(
-            registeredDetails.streetAndNumber + "<br>" +
-            registeredDetails.city + "<br>" +
-            registeredDetails.postalCode.map(_ + "<br>").getOrElse("") +
-            registeredDetails.country
-        ))
+        @warning(content=Html(messages("checkRegisteredDetails.warning")))
+        @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
+
+        @if(registeredDetails.consentToDisclosureOfPersonalData) {
+            @subheading(messages("checkRegisteredDetails.subheading.1"))
+
+            @if(registeredDetails.name.trim != "") {
+                @headingH3(messages("checkRegisteredDetails.heading.2"), "s")
+                @paragraph(content=Html(registeredDetails.name))
+            }
+
+            @headingH3(messages("checkRegisteredDetails.heading.3"), "s")
+            @paragraph(content=Html(
+                registeredDetails.streetAndNumber + "<br>" +
+                registeredDetails.city + "<br>" +
+                registeredDetails.postalCode.map(_ + "<br>").getOrElse("") +
+                registeredDetails.country
+            ))
+        }
 
         @subheading(messages("checkRegisteredDetails.subheading.2"))
         @govukRadios(

@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
-import models.requests.{Application, ApplicationRequest}
+import models.requests.Application
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 

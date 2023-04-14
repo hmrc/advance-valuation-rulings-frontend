@@ -20,6 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 
 final case class TraderDetailsWithCountryCode(
   EORINo: String,
+  consentToDisclosureOfPersonalData: Boolean,
   CDSFullName: String,
   CDSEstablishmentAddress: CDSEstablishmentAddress,
   contactInformation: Option[ContactInformation]
@@ -28,6 +29,7 @@ final case class TraderDetailsWithCountryCode(
     CheckRegisteredDetails(
       value = false,
       eori = EORINo,
+      consentToDisclosureOfPersonalData = consentToDisclosureOfPersonalData,
       name = CDSFullName,
       streetAndNumber = CDSEstablishmentAddress.streetAndNumber,
       city = CDSEstablishmentAddress.city,

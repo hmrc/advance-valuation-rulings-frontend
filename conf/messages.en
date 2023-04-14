@@ -246,6 +246,7 @@ checkRegisteredDetails.title = Check the name and address for EORI number
 checkRegisteredDetails.heading.1 = Check the name and address for EORI number {0}
 checkRegisteredDetails.heading.2 = Registered business name
 checkRegisteredDetails.heading.3 = Registered business address
+checkRegisteredDetails.heading.4 = Check the EORI number {0}
 checkRegisteredDetails.subheading.1 = EORI registration details
 checkRegisteredDetails.subheading.2 = Are these details correct?
 checkRegisteredDetails.caption = About the applicant
