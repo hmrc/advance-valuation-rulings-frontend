@@ -29,7 +29,7 @@
     saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], index: Index, mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @uploadId = @{form("uploadId").value.getOrElse("")}
 @layout(pageTitle = title(form, messages("isThisFileConfidential.title")), draftId = Some(draftId)) {
@@ -45,7 +45,7 @@
     @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
 
-    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(index, mode, draftId), 'autoComplete -> "off") {
         
         @govukRadios(
             RadiosViewModel.yesNo(

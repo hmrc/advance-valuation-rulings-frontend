@@ -24,79 +24,80 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.table.TableRow
 
 import viewmodels.govuk.TableFluency
 
-case class UploadAnotherSupportingDocument(
-  value: Boolean,
-  fileCount: Int
-)
-object UploadAnotherSupportingDocument {
-
-  val reads: Reads[UploadAnotherSupportingDocument] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "value").read[Boolean] and
-        (__ \ "fileCount").read[Int]
-    )(UploadAnotherSupportingDocument.apply _)
-  }
-
-  val writes: OWrites[UploadAnotherSupportingDocument] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "value").write[Boolean] and
-        (__ \ "fileCount").write[Int]
-    )(unlift(UploadAnotherSupportingDocument.unapply))
-  }
-
-  implicit val format: OFormat[UploadAnotherSupportingDocument] = OFormat(reads, writes)
-}
-
-case class SupportingDocument(uploadId: String, fileName: String, isConfidential: Boolean)
-object SupportingDocument {
-  def makeForFiles(uploadedFiles: UploadedFiles): Seq[SupportingDocument] =
-    uploadedFiles.files.map {
-      case (fileId, fileDetails) =>
-        SupportingDocument(fileId.value, fileDetails.fileName, fileDetails.isConfidential)
-    }.toSeq
-}
+//case class UploadAnotherSupportingDocument(
+//  value: Boolean,
+//  fileCount: Int
+//)
+//
+//object UploadAnotherSupportingDocument {
+//
+//  val reads: Reads[UploadAnotherSupportingDocument] = {
+//
+//    import play.api.libs.functional.syntax._
+//
+//    (
+//      (__ \ "value").read[Boolean] and
+//        (__ \ "fileCount").read[Int]
+//    )(UploadAnotherSupportingDocument.apply _)
+//  }
+//
+//  val writes: OWrites[UploadAnotherSupportingDocument] = {
+//
+//    import play.api.libs.functional.syntax._
+//
+//    (
+//      (__ \ "value").write[Boolean] and
+//        (__ \ "fileCount").write[Int]
+//    )(unlift(UploadAnotherSupportingDocument.unapply))
+//  }
+//
+//  implicit val format: OFormat[UploadAnotherSupportingDocument] = OFormat(reads, writes)
+//}
+//
+//case class SupportingDocument(uploadId: String, fileName: String, isConfidential: Boolean)
+//object SupportingDocument {
+//  def makeForFiles(uploadedFiles: UploadedFiles): Seq[SupportingDocument] =
+//    uploadedFiles.files.map {
+//      case (fileId, fileDetails) =>
+//        SupportingDocument(fileId.value, fileDetails.fileName, fileDetails.isConfidential)
+//    }.toSeq
+//}
 
 object SupportingDocumentsRows extends TableFluency {
   def apply(
-    uploadedFiles: UploadedFiles,
+    files: Seq[UploadedFile],
     link: views.html.components.Link,
     mode: Mode,
     draftId: DraftId
   )(implicit messages: Messages): Table = {
-    val rows: Seq[Seq[TableRow]] =
-      uploadedFiles.files.map {
-        case (fileId, fileDetails) =>
-          Seq(
-            TableRow(content = Text(fileDetails.fileName)),
-            TableRow(content = Text(confidentialLabel(fileDetails))),
-            TableRow(
-              HtmlContent(
-                link(
-                  id = fileId.value,
-                  newTab = false,
-                  text = messages("site.remove"),
-                  call = controllers.routes.UploadAnotherSupportingDocumentController
-                    .onDelete(fileId.value, mode, draftId),
-                  classes = "govuk-link govuk-link--no-visited-state"
-                )
-              )
-            )
-          )
-      }.toSeq
+    val rows: Seq[Seq[TableRow]] = ???
+//      uploadedFiles.files.map {
+//        case (fileId, fileDetails) =>
+//          Seq(
+//            TableRow(content = Text(fileDetails.fileName)),
+//            TableRow(content = Text(confidentialLabel(fileDetails))),
+//            TableRow(
+//              HtmlContent(
+//                link(
+//                  id = fileId.value,
+//                  newTab = false,
+//                  text = messages("site.remove"),
+//                  call = controllers.routes.UploadAnotherSupportingDocumentController
+//                    .onDelete(fileId.value, mode, draftId),
+//                  classes = "govuk-link govuk-link--no-visited-state"
+//                )
+//              )
+//            )
+//          )
+//      }.toSeq
 
     Table(rows.withCssClass("govuk-body-s"))
   }
 
-  private def confidentialLabel(fileDetails: UploadedFile)(implicit messages: Messages): String =
-    if (fileDetails.isConfidential) {
-      messages("uploadAnotherSupportingDocument.keepConfidential")
-    } else {
-      ""
-    }
+//  private def confidentialLabel(fileDetails: UploadedFile)(implicit messages: Messages): String =
+//    if (fileDetails.isConfidential) {
+//      messages("uploadAnotherSupportingDocument.keepConfidential")
+//    } else {
+//      ""
+//    }
 }

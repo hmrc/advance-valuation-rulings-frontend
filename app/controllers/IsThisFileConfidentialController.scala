@@ -24,7 +24,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import controllers.actions._
+import actions.{DataRequiredAction, DataRetrievalAction, DataRetrievalActionProvider, IdentifierAction}
 import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
@@ -48,43 +48,43 @@ class IsThisFileConfidentialController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val result = for {
-          fileUploads   <- UploadSupportingDocumentPage.get()
-          theUpload     <- fileUploads.lastUpload
-          isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
-          preparedForm   = isConfidential.map(form.fill).getOrElse(form)
-        } yield Ok(view(preparedForm, mode, draftId))
+  def onPageLoad(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] = ???
+//    (identify andThen getData(draftId) andThen requireData) {
+//      implicit request =>
+//        val result = for {
+//          fileUploads   <- UploadSupportingDocumentPage.get()
+//          theUpload     <- fileUploads.lastUpload
+//          isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
+//          preparedForm   = isConfidential.map(form.fill).getOrElse(form)
+//        } yield Ok(view(preparedForm, mode, draftId))
+//
+//        result.getOrElse {
+//          Redirect(
+//            controllers.routes.UploadSupportingDocumentsController
+//              .onPageLoad(None, None, None, mode, draftId)
+//          )
+//        }
+//    }
 
-        result.getOrElse {
-          Redirect(
-            controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(None, None, None, mode, draftId)
-          )
-        }
-    }
-
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
-            (value: Boolean) =>
-              for {
-                updatedAnswers <- UploadSupportingDocumentPage.modify(
-                                    (files: UploadedFiles) => files.setConfidentiality(value)
-                                  )
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers)(
-                  request.affinityGroup
-                )
-              )
-          )
-
-    }
+  def onSubmit(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] = ???
+//    (identify andThen getData(draftId) andThen requireData).async {
+//      implicit request =>
+//        form
+//          .bindFromRequest()
+//          .fold(
+//            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+//            (value: Boolean) =>
+//              for {
+//                updatedAnswers <- UploadSupportingDocumentPage.modify(
+//                                    (files: UploadedFiles) => files.setConfidentiality(value)
+//                                  )
+//                _              <- userAnswersService.set(updatedAnswers)
+//              } yield Redirect(
+//                navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers)(
+//                  request.affinityGroup
+//                )
+//              )
+//          )
+//
+//    }
 }

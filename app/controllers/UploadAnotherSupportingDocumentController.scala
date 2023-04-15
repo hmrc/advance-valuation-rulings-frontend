@@ -28,10 +28,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
 import controllers.actions._
-import controllers.routes.DoYouWantToUploadDocumentsController
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
-import models.fileupload.UploadId
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
@@ -57,111 +55,123 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        makeDocumentRows(request.userAnswers, mode, draftId) match {
-          case Some(table) =>
-            val preparedForm = UploadAnotherSupportingDocumentPage.get() match {
-              case None        => form
-              case Some(value) => form.fill(value)
-            }
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] = ???
+//    (identify andThen getData(draftId) andThen requireData).async {
+//      implicit request =>
+//        makeDocumentRows(request.userAnswers, mode, draftId) match {
+//          case Some(table) =>
+//            val preparedForm = UploadAnotherSupportingDocumentPage.get() match {
+//              case None        => form
+//              case Some(value) => form.fill(value)
+//            }
+//
+//            Future.successful(Ok(view(table, preparedForm, mode, draftId)))
+//          case None        =>
+//            redirectToUpdateDocument(mode, draftId)
+//        }
+//    }
 
-            Future.successful(Ok(view(table, preparedForm, mode, draftId)))
-          case None        =>
-            redirectToUpdateDocument(mode, draftId)
-        }
-    }
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] = ???
+//    (identify andThen getData(draftId) andThen requireData).async {
+//      implicit request =>
+//        validateFromRequest(form)
+//          .fold(
+//            formWithErrors =>
+//              makeDocumentRows(request.userAnswers, mode, draftId) match {
+//                case Some(table) =>
+//                  Future.successful(BadRequest(view(table, formWithErrors, mode, draftId)))
+//                case None        => redirectToUpdateDocument(mode, draftId)
+//              },
+//            value =>
+//              for {
+//                answers <- UploadAnotherSupportingDocumentPage.set(value)
+//                _       <- userAnswersService.set(answers)
+//              } yield Redirect(
+//                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)(
+//                  request.affinityGroup
+//                )
+//              )
+//          )
+//    }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        validateFromRequest(form)
-          .fold(
-            formWithErrors =>
-              makeDocumentRows(request.userAnswers, mode, draftId) match {
-                case Some(table) =>
-                  Future.successful(BadRequest(view(table, formWithErrors, mode, draftId)))
-                case None        => redirectToUpdateDocument(mode, draftId)
-              },
-            value =>
-              for {
-                answers <- UploadAnotherSupportingDocumentPage.set(value)
-                _       <- userAnswersService.set(answers)
-              } yield Redirect(
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)(
-                  request.affinityGroup
-                )
-              )
-          )
-    }
+  def onDelete(uploadId: String, mode: Mode, draftId: DraftId): Action[AnyContent] = ???
+//    (identify andThen getData(draftId) andThen requireData).async {
+//      implicit request =>
+//        val fileOpt = UploadSupportingDocumentPage.get().flatMap(_.getFile(UploadId(uploadId)))
+//        fileOpt match {
+//          case Some(file) =>
+//            for {
+//              updatedAnswers <-
+//                UploadSupportingDocumentPage.modify(
+//                  _.removeFile(UploadId(uploadId))
+//                )
+//              _              <- osClient.deleteObject(
+//                                  path = Path.File(file.downloadUrl)
+//                                )
+//              updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
+//              _              <- userAnswersService.set(updatedAnswers)
+//            } yield Redirect(
+//              navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)(
+//                request.affinityGroup
+//              )
+//            )
 
-  def onDelete(uploadId: String, mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val fileOpt = UploadSupportingDocumentPage.get().flatMap(_.getFile(UploadId(uploadId)))
-        fileOpt match {
-          case Some(file) =>
-            for {
-              updatedAnswers <-
-                UploadSupportingDocumentPage.modify(
-                  _.removeFile(UploadId(uploadId))
-                )
-              _              <- osClient.deleteObject(
-                                  path = Path.File(file.downloadUrl)
-                                )
-              updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
-              _              <- userAnswersService.set(updatedAnswers)
-            } yield Redirect(
-              navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)(
-                request.affinityGroup
-              )
-            )
-
-          case None =>
-            Future.successful(
-              Redirect(
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, request.userAnswers)(
-                  request.affinityGroup
-                )
-              )
-            )
-        }
-    }
-
-  private def makeDocumentRows(userAnswers: UserAnswers, mode: Mode, draftId: DraftId)(implicit
-    messages: Messages
-  ) =
-    userAnswers
-      .get(UploadSupportingDocumentPage) match {
-      case Some(uploadedFiles) if uploadedFiles.files.nonEmpty =>
-        Some(SupportingDocumentsRows(uploadedFiles, link, mode, draftId))
-      case _                                                   => None
-    }
-
-  private def redirectToUpdateDocument(mode: Mode, draftId: DraftId) =
-    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(mode, draftId)))
-
-  private def validateFromRequest(form: Form[Boolean])(implicit
-    request: DataRequest[AnyContent]
-  ): Form[Boolean] = {
-    val docCount = UploadSupportingDocumentPage.get().map(_.files.size).getOrElse(0)
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => formWithErrors,
-        value =>
-          if (value && docCount >= config.maximumFilesAllowed) {
-            form
-              .fill(value)
-              .withError(
-                "value",
-                "uploadAnotherSupportingDocument.error.fileCount",
-                config.maximumFilesAllowed
-              )
-          } else {
-            form.fill(value)
-          }
-      )
-  }
+  def onSubmit(mode: Mode): Action[AnyContent] = ???
+//    (identify andThen getData andThen requireData).async {
+//      implicit request =>
+//        validateFromRequest(form)
+//          .fold(
+//            formWithErrors =>
+//              makeDocumentRows(request.userAnswers, mode) match {
+//                case Some(table) =>
+//                  Future.successful(BadRequest(view(table, formWithErrors, mode)))
+//                case None        => redirectToUpdateDocument(mode)
+//              },
+//            value =>
+//              for {
+//                answers <- UploadAnotherSupportingDocumentPage.set(value)
+//                _       <- sessionRepository.set(answers)
+//              } yield Redirect(
+//                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)(
+//                  request.affinityGroup
+//                )
+//              )
+//          )
+//    }
+//
+//  private def makeDocumentRows(userAnswers: UserAnswers, mode: Mode, draftId: DraftId)(implicit
+//    messages: Messages
+//  ) =
+//    userAnswers
+//      .get(UploadSupportingDocumentPage) match {
+//      case Some(uploadedFiles) if uploadedFiles.files.nonEmpty =>
+//        Some(SupportingDocumentsRows(uploadedFiles, link, mode, draftId))
+//      case _                                                   => None
+//    }
+//
+//  private def redirectToUpdateDocument(mode: Mode, draftId: DraftId) =
+//    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(mode, draftId)))
+//
+//  private def validateFromRequest(form: Form[Boolean])(implicit
+//    request: DataRequest[AnyContent]
+//  ): Form[Boolean] = {
+//    val docCount = UploadSupportingDocumentPage.get().map(_.files.size).getOrElse(0)
+//    form
+//      .bindFromRequest()
+//      .fold(
+//        formWithErrors => formWithErrors,
+//        value =>
+//          if (value && docCount >= config.maximumFilesAllowed) {
+//            form
+//              .fill(value)
+//              .withError(
+//                "value",
+//                "uploadAnotherSupportingDocument.error.fileCount",
+//                config.maximumFilesAllowed
+//              )
+//          } else {
+//            form.fill(value)
+//          }
+//      )
+//  }
 }

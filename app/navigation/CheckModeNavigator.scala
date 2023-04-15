@@ -24,6 +24,7 @@ import models._
 import models.CheckMode
 import models.ValuationMethod._
 import pages._
+import queries.AllDocuments
 
 object CheckModeNavigator {
   import controllers._
@@ -124,7 +125,7 @@ object CheckModeNavigator {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
         controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, CheckMode, userAnswers.draftId)
+          .onPageLoad(Index(0), CheckMode, userAnswers.draftId, None, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),
@@ -132,22 +133,22 @@ object CheckModeNavigator {
         )
     }
 
-  private def isThisFileConfidential(implicit
+  private def isThisFileConfidential(index: Index)(implicit
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
-  ): Call =
-    userAnswers.get(UploadSupportingDocumentPage) match {
-      case None                => doYouWantToUploadDocuments(userAnswers, affinityGroup)
-      case Some(uploadedFiles) =>
-        uploadedFiles match {
-          case UploadedFiles(Some(_), _)                    =>
-            IsThisFileConfidentialController.onPageLoad(CheckMode, userAnswers.draftId)
-          case UploadedFiles(None, files) if files.nonEmpty =>
-            UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
-          case UploadedFiles(None, _)                       =>
-            DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
-        }
-    }
+  ): Call = ???
+//    userAnswers.get(UploadSupportingDocumentPage) match {
+//      case None                => doYouWantToUploadDocuments(userAnswers, affinityGroup)
+//      case Some(uploadedFiles) =>
+//        uploadedFiles match {
+//          case UploadedFiles(Some(_), _)                    =>
+//            IsThisFileConfidentialController.onPageLoad(CheckMode, userAnswers.draftId)
+//          case UploadedFiles(None, files) if files.nonEmpty =>
+//            UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
+//          case UploadedFiles(None, _)                       =>
+//            DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
+//        }
+//    }
 
   private def uploadAnotherSupportingDocument(implicit
     userAnswers: UserAnswers,
@@ -157,13 +158,9 @@ object CheckModeNavigator {
       case None        =>
         UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
-        UploadSupportingDocumentsController.onPageLoad(
-          None,
-          None,
-          None,
-          CheckMode,
-          userAnswers.draftId
-        )
+        val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
+        UploadSupportingDocumentsController
+          .onPageLoad(Index(nextIndex), CheckMode, userAnswers.draftId, None, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),
@@ -438,7 +435,7 @@ object CheckModeNavigator {
       case HaveTheGoodsBeenSubjectToLegalChallengesPage => haveBeenSubjectToLegalChallenges
       case HasCommodityCodePage                         => hasCommodityCode
       case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments
-      case IsThisFileConfidentialPage                   => isThisFileConfidential
+      case IsThisFileConfidentialPage(index)            => isThisFileConfidential(index)
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument
       case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter
 

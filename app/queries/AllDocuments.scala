@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package models.fileupload
+package queries
+import play.api.libs.json.{__, JsPath, JsValue}
 
-case class UpscanFileReference(reference: String)
-
-case class UpscanInitiateResponse(
-  fileReference: UpscanFileReference,
-  postTarget: String,
-  formFields: Map[String, String]
-)
+case object AllDocuments extends Gettable[List[JsValue]] {
+  override def path: JsPath = __ \ "supportingDocuments"
+}

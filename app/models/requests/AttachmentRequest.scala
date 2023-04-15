@@ -20,7 +20,7 @@ import cats.data.{Validated, ValidatedNel}
 
 import play.api.libs.json.{Json, OFormat}
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import pages.{DoYouWantToUploadDocumentsPage, Page, UploadSupportingDocumentPage}
 
 final case class AttachmentRequest(
@@ -37,25 +37,26 @@ object AttachmentRequest {
   implicit lazy val format: OFormat[AttachmentRequest] = Json.format
 
   def apply(answers: UserAnswers): ValidatedNel[Page, Seq[AttachmentRequest]] =
-    answers
-      .validated(DoYouWantToUploadDocumentsPage)
-      .andThen {
-        case true =>
-          answers
-            .validated(UploadSupportingDocumentPage)
-            .map(_.files.toSeq.map {
-              case (_, file) =>
-                AttachmentRequest(
-                  name = file.fileName,
-                  description = None,
-                  url = file.downloadUrl,
-                  privacy = if (file.isConfidential) Privacy.Confidential else Privacy.Public,
-                  mimeType = file.mimeType,
-                  size = file.size
-                )
-            })
-
-        case false =>
-          Validated.Valid(Nil)
-      }
+    Validated.Valid(Nil)
+//    answers
+//      .validated(DoYouWantToUploadDocumentsPage)
+//      .andThen {
+//        case true =>
+//          answers
+//            .validated(UploadSupportingDocumentPage(Index(0))) // TODO fix
+//            .map(_.files.toSeq.map {
+//              case (_, file) =>
+//                AttachmentRequest(
+//                  name = file.fileName,
+//                  description = None,
+//                  url = file.downloadUrl,
+//                  privacy = if (file.isConfidential) Privacy.Confidential else Privacy.Public,
+//                  mimeType = file.mimeType,
+//                  size = file.size
+//                )
+//            })
+//
+//        case false =>
+//          Validated.Valid(Nil)
+//      }
 }

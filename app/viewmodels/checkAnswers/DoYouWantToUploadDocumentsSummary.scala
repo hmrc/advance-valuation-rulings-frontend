@@ -52,38 +52,38 @@ object DoYouWantToUploadDocumentsSummary {
 
 object UploadedDocumentsSummary {
 
-  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    userAnswers
-      .get(UploadSupportingDocumentPage)
-      .map(_.files.map(_._2.fileName).toSeq)
-      .flatMap {
-        fileNames =>
-          if (fileNames.isEmpty) {
-            None
-          } else {
-            Some(
-              SummaryListRowViewModel(
-                key = "uploadSupportingDocuments.checkYourAnswersLabel",
-                value = ValueViewModel(
-                  HtmlContent(
-                    Html(
-                      fileNames
-                        .map(fileName => Html(s"${HtmlFormat.escape(fileName).body}<br>"))
-                        .mkString
-                    )
-                  )
-                ),
-                actions = Seq(
-                  ActionItemViewModel(
-                    "site.change",
-                    routes.UploadAnotherSupportingDocumentController
-                      .onPageLoad(CheckMode, userAnswers.draftId)
-                      .url
-                  )
-                    .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
-                )
-              )
-            )
-          }
-      }
+  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] = None
+//    userAnswers
+//      .get(UploadSupportingDocumentPage)
+//      .map(_.files.map(_._2.fileName).toSeq)
+//      .flatMap {
+//        fileNames =>
+//          if (fileNames.isEmpty) {
+//            None
+//          } else {
+//            Some(
+//              SummaryListRowViewModel(
+//                key = "uploadSupportingDocuments.checkYourAnswersLabel",
+//                value = ValueViewModel(
+//                  HtmlContent(
+//                    Html(
+//                      fileNames
+//                        .map(fileName => Html(s"${HtmlFormat.escape(fileName).body}<br>"))
+//                        .mkString
+//                    )
+//                  )
+//                ),
+//                actions = Seq(
+//                  ActionItemViewModel(
+//                    "site.change",
+//                    routes.UploadAnotherSupportingDocumentController
+//                      .onPageLoad(CheckMode, userAnswers.draftId)
+//                      .url
+//                  )
+//                    .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+//                )
+//              )
+//            )
+//          }
+//      }
 }

@@ -6,7 +6,7 @@ GET        /admin/metrics                               @com.kenshoo.play.metric
 
 # upload file notification callback
 + nocsrf
-POST       /upscan-callback                             controllers.callback.UploadCallbackController.callback
+POST       /upscan-callback/:internalId/:index          controllers.callback.UploadCallbackController.callback(internalId, index: Index)
 
 + nocsrf
 GET        /attachments/*location                       controllers.callback.AttachmentsController.get(location)

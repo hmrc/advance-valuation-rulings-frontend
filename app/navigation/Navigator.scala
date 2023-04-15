@@ -28,6 +28,7 @@ import models._
 import models.ValuationMethod._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
+import queries.AllDocuments
 
 class Navigator @Inject() () {
 
@@ -60,7 +61,7 @@ class Navigator @Inject() () {
     case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
-    case IsThisFileConfidentialPage                       => isThisFileConfidentialPage
+    case IsThisFileConfidentialPage(index)                => isThisFileConfidentialPage(index)
     case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
     case WhyComputedValuePage                             => whyComputedValuePage
     case ExplainReasonComputedValuePage                   => explainReasonComputedValuePage
@@ -360,7 +361,7 @@ class Navigator @Inject() () {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, NormalMode, userAnswers.draftId)
+          .onPageLoad(Index(0), NormalMode, userAnswers.draftId, None, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),
@@ -368,21 +369,21 @@ class Navigator @Inject() () {
         )
     }
 
-  private def isThisFileConfidentialPage(
+  private def isThisFileConfidentialPage(index: Index)(
     userAnswers: UserAnswers
-  )(implicit affinityGroup: AffinityGroup): Call =
-    userAnswers.get(UploadSupportingDocumentPage) match {
-      case None                => doYouWantToUploadDocumentsPage(userAnswers)
-      case Some(uploadedFiles) =>
-        uploadedFiles match {
-          case UploadedFiles(Some(_), _)                    =>
-            IsThisFileConfidentialController.onPageLoad(NormalMode, userAnswers.draftId)
-          case UploadedFiles(None, files) if files.nonEmpty =>
-            UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
-          case UploadedFiles(None, _)                       =>
-            DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
-        }
-    }
+  )(implicit affinityGroup: AffinityGroup): Call = ???
+//    userAnswers.get(UploadSupportingDocumentPage) match {
+//      case None                => doYouWantToUploadDocumentsPage(userAnswers)
+//      case Some(uploadedFiles) =>
+//        uploadedFiles match {
+//          case UploadedFiles(Some(_), _)                    =>
+//            IsThisFileConfidentialController.onPageLoad(NormalMode, userAnswers.draftId)
+//          case UploadedFiles(None, files) if files.nonEmpty =>
+//            UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
+//          case UploadedFiles(None, _)                       =>
+//            DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+//        }
+//    }
 
   private def uploadAnotherSupportingDocumentPage(
     userAnswers: UserAnswers
@@ -391,8 +392,9 @@ class Navigator @Inject() () {
       case None        =>
         UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
+        val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
         UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, NormalMode, userAnswers.draftId)
+          .onPageLoad(Index(nextIndex), NormalMode, userAnswers.draftId, None, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),

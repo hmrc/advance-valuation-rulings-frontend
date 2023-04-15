@@ -18,20 +18,16 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import config.FrontendAppConfig
+import _root_.config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models._
-import models.fileupload._
-import models.requests.DataRequest
-import pages.UploadSupportingDocumentPage
 import services.UserAnswersService
-import services.fileupload.FileUploadService
 import views.html.UploadSupportingDocumentsView
 
 @Singleton
@@ -42,7 +38,6 @@ class UploadSupportingDocumentsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  fileUploadService: FileUploadService,
   uploadSupportingDocumentsView: UploadSupportingDocumentsView
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendBaseController
@@ -50,120 +45,122 @@ class UploadSupportingDocumentsController @Inject() (
   private val logger = play.api.Logger(this.getClass)
 
   def onPageLoad(
+    index: Index,
+    mode: Mode,
+    draftId: DraftId,
     error: Option[String],
     key: Option[String],
-    uploadId: Option[UploadId],
-    mode: Mode,
-    draftId: DraftId
-  ): Action[AnyContent] = (identify andThen getData(draftId) andThen requireData).async {
-    implicit request: DataRequest[AnyContent] =>
-      val statusFromCode = error.flatMap(UploadStatus.fromErrorCode)
-      uploadId match {
-        case None =>
-          for {
-            result <- fileUploadService.initiateUpload(mode, draftId)
-            status  = if (result.uploadStatus == NotStarted) statusFromCode.getOrElse(NotStarted)
-                      else result.uploadStatus
-
-          } yield Ok(
-            uploadSupportingDocumentsView(
-              result.upscanResponse,
-              result.redirectFileId,
-              status,
-              draftId
-            )
-          )
-
-        case Some(existingFileId) =>
-          val fileUploadIds = FileUploadIds.fromExistingUploadId(existingFileId)
-          for {
-            uploadResult <- fileUploadService.getUploadStatus(existingFileId)
-            result       <- uploadResult match {
-                              case None                               =>
-                                Future(
-                                  BadRequest(s"Upload with id $uploadId not found")
-                                ) // TODO: NICK: This needs to return the view...
-                              case Some(status: UploadedSuccessfully) =>
-                                checkForDuplicateUploads(mode, existingFileId, status, draftId)
-                              case Some(result)                       =>
-                                showUploadForm(fileUploadIds, result, mode, draftId)
-                            }
-          } yield result
-      }
-  }
-
-  private def checkForDuplicateUploads(
-    mode: Mode,
-    existingFileId: UploadId,
-    status: UploadedSuccessfully,
-    draftId: DraftId
-  )(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    val uploadedFiles = UploadSupportingDocumentPage.get().toSet
-    val fileNames     = uploadedFiles.flatMap(_.files.values.map(_.fileName))
-    if (fileNames.contains(status.name)) {
-      fileUploadService
-        .initiateUpload(mode, draftId)
-        .map {
-          result =>
-            Ok(
-              uploadSupportingDocumentsView(
-                result.upscanResponse,
-                existingFileId,
-                DuplicateFile,
-                draftId
-              )
-            )
-        }
-    } else {
-      continueToIsFileConfidential(existingFileId, status, mode, draftId)(request)
-    }
-  }
-
-  private def continueToIsFileConfidential(
-    uploadId: UploadId,
-    uploadDetails: UploadedSuccessfully,
-    mode: Mode,
-    draftId: DraftId
-  ): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val payload = UpscanFileDetails(
-          uploadId,
-          uploadDetails.name,
-          uploadDetails.downloadUrl,
-          uploadDetails.mimeType,
-          uploadDetails.size.getOrElse(0L)
-        )
-
-        for {
-          answers <-
-            UploadSupportingDocumentPage.upsert(
-              (uploadedFiles: UploadedFiles) => uploadedFiles.addFile(payload),
-              UploadedFiles.initialise(payload)
-            )
-          _       <- userAnswersService.set(answers)
-          _        = logger.info(s"Uploaded file added to session repo uploadId: $uploadId")
-        } yield Redirect(
-          controllers.routes.IsThisFileConfidentialController.onPageLoad(mode, draftId)
-        )
-    }
-
-  private def showUploadForm(
-    fileUploadIds: FileUploadIds,
-    result: UploadStatus,
-    mode: Mode,
-    draftId: DraftId
-  )(implicit
-    request: DataRequest[AnyContent]
-  ) =
-    for {
-      response <- fileUploadService.initiateWithExisting(fileUploadIds, mode, draftId)
-    } yield Ok(
-      uploadSupportingDocumentsView(
-        response.upscanResponse,
-        response.redirectFileId,
-        result,
-        draftId
-      )
-    )
+    uploadId: Option[String]
+  ): Action[AnyContent] = ???
+//    (identify andThen getData(draftId) andThen requireData).async {
+//    implicit request: DataRequest[AnyContent] =>
+//      val statusFromCode = error.flatMap(UploadStatus.fromErrorCode)
+//      uploadId match {
+//        case None =>
+//          for {
+//            result <- fileUploadService.initiateUpload(mode, draftId)
+//            status  = if (result.uploadStatus == NotStarted) statusFromCode.getOrElse(NotStarted)
+//                      else result.uploadStatus
+//
+//          } yield Ok(
+//            uploadSupportingDocumentsView(
+//              result.upscanResponse,
+//              result.redirectFileId,
+//              status,
+//              draftId
+//            )
+//          )
+//
+//        case Some(existingFileId) =>
+//          val fileUploadIds = FileUploadIds.fromExistingUploadId(existingFileId)
+//          for {
+//            uploadResult <- fileUploadService.getUploadStatus(existingFileId)
+//            result       <- uploadResult match {
+//                              case None                               =>
+//                                Future(
+//                                  BadRequest(s"Upload with id $uploadId not found")
+//                                ) // TODO: NICK: This needs to return the view...
+//                              case Some(status: UploadedSuccessfully) =>
+//                                checkForDuplicateUploads(mode, existingFileId, status, draftId)
+//                              case Some(result)                       =>
+//                                showUploadForm(fileUploadIds, result, mode, draftId)
+//                            }
+//          } yield result
+//      }
+//  }
+//
+//  private def checkForDuplicateUploads(
+//    mode: Mode,
+//    existingFileId: UploadId,
+//    status: UploadedSuccessfully,
+//    draftId: DraftId
+//  )(implicit request: DataRequest[AnyContent]): Future[Result] = {
+//    val uploadedFiles = UploadSupportingDocumentPage.get().toSet
+//    val fileNames     = uploadedFiles.flatMap(_.files.values.map(_.fileName))
+//    if (fileNames.contains(status.name)) {
+//      fileUploadService
+//        .initiateUpload(mode, draftId)
+//        .map {
+//          result =>
+//            Ok(
+//              uploadSupportingDocumentsView(
+//                result.upscanResponse,
+//                existingFileId,
+//                DuplicateFile,
+//                draftId
+//              )
+//            )
+//        }
+//    } else {
+//      continueToIsFileConfidential(existingFileId, status, mode, draftId)(request)
+//    }
+//  }
+//
+//  private def continueToIsFileConfidential(
+//    uploadId: UploadId,
+//    uploadDetails: UploadedSuccessfully,
+//    mode: Mode,
+//    draftId: DraftId
+//  ): Action[AnyContent] =
+//    (identify andThen getData(draftId) andThen requireData).async {
+//      implicit request =>
+//        val payload = UpscanFileDetails(
+//          uploadId,
+//          uploadDetails.name,
+//          uploadDetails.downloadUrl,
+//          uploadDetails.mimeType,
+//          uploadDetails.size.getOrElse(0L)
+//        )
+//
+//        for {
+//          answers <-
+//            UploadSupportingDocumentPage.upsert(
+//              (uploadedFiles: UploadedFiles) => uploadedFiles.addFile(payload),
+//              UploadedFiles.initialise(payload)
+//            )
+//          _       <- userAnswersService.set(answers)
+//          _        = logger.info(s"Uploaded file added to session repo uploadId: $uploadId")
+//        } yield Redirect(
+//          controllers.routes.IsThisFileConfidentialController.onPageLoad(mode, draftId)
+//        )
+//    }
+//
+//  private def showUploadForm(
+//    fileUploadIds: FileUploadIds,
+//    result: UploadStatus,
+//    mode: Mode,
+//    draftId: DraftId
+//  )(implicit
+//    request: DataRequest[AnyContent]
+//  ) =
+//    for {
+//      response <- fileUploadService.initiateWithExisting(fileUploadIds, mode, draftId)
+//    } yield Ok(
+//      uploadSupportingDocumentsView(
+//        response.upscanResponse,
+//        response.redirectFileId,
+//        result,
+//        draftId
+//      )
+//    )
 }
