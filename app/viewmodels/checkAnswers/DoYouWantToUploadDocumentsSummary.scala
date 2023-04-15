@@ -16,8 +16,6 @@
 
 package viewmodels.checkAnswers
 
-import cats.syntax.all._
-
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
@@ -25,7 +23,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models._
-import models.requests.Application
 import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -53,9 +50,6 @@ object DoYouWantToUploadDocumentsSummary {
     userAnswers
       .get(DoYouWantToUploadDocumentsPage)
       .map(makeRow)
-
-  def row(application: Application)(implicit messages: Messages): Option[SummaryListRow] =
-    makeRow(application.attachments.nonEmpty).some
 }
 
 object UploadedDocumentsSummary {
@@ -90,7 +84,4 @@ object UploadedDocumentsSummary {
       .get(UploadSupportingDocumentPage)
       .map(_.files.map(_._2.fileName).toSeq)
       .flatMap(makeRow)
-
-  def row(application: Application)(implicit messages: Messages): Option[SummaryListRow] =
-    makeRow(application.attachments.map(_.name))
 }

@@ -19,9 +19,7 @@ package controllers
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
-import scala.util.control.NonFatal
 
-import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -29,22 +27,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
-import viewmodels.checkAnswers.summary.ApplicationCompleteSummary
+import viewmodels.ApplicationViewModel
 import views.html.ApplicationCompleteView
 
 class ApplicationCompleteController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
   view: ApplicationCompleteView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
-
-  private val logger = Logger(this.getClass)
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
     identify.async {
@@ -54,13 +48,8 @@ class ApplicationCompleteController @Inject() (
           .map {
             application =>
               val isIndividual = request.affinityGroup == AffinityGroup.Individual
-              val summary      = ApplicationCompleteSummary(application, request.affinityGroup)
-              Ok(view(isIndividual, application.id.toString, application.contact.email, summary))
-          }
-          .recover {
-            case NonFatal(ex) =>
-              logger.error(s"Failed to get application [$applicationId] from backend", ex)
-              Redirect(routes.JourneyRecoveryController.onPageLoad())
+              val viewModel    = ApplicationViewModel(application)
+              Ok(view(isIndividual, application.id.toString, application.contact.email, viewModel))
           }
     }
 }

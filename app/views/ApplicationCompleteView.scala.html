@@ -17,6 +17,7 @@
  @import components._
  @import config.FrontendAppConfig
  @import viewmodels.checkAnswers.summary._
+@import viewmodels.ApplicationViewModel
 
 @this(
     layout: templates.Layout,
@@ -38,7 +39,8 @@
 
 )
 
-@(isIndividual: Boolean, applicationId: String, email: String, applicationSummary: ApplicationCompleteSummary)(implicit request: Request[_], messages: Messages)
+
+ @(isIndividual: Boolean, applicationId: String, email: String, applicationViewModel: ApplicationViewModel)(implicit request: Request[_], messages: Messages)
 
 @guideLink = {
     @link(
@@ -121,18 +123,18 @@ advanceValuationRulingServiceEmailLink)
     
     @if(isIndividual) {
         @subheading(messages("applicationComplete.applicant.heading"))
-        @govukSummaryList(applicationSummary.eoriDetails.rows)
-        @govukSummaryList(applicationSummary.applicant.rows)
+        @govukSummaryList(applicationViewModel.eori)
+        @govukSummaryList(applicationViewModel.applicant)
     } else {
         @subheading(messages("applicationComplete.company.heading"))
-        @govukSummaryList(applicationSummary.eoriDetails.rows)
+        @govukSummaryList(applicationViewModel.eori)
 
         @subheading(messages("applicationComplete.agent.heading"))
-        @govukSummaryList(applicationSummary.applicant.rows)
+        @govukSummaryList(applicationViewModel.applicant)
     }
 
     @subheading(messages("applicationComplete.goods.heading"))
 
-    @govukSummaryList(applicationSummary.method.rows)
-    @govukSummaryList(applicationSummary.details.rows)
+    @govukSummaryList(applicationViewModel.method)
+    @govukSummaryList(applicationViewModel.details)
 }

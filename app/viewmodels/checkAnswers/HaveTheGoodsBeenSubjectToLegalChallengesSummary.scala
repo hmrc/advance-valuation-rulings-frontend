@@ -15,14 +15,11 @@
  */
 
 package viewmodels.checkAnswers
-import cats.implicits._
-
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import models.requests.{Application, ApplicationRequest}
 import pages.HaveTheGoodsBeenSubjectToLegalChallengesPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -51,9 +48,4 @@ object HaveTheGoodsBeenSubjectToLegalChallengesSummary {
     messages: Messages
   ): Option[SummaryListRow] =
     answers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage).map(makeRow)
-
-  def row(application: Application)(implicit
-    messages: Messages
-  ): Option[SummaryListRow] =
-    makeRow(application.goodsDetails.knownLegalProceedings.isDefined).some
 }

@@ -23,7 +23,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, CheckRegisteredDetails, EoriNumber, UserAnswers}
-import models.requests._
 import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -89,12 +88,6 @@ object CheckRegisteredDetailsSummary {
       contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
       number          = registeredNumberRow(EoriNumber(contactDetails.eori))
     } yield number +: getPersonalDetails(contactDetails)
-
-  def rows(
-    application: Application
-  )(implicit messages: Messages): Seq[SummaryListRow] = Seq(
-    registeredNumberRow(EoriNumber(application.trader.eori))
-  )
 
   private def getPersonalDetails(
     registeredDetails: CheckRegisteredDetails

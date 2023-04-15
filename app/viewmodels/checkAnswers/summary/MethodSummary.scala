@@ -19,9 +19,8 @@ package viewmodels.checkAnswers.summary
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
-import models.{AdaptMethod, UserAnswers, ValuationMethod}
+import models.UserAnswers
 import models.ValuationMethod.{Method1, Method2, Method3, Method4, Method5, Method6}
-import models.requests._
 import pages._
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
@@ -75,37 +74,6 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows ++ restrictionsRows ++ conditionsRows))
   }
 
-  protected def methodOne(method: MethodOne)(implicit messages: Messages): MethodSummary = {
-    val valuationMethod = toValuationMethod(method)
-
-    val conditionsRows = method.goodsRestrictions match {
-      case Some(answer) =>
-        Seq(
-          IsTheSaleSubjectToConditionsSummary.row(true),
-          DescribeTheConditionsSummary.row(answer)
-        )
-      case None         => Seq(IsTheSaleSubjectToConditionsSummary.row(false))
-    }
-
-    val restrictionsRows = method.goodsRestrictions match {
-      case Some(answer) =>
-        Seq(
-          AreThereRestrictionsOnTheGoodsSummary.row(true),
-          DescribeTheRestrictionsSummary.row(answer)
-        )
-      case None         => Seq(AreThereRestrictionsOnTheGoodsSummary.row(false))
-    }
-
-    val rows = Seq(
-      ValuationMethodSummary.row(valuationMethod),
-      IsThereASaleInvolvedSummary.row(true),
-      IsSaleBetweenRelatedPartiesSummary.row(method.saleBetweenRelatedParties.isDefined),
-      ExplainHowPartiesAreRelatedSummary.row(method.saleBetweenRelatedParties.getOrElse(""))
-    )
-
-    MethodSummary(SummaryListViewModel(rows ++ restrictionsRows ++ conditionsRows))
-  }
-
   protected def methodTwo(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
     val identicalGoodsRows =
       Seq(
@@ -119,19 +87,6 @@ object MethodSummary {
     ).flatten
 
     MethodSummary(SummaryListViewModel(rows ++ identicalGoodsRows))
-  }
-
-  protected def methodTwo(method: MethodTwo)(implicit messages: Messages): MethodSummary = {
-    val valuationMethod = toValuationMethod(method)
-
-    val rows = Seq(
-      ValuationMethodSummary.row(valuationMethod),
-      WhyIdenticalGoodsSummary.row(method.whyNotOtherMethods),
-      HaveYouUsedMethodOneInPastSummary.row(true),
-      DescribeTheIdenticalGoodsSummary.row(method.previousIdenticalGoods.value)
-    )
-
-    MethodSummary(SummaryListViewModel(rows))
   }
 
   protected def methodThree(
@@ -153,24 +108,6 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows))
   }
 
-  protected def methodThree(
-    method: MethodThree
-  )(implicit messages: Messages): MethodSummary = {
-
-    val valuationMethod = toValuationMethod(method)
-    val methodRow       = ValuationMethodSummary.row(valuationMethod)
-
-    val rows =
-      Seq(
-        methodRow,
-        WhyTransactionValueOfSimilarGoodsSummary.row(method.whyNotOtherMethods),
-        HaveYouUsedMethodOneForSimilarGoodsInPastSummary.row(true),
-        DescribeTheSimilarGoodsSummary.row(method.previousSimilarGoods.value)
-      )
-
-    MethodSummary(SummaryListViewModel(rows))
-  }
-
   protected def methodFour(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
 
     val rows = Seq(
@@ -182,34 +119,12 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows))
   }
 
-  protected def methodFour(method: MethodFour)(implicit messages: Messages): MethodSummary = {
-    val valuationMethod = toValuationMethod(method)
-    val rows            = Seq(
-      ValuationMethodSummary.row(valuationMethod),
-      ExplainWhyYouHaveNotSelectedMethodOneToThreeSummary.row(method.whyNotOtherMethods),
-      ExplainWhyYouChoseMethodFourSummary.row(method.deductiveMethod)
-    )
-
-    MethodSummary(SummaryListViewModel(rows))
-  }
-
   protected def methodFive(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
     val rows = Seq(
       ValuationMethodSummary.row(userAnswers),
       WhyComputedValueSummary.row(userAnswers),
       ExplainReasonComputedValueSummary.row(userAnswers)
     ).flatten
-
-    MethodSummary(SummaryListViewModel(rows))
-  }
-
-  protected def methodFive(method: MethodFive)(implicit messages: Messages): MethodSummary = {
-    val valuationMethod = toValuationMethod(method)
-    val rows            = Seq(
-      ValuationMethodSummary.row(valuationMethod),
-      WhyComputedValueSummary.row(method.whyNotOtherMethods),
-      ExplainReasonComputedValueSummary.row(method.computedValue)
-    )
 
     MethodSummary(SummaryListViewModel(rows))
   }
@@ -225,45 +140,4 @@ object MethodSummary {
 
     MethodSummary(SummaryListViewModel(rows))
   }
-
-  private def toValuationMethod(method: RequestedMethod): ValuationMethod = method match {
-    case _: MethodOne   => Method1
-    case _: MethodTwo   => Method2
-    case _: MethodThree => Method3
-    case _: MethodFour  => Method4
-    case _: MethodFive  => Method5
-    case _: MethodSix   => Method6
-  }
-
-  protected def methodSix(method: MethodSix)(implicit messages: Messages): MethodSummary = {
-    val adaptedMethod = method.adaptedMethod match {
-      case AdaptedMethod.MethodOne   => AdaptMethod.Method1
-      case AdaptedMethod.MethodTwo   => AdaptMethod.Method2
-      case AdaptedMethod.MethodThree => AdaptMethod.Method3
-      case AdaptedMethod.MethodFive  => AdaptMethod.Method5
-      case AdaptedMethod.MethodFour  => AdaptMethod.Method4
-      case AdaptedMethod.Unable      => AdaptMethod.NoOtherMethod
-    }
-
-    val valuationMethod = toValuationMethod(method)
-
-    val rows = Seq(
-      ValuationMethodSummary.row(valuationMethod),
-      ExplainWhyYouHaveNotSelectedMethodOneToFiveSummary.row(method.whyNotOtherMethods),
-      AdaptMethodSummary.row(adaptedMethod),
-      ExplainHowYouWillUseMethodSixSummary.row(method.valuationDescription)
-    )
-
-    MethodSummary(SummaryListViewModel(rows))
-  }
-
-  def apply(application: Application)(implicit messages: Messages): MethodSummary =
-    application.requestedMethod match {
-      case method: MethodOne   => methodOne(method)
-      case method: MethodTwo   => methodTwo(method)
-      case method: MethodThree => methodThree(method)
-      case method: MethodFour  => methodFour(method)
-      case method: MethodFive  => methodFive(method)
-      case method: MethodSix   => methodSix(method)
-    }
 }

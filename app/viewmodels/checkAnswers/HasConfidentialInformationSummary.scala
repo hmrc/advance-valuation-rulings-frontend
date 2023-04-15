@@ -16,14 +16,11 @@
 
 package viewmodels.checkAnswers
 
-import cats.implicits._
-
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import models.requests.Application
 import pages.HasConfidentialInformationPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -50,7 +47,4 @@ object HasConfidentialInformationSummary {
     userAnswers
       .get(HasConfidentialInformationPage)
       .map(makeRow)
-
-  def row(application: Application)(implicit messages: Messages): Option[SummaryListRow] =
-    makeRow(application.goodsDetails.confidentialInformation.isDefined).some
 }

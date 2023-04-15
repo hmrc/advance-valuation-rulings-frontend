@@ -14,37 +14,36 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.application
 
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.CommodityCodePage
+import models.requests.ContactDetails
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object CommodityCodeSummary {
+object ContactDetailsSummary {
 
-  private def makeRow(answer: String)(implicit
-    messages: Messages
-  ) =
-    SummaryListRowViewModel(
-      key = "commodityCode.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(answer).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.CommodityCodeController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("commodityCode.change.hidden"))
+  def rows(contact: ContactDetails)(implicit messages: Messages): Seq[SummaryListRow] = Seq(
+    Some(
+      SummaryListRowViewModel(
+        key = "checkYourAnswers.applicant.name.label",
+        value = ValueViewModel(contact.name)
       )
-    )
-
-  def row(answers: UserAnswers)(implicit
-    messages: Messages
-  ): Option[SummaryListRow] =
-    answers.get(CommodityCodePage).map(makeRow)
+    ),
+    Some(
+      SummaryListRowViewModel(
+        key = "checkYourAnswers.applicant.email.label",
+        value = ValueViewModel(contact.email)
+      )
+    ),
+    contact.phone.map {
+      phone =>
+        SummaryListRowViewModel(
+          key = "checkYourAnswers.applicant.phone.label",
+          value = ValueViewModel(phone)
+        )
+    }
+  ).flatten
 }
