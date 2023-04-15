@@ -88,12 +88,3 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
     }
   }
 }
-
-/*
-name: String,
-description: Option[String],
-url: String,
-privacy: Privacy,
-mimeType: String,
-size: Long
- */
