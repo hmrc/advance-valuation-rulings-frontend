@@ -14,33 +14,20 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers
+package viewmodels.application
 
+import models.requests.TraderDetail
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
-import controllers.routes
-import models.{CheckMode, UserAnswers}
-import pages.ConfidentialInformationPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ConfidentialInformationSummary {
+object RegisteredDetailsSummary {
 
-  private def makeRow(answer: String)(implicit messages: Messages) =
+  def rows(trader: TraderDetail)(implicit messages: Messages): Seq[SummaryListRow] = Seq(
     SummaryListRowViewModel(
-      key = "confidentialInformation.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(answer).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.ConfidentialInformationController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("confidentialInformation.change.hidden"))
-      )
+      key = "checkYourAnswers.eori.number.label",
+      value = ValueViewModel(trader.eori),
     )
-
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ConfidentialInformationPage).map(makeRow)
+  )
 }

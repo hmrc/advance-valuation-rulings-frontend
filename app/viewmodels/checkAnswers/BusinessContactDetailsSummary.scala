@@ -22,7 +22,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{BusinessContactDetails, CheckMode, UserAnswers}
-import models.requests._
 import pages.BusinessContactDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -80,19 +79,4 @@ object BusinessContactDetailsSummary {
       contactNumber   = contactNumberRow(contactDetails)
       result          = Seq(name, email, contactNumber)
     } yield result
-
-  def rows(
-    contactDetails: ContactDetails
-  )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val businessContactDetails = BusinessContactDetails(
-      contactDetails.name,
-      contactDetails.email,
-      contactDetails.phone.getOrElse("")
-    )
-    Seq(
-      nameRow(businessContactDetails),
-      emailRow(businessContactDetails),
-      contactNumberRow(businessContactDetails)
-    )
-  }
 }

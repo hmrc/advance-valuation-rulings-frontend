@@ -25,6 +25,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListR
 import base.SpecBase
 import generators.Generators
 import models._
+import models.ValuationMethod.Method3
 import models.requests._
 
 class ApplicationViewModelSpec extends SpecBase {
@@ -43,26 +44,26 @@ class ApplicationViewModelSpec extends SpecBase {
           Seq(
             SummaryListRow(
               Key(Text("checkYourAnswers.eori.number.label")),
-              Value(Text(randomString))
+              Value(Text(eoriDetails.eori))
             )
           )
         )
       }
 
-      "must create row for the applicant" in {
+      "must create rows for the applicant" in {
         result.applicant.rows must be(
           Seq(
             SummaryListRow(
               Key(Text("checkYourAnswers.applicant.name.label")),
-              Value(Text(randomString))
+              Value(Text(contact.name))
             ),
             SummaryListRow(
               Key(Text("checkYourAnswers.applicant.email.label")),
-              Value(Text(randomString))
+              Value(Text(contact.email))
             ),
             SummaryListRow(
               Key(Text("checkYourAnswers.applicant.phone.label")),
-              Value(Text(randomString))
+              Value(Text(contact.phone.get))
             ),
             SummaryListRow(
               Key(Text("viewApplication.dateSubmitted")),
@@ -71,41 +72,82 @@ class ApplicationViewModelSpec extends SpecBase {
           )
         )
       }
+
+      "must create rows for the goods" in {
+        result.details.rows mustBe Seq(
+          SummaryListRow(
+            Key(Text("descriptionOfGoods.checkYourAnswersLabel")),
+            Value(Text(goodsDetails.goodsName))
+          ),
+          SummaryListRow(
+            Key(Text("commodityCode.checkYourAnswersLabel")),
+            Value(Text(goodsDetails.envisagedCommodityCode.get))
+          ),
+          SummaryListRow(
+            Key(Text("describeTheLegalChallenges.checkYourAnswersLabel")),
+            Value(Text(goodsDetails.knownLegalProceedings.get))
+          ),
+          SummaryListRow(
+            Key(Text("confidentialInformation.checkYourAnswersLabel")),
+            Value(Text(goodsDetails.confidentialInformation.get))
+          )
+        )
+      }
+
+      "must create rows for the method" in {
+        result.method.rows mustBe Seq(
+          SummaryListRow(
+            Key(Text("valuationMethod.checkYourAnswersLabel")),
+            Value(Text(s"valuationMethod.${Method3.toString}"))
+          ),
+          SummaryListRow(
+            Key(Text("whyTransactionValueOfSimilarGoods.checkYourAnswersLabel")),
+            Value(Text(requestedMethod.whyNotOtherMethods))
+          ),
+          SummaryListRow(
+            Key(Text("haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel")),
+            Value(Text("site.yes"))
+          ),
+          SummaryListRow(
+            Key(Text("describeTheSimilarGoods.checkYourAnswersLabel")),
+            Value(Text(requestedMethod.previousSimilarGoods.value))
+          )
+        )
+      }
     }
   }
 }
 
 object ApplicationViewModelSpec extends Generators {
-  val randomString: String = stringsWithMaxLength(8).sample.get
 
   val eoriDetails = TraderDetail(
-    eori = randomString,
-    businessName = randomString,
-    addressLine1 = randomString,
-    addressLine2 = Some(randomString),
+    eori = "eori",
+    businessName = "business name",
+    addressLine1 = "address line 1",
+    addressLine2 = Some("address line 2"),
     addressLine3 = None,
-    postcode = randomString,
-    countryCode = randomString,
+    postcode = "postcode",
+    countryCode = "country code",
     phoneNumber = None
   )
 
   val contact = ContactDetails(
-    name = randomString,
-    email = randomString,
-    phone = Some(randomString)
+    name = "contact name",
+    email = "email@example.com",
+    phone = Some("phone")
   )
 
   val requestedMethod = MethodThree(
-    whyNotOtherMethods = randomString,
-    previousSimilarGoods = PreviousSimilarGoods(randomString)
+    whyNotOtherMethods = "method 3 why not",
+    previousSimilarGoods = PreviousSimilarGoods("previous similar goods")
   )
 
   val goodsDetails = GoodsDetails(
-    goodsName = randomString,
-    goodsDescription = randomString,
-    envisagedCommodityCode = Some(randomString),
-    knownLegalProceedings = Some(randomString),
-    confidentialInformation = Some(randomString)
+    goodsName = "goods name",
+    goodsDescription = "goods description",
+    envisagedCommodityCode = Some("commodity code"),
+    knownLegalProceedings = Some("legal"),
+    confidentialInformation = Some("confidential")
   )
 
   val lastUpdated        = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))

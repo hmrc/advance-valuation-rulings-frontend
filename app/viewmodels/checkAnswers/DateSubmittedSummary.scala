@@ -21,7 +21,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import models.requests._
@@ -38,6 +37,6 @@ object DateSubmittedSummary {
   def row(application: Application)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = "viewApplication.dateSubmitted",
-      value = ValueViewModel(HtmlFormat.escape(formatter.format(application.created)).toString)
+      value = ValueViewModel(formatter.format(application.created))
     )
 }
