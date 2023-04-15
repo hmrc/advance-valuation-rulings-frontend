@@ -22,7 +22,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, CheckRegisteredDetails, UserAnswers}
+import models.{CheckMode, CheckRegisteredDetails, EoriNumber, UserAnswers}
+import models.requests.Application
 import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -70,12 +71,12 @@ object CheckRegisteredDetailsForAgentsSummary {
       )
     )
 
-  private def registeredNumberRow(answer: CheckRegisteredDetails)(implicit
+  private def registeredNumberRow(eoriNumber: EoriNumber)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.business.eori.number.label",
-      value = ValueViewModel(HtmlFormat.escape(answer.eori).body),
+      value = ValueViewModel(HtmlFormat.escape(eoriNumber.value).body),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
@@ -88,7 +89,7 @@ object CheckRegisteredDetailsForAgentsSummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
-      number          = registeredNumberRow(contactDetails)
+      number          = registeredNumberRow(EoriNumber(contactDetails.eori))
     } yield {
       val personalDetails = if (contactDetails.consentToDisclosureOfPersonalData) {
         val name    = registeredNameRow(contactDetails)
@@ -99,4 +100,10 @@ object CheckRegisteredDetailsForAgentsSummary {
       }
       number +: personalDetails
     }
+
+  def rows(
+    application: Application
+  )(implicit messages: Messages): Seq[SummaryListRow] = Seq(
+    registeredNumberRow(EoriNumber(application.trader.eori))
+  )
 }
