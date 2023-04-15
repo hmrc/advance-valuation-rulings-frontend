@@ -25,7 +25,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup._
 import base.SpecBase
 import controllers.routes
 import models._
-import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.fileupload._
 import pages._
 import queries.Modifiable
@@ -412,14 +412,54 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "BusinessContactDetailsPage must" in {
+      "BusinessContactDetailsPage must" - {
         val userAnswers =
           userAnswersWith(
             BusinessContactDetailsPage,
             BusinessContactDetails("name", "email", "phone")
           )
+
+        "when Agent" - {
+          "navigate to AgentCompanyDetailsPage when Yes" in {
+            val ua = userAnswers
+              .set(WhatIsYourRoleAsImporterPage, value = AgentOnBehalfOfOrg)
+              .success
+              .value
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              ua
+            ) mustBe routes.AgentCompanyDetailsController.onPageLoad(mode = NormalMode)
+          }
+        }
+
+        "when an Employee" - {
+          "navigate to valuation method page" in {
+
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              userAnswers.set(WhatIsYourRoleAsImporterPage, value = EmployeeOfOrg).success.value
+            ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+          }
+        }
+      }
+
+      "AgentCompanyDetailsPage must" in {
+        val userAnswers =
+          userAnswersWith(
+            AgentCompanyDetailsPage,
+            AgentCompanyDetails(
+              "Eori",
+              "name",
+              "streetAndNumber",
+              "agentCity",
+              "AgentCountry",
+              Some("AB1 2CD")
+            )
+          )
         navigator.nextPage(
-          BusinessContactDetailsPage,
+          AgentCompanyDetailsPage,
           NormalMode,
           userAnswers
         ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)

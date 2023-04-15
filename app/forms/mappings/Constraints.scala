@@ -134,4 +134,25 @@ trait Constraints {
 
   protected def setEquals[A](expected: Set[_], errorKey: String): Constraint[Set[_]] =
     Constraint(set => if (set == expected) Valid else Invalid(errorKey))
+
+  private val postCodeMaxLength = 9
+
+  protected def optionalPostCodeMaxLength(errorKey: String): Constraint[Option[String]] =
+    optionalMaxLength(postCodeMaxLength, errorKey)
+
+  protected def optionalMaxLength(maximum: Int, errorKey: String): Constraint[Option[String]] =
+    Constraint {
+      case None                                       => Valid
+      case Some(str: String) if str.length <= maximum => Valid
+      case _                                          => Invalid(errorKey, maximum)
+    }
+
+  private val eoriCodeRegex = "^[a-zA-Z0-9]{1,17}"
+  private val eoriCodeError = "agentCompanyDetails.error.agentEori.format"
+
+  val eoriCodeConstraint: Constraint[String] = Constraint("constraints.eoriFormat") {
+    case s: String if s.isEmpty                => Valid
+    case s: String if s.matches(eoriCodeRegex) => Valid
+    case _: String                             => Invalid(eoriCodeError)
+  }
 }

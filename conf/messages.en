@@ -725,3 +725,34 @@ cancelAreYouSure.heading = Are you sure you want to cancel your application?
 cancelAreYouSure.return = Return to application
 cancelAreYouSure.button = Confirm
 cancelAreYouSure.inset.text = If you cancel now any data will be lost and you will need to make a new application.
+
+agentCompanyDetails.title = Your company’s contact details
+agentCompanyDetails.heading = Your company’s contact details
+agentCompanyDetails.agentEori = Your company’s registered EORI number
+agentCompanyDetails.agentCompanyName = Your company’s registered business name
+agentCompanyDetails.agentStreetAndNumber = Address line 1
+agentCompanyDetails.agentCity = Town or city
+agentCompanyDetails.agentCountry = Country
+agentCompanyDetails.agentPostalCode = Postcode
+
+agentCompanyDetails.checkYourAnswersLabel = agentCompanyDetails
+agentCompanyDetails.error.agentEori.required = Enter your company’s registered EORI number
+agentCompanyDetails.error.agentCompanyName.required = Enter your company’s registered business name
+agentCompanyDetails.error.agentStreetAndNumber.required = Enter address line 1
+agentCompanyDetails.error.agentCity.required = Enter the town or city
+agentCompanyDetails.error.agentCountry.required = Enter the country
+agentCompanyDetails.error.agentPostalCode.required = Enter the postcode
+
+agentCompanyDetails.error.agentEori.format = Enter an EORI number in the correct format
+
+agentCompanyDetails.error.agentCompanyName.length = Your company’s registered business name must be 50 characters or less
+agentCompanyDetails.error.agentStreetAndNumber.length = Address line 1 must be 70 characters or less
+agentCompanyDetails.error.agentCity.length = Town or city must be 35 characters or less
+agentCompanyDetails.error.agentCountry.length = Country must be 50 characters or less
+agentCompanyDetails.error.agentPostalCode.length = Postcode must be 9 characters or less
+agentCompanyDetails.agentEori.change.hidden = Your company’s registered EORI number
+agentCompanyDetails.agentCompanyName.change.hidden = Your company’s registered business name
+agentCompanyDetails.agentStreetAndNumber.change.hidden = Address line 1
+agentCompanyDetails.agentCity.change.hidden = Town or city
+agentCompanyDetails.agentCountry.change.hidden = Country
+agentCompanyDetails.agentPostalCode.change.hidden = Postcode

@@ -26,6 +26,7 @@ import controllers.routes._
 import controllers.routes.UploadSupportingDocumentsController
 import models._
 import models.ValuationMethod._
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 
 class Navigator @Inject() () {
@@ -53,6 +54,7 @@ class Navigator @Inject() () {
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
     case BusinessContactDetailsPage                       => businessContactDetailsPage
+    case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
     case IsThisFileConfidentialPage                       => isThisFileConfidentialPage
     case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
@@ -375,6 +377,19 @@ class Navigator @Inject() () {
   private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(BusinessContactDetailsPage) match {
       case None    => BusinessContactDetailsController.onPageLoad(NormalMode)
+      case Some(_) => agentContactDetailsNavigation(userAnswers)
+    }
+
+  private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+      case Some(EmployeeOfOrg)      => ValuationMethodController.onPageLoad(NormalMode)
+      case Some(AgentOnBehalfOfOrg) => AgentCompanyDetailsController.onPageLoad(NormalMode)
+      case _                        => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
+    }
+
+  private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(AgentCompanyDetailsPage) match {
+      case None    => AgentCompanyDetailsController.onPageLoad(NormalMode)
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
     }
 

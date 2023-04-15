@@ -151,4 +151,5 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       errorMessage mustEqual invalidKey
     }
   }
+
 }

@@ -240,3 +240,8 @@ GET        /business-contact-details                        controllers.Business
 POST       /business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode)
 GET        /change-business-contact-details                  controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = CheckMode)
 POST       /change-business-contact-details                  controllers.BusinessContactDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /agent-company-details                        controllers.AgentCompanyDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /agent-company-details                        controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-agent-company-details                  controllers.AgentCompanyDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-agent-company-details                  controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = CheckMode)
