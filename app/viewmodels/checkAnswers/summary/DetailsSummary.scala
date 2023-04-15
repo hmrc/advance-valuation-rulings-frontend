@@ -20,7 +20,6 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import models.UserAnswers
-import models.requests._
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
@@ -44,23 +43,6 @@ object DetailsSummary {
       ConfidentialInformationSummary.row(userAnswers),
       DoYouWantToUploadDocumentsSummary.row(userAnswers),
       UploadedDocumentsSummary.row(userAnswers)
-    ).flatten
-
-    DetailsSummary(SummaryListViewModel(rows))
-  }
-
-  def apply(application: Application)(implicit messages: Messages): DetailsSummary = {
-    val rows = Seq(
-      DescriptionOfGoodsSummary.row(application),
-      HasCommodityCodeSummary.row(application),
-      CommodityCodeSummary.row(application),
-      HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(application),
-      DescribeTheLegalChallengesSummary.row(application),
-      HasConfidentialInformationSummary.row(application),
-      ConfidentialInformationSummary.row(application),
-      DoYouWantToUploadDocumentsSummary.row(application),
-      UploadedDocumentsSummary.row(application),
-      Some(DateSubmittedSummary.row(application))
     ).flatten
 
     DetailsSummary(SummaryListViewModel(rows))

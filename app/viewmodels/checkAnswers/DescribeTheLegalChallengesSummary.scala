@@ -22,7 +22,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import models.requests.{Application, ApplicationRequest}
 import pages.DescribeTheLegalChallengesPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -44,7 +43,4 @@ object DescribeTheLegalChallengesSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(DescribeTheLegalChallengesPage).map(makeRow)
-
-  def row(application: Application)(implicit messages: Messages): Option[SummaryListRow] =
-    application.goodsDetails.knownLegalProceedings.map(makeRow)
 }

@@ -20,30 +20,31 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
 import models.requests._
+import viewmodels.application.{ContactDetailsSummary, GoodsDetailsSummary, RegisteredDetailsSummary, RequestedMethodSummary}
 import viewmodels.checkAnswers._
-import viewmodels.checkAnswers.summary._
 
 case class ApplicationViewModel(
   eori: SummaryList,
   applicant: SummaryList,
-  details: DetailsSummary,
-  method: MethodSummary
+  details: SummaryList,
+  method: SummaryList
 )
 
 object ApplicationViewModel {
   def apply(application: Application)(implicit
     messages: Messages
   ): ApplicationViewModel = {
-    val eoriRow       = CheckRegisteredDetailsSummary.rows(application).map(_.copy(actions = None))
-    val applicant     =
-      ApplicationContactDetailsSummary.rows(application.contact).map(_.copy(actions = None))
+    val eoriRow       = RegisteredDetailsSummary.rows(application.trader)
+    val applicant     = ContactDetailsSummary.rows(application.contact)
     val dateSubmitted = DateSubmittedSummary.row(application)
+    val goodsDetails  = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
+    val methodDetails = RequestedMethodSummary.rows(application.requestedMethod)
 
     ApplicationViewModel(
       eori = SummaryList(eoriRow),
       applicant = SummaryList(applicant :+ dateSubmitted),
-      details = DetailsSummary(application).removeActions(),
-      method = MethodSummary(application).removeActions()
+      details = SummaryList(goodsDetails),
+      method = SummaryList(methodDetails)
     )
   }
 }
