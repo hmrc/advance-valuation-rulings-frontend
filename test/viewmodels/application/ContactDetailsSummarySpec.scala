@@ -16,14 +16,15 @@
 
 package viewmodels.application
 
-import models.requests.ContactDetails
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
+
+import models.requests.ContactDetails
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
 class ContactDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
@@ -63,7 +64,7 @@ class ContactDetailsSummarySpec extends AnyFreeSpec with Matchers {
         None
       )
 
-      ContactDetailsSummary.rows(contact) must contain theSameElementsInOrderAs  Seq(
+      ContactDetailsSummary.rows(contact) must contain theSameElementsInOrderAs Seq(
         SummaryListRow(
           Key(Text(m("checkYourAnswers.applicant.name.label"))),
           Value(Text(contact.name))

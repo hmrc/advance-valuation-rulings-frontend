@@ -34,7 +34,7 @@ import org.mockito.MockitoSugar.{reset, times}
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import viewmodels.checkAnswers.summary.ApplicationCompleteSummary
+import viewmodels.ApplicationViewModel
 import views.html.ApplicationCompleteView
 
 class ApplicationCompleteControllerSpec
@@ -85,16 +85,15 @@ class ApplicationCompleteControllerSpec
 
                 val result = route(application, request).value
 
-                val view    = application.injector.instanceOf[ApplicationCompleteView]
-                val summary = ApplicationCompleteSummary(rulingsApplication, affinityGroup)
-                  .removeActions()
+                val view      = application.injector.instanceOf[ApplicationCompleteView]
+                val viewModel = ApplicationViewModel(rulingsApplication)
 
                 status(result) mustEqual OK
                 contentAsString(result) mustEqual view(
                   isIndividual,
                   applicationId,
                   email,
-                  summary
+                  viewModel
                 )(
                   request,
                   messages(application)
@@ -104,31 +103,6 @@ class ApplicationCompleteControllerSpec
               verify(mockBackendConnector, times(1)).getApplication(eqTo(applicationId))(any())
           }
         }
-    }
-
-    "must redirect to Journey Recovery for a GET when unable to retrieve submitted application" in {
-      ScalaCheckPropertyChecks.forAll(arbitraryApplication.arbitrary) {
-        rulingsApplication =>
-          val applicationId = rulingsApplication.id.toString
-          val application   = applicationBuilder()
-            .overrides(bind[BackendConnector].toInstance(mockBackendConnector))
-            .build()
-
-          when(mockBackendConnector.getApplication(any())(any()))
-            .thenReturn(Future.failed(new Exception("Backend error")))
-
-          running(application) {
-            val request =
-              FakeRequest(GET, routes.ApplicationCompleteController.onPageLoad(applicationId).url)
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result).value mustEqual routes.JourneyRecoveryController
-              .onPageLoad()
-              .url
-          }
-      }
     }
   }
 }

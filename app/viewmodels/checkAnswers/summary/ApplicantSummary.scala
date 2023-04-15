@@ -42,12 +42,6 @@ object IndividualApplicantSummary {
     val contactDetailsRows = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
     IndividualApplicantSummary(SummaryListViewModel(contactDetailsRows))
   }
-
-  def apply(application: Application)(implicit messages: Messages): IndividualApplicantSummary = {
-
-    val contactDetailsRows = ApplicationContactDetailsSummary.rows(application.contact)
-    IndividualApplicantSummary(SummaryListViewModel(contactDetailsRows))
-  }
 }
 
 case class AgentSummary(rows: SummaryList) extends ApplicantSummary {
@@ -62,12 +56,5 @@ object AgentSummary {
     val agentCompanyRow    = AgentCompanySummary.rows(userAnswers).orEmpty
 
     AgentSummary(SummaryListViewModel(contactDetailsRows ++ roleRow ++ agentCompanyRow))
-  }
-
-  def apply(application: Application)(implicit messages: Messages): AgentSummary = {
-
-    val contactDetailsRows = BusinessContactDetailsSummary.rows(application.contact)
-
-    AgentSummary(SummaryListViewModel(contactDetailsRows))
   }
 }

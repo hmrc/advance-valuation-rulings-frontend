@@ -16,48 +16,58 @@
 
 package viewmodels.application
 
-import models.requests.{AttachmentRequest, GoodsDetails}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import models.requests.{AttachmentRequest, GoodsDetails}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object GoodsDetailsSummary {
 
-  def rows(goodsDetails: GoodsDetails, attachments: Seq[AttachmentRequest])(implicit messages: Messages): Seq[SummaryListRow] = {
+  def rows(goodsDetails: GoodsDetails, attachments: Seq[AttachmentRequest])(implicit
+    messages: Messages
+  ): Seq[SummaryListRow] = {
 
-    val descriptionRow = Some(SummaryListRowViewModel(
-      key = "descriptionOfGoods.checkYourAnswersLabel",
-      value = ValueViewModel(goodsDetails.goodsName),
-    ))
-
-    val commodityCodeRow = goodsDetails.envisagedCommodityCode.map { commodityCode =>
+    val descriptionRow = Some(
       SummaryListRowViewModel(
-        key = "commodityCode.checkYourAnswersLabel",
-        value = ValueViewModel(commodityCode),
+        key = "descriptionOfGoods.checkYourAnswersLabel",
+        value = ValueViewModel(goodsDetails.goodsName)
       )
+    )
+
+    val commodityCodeRow = goodsDetails.envisagedCommodityCode.map {
+      commodityCode =>
+        SummaryListRowViewModel(
+          key = "commodityCode.checkYourAnswersLabel",
+          value = ValueViewModel(commodityCode)
+        )
     }
 
-    val legalChallengeRow = goodsDetails.knownLegalProceedings.map { challenge =>
-      SummaryListRowViewModel(
-        key = "describeTheLegalChallenges.checkYourAnswersLabel",
-        value = ValueViewModel(challenge),
-      )
+    val legalChallengeRow = goodsDetails.knownLegalProceedings.map {
+      challenge =>
+        SummaryListRowViewModel(
+          key = "describeTheLegalChallenges.checkYourAnswersLabel",
+          value = ValueViewModel(challenge)
+        )
     }
 
-    val confidentialInformationRow = goodsDetails.confidentialInformation.map { info =>
-      SummaryListRowViewModel(
-        key = "confidentialInformation.checkYourAnswersLabel",
-        value = ValueViewModel(info),
-      )
+    val confidentialInformationRow = goodsDetails.confidentialInformation.map {
+      info =>
+        SummaryListRowViewModel(
+          key = "confidentialInformation.checkYourAnswersLabel",
+          value = ValueViewModel(info)
+        )
     }
 
     val attachmentsRow = if (attachments.nonEmpty) {
-      Some(SummaryListRowViewModel(
-        key = "uploadSupportingDocuments.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(attachments.map(_.name).mkString("<br/>")))
-      ))
+      Some(
+        SummaryListRowViewModel(
+          key = "uploadSupportingDocuments.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlContent(attachments.map(_.name).mkString("<br/>")))
+        )
+      )
     } else {
       None
     }

@@ -43,12 +43,6 @@ object IndividualEoriDetailsSummary {
     val rows = CheckRegisteredDetailsSummary.rows(userAnswers).orEmpty
     IndividualEoriDetailsSummary(SummaryListViewModel(rows))
   }
-
-  def apply(application: Application)(implicit messages: Messages): EoriDetailsSummary = {
-
-    val rows = CheckRegisteredDetailsSummary.rows(application)
-    IndividualEoriDetailsSummary(SummaryListViewModel(rows))
-  }
 }
 
 case class BusinessEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary {
@@ -61,12 +55,6 @@ object BusinessEoriDetailsSummary {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): EoriDetailsSummary = {
 
     val rows = CheckRegisteredDetailsForAgentsSummary.rows(userAnswers).orEmpty
-    BusinessEoriDetailsSummary(SummaryListViewModel(rows))
-  }
-
-  def apply(application: Application)(implicit messages: Messages): EoriDetailsSummary = {
-
-    val rows = CheckRegisteredDetailsForAgentsSummary.rows(application)
     BusinessEoriDetailsSummary(SummaryListViewModel(rows))
   }
 }

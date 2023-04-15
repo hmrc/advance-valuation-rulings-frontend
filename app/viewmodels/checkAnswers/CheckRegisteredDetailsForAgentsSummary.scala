@@ -100,10 +100,4 @@ object CheckRegisteredDetailsForAgentsSummary {
       }
       number +: personalDetails
     }
-
-  def rows(
-    application: Application
-  )(implicit messages: Messages): Seq[SummaryListRow] = Seq(
-    registeredNumberRow(EoriNumber(application.trader.eori))
-  )
 }

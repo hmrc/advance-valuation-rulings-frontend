@@ -16,11 +16,12 @@
 
 package viewmodels.application
 
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
 import models.AdaptMethod
 import models.ValuationMethod._
 import models.requests._
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -38,35 +39,42 @@ object RequestedMethodSummary {
 
   private def method1Rows(method: MethodOne)(implicit messages: Messages): Seq[SummaryListRow] = {
 
-    val methodRow = Some(SummaryListRowViewModel(
-      key = "valuationMethod.checkYourAnswersLabel",
-      value = ValueViewModel(messages(s"valuationMethod.${Method1.toString}"))
-    ))
-
-    val saleInvolvedRow = Some(SummaryListRowViewModel(
-      key = "isThereASaleInvolved.checkYourAnswersLabel",
-      value = ValueViewModel(messages("site.yes")),
-    ))
-
-    val relatedPartiesRow = method.saleBetweenRelatedParties.map { info =>
+    val methodRow = Some(
       SummaryListRowViewModel(
-        key = "explainHowPartiesAreRelated.checkYourAnswersLabel",
-        value = ValueViewModel(info),
+        key = "valuationMethod.checkYourAnswersLabel",
+        value = ValueViewModel(messages(s"valuationMethod.${Method1.toString}"))
       )
+    )
+
+    val saleInvolvedRow = Some(
+      SummaryListRowViewModel(
+        key = "isThereASaleInvolved.checkYourAnswersLabel",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
+
+    val relatedPartiesRow = method.saleBetweenRelatedParties.map {
+      info =>
+        SummaryListRowViewModel(
+          key = "explainHowPartiesAreRelated.checkYourAnswersLabel",
+          value = ValueViewModel(info)
+        )
     }
 
-    val conditionsRow = method.saleConditions.map { conditions =>
-      SummaryListRowViewModel(
-        key = "describeTheConditions.checkYourAnswersLabel",
-        value = ValueViewModel(conditions),
-      )
+    val conditionsRow = method.saleConditions.map {
+      conditions =>
+        SummaryListRowViewModel(
+          key = "describeTheConditions.checkYourAnswersLabel",
+          value = ValueViewModel(conditions)
+        )
     }
 
-    val restrictionsRow = method.goodsRestrictions.map { restrictions =>
-      SummaryListRowViewModel(
-        key = "describeTheRestrictions.checkYourAnswersLabel",
-        value = ValueViewModel(restrictions),
-      )
+    val restrictionsRow = method.goodsRestrictions.map {
+      restrictions =>
+        SummaryListRowViewModel(
+          key = "describeTheRestrictions.checkYourAnswersLabel",
+          value = ValueViewModel(restrictions)
+        )
     }
 
     Seq(

@@ -16,9 +16,10 @@
 
 package viewmodels.application
 
-import models.requests.TraderDetail
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import models.requests.TraderDetail
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -27,7 +28,7 @@ object RegisteredDetailsSummary {
   def rows(trader: TraderDetail)(implicit messages: Messages): Seq[SummaryListRow] = Seq(
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.number.label",
-      value = ValueViewModel(trader.eori),
+      value = ValueViewModel(trader.eori)
     )
   )
 }

@@ -16,6 +16,12 @@
 
 package viewmodels.application
 
+import play.api.i18n.Messages
+import play.api.test.Helpers.stubMessages
+import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
+
 import models.AdaptMethod
 import models.ValuationMethod._
 import models.requests._
@@ -23,11 +29,6 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.i18n.Messages
-import play.api.test.Helpers.stubMessages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryListRow, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 class RequestedMethodSummarySpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
 
@@ -173,14 +174,13 @@ class RequestedMethodSummarySpec extends AnyFreeSpec with Matchers with ScalaChe
 
         forAll(Gen.oneOf(AdaptedMethod.values)) {
           adaptedMethod =>
-
             val adaptMethod = adaptedMethod match {
-              case AdaptedMethod.MethodOne => AdaptMethod.Method1
-              case AdaptedMethod.MethodTwo => AdaptMethod.Method2
+              case AdaptedMethod.MethodOne   => AdaptMethod.Method1
+              case AdaptedMethod.MethodTwo   => AdaptMethod.Method2
               case AdaptedMethod.MethodThree => AdaptMethod.Method3
-              case AdaptedMethod.MethodFour => AdaptMethod.Method4
-              case AdaptedMethod.MethodFive => AdaptMethod.Method5
-              case AdaptedMethod.Unable => AdaptMethod.NoOtherMethod
+              case AdaptedMethod.MethodFour  => AdaptMethod.Method4
+              case AdaptedMethod.MethodFive  => AdaptMethod.Method5
+              case AdaptedMethod.Unable      => AdaptMethod.NoOtherMethod
             }
 
             val method = MethodSix("why", adaptedMethod, "valuation")

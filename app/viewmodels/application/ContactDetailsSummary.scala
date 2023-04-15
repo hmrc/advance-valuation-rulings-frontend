@@ -16,28 +16,34 @@
 
 package viewmodels.application
 
-import models.requests.ContactDetails
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import models.requests.ContactDetails
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ContactDetailsSummary {
 
   def rows(contact: ContactDetails)(implicit messages: Messages): Seq[SummaryListRow] = Seq(
-    Some(SummaryListRowViewModel(
-      key = "checkYourAnswers.applicant.name.label",
-      value = ValueViewModel(contact.name),
-    )),
-    Some(SummaryListRowViewModel(
-      key = "checkYourAnswers.applicant.email.label",
-      value = ValueViewModel(contact.email),
-    )),
-    contact.phone.map { phone =>
+    Some(
       SummaryListRowViewModel(
-        key = "checkYourAnswers.applicant.phone.label",
-        value = ValueViewModel(phone),
+        key = "checkYourAnswers.applicant.name.label",
+        value = ValueViewModel(contact.name)
       )
+    ),
+    Some(
+      SummaryListRowViewModel(
+        key = "checkYourAnswers.applicant.email.label",
+        value = ValueViewModel(contact.email)
+      )
+    ),
+    contact.phone.map {
+      phone =>
+        SummaryListRowViewModel(
+          key = "checkYourAnswers.applicant.phone.label",
+          value = ValueViewModel(phone)
+        )
     }
   ).flatten
 }
