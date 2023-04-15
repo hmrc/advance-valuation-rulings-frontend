@@ -424,7 +424,7 @@ explainHowPartiesAreRelated.caption = About the goods
 explainHowPartiesAreRelated.para.1 = We can only accept the price paid or payable under Method 1 if your relationship with the seller has not affected the price.
 explainHowPartiesAreRelated.para.2 = Giving a detailed description of the relationship helps us process your application as quickly as possible.
 explainHowPartiesAreRelated.error.required = Enter a description of how the parties are related
-explainHowPartiesAreRelated.checkYourAnswersLabel = explainHowPartiesAreRelated
+explainHowPartiesAreRelated.checkYourAnswersLabel = Description of how parties are related
 explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
 explainHowPartiesAreRelated.change.hidden = describe how parties are related
 
