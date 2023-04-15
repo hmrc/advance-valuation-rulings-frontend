@@ -37,7 +37,7 @@ object WhoAreYouAgentSummary {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.WhoAreYouAgentController.onPageLoad(CheckMode).url
+              routes.WhoAreYouAgentController.onPageLoad(CheckMode, answers.draftId).url
             )
               .withVisuallyHiddenText(messages("whoAreYouAgent.change.hidden"))
           )

@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{AgentCompanyDetails, CheckMode, UserAnswers}
+import models.{AgentCompanyDetails, CheckMode, DraftId, UserAnswers}
 import models.requests.ApplicationRequest
 import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
@@ -30,7 +30,7 @@ import viewmodels.implicits._
 
 object AgentCompanySummary {
 
-  private def registeredNameRow(answer: AgentCompanyDetails)(implicit
+  private def registeredNameRow(answer: AgentCompanyDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -39,13 +39,13 @@ object AgentCompanySummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+          routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
       )
     )
 
-  private def registeredAddressRow(answer: AgentCompanyDetails)(implicit
+  private def registeredAddressRow(answer: AgentCompanyDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -65,13 +65,13 @@ object AgentCompanySummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+          routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
       )
     )
 
-  private def registeredEoriNumberRow(answer: AgentCompanyDetails)(implicit
+  private def registeredEoriNumberRow(answer: AgentCompanyDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -80,7 +80,7 @@ object AgentCompanySummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+          routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
       )
@@ -89,9 +89,9 @@ object AgentCompanySummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(AgentCompanyDetailsPage)
-      eori            = registeredEoriNumberRow(contactDetails)
-      name            = registeredNameRow(contactDetails)
-      address         = registeredAddressRow(contactDetails)
+      eori            = registeredEoriNumberRow(contactDetails, userAnswer.draftId)
+      name            = registeredNameRow(contactDetails, userAnswer.draftId)
+      address         = registeredAddressRow(contactDetails, userAnswer.draftId)
       result          = Seq(eori, name, address)
     } yield result
 
@@ -109,9 +109,9 @@ object AgentCompanySummary {
       agentPostalCode = postCode
     )
     Seq(
-      registeredEoriNumberRow(contactDetails),
-      registeredNameRow(contactDetails),
-      registeredAddressRow(contactDetails)
+      registeredEoriNumberRow(contactDetails, DraftId(0)),
+      registeredNameRow(contactDetails, DraftId(0)),
+      registeredAddressRow(contactDetails, DraftId(0)) // TODO: NICK: Fix this!
     )
   }
 

@@ -42,7 +42,7 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
   val form         = formProvider()
 
   lazy val isSaleBetweenRelatedPartiesRoute =
-    routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode).url
+    routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, draftId).url
 
   "IsSaleBetweenRelatedParties Controller" - {
 
@@ -58,7 +58,7 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
         val view = application.injector.instanceOf[IsSaleBetweenRelatedPartiesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -132,7 +132,7 @@ class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

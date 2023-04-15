@@ -31,14 +31,14 @@ class ContactPageControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ContactPageController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ContactPageController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ContactPageView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
       }
     }
   }

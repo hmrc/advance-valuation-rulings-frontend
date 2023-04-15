@@ -42,7 +42,7 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
   val form         = formProvider()
 
   lazy val explainReasonComputedValueRoute =
-    routes.ExplainReasonComputedValueController.onPageLoad(NormalMode).url
+    routes.ExplainReasonComputedValueController.onPageLoad(NormalMode, draftId).url
 
   "ExplainReasonComputedValue Controller" - {
 
@@ -58,7 +58,7 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[ExplainReasonComputedValueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -132,7 +132,7 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

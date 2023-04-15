@@ -29,8 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
-import models.{AcknowledgementReference, CheckRegisteredDetails, EoriNumber, Mode}
-import models.TraderDetails
+import models.{AcknowledgementReference, CheckRegisteredDetails, DraftId, EoriNumber, Mode}
 import models.requests.DataRequest
 import navigation.Navigator
 import org.apache.commons.lang3.StringUtils
@@ -58,7 +57,7 @@ class CheckRegisteredDetailsController @Inject() (
   private val AckRefLength = 32
   private val AckRefPad    = "0"
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         request.userAnswers.get(CheckRegisteredDetailsPage) match {
@@ -67,7 +66,7 @@ class CheckRegisteredDetailsController @Inject() (
               (details: CheckRegisteredDetails) =>
                 val form =
                   formProvider(request.affinityGroup, details.consentToDisclosureOfPersonalData)
-                Ok(view(form.fill(value.value), mode, details, request.affinityGroup))
+                Ok(view(form.fill(value.value), mode, details, request.affinityGroup, draftId))
             }
           case None        =>
             backendConnector
@@ -89,7 +88,9 @@ class CheckRegisteredDetailsController @Inject() (
                                  request.affinityGroup,
                                  traderDetails.details.consentToDisclosureOfPersonalData
                                )
-                  } yield Ok(view(form, mode, traderDetails.details, request.affinityGroup))
+                  } yield Ok(
+                    view(form, mode, traderDetails.details, request.affinityGroup, draftId)
+                  )
                 case Left(backendError)   =>
                   logger.error(s"Failed to get trader details from backend: $backendError")
                   Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
@@ -97,7 +98,7 @@ class CheckRegisteredDetailsController @Inject() (
         }
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         val checkRegisteredDetails: Option[CheckRegisteredDetails] =
@@ -119,7 +120,9 @@ class CheckRegisteredDetailsController @Inject() (
                 formWithErrors =>
                   handleForm(
                     (details: CheckRegisteredDetails) =>
-                      BadRequest(view(formWithErrors, mode, details, request.affinityGroup))
+                      BadRequest(
+                        view(formWithErrors, mode, details, request.affinityGroup, draftId)
+                      )
                   ),
                 value => {
                   val updatedDetails = registeredDetails.copy(value = value)

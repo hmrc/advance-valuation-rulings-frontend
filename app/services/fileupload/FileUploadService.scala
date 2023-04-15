@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import config.FrontendAppConfig
 import connectors.UpscanInitiateConnector
-import models.Mode
+import models.{DraftId, Mode}
 import models.fileupload._
 import services.fileupload.UploadProgressTracker
 
@@ -37,13 +37,11 @@ case class FileUploadResult(
 )
 
 trait FileUploadService {
-  def initiateUpload(
-    mode: Mode
-  )(implicit
+  def initiateUpload(mode: Mode, draftId: DraftId)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult]
 
-  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: Mode)(implicit
+  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: Mode, draftId: DraftId)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult]
 
@@ -57,17 +55,17 @@ class UpscanFileUploadService @Inject() (
 )(implicit ec: ExecutionContext)
     extends FileUploadService {
 
-  def initiateUpload(mode: Mode)(implicit
+  def initiateUpload(mode: Mode, draftId: DraftId)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult] = {
     val nextUploadFileId = FileUploadIds.generateNewFileUploadId.nextUploadFileId
 
     val baseUrl            = appConfig.host
     val redirectRoute      = controllers.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, Some(nextUploadFileId), mode)
+      .onPageLoad(None, None, Some(nextUploadFileId), mode, draftId)
       .url
     val errorRedirectRoute = controllers.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, None, mode)
+      .onPageLoad(None, None, None, mode, draftId)
       .url
 
     val errorRedirectUrl   = s"${baseUrl}$errorRedirectRoute".some
@@ -82,7 +80,7 @@ class UpscanFileUploadService @Inject() (
     } yield FileUploadResult(response, NotStarted, nextUploadFileId)
   }
 
-  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: Mode)(implicit
+  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: Mode, draftId: DraftId)(implicit
     hc: HeaderCarrier
   ) = {
     val redirectUrlFileId = fileUploadIds.redirectUrlFileId
@@ -90,10 +88,10 @@ class UpscanFileUploadService @Inject() (
 
     val baseUrl            = appConfig.host
     val redirectRoute      = controllers.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, Some(nextUploadFileId), mode)
+      .onPageLoad(None, None, Some(nextUploadFileId), mode, draftId)
       .url
     val errorRedirectRoute = controllers.routes.UploadSupportingDocumentsController
-      .onPageLoad(None, None, None, mode)
+      .onPageLoad(None, None, None, mode, draftId)
       .url
 
     val errorRedirectUrl   = s"${baseUrl}$redirectRoute".some

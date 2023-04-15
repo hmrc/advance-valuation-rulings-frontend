@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.WhyTransactionValueOfSimilarGoodsFormProvider
-import models.Mode
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.WhyTransactionValueOfSimilarGoodsPage
 import repositories.SessionRepository
@@ -48,23 +48,24 @@ class WhyTransactionValueOfSimilarGoodsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
-  }
+        Ok(view(preparedForm, mode, draftId))
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
                 updatedAnswers <-

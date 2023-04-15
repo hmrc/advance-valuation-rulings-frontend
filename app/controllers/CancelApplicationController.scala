@@ -24,6 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.DraftId
 import repositories.SessionRepository
 import views.html.CancelAreYouSureView
 
@@ -39,10 +40,9 @@ class CancelApplicationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent]    = (identify andThen getData andThen requireData) {
-    implicit request => Ok(view())
-  }
-  def confirmCancel: Action[AnyContent] =
+  def onPageLoad(draftId: DraftId): Action[AnyContent]    =
+    (identify andThen getData andThen requireData)(implicit request => Ok(view(draftId)))
+  def confirmCancel(draftId: DraftId): Action[AnyContent] =
     identify.async {
       implicit request =>
         for {

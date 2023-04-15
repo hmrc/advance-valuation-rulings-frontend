@@ -42,7 +42,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
   val form         = formProvider()
 
   lazy val hasConfidentialInformationRoute =
-    routes.HasConfidentialInformationController.onPageLoad(NormalMode).url
+    routes.HasConfidentialInformationController.onPageLoad(NormalMode, draftId).url
 
   "HasConfidentialInformation Controller" - {
 
@@ -58,7 +58,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
         val view = application.injector.instanceOf[HasConfidentialInformationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
           request,
           messages(application)
         ).toString

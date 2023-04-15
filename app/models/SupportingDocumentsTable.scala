@@ -66,7 +66,8 @@ object SupportingDocumentsRows extends TableFluency {
   def apply(
     uploadedFiles: UploadedFiles,
     link: views.html.components.Link,
-    mode: Mode
+    mode: Mode,
+    draftId: DraftId
   )(implicit messages: Messages): Table = {
     val rows: Seq[Seq[TableRow]] =
       uploadedFiles.files.map {
@@ -81,7 +82,7 @@ object SupportingDocumentsRows extends TableFluency {
                   newTab = false,
                   text = messages("site.remove"),
                   call = controllers.routes.UploadAnotherSupportingDocumentController
-                    .onDelete(fileId.value, mode),
+                    .onDelete(fileId.value, mode, draftId),
                   classes = "govuk-link govuk-link--no-visited-state"
                 )
               )

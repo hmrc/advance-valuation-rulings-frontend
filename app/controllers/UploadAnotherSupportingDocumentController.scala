@@ -57,31 +57,32 @@ class UploadAnotherSupportingDocumentController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
-        makeDocumentRows(request.userAnswers, mode) match {
+        makeDocumentRows(request.userAnswers, mode, draftId) match {
           case Some(table) =>
             val preparedForm = UploadAnotherSupportingDocumentPage.get() match {
               case None        => form
               case Some(value) => form.fill(value)
             }
 
-            Future.successful(Ok(view(table, preparedForm, mode)))
+            Future.successful(Ok(view(table, preparedForm, mode, draftId)))
           case None        =>
-            redirectToUpdateDocument(mode)
+            redirectToUpdateDocument(mode, draftId)
         }
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         validateFromRequest(form)
           .fold(
             formWithErrors =>
-              makeDocumentRows(request.userAnswers, mode) match {
-                case Some(table) => Future.successful(BadRequest(view(table, formWithErrors, mode)))
-                case None        => redirectToUpdateDocument(mode)
+              makeDocumentRows(request.userAnswers, mode, draftId) match {
+                case Some(table) =>
+                  Future.successful(BadRequest(view(table, formWithErrors, mode, draftId)))
+                case None        => redirectToUpdateDocument(mode, draftId)
               },
             value =>
               for {
@@ -95,7 +96,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
           )
     }
 
-  def onDelete(uploadId: String, mode: Mode): Action[AnyContent] =
+  def onDelete(uploadId: String, mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         val fileOpt = UploadSupportingDocumentPage.get().flatMap(_.getFile(UploadId(uploadId)))
@@ -128,16 +129,18 @@ class UploadAnotherSupportingDocumentController @Inject() (
         }
     }
 
-  private def makeDocumentRows(userAnswers: UserAnswers, mode: Mode)(implicit messages: Messages) =
+  private def makeDocumentRows(userAnswers: UserAnswers, mode: Mode, draftId: DraftId)(implicit
+    messages: Messages
+  ) =
     userAnswers
       .get(UploadSupportingDocumentPage) match {
       case Some(uploadedFiles) if uploadedFiles.files.nonEmpty =>
-        Some(SupportingDocumentsRows(uploadedFiles, link, mode))
+        Some(SupportingDocumentsRows(uploadedFiles, link, mode, draftId))
       case _                                                   => None
     }
 
-  private def redirectToUpdateDocument(mode: Mode) =
-    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(mode)))
+  private def redirectToUpdateDocument(mode: Mode, draftId: DraftId) =
+    Future.successful(Redirect(DoYouWantToUploadDocumentsController.onPageLoad(mode, draftId)))
 
   private def validateFromRequest(form: Form[Boolean])(implicit
     request: DataRequest[AnyContent]

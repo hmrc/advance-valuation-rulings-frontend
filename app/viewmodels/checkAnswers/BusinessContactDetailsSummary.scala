@@ -21,27 +21,29 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{BusinessContactDetails, CheckMode, UserAnswers}
+import models.{BusinessContactDetails, CheckMode, DraftId, UserAnswers}
 import pages.BusinessContactDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object BusinessContactDetailsSummary {
 
-  private def nameRow(answer: BusinessContactDetails)(implicit messages: Messages): SummaryListRow =
+  private def nameRow(answer: BusinessContactDetails, draftId: DraftId)(implicit
+    messages: Messages
+  ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.applicant.name.label",
       value = ValueViewModel(HtmlFormat.escape(answer.name).toString),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("businessContactDetails.name.change.hidden"))
       )
     )
 
-  private def emailRow(answer: BusinessContactDetails)(implicit
+  private def emailRow(answer: BusinessContactDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -50,13 +52,13 @@ object BusinessContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("businessContactDetails.email.change.hidden"))
       )
     )
 
-  private def contactNumberRow(answer: BusinessContactDetails)(implicit
+  private def contactNumberRow(answer: BusinessContactDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -65,7 +67,7 @@ object BusinessContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("businessContactDetails.phone.change.hidden"))
       )
@@ -74,9 +76,9 @@ object BusinessContactDetailsSummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(BusinessContactDetailsPage)
-      name            = nameRow(contactDetails)
-      email           = emailRow(contactDetails)
-      contactNumber   = contactNumberRow(contactDetails)
+      name            = nameRow(contactDetails, userAnswer.draftId)
+      email           = emailRow(contactDetails, userAnswer.draftId)
+      contactNumber   = contactNumberRow(contactDetails, userAnswer.draftId)
       result          = Seq(name, email, contactNumber)
     } yield result
 }

@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.DraftId
 import models.requests._
 import pages.Page
 import services.SubmissionService
@@ -46,13 +47,14 @@ class CheckYourAnswersController @Inject() (
 
   private val logger = Logger(this.getClass)
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
-      Ok(view(applicationSummary))
-  }
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData andThen requireData) {
+      implicit request =>
+        val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
+        Ok(view(applicationSummary, draftId))
+    }
 
-  def onSubmit(): Action[AnyContent] =
+  def onSubmit(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         ApplicationRequest(request.userAnswers, request.affinityGroup) match {

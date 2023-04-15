@@ -42,7 +42,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
   val form         = formProvider()
 
   lazy val haveTheGoodsBeenSubjectToLegalChallengesRoute =
-    routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode).url
+    routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode, draftId).url
 
   "HaveTheGoodsBeenSubjectToLegalChallenges Controller" - {
 
@@ -58,7 +58,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
         val view = application.injector.instanceOf[HaveTheGoodsBeenSubjectToLegalChallengesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -82,7 +82,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -131,7 +131,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

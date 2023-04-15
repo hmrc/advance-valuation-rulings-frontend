@@ -22,16 +22,17 @@ import scala.concurrent.Future
 
 import uk.gov.hmrc.http.HeaderCarrier
 
+import models.{DraftId, Mode}
 import models.fileupload._
 import services.fileupload.{FileUploadResult, FileUploadService}
 
 class FakeFileUploadService @Inject() extends FileUploadService {
   import FakeFileUploadService._
-  def initiateUpload(mode: models.Mode)(implicit
+  def initiateUpload(mode: Mode, draftId: DraftId)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult] = Future.successful(NewUploadResult)
 
-  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: models.Mode)(implicit
+  def initiateWithExisting(fileUploadIds: FileUploadIds, mode: Mode, draftId: DraftId)(implicit
     hc: HeaderCarrier
   ): Future[FileUploadResult] = Future.successful(ExistingUploadResult)
 

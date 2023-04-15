@@ -29,12 +29,12 @@
         caption: Caption
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("contactPage.title"))) {
+@layout(pageTitle = titleNoForm(messages("contactPage.title")), draftId = Some(draftId)) {
 
 
-    @formHelper(action = routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode)) {
+    @formHelper(action = routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId)) {
 
         @caption(messages("contactPage.caption"))
         @heading(messages("contactPage.heading"))
@@ -43,11 +43,9 @@
         @paragraph(content = Html(messages("contactPage.paragraph.2")))
 
 
-        @components.ButtonLink(messages("site.acceptContinue"), routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode).url)
+        @components.ButtonLink(messages("site.acceptContinue"), routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url)
 
     }
 
-
-
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

@@ -65,7 +65,7 @@ class CheckYourAnswersForAgentsControllerSpec
 
       running(application) {
         implicit val request =
-          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
@@ -73,7 +73,7 @@ class CheckYourAnswersForAgentsControllerSpec
         val list = ApplicationSummary(userAnswers, AffinityGroup.Organisation)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list).toString
+        contentAsString(result) mustEqual view(list, draftId).toString
       }
     }
 
@@ -82,7 +82,8 @@ class CheckYourAnswersForAgentsControllerSpec
       val application = applicationBuilderAsOrg(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+        val request =
+          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
@@ -142,7 +143,8 @@ class CheckYourAnswersForAgentsControllerSpec
         .build()
 
       running(application) {
-        val request = FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit.url)
+        val request =
+          FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit(draftId).url)
 
         val result = route(application, request).value
 

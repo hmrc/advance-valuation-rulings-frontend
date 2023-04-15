@@ -42,7 +42,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
   val form         = formProvider()
 
   lazy val businessContactDetailsRoute =
-    routes.BusinessContactDetailsController.onPageLoad(NormalMode).url
+    routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId).url
 
   "BusinessContactDetails Controller" - {
 
@@ -58,7 +58,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[BusinessContactDetailsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -89,7 +89,11 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(businessContactDetails), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(businessContactDetails),
+          NormalMode,
+          draftId
+        )(
           request,
           messages(application)
         ).toString
@@ -142,7 +146,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

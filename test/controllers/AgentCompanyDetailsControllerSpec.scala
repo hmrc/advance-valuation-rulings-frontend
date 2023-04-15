@@ -43,7 +43,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
   val form         = formProvider()
 
   lazy val agentCompanyDetailsRoute =
-    routes.AgentCompanyDetailsController.onPageLoad(NormalMode).url
+    routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId).url
 
   val userAnswers = UserAnswers(
     userAnswersId,
@@ -73,7 +73,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -101,7 +101,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
             "country",
             None
           )
-        contentAsString(result) mustEqual view(form.fill(agentCompanyDetails), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(agentCompanyDetails), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -156,7 +156,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

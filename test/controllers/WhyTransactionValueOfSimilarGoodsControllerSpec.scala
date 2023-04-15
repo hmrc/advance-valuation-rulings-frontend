@@ -42,7 +42,7 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
   val form         = formProvider()
 
   lazy val whyTransactionValueOfSimilarGoodsRoute =
-    routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(NormalMode).url
+    routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(NormalMode, draftId).url
 
   "WhyTransactionValueOfSimilarGoods Controller" - {
 
@@ -58,7 +58,7 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[WhyTransactionValueOfSimilarGoodsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -82,7 +82,7 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -131,7 +131,7 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

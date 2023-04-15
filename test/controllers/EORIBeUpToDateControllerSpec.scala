@@ -38,7 +38,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   lazy val checkRegisteredDetailRoute           =
-    routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode).url
+    routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url
   val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
     value = false,
     eori = "GB123456789012345",
@@ -58,14 +58,14 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.EORIBeUpToDateController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.EORIBeUpToDateController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[EORIBeUpToDateView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
       }
     }
 
@@ -73,12 +73,8 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      val userAnswers      = emptyUserAnswers
+      val userAnswers = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
-        .success
-        .value
-      val answersAfterPost = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
         .success
         .value
 

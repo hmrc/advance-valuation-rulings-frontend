@@ -29,11 +29,11 @@
     insetPara: InsetPara
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("hasConfidentialInformation.title"))) {
+@layout(pageTitle = title(form, messages("hasConfidentialInformation.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.HasConfidentialInformationController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.HasConfidentialInformationController.onSubmit(mode, draftId), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -58,5 +58,5 @@
         )
     }
 
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

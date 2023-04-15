@@ -41,7 +41,7 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new WhoAreYouAgentFormProvider()
   val form         = formProvider()
 
-  lazy val whoAreYouAgentRoute = routes.WhoAreYouAgentController.onPageLoad(NormalMode).url
+  lazy val whoAreYouAgentRoute = routes.WhoAreYouAgentController.onPageLoad(NormalMode, draftId).url
 
   "WhoAreYouAgent Controller" - {
     "must redirect to account home" in {
@@ -70,7 +70,7 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[WhoAreYouAgentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -94,7 +94,7 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -143,7 +143,7 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

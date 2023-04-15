@@ -27,22 +27,23 @@ import viewmodels.implicits._
 
 object IsTheSaleSubjectToConditionsSummary {
 
-  def row(answer: Boolean)(implicit messages: Messages): SummaryListRow = {
-    val value = if (answer) "site.yes" else "site.no"
-
-    SummaryListRowViewModel(
-      key = "isTheSaleSubjectToConditions.checkYourAnswersLabel",
-      value = ValueViewModel(value),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("isTheSaleSubjectToConditions.change.hidden"))
-      )
-    )
-  }
-
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(IsTheSaleSubjectToConditionsPage).map(row(_))
+    answers.get(IsTheSaleSubjectToConditionsPage).map {
+      answer =>
+        val value = if (answer) "site.yes" else "site.no"
+
+        SummaryListRowViewModel(
+          key = "isTheSaleSubjectToConditions.checkYourAnswersLabel",
+          value = ValueViewModel(value),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.IsTheSaleSubjectToConditionsController
+                .onPageLoad(CheckMode, answers.draftId)
+                .url
+            )
+              .withVisuallyHiddenText(messages("isTheSaleSubjectToConditions.change.hidden"))
+          )
+        )
+    }
 }

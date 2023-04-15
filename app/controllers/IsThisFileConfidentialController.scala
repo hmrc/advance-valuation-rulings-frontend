@@ -48,7 +48,7 @@ class IsThisFileConfidentialController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
         val result = for {
@@ -56,23 +56,23 @@ class IsThisFileConfidentialController @Inject() (
           theUpload     <- fileUploads.lastUpload
           isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
           preparedForm   = isConfidential.map(form.fill).getOrElse(form)
-        } yield Ok(view(preparedForm, mode))
+        } yield Ok(view(preparedForm, mode, draftId))
 
         result.getOrElse {
           Redirect(
             controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(None, None, None, mode)
+              .onPageLoad(None, None, None, mode, draftId)
           )
         }
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             (value: Boolean) =>
               for {
                 updatedAnswers <- UploadSupportingDocumentPage.modify(

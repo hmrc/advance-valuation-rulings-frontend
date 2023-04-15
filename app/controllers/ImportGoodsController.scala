@@ -26,8 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ImportGoodsFormProvider
-import models.Mode
-import models.UserAnswers
+import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ImportGoodsPage
 import repositories.SessionRepository
@@ -49,7 +48,7 @@ class ImportGoodsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen generateDraftId) {
       implicit request =>
         val preparedForm =
@@ -59,16 +58,16 @@ class ImportGoodsController @Inject() (
             case None        => form
             case Some(value) => form.fill(value)
           }
-        Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen generateDraftId).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
                 updatedAnswers <-

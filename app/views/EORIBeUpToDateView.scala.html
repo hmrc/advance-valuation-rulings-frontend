@@ -30,7 +30,7 @@
   config: FrontendAppConfig
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @fillInAnEnquiryLink = {
   @link(
@@ -48,7 +48,7 @@
   )
 }
 
-@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title"))) {
+@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title")), draftId = Some(draftId)) {
 
 @caption(messages("eoriBeUpToDate.caption"))
 
@@ -66,5 +66,5 @@
   "govuk-list govuk-list--bullet govuk-list--spaced",
 )
 
-@cancelApplicationLink()
+@cancelApplicationLink(draftId)
 }

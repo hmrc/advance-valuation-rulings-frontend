@@ -29,59 +29,61 @@ import viewmodels.implicits._
 
 object DoYouWantToUploadDocumentsSummary {
 
-  private def makeRow(answer: Boolean)(implicit messages: Messages) = {
-
-    val value = if (answer) "site.yes" else "site.no"
-
-    SummaryListRowViewModel(
-      key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
-      value = ValueViewModel(value),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
-      )
-    )
-  }
-
   def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    userAnswers
-      .get(DoYouWantToUploadDocumentsPage)
-      .map(makeRow)
-}
+    userAnswers.get(DoYouWantToUploadDocumentsPage).map {
+      answer =>
+        val value = if (answer) "site.yes" else "site.no"
 
-object UploadedDocumentsSummary {
-
-  private def makeRow(fileNames: Seq[String])(implicit messages: Messages) =
-    if (fileNames.isEmpty) {
-      None
-    } else {
-      Some(
         SummaryListRowViewModel(
-          key = "uploadSupportingDocuments.checkYourAnswersLabel",
-          value = ValueViewModel(
-            HtmlContent(
-              Html(
-                fileNames.map(fileName => Html(s"${HtmlFormat.escape(fileName).body}<br>")).mkString
-              )
-            )
-          ),
+          key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
+          value = ValueViewModel(value),
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url
+              routes.DoYouWantToUploadDocumentsController
+                .onPageLoad(CheckMode, userAnswers.draftId)
+                .url
             )
               .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
           )
         )
-      )
     }
+}
+
+object UploadedDocumentsSummary {
 
   def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     userAnswers
       .get(UploadSupportingDocumentPage)
       .map(_.files.map(_._2.fileName).toSeq)
-      .flatMap(makeRow)
+      .flatMap {
+        fileNames =>
+          if (fileNames.isEmpty) {
+            None
+          } else {
+            Some(
+              SummaryListRowViewModel(
+                key = "uploadSupportingDocuments.checkYourAnswersLabel",
+                value = ValueViewModel(
+                  HtmlContent(
+                    Html(
+                      fileNames
+                        .map(fileName => Html(s"${HtmlFormat.escape(fileName).body}<br>"))
+                        .mkString
+                    )
+                  )
+                ),
+                actions = Seq(
+                  ActionItemViewModel(
+                    "site.change",
+                    routes.UploadAnotherSupportingDocumentController
+                      .onPageLoad(CheckMode, userAnswers.draftId)
+                      .url
+                  )
+                    .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+                )
+              )
+            )
+          }
+      }
 }

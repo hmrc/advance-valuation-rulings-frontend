@@ -42,7 +42,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new ImportGoodsFormProvider()
   val form         = formProvider()
 
-  lazy val importGoodsRoute = routes.ImportGoodsController.onPageLoad(NormalMode).url
+  lazy val importGoodsRoute = routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url
 
   "ImportGoods Controller" - {
 
@@ -58,7 +58,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ImportGoodsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -80,7 +80,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -129,7 +129,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

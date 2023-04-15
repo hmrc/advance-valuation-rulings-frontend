@@ -53,10 +53,10 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
   val link         = new views.html.components.Link()
 
   lazy val uploadAnotherSupportingDocumentRoute =
-    routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode).url
+    routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId).url
 
   lazy val removeSupportingDocumentRoute =
-    routes.UploadAnotherSupportingDocumentController.onDelete("id", NormalMode).url
+    routes.UploadAnotherSupportingDocumentController.onDelete("id", NormalMode, draftId).url
 
   val fullSetOfFiles = UploadedFiles(
     None,
@@ -81,7 +81,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
       running(application) {
         val fileRows =
-          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode)(
+          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode, draftId)(
             messages(application)
           )
 
@@ -92,7 +92,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val view = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(fileRows, form, NormalMode)(
+        contentAsString(result) mustEqual view(fileRows, form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -106,7 +106,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       running(application) {
         val request  = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
         val fileRows =
-          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode)(
+          SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode, draftId)(
             messages(application)
           )
 
@@ -115,7 +115,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(fileRows, form, NormalMode)(
+        contentAsString(result) mustEqual view(fileRows, form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -163,7 +163,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
       val application = applicationBuilder(userAnswers = Some(ans)).build()
       val fileRows    =
-        SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode)(
+        SupportingDocumentsRows(uploadedFileWithConfidentiality, link, NormalMode, draftId)(
           messages(application)
         )
       running(application) {
@@ -181,7 +181,8 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         contentAsString(result) mustEqual view(
           fileRows,
           boundForm,
-          NormalMode
+          NormalMode,
+          draftId
         )(
           request,
           messages(application)
@@ -204,7 +205,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         status(result) mustEqual SEE_OTHER
         redirectLocation(
           result
-        ).value mustEqual controllers.routes.CheckYourAnswersController.onPageLoad.url
+        ).value mustEqual controllers.routes.CheckYourAnswersController.onPageLoad(draftId).url
       }
     }
 
@@ -214,7 +215,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val application          = applicationBuilder(userAnswers = Some(answers)).build()
 
       val fileRows =
-        SupportingDocumentsRows(fullSetOfFiles, link, NormalMode)(messages(application))
+        SupportingDocumentsRows(fullSetOfFiles, link, NormalMode, draftId)(messages(application))
 
       running(application) {
         val request =
@@ -237,7 +238,8 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         contentAsString(result) mustEqual view(
           fileRows,
           boundForm,
-          NormalMode
+          NormalMode,
+          draftId
         )(
           request,
           messages(application)

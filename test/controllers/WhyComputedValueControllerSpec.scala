@@ -41,7 +41,8 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new WhyComputedValueFormProvider()
   val form         = formProvider()
 
-  lazy val whyComputedValueRoute = routes.WhyComputedValueController.onPageLoad(NormalMode).url
+  lazy val whyComputedValueRoute =
+    routes.WhyComputedValueController.onPageLoad(NormalMode, draftId).url
 
   "WhyComputedValue Controller" - {
 
@@ -57,7 +58,7 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[WhyComputedValueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -81,7 +82,7 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -130,7 +131,7 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

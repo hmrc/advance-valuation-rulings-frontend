@@ -41,14 +41,14 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad().url)
+          val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CancelAreYouSureView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view()(request, messages(application)).toString
+          contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
         }
       }
     }
@@ -65,7 +65,8 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CancelApplicationController.confirmCancel().url)
+        val request =
+          FakeRequest(GET, routes.CancelApplicationController.confirmCancel(draftId).url)
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER

@@ -27,16 +27,7 @@ case class ApplicationSummary(
   applicant: ApplicantSummary,
   details: DetailsSummary,
   method: MethodSummary
-) {
-
-  def removeActions(): ApplicationSummary =
-    copy(
-      eoriDetails = eoriDetails.removeActions(),
-      applicant = applicant.removeActions(),
-      details = details.removeActions(),
-      method = method.removeActions()
-    )
-}
+)
 
 object ApplicationSummary {
 

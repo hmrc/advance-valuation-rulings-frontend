@@ -28,23 +28,19 @@ import viewmodels.implicits._
 
 object CommodityCodeSummary {
 
-  private def makeRow(answer: String)(implicit
-    messages: Messages
-  ) =
-    SummaryListRowViewModel(
-      key = "commodityCode.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(answer).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.CommodityCodeController.onPageLoad(CheckMode).url
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(CommodityCodePage).map {
+      answer =>
+        SummaryListRowViewModel(
+          key = "commodityCode.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.CommodityCodeController.onPageLoad(CheckMode, answers.draftId).url
+            )
+              .withVisuallyHiddenText(messages("commodityCode.change.hidden"))
+          )
         )
-          .withVisuallyHiddenText(messages("commodityCode.change.hidden"))
-      )
-    )
-
-  def row(answers: UserAnswers)(implicit
-    messages: Messages
-  ): Option[SummaryListRow] =
-    answers.get(CommodityCodePage).map(makeRow)
+    }
 }

@@ -44,7 +44,7 @@ class CheckRegisteredDetailsControllerSpec
   def onwardRoute = Call("GET", "/foo")
 
   lazy val checkRegisteredDetailsRoute =
-    routes.CheckRegisteredDetailsController.onPageLoad(NormalMode).url
+    routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new CheckRegisteredDetailsFormProvider()
   val form         = formProvider(AffinityGroup.Individual, true)
