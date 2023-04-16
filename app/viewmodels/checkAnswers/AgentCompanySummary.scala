@@ -94,25 +94,4 @@ object AgentCompanySummary {
       address         = registeredAddressRow(contactDetails, userAnswer.draftId)
       result          = Seq(eori, name, address)
     } yield result
-
-  def rows(
-    request: ApplicationRequest
-  )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val postCode       =
-      if (request.trader.postcode.isEmpty) None else Some(request.trader.postcode)
-    val contactDetails = models.AgentCompanyDetails(
-      agentEori = request.trader.eori,
-      agentCompanyName = request.trader.businessName,
-      agentStreetAndNumber = request.trader.addressLine1 + "\n" + request.trader.addressLine2,
-      agentCity = request.trader.addressLine2.getOrElse(""),
-      agentCountry = request.trader.countryCode,
-      agentPostalCode = postCode
-    )
-    Seq(
-      registeredEoriNumberRow(contactDetails, DraftId(0)),
-      registeredNameRow(contactDetails, DraftId(0)),
-      registeredAddressRow(contactDetails, DraftId(0)) // TODO: NICK: Fix this!
-    )
   }
-
-}
