@@ -16,13 +16,16 @@
 
 package services
 
+import javax.inject.Inject
+
+import scala.concurrent.{ExecutionContext, Future}
+
 import models.{DraftId, UserAnswers}
 import repositories.SessionRepository
 
-import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
-
-class UserAnswersService @Inject()(sessionRepository: SessionRepository)(implicit ec: ExecutionContext) {
+class UserAnswersService @Inject() (sessionRepository: SessionRepository)(implicit
+  ec: ExecutionContext
+) {
 
   def keepAlive(userId: String, draftId: DraftId): Future[Boolean] =
     sessionRepository.keepAlive(userId, draftId)

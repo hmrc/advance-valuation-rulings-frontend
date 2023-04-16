@@ -29,12 +29,12 @@ import forms.CommodityCodeFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.CommodityCodePage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.CommodityCodeView
 
 class CommodityCodeController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -69,7 +69,7 @@ class CommodityCodeController @Inject() (
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(CommodityCodePage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(CommodityCodePage, mode, updatedAnswers)(request.affinityGroup)
               )

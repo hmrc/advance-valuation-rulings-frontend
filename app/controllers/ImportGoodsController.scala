@@ -29,12 +29,12 @@ import forms.ImportGoodsFormProvider
 import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ImportGoodsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ImportGoodsView
 
 class ImportGoodsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -74,7 +74,7 @@ class ImportGoodsController @Inject() (
                     request.userAnswers
                       .set(ImportGoodsPage, value)
                   )
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ImportGoodsPage, mode, updatedAnswers)(request.affinityGroup)
               )

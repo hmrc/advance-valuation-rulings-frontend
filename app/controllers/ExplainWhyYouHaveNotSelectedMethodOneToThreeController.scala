@@ -29,12 +29,12 @@ import forms.ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainWhyYouHaveNotSelectedMethodOneToThreePage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ExplainWhyYouHaveNotSelectedMethodOneToThreeView
 
 class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -73,7 +73,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
                   Future.fromTry(
                     request.userAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, value)
                   )
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
                   .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, mode, updatedAnswers)(

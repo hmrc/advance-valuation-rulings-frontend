@@ -29,12 +29,12 @@ import forms.DescribeTheIdenticalGoodsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.DescribeTheIdenticalGoodsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.DescribeTheIdenticalGoodsView
 
 class DescribeTheIdenticalGoodsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class DescribeTheIdenticalGoodsController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheIdenticalGoodsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(DescribeTheIdenticalGoodsPage, mode, updatedAnswers)(
                   request.affinityGroup

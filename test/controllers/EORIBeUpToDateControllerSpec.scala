@@ -30,7 +30,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CheckRegisteredDetailsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
@@ -71,21 +71,21 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when yes is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
       val userAnswers = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-      when(mockSessionRepository.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -103,20 +103,20 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when 'no' is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = emptyUserAnswers
+      val mockUserAnswersService = mock[UserAnswersService]
+      val userAnswers            = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-      when(mockSessionRepository.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 

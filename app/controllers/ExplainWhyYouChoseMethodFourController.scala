@@ -29,12 +29,12 @@ import forms.ExplainWhyYouChoseMethodFourFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainWhyYouChoseMethodFourPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ExplainWhyYouChoseMethodFourView
 
 class ExplainWhyYouChoseMethodFourController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class ExplainWhyYouChoseMethodFourController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(ExplainWhyYouChoseMethodFourPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ExplainWhyYouChoseMethodFourPage, mode, updatedAnswers)(
                   request.affinityGroup

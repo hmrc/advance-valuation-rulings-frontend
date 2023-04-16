@@ -29,12 +29,12 @@ import forms.DescribeTheLegalChallengesFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.DescribeTheLegalChallengesPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.DescribeTheLegalChallengesView
 
 class DescribeTheLegalChallengesController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class DescribeTheLegalChallengesController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheLegalChallengesPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(DescribeTheLegalChallengesPage, mode, updatedAnswers)(
                   request.affinityGroup

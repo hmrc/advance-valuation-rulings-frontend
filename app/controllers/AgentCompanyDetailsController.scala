@@ -29,12 +29,12 @@ import forms.AgentCompanyDetailsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.AgentCompanyDetailsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.AgentCompanyDetailsView
 
 class AgentCompanyDetailsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class AgentCompanyDetailsController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(AgentCompanyDetailsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(AgentCompanyDetailsPage, mode, updatedAnswers)(
                   request.affinityGroup

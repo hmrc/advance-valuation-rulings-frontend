@@ -29,12 +29,12 @@ import forms.DescribeTheRestrictionsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.DescribeTheRestrictionsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.DescribeTheRestrictionsView
 
 class DescribeTheRestrictionsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class DescribeTheRestrictionsController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheRestrictionsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(DescribeTheRestrictionsPage, mode, updatedAnswers)(
                   request.affinityGroup

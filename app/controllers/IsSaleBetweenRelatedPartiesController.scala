@@ -29,12 +29,12 @@ import forms.IsSaleBetweenRelatedPartiesFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.IsSaleBetweenRelatedPartiesPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.IsSaleBetweenRelatedPartiesView
 
 class IsSaleBetweenRelatedPartiesController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class IsSaleBetweenRelatedPartiesController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(IsSaleBetweenRelatedPartiesPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(IsSaleBetweenRelatedPartiesPage, mode, updatedAnswers)(
                   request.affinityGroup

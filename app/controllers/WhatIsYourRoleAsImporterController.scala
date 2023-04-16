@@ -30,12 +30,12 @@ import forms.WhatIsYourRoleAsImporterFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.WhatIsYourRoleAsImporterPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
 class WhatIsYourRoleAsImporterController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -76,7 +76,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(WhatIsYourRoleAsImporterPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, updatedAnswers)(
                   request.affinityGroup

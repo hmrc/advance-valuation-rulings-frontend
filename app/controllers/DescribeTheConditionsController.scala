@@ -29,12 +29,12 @@ import forms.DescribeTheConditionsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.DescribeTheConditionsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.DescribeTheConditionsView
 
 class DescribeTheConditionsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class DescribeTheConditionsController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheConditionsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(DescribeTheConditionsPage, mode, updatedAnswers)(
                   request.affinityGroup

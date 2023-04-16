@@ -29,12 +29,12 @@ import forms.IsTheSaleSubjectToConditionsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.IsTheSaleSubjectToConditionsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.IsTheSaleSubjectToConditionsView
 
 class IsTheSaleSubjectToConditionsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class IsTheSaleSubjectToConditionsController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(IsTheSaleSubjectToConditionsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(IsTheSaleSubjectToConditionsPage, mode, updatedAnswers)(
                   request.affinityGroup

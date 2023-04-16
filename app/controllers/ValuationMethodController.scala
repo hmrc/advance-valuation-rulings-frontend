@@ -29,12 +29,12 @@ import forms.ValuationMethodFormProvider
 import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ValuationMethodPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ValuationMethodView
 
 class ValuationMethodController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class ValuationMethodController @Inject() (
             value =>
               for {
                 ua <- Future.fromTry(UserAnswers.updateValuationMethod(request.userAnswers, value))
-                _  <- sessionRepository.set(ua)
+                _  <- userAnswersService.set(ua)
               } yield Redirect(
                 navigator.nextPage(ValuationMethodPage, mode, ua)(request.affinityGroup)
               )

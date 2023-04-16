@@ -29,12 +29,12 @@ import forms.HaveTheGoodsBeenSubjectToLegalChallengesFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.HaveTheGoodsBeenSubjectToLegalChallengesPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.HaveTheGoodsBeenSubjectToLegalChallengesView
 
 class HaveTheGoodsBeenSubjectToLegalChallengesController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -73,7 +73,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesController @Inject() (
                   Future.fromTry(
                     request.userAnswers.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, value)
                   )
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
                   .nextPage(HaveTheGoodsBeenSubjectToLegalChallengesPage, mode, updatedAnswers)(

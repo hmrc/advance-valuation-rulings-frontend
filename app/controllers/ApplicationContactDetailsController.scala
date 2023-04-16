@@ -29,12 +29,12 @@ import forms.ApplicationContactDetailsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ApplicationContactDetailsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ApplicationContactDetailsView
 
 class ApplicationContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class ApplicationContactDetailsController @Inject() (
               for {
                 updatedAnswers <-
                   request.userAnswers.setFuture(ApplicationContactDetailsPage, value)
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)(
                   request.affinityGroup

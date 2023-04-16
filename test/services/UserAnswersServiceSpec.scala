@@ -16,21 +16,28 @@
 
 package services
 
-import models.{DraftId, UserAnswers}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.{Mockito, MockitoSugar}
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import play.api.libs.json.Json
-import repositories.SessionRepository
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class UserAnswersServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar with BeforeAndAfterEach with ScalaFutures with OptionValues {
+import play.api.libs.json.Json
+
+import models.{DraftId, UserAnswers}
+import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import repositories.SessionRepository
+
+class UserAnswersServiceSpec
+    extends AnyFreeSpec
+    with Matchers
+    with MockitoSugar
+    with BeforeAndAfterEach
+    with ScalaFutures
+    with OptionValues {
 
   private val mockRepository = mock[SessionRepository]
 
@@ -39,7 +46,7 @@ class UserAnswersServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar
     super.beforeEach()
   }
 
-  private val userId = "user id"
+  private val userId  = "user id"
   private val draftId = DraftId(0)
   private val answers = UserAnswers(userId, draftId, Json.obj())
   private val service = new UserAnswersService(mockRepository)
@@ -48,7 +55,8 @@ class UserAnswersServiceSpec extends AnyFreeSpec with Matchers with MockitoSugar
 
     "must return user answers when they exist in the repository" in {
 
-      when(mockRepository.get(eqTo(userId), eqTo(draftId))).thenReturn(Future.successful(Some(answers)))
+      when(mockRepository.get(eqTo(userId), eqTo(draftId)))
+        .thenReturn(Future.successful(Some(answers)))
 
       val result = service.get(userId, draftId).futureValue
       result.value mustEqual answers

@@ -29,12 +29,12 @@ import forms.HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider
 import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.HaveYouUsedMethodOneForSimilarGoodsInPastPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.HaveYouUsedMethodOneForSimilarGoodsInPastView
 
 class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -73,7 +73,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
                 else UserAnswers.clearValuationMethod(request.userAnswers)
               for {
                 ua <- userAnswers.setFuture(HaveYouUsedMethodOneForSimilarGoodsInPastPage, value)
-                _  <- sessionRepository.set(ua)
+                _  <- userAnswersService.set(ua)
               } yield Redirect(
                 navigator.nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, mode, ua)(
                   request.affinityGroup

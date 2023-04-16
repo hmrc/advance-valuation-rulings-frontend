@@ -24,17 +24,17 @@ import play.api.mvc.ActionTransformer
 import models.{DraftId, UserAnswers}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.MockitoSugar.mock
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class FakeDataRetrievalActionProvider(dataToReturn: Option[UserAnswers])
-    extends DataRetrievalActionProvider(mock[SessionRepository]) {
+    extends DataRetrievalActionProvider(mock[UserAnswersService]) {
 
   override def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
     new FakeDataRetrievalAction(dataToReturn)
 }
 
 class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers])
-    extends DataRetrievalAction(DraftId(0), mock[SessionRepository]) {
+    extends DataRetrievalAction(DraftId(0), mock[UserAnswersService]) {
 
   override protected def transform[A](
     request: IdentifierRequest[A]

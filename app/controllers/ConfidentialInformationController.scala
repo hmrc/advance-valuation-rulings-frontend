@@ -30,12 +30,12 @@ import forms.ConfidentialInformationFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ConfidentialInformationPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ConfidentialInformationView
 
 class ConfidentialInformationController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -65,7 +65,7 @@ class ConfidentialInformationController @Inject() (
             value =>
               for {
                 updatedAnswers <- ConfidentialInformationPage.set(value)
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers)(
                   request.affinityGroup

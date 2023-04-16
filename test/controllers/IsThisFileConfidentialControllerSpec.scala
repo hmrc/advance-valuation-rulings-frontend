@@ -32,7 +32,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
 class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
@@ -96,15 +96,15 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 

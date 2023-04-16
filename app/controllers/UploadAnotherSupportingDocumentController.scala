@@ -35,12 +35,12 @@ import models.fileupload.UploadId
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.UploadAnotherSupportingDocumentView
 
 class UploadAnotherSupportingDocumentController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -87,7 +87,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
             value =>
               for {
                 answers <- UploadAnotherSupportingDocumentPage.set(value)
-                _       <- sessionRepository.set(answers)
+                _       <- userAnswersService.set(answers)
               } yield Redirect(
                 navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)(
                   request.affinityGroup
@@ -111,7 +111,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
                                   path = Path.File(file.downloadUrl)
                                 )
               updatedAnswers <- updatedAnswers.removeFuture(UploadAnotherSupportingDocumentPage)
-              _              <- sessionRepository.set(updatedAnswers)
+              _              <- userAnswersService.set(updatedAnswers)
             } yield Redirect(
               navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, updatedAnswers)(
                 request.affinityGroup

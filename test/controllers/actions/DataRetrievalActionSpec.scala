@@ -32,11 +32,11 @@ import org.mockito.Mockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  private val mockRepository = mock[SessionRepository]
+  private val mockRepository = mock[UserAnswersService]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockRepository)
@@ -44,7 +44,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndA
   }
 
   private val app =
-    GuiceApplicationBuilder().overrides(bind[SessionRepository].toInstance(mockRepository)).build()
+    GuiceApplicationBuilder().overrides(bind[UserAnswersService].toInstance(mockRepository)).build()
 
   private lazy val actionProvider = app.injector.instanceOf[DataRetrievalActionProvider]
 
