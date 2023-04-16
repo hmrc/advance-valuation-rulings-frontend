@@ -28,19 +28,19 @@ import viewmodels.implicits._
 
 object DescribeTheLegalChallengesSummary {
 
-  private def makeRow(answer: String)(implicit messages: Messages) =
-    SummaryListRowViewModel(
-      key = "describeTheLegalChallenges.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(answer).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.DescribeTheLegalChallengesController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("describeTheLegalChallenges.change.hidden"))
-      )
-    )
-
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DescribeTheLegalChallengesPage).map(makeRow)
+    answers.get(DescribeTheLegalChallengesPage).map {
+      answer =>
+        SummaryListRowViewModel(
+          key = "describeTheLegalChallenges.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.DescribeTheLegalChallengesController.onPageLoad(CheckMode, answers.draftId).url
+            )
+              .withVisuallyHiddenText(messages("describeTheLegalChallenges.change.hidden"))
+          )
+        )
+    }
 }

@@ -30,7 +30,7 @@
         subheading: Subheading
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @advanceTariffRulingsLink = {
     @link(
@@ -72,7 +72,7 @@
         )
     }
 
-@layout(pageTitle = titleNoForm(messages("importingGoods.title"))) {
+@layout(pageTitle = titleNoForm(messages("importingGoods.title")), draftId = Some(draftId)) {
 
     @caption(messages("importingGoods.caption"))
     @heading(messages("importingGoods.heading"))
@@ -89,5 +89,5 @@
             "govuk-list govuk-list--bullet govuk-list--spaced",
         )
     
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

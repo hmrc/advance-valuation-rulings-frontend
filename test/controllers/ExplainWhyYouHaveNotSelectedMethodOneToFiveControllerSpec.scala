@@ -42,7 +42,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
   val form         = formProvider()
 
   lazy val explainWhyYouHaveNotSelectedMethodOneToFiveRoute =
-    routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(NormalMode).url
+    routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(NormalMode, draftId).url
 
   "ExplainWhyYouHaveNotSelectedMethodOneToFive Controller" - {
 
@@ -58,7 +58,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
         val view = application.injector.instanceOf[ExplainWhyYouHaveNotSelectedMethodOneToFiveView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -82,7 +82,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -131,7 +131,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

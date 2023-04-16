@@ -32,12 +32,12 @@
     cancelApplicationLink: CancelApplicationLink
 )
 
-@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
+@layout(pageTitle = title(form, messages("checkRegisteredDetails.title")), draftId = Some(draftId)) {
 
 
-    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
@@ -97,5 +97,5 @@
         )
     }
 
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

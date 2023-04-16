@@ -21,15 +21,14 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{ApplicationContactDetails, CheckMode, UserAnswers}
-import models.requests._
+import models.{ApplicationContactDetails, CheckMode, DraftId, UserAnswers}
 import pages.ApplicationContactDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object ApplicationContactDetailsSummary {
 
-  private def nameRow(answer: ApplicationContactDetails)(implicit
+  private def nameRow(answer: ApplicationContactDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -38,13 +37,13 @@ object ApplicationContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.ApplicationContactDetailsController.onPageLoad(CheckMode).url
+          routes.ApplicationContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("applicationContactDetails.name.change.hidden"))
       )
     )
 
-  private def emailRow(answer: ApplicationContactDetails)(implicit
+  private def emailRow(answer: ApplicationContactDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -53,12 +52,12 @@ object ApplicationContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.ApplicationContactDetailsController.onPageLoad(CheckMode).url
+          routes.ApplicationContactDetailsController.onPageLoad(CheckMode, draftId).url
         ).withVisuallyHiddenText(messages("applicationContactDetails.email.change.hidden"))
       )
     )
 
-  private def contactNumberRow(answer: ApplicationContactDetails)(implicit
+  private def contactNumberRow(answer: ApplicationContactDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -67,7 +66,7 @@ object ApplicationContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.ApplicationContactDetailsController.onPageLoad(CheckMode).url
+          routes.ApplicationContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("applicationContactDetails.phone.change.hidden"))
       )
@@ -76,26 +75,9 @@ object ApplicationContactDetailsSummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(ApplicationContactDetailsPage)
-      name            = nameRow(contactDetails)
-      email           = emailRow(contactDetails)
-      contactNumber   = contactNumberRow(contactDetails)
+      name            = nameRow(contactDetails, userAnswer.draftId)
+      email           = emailRow(contactDetails, userAnswer.draftId)
+      contactNumber   = contactNumberRow(contactDetails, userAnswer.draftId)
       result          = Seq(name, email, contactNumber)
     } yield result
-
-  def rows(
-    details: ContactDetails
-  )(implicit messages: Messages): Seq[SummaryListRow] = {
-
-    val contactDetails = ApplicationContactDetails(
-      name = details.name,
-      email = details.email,
-      phone = details.phone.getOrElse("")
-    )
-    Seq(
-      nameRow(contactDetails),
-      emailRow(contactDetails),
-      contactNumberRow(contactDetails)
-    )
-
-  }
 }

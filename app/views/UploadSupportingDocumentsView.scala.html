@@ -31,7 +31,7 @@
         detailsDrop: DetailsDrop
     )
 
-@(upscanInitiateResponse : UpscanInitiateResponse, uploadId: UploadId, status : UploadStatus)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+@(upscanInitiateResponse : UpscanInitiateResponse, uploadId: UploadId, status : UploadStatus, draftId: DraftId)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
 
 @formInputClass = @{
     if(UploadStatus.isError(status)) {
@@ -136,5 +136,5 @@
         @continueButton
          </form>
 
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

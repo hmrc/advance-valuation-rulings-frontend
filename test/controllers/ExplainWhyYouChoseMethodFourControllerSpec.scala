@@ -42,7 +42,7 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
   val form         = formProvider()
 
   lazy val explainWhyYouChoseMethodFourRoute =
-    routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode).url
+    routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, draftId).url
 
   "ExplainWhyYouChoseMethodFour Controller" - {
 
@@ -58,7 +58,7 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
         val view = application.injector.instanceOf[ExplainWhyYouChoseMethodFourView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -132,7 +132,7 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

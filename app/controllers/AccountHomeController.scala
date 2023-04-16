@@ -63,6 +63,6 @@ class AccountHomeController @Inject() (
         for {
           _ <-
             sessionRepository.set(UserAnswers(request.userId, request.draftId))
-        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
+        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, request.draftId))
     }
 }

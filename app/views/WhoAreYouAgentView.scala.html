@@ -24,11 +24,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whoAreYouAgent.title"))) {
+@layout(pageTitle = title(form, messages("whoAreYouAgent.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhoAreYouAgentController.onSubmit(mode)) {
+    @formHelper(action = routes.WhoAreYouAgentController.onSubmit(mode, draftId)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

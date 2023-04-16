@@ -39,7 +39,7 @@ class UploadSupportingDocumentsControllerSpec extends SpecBase {
         val request = FakeRequest(
           GET,
           controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None, models.NormalMode)
+            .onPageLoad(None, None, None, models.NormalMode, draftId)
             .url
         )
 

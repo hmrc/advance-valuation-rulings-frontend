@@ -38,7 +38,7 @@ class AdaptMethodControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val adaptMethodRoute = routes.AdaptMethodController.onPageLoad(NormalMode).url
+  lazy val adaptMethodRoute = routes.AdaptMethodController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new AdaptMethodFormProvider()
   val form         = formProvider()
@@ -57,7 +57,7 @@ class AdaptMethodControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[AdaptMethodView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -82,7 +82,11 @@ class AdaptMethodControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(AdaptMethod.values.head), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(AdaptMethod.values.head),
+          NormalMode,
+          draftId
+        )(
           request,
           messages(application)
         ).toString
@@ -131,7 +135,7 @@ class AdaptMethodControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

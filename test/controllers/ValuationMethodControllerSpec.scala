@@ -38,7 +38,8 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val valuationMethodRoute = routes.ValuationMethodController.onPageLoad(NormalMode).url
+  lazy val valuationMethodRoute =
+    routes.ValuationMethodController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new ValuationMethodFormProvider()
   val form         = formProvider()
@@ -57,7 +58,7 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ValuationMethodView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -81,7 +82,11 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ValuationMethod.values.head), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(ValuationMethod.values.head),
+          NormalMode,
+          draftId
+        )(
           request,
           messages(application)
         ).toString
@@ -130,7 +135,7 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

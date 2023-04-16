@@ -31,9 +31,11 @@ import pages._
 
 class Navigator @Inject() () {
 
-  private def checkYourAnswers(): Call = CheckYourAnswersController.onPageLoad()
+  private def checkYourAnswers(draftId: DraftId): Call =
+    CheckYourAnswersController.onPageLoad(draftId)
 
-  private def checkYourAnswersForAgents(): Call = CheckYourAnswersForAgentsController.onPageLoad()
+  private def checkYourAnswersForAgents(draftId: DraftId): Call =
+    CheckYourAnswersForAgentsController.onPageLoad(draftId)
 
   private def routes(implicit affinityGroup: AffinityGroup): Page => UserAnswers => Call = {
     case ValuationMethodPage                              => valuationMethodPage
@@ -83,144 +85,175 @@ class Navigator @Inject() () {
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
-      case None                  => ValuationMethodController.onPageLoad(NormalMode)
+      case None                  => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(valuationMethod) =>
         import models.ValuationMethod._
         valuationMethod match {
-          case Method1 => IsThereASaleInvolvedController.onPageLoad(NormalMode)
-          case Method2 => WhyIdenticalGoodsController.onPageLoad(NormalMode)
-          case Method3 => WhyTransactionValueOfSimilarGoodsController.onPageLoad(NormalMode)
+          case Method1 => IsThereASaleInvolvedController.onPageLoad(NormalMode, userAnswers.draftId)
+          case Method2 => WhyIdenticalGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+          case Method3 =>
+            WhyTransactionValueOfSimilarGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
           case Method4 =>
-            ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(NormalMode)
-          case Method5 => WhyComputedValueController.onPageLoad(NormalMode)
+            ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
+              NormalMode,
+              userAnswers.draftId
+            )
+          case Method5 => WhyComputedValueController.onPageLoad(NormalMode, userAnswers.draftId)
           case Method6 =>
-            ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(NormalMode)
+            ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
+              NormalMode,
+              userAnswers.draftId
+            )
         }
     }
   // Method 1----------------------------------------------------------------
 
   private def areThereRestrictionsOnTheGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AreThereRestrictionsOnTheGoodsPage) match {
-      case None        => AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
-      case Some(true)  => DescribeTheRestrictionsController.onPageLoad(NormalMode)
-      case Some(false) => IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+      case None        =>
+        AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  =>
+        DescribeTheRestrictionsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(false) =>
+        IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def describeTheRestrictionsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheRestrictionsPage) match {
-      case None    => DescribeTheRestrictionsController.onPageLoad(NormalMode)
-      case Some(_) => IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+      case None    => DescribeTheRestrictionsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) =>
+        IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def isTheSaleSubjectToConditionsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
-      case None        => IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
-      case Some(true)  => DescribeTheConditionsController.onPageLoad(NormalMode)
-      case Some(false) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case None        =>
+        IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  => DescribeTheConditionsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(false) => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def describeTheConditionsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheConditionsPage) match {
-      case None    => DescribeTheConditionsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case None    => DescribeTheConditionsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   // Method 1----------------------------------------------------------------
 
   private def isThereASaleInvolvedPage(userAnswers: UserAnswers): Call =
     userAnswers.get(IsThereASaleInvolvedPage) match {
-      case None        => IsThereASaleInvolvedController.onPageLoad(NormalMode)
-      case Some(true)  => IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
+      case None        => IsThereASaleInvolvedController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  =>
+        IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
         ValuationMethodController.onPageLoad(
-          NormalMode
+          NormalMode,
+          userAnswers.draftId
         )
     }
 
   private def isSaleBetweenRelatedPartiesPage(userAnswers: UserAnswers): Call =
     userAnswers.get(IsSaleBetweenRelatedPartiesPage) match {
-      case None        => IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
-      case Some(true)  => ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode)
-      case Some(false) => AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+      case None        => IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  =>
+        ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(false) =>
+        AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def explainHowPartiesAreRelatedPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainHowPartiesAreRelatedPage) match {
-      case None    => ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode)
-      case Some(_) => AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+      case None    => ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) =>
+        AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   // Method 2----------------------------------------------------------------
   private def whyIdenticalGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyIdenticalGoodsPage) match {
-      case None    => WhyIdenticalGoodsController.onPageLoad(NormalMode)
-      case Some(_) => HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode)
+      case None    => WhyIdenticalGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) =>
+        HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def haveYouUsedMethodOneInPastPage(userAnswers: UserAnswers): Call =
     userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
-      case None        => HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode)
+      case None        => HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
-        DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
+        DescribeTheIdenticalGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
-        ValuationMethodController.onPageLoad(NormalMode)
+        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def describeTheIdenticalGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
-      case None    => DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case None    => DescribeTheIdenticalGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   // Method 3----------------------------------------------------------------
   private def whyTransactionValueOfSimilarGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
-      case None    => WhyTransactionValueOfSimilarGoodsController.onPageLoad(NormalMode)
+      case None    =>
+        WhyTransactionValueOfSimilarGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) =>
-        HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode)
+        HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
+          NormalMode,
+          userAnswers.draftId
+        )
     }
 
   private def haveYouUsedMethodOneForSimilarGoodsInPastPage(userAnswers: UserAnswers): Call =
     userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage) match {
       case None        =>
-        HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode)
+        HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
+          NormalMode,
+          userAnswers.draftId
+        )
       case Some(true)  =>
-        DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
+        DescribeTheSimilarGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
-        ValuationMethodController.onPageLoad(NormalMode)
+        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def describeTheSimilarGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheSimilarGoodsPage) match {
-      case None    => DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case None    => DescribeTheSimilarGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   // method 4 ----------------------------------------------------------------
   private def explainWhyYouHaveNotSelectedMethodOneToThreePage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage) match {
       case None    =>
-        ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(NormalMode)
-      case Some(_) => ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode)
+        ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
+          NormalMode,
+          userAnswers.draftId
+        )
+      case Some(_) =>
+        ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def explainWhyYouChoseMethodFourPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouChoseMethodFourPage) match {
-      case None    => ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case None    =>
+        ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   // method 5----------------------------------------------------------------
   private def whyComputedValuePage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyComputedValuePage) match {
-      case None    => WhyComputedValueController.onPageLoad(NormalMode)
-      case Some(_) => ExplainReasonComputedValueController.onPageLoad(NormalMode)
+      case None    => WhyComputedValueController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) =>
+        ExplainReasonComputedValueController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def explainReasonComputedValuePage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainReasonComputedValuePage) match {
-      case None    => ExplainReasonComputedValueController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case None    => ExplainReasonComputedValueController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   // method 6----------------------------------------------------------------
@@ -229,84 +262,107 @@ class Navigator @Inject() () {
   ): Call =
     userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToFivePage) match {
       case None    =>
-        ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(NormalMode)
-      case Some(_) => AdaptMethodController.onPageLoad(NormalMode)
+        ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
+          NormalMode,
+          userAnswers.draftId
+        )
+      case Some(_) => AdaptMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def adaptMethodPage(
     userAnswers: UserAnswers
   ): Call =
     userAnswers.get(AdaptMethodPage) match {
-      case None    => AdaptMethodController.onPageLoad(NormalMode)
-      case Some(_) => ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode)
+      case None    => AdaptMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) =>
+        ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def explainHowYouWillUseMethodSixPage(
     userAnswers: UserAnswers
   ): Call =
     userAnswers.get(ExplainHowYouWillUseMethodSixPage) match {
-      case None    => ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode)
-      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode)
+      case None    =>
+        ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   // ----------------------------------------------------------------
   private def descriptionOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescriptionOfGoodsPage) match {
-      case None    => DescriptionOfGoodsController.onPageLoad(NormalMode)
-      case Some(_) => HasCommodityCodeController.onPageLoad(NormalMode)
+      case None    => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def hasCommodityCodePage(userAnswers: UserAnswers): Call                         =
     userAnswers.get(HasCommodityCodePage) match {
-      case None        => HasCommodityCodeController.onPageLoad(NormalMode)
-      case Some(true)  => CommodityCodeController.onPageLoad(NormalMode)
+      case None        => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  => CommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
-        HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode)
+        HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
+          NormalMode,
+          userAnswers.draftId
+        )
     }
   private def haveTheGoodsBeenSubjectToLegalChallengesPage(userAnswers: UserAnswers): Call =
     userAnswers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage) match {
-      case None        => HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode)
-      case Some(true)  => DescribeTheLegalChallengesController.onPageLoad(NormalMode)
+      case None        =>
+        HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
+          NormalMode,
+          userAnswers.draftId
+        )
+      case Some(true)  =>
+        DescribeTheLegalChallengesController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
-        HasConfidentialInformationController.onPageLoad(NormalMode)
+        HasConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
     }
   private def describeTheLegalChallengesPage(userAnswers: UserAnswers): Call               =
     userAnswers.get(DescribeTheLegalChallengesPage) match {
-      case None    => DescribeTheLegalChallengesController.onPageLoad(NormalMode)
-      case Some(_) => HasConfidentialInformationController.onPageLoad(NormalMode)
+      case None    => DescribeTheLegalChallengesController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) =>
+        HasConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
 
     }
 
   private def commodityCodePage(userAnswers: UserAnswers): Call =
     userAnswers.get(CommodityCodePage) match {
-      case None    => CommodityCodeController.onPageLoad(NormalMode)
+      case None    => CommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) =>
-        HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode)
+        HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
+          NormalMode,
+          userAnswers.draftId
+        )
     }
 
   private def hasConfidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(HasConfidentialInformationPage) match {
-      case None        => HasConfidentialInformationController.onPageLoad(NormalMode)
-      case Some(true)  => ConfidentialInformationController.onPageLoad(NormalMode)
-      case Some(false) => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)
+      case None        => HasConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  =>
+        ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(false) =>
+        DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def confidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ConfidentialInformationPage) match {
-      case None    => ConfidentialInformationController.onPageLoad(NormalMode)
-      case Some(_) => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)
+      case None    => ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) =>
+        DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def doYouWantToUploadDocumentsPage(
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
-      case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)
+      case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, NormalMode)
+          .onPageLoad(None, None, None, NormalMode, userAnswers.draftId)
       case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(checkYourAnswers(), checkYourAnswersForAgents())
+        resolveAffinityGroup(affinityGroup)(
+          checkYourAnswers(userAnswers.draftId),
+          checkYourAnswersForAgents(userAnswers.draftId)
+        )
     }
 
   private def isThisFileConfidentialPage(
@@ -317,11 +373,11 @@ class Navigator @Inject() () {
       case Some(uploadedFiles) =>
         uploadedFiles match {
           case UploadedFiles(Some(_), _)                    =>
-            IsThisFileConfidentialController.onPageLoad(NormalMode)
+            IsThisFileConfidentialController.onPageLoad(NormalMode, userAnswers.draftId)
           case UploadedFiles(None, files) if files.nonEmpty =>
-            UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
+            UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
           case UploadedFiles(None, _)                       =>
-            DoYouWantToUploadDocumentsController.onPageLoad(NormalMode)
+            DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
         }
     }
 
@@ -329,68 +385,74 @@ class Navigator @Inject() () {
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(UploadAnotherSupportingDocumentPage) match {
-      case None        => UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
+      case None        =>
+        UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, NormalMode)
+          .onPageLoad(None, None, None, NormalMode, userAnswers.draftId)
       case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(checkYourAnswers(), checkYourAnswersForAgents())
+        resolveAffinityGroup(affinityGroup)(
+          checkYourAnswers(userAnswers.draftId),
+          checkYourAnswersForAgents(userAnswers.draftId)
+        )
     }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {
-      case None        => ImportGoodsController.onPageLoad(NormalMode)
-      case Some(true)  => ContactPageController.onPageLoad()
-      case Some(false) => ImportingGoodsController.onPageLoad()
+      case None        => ImportGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  => ContactPageController.onPageLoad(userAnswers.draftId)
+      case Some(false) => ImportingGoodsController.onPageLoad(userAnswers.draftId)
     }
 
   private def requiredInformationPage(userAnswers: UserAnswers): Call      =
     userAnswers.get(RequiredInformationPage) match {
-      case None    => RequiredInformationController.onPageLoad()
-      case Some(_) => ImportGoodsController.onPageLoad(NormalMode)
+      case None    => RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case Some(_) => ImportGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
   private def whatIsYourRoleAsImporterPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
-      case Some(_) => RequiredInformationController.onPageLoad()
+      case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
     }
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
-      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode)
+      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(registeredDetails) =>
         if (registeredDetails.value) {
           resolveAffinityGroup(affinityGroup)(
-            ApplicationContactDetailsController.onPageLoad(NormalMode),
-            BusinessContactDetailsController.onPageLoad(NormalMode)
+            ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
+            BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
           )
-        } else EORIBeUpToDateController.onPageLoad()
+        } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ApplicationContactDetailsPage) match {
-      case None    => ApplicationContactDetailsController.onPageLoad(NormalMode)
-      case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
+      case None    => ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(BusinessContactDetailsPage) match {
-      case None    => BusinessContactDetailsController.onPageLoad(NormalMode)
+      case None    => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => agentContactDetailsNavigation(userAnswers)
     }
 
   private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case Some(EmployeeOfOrg)      => ValuationMethodController.onPageLoad(NormalMode)
-      case Some(AgentOnBehalfOfOrg) => AgentCompanyDetailsController.onPageLoad(NormalMode)
-      case _                        => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
+      case Some(EmployeeOfOrg)      =>
+        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(AgentOnBehalfOfOrg) =>
+        AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                        => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AgentCompanyDetailsPage) match {
-      case None    => AgentCompanyDetailsController.onPageLoad(NormalMode)
-      case Some(_) => ValuationMethodController.onPageLoad(NormalMode)
+      case None    => AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit
@@ -402,10 +464,10 @@ class Navigator @Inject() () {
       CheckModeNavigator.nextPage(page)(userAnswers, affinityGroup)
   }
 
-  def startApplicationRouting(affinityGroup: AffinityGroup): Call =
+  def startApplicationRouting(affinityGroup: AffinityGroup, draftId: DraftId): Call =
     affinityGroup match {
-      case Individual => RequiredInformationController.onPageLoad()
+      case Individual => RequiredInformationController.onPageLoad(draftId)
       case _          =>
-        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode)
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
     }
 }

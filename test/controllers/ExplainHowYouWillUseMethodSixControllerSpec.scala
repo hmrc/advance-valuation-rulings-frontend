@@ -42,7 +42,7 @@ class ExplainHowYouWillUseMethodSixControllerSpec extends SpecBase with MockitoS
   val form         = formProvider()
 
   lazy val explainHowYouWillUseMethodSixRoute =
-    routes.ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode).url
+    routes.ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode, draftId).url
 
   "ExplainHowYouWillUseMethodSix Controller" - {
 
@@ -58,7 +58,7 @@ class ExplainHowYouWillUseMethodSixControllerSpec extends SpecBase with MockitoS
         val view = application.injector.instanceOf[ExplainHowYouWillUseMethodSixView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class ExplainHowYouWillUseMethodSixControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -132,7 +132,7 @@ class ExplainHowYouWillUseMethodSixControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

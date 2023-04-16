@@ -31,11 +31,11 @@
     cancelLink: CancelApplicationLink
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whyIdenticalGoods.title"))) {
+@layout(pageTitle = title(form, messages("whyIdenticalGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhyIdenticalGoodsController.onSubmit(mode)) {
+    @formHelper(action = routes.WhyIdenticalGoodsController.onSubmit(mode, draftId)) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -66,5 +66,5 @@
             ButtonViewModel(messages("site.continue"))
         )
     }
-@cancelLink()
+@cancelLink(draftId)
 }

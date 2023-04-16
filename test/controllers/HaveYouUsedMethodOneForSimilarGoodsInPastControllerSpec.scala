@@ -42,7 +42,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastControllerSpec extends SpecBase w
   val form         = formProvider()
 
   lazy val haveYouUsedMethodOneForSimilarGoodsInPastRoute =
-    routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode).url
+    routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode, draftId).url
 
   "HaveYouUsedMethodOneForSimilarGoodsInPast Controller" - {
 
@@ -58,7 +58,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastControllerSpec extends SpecBase w
         val view = application.injector.instanceOf[HaveYouUsedMethodOneForSimilarGoodsInPastView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -82,7 +82,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastControllerSpec extends SpecBase w
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -131,7 +131,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastControllerSpec extends SpecBase w
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

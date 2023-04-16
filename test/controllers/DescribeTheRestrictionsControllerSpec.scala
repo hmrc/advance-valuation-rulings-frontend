@@ -42,7 +42,7 @@ class DescribeTheRestrictionsControllerSpec extends SpecBase with MockitoSugar {
   val form         = formProvider()
 
   lazy val describeTheRestrictionsRoute =
-    routes.DescribeTheRestrictionsController.onPageLoad(NormalMode).url
+    routes.DescribeTheRestrictionsController.onPageLoad(NormalMode, draftId).url
 
   "DescribeTheRestrictions Controller" - {
 
@@ -58,7 +58,7 @@ class DescribeTheRestrictionsControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[DescribeTheRestrictionsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class DescribeTheRestrictionsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -132,7 +132,7 @@ class DescribeTheRestrictionsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

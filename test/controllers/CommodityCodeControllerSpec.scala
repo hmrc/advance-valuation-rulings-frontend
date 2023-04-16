@@ -42,7 +42,7 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
   val form         = formProvider()
   val validAnswer  = "1234"
 
-  lazy val commodityCodeRoute = routes.CommodityCodeController.onPageLoad(NormalMode).url
+  lazy val commodityCodeRoute = routes.CommodityCodeController.onPageLoad(NormalMode, draftId).url
 
   "CommodityCode Controller" - {
 
@@ -58,7 +58,7 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[CommodityCodeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -82,7 +82,8 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill("answer"),
-          NormalMode
+          NormalMode,
+          draftId
         )(
           request,
           messages(application)
@@ -132,7 +133,7 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

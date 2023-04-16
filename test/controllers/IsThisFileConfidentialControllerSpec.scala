@@ -43,7 +43,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
   val form         = formProvider()
 
   lazy val isThisFileConfidentialRoute =
-    routes.IsThisFileConfidentialController.onPageLoad(NormalMode).url
+    routes.IsThisFileConfidentialController.onPageLoad(NormalMode, draftId).url
   val fileDetails: UpscanFileDetails   =
     UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
 
@@ -65,7 +65,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[IsThisFileConfidentialView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -85,7 +85,8 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form,
-          NormalMode
+          NormalMode,
+          draftId
         )(
           request,
           messages(application)
@@ -135,7 +136,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

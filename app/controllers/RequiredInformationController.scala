@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.RequiredInformationFormProvider
-import models.NormalMode
+import models.{DraftId, NormalMode}
 import navigation.Navigator
 import pages.RequiredInformationPage
 import repositories.SessionRepository
@@ -49,7 +49,7 @@ class RequiredInformationController @Inject() (
   val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
-  def onPageLoad: Action[AnyContent] =
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData) {
       implicit request =>
         logger.info("RequiredInformationController onPageLoad")
@@ -60,17 +60,17 @@ class RequiredInformationController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm, request.affinityGroup))
+        Ok(view(preparedForm, request.affinityGroup, draftId))
     }
 
-  def onSubmit(): Action[AnyContent] =
+  def onSubmit(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, request.affinityGroup))),
+              Future.successful(BadRequest(view(formWithErrors, request.affinityGroup, draftId))),
             value =>
               for {
                 updatedAnswers <-

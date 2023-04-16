@@ -27,22 +27,21 @@ import viewmodels.implicits._
 
 object HaveYouUsedMethodOneInPastSummary {
 
-  def row(answer: Boolean)(implicit messages: Messages): SummaryListRow = {
-    val value = if (answer) "site.yes" else "site.no"
-
-    SummaryListRowViewModel(
-      key = "haveYouUsedMethodOneInPast.checkYourAnswersLabel",
-      value = ValueViewModel(value),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.HaveYouUsedMethodOneInPastController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("haveYouUsedMethodOneInPast.change.hidden"))
-      )
-    )
-  }
-
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(HaveYouUsedMethodOneInPastPage).map(row)
+    answers.get(HaveYouUsedMethodOneInPastPage).map {
+      answer =>
+        val value = if (answer) "site.yes" else "site.no"
+
+        SummaryListRowViewModel(
+          key = "haveYouUsedMethodOneInPast.checkYourAnswersLabel",
+          value = ValueViewModel(value),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.HaveYouUsedMethodOneInPastController.onPageLoad(CheckMode, answers.draftId).url
+            )
+              .withVisuallyHiddenText(messages("haveYouUsedMethodOneInPast.change.hidden"))
+          )
+        )
+    }
 }
