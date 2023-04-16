@@ -28,6 +28,7 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import connectors.UpscanConnector
 import models.{DraftId, Index, NormalMode, UploadedFile, UserAnswers}
+import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._
@@ -74,9 +75,9 @@ class FileServiceSpec
 
   private val hc: HeaderCarrier = HeaderCarrier()
 
-  private val response = UpscanConnector.UpscanInitiateResponse(
+  private val response = UpscanInitiateResponse(
     reference = "reference",
-    uploadRequest = UpscanConnector.UpscanInitiateResponse.UploadRequest(
+    uploadRequest = UpscanInitiateResponse.UploadRequest(
       href = "foobar",
       fields = Map("foo" -> "bar")
     )
@@ -91,7 +92,7 @@ class FileServiceSpec
         .url
       val expectedUrl  = s"host/$expectedPath"
 
-      val expectedRequest = UpscanConnector.UpscanInitiateRequest(
+      val expectedRequest = UpscanInitiateRequest(
         callbackUrl = "callbackUrl",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,

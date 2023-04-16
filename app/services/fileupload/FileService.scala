@@ -30,6 +30,7 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import connectors.UpscanConnector
 import models.{Done, DraftId, Index, Mode, UploadedFile, UserAnswers}
+import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import pages.UploadSupportingDocumentPage
 import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
@@ -52,7 +53,7 @@ class FileService @Inject() (
 
   def initiate(draftId: DraftId, mode: Mode, index: Index)(implicit
     hc: HeaderCarrier
-  ): Future[UpscanConnector.UpscanInitiateResponse] = {
+  ): Future[UpscanInitiateResponse] = {
 
     val redirectPath =
       controllers.routes.UploadSupportingDocumentsController
@@ -60,7 +61,7 @@ class FileService @Inject() (
         .url
     val redirectUrl  = s"$host/$redirectPath"
 
-    val request = UpscanConnector.UpscanInitiateRequest(
+    val request = UpscanInitiateRequest(
       callbackUrl = callbackUrl,
       successRedirect = redirectUrl,
       errorRedirect = redirectUrl,

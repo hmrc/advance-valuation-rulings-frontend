@@ -27,6 +27,7 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import config.Service
+import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 @Singleton
 class UpscanConnector @Inject() (
   httpClient: HttpClientV2,
@@ -37,43 +38,10 @@ class UpscanConnector @Inject() (
     configuration.get[Service]("microservice.services.upscan-initiate")
 
   def initiate(
-    request: UpscanConnector.UpscanInitiateRequest
-  )(implicit hc: HeaderCarrier): Future[UpscanConnector.UpscanInitiateResponse] =
+    request: UpscanInitiateRequest
+  )(implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] =
     httpClient
       .post(url"$upscanInitiateService/upscan/v2/initiate")
       .withBody(Json.toJson(request))
-      .execute[UpscanConnector.UpscanInitiateResponse]
-}
-
-object UpscanConnector {
-
-  final case class UpscanInitiateRequest(
-    callbackUrl: String,
-    successRedirect: String,
-    errorRedirect: String,
-    minimumFileSize: Long,
-    maximumFileSize: Long
-  )
-
-  object UpscanInitiateRequest {
-
-    implicit lazy val format: OFormat[UpscanInitiateRequest] = Json.format
-  }
-
-  final case class UpscanInitiateResponse(
-    reference: String,
-    uploadRequest: UpscanInitiateResponse.UploadRequest
-  )
-
-  object UpscanInitiateResponse {
-
-    final case class UploadRequest(href: String, fields: Map[String, String])
-
-    object UploadRequest {
-
-      implicit lazy val format: OFormat[UploadRequest] = Json.format
-    }
-
-    implicit lazy val format: OFormat[UpscanInitiateResponse] = Json.format
-  }
+      .execute[UpscanInitiateResponse]
 }

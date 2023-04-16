@@ -6,6 +6,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 
 import com.github.tomakehurst.wiremock.client.WireMock._
+import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -45,7 +46,7 @@ class UpscanConnectorSpec
 
   private lazy val connector = app.injector.instanceOf[UpscanConnector]
 
-  private val request = UpscanConnector.UpscanInitiateRequest(
+  private val request = UpscanInitiateRequest(
     callbackUrl = "someCallback",
     successRedirect = "successRedirect",
     errorRedirect = "errorRedirect",
@@ -53,9 +54,9 @@ class UpscanConnectorSpec
     maximumFileSize = 321
   )
 
-  private val response = UpscanConnector.UpscanInitiateResponse(
+  private val response = UpscanInitiateResponse(
     reference = "reference",
-    uploadRequest = UpscanConnector.UpscanInitiateResponse.UploadRequest(
+    uploadRequest = UpscanInitiateResponse.UploadRequest(
       href = "foobar",
       fields = Map("foo" -> "bar")
     )
