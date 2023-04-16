@@ -37,7 +37,7 @@ class RequiredInformationController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: RequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -50,7 +50,7 @@ class RequiredInformationController @Inject() (
   private val logger = play.api.Logger(getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         logger.info("RequiredInformationController onPageLoad")
 
@@ -64,7 +64,7 @@ class RequiredInformationController @Inject() (
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()

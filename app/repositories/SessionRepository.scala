@@ -48,28 +48,39 @@ class SessionRepository @Inject() (
           IndexOptions()
             .name("lastUpdatedIdx")
             .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
+        ),
+        IndexModel(
+          Indexes.ascending("userId", "draftId"),
+          IndexOptions()
+            .name("id-index")
+            .unique(true)
         )
-      )
+      ),
+      extraCodecs = Seq(Codecs.playFormatCodec(DraftId.format))
     ) {
 
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
 
-  private def byId(id: String): Bson = Filters.equal("_id", id)
+  private def byUserIdAndDraftId(userId: String, draftId: DraftId): Bson =
+    Filters.and(
+      Filters.eq("userId", userId),
+      Filters.eq("draftId", draftId)
+    )
 
-  def keepAlive(id: String): Future[Boolean] =
+  def keepAlive(userId: String, draftId: DraftId): Future[Boolean] =
     collection
       .updateOne(
-        filter = byId(id),
+        filter = byUserIdAndDraftId(userId, draftId),
         update = Updates.set("lastUpdated", Instant.now(clock))
       )
       .toFuture()
       .map(_ => true)
 
-  def get(id: String): Future[Option[UserAnswers]] =
-    keepAlive(id).flatMap {
+  def get(userId: String, draftId: DraftId): Future[Option[UserAnswers]] =
+    keepAlive(userId, draftId).flatMap {
       _ =>
         collection
-          .find(byId(id))
+          .find(byUserIdAndDraftId(userId, draftId))
           .headOption()
     }
 
@@ -79,7 +90,7 @@ class SessionRepository @Inject() (
 
     collection
       .replaceOne(
-        filter = byId(updatedAnswers.userId),
+        filter = byUserIdAndDraftId(updatedAnswers.userId, updatedAnswers.draftId),
         replacement = updatedAnswers,
         options = ReplaceOptions().upsert(true)
       )
@@ -87,9 +98,9 @@ class SessionRepository @Inject() (
       .map(_ => true)
   }
 
-  def clear(id: String): Future[Boolean] =
+  def clear(userId: String, draftId: DraftId): Future[Boolean] =
     collection
-      .deleteOne(byId(id))
+      .deleteOne(byUserIdAndDraftId(userId, draftId))
       .toFuture()
       .map(_ => true)
 }

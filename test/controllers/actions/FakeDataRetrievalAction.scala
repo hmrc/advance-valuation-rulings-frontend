@@ -17,11 +17,24 @@
 package controllers.actions
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
-import models.UserAnswers
+import play.api.mvc.ActionTransformer
+
+import models.{DraftId, UserAnswers}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import org.mockito.MockitoSugar.mock
+import repositories.SessionRepository
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+class FakeDataRetrievalActionProvider(dataToReturn: Option[UserAnswers])
+    extends DataRetrievalActionProvider(mock[SessionRepository]) {
+
+  override def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
+    new FakeDataRetrievalAction(dataToReturn)
+}
+
+class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers])
+    extends DataRetrievalAction(DraftId(0), mock[SessionRepository]) {
 
   override protected def transform[A](
     request: IdentifierRequest[A]
@@ -35,8 +48,8 @@ class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRet
         request.credentialRole,
         dataToReturn
       )
-    )
+    )(executionContext)
 
-  override protected implicit val executionContext: ExecutionContext =
+  override implicit val executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 }

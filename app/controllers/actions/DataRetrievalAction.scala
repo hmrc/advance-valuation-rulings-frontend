@@ -22,18 +22,20 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.mvc.ActionTransformer
 
+import models.DraftId
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import repositories.SessionRepository
 
-class DataRetrievalActionImpl @Inject() (
+class DataRetrievalAction @Inject() (
+  draftId: DraftId,
   val sessionRepository: SessionRepository
 )(implicit val executionContext: ExecutionContext)
-    extends DataRetrievalAction {
+    extends ActionTransformer[IdentifierRequest, OptionalDataRequest] {
 
   override protected def transform[A](
     request: IdentifierRequest[A]
   ): Future[OptionalDataRequest[A]] =
-    sessionRepository.get(request.userId).map {
+    sessionRepository.get(request.userId, draftId).map {
       OptionalDataRequest(
         request.request,
         request.userId,
@@ -45,4 +47,10 @@ class DataRetrievalActionImpl @Inject() (
     }
 }
 
-trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]
+class DataRetrievalActionProvider @Inject() (sessionRepository: SessionRepository)(implicit
+  ec: ExecutionContext
+) {
+
+  def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
+    new DataRetrievalAction(draftId, sessionRepository)
+}

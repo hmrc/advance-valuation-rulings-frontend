@@ -37,7 +37,7 @@ class CommodityCodeController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: CommodityCodeFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,7 +49,7 @@ class CommodityCodeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers.get(CommodityCodePage) match {
           case None        => form
@@ -60,7 +60,7 @@ class CommodityCodeController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()

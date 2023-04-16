@@ -37,7 +37,7 @@ class WhyComputedValueController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: WhyComputedValueFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,7 +49,7 @@ class WhyComputedValueController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers.get(WhyComputedValuePage) match {
           case None        => form
@@ -60,7 +60,7 @@ class WhyComputedValueController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()

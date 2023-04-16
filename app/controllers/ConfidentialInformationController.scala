@@ -38,7 +38,7 @@ class ConfidentialInformationController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: ConfidentialInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,14 +49,14 @@ class ConfidentialInformationController @Inject() (
 
   val form: Form[String]                                           = formProvider()
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm = ConfidentialInformationPage.fill(form)
         Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()

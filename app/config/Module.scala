@@ -30,11 +30,11 @@ class Module extends play.api.inject.Module {
     val authTokenInitialiserBindings: Seq[Binding[_]] =
       if (configuration.get[Boolean]("create-internal-auth-token-on-start")) {
         Seq(binding[InternalAuthTokenInitialiser].to[InternalAuthTokenInitialiserImpl].eagerly())
-      } else
+      } else {
         Seq(binding[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser].eagerly())
+      }
 
     Seq(
-      binding[DataRetrievalAction].to[DataRetrievalActionImpl].eagerly(),
       binding[DataRequiredAction].to[DataRequiredActionImpl].eagerly(),
       binding[Clock].to(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)),
       binding[IdentifierAction].to[AuthenticatedIdentifierAction].eagerly(),

@@ -29,7 +29,7 @@ import views.html.ImportingGoodsView
 class ImportingGoodsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: ImportingGoodsView
@@ -37,5 +37,5 @@ class ImportingGoodsController @Inject() (
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData)(implicit request => Ok(view(draftId)))
+    (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
 }

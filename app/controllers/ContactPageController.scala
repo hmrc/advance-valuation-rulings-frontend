@@ -29,13 +29,13 @@ import views.html.ContactPageView
 class ContactPageController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ContactPageView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(draftId: DraftId): Action[AnyContent] = (identify andThen getData(draftId)) {
     implicit request => Ok(view(draftId))
   }
 }

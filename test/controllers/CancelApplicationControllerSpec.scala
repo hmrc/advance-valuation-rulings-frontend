@@ -24,6 +24,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,31 +35,29 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
   "CancelApplication Controller" - {
 
-    "CancelAreYouSure Controller" - {
+    "must return OK and the correct view for a GET" in {
 
-      "must return OK and the correct view for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      running(application) {
+        val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad(draftId).url)
 
-        running(application) {
-          val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad(draftId).url)
+        val result = route(application, request).value
 
-          val result = route(application, request).value
+        val view = application.injector.instanceOf[CancelAreYouSureView]
 
-          val view = application.injector.instanceOf[CancelAreYouSureView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
       }
     }
+
     "must clear answers and redirect" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
       Mockito.reset(mockSessionRepository)
 
-      when(mockSessionRepository.clear(any())).thenReturn(Future.successful(true))
+      when(mockSessionRepository.clear(any(), any())).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
@@ -70,7 +69,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        verify(mockSessionRepository, times(1)).clear(any())
+        verify(mockSessionRepository, times(1)).clear(eqTo(emptyUserAnswers.userId), eqTo(draftId))
       }
     }
   }
