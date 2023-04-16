@@ -19,6 +19,7 @@ package models
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
+
 import viewmodels.govuk.select._
 
 case class Country(code: String, name: String)
@@ -236,7 +237,7 @@ object Country {
         country =>
           SelectItemViewModel(
             value = country.code,
-            text  = country.name
+            text = country.name
           )
       }
 }
