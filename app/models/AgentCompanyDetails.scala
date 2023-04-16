@@ -23,7 +23,7 @@ case class AgentCompanyDetails(
   agentCompanyName: String,
   agentStreetAndNumber: String,
   agentCity: String,
-  agentCountry: String,
+  agentCountry: Country,
   agentPostalCode: Option[String]
 )
 

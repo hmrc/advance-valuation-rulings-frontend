@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{AgentCompanyDetails, CheckMode, DraftId, UserAnswers}
+import models.{AgentCompanyDetails, CheckMode, Country, DraftId, UserAnswers}
 import models.requests.ApplicationRequest
 import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
@@ -58,7 +58,7 @@ object AgentCompanySummary {
               answer.agentPostalCode
                 .map(value => s"${HtmlFormat.escape(value).body}<br>")
                 .getOrElse("") +
-              s"${HtmlFormat.escape(answer.agentCountry).body}"
+              s"${HtmlFormat.escape(answer.agentCountry.name).body}"
           )
         )
       ),

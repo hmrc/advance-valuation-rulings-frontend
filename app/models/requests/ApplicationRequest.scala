@@ -99,7 +99,7 @@ object TraderDetail {
               addressLine2 = Some(acd.agentCity),
               addressLine3 = None,
               postcode = acd.agentPostalCode.getOrElse(""),
-              countryCode = acd.agentCountry,
+              countryCode = acd.agentCountry.code,
               phoneNumber = None
             )
           )

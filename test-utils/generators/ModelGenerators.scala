@@ -30,7 +30,7 @@ trait ModelGenerators {
         agentCompanyName     <- arbitrary[String]
         agentStreetAndNumber <- arbitrary[String]
         agentCity            <- arbitrary[String]
-        agentCountry         <- arbitrary[String]
+        agentCountry         <- Gen.oneOf(Country.allCountries)
         agentPostalCode      <- arbitrary[Option[String]]
 
       } yield AgentCompanyDetails(

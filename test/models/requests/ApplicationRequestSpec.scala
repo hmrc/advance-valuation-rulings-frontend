@@ -119,7 +119,7 @@ class ApplicationRequestSpec
                     name = randomString,
                     streetAndNumber = randomString,
                     city = randomString,
-                    country = randomString,
+                    country = country.code,
                     postalCode = Some(randomString),
                     phoneNumber = Some(randomString)
                   )
@@ -194,7 +194,7 @@ class ApplicationRequestSpec
                     name = randomString,
                     streetAndNumber = randomString,
                     city = randomString,
-                    country = randomString,
+                    country = country.code,
                     postalCode = Some(randomString),
                     phoneNumber = Some(randomString)
                   )
@@ -274,7 +274,7 @@ class ApplicationRequestSpec
                     name = randomString,
                     streetAndNumber = randomString,
                     city = randomString,
-                    country = randomString,
+                    country = country.code,
                     postalCode = Some(randomString),
                     phoneNumber = Some(randomString)
                   )
@@ -303,7 +303,7 @@ class ApplicationRequestSpec
                     agentEoriDetails.businessName,
                     agentEoriDetails.addressLine1,
                     agentEoriDetails.addressLine2.getOrElse(""),
-                    agentEoriDetails.countryCode,
+                    country,
                     Some(agentEoriDetails.postcode)
                   )
                 )
@@ -362,6 +362,8 @@ object ApplicationRequestSpec extends Generators {
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
+  val country = Country("GB", "United Kingdom")
+
   val eoriDetails = TraderDetail(
     eori = randomString,
     businessName = randomString,
@@ -369,7 +371,7 @@ object ApplicationRequestSpec extends Generators {
     addressLine2 = Some(randomString),
     addressLine3 = None,
     postcode = randomString,
-    countryCode = randomString,
+    countryCode = country.code,
     phoneNumber = Some(randomString)
   )
 
@@ -380,7 +382,7 @@ object ApplicationRequestSpec extends Generators {
     addressLine2 = Some(randomString),
     addressLine3 = None,
     postcode = randomString,
-    countryCode = randomString,
+    countryCode = country.code,
     phoneNumber = None
   )
 
@@ -420,7 +422,7 @@ object ApplicationRequestSpec extends Generators {
        |  "addressLine1": "$randomString",
        |  "addressLine2": "$randomString",
        |  "postcode": "$randomString",
-       |  "countryCode": "$randomString",
+       |  "countryCode": "${country.code}",
        |  "phoneNumber": "$randomString"
        |},
        |"contact": {
@@ -452,7 +454,7 @@ object ApplicationRequestSpec extends Generators {
        |  "addressLine1": "$randomString",
        |  "addressLine2": "$randomString",
        |  "postcode": "$randomString",
-       |  "countryCode": "$randomString",
+       |  "countryCode": "${country.code}",
        |  "phoneNumber": "$randomString"
        |},
        |"agent": {
@@ -461,7 +463,7 @@ object ApplicationRequestSpec extends Generators {
        |  "addressLine1": "$randomString",
        |  "addressLine2": "$randomString",
        |  "postcode": "$randomString",
-       |  "countryCode": "$randomString"
+       |  "countryCode": "${country.code}"
        |},
        |"contact": {
        |  "name": "$randomString",

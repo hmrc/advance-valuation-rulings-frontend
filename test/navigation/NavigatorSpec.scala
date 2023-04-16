@@ -467,7 +467,7 @@ class NavigatorSpec extends SpecBase {
               "name",
               "streetAndNumber",
               "agentCity",
-              "AgentCountry",
+              Country("GB", "United Kingdom"),
               Some("AB1 2CD")
             )
           )

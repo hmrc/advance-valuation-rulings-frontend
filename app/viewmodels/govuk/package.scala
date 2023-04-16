@@ -30,6 +30,7 @@ package object govuk {
       with InputFluency
       with LabelFluency
       with RadiosFluency
+      with SelectFluency
       with SummaryListFluency
       with TagFluency
       with TextareaFluency
