@@ -16,14 +16,12 @@
 
 package viewmodels.checkAnswers.summary
 
-import scala.util.Try
-
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 import base.SpecBase
-import models.{AgentCompanyDetails, BusinessContactDetails, UserAnswers, WhatIsYourRoleAsImporter}
+import models.{AgentCompanyDetails, BusinessContactDetails, Country, UserAnswers, WhatIsYourRoleAsImporter}
 import pages.{AgentCompanyDetailsPage, BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 
 class AgentSummarySpec extends SpecBase {
@@ -46,7 +44,7 @@ class AgentSummarySpec extends SpecBase {
           agentCompanyName = RegisteredName,
           agentStreetAndNumber = StreetAndNumber,
           agentCity = City,
-          agentCountry = Country,
+          agentCountry = Country("GB", "United Kingdom"),
           agentPostalCode = Some(Postcode)
         )
       )
@@ -127,7 +125,7 @@ class AgentSummarySpec extends SpecBase {
         rows must contain(
           (
             Key(Text("checkYourAnswersForAgents.business.address.label")),
-            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$Country"))
+            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$country"))
           )
         )
       }

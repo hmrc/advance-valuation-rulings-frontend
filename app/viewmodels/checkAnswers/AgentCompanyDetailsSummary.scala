@@ -36,7 +36,7 @@ object AgentCompanyDetailsSummary {
           "<br/>" + HtmlFormat.escape(answer.agentCompanyName).toString +
           "<br/>" + HtmlFormat.escape(answer.agentStreetAndNumber).toString +
           "<br/>" + HtmlFormat.escape(answer.agentCity).toString +
-          "<br/>" + HtmlFormat.escape(answer.agentCountry).toString +
+          "<br/>" + HtmlFormat.escape(answer.agentCountry.name).toString +
           "<br/>" + HtmlFormat.escape(answer.agentPostalCode.getOrElse("")).toString
 
         SummaryListRowViewModel(

@@ -33,7 +33,7 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
     RegisteredName,
     StreetAndNumber,
     City,
-    Country,
+    country,
     Some(Postcode),
     Some(phoneNumber)
   )
@@ -82,7 +82,7 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
         rows must contain(
           (
             Key(Text("checkYourAnswers.eori.address.label")),
-            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$Country"))
+            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$country"))
           )
         )
       }

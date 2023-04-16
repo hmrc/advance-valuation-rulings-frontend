@@ -22,7 +22,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 
 import forms.mappings.Mappings
-import models.AgentCompanyDetails
+import models.{AgentCompanyDetails, Country}
 
 class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
 
@@ -43,7 +43,12 @@ class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
         .verifying(
           maxLength(maximumValueForTownOrCity, "agentCompanyDetails.error.agentCity.length")
         ),
-      "agentCountry"         -> text("agentCompanyDetails.error.agentCountry.required"),
+      "agentCountry"         -> text("agentCompanyDetails.error.agentCountry.required")
+        .verifying(
+          "agentCompanyDetails.error.agentCountry.required",
+          x => Country.allCountries.exists(_.code == x)
+        )
+        .transform[Country](x => Country.allCountries.find(_.code == x).get, _.code),
       "agentPostalCode"      -> postcodeText(
         "agentCompanyDetails.error.agentPostalCode.required",
         "agentCompanyDetails.error.agentPostalCode.gb"

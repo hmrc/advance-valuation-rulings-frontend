@@ -21,6 +21,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
+    govukSelect: GovukSelect,
     govukButton: GovukButton
 )
 
@@ -41,7 +42,7 @@
                 field = form("agentEori"),
                 label = LabelViewModel(messages("agentCompanyDetails.agentEori"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed20)
         )
 
         @govukInput(
@@ -70,18 +71,19 @@
 
         @govukInput(
             InputViewModel(
-                field = form("agentCountry"),
-                label = LabelViewModel(messages("agentCompanyDetails.agentCountry"))
-            )
-            .withWidth(Full)
-        )
-
-        @govukInput(
-            InputViewModel(
                 field = form("agentPostalCode"),
                 label = LabelViewModel(messages("agentCompanyDetails.agentPostalCode"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed10)
+        )
+
+        @govukSelect(
+            SelectViewModel(
+                field = form("agentCountry"),
+                items = Country.selectItems,
+                label = LabelViewModel(messages("agentCompanyDetails.agentCountry"))
+            )
+            .withCssClass("autocomplete")
         )
 
         @govukButton(
