@@ -94,4 +94,4 @@ object AgentCompanySummary {
       address         = registeredAddressRow(contactDetails, userAnswer.draftId)
       result          = Seq(eori, name, address)
     } yield result
-  }
+}
