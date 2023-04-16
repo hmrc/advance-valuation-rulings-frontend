@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.AgentCompanyDetailsFormProvider
-import models.{AgentCompanyDetails, NormalMode, UserAnswers}
+import models.{AgentCompanyDetails, Country, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -45,19 +45,17 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
   lazy val agentCompanyDetailsRoute =
     routes.AgentCompanyDetailsController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(
-    userAnswersId,
-    draftId,
-    Json.obj(
-      AgentCompanyDetailsPage.toString -> Json.obj(
-        "agentEori"            -> "GB12341234123",
-        "agentCompanyName"     -> "companyName",
-        "agentStreetAndNumber" -> "streetandNumber",
-        "agentCity"            -> "city",
-        "agentCountry"         -> "country"
-      )
+  val agentCompanyDetails =
+    AgentCompanyDetails(
+      "GB12341234123",
+      "companyName",
+      "streetandNumber",
+      "city",
+      Country("GB", "United Kingdom"),
+      None
     )
-  )
+
+  val userAnswers = emptyUserAnswers.set(AgentCompanyDetailsPage, agentCompanyDetails).success.value
 
   "AgentCompanyDetails Controller" - {
 
@@ -92,15 +90,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        val agentCompanyDetails =
-          AgentCompanyDetails(
-            "GB12341234123",
-            "companyName",
-            "streetandNumber",
-            "city",
-            "country",
-            None
-          )
+
         contentAsString(result) mustEqual view(form.fill(agentCompanyDetails), NormalMode)(
           request,
           messages(application)
@@ -130,7 +120,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
               ("agentCompanyName", "value 2"),
               ("agentStreetAndNumber", "streetandNumber"),
               ("agentCity", "city"),
-              ("agentCountry", "country")
+              ("agentCountry", "GB")
             )
 
         val result = route(application, request).value
@@ -189,7 +179,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
               ("agentCompanyName", "value 2"),
               ("agentStreetAndNumber", "streetandNumber"),
               ("agentCity", "city"),
-              ("agentCountry", "country")
+              ("agentCountry", "GB")
             )
 
         val result = route(application, request).value

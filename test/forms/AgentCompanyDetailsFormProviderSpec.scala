@@ -20,8 +20,9 @@ import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
 import generators.TraderDetailsGenerator
-import models.EoriNumber
+import models.{Country, EoriNumber}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen
 
 class AgentCompanyDetailsFormProviderSpec
     extends StringFieldBehaviours
@@ -127,7 +128,7 @@ class AgentCompanyDetailsFormProviderSpec
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      arbitrary[String].suchThat(_.nonEmpty)
+      Gen.oneOf(Country.allCountries.map(_.code))
     )
 
     behave like mandatoryField(
@@ -135,6 +136,20 @@ class AgentCompanyDetailsFormProviderSpec
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    "must not bind any values other than valid country codes" in {
+
+      val invalidAnswers =
+        arbitrary[String]
+          .suchThat(_.nonEmpty)
+          .suchThat(x => !Country.allCountries.map(_.code).contains(x))
+
+      forAll(invalidAnswers) {
+        answer =>
+          val result = form.bind(Map("agentCountry" -> answer)).apply(fieldName)
+          result.errors must contain only FormError(fieldName, requiredKey)
+      }
+    }
   }
 
   ".agentPostalCode" - {

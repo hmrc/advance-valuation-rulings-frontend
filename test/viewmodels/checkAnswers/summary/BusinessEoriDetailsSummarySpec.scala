@@ -34,7 +34,7 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
     RegisteredName,
     StreetAndNumber,
     City,
-    Country,
+    country,
     Some(Postcode),
     Some(phoneNumber)
   )
@@ -83,7 +83,7 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
         rows must contain(
           (
             Key(Text("checkYourAnswersForAgents.business.address.label")),
-            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$Country"))
+            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$country"))
           )
         )
       }

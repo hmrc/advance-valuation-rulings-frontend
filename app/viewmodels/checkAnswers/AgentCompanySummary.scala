@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{AgentCompanyDetails, CheckMode, UserAnswers}
+import models.{AgentCompanyDetails, CheckMode, Country, UserAnswers}
 import models.requests.ApplicationRequest
 import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
@@ -58,7 +58,7 @@ object AgentCompanySummary {
               answer.agentPostalCode
                 .map(value => s"${HtmlFormat.escape(value).body}<br>")
                 .getOrElse("") +
-              s"${HtmlFormat.escape(answer.agentCountry).body}"
+              s"${HtmlFormat.escape(answer.agentCountry.name).body}"
           )
         )
       ),
@@ -98,14 +98,18 @@ object AgentCompanySummary {
   def rows(
     request: ApplicationRequest
   )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val postCode       =
+    val postCode =
       if (request.trader.postcode.isEmpty) None else Some(request.trader.postcode)
+
+    val country =
+      Country.fromCountryCode(request.trader.countryCode)
+
     val contactDetails = models.AgentCompanyDetails(
       agentEori = request.trader.eori,
       agentCompanyName = request.trader.businessName,
       agentStreetAndNumber = request.trader.addressLine1 + "\n" + request.trader.addressLine2,
       agentCity = request.trader.addressLine2.getOrElse(""),
-      agentCountry = request.trader.countryCode,
+      agentCountry = country,
       agentPostalCode = postCode
     )
     Seq(
