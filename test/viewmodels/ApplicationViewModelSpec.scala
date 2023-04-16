@@ -160,7 +160,7 @@ object ApplicationViewModelSpec extends Generators {
     contact = contact,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
-    attachments = Seq.empty
+    attachments = Nil
   )
   val applicationId      = ApplicationId(0L)
   val application        =
@@ -173,6 +173,6 @@ object ApplicationViewModelSpec extends Generators {
       contact = applicationRequest.contact,
       requestedMethod = applicationRequest.requestedMethod,
       goodsDetails = applicationRequest.goodsDetails,
-      attachments = applicationRequest.attachments
+      attachments = Nil
     )
 }

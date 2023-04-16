@@ -20,26 +20,41 @@ import java.time.{LocalDate, ZoneOffset}
 
 import models.requests._
 import org.scalacheck._
+import org.scalacheck.Arbitrary.arbitrary
 
 trait ApplicationGenerator extends ApplicationRequestGenerator {
 
   implicit lazy val arbitraryApplication: Arbitrary[Application] =
     Arbitrary {
       for {
-        id        <- applicationIdGen
-        data      <- arbitraryApplicationRequest.arbitrary
-        date      <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        dateIntant = date.atStartOfDay(ZoneOffset.UTC).toInstant
+        id          <- applicationIdGen
+        data        <- arbitraryApplicationRequest.arbitrary
+        date        <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
+        dateInstant  = date.atStartOfDay(ZoneOffset.UTC).toInstant
+        attachments <- Gen.listOf(arbitrary[Attachment])
       } yield Application(
         id = id,
-        lastUpdated = dateIntant,
-        created = dateIntant,
+        lastUpdated = dateInstant,
+        created = dateInstant,
         trader = data.trader,
         agent = data.agent,
         contact = data.contact,
         requestedMethod = data.requestedMethod,
         goodsDetails = data.goodsDetails,
-        attachments = data.attachments
+        attachments = attachments
       )
+    }
+
+  implicit lazy val arbitraryAttachment: Arbitrary[Attachment] =
+    Arbitrary {
+      for {
+        id          <- arbitrary[Long]
+        name        <- arbitrary[String]
+        description <- Gen.option(arbitrary[String])
+        location    <- arbitrary[String]
+        privacy     <- Gen.oneOf(Privacy.values)
+        mimeType    <- arbitrary[String]
+        size        <- arbitrary[Long]
+      } yield Attachment(id, name, description, location, privacy, mimeType, size)
     }
 }
