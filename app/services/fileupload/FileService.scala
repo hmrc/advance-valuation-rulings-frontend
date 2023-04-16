@@ -44,10 +44,10 @@ class FileService @Inject() (
   objectStoreConfig: ObjectStoreClientConfig
 )(implicit ec: ExecutionContext) {
 
-  private val host: String          = configuration.get[String]("host")
-  private val callbackUrl: String   = configuration.get[String]("upscan.callbackUrl")
-  private val minimumFileSize: Long = configuration.underlying.getBytes("upscan.minFileSize")
-  private val maximumFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize")
+  private val host: String            = configuration.get[String]("host")
+  private val callbackBaseUrl: String = configuration.get[String]("upscan.callbackBaseUrl")
+  private val minimumFileSize: Long   = configuration.underlying.getBytes("upscan.minFileSize")
+  private val maximumFileSize: Long   = configuration.underlying.getBytes("upscan.maxFileSize")
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -59,10 +59,11 @@ class FileService @Inject() (
       controllers.routes.UploadSupportingDocumentsController
         .onPageLoad(index, mode, draftId, None, None, None)
         .url
-    val redirectUrl  = s"$host/$redirectPath"
+    val redirectUrl  = s"$host$redirectPath"
 
     val request = UpscanInitiateRequest(
-      callbackUrl = callbackUrl,
+      callbackUrl =
+        s"$callbackBaseUrl${controllers.callback.routes.UploadCallbackController.callback(draftId, index).url}",
       successRedirect = redirectUrl,
       errorRedirect = redirectUrl,
       minimumFileSize = minimumFileSize,
@@ -99,7 +100,7 @@ class FileService @Inject() (
     }
 
   private def getUserAnswers(draftId: DraftId): Future[UserAnswers] =
-    userAnswersService.get(DraftId(0)).flatMap {
+    userAnswersService.get(draftId).flatMap {
       _.map(Future.successful)
         .getOrElse(Future.failed(NoUserAnswersFoundException(draftId)))
     }

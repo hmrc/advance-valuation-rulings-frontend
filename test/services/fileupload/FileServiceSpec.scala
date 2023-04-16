@@ -60,10 +60,10 @@ class FileServiceSpec
 
   private lazy val app = GuiceApplicationBuilder()
     .configure(
-      "host"               -> "host",
-      "upscan.callbackUrl" -> "callbackUrl",
-      "upscan.minFileSize" -> "123b",
-      "upscan.maxFileSize" -> "321b"
+      "host"                   -> "host",
+      "upscan.callbackBaseUrl" -> "callbackUrl",
+      "upscan.minFileSize"     -> "123b",
+      "upscan.maxFileSize"     -> "321b"
     )
     .overrides(
       bind[UpscanConnector].toInstance(mockUpscanConnector),
@@ -90,10 +90,11 @@ class FileServiceSpec
       val expectedPath = controllers.routes.UploadSupportingDocumentsController
         .onPageLoad(Index(0), NormalMode, DraftId(0), None, None, None)
         .url
-      val expectedUrl  = s"host/$expectedPath"
+      val expectedUrl  = s"host$expectedPath"
 
       val expectedRequest = UpscanInitiateRequest(
-        callbackUrl = "callbackUrl",
+        callbackUrl = s"callbackUrl${controllers.callback.routes.UploadCallbackController
+            .callback(DraftId(0), Index(0))}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,

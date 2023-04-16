@@ -94,9 +94,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  val callbackEndpointTarget: String = loadConfig("upscan.callbackUrl")
-  val maximumFileSizeBytes: Long     = configuration.underlying.getBytes("upscan.maxFileSize")
-  val maximumFilesAllowed: Int       = configuration.get[Int]("upscan.maxFiles")
+  val maximumFileSizeBytes: Long = configuration.underlying.getBytes("upscan.maxFileSize")
+  val maximumFilesAllowed: Int   = configuration.get[Int]("upscan.maxFiles")
 
   val maxFileSizeMegaBytes: Int = {
     val KiloByte = 1000
