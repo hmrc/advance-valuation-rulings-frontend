@@ -24,7 +24,7 @@ import scala.concurrent.ExecutionContext
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import models.{Index, UploadedFile}
+import models.{DraftId, Index, UploadedFile}
 import services.fileupload.FileService
 
 @Singleton
@@ -34,7 +34,7 @@ class UploadCallbackController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
-  def callback(internalId: String, index: Index) = Action.async(parse.json[UploadedFile]) {
-    implicit request => fileService.update(internalId, index, request.body).as(Ok)
+  def callback(draftId: DraftId, index: Index) = Action.async(parse.json[UploadedFile]) {
+    implicit request => fileService.update(draftId, index, request.body).as(Ok)
   }
 }

@@ -31,14 +31,14 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import connectors.UpscanConnector
 import models.{Done, DraftId, Index, Mode, UploadedFile, UserAnswers}
 import pages.UploadSupportingDocumentPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
 
 @Singleton
 class FileService @Inject() (
   configuration: Configuration,
   upscanConnector: UpscanConnector,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   objectStoreClient: PlayObjectStoreClient,
   objectStoreConfig: ObjectStoreClientConfig
 )(implicit ec: ExecutionContext) {
@@ -50,13 +50,13 @@ class FileService @Inject() (
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  def initiate(mode: Mode, index: Index)(implicit
+  def initiate(draftId: DraftId, mode: Mode, index: Index)(implicit
     hc: HeaderCarrier
   ): Future[UpscanConnector.UpscanInitiateResponse] = {
 
     val redirectPath =
       controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(index, mode, DraftId(0), None, None, None) // TODO fix draft id
+        .onPageLoad(index, mode, draftId, None, None, None)
         .url
     val redirectUrl  = s"$host/$redirectPath"
 
@@ -71,24 +71,22 @@ class FileService @Inject() (
     upscanConnector.initiate(request)
   }
 
-  // TODO replace internalId with DraftId
-  def update(internalId: String, index: Index, file: UploadedFile): Future[Done] =
+  def update(draftId: DraftId, index: Index, file: UploadedFile): Future[Done] =
     for {
-      updatedFile    <- processFile(file)
-      answers        <- getUserAnswers(internalId)
+      updatedFile    <- processFile(draftId, file)
+      answers        <- getUserAnswers(draftId)
       updatedAnswers <-
         Future.fromTry(answers.set(UploadSupportingDocumentPage(index), updatedFile))
-      _              <- sessionRepository.set(updatedAnswers)
+      _              <- userAnswersService.set(updatedAnswers)
     } yield Done
 
-  private def processFile(file: UploadedFile): Future[UploadedFile] =
+  private def processFile(draftId: DraftId, file: UploadedFile): Future[UploadedFile] =
     file match {
       case success: UploadedFile.Success =>
-        // TODO include draftId in path
         objectStoreClient
           .uploadFromUrl(
             from = new URL(success.downloadUrl),
-            to = Path.File(s"rulings/${success.reference}/${success.uploadDetails.fileName}"),
+            to = Path.File(s"drafts/$draftId/${success.uploadDetails.fileName}"),
             retentionPeriod = objectStoreConfig.defaultRetentionPeriod,
             contentType = Some(success.uploadDetails.fileMimeType),
             contentMd5 = Some(Md5Hash(success.uploadDetails.checksum)),
@@ -99,18 +97,18 @@ class FileService @Inject() (
         Future.successful(file)
     }
 
-  private def getUserAnswers(internalId: String): Future[UserAnswers] =
-    sessionRepository.get(internalId, DraftId(0)).flatMap {
+  private def getUserAnswers(draftId: DraftId): Future[UserAnswers] =
+    userAnswersService.get(DraftId(0)).flatMap {
       _.map(Future.successful)
-        .getOrElse(Future.failed(NoUserAnswersFoundException(internalId)))
+        .getOrElse(Future.failed(NoUserAnswersFoundException(draftId)))
     }
 }
 
 object FileService {
 
-  final case class NoUserAnswersFoundException(internalId: String)
+  final case class NoUserAnswersFoundException(draftId: DraftId)
       extends Exception
       with NoStackTrace {
-    override def getMessage: String = s"No user answers found for $internalId"
+    override def getMessage: String = s"No user answers found for $draftId"
   }
 }

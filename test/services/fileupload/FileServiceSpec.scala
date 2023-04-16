@@ -37,7 +37,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class FileServiceSpec
     extends AnyFreeSpec
@@ -50,12 +50,12 @@ class FileServiceSpec
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockUpscanConnector, mockSessionRepository, mockObjectStoreClient)
+    reset(mockUpscanConnector, mockUserAnswersService, mockObjectStoreClient)
   }
 
-  private val mockUpscanConnector   = mock[UpscanConnector]
-  private val mockSessionRepository = mock[SessionRepository]
-  private val mockObjectStoreClient = mock[PlayObjectStoreClient]
+  private val mockUpscanConnector    = mock[UpscanConnector]
+  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockObjectStoreClient  = mock[PlayObjectStoreClient]
 
   private lazy val app = GuiceApplicationBuilder()
     .configure(
@@ -66,7 +66,7 @@ class FileServiceSpec
     )
     .overrides(
       bind[UpscanConnector].toInstance(mockUpscanConnector),
-      bind[SessionRepository].toInstance(mockSessionRepository),
+      bind[UserAnswersService].toInstance(mockUserAnswersService),
       bind[PlayObjectStoreClient].toInstance(mockObjectStoreClient)
     )
 
@@ -87,7 +87,7 @@ class FileServiceSpec
     "must call the upscan connector with the expected request" in {
 
       val expectedPath = controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(0), NormalMode, DraftId(0), None, None, None) // TODO fix draft id
+        .onPageLoad(Index(0), NormalMode, DraftId(0), None, None, None)
         .url
       val expectedUrl  = s"host/$expectedPath"
 
@@ -101,7 +101,7 @@ class FileServiceSpec
 
       when(mockUpscanConnector.initiate(any())(any())).thenReturn(Future.successful(response))
 
-      service.initiate(NormalMode, Index(0))(hc).futureValue mustEqual response
+      service.initiate(DraftId(0), NormalMode, Index(0))(hc).futureValue mustEqual response
 
       verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
     }
@@ -109,8 +109,7 @@ class FileServiceSpec
 
   "update" - {
 
-    val internalId  = "userId"
-    val userAnswers = UserAnswers(internalId, DraftId(0))
+    val userAnswers = UserAnswers("userId", DraftId(0))
 
     val instant = LocalDateTime
       .of(2023, 3, 2, 12, 30, 45)
@@ -145,29 +144,29 @@ class FileServiceSpec
           .success
           .value
 
-        when(mockSessionRepository.get(any(), any()))
+        when(mockUserAnswersService.get(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
-        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
 
-        service.update(internalId, Index(0), uploadedFile).futureValue
+        service.update(DraftId(0), Index(0), uploadedFile).futureValue
 
-        verify(mockSessionRepository).get(eqTo(internalId), any())
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
-        verify(mockSessionRepository).set(eqTo(expectedAnswers))
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
       }
 
       "must fail if no user answers can be found" in {
 
-        when(mockSessionRepository.get(any(), any())).thenReturn(Future.successful(None))
+        when(mockUserAnswersService.get(any())).thenReturn(Future.successful(None))
         when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
 
-        service.update(internalId, Index(0), uploadedFile).failed.futureValue
+        service.update(DraftId(0), Index(0), uploadedFile).failed.futureValue
 
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
-        verify(mockSessionRepository, never).set(any())
+        verify(mockUserAnswersService, never).set(any())
       }
     }
 
@@ -188,13 +187,13 @@ class FileServiceSpec
           .success
           .value
 
-        when(mockSessionRepository.get(any(), any()))
+        when(mockUserAnswersService.get(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
-        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
 
-        service.update(internalId, Index(0), uploadedFile).futureValue
+        service.update(DraftId(0), Index(0), uploadedFile).futureValue
 
-        verify(mockSessionRepository).get(eqTo(internalId), any())
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
         verify(mockObjectStoreClient, never).uploadFromUrl(
           any(),
           any(),
@@ -203,7 +202,7 @@ class FileServiceSpec
           any(),
           any()
         )(any())
-        verify(mockSessionRepository).set(eqTo(expectedAnswers))
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
       }
     }
   }

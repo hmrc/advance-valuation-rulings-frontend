@@ -26,7 +26,7 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-import models.{Done, Index, UploadedFile}
+import models.{Done, DraftId, Index, UploadedFile}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
@@ -69,13 +69,13 @@ class UploadCallbackControllerSpec
 
       when(mockFileService.update(any(), any(), any())).thenReturn(Future.successful(Done))
 
-      val request = FakeRequest(routes.UploadCallbackController.callback("internalId", Index(0)))
+      val request = FakeRequest(routes.UploadCallbackController.callback(DraftId(0), Index(0)))
         .withJsonBody(Json.toJson(requestBody))
       val result  = route(app, request).value
 
       status(result) mustBe OK
 
-      verify(mockFileService).update(eqTo("internalId"), eqTo(Index(0)), any())
+      verify(mockFileService).update(eqTo(DraftId(0)), eqTo(Index(0)), any())
     }
   }
 }
