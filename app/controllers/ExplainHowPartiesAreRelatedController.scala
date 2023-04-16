@@ -29,12 +29,12 @@ import forms.ExplainHowPartiesAreRelatedFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainHowPartiesAreRelatedPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ExplainHowPartiesAreRelatedView
 
 class ExplainHowPartiesAreRelatedController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class ExplainHowPartiesAreRelatedController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(ExplainHowPartiesAreRelatedPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ExplainHowPartiesAreRelatedPage, mode, updatedAnswers)(
                   request.affinityGroup

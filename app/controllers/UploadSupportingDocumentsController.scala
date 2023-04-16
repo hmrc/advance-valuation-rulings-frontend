@@ -30,7 +30,7 @@ import models._
 import models.fileupload._
 import models.requests.DataRequest
 import pages.UploadSupportingDocumentPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import services.fileupload.FileUploadService
 import views.html.UploadSupportingDocumentsView
 
@@ -38,7 +38,7 @@ import views.html.UploadSupportingDocumentsView
 class UploadSupportingDocumentsController @Inject() (
   override val messagesApi: MessagesApi,
   val controllerComponents: MessagesControllerComponents,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
@@ -141,7 +141,7 @@ class UploadSupportingDocumentsController @Inject() (
               (uploadedFiles: UploadedFiles) => uploadedFiles.addFile(payload),
               UploadedFiles.initialise(payload)
             )
-          _       <- sessionRepository.set(answers)
+          _       <- userAnswersService.set(answers)
           _        = logger.info(s"Uploaded file added to session repo uploadId: $uploadId")
         } yield Redirect(
           controllers.routes.IsThisFileConfidentialController.onPageLoad(mode, draftId)

@@ -32,7 +32,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.RequiredInformationPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.RequiredInformationView
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
@@ -94,15 +94,15 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -126,15 +126,15 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
     }
     "must display an error on the page when not all checkbox are submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 

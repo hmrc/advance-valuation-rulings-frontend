@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
 import controllers.actions.IdentifierAction
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,

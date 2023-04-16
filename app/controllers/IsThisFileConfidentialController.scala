@@ -29,12 +29,12 @@ import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
 class IsThisFileConfidentialController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -78,7 +78,7 @@ class IsThisFileConfidentialController @Inject() (
                 updatedAnswers <- UploadSupportingDocumentPage.modify(
                                     (files: UploadedFiles) => files.setConfidentiality(value)
                                   )
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers)(
                   request.affinityGroup

@@ -29,12 +29,12 @@ import forms.WhyComputedValueFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.WhyComputedValuePage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.WhyComputedValueView
 
 class WhyComputedValueController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class WhyComputedValueController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(WhyComputedValuePage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers)(
                   request.affinityGroup

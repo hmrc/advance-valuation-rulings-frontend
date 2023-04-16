@@ -29,12 +29,12 @@ import forms.AreThereRestrictionsOnTheGoodsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.AreThereRestrictionsOnTheGoodsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.AreThereRestrictionsOnTheGoodsView
 
 class AreThereRestrictionsOnTheGoodsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class AreThereRestrictionsOnTheGoodsController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(AreThereRestrictionsOnTheGoodsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(AreThereRestrictionsOnTheGoodsPage, mode, updatedAnswers)(
                   request.affinityGroup

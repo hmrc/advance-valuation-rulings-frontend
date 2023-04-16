@@ -29,12 +29,12 @@ import forms.ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainWhyYouHaveNotSelectedMethodOneToFivePage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ExplainWhyYouHaveNotSelectedMethodOneToFiveView
 
 class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -73,7 +73,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
                   Future.fromTry(
                     request.userAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, value)
                   )
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
                   .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, mode, updatedAnswers)(

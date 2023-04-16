@@ -30,12 +30,13 @@ import connectors.BackendConnector
 import controllers.actions._
 import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
 import navigation.Navigator
-import repositories.{CounterRepository, SessionRepository}
+import repositories.CounterRepository
+import services.UserAnswersService
 import views.html.AccountHomeView
 
 class AccountHomeController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   counterRepository: CounterRepository,
   identify: IdentifierAction,
   backendConnector: BackendConnector,
@@ -61,7 +62,7 @@ class AccountHomeController @Inject() (
       implicit request =>
         for {
           draftId <- counterRepository.nextId(CounterId.DraftId)
-          _       <- sessionRepository.set(UserAnswers(request.userId, DraftId(draftId)))
+          _       <- userAnswersService.set(UserAnswers(request.userId, DraftId(draftId)))
         } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, DraftId(draftId)))
     }
 }

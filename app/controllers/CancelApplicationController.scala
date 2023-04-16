@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.CancelAreYouSureView
 
 class CancelApplicationController @Inject() (
@@ -33,7 +33,7 @@ class CancelApplicationController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   val controllerComponents: MessagesControllerComponents,
   view: CancelAreYouSureView
 )(implicit ec: ExecutionContext)
@@ -47,7 +47,7 @@ class CancelApplicationController @Inject() (
     identify.async {
       implicit request =>
         for {
-          _ <- sessionRepository.clear(request.userId, draftId)
+          _ <- userAnswersService.clear(request.userId, draftId)
         } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
     }
 }

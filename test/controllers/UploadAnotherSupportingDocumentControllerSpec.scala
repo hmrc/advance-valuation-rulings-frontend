@@ -34,7 +34,7 @@ import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.UploadAnotherSupportingDocumentView
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
@@ -135,15 +135,15 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
     }
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -280,11 +280,11 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
     "must redirect on files are delete" in {
 
-      val config                = mock[FrontendAppConfig]
-      val osClient              = mock[PlayObjectStoreClient]
-      val mockSessionRepository = mock[SessionRepository]
+      val config                 = mock[FrontendAppConfig]
+      val osClient               = mock[PlayObjectStoreClient]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any()))
+      when(mockUserAnswersService.set(any()))
         .thenReturn(Future.successful(true))
       when(osClient.deleteObject(any(), any())(any()))
         .thenReturn(Future.successful(()))
@@ -293,7 +293,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         applicationBuilder(userAnswers = Some(ans))
           .overrides(
             bind[PlayObjectStoreClient].toInstance(osClient),
-            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
             bind[FrontendAppConfig].toInstance(config)
           )
           .build()
@@ -304,7 +304,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockSessionRepository, times(1)).set(any())
+        verify(mockUserAnswersService, times(1)).set(any())
         verify(osClient, times(1)).deleteObject(any(), any())(
           any()
         )
@@ -313,10 +313,10 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
     "does not call object store if the file does not exist" in {
 
-      val osClient              = mock[PlayObjectStoreClient]
-      val mockSessionRepository = mock[SessionRepository]
+      val osClient               = mock[PlayObjectStoreClient]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any()))
+      when(mockUserAnswersService.set(any()))
         .thenReturn(Future.successful(true))
       when(osClient.deleteObject(any(), anyString())(any()))
         .thenReturn(Future.successful(()))
@@ -325,7 +325,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[PlayObjectStoreClient].toInstance(osClient),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
       running(application) {
@@ -335,7 +335,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockSessionRepository, times(0)).set(any())
+        verify(mockUserAnswersService, times(0)).set(any())
         verify(osClient, times(0)).deleteObject(any(), anyString())(any())
       }
     }

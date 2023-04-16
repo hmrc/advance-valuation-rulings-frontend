@@ -29,12 +29,12 @@ import forms.ExplainHowYouWillUseMethodSixFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainHowYouWillUseMethodSixPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ExplainHowYouWillUseMethodSixView
 
 class ExplainHowYouWillUseMethodSixController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(ExplainHowYouWillUseMethodSixPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ExplainHowYouWillUseMethodSixPage, mode, updatedAnswers)(
                   request.affinityGroup

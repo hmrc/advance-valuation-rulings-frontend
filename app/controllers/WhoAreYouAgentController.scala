@@ -30,12 +30,12 @@ import forms.WhoAreYouAgentFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.WhoAreYouAgentPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.WhoAreYouAgentView
 
 class WhoAreYouAgentController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -71,7 +71,7 @@ class WhoAreYouAgentController @Inject() (
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(WhoAreYouAgentPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers)(request.affinityGroup)
               )

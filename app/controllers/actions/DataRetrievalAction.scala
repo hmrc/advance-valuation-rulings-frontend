@@ -24,18 +24,18 @@ import play.api.mvc.ActionTransformer
 
 import models.DraftId
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class DataRetrievalAction @Inject() (
   draftId: DraftId,
-  val sessionRepository: SessionRepository
+  val userAnswersService: UserAnswersService
 )(implicit val executionContext: ExecutionContext)
     extends ActionTransformer[IdentifierRequest, OptionalDataRequest] {
 
   override protected def transform[A](
     request: IdentifierRequest[A]
   ): Future[OptionalDataRequest[A]] =
-    sessionRepository.get(request.userId, draftId).map {
+    userAnswersService.get(request.userId, draftId).map {
       OptionalDataRequest(
         request.request,
         request.userId,
@@ -47,10 +47,10 @@ class DataRetrievalAction @Inject() (
     }
 }
 
-class DataRetrievalActionProvider @Inject() (sessionRepository: SessionRepository)(implicit
+class DataRetrievalActionProvider @Inject() (userAnswersService: UserAnswersService)(implicit
   ec: ExecutionContext
 ) {
 
   def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
-    new DataRetrievalAction(draftId, sessionRepository)
+    new DataRetrievalAction(draftId, userAnswersService)
 }

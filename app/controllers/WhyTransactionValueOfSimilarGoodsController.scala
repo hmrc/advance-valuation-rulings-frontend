@@ -29,12 +29,12 @@ import forms.WhyTransactionValueOfSimilarGoodsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.WhyTransactionValueOfSimilarGoodsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.WhyTransactionValueOfSimilarGoodsView
 
 class WhyTransactionValueOfSimilarGoodsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -71,7 +71,7 @@ class WhyTransactionValueOfSimilarGoodsController @Inject() (
                 updatedAnswers <-
                   Future
                     .fromTry(request.userAnswers.set(WhyTransactionValueOfSimilarGoodsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(WhyTransactionValueOfSimilarGoodsPage, mode, updatedAnswers)(
                   request.affinityGroup

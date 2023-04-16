@@ -29,12 +29,12 @@ import forms.RequiredInformationFormProvider
 import models.{DraftId, NormalMode}
 import navigation.Navigator
 import pages.RequiredInformationPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.RequiredInformationView
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -77,7 +77,7 @@ class RequiredInformationController @Inject() (
                   Future.fromTry(
                     request.userAnswers.set(RequiredInformationPage, value)
                   )
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)(
                   request.affinityGroup

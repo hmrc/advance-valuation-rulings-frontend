@@ -34,12 +34,12 @@ import models.requests.DataRequest
 import navigation.Navigator
 import org.apache.commons.lang3.StringUtils
 import pages.CheckRegisteredDetailsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -83,7 +83,7 @@ class CheckRegisteredDetailsController @Inject() (
                     answers <-
                       request.userAnswers
                         .setFuture(CheckRegisteredDetailsPage, traderDetails.details)
-                    _       <- sessionRepository.set(answers)
+                    _       <- userAnswersService.set(answers)
                     form     = formProvider(
                                  request.affinityGroup,
                                  traderDetails.details.consentToDisclosureOfPersonalData
@@ -129,7 +129,7 @@ class CheckRegisteredDetailsController @Inject() (
                   for {
                     updatedAnswers <-
                       request.userAnswers.setFuture(CheckRegisteredDetailsPage, updatedDetails)
-                    _              <- sessionRepository.set(updatedAnswers)
+                    _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
                     navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)(
                       request.affinityGroup
@@ -144,7 +144,7 @@ class CheckRegisteredDetailsController @Inject() (
     detailsToResult: CheckRegisteredDetails => Result
   )(implicit request: DataRequest[AnyContent]): Future[Result] =
     for {
-      userAnswers <- sessionRepository.get(request.userAnswers.userId, draftId)
+      userAnswers <- userAnswersService.get(request.userAnswers.userId, draftId)
       details      = userAnswers.flatMap(_.get(CheckRegisteredDetailsPage))
       result       = details match {
                        case Some(registrationDetails) =>

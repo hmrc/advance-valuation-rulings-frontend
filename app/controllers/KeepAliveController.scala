@@ -25,20 +25,20 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions.{DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class KeepAliveController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
-  sessionRepository: SessionRepository
+  userAnswersService: UserAnswersService
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
   def keepAlive(draftId: DraftId): Action[AnyContent] = (identify andThen getData(draftId)).async {
     implicit request =>
       request.userAnswers
-        .map(answers => sessionRepository.keepAlive(answers.userId, draftId).map(_ => Ok))
+        .map(answers => userAnswersService.keepAlive(answers.userId, draftId).map(_ => Ok))
         .getOrElse(Future.successful(Ok))
   }
 }

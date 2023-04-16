@@ -28,7 +28,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.CancelAreYouSureView
 
 class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
@@ -53,14 +53,14 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
     "must clear answers and redirect" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      Mockito.reset(mockSessionRepository)
+      Mockito.reset(mockUserAnswersService)
 
-      when(mockSessionRepository.clear(any(), any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersService.clear(any(), any())).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
         .build()
 
       running(application) {
@@ -69,7 +69,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        verify(mockSessionRepository, times(1)).clear(eqTo(emptyUserAnswers.userId), eqTo(draftId))
+        verify(mockUserAnswersService, times(1)).clear(eqTo(emptyUserAnswers.userId), eqTo(draftId))
       }
     }
   }

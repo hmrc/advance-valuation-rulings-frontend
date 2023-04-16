@@ -29,12 +29,12 @@ import forms.HaveYouUsedMethodOneInPastFormProvider
 import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.HaveYouUsedMethodOneInPastPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.HaveYouUsedMethodOneInPastView
 
 class HaveYouUsedMethodOneInPastController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -72,7 +72,7 @@ class HaveYouUsedMethodOneInPastController @Inject() (
                 else UserAnswers.clearValuationMethod(request.userAnswers)
               for {
                 ua <- userAnswers.setFuture(HaveYouUsedMethodOneInPastPage, value)
-                _  <- sessionRepository.set(ua)
+                _  <- userAnswersService.set(ua)
               } yield Redirect(
                 navigator.nextPage(HaveYouUsedMethodOneInPastPage, mode, ua)(
                   request.affinityGroup

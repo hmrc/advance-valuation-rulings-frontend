@@ -29,12 +29,12 @@ import forms.DoYouWantToUploadDocumentsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.DoYouWantToUploadDocumentsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.DoYouWantToUploadDocumentsView
 
 class DoYouWantToUploadDocumentsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -66,7 +66,7 @@ class DoYouWantToUploadDocumentsController @Inject() (
             value =>
               for {
                 updatedAnswers <- DoYouWantToUploadDocumentsPage.set(value)
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(DoYouWantToUploadDocumentsPage, mode, updatedAnswers)(
                   request.affinityGroup

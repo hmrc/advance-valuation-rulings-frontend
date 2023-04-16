@@ -29,12 +29,12 @@ import forms.ExplainReasonComputedValueFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainReasonComputedValuePage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ExplainReasonComputedValueView
 
 class ExplainReasonComputedValueController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -70,7 +70,7 @@ class ExplainReasonComputedValueController @Inject() (
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(ExplainReasonComputedValuePage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ExplainReasonComputedValuePage, mode, updatedAnswers)(
                   request.affinityGroup

@@ -29,12 +29,12 @@ import forms.AdaptMethodFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.AdaptMethodPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.AdaptMethodView
 
 class AdaptMethodController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -69,7 +69,7 @@ class AdaptMethodController @Inject() (
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(AdaptMethodPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(AdaptMethodPage, mode, updatedAnswers)(request.affinityGroup)
               )
