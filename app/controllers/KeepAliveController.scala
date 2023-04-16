@@ -23,22 +23,22 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
 import repositories.SessionRepository
 
 class KeepAliveController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   sessionRepository: SessionRepository
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
-  def keepAlive(draftId: DraftId): Action[AnyContent] = (identify andThen getData).async {
+  def keepAlive(draftId: DraftId): Action[AnyContent] = (identify andThen getData(draftId)).async {
     implicit request =>
       request.userAnswers
-        .map(answers => sessionRepository.keepAlive(answers.userId).map(_ => Ok))
+        .map(answers => sessionRepository.keepAlive(answers.userId, draftId).map(_ => Ok))
         .getOrElse(Future.successful(Ok))
   }
 }

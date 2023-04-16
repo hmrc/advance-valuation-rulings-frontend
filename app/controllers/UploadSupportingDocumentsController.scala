@@ -25,7 +25,7 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models._
 import models.fileupload._
 import models.requests.DataRequest
@@ -40,11 +40,10 @@ class UploadSupportingDocumentsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   sessionRepository: SessionRepository,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   fileUploadService: FileUploadService,
-  uploadSupportingDocumentsView: UploadSupportingDocumentsView,
-  isThisFileConfidentialController: IsThisFileConfidentialController
+  uploadSupportingDocumentsView: UploadSupportingDocumentsView
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -56,7 +55,7 @@ class UploadSupportingDocumentsController @Inject() (
     uploadId: Option[UploadId],
     mode: Mode,
     draftId: DraftId
-  ): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  ): Action[AnyContent] = (identify andThen getData(draftId) andThen requireData).async {
     implicit request: DataRequest[AnyContent] =>
       val statusFromCode = error.flatMap(UploadStatus.fromErrorCode)
       uploadId match {
@@ -126,7 +125,7 @@ class UploadSupportingDocumentsController @Inject() (
     mode: Mode,
     draftId: DraftId
   ): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val payload = UpscanFileDetails(
           uploadId,

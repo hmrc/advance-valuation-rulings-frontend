@@ -43,7 +43,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: UploadAnotherSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -58,7 +58,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         makeDocumentRows(request.userAnswers, mode, draftId) match {
           case Some(table) =>
@@ -74,7 +74,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         validateFromRequest(form)
           .fold(
@@ -97,7 +97,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
     }
 
   def onDelete(uploadId: String, mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val fileOpt = UploadSupportingDocumentPage.get().flatMap(_.getFile(UploadId(uploadId)))
         fileOpt match {

@@ -79,7 +79,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         .value
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -110,7 +110,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         .value
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))

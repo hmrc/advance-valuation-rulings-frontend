@@ -37,7 +37,7 @@ class ApplicationContactDetailsController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: ApplicationContactDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,7 +49,7 @@ class ApplicationContactDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers.get(ApplicationContactDetailsPage) match {
           case None        => form
@@ -60,7 +60,7 @@ class ApplicationContactDetailsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()

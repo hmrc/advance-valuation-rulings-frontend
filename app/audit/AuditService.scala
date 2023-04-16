@@ -26,19 +26,19 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import models.WhatIsYourRoleAsImporter
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
 import models.events.{AgentIndicatorEvent, UserTypeEvent}
-import models.requests.{DataRequest, OptionalDataRequest}
+import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
 
 @Singleton
 class AuditService @Inject() (auditConnector: AuditConnector) {
 
   def sendUserTypeEvent()(implicit
-    dataRequest: OptionalDataRequest[_],
+    identifierRequest: IdentifierRequest[_],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Unit = {
-    import dataRequest._
+    import identifierRequest._
 
-    val referrer = dataRequest.headers.get("Referer")
+    val referrer = identifierRequest.headers.get("Referer")
     val detail   = UserTypeEvent(userId, eoriNumber, affinityGroup, credentialRole, referrer)
     auditConnector.sendExplicitAudit("UserEntersService", detail)
   }

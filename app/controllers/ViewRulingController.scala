@@ -28,13 +28,11 @@ import views.html.ViewRulingView
 class ViewRulingController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: ViewRulingView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
-    (identify andThen getData andThen requireData)(implicit request => Ok(view()))
+    identify(implicit request => Ok(view()))
 }

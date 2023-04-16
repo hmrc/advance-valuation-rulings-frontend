@@ -37,8 +37,8 @@ class ImportGoodsController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  generateDraftId: DraftIdGenerationAction,
+  getData: DataRetrievalActionProvider,
+  requireData: DataRequiredAction,
   formProvider: ImportGoodsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ImportGoodsView
@@ -49,11 +49,10 @@ class ImportGoodsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen generateDraftId) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm =
           request.userAnswers
-            .getOrElse(UserAnswers(request.userId, request.draftId))
             .get(ImportGoodsPage) match {
             case None        => form
             case Some(value) => form.fill(value)
@@ -62,7 +61,7 @@ class ImportGoodsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen generateDraftId).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
@@ -73,7 +72,6 @@ class ImportGoodsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(
                     request.userAnswers
-                      .getOrElse(UserAnswers(request.userId, request.draftId))
                       .set(ImportGoodsPage, value)
                   )
                 _              <- sessionRepository.set(updatedAnswers)

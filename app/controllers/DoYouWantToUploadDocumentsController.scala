@@ -37,7 +37,7 @@ class DoYouWantToUploadDocumentsController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: DoYouWantToUploadDocumentsFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,7 +49,7 @@ class DoYouWantToUploadDocumentsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm = DoYouWantToUploadDocumentsPage.fill(form)
 
@@ -57,7 +57,7 @@ class DoYouWantToUploadDocumentsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()

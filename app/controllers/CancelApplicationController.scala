@@ -23,7 +23,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
 import repositories.SessionRepository
 import views.html.CancelAreYouSureView
@@ -31,7 +31,7 @@ import views.html.CancelAreYouSureView
 class CancelApplicationController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   sessionRepository: SessionRepository,
   val controllerComponents: MessagesControllerComponents,
@@ -40,13 +40,14 @@ class CancelApplicationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId): Action[AnyContent]    =
-    (identify andThen getData andThen requireData)(implicit request => Ok(view(draftId)))
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
+
   def confirmCancel(draftId: DraftId): Action[AnyContent] =
     identify.async {
       implicit request =>
         for {
-          _ <- sessionRepository.clear(request.userId)
+          _ <- sessionRepository.clear(request.userId, draftId)
         } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
     }
 }

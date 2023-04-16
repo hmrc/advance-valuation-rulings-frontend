@@ -28,19 +28,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import audit.AuditService
 import connectors.BackendConnector
 import controllers.actions._
-import models.{ApplicationForAccountHome, UserAnswers}
+import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
 import navigation.Navigator
-import repositories.SessionRepository
+import repositories.{CounterRepository, SessionRepository}
 import views.html.AccountHomeView
 
 class AccountHomeController @Inject() (
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
+  counterRepository: CounterRepository,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
   backendConnector: BackendConnector,
   auditService: AuditService,
-  generateDraftId: DraftIdGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
@@ -50,7 +49,7 @@ class AccountHomeController @Inject() (
     with Retrievals {
 
   def onPageLoad: Action[AnyContent] =
-    (identify andThen getData).async {
+    identify.async {
       implicit request =>
         auditService.sendUserTypeEvent()
         backendConnector.applicationSummaries
@@ -58,11 +57,11 @@ class AccountHomeController @Inject() (
     }
 
   def startApplication: Action[AnyContent] =
-    (identify andThen getData andThen generateDraftId).async {
+    identify.async {
       implicit request =>
         for {
-          _ <-
-            sessionRepository.set(UserAnswers(request.userId, request.draftId))
-        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, request.draftId))
+          draftId <- counterRepository.nextId(CounterId.DraftId)
+          _       <- sessionRepository.set(UserAnswers(request.userId, DraftId(draftId)))
+        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, DraftId(draftId)))
     }
 }

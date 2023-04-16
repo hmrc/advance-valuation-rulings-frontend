@@ -42,7 +42,7 @@ class CheckRegisteredDetailsController @Inject() (
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -58,11 +58,11 @@ class CheckRegisteredDetailsController @Inject() (
   private val AckRefPad    = "0"
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         request.userAnswers.get(CheckRegisteredDetailsPage) match {
           case Some(value) =>
-            handleForm {
+            handleForm(draftId) {
               (details: CheckRegisteredDetails) =>
                 val form =
                   formProvider(request.affinityGroup, details.consentToDisclosureOfPersonalData)
@@ -99,7 +99,7 @@ class CheckRegisteredDetailsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val checkRegisteredDetails: Option[CheckRegisteredDetails] =
           request.userAnswers.get(CheckRegisteredDetailsPage)
@@ -118,7 +118,7 @@ class CheckRegisteredDetailsController @Inject() (
               .bindFromRequest()
               .fold(
                 formWithErrors =>
-                  handleForm(
+                  handleForm(draftId)(
                     (details: CheckRegisteredDetails) =>
                       BadRequest(
                         view(formWithErrors, mode, details, request.affinityGroup, draftId)
@@ -140,11 +140,11 @@ class CheckRegisteredDetailsController @Inject() (
         }
     }
 
-  private def handleForm(
+  private def handleForm(draftId: DraftId)(
     detailsToResult: CheckRegisteredDetails => Result
   )(implicit request: DataRequest[AnyContent]): Future[Result] =
     for {
-      userAnswers <- sessionRepository.get(request.userAnswers.userId)
+      userAnswers <- sessionRepository.get(request.userAnswers.userId, draftId)
       details      = userAnswers.flatMap(_.get(CheckRegisteredDetailsPage))
       result       = details match {
                        case Some(registrationDetails) =>

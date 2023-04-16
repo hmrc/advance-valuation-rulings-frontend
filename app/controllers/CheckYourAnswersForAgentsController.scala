@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction, IdentifyAgentAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import models.DraftId
 import models.requests._
 import pages.Page
@@ -36,7 +36,7 @@ import views.html.CheckYourAnswersForAgentsView
 class CheckYourAnswersForAgentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   isAgent: IdentifyAgentAction,
   val controllerComponents: MessagesControllerComponents,
@@ -49,14 +49,14 @@ class CheckYourAnswersForAgentsController @Inject() (
   private val logger = Logger(this.getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen isAgent andThen getData andThen requireData) {
+    (identify andThen isAgent andThen getData(draftId) andThen requireData) {
       implicit request =>
         val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
         Ok(view(applicationSummary, draftId))
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen isAgent andThen getData andThen requireData).async {
+    (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
       implicit request =>
         ApplicationRequest(request.userAnswers, request.affinityGroup) match {
           case Invalid(errors: cats.data.NonEmptyList[Page]) =>

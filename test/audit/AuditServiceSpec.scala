@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import base.SpecBase
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.events.{AgentIndicatorEvent, UserTypeEvent}
-import models.requests.{DataRequest, OptionalDataRequest}
+import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{times, verify}
@@ -47,20 +47,19 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
 
   "sendUserTypeEvent" - {
 
-    implicit val optionalDataRequest: OptionalDataRequest[_] = OptionalDataRequest(
+    implicit val identifierRequest: IdentifierRequest[_] = IdentifierRequest(
       request = FakeRequest().withHeaders("Referer" -> "some referer"),
       userId = userAnswersId,
       eoriNumber = EoriNumber,
       affinityGroup = AffinityGroup.Individual,
-      credentialRole = Option(User),
-      userAnswers = None
+      credentialRole = Option(User)
     )
 
     val event = UserTypeEvent(
-      optionalDataRequest.userId,
-      optionalDataRequest.eoriNumber,
-      optionalDataRequest.affinityGroup,
-      optionalDataRequest.credentialRole,
+      identifierRequest.userId,
+      identifierRequest.eoriNumber,
+      identifierRequest.affinityGroup,
+      identifierRequest.credentialRole,
       Some("some referer")
     )
 
