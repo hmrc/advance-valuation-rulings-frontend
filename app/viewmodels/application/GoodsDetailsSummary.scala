@@ -20,13 +20,13 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
-import models.requests.{AttachmentRequest, GoodsDetails}
+import models.requests.{Attachment, GoodsDetails}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object GoodsDetailsSummary {
 
-  def rows(goodsDetails: GoodsDetails, attachments: Seq[AttachmentRequest])(implicit
+  def rows(goodsDetails: GoodsDetails, attachments: Seq[Attachment])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
 

@@ -16,23 +16,19 @@
 
 package models.requests
 
-import java.time.Instant
-
 import play.api.libs.json.{Json, OFormat}
 
-final case class Application(
-  id: ApplicationId,
-  created: Instant,
-  lastUpdated: Instant,
-  trader: TraderDetail,
-  agent: Option[TraderDetail],
-  contact: ContactDetails,
-  requestedMethod: RequestedMethod,
-  goodsDetails: GoodsDetails,
-  attachments: Seq[Attachment]
+final case class Attachment(
+  id: Long,
+  name: String,
+  description: Option[String],
+  location: String,
+  privacy: Privacy,
+  mimeType: String,
+  size: Long
 )
 
-object Application {
+object Attachment {
 
-  implicit lazy val format: OFormat[Application] = Json.format
+  implicit lazy val format: OFormat[Attachment] = Json.format
 }

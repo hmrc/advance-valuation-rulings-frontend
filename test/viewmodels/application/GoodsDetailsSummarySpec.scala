@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryListRow
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, Value}
 
-import models.requests.{AttachmentRequest, GoodsDetails, Privacy}
+import models.requests.{Attachment, GoodsDetails, Privacy}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 
@@ -60,8 +60,8 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
       )
 
       val attachments = Seq(
-        AttachmentRequest("name 1", None, "url 1", Privacy.Public, "mime", 1L),
-        AttachmentRequest("name 2", None, "url 2", Privacy.Public, "mime", 2L)
+        Attachment(1L, "name 1", None, "url 1", Privacy.Public, "mime", 1L),
+        Attachment(2L, "name 2", None, "url 2", Privacy.Public, "mime", 2L)
       )
 
       GoodsDetailsSummary.rows(goods, attachments) must contain theSameElementsInOrderAs Seq(
