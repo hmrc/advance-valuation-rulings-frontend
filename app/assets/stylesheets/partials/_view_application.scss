@@ -30,10 +30,16 @@
 
 .print-document .print-header {
   position: relative;
-  border-left: #28A197 solid;
   padding-left: 8px;
   margin-right: -15px;
   //top: 10mm;
+}
+
+.print-document .print-header .column-one-third {
+  position: relative;
+  padding-left: 8px;
+  margin-right: -15px;
+  border-left: #28A197 solid;
 }
 
 .print-document .logotype {
@@ -50,7 +56,7 @@
   line-height: 1;
 }
 .print-document .print-header h2 {
-  text-align: right;
+  text-align: center;
   margin-top: 2em;
   font-size: 1.2em;
   color: #00703C;
@@ -278,6 +284,22 @@
     visibility: visible;
     position: relative;
   }
+
+  .break-after {
+    display: block;
+    page-break-after: always;
+    position: relative;
+    visibility: visible;
+    float: left;
+  }
+  .break-before {
+    display: block;
+    page-break-before: always;
+    visibility: visible;
+    position: relative;
+    float: left;
+  }
+  
   .print-document {
     visibility: visible;
     margin: 10mm;

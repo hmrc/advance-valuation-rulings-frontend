@@ -62,6 +62,7 @@ s"${appConfig.host}${routes.Assets.versioned(path)}"
 
     <div id="print-pages">
         <div class="page-break">
+            <div class="break-after">
             <div id="your-records" class="print-document">
                 <div class="grid-row print-header">
                     <div class="column-one-third">
@@ -73,16 +74,16 @@ s"${appConfig.host}${routes.Assets.versioned(path)}"
                             @messages("viewApplication.hmrc")
                         </p>
                     </div>
-                    <div class="govuk-grid-column-two-thirds">
-
+                    <div class="govuk-grid-column-full">
                         <h2 class="govuk-heading-m">@messages("viewApplication.yourRuling")</h2>
                     </div>
                 </div>
                 @forYourRecords(appModel, applicationId, lastUpdated)
             </div>
         </div>
+    </div>
 
-    <div class="page-break">
+    <div class="break-before">
         <div id="about-goods" class="print-document">
             <div class="grid-row print-header">
                 <div class="column-one-third">
@@ -94,7 +95,7 @@ s"${appConfig.host}${routes.Assets.versioned(path)}"
                         @messages("viewApplication.hmrc")
                     </p>
                 </div>
-                <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-column-two-full">
 
                     <h2 class="govuk-heading-m">@messages("viewApplication.yourRuling")</h2>
                 </div>
