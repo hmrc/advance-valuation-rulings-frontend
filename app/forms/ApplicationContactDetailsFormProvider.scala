@@ -41,8 +41,10 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
           .verifying(maxLength(Validation.emailMaxLength, emailLengthError))
           .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError)),
         "phone" -> text(phoneRequiredError)
-          .verifying(phoneFormatError, isValid(_))
-          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError))
+          .verifying(
+            phoneFormatError,
+            phone => isValid(phone) && phone.length <= Validation.phoneNumberMaxLength
+          )
       )(ApplicationContactDetails.apply)(
         (applicationContactDetails: ApplicationContactDetails) =>
           Some(
@@ -70,7 +72,6 @@ object ApplicationContactDetailsFormProvider {
 
   private val phoneRequiredError = "applicationContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "applicationContactDetails.telephoneNumber.error.format"
-  private val phoneLengthError   = "applicationContactDetails.telephoneNumber.length"
 
   private def isValid(string: String): Boolean =
     Try(util.isPossibleNumber(util.parse(string, "GB")))
