@@ -61,7 +61,7 @@ class CheckYourAnswersController @Inject() (
             Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
           case Valid(applicationRequest)                     =>
             submissionService
-              .submitApplication(applicationRequest)
+              .submitApplication(applicationRequest, request.userId)
               .map {
                 response =>
                   Redirect(

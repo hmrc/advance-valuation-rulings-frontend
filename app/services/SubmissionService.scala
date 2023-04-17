@@ -24,33 +24,35 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import connectors.BackendConnector
 import logging.Logging
-import models.requests.{ApplicationRequest, ApplicationSubmissionResponse}
+import models.requests.{ApplicationId, ApplicationRequest, ApplicationSubmissionResponse}
+import repositories.SessionRepository
 import services.email.EmailService
 
-class SubmissionService @Inject() (backendConnector: BackendConnector, emailService: EmailService)(
-  implicit ec: ExecutionContext
+class SubmissionService @Inject() (
+  backendConnector: BackendConnector,
+  emailService: EmailService,
+  sessionRepository: SessionRepository
+)(implicit
+  ec: ExecutionContext
 ) extends Logging {
 
   def submitApplication(
-    applicationRequest: ApplicationRequest
+    applicationRequest: ApplicationRequest,
+    userId: String
   )(implicit hc: HeaderCarrier): Future[ApplicationSubmissionResponse] =
-    backendConnector
-      .submitApplication(applicationRequest)
-      .flatMap {
-        submissionResponse =>
-          emailService
-            .sendConfirmationEmail(
-              applicationRequest.contact.email,
-              applicationRequest.contact.name
-            )
-            .map(_ => submissionResponse)
-            .recover {
-              case err: Throwable =>
-                logger.warn(
-                  s"Failed to send an email for application ${submissionResponse.applicationId.toString}",
-                  err
-                )
-                submissionResponse
-            }
-      }
+    for {
+      submissionResponse <- backendConnector.submitApplication(applicationRequest)
+      applicationId       = submissionResponse.applicationId
+      contactDetails      = applicationRequest.contact
+      _                  <- sessionRepository
+                              .clear(userId)
+                              .recover(logError(applicationId, "Failed to clear user answers")(_))
+      _                  <- emailService
+                              .sendConfirmationEmail(contactDetails.email, contactDetails.name)
+                              .recover(logError(applicationId, "Failed to send an email")(_))
+    } yield submissionResponse
+
+  private def logError(applicationId: ApplicationId, message: String): Throwable => Unit = {
+    err: Throwable => logger.warn(s"$message for application $applicationId", err)
+  }
 }
