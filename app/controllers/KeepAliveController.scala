@@ -38,7 +38,7 @@ class KeepAliveController @Inject() (
   def keepAlive(draftId: DraftId): Action[AnyContent] = (identify andThen getData(draftId)).async {
     implicit request =>
       request.userAnswers
-        .map(answers => userAnswersService.keepAlive(answers.userId, draftId).map(_ => Ok))
+        .map(answers => userAnswersService.keepAlive(draftId).map(_ => Ok))
         .getOrElse(Future.successful(Ok))
   }
 }

@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import audit.AuditService
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{NormalMode, WhatIsYourRoleAsImporter}
+import models.{Done, NormalMode, WhatIsYourRoleAsImporter}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
@@ -106,7 +106,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))

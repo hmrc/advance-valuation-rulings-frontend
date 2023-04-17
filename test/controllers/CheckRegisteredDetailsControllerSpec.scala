@@ -101,11 +101,13 @@ class CheckRegisteredDetailsControllerSpec
       consentValue =>
         s"must return OK and the correct view for a GET when consentToDisclosureOfPersonalData is $consentValue" in {
 
-          val mockBackendConnector = mock[BackendConnector]
+          val mockBackendConnector   = mock[BackendConnector]
+          val mockUserAnswersService = mock[UserAnswersService]
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
             .overrides(
-              bind[BackendConnector].toInstance(mockBackendConnector)
+              bind[BackendConnector].toInstance(mockBackendConnector),
+              bind[UserAnswersService].toInstance(mockUserAnswersService)
             )
             .build()
 
@@ -118,6 +120,10 @@ class CheckRegisteredDetailsControllerSpec
               )
             )
 
+          when(mockUserAnswersService.get(any())(any()))
+            .thenReturn(Future.successful(Some(userAnswers)))
+          when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
           running(application) {
             val request = FakeRequest(GET, checkRegisteredDetailsRoute)
 
@@ -129,7 +135,8 @@ class CheckRegisteredDetailsControllerSpec
 
         s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
 
-          val previousUserAnswers = emptyUserAnswers
+          val mockUserAnswersService = mock[UserAnswersService]
+          val previousUserAnswers    = emptyUserAnswers
             .set(
               CheckRegisteredDetailsPage,
               registeredDetails.copy(consentToDisclosureOfPersonalData = consentValue)
@@ -137,7 +144,13 @@ class CheckRegisteredDetailsControllerSpec
             .success
             .value
 
-          val application = applicationBuilder(userAnswers = Some(previousUserAnswers)).build()
+          when(mockUserAnswersService.get(any())(any()))
+            .thenReturn(Future.successful(Some(previousUserAnswers)))
+
+          val application =
+            applicationBuilder(userAnswers = Some(previousUserAnswers))
+              .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+              .build()
 
           running(application) {
             val request = FakeRequest(GET, checkRegisteredDetailsRoute)
@@ -153,7 +166,7 @@ class CheckRegisteredDetailsControllerSpec
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -176,12 +189,21 @@ class CheckRegisteredDetailsControllerSpec
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+
       val userAnswers = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      when(mockUserAnswersService.get(any())(any()))
+        .thenReturn(Future.successful(Some(userAnswers)))
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+          .build()
 
       running(application) {
         val request =

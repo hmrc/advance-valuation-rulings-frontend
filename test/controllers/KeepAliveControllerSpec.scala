@@ -23,6 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
@@ -39,7 +40,9 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
 
         val mockUserAnswersService = mock[UserAnswersService]
 
-        when(mockUserAnswersService.keepAlive(any(), any())) thenReturn Future.successful(true)
+        when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
+          Done
+        )
 
         val application =
           applicationBuilder(Some(emptyUserAnswers))
@@ -54,7 +57,7 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual OK
           verify(mockUserAnswersService, times(1))
-            .keepAlive(eqTo(emptyUserAnswers.userId), eqTo(draftId))
+            .keepAlive(eqTo(draftId))(any())
         }
       }
     }
@@ -64,7 +67,9 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
       "must return OK" in {
 
         val mockUserAnswersService = mock[UserAnswersService]
-        when(mockUserAnswersService.keepAlive(any(), any())) thenReturn Future.successful(true)
+        when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
+          Done
+        )
 
         val application =
           applicationBuilder(None)
@@ -78,7 +83,7 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockUserAnswersService, never()).keepAlive(any(), any())
+          verify(mockUserAnswersService, never()).keepAlive(any())(any())
         }
       }
     }

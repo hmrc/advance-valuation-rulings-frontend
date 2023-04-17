@@ -137,7 +137,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -190,10 +190,16 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       }
     }
 
-    "must redirect to the next pagewhen user with 10 files selects 'No'" in {
+    "must redirect to the next page when user with 10 files selects 'No'" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
       val answers: UserAnswers =
         emptyUserAnswers.set(UploadSupportingDocumentPage, fullSetOfFiles).get
-      val application          = applicationBuilder(userAnswers = Some(answers)).build()
+      val application          = applicationBuilder(userAnswers = Some(answers))
+        .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+        .build()
 
       running(application) {
         val request =
@@ -284,8 +290,8 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val osClient               = mock[PlayObjectStoreClient]
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any()))
-        .thenReturn(Future.successful(true))
+      when(mockUserAnswersService.set(any())(any()))
+        .thenReturn(Future.successful(Done))
       when(osClient.deleteObject(any(), any())(any()))
         .thenReturn(Future.successful(()))
 
@@ -304,7 +310,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockUserAnswersService, times(1)).set(any())
+        verify(mockUserAnswersService, times(1)).set(any())(any())
         verify(osClient, times(1)).deleteObject(any(), any())(
           any()
         )
@@ -316,8 +322,8 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val osClient               = mock[PlayObjectStoreClient]
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any()))
-        .thenReturn(Future.successful(true))
+      when(mockUserAnswersService.set(any())(any()))
+        .thenReturn(Future.successful(Done))
       when(osClient.deleteObject(any(), anyString())(any()))
         .thenReturn(Future.successful(()))
 
@@ -335,7 +341,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockUserAnswersService, times(0)).set(any())
+        verify(mockUserAnswersService, times(0)).set(any())(any())
         verify(osClient, times(0)).deleteObject(any(), anyString())(any())
       }
     }

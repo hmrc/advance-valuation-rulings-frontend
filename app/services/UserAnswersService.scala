@@ -18,24 +18,24 @@ package services
 
 import javax.inject.Inject
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-import models.{DraftId, UserAnswers}
-import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 
-class UserAnswersService @Inject() (sessionRepository: SessionRepository)(implicit
-  ec: ExecutionContext
-) {
+import connectors.UserAnswersConnector
+import models.{Done, DraftId, UserAnswers}
 
-  def keepAlive(userId: String, draftId: DraftId): Future[Boolean] =
-    sessionRepository.keepAlive(userId, draftId)
+class UserAnswersService @Inject() (userAnswersConnector: UserAnswersConnector) {
 
-  def get(userId: String, draftId: DraftId): Future[Option[UserAnswers]] =
-    sessionRepository.get(userId, draftId)
+  def keepAlive(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
+    userAnswersConnector.keepAlive(draftId)
 
-  def set(answers: UserAnswers): Future[Boolean] =
-    sessionRepository.set(answers)
+  def get(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
+    userAnswersConnector.get(draftId)
 
-  def clear(userId: String, draftId: DraftId): Future[Boolean] =
-    sessionRepository.clear(userId, draftId)
+  def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
+    userAnswersConnector.set(answers)
+
+  def clear(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
+    userAnswersConnector.clear(draftId)
 }

@@ -19,8 +19,6 @@ package controllers.actions
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
@@ -36,19 +34,14 @@ import services.UserAnswersService
 
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  private val mockRepository = mock[UserAnswersService]
+  private val mockUserAnswersService = mock[UserAnswersService]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockRepository)
+    Mockito.reset(mockUserAnswersService)
     super.beforeEach()
   }
 
-  private val app =
-    GuiceApplicationBuilder().overrides(bind[UserAnswersService].toInstance(mockRepository)).build()
-
-  private lazy val actionProvider = app.injector.instanceOf[DataRetrievalActionProvider]
-
-  class Harness(draftId: DraftId) extends DataRetrievalAction(draftId, mockRepository) {
+  class Harness(draftId: DraftId) extends DataRetrievalAction(draftId, mockUserAnswersService) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(
       request
     )
@@ -60,7 +53,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndA
 
       "must set userAnswers to 'None' in the request" in {
 
-        when(mockRepository.get(any(), any())) thenReturn Future(None)
+        when(mockUserAnswersService.get(any())(any())) thenReturn Future(None)
         val action = new Harness(draftId)
 
         val result =
@@ -76,7 +69,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndA
 
       "must build a userAnswers object and add it to the request" in {
 
-        when(mockRepository.get(any(), any())) thenReturn Future(
+        when(mockUserAnswersService.get(any())(any())) thenReturn Future(
           Some(emptyUserAnswers)
         )
         val action = new Harness(draftId)

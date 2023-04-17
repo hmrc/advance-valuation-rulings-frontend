@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.CheckRegisteredDetails
+import models.{CheckRegisteredDetails, Done}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -78,8 +78,10 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         .success
         .value
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
-      when(mockUserAnswersService.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+        Some(userAnswers)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -109,8 +111,10 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         .success
         .value
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
-      when(mockUserAnswersService.get(any(), any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+        Some(userAnswers)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))

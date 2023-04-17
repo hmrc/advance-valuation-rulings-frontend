@@ -21,6 +21,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.mvc.ActionTransformer
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import models.DraftId
 import models.requests.{IdentifierRequest, OptionalDataRequest}
@@ -34,8 +35,11 @@ class DataRetrievalAction @Inject() (
 
   override protected def transform[A](
     request: IdentifierRequest[A]
-  ): Future[OptionalDataRequest[A]] =
-    userAnswersService.get(request.userId, draftId).map {
+  ): Future[OptionalDataRequest[A]] = {
+
+    val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+    userAnswersService.get(draftId)(hc).map {
       OptionalDataRequest(
         request.request,
         request.userId,
@@ -45,6 +49,7 @@ class DataRetrievalAction @Inject() (
         _
       )
     }
+  }
 }
 
 class DataRetrievalActionProvider @Inject() (userAnswersService: UserAnswersService)(implicit
