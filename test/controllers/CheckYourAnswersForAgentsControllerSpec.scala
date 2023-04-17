@@ -134,7 +134,7 @@ class CheckYourAnswersForAgentsControllerSpec
       val applicationId = ApplicationId(1)
       val response      = ApplicationSubmissionResponse(applicationId)
 
-      when(mockSubmissionService.submitApplication(any())(any()))
+      when(mockSubmissionService.submitApplication(any(), any())(any()))
         .thenReturn(Future.successful(response))
 
       val application = applicationBuilderAsOrg(Option(answers))
