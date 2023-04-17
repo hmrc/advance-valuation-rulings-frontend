@@ -27,10 +27,12 @@
 
     <p class="govuk-body">@messages("journeyRecovery.continue.guidance")</p>
 
+
     <p class="govuk-body">
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-                .asLink(continueUrl)
-        )
+           @govukButton(
+               ButtonViewModel(messages("site.continue"))
+                   .asLink(continueUrl)
+           )
     </p>
+
 }
