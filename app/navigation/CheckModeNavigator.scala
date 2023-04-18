@@ -372,8 +372,7 @@ object CheckModeNavigator {
       case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments
       case IsThisFileConfidentialPage                   => isThisFileConfidential
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument
-
-      case WhatIsYourRoleAsImporterPage => whatIsYourRoleAsImporter
+      case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter
 
       // method 1
       case IsThereASaleInvolvedPage           => isThereASaleInvolved
