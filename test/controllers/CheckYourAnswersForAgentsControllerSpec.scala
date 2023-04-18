@@ -57,9 +57,11 @@ class CheckYourAnswersForAgentsControllerSpec
 
   "Check Your Answers for Agents Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for a GET as Employee of Organisation" in {
+      val ua: UserAnswers =
+        userAnswers.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg).get
 
-      val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers)).build()
+      val application = applicationBuilderAsOrg(userAnswers = Option(ua)).build()
 
       implicit val msgs: Messages = messages(application)
 
@@ -70,14 +72,57 @@ class CheckYourAnswersForAgentsControllerSpec
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-        val list = ApplicationSummary(userAnswers, AffinityGroup.Organisation)
+        val list = ApplicationSummary(ua, AffinityGroup.Organisation)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list).toString
+        contentAsString(result) mustEqual view(
+          list,
+          role = WhatIsYourRoleAsImporter.EmployeeOfOrg
+        ).toString
+      }
+    }
+    "must return OK and the correct view for a GET as Agent on behalf of Organisation" in {
+      val ua: UserAnswers =
+        userAnswers
+          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+          .get
+
+      val application = applicationBuilderAsOrg(userAnswers = Option(ua)).build()
+
+      implicit val msgs: Messages = messages(application)
+
+      running(application) {
+        implicit val request =
+          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
+        val list = ApplicationSummary(ua, AffinityGroup.Organisation)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          list,
+          role = WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
+        ).toString
       }
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilderAsOrg(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no importer role is found" in {
 
       val application = applicationBuilderAsOrg(userAnswers = None).build()
 

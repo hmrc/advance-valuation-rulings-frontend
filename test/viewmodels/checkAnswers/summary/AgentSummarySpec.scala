@@ -75,7 +75,7 @@ class AgentSummarySpec extends SpecBase {
       "create row for agent applicant name" in {
         rows must contain(
           (
-            Key(Text("checkYourAnswersForAgents.applicant.name.label")),
+            Key(Text("checkYourAnswersForAgents.agent.org.name.label")),
             Value(Text(ContactName))
           )
         )
@@ -84,7 +84,7 @@ class AgentSummarySpec extends SpecBase {
       "create row for agent applicant email" in {
         rows must contain(
           (
-            Key(Text("checkYourAnswersForAgents.applicant.email.label")),
+            Key(Text("checkYourAnswersForAgents.agent.org.email.label")),
             Value(Text(ContactEmail))
           )
         )
@@ -106,7 +106,7 @@ class AgentSummarySpec extends SpecBase {
       "create row for agent EORI number" in {
         rows must contain(
           (
-            Key(Text("checkYourAnswersForAgents.business.eori.number.label")),
+            Key(Text("checkYourAnswersForAgents.agent.eori.number.label")),
             Value(Text(EoriNumber))
           )
         )
@@ -115,7 +115,7 @@ class AgentSummarySpec extends SpecBase {
       "create row for agent registered name" in {
         rows must contain(
           (
-            Key(Text("checkYourAnswersForAgents.business.name.label")),
+            Key(Text("checkYourAnswersForAgents.agent.name.label")),
             Value(Text(RegisteredName))
           )
         )
@@ -124,7 +124,7 @@ class AgentSummarySpec extends SpecBase {
       "create row for agent registered address" in {
         rows must contain(
           (
-            Key(Text("checkYourAnswersForAgents.business.address.label")),
+            Key(Text("checkYourAnswersForAgents.agent.address.label")),
             Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$country"))
           )
         )

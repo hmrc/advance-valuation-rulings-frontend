@@ -26,12 +26,13 @@ import play.api.test.Helpers._
 import audit.AuditService
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{NormalMode, WhatIsYourRoleAsImporter}
+import models._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.WhatIsYourRoleAsImporterPage
+import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import repositories.SessionRepository
 import views.html.WhatIsYourRoleAsImporterView
 
@@ -102,13 +103,26 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
       val mockSessionRepository = mock[SessionRepository]
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      val userAnswers = emptyUserAnswers
+        .set(
+          AgentCompanyDetailsPage,
+          AgentCompanyDetails(
+            agentEori = "agentEori",
+            agentCompanyName = "agentCompanyName",
+            agentStreetAndNumber = "agentStreetAndNumber",
+            agentCity = "agentCity",
+            agentCountry = Country("GB", "United Kingdom"),
+            agentPostalCode = Some("agentPostalCode")
+          )
+        )
+        .success
+        .value
 
       val application =
-        applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository),
@@ -119,7 +133,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
       running(application) {
         val request =
           FakeRequest(POST, whatIsYourRoleAsImporterRoute)
-            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.values.head.toString))
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg.toString))
 
         val result = route(application, request).value
 
@@ -127,6 +141,61 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         redirectLocation(result).value mustEqual onwardRoute.url
       }
 
+      val expectedUserAnswers =
+        userAnswers
+          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+          .success
+          .value
+
+      verify(mockSessionRepository, times(1)).set(eqTo(expectedUserAnswers))
+      verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
+    }
+
+    "must remove answer for AgentCompanyDetails when answered as Employee" in {
+      val emptyAnswers          = UserAnswers(userAnswersId, draftId)
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      val userAnswers = emptyAnswers
+        .set(
+          AgentCompanyDetailsPage,
+          AgentCompanyDetails(
+            agentEori = "agentEori",
+            agentCompanyName = "agentCompanyName",
+            agentStreetAndNumber = "agentStreetAndNumber",
+            agentCity = "agentCity",
+            agentCountry = Country("GB", "United Kingdom"),
+            agentPostalCode = Some("agentPostalCode")
+          )
+        )
+        .success
+        .value
+
+      val application =
+        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[AuditService].to(mockAuditService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whatIsYourRoleAsImporterRoute)
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.EmployeeOfOrg.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+      }
+
+      val expectedUserAnswers = emptyAnswers
+        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+        .success
+        .value
+
+      verify(mockSessionRepository, times(1)).set(eqTo(expectedUserAnswers))
       verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
     }
 

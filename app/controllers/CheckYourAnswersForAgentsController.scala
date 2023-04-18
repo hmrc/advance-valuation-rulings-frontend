@@ -28,6 +28,7 @@ import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction, IdentifyAgentAction}
 import models.requests._
 import pages.Page
+import pages.WhatIsYourRoleAsImporterPage
 import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
@@ -51,7 +52,14 @@ class CheckYourAnswersForAgentsController @Inject() (
     (identify andThen isAgent andThen getData andThen requireData) {
       implicit request =>
         val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
-        Ok(view(applicationSummary))
+        request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+          case Some(role) => Ok(view(applicationSummary, role))
+          case None       =>
+            logger.warn(
+              "Invalid journey: User naviaged to check your answers without specifying agent role"
+            )
+            Redirect(routes.JourneyRecoveryController.onPageLoad())
+        }
     }
 
   def onSubmit(): Action[AnyContent] =
