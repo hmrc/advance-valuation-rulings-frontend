@@ -30,7 +30,7 @@ import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import models.fileupload.{UploadId, UpscanFileDetails}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage

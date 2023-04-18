@@ -21,62 +21,81 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{BusinessContactDetails, CheckMode, UserAnswers}
-import pages.BusinessContactDetailsPage
+import models.{BusinessContactDetails, CheckMode, UserAnswers, WhatIsYourRoleAsImporter}
+import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object BusinessContactDetailsSummary {
 
-  private def nameRow(answer: BusinessContactDetails)(implicit messages: Messages): SummaryListRow =
+  private def nameRow(answer: BusinessContactDetails, role: WhatIsYourRoleAsImporter)(implicit
+    messages: Messages
+  ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.applicant.name.label",
+      key = getMessageKey(role, "name"),
       value = ValueViewModel(HtmlFormat.escape(answer.name).toString),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
           routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("businessContactDetails.name.change.hidden"))
+          .withVisuallyHiddenText(messages(getAriaMessageKey(role, "name")))
       )
     )
 
-  private def emailRow(answer: BusinessContactDetails)(implicit
+  private def emailRow(answer: BusinessContactDetails, role: WhatIsYourRoleAsImporter)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.applicant.email.label",
+      key = getMessageKey(role, "email"),
       value = ValueViewModel(HtmlFormat.escape(answer.email).toString),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
           routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("businessContactDetails.email.change.hidden"))
+          .withVisuallyHiddenText(messages(getAriaMessageKey(role, "email")))
       )
     )
-
-  private def contactNumberRow(answer: BusinessContactDetails)(implicit
-    messages: Messages
+  private def contactNumberRow(answer: BusinessContactDetails, role: WhatIsYourRoleAsImporter)(
+    implicit messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.applicant.phone.label",
+      key = getMessageKey(role, "phone"),
       value = ValueViewModel(HtmlFormat.escape(answer.phone).toString),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
           routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("businessContactDetails.phone.change.hidden"))
+          .withVisuallyHiddenText(messages(getAriaMessageKey(role, "phone")))
       )
     )
 
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(BusinessContactDetailsPage)
-      name            = nameRow(contactDetails)
-      email           = emailRow(contactDetails)
-      contactNumber   = contactNumberRow(contactDetails)
+      role           <- userAnswer.get(WhatIsYourRoleAsImporterPage)
+      name            = nameRow(contactDetails, role)
+      email           = emailRow(contactDetails, role)
+      contactNumber   = contactNumberRow(contactDetails, role)
       result          = Seq(name, email, contactNumber)
     } yield result
+
+  private def getMessageKey(role: WhatIsYourRoleAsImporter, fieldName: String): String =
+    role match {
+      case WhatIsYourRoleAsImporter.EmployeeOfOrg      =>
+        s"checkYourAnswersForAgents.applicant.$fieldName.label"
+      case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg =>
+        s"checkYourAnswersForAgents.agent.org.$fieldName.label"
+    }
+
+  private def getAriaMessageKey(role: WhatIsYourRoleAsImporter, fieldName: String): String =
+    role match {
+      case WhatIsYourRoleAsImporter.EmployeeOfOrg      =>
+        s"businessContactDetails.$fieldName.change.hidden"
+      case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg =>
+        s"businessContactDetails.agent.org.$fieldName.change.hidden"
+    }
+
 }

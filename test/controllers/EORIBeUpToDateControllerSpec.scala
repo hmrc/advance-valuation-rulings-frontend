@@ -73,12 +73,8 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      val userAnswers      = emptyUserAnswers
+      val userAnswers = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
-        .success
-        .value
-      val answersAfterPost = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, registeredDetails.copy(value = true))
         .success
         .value
 

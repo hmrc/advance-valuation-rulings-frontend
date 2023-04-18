@@ -87,11 +87,20 @@ checkYourAnswers.goods.uploaddocuments.label = Documents uploaded
 
 checkYourAnswersForAgents.title = Check your answers before sending your application
 checkYourAnswersForAgents.heading = Check your answers before sending your application
-checkYourAnswersForAgents.company.heading = About the company
 checkYourAnswersForAgents.business.eori.number.label = Company''s registered EORI number
 checkYourAnswersForAgents.business.name.label = Company''s registered business name
 checkYourAnswersForAgents.business.address.label = Company''s registered business address
-checkYourAnswersForAgents.agent.heading = About the applicant
+
+checkYourAnswersForAgents.company.org.heading = About the company
+checkYourAnswersForAgents.company.agent.heading = About the company you are representing
+
+checkYourAnswersForAgents.applicant.org.heading = About the applicant
+checkYourAnswersForAgents.applicant.agent.heading = About the agent
+
+checkYourAnswersForAgents.agent.eori.number.label = Your company''s registered EORI number
+checkYourAnswersForAgents.agent.name.label = Your company''s registered business name
+checkYourAnswersForAgents.agent.address.label = Your company''s registered business address
+
 checkYourAnswersForAgents.applicant.name.label = Applicant''s full name
 checkYourAnswersForAgents.applicant.email.label = Applicant''s email address
 checkYourAnswersForAgents.applicant.phone.label = Applicant''s telephone number
@@ -757,3 +766,7 @@ agentCompanyDetails.agentStreetAndNumber.change.hidden = Address line 1
 agentCompanyDetails.agentCity.change.hidden = Town or city
 agentCompanyDetails.agentCountry.change.hidden = Country
 agentCompanyDetails.agentPostalCode.change.hidden = Postcode
+
+checkYourAnswersForAgents.agent.org.name.label = Agent''s full name
+checkYourAnswersForAgents.agent.org.email.label = Agent''s email address
+checkYourAnswersForAgents.agent.org.phone.label = Agent''s telephone number

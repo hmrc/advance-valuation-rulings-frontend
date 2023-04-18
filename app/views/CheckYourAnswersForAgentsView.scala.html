@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import models._
 @import viewmodels.checkAnswers.summary._
 
 
@@ -30,16 +31,27 @@
     formHelper: FormWithCSRF,
 )
 
-@(applicationSummary: ApplicationSummary)(implicit request: Request[_], messages: Messages)
+@(applicationSummary: ApplicationSummary, role: WhatIsYourRoleAsImporter)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title"))) {
 
     <h1 class="govuk-heading-l">@(messages("checkYourAnswersForAgents.heading"))</h1>
 
-    @subheading(messages("checkYourAnswersForAgents.company.heading"))
+    @subheading(
+        {role match {
+            case WhatIsYourRoleAsImporter.EmployeeOfOrg         => messages("checkYourAnswersForAgents.company.org.heading")
+            case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    => messages("checkYourAnswersForAgents.company.agent.heading")
+        }}
+    )
+
     @govukSummaryList(applicationSummary.eoriDetails.rows.withCssClass("govuk-!-margin-bottom-9"))
 
-    @subheading(messages("checkYourAnswersForAgents.agent.heading"))
+    @subheading(
+        {role match {
+            case WhatIsYourRoleAsImporter.EmployeeOfOrg         => messages("checkYourAnswersForAgents.applicant.org.heading")
+            case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    => messages("checkYourAnswersForAgents.applicant.agent.heading")
+        }}
+    )
     @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
 
     @subheading(messages("checkYourAnswersForAgents.goods.heading"))
