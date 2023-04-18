@@ -32,24 +32,24 @@
         forYourRecords: ForYourRecords,
         appConfig: FrontendAppConfig,
         fullMainContent: FullLayoutMainContent,
+        printApplicationLink: PrintApplicationLink
 )
 
 @(appModel: ApplicationViewModel, applicationId: String, lastUpdated: String)(implicit request: Request[_], messages:
 Messages)
 
-@createLink(path: String)(implicit req: play.api.mvc.Request[_]) = @{
-s"${appConfig.host}${routes.Assets.versioned(path)}"
-}
-
 @layout(
     pageTitle = titleNoForm(messages("viewApplication.title")),
     mainContentLayout = Some(fullMainContent(_))
     ) {
+
     <div class="grid-row hidden-print">
         <div class="column-two-thirds hidden-print">
             @heading(messages("viewApplication.heading"), size="l")
         </div>
     </div>
+
+    @printApplicationLink()
 
     <div id="print-pages">
         <div class="page-break">
