@@ -98,10 +98,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val maximumFileSizeBytes: Long     = configuration.underlying.getBytes("upscan.maxFileSize")
   val maximumFilesAllowed: Int       = configuration.get[Int]("upscan.maxFiles")
 
-  val maxFileSizeHumanReadableMebiBytes: Int = {
-    val KebiByte = 1024
+  val maxFileSizeMegaBytes: Int = {
+    val KiloByte = 1000
     val BaseTwo  = 2
-    (maximumFileSizeBytes / Math.pow(KebiByte, BaseTwo)).toInt
+    (maximumFileSizeBytes / Math.pow(KiloByte, BaseTwo)).toInt
   }
 
   val advanceValuationRulingsBackendURL: String =
