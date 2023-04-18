@@ -25,8 +25,8 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ApplicationContactDetailsFormProvider
+import models.{Done, NormalMode}
 import models.ApplicationContactDetails
-import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -100,7 +100,7 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))

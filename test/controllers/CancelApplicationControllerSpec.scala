@@ -23,6 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito
@@ -57,7 +58,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
       Mockito.reset(mockUserAnswersService)
 
-      when(mockUserAnswersService.clear(any(), any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
@@ -69,7 +70,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        verify(mockUserAnswersService, times(1)).clear(eqTo(emptyUserAnswers.userId), eqTo(draftId))
+        verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
       }
     }
   }

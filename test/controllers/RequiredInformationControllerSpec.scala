@@ -26,7 +26,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import forms.RequiredInformationFormProvider
-import models.RequiredInformation
+import models.{Done, RequiredInformation}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -96,7 +96,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -128,7 +128,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))

@@ -19,14 +19,13 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.AgentCompanyDetailsFormProvider
-import models.{AgentCompanyDetails, Country, NormalMode, UserAnswers}
+import models.{AgentCompanyDetails, Country, Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -102,7 +101,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))

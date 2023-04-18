@@ -47,7 +47,7 @@ class CancelApplicationController @Inject() (
     identify.async {
       implicit request =>
         for {
-          _ <- userAnswersService.clear(request.userId, draftId)
+          _ <- userAnswersService.clear(draftId)
         } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
     }
 }

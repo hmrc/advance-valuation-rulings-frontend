@@ -16,12 +16,13 @@
 
 package services
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HeaderCarrier
 
-import models.{DraftId, UserAnswers}
+import connectors.UserAnswersConnector
+import models.{Done, DraftId, UserAnswers}
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -29,7 +30,6 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import repositories.SessionRepository
 
 class UserAnswersServiceSpec
     extends AnyFreeSpec
@@ -39,34 +39,36 @@ class UserAnswersServiceSpec
     with ScalaFutures
     with OptionValues {
 
-  private val mockRepository = mock[SessionRepository]
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  private val mockUserAnswersConnector = mock[UserAnswersConnector]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockRepository)
+    Mockito.reset(mockUserAnswersConnector)
     super.beforeEach()
   }
 
   private val userId  = "user id"
   private val draftId = DraftId(0)
   private val answers = UserAnswers(userId, draftId, Json.obj())
-  private val service = new UserAnswersService(mockRepository)
+  private val service = new UserAnswersService(mockUserAnswersConnector)
 
   ".get" - {
 
     "must return user answers when they exist in the repository" in {
 
-      when(mockRepository.get(eqTo(userId), eqTo(draftId)))
+      when(mockUserAnswersConnector.get(eqTo(draftId))(any()))
         .thenReturn(Future.successful(Some(answers)))
 
-      val result = service.get(userId, draftId).futureValue
+      val result = service.get(draftId).futureValue
       result.value mustEqual answers
     }
 
     "must return None when answers do not exist in the repository" in {
 
-      when(mockRepository.get(eqTo(userId), eqTo(draftId))).thenReturn(Future.successful(None))
+      when(mockUserAnswersConnector.get(eqTo(draftId))(any())).thenReturn(Future.successful(None))
 
-      val result = service.get(userId, draftId).futureValue
+      val result = service.get(draftId).futureValue
       result must not be defined
     }
   }
@@ -75,10 +77,10 @@ class UserAnswersServiceSpec
 
     "must save user answers to the repository" in {
 
-      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersConnector.set(any())(any())).thenReturn(Future.successful(Done))
 
       service.set(answers).futureValue
-      verify(mockRepository, times(1)).set(eqTo(answers))
+      verify(mockUserAnswersConnector, times(1)).set(eqTo(answers))(any())
     }
   }
 
@@ -86,10 +88,10 @@ class UserAnswersServiceSpec
 
     "must keep user answers alive" in {
 
-      when(mockRepository.keepAlive(any(), any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersConnector.keepAlive(any())(any())).thenReturn(Future.successful(Done))
 
-      service.keepAlive(userId, draftId).futureValue
-      verify(mockRepository, times(1)).keepAlive(eqTo(userId), eqTo(draftId))
+      service.keepAlive(draftId).futureValue
+      verify(mockUserAnswersConnector, times(1)).keepAlive(eqTo(draftId))(any())
     }
   }
 
@@ -97,10 +99,10 @@ class UserAnswersServiceSpec
 
     "must keep user answers alive" in {
 
-      when(mockRepository.clear(any(), any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersConnector.clear(any())(any())).thenReturn(Future.successful(Done))
 
-      service.clear(userId, draftId).futureValue
-      verify(mockRepository, times(1)).clear(eqTo(userId), eqTo(draftId))
+      service.clear(draftId).futureValue
+      verify(mockUserAnswersConnector, times(1)).clear(eqTo(draftId))(any())
     }
   }
 }

@@ -144,7 +144,7 @@ class CheckRegisteredDetailsController @Inject() (
     detailsToResult: CheckRegisteredDetails => Result
   )(implicit request: DataRequest[AnyContent]): Future[Result] =
     for {
-      userAnswers <- userAnswersService.get(request.userAnswers.userId, draftId)
+      userAnswers <- userAnswersService.get(draftId)
       details      = userAnswers.flatMap(_.get(CheckRegisteredDetailsPage))
       result       = details match {
                        case Some(registrationDetails) =>

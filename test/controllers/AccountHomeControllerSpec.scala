@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
-import models.ApplicationForAccountHome
+import models.{ApplicationForAccountHome, Done}
 import models.requests.{ApplicationId, ApplicationSummary, ApplicationSummaryResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{reset, times, verify, when}
@@ -121,7 +121,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           .overrides(bind[UserAnswersService].to(mockUserAnswersService))
           .build()
 
-      when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       running(application) {
         val request = FakeRequest(POST, routes.AccountHomeController.startApplication().url)
@@ -130,7 +130,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockUserAnswersService, times(1)).set(any())
+        verify(mockUserAnswersService, times(1)).set(any())(any())
       }
     }
   }

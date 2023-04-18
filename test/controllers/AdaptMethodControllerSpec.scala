@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.AdaptMethodFormProvider
-import models.{AdaptMethod, NormalMode}
+import models.{AdaptMethod, Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -97,7 +97,7 @@ class AdaptMethodControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))

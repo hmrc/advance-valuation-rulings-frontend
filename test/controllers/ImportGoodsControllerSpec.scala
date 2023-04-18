@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ImportGoodsFormProvider
-import models.NormalMode
+import models.{Done, NormalMode}
 import navigation.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
@@ -91,7 +91,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
