@@ -35,6 +35,7 @@ object ApplicationViewModel {
     messages: Messages
   ): ApplicationViewModel = {
     val eoriRow       = RegisteredDetailsSummary.rows(application.trader)
+    val agentRows     = AgentCompanySummary.rows(application.agent)
     val applicant     = ContactDetailsSummary.rows(application.contact)
     val dateSubmitted = DateSubmittedSummary.row(application)
     val goodsDetails  = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
@@ -42,7 +43,7 @@ object ApplicationViewModel {
 
     ApplicationViewModel(
       eori = SummaryList(eoriRow),
-      applicant = SummaryList(applicant :+ dateSubmitted),
+      applicant = SummaryList(applicant :++ agentRows :+ dateSubmitted),
       details = SummaryList(goodsDetails),
       method = SummaryList(methodDetails)
     )

@@ -33,9 +33,9 @@
     @headingH3(messages("viewApplication.forYourRecords"))
   </div>
   
-  <div class="govuk-grid-column-one-half">
-    @applicationSummaryList(appModel.eori)
-    @applicationSummaryList(appModel.applicant)
+  <div class="govuk-grid-column-full">
+    @govukSummaryList(appModel.eori)
+    @govukSummaryList(appModel.applicant)
   </div>
 </div>
 

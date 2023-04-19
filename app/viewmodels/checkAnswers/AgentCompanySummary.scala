@@ -23,7 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{AgentCompanyDetails, CheckMode, Country, UserAnswers}
-import models.requests.ApplicationRequest
+import models.requests.TraderDetail
 import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -96,27 +96,29 @@ object AgentCompanySummary {
     } yield result
 
   def rows(
-    request: ApplicationRequest
-  )(implicit messages: Messages): Seq[SummaryListRow] = {
-    val postCode =
-      if (request.trader.postcode.isEmpty) None else Some(request.trader.postcode)
+    agentTraderDetails: Option[TraderDetail]
+  )(implicit messages: Messages): Seq[SummaryListRow] =
+    agentTraderDetails match {
+      case None          => Seq.empty
+      case Some(details) =>
+        val postCode =
+          if (details.postcode.isEmpty) None else Some(details.postcode)
 
-    val country =
-      Country.fromCountryCode(request.trader.countryCode)
+        val country =
+          Country.fromCountryCode(details.countryCode)
 
-    val contactDetails = models.AgentCompanyDetails(
-      agentEori = request.trader.eori,
-      agentCompanyName = request.trader.businessName,
-      agentStreetAndNumber = request.trader.addressLine1 + "\n" + request.trader.addressLine2,
-      agentCity = request.trader.addressLine2.getOrElse(""),
-      agentCountry = country,
-      agentPostalCode = postCode
-    )
-    Seq(
-      registeredEoriNumberRow(contactDetails),
-      registeredNameRow(contactDetails),
-      registeredAddressRow(contactDetails)
-    )
-  }
-
+        val contactDetails = models.AgentCompanyDetails(
+          agentEori = details.eori,
+          agentCompanyName = details.businessName,
+          agentStreetAndNumber = details.addressLine1,
+          agentCity = details.addressLine2.getOrElse(""),
+          agentCountry = country,
+          agentPostalCode = postCode
+        )
+        Seq(
+          registeredEoriNumberRow(contactDetails),
+          registeredNameRow(contactDetails),
+          registeredAddressRow(contactDetails)
+        ).map(row => row.copy(actions = None))
+    }
 }
