@@ -41,7 +41,7 @@ object AgentCompanySummary {
           "site.change",
           routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.name.hidden"))
       )
     )
 
@@ -67,7 +67,7 @@ object AgentCompanySummary {
           "site.change",
           routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.address.hidden"))
       )
     )
 
@@ -82,7 +82,7 @@ object AgentCompanySummary {
           "site.change",
           routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.eori.number.hidden"))
       )
     )
 
