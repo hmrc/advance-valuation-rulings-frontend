@@ -45,7 +45,10 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label(None)
+                label = Label(
+                    content = Text(messages("commodityCode.heading")),
+                    classes = "govuk-visually-hidden"),
+                )
                 )
             .withWidth(Full)
             .withHint(Hint(

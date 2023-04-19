@@ -51,7 +51,10 @@
     @govukTextarea(
         TextareaViewModel(
             field = form("value"),
-            label = Label(None)
+            label = Label(
+                content = Text(messages("explainWhyYouChoseMethodFour.heading")),
+                classes = "govuk-visually-hidden",
+                )
             )
             .withRows(15)
             .withAttribute("maxlength","8167")
