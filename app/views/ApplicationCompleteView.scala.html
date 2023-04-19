@@ -17,7 +17,6 @@
  @import components._
  @import config.FrontendAppConfig
  @import viewmodels.checkAnswers.summary._
-@import viewmodels.ApplicationViewModel
 
 @this(
     layout: templates.Layout,
@@ -26,8 +25,6 @@
     govukTextarea: GovukTextarea,
     govukSummaryList: GovukSummaryList,
     bulletList: BulletList,
-    cancelApplicationLink: CancelApplicationLink,
-    printApplicationLink: PrintApplicationLink,
     link: Link,
     caption: Caption,
     heading: Heading,
@@ -41,7 +38,7 @@
 )
 
 
- @(isIndividual: Boolean, applicationId: String, email: String, applicationViewModel: ApplicationViewModel)(implicit request: Request[_], messages: Messages)
+ @(isIndividual: Boolean, applicationId: String, email: String)(implicit request: Request[_], messages: Messages)
 
 @guideLink = {
     @link(
