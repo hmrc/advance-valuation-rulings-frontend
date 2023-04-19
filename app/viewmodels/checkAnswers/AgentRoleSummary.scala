@@ -38,7 +38,7 @@ object AgentRoleSummary {
           "site.change",
           routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode).url
         )
-          .withVisuallyHiddenText(messages("businessContactDetails.role.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.applicant.role.hidden"))
       )
     )
 
