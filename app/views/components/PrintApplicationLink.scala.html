@@ -14,25 +14,21 @@
  * limitations under the License.
  *@
 
-@this(
-    layout: templates.Layout,
-    govukButton: GovukButton
-)
+@import config.FrontendAppConfig
 
-@(continueUrl: String)(implicit request: Request[_], messages: Messages)
+@this(appConfig: FrontendAppConfig)
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.continue.title"))) {
+@()(implicit request: Request[_], messages: Messages)
 
-    <h1 class="govuk-heading-xl">@messages("journeyRecovery.continue.heading")</h1>
-
-    <p class="govuk-body">@messages("journeyRecovery.continue.guidance")</p>
-
-
-    <p class="govuk-body">
-           @govukButton(
-               ButtonViewModel(messages("site.continue"))
-                   .asLink(continueUrl)
-           )
-    </p>
-
+@createLink(path: String) = @{
+    s"${appConfig.host}${routes.Assets.versioned(path)}"
 }
+
+<div>
+    <span class="govuk-body hidden-print">
+        <img class="print-this__icon" src='@createLink("images/icon-print.svg")' alt="Print Icon" aria-hidden="true">
+
+        <a class="print-this__link" href="javascript:window.print()"
+           data-journey-click="print - click:Your application:Print your application">@messages("site.printApplication")</a>
+    </span>
+</div>

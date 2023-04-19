@@ -74,7 +74,7 @@
     }) {
 
     @if(UploadStatus.isError(status)) {
-        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status, appConfig.maxFileSizeHumanReadableMebiBytes)))
+        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status, appConfig.maxFileSizeMegaBytes)))
     }
 
         @caption(messages("uploadSupportingDocuments.caption"))
@@ -95,7 +95,7 @@
 
         @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
         @list(Seq(
-            Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maxFileSizeHumanReadableMebiBytes)),
+            Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maxFileSizeMegaBytes)),
             Html(messages("uploadSupportingDocuments.bulletPoint.4"))
             ),
             "govuk-list govuk-list--bullet",
@@ -110,7 +110,7 @@
             <div class="@formGroupClass">
                 @if(UploadStatus.isError(status)) {
                     <p id="file-input-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @{messages(UploadStatus.message(status), appConfig.maxFileSizeHumanReadableMebiBytes)}
+                        <span class="govuk-visually-hidden">Error:</span> @{messages(UploadStatus.message(status), appConfig.maxFileSizeMegaBytes)}
                     </p>
                 }
                 

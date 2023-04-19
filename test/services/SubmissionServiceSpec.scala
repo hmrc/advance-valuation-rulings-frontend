@@ -22,32 +22,26 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
 
+import base.SpecBase
 import connectors.BackendConnector
 import models.{Done, DraftId}
 import models.requests._
-import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
+import org.mockito.MockitoSugar
 import services.email.EmailService
 
-class SubmissionServiceSpec
-    extends AnyFreeSpec
-    with Matchers
-    with MockitoSugar
-    with ScalaFutures
-    with BeforeAndAfterEach {
+class SubmissionServiceSpec extends SpecBase with MockitoSugar {
 
-  private val mockBackendConnector = mock[BackendConnector]
-  private val mockEmailService     = mock[EmailService]
+  private val mockBackendConnector   = mock[BackendConnector]
+  private val mockEmailService       = mock[EmailService]
+  private val mockUserAnswersService = mock[UserAnswersService]
 
   private val app =
     GuiceApplicationBuilder()
       .overrides(
         bind[BackendConnector].toInstance(mockBackendConnector),
+        bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[EmailService].toInstance(mockEmailService)
       )
       .build()
@@ -55,7 +49,7 @@ class SubmissionServiceSpec
   private val service = app.injector.instanceOf[SubmissionService]
 
   private val applicationRequest = ApplicationRequest(
-    draftId = DraftId(0),
+    draftId = draftId,
     trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
     agent = None,
     contact = ContactDetails("name", "email", None),
@@ -67,26 +61,27 @@ class SubmissionServiceSpec
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockBackendConnector)
-    Mockito.reset(mockEmailService)
+    reset(mockBackendConnector, mockEmailService, mockUserAnswersService)
     super.beforeEach()
   }
 
   ".submitApplication" - {
 
-    "must submit an application, send a confirmation email and return the submission response" in {
+    "must submit an application, clear user answers, send a confirmation email and return the submission response" in {
 
       val response = ApplicationSubmissionResponse(ApplicationId(1))
 
       when(mockBackendConnector.submitApplication(any())(any()))
         .thenReturn(Future.successful(response))
+      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
       when(mockEmailService.sendConfirmationEmail(any(), any())(any()))
         .thenReturn(Future.successful(Done))
 
-      val result = service.submitApplication(applicationRequest).futureValue
+      val result = service.submitApplication(applicationRequest, userAnswersId).futureValue
       result mustEqual response
 
       verify(mockBackendConnector, times(1)).submitApplication(eqTo(applicationRequest))(any())
+      verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
       verify(mockEmailService, times(1)).sendConfirmationEmail(
         eqTo(applicationRequest.contact.email),
         eqTo(applicationRequest.contact.name)
@@ -99,13 +94,37 @@ class SubmissionServiceSpec
 
       when(mockBackendConnector.submitApplication(any())(any()))
         .thenReturn(Future.successful(response))
+      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
       when(mockEmailService.sendConfirmationEmail(any(), any())(any()))
         .thenReturn(Future.failed(new RuntimeException("foo")))
 
-      val result = service.submitApplication(applicationRequest).futureValue
+      val result = service.submitApplication(applicationRequest, userAnswersId).futureValue
       result mustEqual response
 
       verify(mockBackendConnector, times(1)).submitApplication(eqTo(applicationRequest))(any())
+      verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
+      verify(mockEmailService, times(1)).sendConfirmationEmail(
+        eqTo(applicationRequest.contact.email),
+        eqTo(applicationRequest.contact.name)
+      )(any())
+    }
+
+    "must return the response when the submission succeeds but clearing the user answers fail" in {
+
+      val response = ApplicationSubmissionResponse(ApplicationId(1))
+
+      when(mockBackendConnector.submitApplication(any())(any()))
+        .thenReturn(Future.successful(response))
+      when(mockUserAnswersService.clear(any())(any()))
+        .thenReturn(Future.failed(new Exception("Failed to clear user answers")))
+      when(mockEmailService.sendConfirmationEmail(any(), any())(any()))
+        .thenReturn(Future.successful(Done))
+
+      val result = service.submitApplication(applicationRequest, userAnswersId).futureValue
+      result mustEqual response
+
+      verify(mockBackendConnector, times(1)).submitApplication(eqTo(applicationRequest))(any())
+      verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
       verify(mockEmailService, times(1)).sendConfirmationEmail(
         eqTo(applicationRequest.contact.email),
         eqTo(applicationRequest.contact.name)
@@ -117,7 +136,7 @@ class SubmissionServiceSpec
       when(mockBackendConnector.submitApplication(any())(any()))
         .thenReturn(Future.failed(new RuntimeException("foo")))
 
-      service.submitApplication(applicationRequest).failed.futureValue
+      service.submitApplication(applicationRequest, userAnswersId).failed.futureValue
 
       verify(mockBackendConnector, times(1)).submitApplication(eqTo(applicationRequest))(any())
       verify(mockEmailService, never).sendConfirmationEmail(any(), any())(any())

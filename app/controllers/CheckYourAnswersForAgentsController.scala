@@ -29,6 +29,7 @@ import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, Ide
 import models.DraftId
 import models.requests._
 import pages.Page
+import pages.WhatIsYourRoleAsImporterPage
 import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
@@ -52,7 +53,15 @@ class CheckYourAnswersForAgentsController @Inject() (
     (identify andThen isAgent andThen getData(draftId) andThen requireData) {
       implicit request =>
         val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
-        Ok(view(applicationSummary, draftId))
+
+        request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+          case Some(role) => Ok(view(applicationSummary, role, draftId))
+          case None       =>
+            logger.warn(
+              "Invalid journey: User navigated to check your answers without specifying agent role"
+            )
+            Redirect(routes.JourneyRecoveryController.onPageLoad())
+        }
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
@@ -64,7 +73,7 @@ class CheckYourAnswersForAgentsController @Inject() (
             Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
           case Valid(applicationRequest)                     =>
             submissionService
-              .submitApplication(applicationRequest)
+              .submitApplication(applicationRequest, request.userId)
               .map {
                 response =>
                   Redirect(

@@ -28,8 +28,9 @@ import audit.AuditService
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
 import models.{DraftId, Mode}
+import models.WhatIsYourRoleAsImporter._
 import navigation.Navigator
-import pages.WhatIsYourRoleAsImporterPage
+import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
@@ -74,11 +75,15 @@ class WhatIsYourRoleAsImporterController @Inject() (
             value => {
               auditService.sendAgentIndicatorEvent(value)
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(WhatIsYourRoleAsImporterPage, value))
-                _              <- userAnswersService.set(updatedAnswers)
+                ua <- value match {
+                        case EmployeeOfOrg      =>
+                          request.userAnswers.removeFuture(AgentCompanyDetailsPage)
+                        case AgentOnBehalfOfOrg => Future.successful(request.userAnswers)
+                      }
+                ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)
+                _  <- userAnswersService.set(ua)
               } yield Redirect(
-                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, updatedAnswers)(
+                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, ua)(
                   request.affinityGroup
                 )
               )

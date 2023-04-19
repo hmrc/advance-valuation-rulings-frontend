@@ -34,7 +34,7 @@ object AgentCompanySummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.business.name.label",
+      key = "checkYourAnswersForAgents.agent.name.label",
       value = ValueViewModel(HtmlFormat.escape(answer.agentCompanyName).body),
       actions = Seq(
         ActionItemViewModel(
@@ -49,7 +49,7 @@ object AgentCompanySummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.business.address.label",
+      key = "checkYourAnswersForAgents.agent.address.label",
       value = ValueViewModel(
         HtmlContent(
           Html(
@@ -75,7 +75,7 @@ object AgentCompanySummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.business.eori.number.label",
+      key = "checkYourAnswersForAgents.agent.eori.number.label",
       value = ValueViewModel(HtmlFormat.escape(answer.agentEori).body),
       actions = Seq(
         ActionItemViewModel(

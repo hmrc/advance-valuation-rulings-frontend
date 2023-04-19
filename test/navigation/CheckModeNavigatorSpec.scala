@@ -965,6 +965,32 @@ class CheckModeNavigatorSpec extends SpecBase {
         }
       }
 
+      "WhatIsYourRoleAsImporter page" - {
+        "navigate to CheckYourAnswers when An Employee of the Organisation" in {
+          val userAnswers = userAnswersWith(
+            WhatIsYourRoleAsImporterPage,
+            WhatIsYourRoleAsImporter.EmployeeOfOrg
+          )
+          navigator.nextPage(
+            WhatIsYourRoleAsImporterPage,
+            CheckMode,
+            userAnswers
+          ) mustBe checkYourAnswers
+        }
+
+        "navigate to AgentCompanyDetails when user answers are empty and selecting Agent acting on behalf" in {
+          val userAnswers = userAnswersWith(
+            WhatIsYourRoleAsImporterPage,
+            WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
+          )
+          navigator.nextPage(
+            WhatIsYourRoleAsImporterPage,
+            CheckMode,
+            userAnswers
+          ) mustBe routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId)
+        }
+      }
+
       "Other pages" - {
         "should navigate to CheckYourAnswers page" in {
           val userAnswers =

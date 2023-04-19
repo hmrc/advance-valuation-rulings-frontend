@@ -22,21 +22,24 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 
 import audit.AuditService
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{Done, NormalMode, WhatIsYourRoleAsImporter}
+import models._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.WhatIsYourRoleAsImporterPage
+import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
 
+  private implicit val hc: HeaderCarrier     = HeaderCarrier()
   private val mockAuditService: AuditService = mock[AuditService]
 
   override def beforeEach(): Unit = {
@@ -108,8 +111,23 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
+      val userAnswers = emptyUserAnswers
+        .set(
+          AgentCompanyDetailsPage,
+          AgentCompanyDetails(
+            agentEori = "agentEori",
+            agentCompanyName = "agentCompanyName",
+            agentStreetAndNumber = "agentStreetAndNumber",
+            agentCity = "agentCity",
+            agentCountry = Country("GB", "United Kingdom"),
+            agentPostalCode = Some("agentPostalCode")
+          )
+        )
+        .success
+        .value
+
       val application =
-        applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
@@ -120,7 +138,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
       running(application) {
         val request =
           FakeRequest(POST, whatIsYourRoleAsImporterRoute)
-            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.values.head.toString))
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg.toString))
 
         val result = route(application, request).value
 
@@ -128,6 +146,61 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         redirectLocation(result).value mustEqual onwardRoute.url
       }
 
+      val expectedUserAnswers =
+        userAnswers
+          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+          .success
+          .value
+
+      verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
+      verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
+    }
+
+    "must remove answer for AgentCompanyDetails when answered as Employee" in {
+      val emptyAnswers           = UserAnswers(userAnswersId, draftId)
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      val userAnswers = emptyAnswers
+        .set(
+          AgentCompanyDetailsPage,
+          AgentCompanyDetails(
+            agentEori = "agentEori",
+            agentCompanyName = "agentCompanyName",
+            agentStreetAndNumber = "agentStreetAndNumber",
+            agentCity = "agentCity",
+            agentCountry = Country("GB", "United Kingdom"),
+            agentPostalCode = Some("agentPostalCode")
+          )
+        )
+        .success
+        .value
+
+      val application =
+        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[AuditService].to(mockAuditService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whatIsYourRoleAsImporterRoute)
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.EmployeeOfOrg.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+      }
+
+      val expectedUserAnswers = emptyAnswers
+        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+        .success
+        .value
+
+      verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
       verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
     }
 

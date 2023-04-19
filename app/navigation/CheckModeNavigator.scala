@@ -101,6 +101,21 @@ object CheckModeNavigator {
         )
     }
 
+  private def whatIsYourRoleAsImporter(implicit
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup
+  ): Call =
+    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+      case None                                              => WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
+        AgentCompanyDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      =>
+        resolveAffinityGroup(affinityGroup)(
+          checkYourAnswers(userAnswers.draftId),
+          checkYourAnswersForAgents(userAnswers.draftId)
+        )
+    }
+
   private def doYouWantToUploadDocuments(implicit
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
@@ -425,6 +440,7 @@ object CheckModeNavigator {
       case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments
       case IsThisFileConfidentialPage                   => isThisFileConfidential
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument
+      case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter
 
       // method 1
       case IsThereASaleInvolvedPage           => isThereASaleInvolved
