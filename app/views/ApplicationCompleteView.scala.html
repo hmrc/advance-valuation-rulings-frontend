@@ -27,6 +27,7 @@
     govukSummaryList: GovukSummaryList,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
+    printApplicationLink: PrintApplicationLink,
     link: Link,
     caption: Caption,
     heading: Heading,
@@ -61,7 +62,7 @@
 @appealLink = {
     @link(
             id = "appeal_ruling_link",
-            text = messages("applicationComplete.appeal.paragraph.2.link"),
+            text = messages("applicationComplete.appeal.paragraph.3.link"),
             call = Call("GET", config.appealsAndTribunalGuidanceUrl)
         )
     }
@@ -110,31 +111,14 @@
 <!--If you have any questions about your application-->
     @h3(messages("applicationComplete.questions.subheading"))
     @paragraph( Html(messages("applicationComplete.questions.para.1",
-advanceValuationRulingServiceEmailLink)
-                ))
+                    advanceValuationRulingServiceEmailLink)
+    ))
 
 
 <!--Appeal a ruling decision-->
     @h3(messages("applicationComplete.appeal.subheading"))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.1", advanceValuationRulingServiceEmailLink)))
-    @paragraph(Html(messages("applicationComplete.appeal.paragraph.2", appealLink)))
+    @paragraph(Html(messages("applicationComplete.appeal.paragraph.2")))
+    @paragraph(Html(messages("applicationComplete.appeal.paragraph.3", appealLink)))
 
-    @subheading(messages("applicationComplete.application.heading"),"l")
-    
-    @if(isIndividual) {
-        @subheading(messages("applicationComplete.applicant.heading"))
-        @govukSummaryList(applicationViewModel.eori)
-        @govukSummaryList(applicationViewModel.applicant)
-    } else {
-        @subheading(messages("applicationComplete.company.heading"))
-        @govukSummaryList(applicationViewModel.eori)
-
-        @subheading(messages("applicationComplete.agent.heading"))
-        @govukSummaryList(applicationViewModel.applicant)
-    }
-
-    @subheading(messages("applicationComplete.goods.heading"))
-
-    @govukSummaryList(applicationViewModel.method)
-    @govukSummaryList(applicationViewModel.details)
 }
