@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
+
 import base.SpecBase
 import connectors.BackendConnector
 import generators.ApplicationGenerator
@@ -26,13 +33,7 @@ import org.mockito.MockitoSugar.{reset, times}
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.ApplicationCompleteView
-
-import scala.concurrent.Future
 
 class ApplicationCompleteControllerSpec
     extends SpecBase

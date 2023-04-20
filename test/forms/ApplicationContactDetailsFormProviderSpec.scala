@@ -134,7 +134,17 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       phoneField,
-      Gen.oneOf("07777777777", "+447777777777", "07777777777  ")
+      Gen.oneOf(
+        "07777777777",
+        "+447777777777",
+        " 07777777777  ",
+        "070 0000 0000",
+        "+44130000000",
+        "01632 960 001",
+        "07700 900 982",
+        "07700-900-982",
+        "+44 808 157 0192"
+      )
     )
 
     behave like mandatoryField(
@@ -145,6 +155,21 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
     "fail to bind an invalid phone number" in {
       val result       = form.bind(Map(phoneField -> "invalid")).apply(phoneField)
+      val errorMessage = result.error.value.message
+      errorMessage mustEqual invalidKey
+    }
+
+    "fail to bind a phone number that is too long" in {
+      val length       = Validation.phoneNumberMaxLength + 1
+      val result       = form
+        .bind(Map(phoneField -> "0" * length))
+        .apply(phoneField)
+      val errorMessage = result.error.value.message
+      errorMessage mustEqual invalidKey
+    }
+
+    "fail to bind an phone number with trailing letters" in {
+      val result       = form.bind(Map(phoneField -> "070 0000 000AB")).apply(phoneField)
       val errorMessage = result.error.value.message
       errorMessage mustEqual invalidKey
     }
