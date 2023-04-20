@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.AgentCompanyDetailsFormProvider
-import models.{AgentCompanyDetails, Country, NormalMode, UserAnswers}
+import models.{AgentCompanyDetails, Country, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when

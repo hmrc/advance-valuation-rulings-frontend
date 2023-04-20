@@ -16,14 +16,6 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.i18n.Messages
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import base.SpecBase
 import connectors.BackendConnector
 import generators.ApplicationGenerator
@@ -34,8 +26,13 @@ import org.mockito.MockitoSugar.{reset, times}
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import viewmodels.ApplicationViewModel
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.ApplicationCompleteView
+
+import scala.concurrent.Future
 
 class ApplicationCompleteControllerSpec
     extends SpecBase
@@ -71,8 +68,6 @@ class ApplicationCompleteControllerSpec
                 .overrides(bind[BackendConnector].toInstance(mockBackendConnector))
                 .build()
 
-              implicit val msgs: Messages = messages(application)
-
               when(mockBackendConnector.getApplication(any())(any()))
                 .thenReturn(Future.successful(rulingsApplication))
 
@@ -84,16 +79,13 @@ class ApplicationCompleteControllerSpec
                   )
 
                 val result = route(application, request).value
-
-                val view      = application.injector.instanceOf[ApplicationCompleteView]
-                val viewModel = ApplicationViewModel(rulingsApplication)
+                val view   = application.injector.instanceOf[ApplicationCompleteView]
 
                 status(result) mustEqual OK
                 contentAsString(result) mustEqual view(
                   isIndividual,
                   applicationId,
-                  email,
-                  viewModel
+                  email
                 )(
                   request,
                   messages(application)

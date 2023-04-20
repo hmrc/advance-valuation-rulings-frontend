@@ -27,7 +27,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
-import viewmodels.ApplicationViewModel
 import views.html.ApplicationCompleteView
 
 class ApplicationCompleteController @Inject() (
@@ -48,8 +47,7 @@ class ApplicationCompleteController @Inject() (
           .map {
             application =>
               val isIndividual = request.affinityGroup == AffinityGroup.Individual
-              val viewModel    = ApplicationViewModel(application)
-              Ok(view(isIndividual, application.id.toString, application.contact.email, viewModel))
+              Ok(view(isIndividual, application.id.toString, application.contact.email))
           }
     }
 }
