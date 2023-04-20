@@ -43,7 +43,10 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
         "phone" -> text(phoneRequiredError)
           .verifying(
             phoneFormatError,
-            phone => isValid(phone) && phone.length <= Validation.phoneNumberMaxLength
+            phone =>
+              isValid(phone)
+                && phone.length <= Validation.phoneNumberMaxLength
+                && !phone.exists(_.isLetter)
           )
       )(ApplicationContactDetails.apply)(
         (applicationContactDetails: ApplicationContactDetails) =>

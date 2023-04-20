@@ -167,5 +167,11 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
       val errorMessage = result.error.value.message
       errorMessage mustEqual invalidKey
     }
+
+    "fail to bind an phone number with trailing letters" in {
+      val result       = form.bind(Map(phoneField -> "070 0000 000AB")).apply(phoneField)
+      val errorMessage = result.error.value.message
+      errorMessage mustEqual invalidKey
+    }
   }
 }
