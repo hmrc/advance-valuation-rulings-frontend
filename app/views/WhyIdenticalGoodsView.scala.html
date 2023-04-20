@@ -56,7 +56,10 @@
        @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(None)
+                label = Label(
+                    content = Text(messages("whyIdenticalGoods.label")),
+                    classes = "govuk-visually-hidden",
+                    )
                 )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
