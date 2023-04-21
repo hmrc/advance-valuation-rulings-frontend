@@ -34,7 +34,15 @@
 
 @(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("checkRegisteredDetails.title"))) {
+@layout(
+    pageTitle = title(
+        form,
+        messages(
+            if (registeredDetails.consentToDisclosureOfPersonalData) "checkRegisteredDetails.title" else "checkRegisteredDetails.private.title",
+            registeredDetails.eori
+        )
+    )
+) {
 
 
     @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {

@@ -195,7 +195,7 @@ contactPage.caption = About the applicant
 contactPage.paragraph.1 = We might contact you by phone or email if we need more information about your application.
 contactPage.paragraph.2 = Please note that email communication may not always be secure, as emails can be read or changed by someone else. If you choose to continue your application, you accept the risks involved.
 
-importGoods.title = To use this service, you must intend to bring goods into Great Britain
+importGoods.title = Are you planning to import goods into Great Britain?
 importGoods.heading = Are you planning to import goods into Great Britain?
 importGoods.caption = About the applicant
 importGoods.checkYourAnswersLabel = importGoods
@@ -268,7 +268,8 @@ accountHome.heading = Your applications and rulings
 accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
 
-checkRegisteredDetails.title = Check the name and address for EORI number
+checkRegisteredDetails.title = Check the name and address for EORI number {0}
+checkRegisteredDetails.private.title = The registration details for EORI number {0} are private
 checkRegisteredDetails.heading.1 = Check the name and address for EORI number {0}
 checkRegisteredDetails.heading.2 = Registered business name
 checkRegisteredDetails.heading.3 = Registered business address
