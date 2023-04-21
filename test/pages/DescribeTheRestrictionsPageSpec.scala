@@ -28,5 +28,4 @@ class DescribeTheRestrictionsPageSpec extends PageBehaviours {
 
     beRemovable[String](DescribeTheRestrictionsPage)
   }
-
 }

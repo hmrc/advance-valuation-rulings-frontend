@@ -28,5 +28,4 @@ class CommodityCodePageSpec extends PageBehaviours {
 
     beRemovable[String](CommodityCodePage)
   }
-
 }

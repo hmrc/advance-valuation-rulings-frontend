@@ -28,5 +28,4 @@ class ConfidentialInformationPageSpec extends PageBehaviours {
 
     beRemovable[String](ConfidentialInformationPage)
   }
-
 }

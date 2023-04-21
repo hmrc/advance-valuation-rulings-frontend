@@ -28,5 +28,4 @@ class ExplainHowPartiesAreRelatedPageSpec extends PageBehaviours {
 
     beRemovable[String](ExplainHowPartiesAreRelatedPage)
   }
-
 }

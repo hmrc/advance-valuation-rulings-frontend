@@ -28,5 +28,4 @@ class DescribeTheSimilarGoodsPageSpec extends PageBehaviours {
 
     beRemovable[String](DescribeTheSimilarGoodsPage)
   }
-
 }

@@ -28,5 +28,4 @@ class DescribeTheLegalChallengesPageSpec extends PageBehaviours {
 
     beRemovable[String](DescribeTheLegalChallengesPage)
   }
-
 }

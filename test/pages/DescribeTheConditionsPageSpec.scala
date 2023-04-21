@@ -28,5 +28,4 @@ class DescribeTheConditionsPageSpec extends PageBehaviours {
 
     beRemovable[String](DescribeTheConditionsPage)
   }
-
 }
