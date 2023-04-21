@@ -18,7 +18,7 @@ package models
 
 import java.time.{LocalDateTime, ZoneOffset}
 
-import play.api.libs.json.{__, JsError, Json, JsonValidationError, JsResult}
+import play.api.libs.json.Json
 
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -28,6 +28,24 @@ class UploadedFileSpec extends AnyFreeSpec with Matchers {
   private val instant = LocalDateTime
     .of(2023, 3, 2, 12, 30, 45)
     .toInstant(ZoneOffset.UTC)
+
+  "Initiate" - {
+
+    val model: UploadedFile = UploadedFile.Initiated("reference")
+
+    val json = Json.obj(
+      "reference"  -> "reference",
+      "fileStatus" -> "INITIATED"
+    )
+
+    "must read from json" in {
+      json.as[UploadedFile] mustEqual model
+    }
+
+    "must write to json" in {
+      Json.toJson(model) mustEqual json
+    }
+  }
 
   "Success" - {
 
@@ -69,7 +87,7 @@ class UploadedFileSpec extends AnyFreeSpec with Matchers {
       reference = "reference",
       failureDetails = UploadedFile.FailureDetails(
         failureReason = UploadedFile.FailureReason.Quarantine,
-        failureMessage = "failureMessage"
+        failureMessage = Some("failureMessage")
       )
     )
 

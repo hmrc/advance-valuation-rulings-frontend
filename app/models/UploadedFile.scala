@@ -23,9 +23,21 @@ import play.api.libs.json.{__, Json, OFormat, OWrites, Reads}
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import enumeratum.EnumEntry.Uppercase
 
-sealed abstract class UploadedFile extends Product with Serializable
+sealed abstract class UploadedFile extends Product with Serializable {
+
+  def reference: String
+}
 
 object UploadedFile {
+
+  final case class Initiated(
+    reference: String
+  ) extends UploadedFile
+
+  object Initiated {
+
+    implicit lazy val format: OFormat[Initiated] = Json.format
+  }
 
   final case class Success(
     reference: String,
@@ -62,7 +74,7 @@ object UploadedFile {
 
   final case class FailureDetails(
     failureReason: FailureReason,
-    failureMessage: String
+    failureMessage: Option[String]
   )
 
   object FailureDetails {
@@ -83,16 +95,19 @@ object UploadedFile {
 
   implicit lazy val reads: Reads[UploadedFile] =
     (__ \ "fileStatus").read[String].flatMap {
-      case "READY"  => __.read[Success].widen
-      case "FAILED" => __.read[Failure].widen
-      case _        => Reads.failed("error.invalid")
+      case "INITIATED" => __.read[Initiated].widen
+      case "READY"     => __.read[Success].widen
+      case "FAILED"    => __.read[Failure].widen
+      case _           => Reads.failed("error.invalid")
     }
 
   implicit lazy val writes: OWrites[UploadedFile] =
     OWrites {
-      case s: UploadedFile.Success =>
+      case i: UploadedFile.Initiated =>
+        Json.toJsObject(i) ++ Json.obj("fileStatus" -> "INITIATED")
+      case s: UploadedFile.Success   =>
         Json.toJsObject(s) ++ Json.obj("fileStatus" -> "READY")
-      case f: UploadedFile.Failure =>
+      case f: UploadedFile.Failure   =>
         Json.toJsObject(f) ++ Json.obj("fileStatus" -> "FAILED")
     }
 }
