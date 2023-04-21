@@ -16,6 +16,9 @@
 
 package pages
 
+import scala.util.Success
+
+import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class IsTheSaleSubjectToConditionsPageSpec extends PageBehaviours {
@@ -27,5 +30,45 @@ class IsTheSaleSubjectToConditionsPageSpec extends PageBehaviours {
     beSettable[Boolean](IsTheSaleSubjectToConditionsPage)
 
     beRemovable[Boolean](IsTheSaleSubjectToConditionsPage)
+  }
+  "cleanup" - {
+    "should reset DescribeTheConditionsPage" - {
+      "when IsTheSaleSubjectToConditionsPage is changed to No" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+        val ua               = emptyUserAnswers
+          .set(DescribeTheConditionsPage, "conditions")
+          .get
+
+        IsTheSaleSubjectToConditionsPage.cleanup(Some(false), ua) mustBe
+          Success(emptyUserAnswers)
+      }
+    }
+    "should do nothing" - {
+
+      "when IsTheSaleSubjectToConditionsPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheConditionsPage, "conditions")
+          .get
+
+        IsTheSaleSubjectToConditionsPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when IsTheSaleSubjectToConditionsPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheConditionsPage, "conditions")
+          .get
+
+        IsTheSaleSubjectToConditionsPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }
