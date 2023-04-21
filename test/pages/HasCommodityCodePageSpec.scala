@@ -44,5 +44,31 @@ class HasCommodityCodePageSpec extends PageBehaviours {
           Success(emptyUserAnswers)
       }
     }
+    "should do nothing" - {
+
+      "when HasCommodityCodePage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(CommodityCodePage, "123456")
+          .get
+
+        HasCommodityCodePage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when HasCommodityCodePage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(CommodityCodePage, "123456")
+          .get
+
+        HasCommodityCodePage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }

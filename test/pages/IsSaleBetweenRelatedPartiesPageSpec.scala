@@ -33,7 +33,9 @@ class IsSaleBetweenRelatedPartiesPageSpec extends PageBehaviours {
   }
   "cleanup" - {
     "should reset ExplainHowPartiesAreRelatedPage" - {
+
       "when IsSaleBetweenRelatedPartiesPage is changed to No" in {
+
         val emptyUserAnswers = UserAnswers("id", DraftId(1))
 
         val ua = emptyUserAnswers
@@ -42,6 +44,32 @@ class IsSaleBetweenRelatedPartiesPageSpec extends PageBehaviours {
 
         IsSaleBetweenRelatedPartiesPage.cleanup(Some(false), ua) mustBe
           Success(emptyUserAnswers)
+      }
+    }
+    "should do nothing" - {
+
+      "when IsSaleBetweenRelatedPartiesPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(ExplainHowPartiesAreRelatedPage, "reasons")
+          .get
+
+        IsSaleBetweenRelatedPartiesPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when IsSaleBetweenRelatedPartiesPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(ExplainHowPartiesAreRelatedPage, "reasons")
+          .get
+
+        IsSaleBetweenRelatedPartiesPage.cleanup(None, ua) mustBe
+          Success(ua)
       }
     }
   }

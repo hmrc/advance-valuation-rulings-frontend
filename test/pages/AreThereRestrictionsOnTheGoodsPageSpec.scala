@@ -44,5 +44,31 @@ class AreThereRestrictionsOnTheGoodsPageSpec extends PageBehaviours {
           Success(emptyUserAnswers)
       }
     }
+    "should do nothing" - {
+
+      "when AreThereRestrictionsOnTheGoodsPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheRestrictionsPage, "restrictions")
+          .get
+
+        AreThereRestrictionsOnTheGoodsPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when AreThereRestrictionsOnTheGoodsPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheRestrictionsPage, "restrictions")
+          .get
+
+        AreThereRestrictionsOnTheGoodsPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }

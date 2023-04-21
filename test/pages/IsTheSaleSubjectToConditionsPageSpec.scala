@@ -44,5 +44,31 @@ class IsTheSaleSubjectToConditionsPageSpec extends PageBehaviours {
           Success(emptyUserAnswers)
       }
     }
+    "should do nothing" - {
+
+      "when IsTheSaleSubjectToConditionsPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheConditionsPage, "conditions")
+          .get
+
+        IsTheSaleSubjectToConditionsPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when IsTheSaleSubjectToConditionsPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheConditionsPage, "conditions")
+          .get
+
+        IsTheSaleSubjectToConditionsPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }

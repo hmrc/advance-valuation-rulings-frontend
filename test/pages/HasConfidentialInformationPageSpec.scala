@@ -44,5 +44,31 @@ class HasConfidentialInformationPageSpec extends PageBehaviours {
           Success(emptyUserAnswers)
       }
     }
+    "should do nothing" - {
+
+      "when HasConfidentialInformationPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(ConfidentialInformationPage, "secret")
+          .get
+
+        HasConfidentialInformationPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when HasConfidentialInformationPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(ConfidentialInformationPage, "secret")
+          .get
+
+        HasConfidentialInformationPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }
