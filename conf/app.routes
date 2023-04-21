@@ -101,8 +101,8 @@ POST       /:draftId/supporting-documents/change-uploaded                       
 GET        /:draftId/supporting-documents/remove/:uploadId                         controllers.UploadAnotherSupportingDocumentController.onDelete(uploadId, mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/supporting-documents/change-remove/:uploadId                  controllers.UploadAnotherSupportingDocumentController.onDelete(uploadId, mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /:draftId/supporting-documents/:index/upload                            controllers.UploadSupportingDocumentsController.onPageLoad(index: Index, mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String],  uploadId: Option[String])
-GET        /:draftId/supporting-documents/:index/change-upload                     controllers.UploadSupportingDocumentsController.onPageLoad(index: Index, mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String],  uploadId: Option[String])
+GET        /:draftId/supporting-documents/:index/upload                            controllers.UploadSupportingDocumentsController.onPageLoad(index: Index, mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
+GET        /:draftId/supporting-documents/:index/change-upload                     controllers.UploadSupportingDocumentsController.onPageLoad(index: Index, mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
 
 GET        /:draftId/explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)

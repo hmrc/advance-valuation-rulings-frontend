@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import models.upscan.UpscanInitiateResponse
 @import components._
 
 @this(  mainLayout: templates.Layout,
@@ -25,7 +26,127 @@
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
-        list: BulletList
+        list: BulletList,
+        appConfig: FrontendAppConfig,
+        detailsDrop: DetailsDrop,
     )
 
-@()(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+@(
+        draftId: DraftId,
+        upscanInitiateResponse: Option[UpscanInitiateResponse],
+        errorMessage: Option[String]
+)(implicit messages: Messages, requestHeader: RequestHeader)
+
+@shouldRefresh = @{
+  upscanInitiateResponse.isEmpty
+}
+
+@formInputClass = @{
+  if(errorMessage.isDefined) {
+    "govuk-file-upload govuk-file-upload--error"
+  } else {
+    "govuk-file-upload"
+  }
+}
+
+@formGroupClass = @{
+  if(errorMessage.isDefined) {
+    "govuk-form-group govuk-form-group--error"
+  } else {
+    "govuk-form-group"
+  }
+}
+
+@formWrapper(content: Html) = {
+
+  @upscanInitiateResponse.map { upscanInitiateResponse =>
+
+    <form action="@upscanInitiateResponse.uploadRequest.href" method="post" enctype="multipart/form-data">
+
+      @for(field <- upscanInitiateResponse.uploadRequest.fields) {
+        <input type="hidden" name="@field._1" value="@field._2"/>
+      }
+
+      @content
+
+    </form>
+  }.getOrElse {
+    <div>
+      @content
+    </div>
+  }
+}
+
+@refreshBlock = {
+  @if(shouldRefresh) {
+    <meta http-equiv="refresh" content="1"/>
+  }
+}
+
+@mainLayout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title")), additionalHeadBlock = Some(refreshBlock)) {
+
+  @errorMessage.map { errorMessage =>
+    @govukErrorSummary(ErrorSummaryViewModel.withoutForm(Map("file-input" -> messages(errorMessage))))
+  }
+
+  @caption(messages("uploadSupportingDocuments.caption"))
+  @heading(messages("uploadSupportingDocuments.heading"))
+
+  @detailsDrop(messages("uploadSupportingDocuments.details.label"),
+    Html(messages("uploadSupportingDocuments.details.paragraph"))
+  )
+
+  @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
+  @list(Seq(
+    Html(messages("uploadSupportingDocuments.bulletPoint.1")),
+    Html(messages("uploadSupportingDocuments.bulletPoint.2", appConfig.maximumFilesAllowed)),
+  ),
+    "govuk-list govuk-list--bullet",
+  )
+
+  @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
+  @list(Seq(
+    Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maxFileSizeHumanReadableMebiBytes)),
+    Html(messages("uploadSupportingDocuments.bulletPoint.4"))
+  ),
+    "govuk-list govuk-list--bullet",
+  )
+
+  @formWrapper {
+
+    <div class="mt-3">
+      <div class="@formGroupClass">
+
+        @errorMessage.map { errorMessage =>
+          <p id="file-input-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> @{messages(errorMessage)}
+          </p>
+        }
+
+        <label class="govuk-label" for="file-input">
+        @messages("uploadSupportingDocuments.label")
+        </label>
+        <div class="form-control-wrapper">
+          <input
+          class="@formInputClass"
+          type="file"
+          id="file-input"
+          name="file"
+          accept=".pdf,.jpeg,.jpg"
+          />
+        </div>
+      </div>
+    </div>
+
+    @govukButton(
+      ButtonViewModel(
+      messages("uploadSupportingDocuments.button")
+      )
+              .preventingDoubleClick()
+              .withAttribute(("id" -> "submit"))
+              .disableIf(shouldRefresh)
+    )
+  }
+
+  @cancelApplicationLink(draftId)
+}

@@ -505,7 +505,7 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(0), NormalMode, draftId, None, None, None)
+            .onPageLoad(Index(0), NormalMode, draftId, None, None)
         }
 
         "CheckYourAnswers page when No is selected" in {
@@ -536,7 +536,7 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(0), NormalMode, draftId, None, None, None)
+            .onPageLoad(Index(0), NormalMode, draftId, None, None)
         }
 
         "CheckYourAnswers page when No is selected" in {

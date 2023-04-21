@@ -361,7 +361,7 @@ class Navigator @Inject() () {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
-          .onPageLoad(Index(0), NormalMode, userAnswers.draftId, None, None, None)
+          .onPageLoad(Index(0), NormalMode, userAnswers.draftId, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),
@@ -394,7 +394,7 @@ class Navigator @Inject() () {
       case Some(true)  =>
         val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
         UploadSupportingDocumentsController
-          .onPageLoad(Index(nextIndex), NormalMode, userAnswers.draftId, None, None, None)
+          .onPageLoad(Index(nextIndex), NormalMode, userAnswers.draftId, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),

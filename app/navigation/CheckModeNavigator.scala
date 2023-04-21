@@ -125,7 +125,7 @@ object CheckModeNavigator {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
         controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(Index(0), CheckMode, userAnswers.draftId, None, None, None)
+          .onPageLoad(Index(0), CheckMode, userAnswers.draftId, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),
@@ -160,7 +160,7 @@ object CheckModeNavigator {
       case Some(true)  =>
         val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
         UploadSupportingDocumentsController
-          .onPageLoad(Index(nextIndex), CheckMode, userAnswers.draftId, None, None, None)
+          .onPageLoad(Index(nextIndex), CheckMode, userAnswers.draftId, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),

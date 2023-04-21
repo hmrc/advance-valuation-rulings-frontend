@@ -860,7 +860,6 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckMode,
               draftId,
               None,
-              None,
               None
             )
           }

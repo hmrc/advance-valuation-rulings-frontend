@@ -18,149 +18,162 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.Configuration
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import _root_.config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models._
-import services.UserAnswersService
+import models.requests.DataRequest
+import navigation.Navigator
+import pages.UploadSupportingDocumentPage
+import services.fileupload.FileService
 import views.html.UploadSupportingDocumentsView
 
 @Singleton
 class UploadSupportingDocumentsController @Inject() (
   override val messagesApi: MessagesApi,
-  val controllerComponents: MessagesControllerComponents,
-  userAnswersService: UserAnswersService,
+  override val controllerComponents: MessagesControllerComponents,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  uploadSupportingDocumentsView: UploadSupportingDocumentsView
-)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+  view: UploadSupportingDocumentsView,
+  fileService: FileService,
+  navigator: Navigator,
+  configuration: Configuration
+)(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
-  private val logger = play.api.Logger(this.getClass)
+
+  private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
 
   def onPageLoad(
     index: Index,
     mode: Mode,
     draftId: DraftId,
-    error: Option[String],
+    errorCode: Option[String],
+    key: Option[String]
+  ): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
+      implicit request =>
+        val answers = request.userAnswers
+        val file    = answers.get(UploadSupportingDocumentPage(index))
+
+        file
+          .map {
+            case file: UploadedFile.Initiated =>
+              errorCode
+                .map(errorCode => showErrorPage(draftId, mode, index, errorForCode(errorCode)))
+                .getOrElse {
+                  if (key.contains(file.reference)) {
+                    showInterstitialPage(draftId)
+                  } else {
+                    showPage(draftId, mode, index)
+                  }
+                }
+            case file: UploadedFile.Success   =>
+              if (key.contains(file.reference)) {
+                continue(index, mode, answers)
+              } else {
+                showPage(draftId, mode, index)
+              }
+            case file: UploadedFile.Failure   =>
+              redirectWithError(
+                draftId,
+                mode,
+                index,
+                key,
+                file.failureDetails.failureReason.toString
+              )
+          }
+          .getOrElse {
+            showPage(draftId, mode, index)
+          }
+    }
+
+  private def showPage(draftId: DraftId, mode: Mode, index: Index)(implicit
+    request: RequestHeader
+  ): Future[Result] =
+    fileService.initiate(draftId, mode, index).map {
+      response =>
+        Ok(
+          view(
+            draftId = draftId,
+            upscanInitiateResponse = Some(response),
+            errorMessage = None
+          )
+        )
+    }
+
+  private def showInterstitialPage(
+    draftId: DraftId
+  )(implicit request: RequestHeader): Future[Result] =
+    Future.successful(
+      Ok(
+        view(
+          draftId = draftId,
+          upscanInitiateResponse = None,
+          errorMessage = None
+        )
+      )
+    )
+
+  private def showErrorPage(draftId: DraftId, mode: Mode, index: Index, errorMessage: String)(
+    implicit request: RequestHeader
+  ): Future[Result] =
+    fileService.initiate(draftId, mode, index).map {
+      response =>
+        BadRequest(
+          view(
+            draftId = draftId,
+            upscanInitiateResponse = Some(response),
+            errorMessage = Some(errorMessage)
+          )
+        )
+    }
+
+  private def redirectWithError(
+    draftId: DraftId,
+    mode: Mode,
+    index: Index,
     key: Option[String],
-    uploadId: Option[String]
-  ): Action[AnyContent] = ???
-//    (identify andThen getData(draftId) andThen requireData).async {
-//    implicit request: DataRequest[AnyContent] =>
-//      val statusFromCode = error.flatMap(UploadStatus.fromErrorCode)
-//      uploadId match {
-//        case None =>
-//          for {
-//            result <- fileUploadService.initiateUpload(mode, draftId)
-//            status  = if (result.uploadStatus == NotStarted) statusFromCode.getOrElse(NotStarted)
-//                      else result.uploadStatus
-//
-//          } yield Ok(
-//            uploadSupportingDocumentsView(
-//              result.upscanResponse,
-//              result.redirectFileId,
-//              status,
-//              draftId
-//            )
-//          )
-//
-//        case Some(existingFileId) =>
-//          val fileUploadIds = FileUploadIds.fromExistingUploadId(existingFileId)
-//          for {
-//            uploadResult <- fileUploadService.getUploadStatus(existingFileId)
-//            result       <- uploadResult match {
-//                              case None                               =>
-//                                Future(
-//                                  BadRequest(s"Upload with id $uploadId not found")
-//                                ) // TODO: NICK: This needs to return the view...
-//                              case Some(status: UploadedSuccessfully) =>
-//                                checkForDuplicateUploads(mode, existingFileId, status, draftId)
-//                              case Some(result)                       =>
-//                                showUploadForm(fileUploadIds, result, mode, draftId)
-//                            }
-//          } yield result
-//      }
-//  }
-//
-//  private def checkForDuplicateUploads(
-//    mode: Mode,
-//    existingFileId: UploadId,
-//    status: UploadedSuccessfully,
-//    draftId: DraftId
-//  )(implicit request: DataRequest[AnyContent]): Future[Result] = {
-//    val uploadedFiles = UploadSupportingDocumentPage.get().toSet
-//    val fileNames     = uploadedFiles.flatMap(_.files.values.map(_.fileName))
-//    if (fileNames.contains(status.name)) {
-//      fileUploadService
-//        .initiateUpload(mode, draftId)
-//        .map {
-//          result =>
-//            Ok(
-//              uploadSupportingDocumentsView(
-//                result.upscanResponse,
-//                existingFileId,
-//                DuplicateFile,
-//                draftId
-//              )
-//            )
-//        }
-//    } else {
-//      continueToIsFileConfidential(existingFileId, status, mode, draftId)(request)
-//    }
-//  }
-//
-//  private def continueToIsFileConfidential(
-//    uploadId: UploadId,
-//    uploadDetails: UploadedSuccessfully,
-//    mode: Mode,
-//    draftId: DraftId
-//  ): Action[AnyContent] =
-//    (identify andThen getData(draftId) andThen requireData).async {
-//      implicit request =>
-//        val payload = UpscanFileDetails(
-//          uploadId,
-//          uploadDetails.name,
-//          uploadDetails.downloadUrl,
-//          uploadDetails.mimeType,
-//          uploadDetails.size.getOrElse(0L)
-//        )
-//
-//        for {
-//          answers <-
-//            UploadSupportingDocumentPage.upsert(
-//              (uploadedFiles: UploadedFiles) => uploadedFiles.addFile(payload),
-//              UploadedFiles.initialise(payload)
-//            )
-//          _       <- userAnswersService.set(answers)
-//          _        = logger.info(s"Uploaded file added to session repo uploadId: $uploadId")
-//        } yield Redirect(
-//          controllers.routes.IsThisFileConfidentialController.onPageLoad(mode, draftId)
-//        )
-//    }
-//
-//  private def showUploadForm(
-//    fileUploadIds: FileUploadIds,
-//    result: UploadStatus,
-//    mode: Mode,
-//    draftId: DraftId
-//  )(implicit
-//    request: DataRequest[AnyContent]
-//  ) =
-//    for {
-//      response <- fileUploadService.initiateWithExisting(fileUploadIds, mode, draftId)
-//    } yield Ok(
-//      uploadSupportingDocumentsView(
-//        response.upscanResponse,
-//        response.redirectFileId,
-//        result,
-//        draftId
-//      )
-//    )
+    errorCode: String
+  )(implicit request: RequestHeader): Future[Result] =
+    fileService.initiate(draftId, mode, index).map {
+      _ =>
+        Redirect(
+          routes.UploadSupportingDocumentsController
+            .onPageLoad(index, mode, draftId, Some(errorCode), key)
+        )
+    }
+
+  private def continue(index: Index, mode: Mode, answers: UserAnswers)(implicit
+    request: DataRequest[_]
+  ): Future[Result] =
+    Future.successful(
+      Redirect(
+        navigator.nextPage(UploadSupportingDocumentPage(index), mode, answers)(
+          request.affinityGroup
+        )
+      )
+    )
+
+  private def errorForCode(code: String)(implicit messages: Messages): String =
+    code match {
+      case "InvalidArgument" =>
+        Messages("uploadSupportingDocuments.error.invalidargument")
+      case "EntityTooLarge"  =>
+        Messages(s"uploadSupportingDocuments.error.entitytoolarge", maxFileSize)
+      case "EntityTooSmall"  =>
+        Messages("uploadSupportingDocuments.error.entitytoosmall")
+      case "Rejected"        =>
+        Messages("uploadSupportingDocuments.error.rejected")
+      case "Quarantine"      =>
+        Messages("uploadSupportingDocuments.error.quarantine")
+      case _                 =>
+        Messages(s"uploadSupportingDocuments.error.unknown")
+    }
 }
