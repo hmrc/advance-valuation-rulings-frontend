@@ -16,9 +16,6 @@
 
 package pages
 
-import scala.util.Success
-
-import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class CommodityCodePageSpec extends PageBehaviours {
@@ -32,18 +29,4 @@ class CommodityCodePageSpec extends PageBehaviours {
     beRemovable[String](CommodityCodePage)
   }
 
-  "cleanup" - {
-    "should reset CommodityCodePage" - {
-      "when HasCommodityCodePage is changed to No" in {
-        val emptyUserAnswers = UserAnswers("id", DraftId(1))
-
-        val ua = emptyUserAnswers
-          .set(CommodityCodePage, "123456")
-          .get
-
-        HasCommodityCodePage.cleanup(Some(false), ua) mustBe
-          Success(emptyUserAnswers)
-      }
-    }
-  }
 }

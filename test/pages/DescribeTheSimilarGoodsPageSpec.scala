@@ -16,9 +16,6 @@
 
 package pages
 
-import scala.util.Success
-
-import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class DescribeTheSimilarGoodsPageSpec extends PageBehaviours {
@@ -31,18 +28,5 @@ class DescribeTheSimilarGoodsPageSpec extends PageBehaviours {
 
     beRemovable[String](DescribeTheSimilarGoodsPage)
   }
-  "cleanup" - {
-    "should reset DescribeTheSimilarGoodsPage" - {
-      "when HaveYouUsedMethodOneForSimilarGoodsInPastPage is changed to No" in {
-        val emptyUserAnswers = UserAnswers("id", DraftId(1))
 
-        val ua = emptyUserAnswers
-          .set(DescribeTheSimilarGoodsPage, "similarities")
-          .get
-
-        HaveYouUsedMethodOneForSimilarGoodsInPastPage.cleanup(Some(false), ua) mustBe
-          Success(emptyUserAnswers)
-      }
-    }
-  }
 }

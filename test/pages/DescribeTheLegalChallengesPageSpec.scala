@@ -16,9 +16,6 @@
 
 package pages
 
-import scala.util.Success
-
-import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class DescribeTheLegalChallengesPageSpec extends PageBehaviours {
@@ -31,18 +28,5 @@ class DescribeTheLegalChallengesPageSpec extends PageBehaviours {
 
     beRemovable[String](DescribeTheLegalChallengesPage)
   }
-  "cleanup" - {
-    "should reset DescribeTheLegalChallengesPage" - {
-      "when HaveTheGoodsBeenSubjectToLegalChallengesPage is changed to No" in {
-        val emptyUserAnswers = UserAnswers("id", DraftId(1))
 
-        val ua = emptyUserAnswers
-          .set(DescribeTheLegalChallengesPage, "legalities")
-          .get
-
-        HaveTheGoodsBeenSubjectToLegalChallengesPage.cleanup(Some(false), ua) mustBe
-          Success(emptyUserAnswers)
-      }
-    }
-  }
 }

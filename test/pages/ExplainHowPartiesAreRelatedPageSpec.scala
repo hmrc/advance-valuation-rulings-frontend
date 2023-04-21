@@ -16,9 +16,6 @@
 
 package pages
 
-import scala.util.Success
-
-import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class ExplainHowPartiesAreRelatedPageSpec extends PageBehaviours {
@@ -31,18 +28,5 @@ class ExplainHowPartiesAreRelatedPageSpec extends PageBehaviours {
 
     beRemovable[String](ExplainHowPartiesAreRelatedPage)
   }
-  "cleanup" - {
-    "should reset ExplainHowPartiesAreRelatedPage" - {
-      "when IsSaleBetweenRelatedPartiesPage is changed to No" in {
-        val emptyUserAnswers = UserAnswers("id", DraftId(1))
 
-        val ua = emptyUserAnswers
-          .set(ExplainHowPartiesAreRelatedPage, "reasons")
-          .get
-
-        IsSaleBetweenRelatedPartiesPage.cleanup(Some(false), ua) mustBe
-          Success(emptyUserAnswers)
-      }
-    }
-  }
 }
