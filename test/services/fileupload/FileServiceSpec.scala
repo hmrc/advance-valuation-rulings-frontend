@@ -29,6 +29,7 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import connectors.UpscanConnector
 import models.{DraftId, Index, NormalMode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._
@@ -85,10 +86,15 @@ class FileServiceSpec
 
   "initiate" - {
 
-    "must call the upscan connector with the expected request" in {
+    "must call the upscan connector with the expected request and update the user answers with the initiated file" in {
+
+      val userAnswersCaptor: ArgumentCaptor[UserAnswers] =
+        ArgumentCaptor.forClass(classOf[UserAnswers])
+
+      val userAnswers = UserAnswers("userId", DraftId(0))
 
       val expectedPath = controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(0), NormalMode, DraftId(0), None, None, None)
+        .onPageLoad(Index(0), NormalMode, DraftId(0), None, None)
         .url
       val expectedUrl  = s"host$expectedPath"
 
@@ -102,10 +108,45 @@ class FileServiceSpec
       )
 
       when(mockUpscanConnector.initiate(any())(any())).thenReturn(Future.successful(response))
+      when(mockUserAnswersService.get(any())).thenReturn(Future.successful(Some(userAnswers)))
+      when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
 
       service.initiate(DraftId(0), NormalMode, Index(0))(hc).futureValue mustEqual response
 
       verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
+      verify(mockUserAnswersService).set(userAnswersCaptor.capture())
+
+      val actualAnswers = userAnswersCaptor.getValue
+
+      actualAnswers.get(UploadSupportingDocumentPage(Index(0))).value mustEqual UploadedFile
+        .Initiated("reference")
+    }
+
+    "fail when there are no user answers for that draft" in {
+
+      val expectedPath = controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(0), NormalMode, DraftId(0), None, None)
+        .url
+      val expectedUrl  = s"host$expectedPath"
+
+      val expectedRequest = UpscanInitiateRequest(
+        callbackUrl = s"callbackUrl${controllers.callback.routes.UploadCallbackController
+            .callback(DraftId(0), Index(0))}",
+        successRedirect = expectedUrl,
+        errorRedirect = expectedUrl,
+        minimumFileSize = 123,
+        maximumFileSize = 321
+      )
+
+      when(mockUpscanConnector.initiate(any())(any())).thenReturn(Future.successful(response))
+      when(mockUserAnswersService.get(any())).thenReturn(Future.successful(None))
+
+      val exception = service.initiate(DraftId(0), NormalMode, Index(0))(hc).failed.futureValue
+
+      verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
+
+      exception mustBe a[FileService.NoUserAnswersFoundException]
+      exception.asInstanceOf[FileService.NoUserAnswersFoundException].draftId mustEqual DraftId(0)
     }
   }
 
@@ -178,7 +219,7 @@ class FileServiceSpec
         reference = "reference",
         failureDetails = UploadedFile.FailureDetails(
           failureReason = UploadedFile.FailureReason.Quarantine,
-          failureMessage = "failureMessage"
+          failureMessage = Some("failureMessage")
         )
       )
 

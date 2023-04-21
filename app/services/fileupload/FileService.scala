@@ -57,7 +57,7 @@ class FileService @Inject() (
 
     val redirectPath =
       controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(index, mode, draftId, None, None, None)
+        .onPageLoad(index, mode, draftId, None, None)
         .url
     val redirectUrl  = s"$host$redirectPath"
 
@@ -70,7 +70,17 @@ class FileService @Inject() (
       maximumFileSize = maximumFileSize
     )
 
-    upscanConnector.initiate(request)
+    for {
+      response       <- upscanConnector.initiate(request)
+      answers        <- getUserAnswers(draftId)
+      updatedAnswers <- Future.fromTry(
+                          answers.set(
+                            UploadSupportingDocumentPage(index),
+                            UploadedFile.Initiated(response.reference)
+                          )
+                        )
+      _              <- userAnswersService.set(updatedAnswers)
+    } yield response
   }
 
   def update(draftId: DraftId, index: Index, file: UploadedFile): Future[Done] =
