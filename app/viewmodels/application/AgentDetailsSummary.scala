@@ -16,12 +16,13 @@
 
 package viewmodels.application
 
-import models.Country
-import models.requests.TraderDetail
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import models.Country
+import models.requests.TraderDetail
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
