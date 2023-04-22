@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
-@import java.time.format.DateTimeFormatter
 @import components._
 @import models.ApplicationForAccountHome
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
+@import views.html.templates.FullLayoutMainContent
 
 @this(
         layout: templates.Layout,
@@ -25,7 +25,8 @@
         formHelper: FormWithCSRF,
         para: Paragraph,
         table: GovukTable,
-        link: Link
+        link: Link,
+        fullMainContent: FullLayoutMainContent
 )
 
 @(applications: Seq[ApplicationForAccountHome])(implicit request: Request[_], messages: Messages)
@@ -68,7 +69,7 @@
 
 }
 
-@layout(pageTitle = titleNoForm(messages("accountHome.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("accountHome.title")), showBackLink = false, mainContentLayout = Some(fullMainContent(_))) {
 
     <h1 class="govuk-heading-l">@messages("accountHome.heading")</h1>
 
