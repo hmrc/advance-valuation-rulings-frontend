@@ -16,6 +16,8 @@
 
 package navigation
 
+import java.time.Instant
+
 import play.api.libs.json.Writes
 import uk.gov.hmrc.auth.core.AffinityGroup
 
@@ -30,6 +32,17 @@ class CheckModeNavigatorSpec extends SpecBase {
   val EmptyUserAnswers: UserAnswers = emptyUserAnswers
   val navigator                     = new Navigator
   val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
+
+  private val successfulFile = UploadedFile.Success(
+    reference = "reference",
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.now(),
+      checksum = "checksum"
+    )
+  )
 
   "Navigator" - {
 
@@ -874,84 +887,120 @@ class CheckModeNavigatorSpec extends SpecBase {
           }
         }
 
-        "IsThisFileConfidential page" - {
-//          "navigate to self if file confidentiality not set" in {
-//            val userAnswers = userAnswersWith(
-//              UploadSupportingDocumentPage,
-//              UploadedFiles(
-//                lastUpload = Some(fileDetails),
-//                files = Map.empty
-//              )
-//            )
-//            navigator.nextPage(
-//              IsThisFileConfidentialPage,
-//              CheckMode,
-//              userAnswers
-//            ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
-//              CheckMode,
-//              draftId
-//            )
-//          }
-//
-//          "navigate to upload another if file confidentiality not set" in {
-//            val userAnswers = userAnswersWith(
-//              UploadSupportingDocumentPage,
-//              UploadedFiles(
-//                lastUpload = Some(fileDetails),
-//                files = Map.empty
-//              )
-//            )
-//            navigator.nextPage(
-//              IsThisFileConfidentialPage,
-//              CheckMode,
-//              userAnswers
-//            ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
-//              CheckMode,
-//              draftId
-//            )
-//          }
-//
-//          "navigate to UploadAnotherSupportingDocument when set" in {
-//            val userAnswers = userAnswersWith(
-//              UploadSupportingDocumentPage,
-//              UploadedFiles(
-//                lastUpload = None,
-//                files = Map(
-//                  UploadId("id") ->
-//                    uploadedFile
-//                )
-//              )
-//            )
-//            navigator.nextPage(
-//              IsThisFileConfidentialPage,
-//              CheckMode,
-//              userAnswers
-//            ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
-//          }
-//
-//          "navigate to DoYouWantToUploadDocuments when there are no uploaded documents" in {
-//            val userAnswers = userAnswersWith(
-//              UploadSupportingDocumentPage,
-//              UploadedFiles(
-//                lastUpload = None,
-//                files = Map.empty
-//              )
-//            )
-//            navigator.nextPage(
-//              IsThisFileConfidentialPage,
-//              CheckMode,
-//              userAnswers
-//            ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
-//          }
-//
-//          "navigate to DoYouWantToUploadDocuments when the question has no answer" in {
-//            val userAnswers = EmptyUserAnswers
-//            navigator.nextPage(
-//              IsThisFileConfidentialPage,
-//              CheckMode,
-//              userAnswers
-//            ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
-//          }
+        "UploadSupportingDocumentPage must navigate to" - {
+
+          "IsThisFileConfidential page" in {
+            navigator.nextPage(
+              UploadSupportingDocumentPage(Index(0)),
+              CheckMode,
+              emptyUserAnswers
+            ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
+              Index(0),
+              CheckMode,
+              draftId
+            )
+          }
+        }
+
+        "IsThisFileConfidentialPage must navigate to" - {
+
+          "UploadAnotherSupportingDocument page" in {
+            navigator.nextPage(
+              IsThisFileConfidentialPage(Index(0)),
+              CheckMode,
+              emptyUserAnswers
+            ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
+          }
+        }
+
+        "UploadAnotherSupportingDocumentPage must navigate to" - {
+
+          "UploadSupportingDocumentsPage when Yes is selected" in {
+            val userAnswers =
+              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, true).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(Index(0), CheckMode, draftId, None, None)
+          }
+
+          "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
+            val userAnswers =
+              emptyUserAnswers
+                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+                .success
+                .value
+                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .success
+                .value
+                .set(UploadAnotherSupportingDocumentPage, true)
+                .get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(Index(1), CheckMode, draftId, None, None)
+          }
+
+          "CheckYourAnswers page when No is selected and the user is not an agent" in {
+            val userAnswers =
+              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
+          }
+
+          "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
+            val userAnswers =
+              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+              draftId
+            )
+          }
+
+          "JourneyRecovery page when the page is not answered" in {
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              emptyUserAnswers
+            ) mustBe routes.JourneyRecoveryController.onPageLoad()
+          }
+        }
+
+        "DeleteSupportingDocumentPage must navigate to" - {
+
+          "UploadAnotherSupportingDocument page when there are more documents" in {
+            val answers =
+              emptyUserAnswers
+                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+                .success
+                .value
+                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .success
+                .value
+            navigator.nextPage(
+              DeleteSupportingDocumentPage(Index(0)),
+              CheckMode,
+              answers
+            ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
+          }
+
+          "DoYouWantToUploadSupportingDocuments page when there are no more documents" in {
+            navigator.nextPage(
+              DeleteSupportingDocumentPage(Index(0)),
+              CheckMode,
+              emptyUserAnswers
+            ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
+          }
         }
       }
 
@@ -993,6 +1042,5 @@ class CheckModeNavigatorSpec extends SpecBase {
         }
       }
     }
-
   }
 }

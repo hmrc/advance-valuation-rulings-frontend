@@ -16,19 +16,20 @@
 
 package controllers
 
+import java.time.Instant
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import views.html.UploadAnotherSupportingDocumentView
-
-import java.time.Instant
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
 
@@ -39,9 +40,6 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
   private lazy val uploadAnotherSupportingDocumentRoute =
     routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId).url
-
-  private lazy val removeSupportingDocumentRoute =
-    routes.DeleteSupportingDocumentController.onDelete(Index(0), NormalMode, draftId).url
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
@@ -142,6 +140,5 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
-
   }
 }

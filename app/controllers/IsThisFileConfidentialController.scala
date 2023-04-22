@@ -79,22 +79,4 @@ class IsThisFileConfidentialController @Inject() (
               )
           )
     }
-//        form
-//          .bindFromRequest()
-//          .fold(
-//            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
-//            (value: Boolean) =>
-//              for {
-//                updatedAnswers <- UploadSupportingDocumentPage.modify(
-//                                    (files: UploadedFiles) => files.setConfidentiality(value)
-//                                  )
-//                _              <- userAnswersService.set(updatedAnswers)
-//              } yield Redirect(
-//                navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers)(
-//                  request.affinityGroup
-//                )
-//              )
-//          )
-//
-//    }
 }

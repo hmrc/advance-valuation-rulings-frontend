@@ -16,11 +16,12 @@
 
 package navigation
 
+import java.time.Instant
+
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup._
 
 import base.SpecBase
 import controllers.routes
@@ -33,6 +34,17 @@ class NavigatorSpec extends SpecBase {
 
   val EmptyUserAnswers: UserAnswers = emptyUserAnswers
   val navigator                     = new Navigator
+
+  private val successfulFile = UploadedFile.Success(
+    reference = "reference",
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.now(),
+      checksum = "checksum"
+    )
+  )
 
   "Navigator" - {
 
@@ -66,25 +78,26 @@ class NavigatorSpec extends SpecBase {
     }
 
     "Account Home" - {
+
       "should navigate to RequiredInformation page when Individual" in {
         navigator.startApplicationRouting(
-          Individual,
+          AffinityGroup.Individual,
           draftId
         ) mustBe routes.RequiredInformationController
           .onPageLoad(draftId)
-
       }
+
       "should navigate to WhatIsYourRole page when Agent" in {
         navigator.startApplicationRouting(
-          Agent,
+          AffinityGroup.Agent,
           draftId
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
-
       }
+
       "should navigate to WhatIsYourRole page when Org" in {
         navigator.startApplicationRouting(
-          Organisation,
+          AffinityGroup.Organisation,
           draftId
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
@@ -384,7 +397,7 @@ class NavigatorSpec extends SpecBase {
         )
 
         "when Individual" - {
-          val aff: AffinityGroup = Individual
+          val aff: AffinityGroup = AffinityGroup.Individual
 
           "navigate to ApplicationContactDetailsPage when Yes" in {
             val userAnswers =
@@ -408,7 +421,7 @@ class NavigatorSpec extends SpecBase {
         }
 
         "when Organisation" - {
-          val aff: AffinityGroup = Organisation
+          val aff: AffinityGroup = AffinityGroup.Organisation
 
           "navigate to BusinessContactDetailsPage when Yes" in {
             val userAnswers =
@@ -519,14 +532,29 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "UploadAnotherSupportingDocumentPage must" - {
-        "self when no answer is selected" in {
+      "UploadSupportingDocumentPage must navigate to" - {
+
+        "IsThisFileConfidential page" in {
           navigator.nextPage(
-            UploadAnotherSupportingDocumentPage,
+            UploadSupportingDocumentPage(Index(0)),
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId)
+        }
+      }
+
+      "IsThisFileConfidentialPage must navigate to" - {
+
+        "UploadAnotherSupportingDocument page" in {
+          navigator.nextPage(
+            IsThisFileConfidentialPage(Index(0)),
             NormalMode,
             emptyUserAnswers
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
         }
+      }
+
+      "UploadAnotherSupportingDocumentPage must navigate to" - {
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
@@ -539,7 +567,26 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(Index(0), NormalMode, draftId, None, None)
         }
 
-        "CheckYourAnswers page when No is selected" in {
+        "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
+          val userAnswers =
+            emptyUserAnswers
+              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .success
+              .value
+              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .success
+              .value
+              .set(UploadAnotherSupportingDocumentPage, true)
+              .get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe controllers.routes.UploadSupportingDocumentsController
+            .onPageLoad(Index(1), NormalMode, draftId, None, None)
+        }
+
+        "CheckYourAnswers page when No is selected and the user is not an agent" in {
           val userAnswers =
             emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
@@ -548,45 +595,53 @@ class NavigatorSpec extends SpecBase {
             userAnswers
           ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
         }
+
+        "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
+          val userAnswers =
+            emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            draftId
+          )
+        }
+
+        "JourneyRecovery page when the page is not answered" in {
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
+        }
       }
 
-      "IsThisFileConfidentialPage must" - {
+      "DeleteSupportingDocumentPage must navigate to" - {
 
-//        "redirect to UploadSupportingDocumentsPage user has no files" in {
-//          navigator.nextPage(
-//            IsThisFileConfidentialPage,
-//            NormalMode,
-//            emptyUserAnswers
-//          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
-//        }
-//
-//        "redirect to self when user has a file without confidentiality info" in {
-//          val userAnswers = emptyUserAnswers
-//            .set(
-//              UploadSupportingDocumentPage,
-//              UploadedFiles.initialise(fileDetails)
-//            )
-//            .get
-//          navigator.nextPage(
-//            IsThisFileConfidentialPage,
-//            NormalMode,
-//            userAnswers
-//          ) mustBe routes.IsThisFileConfidentialController.onPageLoad(NormalMode, draftId)
-//        }
-//
-//        "UploadSupportingDocumentsPage when an answer is selected" in {
-//          val userAnswers = emptyUserAnswers
-//            .set(
-//              UploadSupportingDocumentPage,
-//              UploadedFiles.initialise(fileDetails).setConfidentiality(false)
-//            )
-//            .get
-//          navigator.nextPage(
-//            IsThisFileConfidentialPage,
-//            NormalMode,
-//            userAnswers
-//          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
-//        }
+        "UploadAnotherSupportingDocument page when there are more documents" in {
+          val answers =
+            emptyUserAnswers
+              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .success
+              .value
+              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .success
+              .value
+          navigator.nextPage(
+            DeleteSupportingDocumentPage(Index(0)),
+            NormalMode,
+            answers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
+        }
+
+        "DoYouWantToUploadSupportingDocuments page when there are no more documents" in {
+          navigator.nextPage(
+            DeleteSupportingDocumentPage(Index(0)),
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
+        }
       }
 
       "valuationMethod page must navigate to" - {

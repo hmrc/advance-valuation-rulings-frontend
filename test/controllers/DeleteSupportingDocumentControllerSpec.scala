@@ -151,8 +151,8 @@ class DeleteSupportingDocumentControllerSpec extends SpecBase with MockitoSugar 
   "must redirect to Journey Recovery page when there are no user answers" in {
 
     val application = applicationBuilder(userAnswers = None).build()
-    val request = FakeRequest(deleteSupportingDocumentRoute)
-    val result = route(application, request).value
+    val request     = FakeRequest(deleteSupportingDocumentRoute)
+    val result      = route(application, request).value
 
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
