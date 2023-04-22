@@ -22,11 +22,11 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    saveButtons: SaveButtons
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -54,9 +54,7 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
     @cancelApplicationLink(draftId)
 }

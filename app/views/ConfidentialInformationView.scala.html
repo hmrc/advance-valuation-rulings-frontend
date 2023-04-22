@@ -20,14 +20,14 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukButton: GovukButton,
     govukTextarea: GovukTextarea,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    insetPara: InsetPara
+    insetPara: InsetPara,
+    saveButtons: SaveButtons
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -65,9 +65,7 @@
                     .withAttribute("maxlength","8167")
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 
     @cancelApplicationLink(draftId)

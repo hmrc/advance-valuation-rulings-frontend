@@ -16,6 +16,8 @@ site.cancel = Cancel application
 site.printApplication = Print your application
 site.saveApplication = Save your application
 site.page = Page {0} of {1}
+site.saveAndContinue = Save and continue
+site.saveAsDraft = Save as draft
 
 
 site.1 = one

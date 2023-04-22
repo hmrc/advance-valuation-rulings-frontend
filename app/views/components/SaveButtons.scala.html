@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package pages
+@this(govukButton: GovukButton)
 
-import play.api.libs.json.JsPath
+@(submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
 
-case object DescriptionOfGoodsPage extends QuestionPage[String] {
+    <div class="govuk-button-group">
+        @govukButton(
+            ButtonViewModel(messages(submitButtonMessageKey))
+        )
 
-  override def path: JsPath = JsPath \ toString
+        <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+            @messages("site.saveAsDraft")
+        </a>
+    </div>
 
-  override def toString: String = "goodsDescription"
-}
+    

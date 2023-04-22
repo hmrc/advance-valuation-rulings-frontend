@@ -26,15 +26,16 @@
         paragraph: Paragraph,
         heading: Heading,
         config: FrontendAppConfig,
-        caption: Caption
+        caption: Caption,
+        saveButtons: SaveButtons
 )
 
-@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("contactPage.title")), draftId = Some(draftId)) {
 
 
-    @formHelper(action = routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId)) {
+    @formHelper(action = routes.ContactPageController.onSubmit(mode, draftId)) {
 
         @caption(messages("contactPage.caption"))
         @heading(messages("contactPage.heading"))
@@ -43,8 +44,7 @@
         @paragraph(content = Html(messages("contactPage.paragraph.2")))
 
 
-        @components.ButtonLink(messages("site.acceptContinue"), routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url)
-
+        @saveButtons("site.acceptContinue")
     }
 
     @cancelApplicationLink(draftId)

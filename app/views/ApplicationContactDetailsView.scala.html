@@ -22,11 +22,11 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    cancelApplicationLink: CancelApplicationLink
+    cancelApplicationLink: CancelApplicationLink,
+    saveButtons: SaveButtons
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -71,9 +71,7 @@
             .withWidth(OneHalf)
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 @cancelApplicationLink(draftId)
 }

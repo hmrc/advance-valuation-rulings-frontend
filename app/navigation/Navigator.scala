@@ -53,6 +53,8 @@ class Navigator @Inject() () {
     case ImportGoodsPage                                  => importGoodsPage
     case RequiredInformationPage                          => requiredInformationPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
+    case ContactPagePage                                  =>
+      ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
     case BusinessContactDetailsPage                       => businessContactDetailsPage
@@ -401,7 +403,7 @@ class Navigator @Inject() () {
   private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {
       case None        => ImportGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(true)  => ContactPageController.onPageLoad(userAnswers.draftId)
+      case Some(true)  => ContactPageController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) => ImportingGoodsController.onPageLoad(userAnswers.draftId)
     }
 

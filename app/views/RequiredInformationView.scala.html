@@ -22,10 +22,10 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    saveButtons: SaveButtons
 )
 
 @(form: Form[_], affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -51,8 +51,6 @@
             ).withHint(Hint(content=Text(messages("requiredInformation.hint"))))
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 }
