@@ -17,11 +17,13 @@
 package services
 
 import scala.concurrent.Future
+
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
+
 import connectors.UserAnswersConnector
-import models.requests.DraftSummaryResponse
 import models.{Done, DraftId, UserAnswers}
+import models.requests.DraftSummaryResponse
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -109,7 +111,8 @@ class UserAnswersServiceSpec
 
     "must return the summary response provided by the connector" in {
 
-      when(mockUserAnswersConnector.summaries()(any())).thenReturn(Future.successful(DraftSummaryResponse(Nil)))
+      when(mockUserAnswersConnector.summaries()(any()))
+        .thenReturn(Future.successful(DraftSummaryResponse(Nil)))
 
       val result = service.summaries().futureValue
       result mustEqual DraftSummaryResponse(Nil)

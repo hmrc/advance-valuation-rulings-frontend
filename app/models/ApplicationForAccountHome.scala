@@ -71,6 +71,10 @@ object ApplicationForAccountHome {
         ActionItem(
           href = continueCall.url,
           content = Text(messages("accountHome.continueApplication"))
+        ),
+        ActionItem(
+          href = routes.DeleteDraftController.onPageLoad(draftSummary.id).url,
+          content = Text(messages("accountHome.deleteApplication"))
         )
       )
     )

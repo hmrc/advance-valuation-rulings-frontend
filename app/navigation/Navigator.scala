@@ -80,7 +80,8 @@ class Navigator @Inject() () {
       explainWhyYouHaveNotSelectedMethodOneToFivePage
     case ExplainHowYouWillUseMethodSixPage                => explainHowYouWillUseMethodSixPage
     case AdaptMethodPage                                  => adaptMethodPage
-    case _                                                => _ => AccountHomeController.onPageLoad
+    case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
+    case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =

@@ -244,3 +244,7 @@ POST       /:draftId/agent-company-details                        controllers.Ag
 GET        /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
+GET        /:draftId/delete-application                        controllers.DeleteDraftController.onPageLoad(draftId: DraftId)
+POST       /:draftId/delete-application                        controllers.DeleteDraftController.onSubmit(draftId: DraftId)
+
+

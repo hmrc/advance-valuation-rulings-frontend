@@ -16,24 +16,26 @@
 
 package controllers
 
+import java.time.Instant
+
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
+
 import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
-import models.requests._
 import models.{ApplicationForAccountHome, Done, DraftId}
+import models.requests._
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{reset, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import services.UserAnswersService
-import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.AccountHomeView
-
-import java.time.Instant
-import scala.concurrent.Future
 
 class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
