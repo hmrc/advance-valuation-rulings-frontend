@@ -20,6 +20,7 @@ import java.time.Instant
 
 import scala.concurrent.Future
 
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -76,13 +77,11 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must return OK and the correct view for a GET with some applications" in {
-      val appsSummary: Seq[ApplicationSummary]               =
+      val appsSummary: Seq[ApplicationSummary] =
         Seq(
           ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, "eoriStr"),
           ApplicationSummary(ApplicationId(1235L), "shoes", Instant.now, "eoriStr")
         )
-      val appsForAccountHome: Seq[ApplicationForAccountHome] =
-        for (app <- appsSummary) yield ApplicationForAccountHome(app)
 
       val application = applicationBuilder()
         .overrides(
@@ -103,6 +102,9 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[AccountHomeView]
+
+        val appsForAccountHome: Seq[ApplicationForAccountHome] =
+          for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(appsForAccountHome)(

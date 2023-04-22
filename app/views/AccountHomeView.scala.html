@@ -25,21 +25,20 @@
         formHelper: FormWithCSRF,
         para: Paragraph,
         table: GovukTable,
-        link: Link,
-        fullMainContent: FullLayoutMainContent
+        fullMainContent: FullLayoutMainContent,
+        govukTag: GovukTag
 )
 
 @(applications: Seq[ApplicationForAccountHome])(implicit request: Request[_], messages: Messages)
 
 @theRows = @{for(app <- applications) yield Seq(
-                    TableRow(content = Text(app.ref),format = Some("text")),
-                    TableRow(content =  Text(app.nameOfGoods),format = Some("text")),
-                    TableRow(content =  Text(app.dateSubmitted),format = Some("text")),
-                    TableRow(content =  HtmlContent(link(   id = "application_link",
-                                                text = messages("View application"),
-                                                call = Call("GET", routes.ViewApplicationController.onPageLoad(app.ref).url),
-                                                newTab = false
-                                                )))
+                    TableRow(content = Text(app.id), format = Some("text")),
+                    TableRow(content = Text(app.goodsName), format = Some("text")),
+                    TableRow(content = Text(app.date), format = Some("text")),
+                    TableRow(content = HtmlContent(govukTag(app.statusTag))),
+                    TableRow(content = HtmlContent(app.actions.map { a =>
+                        s"""<a href="${a.href}" class="govuk-link">${a.content.asHtml}</a>"""
+                    }.mkString("<br/>")))
                 )}
 @appsTable = @{
 
@@ -49,13 +48,16 @@
             head = Some(
                 Seq(
                     HeadCell(
-                        content = Text(messages("Reference"))
+                        content = Text(messages("accountHome.reference"))
                     ),
                     HeadCell(
-                        content = Text(messages("Name of goods"))
+                        content = Text(messages("accountHome.goodsName"))
                     ),
                     HeadCell(
-                        content = Text(messages("Date submitted"))
+                        content = Text(messages("accountHome.date"))
+                    ),
+                    HeadCell(
+                        content = Text(messages("accountHome.status"))
                     ),
                     HeadCell(
                         content = Text("")
@@ -80,7 +82,7 @@
              ButtonViewModel(messages("accountHome.button.text"))
         )
     }
-    @{if(!applications.isEmpty) appsTable }
+    @{if(applications.nonEmpty) appsTable }
 
 
 
