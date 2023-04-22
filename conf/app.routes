@@ -42,7 +42,10 @@ POST       /:draftId/do-you-have-commodity-code                                 
 GET        /:draftId/change-do-you-have-commodity-code                              controllers.HasCommodityCodeController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-do-you-have-commodity-code                              controllers.HasCommodityCodeController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /:draftId/need-to-contact-you                                           controllers.ContactPageController.onPageLoad(draftId: DraftId)
+GET        /:draftId/need-to-contact-you                                           controllers.ContactPageController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/need-to-contact-you                                           controllers.ContactPageController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/change-need-to-contact-you                                    controllers.ContactPageController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-need-to-contact-you                                    controllers.ContactPageController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/planning-import-goods-great-britain                           controllers.ImportGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/planning-import-goods-great-britain                           controllers.ImportGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)

@@ -246,7 +246,7 @@ class NavigatorSpec extends SpecBase {
             ImportGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ContactPageController.onPageLoad(draftId)
+          ) mustBe routes.ContactPageController.onPageLoad(NormalMode, draftId)
         }
 
         "and navigate to ImportingGoodsPage when False" in {
@@ -935,6 +935,15 @@ class NavigatorSpec extends SpecBase {
         NormalMode,
         emptyUserAnswers
       ) mustBe routes.AccountHomeController.onPageLoad()
+    }
+
+    "must go from ContactPage to CheckRegisteredDetails" in {
+
+      navigator.nextPage(
+        ContactPagePage,
+        NormalMode,
+        emptyUserAnswers
+      ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
     }
   }
 }

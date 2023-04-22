@@ -22,14 +22,14 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
     headingH3: headingH3,
     warning: Warning,
     paragraph: Paragraph,
     subheading: Subheading,
-    cancelApplicationLink: CancelApplicationLink
+    cancelApplicationLink: CancelApplicationLink,
+    saveButtons: SaveButtons
 )
 
 @(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -101,9 +101,7 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 
     @cancelApplicationLink(draftId)

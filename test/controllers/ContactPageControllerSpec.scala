@@ -16,10 +16,19 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import models.{Done, NormalMode}
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import services.UserAnswersService
 import views.html.ContactPageView
 
 class ContactPageControllerSpec extends SpecBase {
@@ -31,14 +40,40 @@ class ContactPageControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ContactPageController.onPageLoad(draftId).url)
+        val request =
+          FakeRequest(GET, routes.ContactPageController.onPageLoad(NormalMode, draftId).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ContactPageView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(NormalMode, draftId)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must redirect to the next page on submit" in {
+
+      val onwardRoute = Call("GET", "/foo")
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, routes.ContactPageController.onSubmit(NormalMode, draftId).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
   }
