@@ -6,6 +6,7 @@ import play.api.libs.json.Json
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import models.{DraftId, UserAnswers}
+import models.requests.{DraftSummary, DraftSummaryResponse}
 import org.scalatest.OptionValues
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
@@ -137,6 +138,33 @@ class UserAnswersConnectorSpec extends BaseIntegrationSpec with WireMockHelper w
       )
 
       connector.keepAlive(draftId).failed.futureValue
+    }
+  }
+
+  ".summaries" - {
+
+    "must return a draft summary response" in {
+
+      val response = DraftSummaryResponse(Seq(DraftSummary(DraftId(0), None, Instant.now, None)))
+
+      wireMockServer.stubFor(
+        get(urlEqualTo(s"/advance-valuation-rulings/user-answers"))
+          .willReturn(ok(Json.toJson(response).toString))
+      )
+
+      val result = connector.summaries().futureValue
+
+      result mustEqual response
+    }
+
+    "must return a failed future when the server returns an error" in {
+
+      wireMockServer.stubFor(
+        get(urlEqualTo(s"/advance-valuation-rulings/user-answers"))
+          .willReturn(serverError())
+      )
+
+      connector.summaries().failed.futureValue
     }
   }
 }
