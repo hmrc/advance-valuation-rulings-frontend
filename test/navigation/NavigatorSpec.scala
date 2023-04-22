@@ -927,5 +927,14 @@ class NavigatorSpec extends SpecBase {
         }
       }
     }
+
+    "must go from Delete Draft to Account Home" in {
+
+      navigator.nextPage(
+        DeleteDraftPage,
+        NormalMode,
+        emptyUserAnswers
+      ) mustBe routes.AccountHomeController.onPageLoad()
+    }
   }
 }

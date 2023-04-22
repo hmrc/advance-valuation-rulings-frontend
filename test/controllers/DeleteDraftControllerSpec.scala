@@ -16,6 +16,13 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.DeleteDraftFormProvider
 import models.Done
@@ -24,14 +31,8 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.DeleteDraftView
-
-import scala.concurrent.Future
 
 class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
 
