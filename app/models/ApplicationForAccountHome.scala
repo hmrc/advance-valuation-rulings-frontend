@@ -58,4 +58,20 @@ object ApplicationForAccountHome {
       )
     )
 
+  def apply(draftSummary: DraftSummary, continueCall: Call)(implicit
+    messages: Messages
+  ): ApplicationForAccountHome =
+    ApplicationForAccountHome(
+      id = draftSummary.id.toString,
+      goodsName = draftSummary.goodsName.getOrElse(""),
+      date = formatter.format(draftSummary.lastUpdated),
+      statusTag =
+        Tag(content = Text(messages("accountHome.status.draft")), classes = "govuk-tag--grey"),
+      actions = Seq(
+        ActionItem(
+          href = continueCall.url,
+          content = Text(messages("accountHome.continueApplication"))
+        )
+      )
+    )
 }

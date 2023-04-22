@@ -16,25 +16,24 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
-import play.api.i18n.Messages
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
-import models.{ApplicationForAccountHome, Done}
-import models.requests.{ApplicationId, ApplicationSummary, ApplicationSummaryResponse}
+import models.requests._
+import models.{ApplicationForAccountHome, Done, DraftId}
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{reset, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.AccountHomeView
+
+import java.time.Instant
+import scala.concurrent.Future
 
 class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
@@ -49,10 +48,12 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
   "AccountHome Controller" - {
 
-    "must return OK and the correct view for a GET with no applications" in {
+    "must return OK and the correct view for a GET with no applications or drafts" in {
 
       val response = ApplicationSummaryResponse(Nil)
       when(mockBackEndConnector.applicationSummaries(any())).thenReturn(Future.successful(response))
+      when(mockUserAnswersService.summaries()(any()))
+        .thenReturn(Future.successful(DraftSummaryResponse(Nil)))
 
       val application = applicationBuilder()
         .overrides(
@@ -76,7 +77,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
     }
 
-    "must return OK and the correct view for a GET with some applications" in {
+    "must return OK and the correct view for a GET with some applications and no drafts" in {
       val appsSummary: Seq[ApplicationSummary] =
         Seq(
           ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, "eoriStr"),
@@ -96,6 +97,9 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       ) thenReturn Future
         .successful(ApplicationSummaryResponse(appsSummary))
 
+      when(mockUserAnswersService.summaries()(any()))
+        .thenReturn(Future.successful(DraftSummaryResponse(Nil)))
+
       running(application) {
         val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
 
@@ -107,7 +111,109 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(appsForAccountHome)(
+        contentAsString(result) mustEqual view(appsForAccountHome.reverse)(
+          request,
+          messages(application)
+        ).toString
+      }
+
+      verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
+    }
+
+    "must return OK and the correct view for a GET with some drafts and no applications" in {
+
+      val draftSummaries = Seq(DraftSummary(DraftId(0), None, Instant.now, None))
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackEndConnector),
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].to(mockUserAnswersService)
+        )
+        .build()
+
+      when(
+        mockBackEndConnector.applicationSummaries(any())
+      ) thenReturn Future
+        .successful(ApplicationSummaryResponse(Nil))
+
+      when(mockUserAnswersService.summaries()(any()))
+        .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view      = application.injector.instanceOf[AccountHomeView]
+        val navigator = application.injector.instanceOf[Navigator]
+
+        val draftsForAccountHome = draftSummaries.map {
+          d =>
+            ApplicationForAccountHome(
+              d,
+              navigator.startApplicationRouting(AffinityGroup.Individual, d.id)
+            )(messages(application))
+        }
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(draftsForAccountHome)(
+          request,
+          messages(application)
+        ).toString
+      }
+
+      verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
+    }
+
+    "must return OK and the correct view for a GET with some drafts and some applications" in {
+      val appsSummary: Seq[ApplicationSummary] =
+        Seq(
+          ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, "eoriStr"),
+          ApplicationSummary(ApplicationId(1235L), "shoes", Instant.now, "eoriStr")
+        )
+
+      val draftSummaries = Seq(DraftSummary(DraftId(0), None, Instant.now, None))
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackEndConnector),
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].to(mockUserAnswersService)
+        )
+        .build()
+
+      when(
+        mockBackEndConnector.applicationSummaries(any())
+      ) thenReturn Future
+        .successful(ApplicationSummaryResponse(appsSummary))
+
+      when(mockUserAnswersService.summaries()(any()))
+        .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view      = application.injector.instanceOf[AccountHomeView]
+        val navigator = application.injector.instanceOf[Navigator]
+
+        val appsForAccountHome: Seq[ApplicationForAccountHome] =
+          for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
+
+        val draftsForAccountHome = draftSummaries.map {
+          d =>
+            ApplicationForAccountHome(
+              d,
+              navigator.startApplicationRouting(AffinityGroup.Individual, d.id)
+            )(messages(application))
+        }
+
+        val viewModels = (appsForAccountHome ++ draftsForAccountHome).sortBy(_.date).reverse
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(viewModels)(
           request,
           messages(application)
         ).toString
