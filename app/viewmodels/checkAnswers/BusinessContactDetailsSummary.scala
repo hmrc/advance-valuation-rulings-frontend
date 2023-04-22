@@ -106,9 +106,9 @@ object BusinessContactDetailsSummary {
   private def getAriaMessageKey(role: WhatIsYourRoleAsImporter, fieldName: String): String =
     role match {
       case WhatIsYourRoleAsImporter.EmployeeOfOrg      =>
-        s"businessContactDetails.$fieldName.change.hidden"
+        s"checkYourAnswersForAgents.applicant.$fieldName.change.hidden"
       case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg =>
-        s"businessContactDetails.agent.org.$fieldName.change.hidden"
+        s"checkYourAnswersForAgents.agent.org.$fieldName.change.hidden"
     }
 
 }

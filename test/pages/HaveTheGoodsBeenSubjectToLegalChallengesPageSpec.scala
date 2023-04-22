@@ -16,6 +16,9 @@
 
 package pages
 
+import scala.util.Success
+
+import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class HaveTheGoodsBeenSubjectToLegalChallengesPageSpec extends PageBehaviours {
@@ -27,5 +30,45 @@ class HaveTheGoodsBeenSubjectToLegalChallengesPageSpec extends PageBehaviours {
     beSettable[Boolean](HaveTheGoodsBeenSubjectToLegalChallengesPage)
 
     beRemovable[Boolean](HaveTheGoodsBeenSubjectToLegalChallengesPage)
+  }
+  "cleanup" - {
+    "should reset DescribeTheLegalChallengesPage" - {
+      "when HaveTheGoodsBeenSubjectToLegalChallengesPage is changed to No" in {
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheLegalChallengesPage, "legalities")
+          .get
+
+        HaveTheGoodsBeenSubjectToLegalChallengesPage.cleanup(Some(false), ua) mustBe
+          Success(emptyUserAnswers)
+      }
+    }
+    "should do nothing" - {
+
+      "when HaveTheGoodsBeenSubjectToLegalChallengesPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheLegalChallengesPage, "legalities")
+          .get
+
+        HaveTheGoodsBeenSubjectToLegalChallengesPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when HaveTheGoodsBeenSubjectToLegalChallengesPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheLegalChallengesPage, "legalities")
+          .get
+
+        HaveTheGoodsBeenSubjectToLegalChallengesPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }

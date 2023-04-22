@@ -16,6 +16,9 @@
 
 package pages
 
+import scala.util.Success
+
+import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class HaveYouUsedMethodOneForSimilarGoodsInPastPageSpec extends PageBehaviours {
@@ -27,5 +30,45 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastPageSpec extends PageBehaviours {
     beSettable[Boolean](HaveYouUsedMethodOneForSimilarGoodsInPastPage)
 
     beRemovable[Boolean](HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+  }
+  "cleanup" - {
+    "should reset DescribeTheSimilarGoodsPage" - {
+      "when HaveYouUsedMethodOneForSimilarGoodsInPastPage is changed to No" in {
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheSimilarGoodsPage, "similarities")
+          .get
+
+        HaveYouUsedMethodOneForSimilarGoodsInPastPage.cleanup(Some(false), ua) mustBe
+          Success(emptyUserAnswers)
+      }
+    }
+    "should do nothing" - {
+
+      "when HaveYouUsedMethodOneForSimilarGoodsInPastPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheSimilarGoodsPage, "similarities")
+          .get
+
+        HaveYouUsedMethodOneForSimilarGoodsInPastPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when HaveYouUsedMethodOneForSimilarGoodsInPastPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheSimilarGoodsPage, "similarities")
+          .get
+
+        HaveYouUsedMethodOneForSimilarGoodsInPastPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }

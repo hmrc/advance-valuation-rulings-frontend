@@ -22,8 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{AgentCompanyDetails, CheckMode, Country, DraftId, UserAnswers}
-import models.requests.ApplicationRequest
+import models.{AgentCompanyDetails, CheckMode, DraftId, UserAnswers}
 import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -41,7 +40,7 @@ object AgentCompanySummary {
           "site.change",
           routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.name.hidden"))
       )
     )
 
@@ -67,7 +66,7 @@ object AgentCompanySummary {
           "site.change",
           routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.address.hidden"))
       )
     )
 
@@ -82,7 +81,7 @@ object AgentCompanySummary {
           "site.change",
           routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.eori.number.hidden"))
       )
     )
 

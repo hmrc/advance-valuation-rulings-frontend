@@ -40,7 +40,7 @@ object CheckRegisteredDetailsForAgentsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.name.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.business.name.hidden"))
       )
     )
 
@@ -66,7 +66,7 @@ object CheckRegisteredDetailsForAgentsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.address.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.business.address.hidden"))
       )
     )
 
@@ -81,7 +81,7 @@ object CheckRegisteredDetailsForAgentsSummary {
           "site.change",
           routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.eori.change.hidden"))
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.business.eori.number.hidden"))
       )
     )
 

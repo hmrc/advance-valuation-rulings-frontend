@@ -19,7 +19,7 @@ package viewmodels
 import java.time.{Clock, Instant, ZoneOffset}
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
 import base.SpecBase
@@ -35,7 +35,7 @@ class ApplicationViewModelSpec extends SpecBase {
 
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
-    "when given a valid application" - {
+    "when given a valid application for a trader" - {
 
       val result = ApplicationViewModel(application)
 
@@ -50,27 +50,43 @@ class ApplicationViewModelSpec extends SpecBase {
         )
       }
 
-      "must create rows for the applicant" in {
-        result.applicant.rows must be(
-          Seq(
+      "must create rows for the applicant" - {
+
+        "must create 4 rows" in {
+          result.applicant.rows.length must be(4)
+        }
+        "must create row for the applicant name" in {
+          result.applicant.rows must contain(
             SummaryListRow(
               Key(Text("checkYourAnswers.applicant.name.label")),
               Value(Text(contact.name))
-            ),
+            )
+          )
+        }
+        "must create row for the applicant email" in {
+          result.applicant.rows must contain(
             SummaryListRow(
               Key(Text("checkYourAnswers.applicant.email.label")),
               Value(Text(contact.email))
-            ),
+            )
+          )
+        }
+        "must create row for the applicant phone" in {
+          result.applicant.rows must contain(
             SummaryListRow(
               Key(Text("checkYourAnswers.applicant.phone.label")),
               Value(Text(contact.phone.get))
-            ),
+            )
+          )
+        }
+        "must create row for date submitted" in {
+          result.applicant.rows must contain(
             SummaryListRow(
               Key(Text("viewApplication.dateSubmitted")),
               Value(Text("22 August 2018"))
             )
           )
-        )
+        }
       }
 
       "must create rows for the goods" in {
@@ -111,6 +127,85 @@ class ApplicationViewModelSpec extends SpecBase {
           SummaryListRow(
             Key(Text("describeTheSimilarGoods.checkYourAnswersLabel")),
             Value(Text(requestedMethod.previousSimilarGoods.value))
+          )
+        )
+      }
+    }
+
+    "when given a valid application with agent details" - {
+      val agent            = TraderDetail(
+        eori = "agent eori",
+        businessName = "agent business name",
+        addressLine1 = "agent address line 1",
+        addressLine2 = Some("AgentCity"),
+        addressLine3 = None,
+        postcode = "postcode",
+        countryCode = "GB",
+        phoneNumber = None
+      )
+      val agentApplication = application.copy(agent = Some(agent))
+      val result           = ApplicationViewModel(agentApplication)
+
+      "must create 7 rows" in {
+        result.applicant.rows.length must be(7)
+      }
+      "must create row for the applicant name" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswers.applicant.name.label")),
+            Value(Text(contact.name))
+          )
+        )
+      }
+      "must create row for the applicant email" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswers.applicant.email.label")),
+            Value(Text(contact.email))
+          )
+        )
+      }
+      "must create row for the applicant phone" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswers.applicant.phone.label")),
+            Value(Text(contact.phone.get))
+          )
+        )
+      }
+      "must create row for the agent eori" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswersForAgents.agent.eori.number.label")),
+            Value(Text(agent.eori))
+          )
+        )
+      }
+      "must create row for the agent business name" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswersForAgents.agent.name.label")),
+            Value(Text(agent.businessName))
+          )
+        )
+      }
+      "must create row for the agent address" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswersForAgents.agent.address.label")),
+            Value(
+              HtmlContent(
+                "agent address line 1<br/>AgentCity<br/>postcode<br/>United Kingdom"
+              )
+            )
+          )
+        )
+      }
+      "must create row for date submitted" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("viewApplication.dateSubmitted")),
+            Value(Text("22 August 2018"))
           )
         )
       }

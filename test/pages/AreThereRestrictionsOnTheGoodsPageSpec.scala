@@ -16,6 +16,9 @@
 
 package pages
 
+import scala.util.Success
+
+import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class AreThereRestrictionsOnTheGoodsPageSpec extends PageBehaviours {
@@ -27,5 +30,45 @@ class AreThereRestrictionsOnTheGoodsPageSpec extends PageBehaviours {
     beSettable[Boolean](AreThereRestrictionsOnTheGoodsPage)
 
     beRemovable[Boolean](AreThereRestrictionsOnTheGoodsPage)
+  }
+  "cleanup" - {
+    "should reset DescribeTheRestrictionsPage" - {
+      "when AreThereRestrictionsOnTheGoodsPage is changed to No" in {
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheRestrictionsPage, "restrictions")
+          .get
+
+        AreThereRestrictionsOnTheGoodsPage.cleanup(Some(false), ua) mustBe
+          Success(emptyUserAnswers)
+      }
+    }
+    "should do nothing" - {
+
+      "when AreThereRestrictionsOnTheGoodsPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheRestrictionsPage, "restrictions")
+          .get
+
+        AreThereRestrictionsOnTheGoodsPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when AreThereRestrictionsOnTheGoodsPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheRestrictionsPage, "restrictions")
+          .get
+
+        AreThereRestrictionsOnTheGoodsPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }

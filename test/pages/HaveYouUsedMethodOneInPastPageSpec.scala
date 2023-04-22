@@ -16,6 +16,9 @@
 
 package pages
 
+import scala.util.Success
+
+import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class HaveYouUsedMethodOneInPastPageSpec extends PageBehaviours {
@@ -27,5 +30,45 @@ class HaveYouUsedMethodOneInPastPageSpec extends PageBehaviours {
     beSettable[Boolean](HaveYouUsedMethodOneInPastPage)
 
     beRemovable[Boolean](HaveYouUsedMethodOneInPastPage)
+  }
+  "cleanup" - {
+    "should reset DescribeTheIdenticalGoodsPage" - {
+      "when HaveYouUsedMethodOneInPastPage is changed to No" in {
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheIdenticalGoodsPage, "identicalities")
+          .get
+
+        HaveYouUsedMethodOneInPastPage.cleanup(Some(false), ua) mustBe
+          Success(emptyUserAnswers)
+      }
+    }
+    "should do nothing" - {
+
+      "when HaveYouUsedMethodOneInPastPage unchanged (as Yes)" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheIdenticalGoodsPage, "identicalities")
+          .get
+
+        HaveYouUsedMethodOneInPastPage.cleanup(Some(true), ua) mustBe
+          Success(ua)
+      }
+
+      "when HaveYouUsedMethodOneInPastPage is None" in {
+
+        val emptyUserAnswers = UserAnswers("id", DraftId(1))
+
+        val ua = emptyUserAnswers
+          .set(DescribeTheIdenticalGoodsPage, "identicalities")
+          .get
+
+        HaveYouUsedMethodOneInPastPage.cleanup(None, ua) mustBe
+          Success(ua)
+      }
+    }
   }
 }
