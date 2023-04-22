@@ -48,27 +48,37 @@ class IsThisFileConfidentialController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] = ???
-//    (identify andThen getData(draftId) andThen requireData) {
-//      implicit request =>
-//        val result = for {
-//          fileUploads   <- UploadSupportingDocumentPage.get()
-//          theUpload     <- fileUploads.lastUpload
-//          isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
-//          preparedForm   = isConfidential.map(form.fill).getOrElse(form)
-//        } yield Ok(view(preparedForm, mode, draftId))
-//
-//        result.getOrElse {
-//          Redirect(
-//            controllers.routes.UploadSupportingDocumentsController
-//              .onPageLoad(None, None, None, mode, draftId)
-//          )
-//        }
-//    }
+  def onPageLoad(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage(index)) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-  def onSubmit(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] = ???
-//    (identify andThen getData(draftId) andThen requireData).async {
-//      implicit request =>
+        Ok(view(preparedForm, index, mode, draftId))
+    }
+
+  def onSubmit(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, index, mode, draftId))),
+            value =>
+              for {
+                updatedAnswers <-
+                  Future.fromTry(request.userAnswers.set(IsThisFileConfidentialPage(index), value))
+                _              <- userAnswersService.set(updatedAnswers)
+              } yield Redirect(
+                navigator.nextPage(IsThisFileConfidentialPage(index), mode, updatedAnswers)(
+                  request.affinityGroup
+                )
+              )
+          )
+    }
 //        form
 //          .bindFromRequest()
 //          .fold(

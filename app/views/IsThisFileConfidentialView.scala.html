@@ -31,7 +31,6 @@
 
 @(form: Form[_], index: Index, mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@uploadId = @{form("uploadId").value.getOrElse("")}
 @layout(pageTitle = title(form, messages("isThisFileConfidential.title")), draftId = Some(draftId)) {
 
     @if(form.errors.nonEmpty) {
