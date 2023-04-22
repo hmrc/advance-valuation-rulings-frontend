@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package queries
-import play.api.libs.json.{__, JsPath}
+package models
 
-import models.DraftAttachment
+import play.api.libs.json.{Json, OFormat}
 
-case object AllDocuments extends Gettable[List[DraftAttachment]] {
-  override def path: JsPath = __ \ "supportingDocuments"
+final case class DraftAttachment(file: UploadedFile, isThisFileConfidential: Boolean)
+
+object DraftAttachment {
+
+  implicit lazy val format: OFormat[DraftAttachment] = Json.format
 }

@@ -26,13 +26,18 @@ import enumeratum.EnumEntry.Uppercase
 sealed abstract class UploadedFile extends Product with Serializable {
 
   def reference: String
+  def fileName: Option[String]
+  def fileUrl: Option[String]
 }
 
 object UploadedFile {
 
   final case class Initiated(
     reference: String
-  ) extends UploadedFile
+  ) extends UploadedFile {
+    override val fileName: Option[String] = None
+    override val fileUrl: Option[String]  = None
+  }
 
   object Initiated {
 
@@ -43,7 +48,12 @@ object UploadedFile {
     reference: String,
     downloadUrl: String,
     uploadDetails: UploadDetails
-  ) extends UploadedFile
+  ) extends UploadedFile {
+    override val fileName: Option[String] =
+      Some(uploadDetails.fileName)
+    override val fileUrl: Option[String]  =
+      Some(downloadUrl)
+  }
 
   object Success {
 
@@ -53,7 +63,10 @@ object UploadedFile {
   final case class Failure(
     reference: String,
     failureDetails: FailureDetails
-  ) extends UploadedFile
+  ) extends UploadedFile {
+    override val fileName: Option[String] = None
+    override val fileUrl: Option[String]  = None
+  }
 
   object Failure {
 

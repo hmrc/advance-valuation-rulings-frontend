@@ -15,10 +15,11 @@
  */
 
 package queries
+
 import play.api.libs.json.{__, JsPath}
 
-import models.DraftAttachment
+import models.{DraftAttachment, Index}
 
-case object AllDocuments extends Gettable[List[DraftAttachment]] {
-  override def path: JsPath = __ \ "supportingDocuments"
+final case class DraftAttachmentQuery(index: Index) extends Modifiable[DraftAttachment] {
+  override def path: JsPath = __ \ "supportingDocuments" \ index.position
 }
