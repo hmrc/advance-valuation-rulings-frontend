@@ -53,8 +53,23 @@ class AccountHomeController @Inject() (
     identify.async {
       implicit request =>
         auditService.sendUserTypeEvent()
-        backendConnector.applicationSummaries
-          .map(response => Ok(view(response.summaries.map(ApplicationForAccountHome(_)))))
+
+        for {
+          applications <- backendConnector.applicationSummaries.map(_.summaries)
+          drafts       <- userAnswersService.summaries().map(_.summaries)
+        } yield {
+          val applicationViewModels = applications.map(ApplicationForAccountHome(_))
+          val draftViewModels       = drafts.map {
+            draft =>
+              ApplicationForAccountHome(
+                draft,
+                navigator.startApplicationRouting(request.affinityGroup, draft.id)
+              )
+          }
+
+          val viewModels = (applicationViewModels ++ draftViewModels).sortBy(_.date).reverse
+          Ok(view(viewModels))
+        }
     }
 
   def startApplication: Action[AnyContent] =

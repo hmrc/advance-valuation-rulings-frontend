@@ -24,6 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import connectors.UserAnswersConnector
 import models.{Done, DraftId, UserAnswers}
+import models.requests.DraftSummaryResponse
 
 class UserAnswersService @Inject() (userAnswersConnector: UserAnswersConnector) {
 
@@ -38,4 +39,7 @@ class UserAnswersService @Inject() (userAnswersConnector: UserAnswersConnector) 
 
   def clear(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
     userAnswersConnector.clear(draftId)
+
+  def summaries()(implicit hc: HeaderCarrier): Future[DraftSummaryResponse] =
+    userAnswersConnector.summaries()
 }

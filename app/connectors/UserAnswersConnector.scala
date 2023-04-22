@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 import config.FrontendAppConfig
 import models.{Done, DraftId, UserAnswers}
+import models.requests.DraftSummaryResponse
 
 class UserAnswersConnector @Inject() (config: FrontendAppConfig, httpClient: HttpClientV2)(implicit
   ec: ExecutionContext
@@ -56,4 +57,9 @@ class UserAnswersConnector @Inject() (config: FrontendAppConfig, httpClient: Htt
       .post(url"$backendUrl/user-answers/${draftId.toString}/keep-alive")
       .execute
       .map(_ => Done)
+
+  def summaries()(implicit headerCarrier: HeaderCarrier): Future[DraftSummaryResponse] =
+    httpClient
+      .get(url"$backendUrl/user-answers")
+      .execute[DraftSummaryResponse]
 }

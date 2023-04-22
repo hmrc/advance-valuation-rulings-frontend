@@ -267,6 +267,15 @@ accountHome.title = Your applications and rulings
 accountHome.heading = Your applications and rulings
 accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
+accountHome.viewApplication = View application
+accountHome.continueApplication = Continue application
+accountHome.deleteApplication = Delete application
+accountHome.reference = Reference
+accountHome.goodsName = Name of goods
+accountHome.date = Date submitted
+accountHome.status = Status
+accountHome.status.submitted = Submitted
+accountHome.status.draft = In progress
 
 checkRegisteredDetails.title = Check the name and address for EORI number {0}
 checkRegisteredDetails.private.title = The registration details for EORI number {0} are private
