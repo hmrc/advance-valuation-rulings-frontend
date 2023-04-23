@@ -174,7 +174,8 @@ class FileServiceSpec
           fileName = "foobar",
           fileMimeType = "text/plain",
           uploadTimestamp = instant,
-          checksum = "checksum"
+          checksum = "checksum",
+          size = 1337
         )
       )
 
@@ -267,7 +268,8 @@ class FileServiceSpec
             fileName = "foobar",
             fileMimeType = "text/plain",
             uploadTimestamp = instant,
-            checksum = "checksum"
+            checksum = "checksum",
+            size = 1337
           )
         )
 
@@ -321,7 +323,8 @@ class FileServiceSpec
             fileName = "foobar",
             fileMimeType = "text/plain",
             uploadTimestamp = instant,
-            checksum = "checksum"
+            checksum = "checksum",
+            size = 1337
           )
         )
 

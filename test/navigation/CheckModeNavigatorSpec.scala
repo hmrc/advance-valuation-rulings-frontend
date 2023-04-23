@@ -40,7 +40,8 @@ class CheckModeNavigatorSpec extends SpecBase {
       fileName = "fileName",
       fileMimeType = "fileMimeType",
       uploadTimestamp = Instant.now(),
-      checksum = "checksum"
+      checksum = "checksum",
+      size = 1337
     )
   )
 

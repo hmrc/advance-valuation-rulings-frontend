@@ -56,7 +56,8 @@ class UploadedFileSpec extends AnyFreeSpec with Matchers {
         fileName = "fileName",
         fileMimeType = "fileMimeType",
         uploadTimestamp = instant,
-        checksum = "checksum"
+        checksum = "checksum",
+        size = 1337
       )
     )
 
@@ -68,7 +69,8 @@ class UploadedFileSpec extends AnyFreeSpec with Matchers {
         "fileName"        -> "fileName",
         "fileMimeType"    -> "fileMimeType",
         "uploadTimestamp" -> "2023-03-02T12:30:45Z",
-        "checksum"        -> "checksum"
+        "checksum"        -> "checksum",
+        "size"            -> 1337
       )
     )
 

@@ -49,7 +49,8 @@ class DeleteSupportingDocumentControllerSpec extends SpecBase with MockitoSugar 
       fileName = "fileName",
       fileMimeType = "fileMimeType",
       uploadTimestamp = Instant.now(),
-      checksum = "checksum"
+      checksum = "checksum",
+      size = 1337
     )
   )
 

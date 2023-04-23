@@ -60,7 +60,8 @@ class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehavi
           fileName = "filename",
           fileMimeType = "application/pdf",
           uploadTimestamp = Instant.now(),
-          checksum = "checksum"
+          checksum = "checksum",
+          size = 1337
         )
       )
 

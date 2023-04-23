@@ -169,8 +169,8 @@ class ApplicationRequestSpec
             CheckRegisteredDetailsPage,
             ApplicationContactDetailsPage,
             ValuationMethodPage,
-            DescriptionOfGoodsPage
-//            DoYouWantToUploadDocumentsPage TODO add back
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
           )
         )
       }
@@ -249,8 +249,8 @@ class ApplicationRequestSpec
             CheckRegisteredDetailsPage,
             BusinessContactDetailsPage,
             ValuationMethodPage,
-            DescriptionOfGoodsPage
-//            DoYouWantToUploadDocumentsPage TODO add back
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
           )
         )
       }
@@ -341,8 +341,8 @@ class ApplicationRequestSpec
             AgentCompanyDetailsPage,
             BusinessContactDetailsPage,
             ValuationMethodPage,
-            DescriptionOfGoodsPage
-//            DoYouWantToUploadDocumentsPage TODO add back
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
           )
         )
       }

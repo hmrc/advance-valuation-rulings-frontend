@@ -77,7 +77,8 @@ object UploadedFile {
     fileName: String,
     fileMimeType: String,
     uploadTimestamp: Instant,
-    checksum: String
+    checksum: String,
+    size: Long
   )
 
   object UploadDetails {

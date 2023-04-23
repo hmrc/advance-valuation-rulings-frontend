@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.time.Instant
-
 import scala.concurrent.Future
 
 import play.api.inject.bind
@@ -27,7 +25,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
-import models.{Index, NormalMode, UploadedFile}
+import models.{Index, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -45,17 +43,6 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
   private lazy val isThisFileConfidentialRoute =
     routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId).url
-
-  private val successfulFile = UploadedFile.Success(
-    reference = "reference",
-    downloadUrl = "downloadUrl",
-    uploadDetails = UploadedFile.UploadDetails(
-      fileName = "fileName",
-      fileMimeType = "fileMimeType",
-      uploadTimestamp = Instant.now(),
-      checksum = "checksum"
-    )
-  )
 
   "IsThisFileConfidential Controller" - {
 
