@@ -4,6 +4,7 @@ import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import com.codahale.metrics.SharedMetricRegistries
 import models.{CounterId, CounterWrapper}
+import org.mongodb.scala.model.{Filters, FindOneAndUpdateOptions, ReturnDocument, Updates}
 import utils.BaseIntegrationSpec
 
 class CounterRepositorySpec
@@ -13,8 +14,7 @@ class CounterRepositorySpec
   override def beforeEach(): Unit = {
     super.beforeEach()
     SharedMetricRegistries.clear()
-    val _: models.Done = repository.seed.futureValue
-    ()
+    repository.seed.futureValue
   }
 
   override protected def checkTtlIndex = false
@@ -35,6 +35,53 @@ class CounterRepositorySpec
       repository.seed.futureValue
 
       findAll().futureValue must contain only repository.seeds.head
+    }
+  }
+
+  ".ensureDraftIdIsCorrect" - {
+
+    "must update the draft Id index when it is lower than the intended starting index" in {
+
+      repository.seed.futureValue
+
+      repository.collection
+        .findOneAndUpdate(
+          filter = Filters.eq("_id", CounterId.DraftId.toString),
+          update = Updates.set("index", 1L),
+          options = FindOneAndUpdateOptions()
+            .upsert(true)
+            .bypassDocumentValidation(false)
+        )
+        .toFuture()
+        .futureValue
+
+      repository.ensureDraftIdIsCorrect().futureValue
+
+      find(
+        Filters.eq("_id", CounterId.DraftId.toString)
+      ).futureValue.head.index mustEqual repository.startingIndex
+    }
+
+    "must not update the draft Id index when it is equal to or greater than the intended starting index" in {
+
+      repository.seed.futureValue
+
+      repository.collection
+        .findOneAndUpdate(
+          filter = Filters.eq("_id", CounterId.DraftId.toString),
+          update = Updates.set("index", repository.startingIndex + 1),
+          options = FindOneAndUpdateOptions()
+            .upsert(true)
+            .bypassDocumentValidation(false)
+        )
+        .toFuture()
+        .futureValue
+
+      repository.ensureDraftIdIsCorrect().futureValue
+
+      find(
+        Filters.eq("_id", CounterId.DraftId.toString)
+      ).futureValue.head.index mustEqual repository.startingIndex + 1
     }
   }
 
