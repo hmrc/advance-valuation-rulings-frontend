@@ -86,11 +86,11 @@ class FileService @Inject() (
 
   def update(draftId: DraftId, index: Index, file: UploadedFile): Future[Done] =
     for {
-      answers        <- getUserAnswers(draftId)
+      answers        <- getUserAnswersInternal(draftId)
       updatedFile    <- processFile(answers, index, file)
       updatedAnswers <-
         Future.fromTry(answers.set(UploadSupportingDocumentPage(index), updatedFile))
-      _              <- userAnswersService.set(updatedAnswers)
+      _              <- userAnswersService.setInternal(updatedAnswers)
     } yield Done
 
   private def processFile(
@@ -133,8 +133,14 @@ class FileService @Inject() (
         Future.successful(file)
     }
 
-  private def getUserAnswers(draftId: DraftId): Future[UserAnswers] =
+  private def getUserAnswers(draftId: DraftId)(implicit hc: HeaderCarrier): Future[UserAnswers] =
     userAnswersService.get(draftId).flatMap {
+      _.map(Future.successful)
+        .getOrElse(Future.failed(NoUserAnswersFoundException(draftId)))
+    }
+
+  private def getUserAnswersInternal(draftId: DraftId): Future[UserAnswers] =
+    userAnswersService.getInternal(draftId).flatMap {
       _.map(Future.successful)
         .getOrElse(Future.failed(NoUserAnswersFoundException(draftId)))
     }
