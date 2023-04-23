@@ -39,8 +39,8 @@ class UploadAnotherSupportingDocumentFormProvider @Inject() (
 
   private def fileCountConstraint(documents: Seq[DraftAttachment]): Constraint[Boolean] =
     Constraint {
-      _ =>
-        if (documents.size < maxFiles) {
+      value =>
+        if (!value || documents.size < maxFiles) {
           Valid
         } else {
           Invalid("uploadAnotherSupportingDocument.error.fileCount", maxFiles)

@@ -51,7 +51,7 @@ class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehavi
       requiredError = FormError(fieldName, requiredKey)
     )
 
-    "must fail when there are already the max number of files" in {
+    "must fail when the user answers yes and there are already the max number of files" in {
 
       val file = UploadedFile.Success(
         reference = "reference",
@@ -74,6 +74,26 @@ class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehavi
         "uploadAnotherSupportingDocument.error.fileCount",
         Seq(1)
       )
+    }
+
+    "must succeed when the uer answers no when there are already the max number of files" in {
+
+      val file = UploadedFile.Success(
+        reference = "reference",
+        downloadUrl = "foobar",
+        uploadDetails = UploadedFile.UploadDetails(
+          fileName = "filename",
+          fileMimeType = "application/pdf",
+          uploadTimestamp = Instant.now(),
+          checksum = "checksum",
+          size = 1337
+        )
+      )
+
+      val form      = formProvider(Seq(DraftAttachment(file, None)))
+      val boundForm = form.bind(Map("value" -> "false"))
+
+      boundForm.hasErrors mustBe false
     }
   }
 }
