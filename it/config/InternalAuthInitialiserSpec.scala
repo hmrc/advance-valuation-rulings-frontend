@@ -63,6 +63,11 @@ class InternalAuthInitialiserSpec
             "resourceType"     -> "object-store",
             "resourceLocation" -> "advance-valuation-rulings-frontend",
             "actions"          -> List("READ", "WRITE", "DELETE")
+          ),
+          Json.obj(
+            "resourceType" -> "advance-valuation-rulings",
+            "resourceLocation" -> "*",
+            "actions" -> List("*")
           )
         )
       )

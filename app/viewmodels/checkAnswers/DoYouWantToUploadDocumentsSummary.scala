@@ -62,7 +62,7 @@ object UploadedDocumentsSummary {
             HtmlContent(
               Html(
                 attachments
-                  .flatMap {
+                  .map {
                     attachment =>
                       attachment.file.fileName
                         .map(fileName => HtmlFormat.escape(fileName).body)
