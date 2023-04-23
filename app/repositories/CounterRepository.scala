@@ -45,23 +45,48 @@ class CounterRepository @Inject() (
 
   override lazy val requiresTtlIndex: Boolean = false
 
+  val startingIndex = 7081634L
+
   private[repositories] val seeds: Seq[CounterWrapper] = Seq(
-    CounterWrapper(CounterId.DraftId, 7081634L)
+    CounterWrapper(CounterId.DraftId, startingIndex)
   )
+
+  def ensureDraftIdIsCorrect(): Future[Done] =
+    collection
+      .find(byId(CounterId.DraftId))
+      .headOption
+      .flatMap(_.map {
+        draftId =>
+          if (draftId.index < startingIndex) {
+            collection
+              .findOneAndUpdate(
+                filter = byId(CounterId.DraftId),
+                update = Updates.set("index", startingIndex),
+                options = FindOneAndUpdateOptions()
+                  .upsert(true)
+                  .bypassDocumentValidation(false)
+                  .returnDocument(ReturnDocument.AFTER)
+              )
+              .toFuture()
+              .map(_ => Done)
+          } else {
+            Future.successful(Done)
+          }
+      }.getOrElse(Future.successful(Done)))
 
   @nowarn
   private val seedDatabase =
-    seeds // Eagerly call seed to ensure records are created on startup if needed
+    seed // Eagerly call seed to ensure records are created on startup if needed
 
   def seed: Future[Done] =
     collection
       .insertMany(seeds)
       .toFuture()
       .map(_ => Done)
-      .recover {
+      .recoverWith {
         case e: MongoBulkWriteException
             if e.getWriteErrors.asScala.forall(x => x.getCode == duplicateErrorCode) =>
-          Done
+          ensureDraftIdIsCorrect()
       }
 
   def nextId(id: CounterId): Future[Long] =
