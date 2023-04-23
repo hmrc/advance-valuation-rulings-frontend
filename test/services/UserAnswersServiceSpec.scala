@@ -74,6 +74,27 @@ class UserAnswersServiceSpec
     }
   }
 
+  ".getInternal" - {
+
+    "must return user answers when they exist in the repository" in {
+
+      when(mockUserAnswersConnector.getInternal(eqTo(draftId))(any()))
+        .thenReturn(Future.successful(Some(answers)))
+
+      val result = service.getInternal(draftId).futureValue
+      result.value mustEqual answers
+    }
+
+    "must return None when answers do not exist in the repository" in {
+
+      when(mockUserAnswersConnector.getInternal(eqTo(draftId))(any()))
+        .thenReturn(Future.successful(None))
+
+      val result = service.getInternal(draftId).futureValue
+      result must not be defined
+    }
+  }
+
   ".set" - {
 
     "must save user answers to the repository" in {
@@ -82,6 +103,17 @@ class UserAnswersServiceSpec
 
       service.set(answers).futureValue
       verify(mockUserAnswersConnector, times(1)).set(eqTo(answers))(any())
+    }
+  }
+
+  ".setInternal" - {
+
+    "must save user answers to the repository" in {
+
+      when(mockUserAnswersConnector.setInternal(any())(any())).thenReturn(Future.successful(Done))
+
+      service.setInternal(answers).futureValue
+      verify(mockUserAnswersConnector, times(1)).setInternal(eqTo(answers))(any())
     }
   }
 
