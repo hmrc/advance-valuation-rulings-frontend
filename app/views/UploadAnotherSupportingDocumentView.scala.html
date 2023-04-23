@@ -70,7 +70,7 @@
           rows = attachments.zipWithIndex.map { case (attachment, i) =>
             Seq(
               TableRow(content = Text(attachment.file.fileName.getOrElse(""))),
-              TableRow(content = Text(if(attachment.isThisFileConfidential) messages("uploadAnotherSupportingDocument.keepConfidential") else "")),
+              TableRow(content = Text(if(attachment.isThisFileConfidential.contains(true)) messages("uploadAnotherSupportingDocument.keepConfidential") else "")),
               TableRow(
                 HtmlContent(
                   govukLink(

@@ -65,7 +65,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         .value
 
       val attachments = Seq(
-        DraftAttachment(successfulFile, isThisFileConfidential = false)
+        DraftAttachment(successfulFile, isThisFileConfidential = Some(false))
       )
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()

@@ -173,6 +173,8 @@ class UploadSupportingDocumentsController @Inject() (
         Messages("uploadSupportingDocuments.error.rejected")
       case "Quarantine"      =>
         Messages("uploadSupportingDocuments.error.quarantine")
+      case "Duplicate"       =>
+        Messages("uploadSupportingDocuments.error.duplicate")
       case _                 =>
         Messages(s"uploadSupportingDocuments.error.unknown")
     }

@@ -32,6 +32,7 @@ import connectors.UpscanConnector
 import models.{Done, DraftId, Index, Mode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import pages.UploadSupportingDocumentPage
+import queries.AllDocuments
 import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
 
@@ -85,28 +86,51 @@ class FileService @Inject() (
 
   def update(draftId: DraftId, index: Index, file: UploadedFile): Future[Done] =
     for {
-      updatedFile    <- processFile(draftId, file)
       answers        <- getUserAnswers(draftId)
+      updatedFile    <- processFile(answers, index, file)
       updatedAnswers <-
         Future.fromTry(answers.set(UploadSupportingDocumentPage(index), updatedFile))
       _              <- userAnswersService.set(updatedAnswers)
     } yield Done
 
-  private def processFile(draftId: DraftId, file: UploadedFile): Future[UploadedFile] =
+  private def processFile(
+    answers: UserAnswers,
+    index: Index,
+    file: UploadedFile
+  ): Future[UploadedFile] =
     file match {
-      case success: UploadedFile.Success =>
-        val path = Path.File(s"drafts/$draftId/${success.uploadDetails.fileName}")
-        objectStoreClient
-          .uploadFromUrl(
-            from = new URL(success.downloadUrl),
-            to = path,
-            retentionPeriod = objectStoreConfig.defaultRetentionPeriod,
-            contentType = Some(success.uploadDetails.fileMimeType),
-            contentMd5 = Some(Md5Hash(success.uploadDetails.checksum)),
-            owner = objectStoreConfig.owner
-          )
-          .map(summary => success.copy(downloadUrl = path.asUri))
-      case _                             =>
+      case file: UploadedFile.Success =>
+
+        val documents      = answers.get(AllDocuments).getOrElse(Seq.empty)
+        val otherDocuments =
+          documents.patch(index.position, Seq.empty, 1)
+
+        if (otherDocuments.flatMap(_.file.fileName).contains(file.uploadDetails.fileName)) {
+
+          Future.successful {
+            UploadedFile.Failure(
+              reference = file.reference,
+              failureDetails = UploadedFile.FailureDetails(
+                failureReason = UploadedFile.FailureReason.Duplicate,
+                failureMessage = None
+              )
+            )
+          }
+        } else {
+
+          val path = Path.File(s"drafts/${answers.draftId}/${file.uploadDetails.fileName}")
+          objectStoreClient
+            .uploadFromUrl(
+              from = new URL(file.downloadUrl),
+              to = path,
+              retentionPeriod = objectStoreConfig.defaultRetentionPeriod,
+              contentType = Some(file.uploadDetails.fileMimeType),
+              contentMd5 = Some(Md5Hash(file.uploadDetails.checksum)),
+              owner = objectStoreConfig.owner
+            )
+            .map(_ => file.copy(downloadUrl = path.asUri))
+        }
+      case _                          =>
         Future.successful(file)
     }
 

@@ -38,7 +38,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadSupportingDocumentPage
+import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
 
 class FileServiceSpec
@@ -208,7 +208,14 @@ class FileServiceSpec
 
         service.update(DraftId(0), Index(0), uploadedFile).failed.futureValue
 
-        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
+        verify(mockObjectStoreClient, never).uploadFromUrl(
+          any(),
+          any(),
+          any(),
+          any(),
+          any(),
+          any()
+        )(any())
         verify(mockUserAnswersService, never).set(any())
       }
     }
@@ -245,6 +252,107 @@ class FileServiceSpec
           any(),
           any()
         )(any())
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
+      }
+    }
+
+    "when the file name is the same as an existing file for this draft" - {
+
+      "must not transfer the file to object-store and update the user answers with a failed status" in {
+
+        val file1 = UploadedFile.Success(
+          reference = "reference",
+          downloadUrl = "http://example.com/foobar",
+          uploadDetails = UploadedFile.UploadDetails(
+            fileName = "foobar",
+            fileMimeType = "text/plain",
+            uploadTimestamp = instant,
+            checksum = "checksum"
+          )
+        )
+
+        val file2 = file1.copy(reference = "reference2")
+
+        val file3 = UploadedFile.Failure(
+          reference = "reference2",
+          failureDetails = UploadedFile.FailureDetails(
+            failureReason = UploadedFile.FailureReason.Duplicate,
+            failureMessage = None
+          )
+        )
+
+        val userAnswers = UserAnswers("userId", DraftId(0))
+          .set(UploadSupportingDocumentPage(Index(0)), file1)
+          .success
+          .value
+          .set(IsThisFileConfidentialPage(Index(0)), true)
+          .success
+          .value
+
+        val expectedAnswers = userAnswers
+          .set(UploadSupportingDocumentPage(Index(1)), file3)
+          .success
+          .value
+
+        when(mockUserAnswersService.get(any()))
+          .thenReturn(Future.successful(Some(userAnswers)))
+        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+
+        service.update(DraftId(0), Index(1), file2).futureValue
+
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
+        verify(mockObjectStoreClient, never).uploadFromUrl(
+          any(),
+          any(),
+          any(),
+          any(),
+          any(),
+          any()
+        )(any())
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
+      }
+
+      "must allow an upload of a file with the same name if the index matches" in {
+
+        val file1 = UploadedFile.Success(
+          reference = "reference",
+          downloadUrl = "http://example.com/foobar",
+          uploadDetails = UploadedFile.UploadDetails(
+            fileName = "foobar",
+            fileMimeType = "text/plain",
+            uploadTimestamp = instant,
+            checksum = "checksum"
+          )
+        )
+
+        val file2 = file1.copy(
+          reference = "reference2"
+        )
+
+        val file3 = file2.copy(
+          downloadUrl = "drafts/DRAFT000000000/foobar"
+        )
+
+        val userAnswers = UserAnswers("userId", DraftId(0))
+          .set(UploadSupportingDocumentPage(Index(0)), file1)
+          .success
+          .value
+
+        val expectedAnswers = userAnswers
+          .set(UploadSupportingDocumentPage(Index(0)), file3)
+          .success
+          .value
+
+        when(mockUserAnswersService.get(any()))
+          .thenReturn(Future.successful(Some(userAnswers)))
+        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
+          .thenReturn(Future.successful(objectSummary))
+        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+
+        service.update(DraftId(0), Index(0), file2).futureValue
+
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
+        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
         verify(mockUserAnswersService).set(eqTo(expectedAnswers))
       }
     }

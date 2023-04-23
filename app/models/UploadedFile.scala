@@ -104,6 +104,7 @@ object UploadedFile {
     case object Quarantine extends FailureReason
     case object Rejected extends FailureReason
     case object Unknown extends FailureReason
+    case object Duplicate extends FailureReason
   }
 
   implicit lazy val reads: Reads[UploadedFile] =

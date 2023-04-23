@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-final case class DraftAttachment(file: UploadedFile, isThisFileConfidential: Boolean)
+final case class DraftAttachment(file: UploadedFile, isThisFileConfidential: Option[Boolean])
 
 object DraftAttachment {
 
