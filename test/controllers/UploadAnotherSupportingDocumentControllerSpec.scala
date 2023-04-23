@@ -18,6 +18,7 @@ package controllers
 
 import java.time.Instant
 
+import play.api.Configuration
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -35,8 +36,10 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
   private val onwardRoute = Call("GET", "/foo")
 
-  private val formProvider = new UploadAnotherSupportingDocumentFormProvider()
-  private val form         = formProvider()
+  private val formProvider = new UploadAnotherSupportingDocumentFormProvider(
+    Configuration("upscan.maxFiles" -> 5)
+  )
+  private val form         = formProvider(Seq.empty)
 
   private lazy val uploadAnotherSupportingDocumentRoute =
     routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId).url

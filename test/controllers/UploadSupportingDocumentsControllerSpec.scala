@@ -416,6 +416,52 @@ class UploadSupportingDocumentsControllerSpec
     }
   }
 
+  "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
+
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      .configure(
+        "upscan.maxFiles" -> 1
+      )
+      .build()
+
+    when(mockFileService.initiate(any(), any(), any())(any()))
+      .thenReturn(Future.successful(upscanInitiateResponse))
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(1), models.NormalMode, draftId, None, Some("key"))
+        .url
+    )
+
+    val result = route(application, request).value
+
+    status(result) mustEqual NOT_FOUND
+  }
+
+  "must return NOT_FOUND when the index is greater than the greatest existing index + 1" in {
+
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      .configure(
+        "upscan.maxFiles" -> 5
+      )
+      .build()
+
+    when(mockFileService.initiate(any(), any(), any())(any()))
+      .thenReturn(Future.successful(upscanInitiateResponse))
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(1), models.NormalMode, draftId, None, Some("key"))
+        .url
+    )
+
+    val result = route(application, request).value
+
+    status(result) mustEqual NOT_FOUND
+  }
+
   "must redirect to the JourneyRecovery page when there are no user answers" in {
 
     val application = applicationBuilder(userAnswers = None)

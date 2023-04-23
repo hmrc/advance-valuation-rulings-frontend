@@ -100,7 +100,6 @@ class FileService @Inject() (
   ): Future[UploadedFile] =
     file match {
       case file: UploadedFile.Success =>
-
         val documents      = answers.get(AllDocuments).getOrElse(Seq.empty)
         val otherDocuments =
           documents.patch(index.position, Seq.empty, 1)

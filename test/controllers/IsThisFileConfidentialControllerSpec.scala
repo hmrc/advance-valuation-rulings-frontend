@@ -132,6 +132,78 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       ).toString
     }
 
+    "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .configure(
+          "upscan.maxFiles" -> 1
+        )
+        .build()
+
+      val request = FakeRequest(
+        controllers.routes.IsThisFileConfidentialController
+          .onPageLoad(Index(1), models.NormalMode, draftId)
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
+    }
+
+    "must return NOT_FOUND when the index is greater than the greatest existing index + 1" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .configure(
+          "upscan.maxFiles" -> 5
+        )
+        .build()
+
+      val request = FakeRequest(
+        controllers.routes.IsThisFileConfidentialController
+          .onPageLoad(Index(1), models.NormalMode, draftId)
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
+    }
+
+    "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload for POST" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .configure(
+          "upscan.maxFiles" -> 1
+        )
+        .build()
+
+      val request = FakeRequest(
+        controllers.routes.IsThisFileConfidentialController
+          .onSubmit(Index(1), models.NormalMode, draftId)
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
+    }
+
+    "must return NOT_FOUND when the index is greater than the greatest existing index + 1 for POST" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .configure(
+          "upscan.maxFiles" -> 5
+        )
+        .build()
+
+      val request = FakeRequest(
+        controllers.routes.IsThisFileConfidentialController
+          .onSubmit(Index(1), models.NormalMode, draftId)
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual NOT_FOUND
+    }
+
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()

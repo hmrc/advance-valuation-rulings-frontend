@@ -45,25 +45,23 @@ class UploadAnotherSupportingDocumentController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private val form = formProvider()
-
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val attachments = request.userAnswers.get(AllDocuments).getOrElse(List.empty)
+        val form        = formProvider(attachments)
         Ok(view(attachments, form, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        form
+        val attachments = request.userAnswers.get(AllDocuments).getOrElse(List.empty)
+        formProvider(attachments)
           .bindFromRequest()
           .fold(
-            formWithErrors => {
-              val attachments = request.userAnswers.get(AllDocuments).getOrElse(List.empty)
-              Future.successful(BadRequest(view(attachments, formWithErrors, mode, draftId)))
-            },
+            formWithErrors =>
+              Future.successful(BadRequest(view(attachments, formWithErrors, mode, draftId))),
             value =>
               for {
                 answers <- Future.fromTry(

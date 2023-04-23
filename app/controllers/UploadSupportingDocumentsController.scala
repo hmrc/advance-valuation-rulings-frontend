@@ -30,6 +30,7 @@ import models._
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.UploadSupportingDocumentPage
+import queries.AllDocuments
 import services.fileupload.FileService
 import views.html.UploadSupportingDocumentsView
 
@@ -49,6 +50,7 @@ class UploadSupportingDocumentsController @Inject() (
     with I18nSupport {
 
   private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val maxFiles: Int     = configuration.get[Int]("upscan.maxFiles")
 
   def onPageLoad(
     index: Index,
@@ -59,39 +61,46 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val answers = request.userAnswers
-        val file    = answers.get(UploadSupportingDocumentPage(index))
+        val answers     = request.userAnswers
+        val attachments = answers.get(AllDocuments).getOrElse(Seq.empty)
 
-        file
-          .map {
-            case file: UploadedFile.Initiated =>
-              errorCode
-                .map(errorCode => showErrorPage(draftId, mode, index, errorForCode(errorCode)))
-                .getOrElse {
-                  if (key.contains(file.reference)) {
-                    showInterstitialPage(draftId)
-                  } else {
-                    showPage(draftId, mode, index)
+        if (index.position > attachments.size || index.position >= maxFiles) {
+          Future.successful(NotFound)
+        } else {
+
+          val file = answers.get(UploadSupportingDocumentPage(index))
+
+          file
+            .map {
+              case file: UploadedFile.Initiated =>
+                errorCode
+                  .map(errorCode => showErrorPage(draftId, mode, index, errorForCode(errorCode)))
+                  .getOrElse {
+                    if (key.contains(file.reference)) {
+                      showInterstitialPage(draftId)
+                    } else {
+                      showPage(draftId, mode, index)
+                    }
                   }
+              case file: UploadedFile.Success   =>
+                if (key.contains(file.reference)) {
+                  continue(index, mode, answers)
+                } else {
+                  showPage(draftId, mode, index)
                 }
-            case file: UploadedFile.Success   =>
-              if (key.contains(file.reference)) {
-                continue(index, mode, answers)
-              } else {
-                showPage(draftId, mode, index)
-              }
-            case file: UploadedFile.Failure   =>
-              redirectWithError(
-                draftId,
-                mode,
-                index,
-                key,
-                file.failureDetails.failureReason.toString
-              )
-          }
-          .getOrElse {
-            showPage(draftId, mode, index)
-          }
+              case file: UploadedFile.Failure   =>
+                redirectWithError(
+                  draftId,
+                  mode,
+                  index,
+                  key,
+                  file.failureDetails.failureReason.toString
+                )
+            }
+            .getOrElse {
+              showPage(draftId, mode, index)
+            }
+        }
     }
 
   private def showPage(draftId: DraftId, mode: Mode, index: Index)(implicit
