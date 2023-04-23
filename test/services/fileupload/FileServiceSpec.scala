@@ -201,25 +201,6 @@ class FileServiceSpec
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
       }
-
-      "must fail if no user answers can be found" in {
-
-        when(mockUserAnswersService.getInternal(any())(any())).thenReturn(Future.successful(None))
-        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
-          .thenReturn(Future.successful(objectSummary))
-
-        service.update(DraftId(0), Index(0), uploadedFile).failed.futureValue
-
-        verify(mockObjectStoreClient, never).uploadFromUrl(
-          any(),
-          any(),
-          any(),
-          any(),
-          any(),
-          any()
-        )(any())
-        verify(mockUserAnswersService, never).setInternal(any())(any())
-      }
     }
 
     "when the file has failed" - {
@@ -359,6 +340,37 @@ class FileServiceSpec
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
       }
+    }
+
+    "must fail if no user answers can be found" in {
+
+      val uploadedFile = UploadedFile.Success(
+        reference = "reference",
+        downloadUrl = "http://example.com/foobar",
+        uploadDetails = UploadedFile.UploadDetails(
+          fileName = "foobar",
+          fileMimeType = "text/plain",
+          uploadTimestamp = instant,
+          checksum = "checksum",
+          size = 1337
+        )
+      )
+
+      when(mockUserAnswersService.getInternal(any())(any())).thenReturn(Future.successful(None))
+      when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
+        .thenReturn(Future.successful(objectSummary))
+
+      service.update(DraftId(0), Index(0), uploadedFile).failed.futureValue
+
+      verify(mockObjectStoreClient, never).uploadFromUrl(
+        any(),
+        any(),
+        any(),
+        any(),
+        any(),
+        any()
+      )(any())
+      verify(mockUserAnswersService, never).setInternal(any())(any())
     }
   }
 }

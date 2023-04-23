@@ -34,7 +34,7 @@ class UploadCallbackController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
-  def callback(draftId: DraftId, index: Index) = Action.async(parse.json) {
-    implicit request => fileService.update(draftId, index, request.body.as[UploadedFile]).as(Ok)
+  def callback(draftId: DraftId, index: Index) = Action.async(parse.json[UploadedFile]) {
+    implicit request => fileService.update(draftId, index, request.body).as(Ok)
   }
 }

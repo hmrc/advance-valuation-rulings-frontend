@@ -106,7 +106,7 @@
 
   @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
   @list(Seq(
-    Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maximumFilesAllowed)),
+    Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maximumFileSizeBytes / 1000000L)),
     Html(messages("uploadSupportingDocuments.bulletPoint.4"))
   ),
     "govuk-list govuk-list--bullet",
@@ -138,14 +138,26 @@
       </div>
     </div>
 
-    @govukButton(
-      ButtonViewModel(
-      messages("uploadSupportingDocuments.button")
+    <div class="govuk-button-group">
+      @govukButton(
+        ButtonViewModel(
+        messages("uploadSupportingDocuments.button")
+        )
+                .preventingDoubleClick()
+                .withAttribute(("id" -> "submit"))
+                .disableIf(shouldRefresh)
       )
-              .preventingDoubleClick()
-              .withAttribute(("id" -> "submit"))
-              .disableIf(shouldRefresh)
-    )
+
+      @if(shouldRefresh) {
+        <span href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary" disabled>
+        @messages("site.saveAsDraft")
+        </span>
+      } else {
+        <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+          @messages("site.saveAsDraft")
+        </a>
+      }
+    </div>
   }
 
   @cancelApplicationLink(draftId)

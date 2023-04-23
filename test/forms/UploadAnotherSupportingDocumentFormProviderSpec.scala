@@ -76,7 +76,7 @@ class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehavi
       )
     }
 
-    "must succeed when the uer answers no when there are already the max number of files" in {
+    "must succeed when the user answers no when there are already the max number of files" in {
 
       val file = UploadedFile.Success(
         reference = "reference",
