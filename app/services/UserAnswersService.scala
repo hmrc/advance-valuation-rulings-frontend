@@ -34,8 +34,14 @@ class UserAnswersService @Inject() (userAnswersConnector: UserAnswersConnector) 
   def get(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
     userAnswersConnector.get(draftId)
 
+  def getInternal(draftId: DraftId)(hc: HeaderCarrier): Future[Option[UserAnswers]] =
+    ???
+
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
     userAnswersConnector.set(answers)
+
+  def setInternal(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
+    ???
 
   def clear(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
     userAnswersConnector.clear(draftId)

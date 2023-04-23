@@ -28,7 +28,8 @@ import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import base.SpecBase
-import models.{DraftId, Index, NormalMode, UploadedFile, UserAnswers}
+import controllers.ViewApplicationControllerSpec.hc
+import models.{Done, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
@@ -65,8 +66,8 @@ class DeleteSupportingDocumentControllerSpec extends SpecBase with MockitoSugar 
     val mockUserAnswersService = mock[UserAnswersService]
     val osClient               = mock[PlayObjectStoreClient]
 
-    when(mockUserAnswersService.set(any()))
-      .thenReturn(Future.successful(true))
+    when(mockUserAnswersService.set(any())(any()))
+      .thenReturn(Future.successful(Done))
     when(osClient.deleteObject(any(), any())(any()))
       .thenReturn(Future.successful(()))
 
@@ -92,7 +93,7 @@ class DeleteSupportingDocumentControllerSpec extends SpecBase with MockitoSugar 
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
-    verify(mockUserAnswersService).set(userAnswersCaptor.capture())
+    verify(mockUserAnswersService).set(userAnswersCaptor.capture())(any())
     verify(osClient).deleteObject(eqTo(Path.File("downloadUrl")), any())(any())
 
     val updatedAnswers = userAnswersCaptor.getValue

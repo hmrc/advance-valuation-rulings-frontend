@@ -27,7 +27,7 @@ import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import connectors.UpscanConnector
-import models.{DraftId, Index, NormalMode, UploadedFile, UserAnswers}
+import models.{Done, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
@@ -108,13 +108,14 @@ class FileServiceSpec
       )
 
       when(mockUpscanConnector.initiate(any())(any())).thenReturn(Future.successful(response))
-      when(mockUserAnswersService.get(any())).thenReturn(Future.successful(Some(userAnswers)))
-      when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersService.get(any())(any()))
+        .thenReturn(Future.successful(Some(userAnswers)))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       service.initiate(DraftId(0), NormalMode, Index(0))(hc).futureValue mustEqual response
 
       verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
-      verify(mockUserAnswersService).set(userAnswersCaptor.capture())
+      verify(mockUserAnswersService).set(userAnswersCaptor.capture())(any())
 
       val actualAnswers = userAnswersCaptor.getValue
 
@@ -139,7 +140,7 @@ class FileServiceSpec
       )
 
       when(mockUpscanConnector.initiate(any())(any())).thenReturn(Future.successful(response))
-      when(mockUserAnswersService.get(any())).thenReturn(Future.successful(None))
+      when(mockUserAnswersService.get(any())(any())).thenReturn(Future.successful(None))
 
       val exception = service.initiate(DraftId(0), NormalMode, Index(0))(hc).failed.futureValue
 
@@ -188,22 +189,22 @@ class FileServiceSpec
           .success
           .value
 
-        when(mockUserAnswersService.get(any()))
+        when(mockUserAnswersService.get(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
-        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+        when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), Index(0), uploadedFile).futureValue
 
-        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
-        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))(any())
       }
 
       "must fail if no user answers can be found" in {
 
-        when(mockUserAnswersService.get(any())).thenReturn(Future.successful(None))
+        when(mockUserAnswersService.get(any())(any())).thenReturn(Future.successful(None))
         when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
 
@@ -217,7 +218,7 @@ class FileServiceSpec
           any(),
           any()
         )(any())
-        verify(mockUserAnswersService, never).set(any())
+        verify(mockUserAnswersService, never).set(any())(any())
       }
     }
 
@@ -238,13 +239,13 @@ class FileServiceSpec
           .success
           .value
 
-        when(mockUserAnswersService.get(any()))
+        when(mockUserAnswersService.get(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
-        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+        when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), Index(0), uploadedFile).futureValue
 
-        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
           any(),
           any(),
@@ -253,7 +254,7 @@ class FileServiceSpec
           any(),
           any()
         )(any())
-        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))(any())
       }
     }
 
@@ -296,13 +297,13 @@ class FileServiceSpec
           .success
           .value
 
-        when(mockUserAnswersService.get(any()))
+        when(mockUserAnswersService.get(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
-        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+        when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), Index(1), file2).futureValue
 
-        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
           any(),
           any(),
@@ -311,7 +312,7 @@ class FileServiceSpec
           any(),
           any()
         )(any())
-        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))(any())
       }
 
       "must allow an upload of a file with the same name if the index matches" in {
@@ -346,17 +347,17 @@ class FileServiceSpec
           .success
           .value
 
-        when(mockUserAnswersService.get(any()))
+        when(mockUserAnswersService.get(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
-        when(mockUserAnswersService.set(any())).thenReturn(Future.successful(true))
+        when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), Index(0), file2).futureValue
 
-        verify(mockUserAnswersService).get(eqTo(DraftId(0)))
+        verify(mockUserAnswersService).get(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
-        verify(mockUserAnswersService).set(eqTo(expectedAnswers))
+        verify(mockUserAnswersService).set(eqTo(expectedAnswers))(any())
       }
     }
   }
