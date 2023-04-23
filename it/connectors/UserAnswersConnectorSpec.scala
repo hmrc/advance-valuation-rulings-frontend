@@ -2,6 +2,7 @@ package connectors
 
 import java.time.Instant
 
+import play.api.Configuration
 import play.api.libs.json.Json
 
 import com.github.tomakehurst.wiremock.client.WireMock._
@@ -27,7 +28,11 @@ class UserAnswersConnectorSpec extends BaseIntegrationSpec with WireMockHelper w
     resetWireMock()
   }
 
-  private val connector = new UserAnswersConnector(appConfig, httpClient)
+  private val configuration = Configuration(
+    "internal-auth.token" -> "authToken"
+  )
+
+  private val connector = new UserAnswersConnector(appConfig, configuration, httpClient)
 
   private val draftId = DraftId(0)
   private val answers = UserAnswers(
@@ -57,6 +62,31 @@ class UserAnswersConnectorSpec extends BaseIntegrationSpec with WireMockHelper w
       )
 
       connector.set(answers).failed.futureValue
+    }
+  }
+
+  ".setInternal" - {
+
+    "must send user answers to the backend" in {
+
+      wireMockServer.stubFor(
+        post(urlEqualTo("/advance-valuation-rulings/internal/user-answers"))
+          .withHeader("Authorization", equalTo("authToken"))
+          .willReturn(noContent())
+      )
+
+      connector.setInternal(answers).futureValue
+    }
+
+    "must return a failed future when the server returns an error" in {
+
+      wireMockServer.stubFor(
+        post(urlEqualTo("/advance-valuation-rulings/internal/user-answers"))
+          .withHeader("Authorization", equalTo("authToken"))
+          .willReturn(serverError())
+      )
+
+      connector.setInternal(answers).failed.futureValue
     }
   }
 
@@ -92,6 +122,44 @@ class UserAnswersConnectorSpec extends BaseIntegrationSpec with WireMockHelper w
       )
 
       connector.get(draftId).failed.futureValue
+    }
+  }
+
+  ".getInternal" - {
+
+    "must return user answers when the server provides them" in {
+
+      wireMockServer.stubFor(
+        get(urlEqualTo(s"/advance-valuation-rulings/internal/user-answers/$draftId"))
+          .withHeader("Authorization", equalTo("authToken"))
+          .willReturn(ok(Json.toJson(answers).toString))
+      )
+
+      val result = connector.getInternal(draftId).futureValue
+      result.value mustEqual answers
+    }
+
+    "must return None when the server responds with Not Found" in {
+
+      wireMockServer.stubFor(
+        get(urlEqualTo(s"/advance-valuation-rulings/internal/user-answers/$draftId"))
+          .withHeader("Authorization", equalTo("authToken"))
+          .willReturn(notFound())
+      )
+
+      val result = connector.getInternal(draftId).futureValue
+      result must not be defined
+    }
+
+    "must return a failed future when the server returns an error" in {
+
+      wireMockServer.stubFor(
+        get(urlEqualTo(s"/advance-valuation-rulings/internal/user-answers/$draftId"))
+          .withHeader("Authorization", equalTo("authToken"))
+          .willReturn(serverError())
+      )
+
+      connector.getInternal(draftId).failed.futureValue
     }
   }
 
