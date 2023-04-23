@@ -180,7 +180,7 @@ class FileServiceSpec
 
       "must transfer the file to object-store and update the user answers with the status of the file" in {
 
-        val updatedFile = uploadedFile.copy(downloadUrl = "object-store/foobar")
+        val updatedFile = uploadedFile.copy(downloadUrl = "drafts/DRAFT000000000/foobar")
 
         val expectedAnswers = userAnswers
           .set(UploadSupportingDocumentPage(Index(0)), updatedFile)

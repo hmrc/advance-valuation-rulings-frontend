@@ -95,16 +95,17 @@ class FileService @Inject() (
   private def processFile(draftId: DraftId, file: UploadedFile): Future[UploadedFile] =
     file match {
       case success: UploadedFile.Success =>
+        val path = Path.File(s"drafts/$draftId/${success.uploadDetails.fileName}")
         objectStoreClient
           .uploadFromUrl(
             from = new URL(success.downloadUrl),
-            to = Path.File(s"drafts/$draftId/${success.uploadDetails.fileName}"),
+            to = path,
             retentionPeriod = objectStoreConfig.defaultRetentionPeriod,
             contentType = Some(success.uploadDetails.fileMimeType),
             contentMd5 = Some(Md5Hash(success.uploadDetails.checksum)),
             owner = objectStoreConfig.owner
           )
-          .map(summary => success.copy(downloadUrl = summary.location.asUri))
+          .map(summary => success.copy(downloadUrl = path.asUri))
       case _                             =>
         Future.successful(file)
     }
