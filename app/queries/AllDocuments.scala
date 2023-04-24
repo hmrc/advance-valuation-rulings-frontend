@@ -19,6 +19,6 @@ import play.api.libs.json.{__, JsPath}
 
 import models.DraftAttachment
 
-case object AllDocuments extends Gettable[List[DraftAttachment]] {
+case object AllDocuments extends Modifiable[List[DraftAttachment]] {
   override def path: JsPath = __ \ "supportingDocuments"
 }
