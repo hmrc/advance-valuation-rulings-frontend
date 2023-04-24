@@ -34,7 +34,10 @@
               )
           }
       },
-      label = Label()
+      label = Label(
+                content = Text(messages("countrySelect.label")),
+                classes = "govuk-visually-hidden")
+                )
       //TODO: County Code is not to prefilled on returning to the page due to GDS autocomplete bug which forces a
         //change to the defaulted prefill value
   )

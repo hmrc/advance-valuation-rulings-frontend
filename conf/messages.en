@@ -56,6 +56,8 @@ error.summary.title = There is a problem
 caption.prefix = This section is
 caption.applicant = About the applicant
 
+countrySelect.label = select a country
+
 checkYourAnswers.title = Check your answers before sending your application
 checkYourAnswers.heading = Check your answers before sending your application
 checkYourAnswers.applicant.heading = About the applicant
