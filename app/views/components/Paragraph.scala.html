@@ -18,4 +18,4 @@
 
 @(content: Html, classes: String = "govuk-body", id: Option[String] = None)
 
-<p class="@classes" @id.map{id => id="@id"}>@content</p>
+<p class="@classes wrappable" @id.map{id => id="@id"}>@content</p>

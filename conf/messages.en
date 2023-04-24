@@ -16,6 +16,7 @@ site.cancel = Cancel application
 site.printApplication = Print your application
 site.saveApplication = Save your application
 site.page = Page {0} of {1}
+site.warning = Warning
 
 
 site.1 = one
