@@ -35,12 +35,12 @@
 
     @formHelper(action = routes.CommodityCodeController.onSubmit(mode)) {
 
-        @caption(messages("commodityCode.caption"))
-        @heading(messages("commodityCode.heading"))
-
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
+
+        @caption(messages("commodityCode.caption"))
+        @heading(messages("commodityCode.heading"))
 
         @govukInput(
             InputViewModel(
