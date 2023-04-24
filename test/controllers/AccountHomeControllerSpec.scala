@@ -17,6 +17,7 @@
 package controllers
 
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 import scala.concurrent.Future
 
@@ -73,13 +74,16 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must return OK and the correct view for a GET with some applications" in {
-      val appsSummary: Seq[ApplicationSummary]               =
+      val appsSummary: Seq[ApplicationSummary] =
         Seq(
-          ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, "eoriStr"),
+          ApplicationSummary(
+            ApplicationId(1234L),
+            "socks",
+            Instant.now.minus(2, ChronoUnit.DAYS),
+            "eoriStr"
+          ),
           ApplicationSummary(ApplicationId(1235L), "shoes", Instant.now, "eoriStr")
         )
-      val appsForAccountHome: Seq[ApplicationForAccountHome] =
-        for (app <- appsSummary) yield ApplicationForAccountHome(app)
 
       val application = applicationBuilder()
         .overrides(
@@ -100,6 +104,9 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[AccountHomeView]
 
+        val sortedAppsSummary  = appsSummary.reverse
+        val appsForAccountHome = sortedAppsSummary.map(ApplicationForAccountHome(_))
+
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(appsForAccountHome)(
           request,
@@ -108,6 +115,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       }
 
       verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
+      verify(mockBackEndConnector, times(1)).applicationSummaries(any())
     }
 
     "must REDIRECT on startApplication" in {

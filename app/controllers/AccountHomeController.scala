@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.time.Instant
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
@@ -53,8 +54,11 @@ class AccountHomeController @Inject() (
     (identify andThen getData).async {
       implicit request =>
         auditService.sendUserTypeEvent()
-        backendConnector.applicationSummaries
-          .map(response => Ok(view(response.summaries.map(ApplicationForAccountHome(_)))))
+        for {
+          response    <- backendConnector.applicationSummaries
+          summaries    = response.summaries.sortBy(_.dateSubmitted)(Ordering[Instant].reverse)
+          applications = summaries.map(ApplicationForAccountHome(_))
+        } yield Ok(view(applications))
     }
 
   def startApplication: Action[AnyContent] =
