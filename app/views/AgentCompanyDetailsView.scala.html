@@ -43,6 +43,7 @@
                 label = LabelViewModel(messages("agentCompanyDetails.agentEori"))
             )
             .withWidth(Fixed20)
+            .withSpellcheck(on = false)
         )
 
         @govukInput(
@@ -51,6 +52,8 @@
                 label = LabelViewModel(messages("agentCompanyDetails.agentCompanyName"))
             )
             .withWidth(Full)
+            .withSpellcheck(on = false)
+            .withAutocomplete("organization")
         )
 
         @govukInput(
@@ -59,6 +62,8 @@
                 label = LabelViewModel(messages("agentCompanyDetails.agentStreetAndNumber"))
             )
             .withWidth(Full)
+            .withSpellcheck(on = false)
+            .withAutocomplete("address-level1")
         )
 
         @govukInput(
@@ -67,6 +72,8 @@
                 label = LabelViewModel(messages("agentCompanyDetails.agentCity"))
             )
             .withWidth(Full)
+            .withSpellcheck(on = false)
+            .withAutocomplete("address-level2")
         )
 
         @govukInput(
@@ -75,6 +82,8 @@
                 label = LabelViewModel(messages("agentCompanyDetails.agentPostalCode"))
             )
             .withWidth(Fixed10)
+            .withSpellcheck(on = false)
+            .withAutocomplete("postal-code")
         )
 
         @govukSelect(

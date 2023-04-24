@@ -60,6 +60,13 @@ trait InputFluency {
       input
         .withInputMode("tel")
         .withPattern("[0-9]*")
+        .withAutocomplete("phone")
+        .withSpellcheck(on = false)
+
+    def asContactName(): Input =
+      input
+        .withAutocomplete("name")
+        .withSpellcheck(on = false)
 
     def withId(id: String): Input =
       input.copy(id = id)
