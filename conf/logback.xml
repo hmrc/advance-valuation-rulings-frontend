@@ -41,6 +41,10 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+    <logger name="config.InternalAuthTokenInitialiserImpl" level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
     <logger name="connectors" level="INFO"/>
     <logger name="controllers" level="INFO"/>
 

@@ -18,14 +18,32 @@ package forms
 
 import javax.inject.Inject
 
+import play.api.Configuration
 import play.api.data.Form
+import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import forms.mappings.Mappings
+import models.DraftAttachment
 
-class UploadAnotherSupportingDocumentFormProvider @Inject() extends Mappings {
+class UploadAnotherSupportingDocumentFormProvider @Inject() (
+  configuration: Configuration
+) extends Mappings {
 
-  def apply(): Form[Boolean] =
+  private val maxFiles: Int = configuration.get[Int]("upscan.maxFiles")
+
+  def apply(documents: Seq[DraftAttachment]): Form[Boolean] =
     Form(
       "value" -> boolean("uploadAnotherSupportingDocument.error.required")
+        .verifying(fileCountConstraint(documents))
     )
+
+  private def fileCountConstraint(documents: Seq[DraftAttachment]): Constraint[Boolean] =
+    Constraint {
+      value =>
+        if (!value || documents.size < maxFiles) {
+          Valid
+        } else {
+          Invalid("uploadAnotherSupportingDocument.error.fileCount", maxFiles)
+        }
+    }
 }

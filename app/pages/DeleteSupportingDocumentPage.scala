@@ -16,13 +16,6 @@
 
 package pages
 
-import play.api.libs.json.JsPath
+import models.Index
 
-import models.{Index, UploadedFile}
-
-final case class UploadSupportingDocumentPage(index: Index) extends QuestionPage[UploadedFile] {
-
-  override def path: JsPath = JsPath \ "supportingDocuments" \ index.position \ "file"
-
-  override def toString: String = "file"
-}
+final case class DeleteSupportingDocumentPage(index: Index) extends Page

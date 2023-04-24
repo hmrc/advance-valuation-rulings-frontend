@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package models.fileupload
+package models.upscan
 
-import play.api.libs.json._
-import play.api.libs.json.Reads
+import play.api.libs.json.{Json, OFormat}
 
-case class Reference(value: String) extends AnyVal
+final case class UpscanInitiateResponse(
+  reference: String,
+  uploadRequest: UpscanInitiateResponse.UploadRequest
+)
 
-object Reference {
-  implicit val referenceFormat: Format[Reference] =
-    Format(
-      Reads.StringReads.map(Reference(_)),
-      Writes.StringWrites.contramap[Reference](_.value)
-    )
+object UpscanInitiateResponse {
 
-  implicit val referenceReader: Reads[Reference] = Reads.StringReads.map(Reference(_))
+  final case class UploadRequest(href: String, fields: Map[String, String])
+
+  object UploadRequest {
+
+    implicit lazy val format: OFormat[UploadRequest] = Json.format
+  }
+
+  implicit lazy val format: OFormat[UpscanInitiateResponse] = Json.format
 }

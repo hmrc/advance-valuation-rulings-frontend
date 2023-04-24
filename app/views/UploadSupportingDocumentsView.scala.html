@@ -15,9 +15,8 @@
  *@
 
 @import config.FrontendAppConfig
-@import models.fileupload._
+@import models.upscan.UpscanInitiateResponse
 @import components._
-@import controllers.routes.UploadSupportingDocumentsController
 
 @this(  mainLayout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -28,113 +27,138 @@
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
         list: BulletList,
-        detailsDrop: DetailsDrop
+        appConfig: FrontendAppConfig,
+        detailsDrop: DetailsDrop,
     )
 
-@(upscanInitiateResponse : UpscanInitiateResponse, uploadId: UploadId, status : UploadStatus, draftId: DraftId)(implicit messages: Messages, appConfig: FrontendAppConfig, requestHeader: RequestHeader)
+@(
+        draftId: DraftId,
+        upscanInitiateResponse: Option[UpscanInitiateResponse],
+        errorMessage: Option[String]
+)(implicit messages: Messages, requestHeader: RequestHeader)
+
+@shouldRefresh = @{
+  upscanInitiateResponse.isEmpty
+}
 
 @formInputClass = @{
-    if(UploadStatus.isError(status)) {
-        "govuk-file-upload govuk-file-upload--error"
-    } else {
-        "govuk-file-upload"
-    }
+  if(errorMessage.isDefined) {
+    "govuk-file-upload govuk-file-upload--error"
+  } else {
+    "govuk-file-upload"
+  }
 }
-
-@refreshHeader = {
-    <meta http-equiv="refresh" content="1"/>
-   }   
 
 @formGroupClass = @{
-    if(UploadStatus.isError(status)) {
-        "govuk-form-group govuk-form-group--error"
-    } else {
-        "govuk-form-group"
-    }
+  if(errorMessage.isDefined) {
+    "govuk-form-group govuk-form-group--error"
+  } else {
+    "govuk-form-group"
+  }
 }
 
-@continueButton = @{govukButton(
-    ButtonViewModel(
-        if(status == InProgress) {
-            messages("uploadSupportingDocuments.button.inProgress")
-        } else {
-            messages("uploadSupportingDocuments.button")
-        }    
-        )
-        .preventingDoubleClick()
-        .withAttribute(("id" -> "submit"))
-        .disableIf(status == InProgress)
-)}
+@formWrapper(content: Html) = {
 
-@mainLayout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title")), additionalHeadBlock = {
-    status match {
-        case InProgress => Some(refreshHeader)
-        case _ => None
+  @upscanInitiateResponse.map { upscanInitiateResponse =>
+
+    <form action="@upscanInitiateResponse.uploadRequest.href" method="post" enctype="multipart/form-data">
+
+      @for(field <- upscanInitiateResponse.uploadRequest.fields) {
+        <input type="hidden" name="@field._1" value="@field._2"/>
+      }
+
+      @content
+
+    </form>
+  }.getOrElse {
+    <div>
+      @content
+    </div>
+  }
+}
+
+@refreshBlock = {
+  @if(shouldRefresh) {
+    <meta http-equiv="refresh" content="1"/>
+  }
+}
+
+@mainLayout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title")), additionalHeadBlock = Some(refreshBlock)) {
+
+  @errorMessage.map { errorMessage =>
+    @govukErrorSummary(ErrorSummaryViewModel.withoutForm(Map("file-input" -> messages(errorMessage))))
+  }
+
+  @caption(messages("uploadSupportingDocuments.caption"))
+  @heading(messages("uploadSupportingDocuments.heading"))
+
+  @detailsDrop(messages("uploadSupportingDocuments.details.label"),
+    Html(messages("uploadSupportingDocuments.details.paragraph"))
+  )
+
+  @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
+  @list(Seq(
+    Html(messages("uploadSupportingDocuments.bulletPoint.1")),
+    Html(messages("uploadSupportingDocuments.bulletPoint.2", appConfig.maximumFilesAllowed)),
+  ),
+    "govuk-list govuk-list--bullet",
+  )
+
+  @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
+  @list(Seq(
+    Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maximumFileSizeBytes / 1000000L)),
+    Html(messages("uploadSupportingDocuments.bulletPoint.4"))
+  ),
+    "govuk-list govuk-list--bullet",
+  )
+
+  @formWrapper {
+
+    <div class="mt-3">
+      <div class="@formGroupClass">
+
+        @errorMessage.map { errorMessage =>
+          <p id="file-input-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> @{messages(errorMessage)}
+          </p>
         }
-    }) {
 
-    @if(UploadStatus.isError(status)) {
-        @govukErrorSummary(ErrorSummaryViewModel.withoutForm(UploadStatus.toFormErrors(status, appConfig.maxFileSizeMegaBytes)))
-    }
-
-        @caption(messages("uploadSupportingDocuments.caption"))
-        @heading(messages("uploadSupportingDocuments.heading"))
-
-
-        @detailsDrop(messages("uploadSupportingDocuments.details.label"),
-            Html(messages("uploadSupportingDocuments.details.paragraph"))
-        )
-
-        @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
-        @list(Seq(
-                Html(messages("uploadSupportingDocuments.bulletPoint.1")),
-                Html(messages("uploadSupportingDocuments.bulletPoint.2", appConfig.maximumFilesAllowed)),
-            ),
-            "govuk-list govuk-list--bullet",
-        )
-
-        @paragraph(Html(messages("uploadSupportingDocuments.paragraph.2")))
-        @list(Seq(
-            Html(messages("uploadSupportingDocuments.bulletPoint.3", appConfig.maxFileSizeMegaBytes)),
-            Html(messages("uploadSupportingDocuments.bulletPoint.4"))
-            ),
-            "govuk-list govuk-list--bullet",
-        )
-    <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
-
-        @for(field <- upscanInitiateResponse.formFields) {
-            <input type="hidden" name="@field._1" value="@field._2"/>
-        }
-
-        <div class="mt-3">
-            <div class="@formGroupClass">
-                @if(UploadStatus.isError(status)) {
-                    <p id="file-input-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @{messages(UploadStatus.message(status), appConfig.maxFileSizeMegaBytes)}
-                    </p>
-                }
-                
-                @if(status != InProgress) {
-                    <label class="govuk-label" for="file-input">
-                        @messages("uploadSupportingDocuments.label")
-                    </label>
-                    <div class="form-control-wrapper">
-                        <input
-                                class="@formInputClass"
-                                type="file"
-                                id="file-input"
-                                name="file"
-                                accept=".pdf,.jpeg,.jpg"
-                        />
-                    </div>
-                }
-                
-            </div>
-
+        <label class="govuk-label" for="file-input">
+        @messages("uploadSupportingDocuments.label")
+        </label>
+        <div class="form-control-wrapper">
+          <input
+          class="@formInputClass"
+          type="file"
+          id="file-input"
+          name="file"
+          accept=".pdf,.jpeg,.jpg"
+          />
         </div>
+      </div>
+    </div>
 
-        @continueButton
-         </form>
+    <div class="govuk-button-group">
+      @govukButton(
+        ButtonViewModel(
+        messages("uploadSupportingDocuments.button")
+        )
+                .preventingDoubleClick()
+                .withAttribute(("id" -> "submit"))
+                .disableIf(shouldRefresh)
+      )
 
-    @cancelApplicationLink(draftId)
+      @if(shouldRefresh) {
+        <span href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary" disabled>
+        @messages("site.saveAsDraft")
+        </span>
+      } else {
+        <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+          @messages("site.saveAsDraft")
+        </a>
+      }
+    </div>
+  }
+
+  @cancelApplicationLink(draftId)
 }

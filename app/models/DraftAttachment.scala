@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package models
 
-import play.api.libs.json.JsPath
+import play.api.libs.json.{Json, OFormat}
 
-import models.{Index, UploadedFile}
+final case class DraftAttachment(file: UploadedFile, isThisFileConfidential: Option[Boolean])
 
-final case class UploadSupportingDocumentPage(index: Index) extends QuestionPage[UploadedFile] {
+object DraftAttachment {
 
-  override def path: JsPath = JsPath \ "supportingDocuments" \ index.position \ "file"
-
-  override def toString: String = "file"
+  implicit lazy val format: OFormat[DraftAttachment] = Json.format
 }

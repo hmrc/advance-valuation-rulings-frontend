@@ -35,8 +35,6 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import repositories.CounterRepository
-import services.FakeFileUploadService
-import services.fileupload.FileUploadService
 
 trait SpecBase
     extends AnyFreeSpec
@@ -83,7 +81,6 @@ trait SpecBase
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[IdentifyIndividualAction].to[FakeIdentifyIndividualAction],
-        bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),
@@ -98,7 +95,6 @@ trait SpecBase
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeAgentIdentifierAction],
         bind[IdentifyAgentAction].to[FakeIdentifyAgentAction],
-        bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),
@@ -113,7 +109,6 @@ trait SpecBase
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeOrgIdentifierAction],
         bind[IdentifyAgentAction].to[FakeIdentifyOrgAction],
-        bind[FileUploadService].to[FakeFileUploadService],
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),

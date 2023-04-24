@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package pages
+package queries
+import play.api.libs.json.{__, JsPath}
 
-import play.api.libs.json.JsPath
+import models.DraftAttachment
 
-import models.{Index, UploadedFile}
-
-final case class UploadSupportingDocumentPage(index: Index) extends QuestionPage[UploadedFile] {
-
-  override def path: JsPath = JsPath \ "supportingDocuments" \ index.position \ "file"
-
-  override def toString: String = "file"
+case object AllDocuments extends Gettable[List[DraftAttachment]] {
+  override def path: JsPath = __ \ "supportingDocuments"
 }

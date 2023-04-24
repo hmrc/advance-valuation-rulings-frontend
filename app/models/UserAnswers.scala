@@ -27,7 +27,7 @@ import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import models.ValuationMethod._
 import pages._
-import queries.Modifiable
+import queries.{Gettable, Modifiable}
 
 final case class UserAnswers(
   userId: String,
@@ -36,7 +36,7 @@ final case class UserAnswers(
   lastUpdated: Instant = Instant.now
 ) {
 
-  def get[A](page: Modifiable[A])(implicit rds: Reads[A]): Option[A] =
+  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
 
   def getOrElse[A](page: Modifiable[A], default: => A)(implicit rds: Reads[A]): A =

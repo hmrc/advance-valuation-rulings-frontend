@@ -23,11 +23,11 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
 import controllers.routes._
-import controllers.routes.UploadSupportingDocumentsController
 import models._
 import models.ValuationMethod._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
+import queries.AllDocuments
 
 class Navigator @Inject() () {
 
@@ -60,8 +60,10 @@ class Navigator @Inject() () {
     case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
-    case IsThisFileConfidentialPage                       => isThisFileConfidentialPage
+    case UploadSupportingDocumentPage(index)              => uploadSupportingDocumentPage(index)
+    case IsThisFileConfidentialPage(index)                => isThisFileConfidentialPage(index)
     case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
+    case DeleteSupportingDocumentPage(_)                  => deleteSupportingDocumentPage
     case WhyComputedValuePage                             => whyComputedValuePage
     case ExplainReasonComputedValuePage                   => explainReasonComputedValuePage
     case WhyTransactionValueOfSimilarGoodsPage            => whyTransactionValueOfSimilarGoodsPage
@@ -360,7 +362,7 @@ class Navigator @Inject() () {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, NormalMode, userAnswers.draftId)
+          .onPageLoad(Index(0), NormalMode, userAnswers.draftId, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),
@@ -368,37 +370,56 @@ class Navigator @Inject() () {
         )
     }
 
-  private def isThisFileConfidentialPage(
+  private def uploadSupportingDocumentPage(index: Index)(
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
-    userAnswers.get(UploadSupportingDocumentPage) match {
-      case None                => doYouWantToUploadDocumentsPage(userAnswers)
-      case Some(uploadedFiles) =>
-        uploadedFiles match {
-          case UploadedFiles(Some(_), _)                    =>
-            IsThisFileConfidentialController.onPageLoad(NormalMode, userAnswers.draftId)
-          case UploadedFiles(None, files) if files.nonEmpty =>
-            UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
-          case UploadedFiles(None, _)                       =>
-            DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
-        }
-    }
+    controllers.routes.IsThisFileConfidentialController.onPageLoad(
+      index,
+      NormalMode,
+      userAnswers.draftId
+    )
+
+  private def isThisFileConfidentialPage(index: Index)(
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
+    controllers.routes.UploadAnotherSupportingDocumentController
+      .onPageLoad(NormalMode, userAnswers.draftId)
 
   private def uploadAnotherSupportingDocumentPage(
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
-    userAnswers.get(UploadAnotherSupportingDocumentPage) match {
-      case None        =>
-        UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(true)  =>
-        UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, NormalMode, userAnswers.draftId)
-      case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+    userAnswers
+      .get(UploadAnotherSupportingDocumentPage)
+      .map {
+        case true  =>
+          val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
+          controllers.routes.UploadSupportingDocumentsController.onPageLoad(
+            Index(nextIndex),
+            NormalMode,
+            userAnswers.draftId,
+            None,
+            None
+          )
+        case false =>
+          resolveAffinityGroup(affinityGroup)(
+            checkYourAnswers(userAnswers.draftId),
+            checkYourAnswersForAgents(userAnswers.draftId)
+          )
+      }
+      .getOrElse(controllers.routes.JourneyRecoveryController.onPageLoad())
+
+  private def deleteSupportingDocumentPage(
+    userAnswers: UserAnswers
+  ): Call = {
+    val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
+    if (numberOfDocuments > 0) {
+      controllers.routes.UploadAnotherSupportingDocumentController
+        .onPageLoad(NormalMode, userAnswers.draftId)
+    } else {
+      controllers.routes.DoYouWantToUploadDocumentsController
+        .onPageLoad(NormalMode, userAnswers.draftId)
     }
+  }
 
   private def importGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ImportGoodsPage) match {

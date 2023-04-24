@@ -18,25 +18,23 @@ package controllers.callback
 
 import javax.inject.{Inject, Singleton}
 
+import cats.implicits._
 import scala.concurrent.ExecutionContext
 
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import play.api.mvc.MessagesControllerComponents
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import models.fileupload.CallbackBody
-import services.fileupload.UpscanCallbackDispatcher
+import models.{DraftId, Index, UploadedFile}
+import services.fileupload.FileService
 
 @Singleton
 class UploadCallbackController @Inject() (
-  upscanCallbackDispatcher: UpscanCallbackDispatcher,
-  mcc: MessagesControllerComponents
+  override val controllerComponents: MessagesControllerComponents,
+  fileService: FileService
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) {
+    extends FrontendBaseController {
 
-  val callback = Action.async(parse.json) {
-    implicit request =>
-      withJsonBody[CallbackBody] {
-        feedback: CallbackBody => upscanCallbackDispatcher.handleCallback(feedback).map(_ => Ok)
-      }
+  def callback(draftId: DraftId, index: Index) = Action.async(parse.json[UploadedFile]) {
+    implicit request => fileService.update(draftId, index, request.body).as(Ok)
   }
 }

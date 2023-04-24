@@ -16,31 +16,84 @@
 
 package forms
 
+import java.time.Instant
+
+import play.api.Configuration
 import play.api.data.FormError
 
 import forms.behaviours.BooleanFieldBehaviours
+import models.{DraftAttachment, UploadedFile}
 
 class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "uploadAnotherSupportingDocument.error.required"
-  val invalidKey  = "error.boolean"
+  private val requiredKey = "uploadAnotherSupportingDocument.error.required"
+  private val invalidKey  = "error.boolean"
 
-  val form = new UploadAnotherSupportingDocumentFormProvider()()
+  private val configuration = Configuration(
+    "upscan.maxFiles" -> 1
+  )
+
+  val formProvider = new UploadAnotherSupportingDocumentFormProvider(configuration)
 
   ".value" - {
 
     val fieldName = "value"
 
     behave like booleanField(
-      form,
+      formProvider(Seq.empty),
       fieldName,
       invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(
-      form,
+      formProvider(Seq.empty),
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+
+    "must fail when the user answers yes and there are already the max number of files" in {
+
+      val file = UploadedFile.Success(
+        reference = "reference",
+        downloadUrl = "foobar",
+        uploadDetails = UploadedFile.UploadDetails(
+          fileName = "filename",
+          fileMimeType = "application/pdf",
+          uploadTimestamp = Instant.now(),
+          checksum = "checksum",
+          size = 1337
+        )
+      )
+
+      val form      = formProvider(Seq(DraftAttachment(file, None)))
+      val boundForm = form.bind(Map("value" -> "true"))
+
+      boundForm.hasErrors mustBe true
+      boundForm("value").error.value mustEqual FormError(
+        "value",
+        "uploadAnotherSupportingDocument.error.fileCount",
+        Seq(1)
+      )
+    }
+
+    "must succeed when the user answers no when there are already the max number of files" in {
+
+      val file = UploadedFile.Success(
+        reference = "reference",
+        downloadUrl = "foobar",
+        uploadDetails = UploadedFile.UploadDetails(
+          fileName = "filename",
+          fileMimeType = "application/pdf",
+          uploadTimestamp = Instant.now(),
+          checksum = "checksum",
+          size = 1337
+        )
+      )
+
+      val form      = formProvider(Seq(DraftAttachment(file, None)))
+      val boundForm = form.bind(Map("value" -> "false"))
+
+      boundForm.hasErrors mustBe false
+    }
   }
 }

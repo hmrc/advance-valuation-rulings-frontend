@@ -24,6 +24,7 @@ import models._
 import models.CheckMode
 import models.ValuationMethod._
 import pages._
+import queries.AllDocuments
 
 object CheckModeNavigator {
   import controllers._
@@ -124,7 +125,7 @@ object CheckModeNavigator {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
         controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(None, None, None, CheckMode, userAnswers.draftId)
+          .onPageLoad(Index(0), CheckMode, userAnswers.draftId, None, None)
       case Some(false) =>
         resolveAffinityGroup(affinityGroup)(
           checkYourAnswers(userAnswers.draftId),
@@ -132,44 +133,59 @@ object CheckModeNavigator {
         )
     }
 
-  private def isThisFileConfidential(implicit
+  private def uploadSupportingDocumentPage(
+    index: Index
+  )(implicit userAnswers: UserAnswers, affinityGroup: AffinityGroup): Call =
+    controllers.routes.IsThisFileConfidentialController.onPageLoad(
+      index,
+      CheckMode,
+      userAnswers.draftId
+    )
+
+  private def isThisFileConfidential(index: Index)(implicit
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
   ): Call =
-    userAnswers.get(UploadSupportingDocumentPage) match {
-      case None                => doYouWantToUploadDocuments(userAnswers, affinityGroup)
-      case Some(uploadedFiles) =>
-        uploadedFiles match {
-          case UploadedFiles(Some(_), _)                    =>
-            IsThisFileConfidentialController.onPageLoad(CheckMode, userAnswers.draftId)
-          case UploadedFiles(None, files) if files.nonEmpty =>
-            UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
-          case UploadedFiles(None, _)                       =>
-            DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
-        }
-    }
+    controllers.routes.UploadAnotherSupportingDocumentController
+      .onPageLoad(CheckMode, userAnswers.draftId)
 
   private def uploadAnotherSupportingDocument(implicit
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup
   ): Call =
-    userAnswers.get(UploadAnotherSupportingDocumentPage) match {
-      case None        =>
-        UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(true)  =>
-        UploadSupportingDocumentsController.onPageLoad(
-          None,
-          None,
-          None,
-          CheckMode,
-          userAnswers.draftId
-        )
-      case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+    userAnswers
+      .get(UploadAnotherSupportingDocumentPage)
+      .map {
+        case true  =>
+          val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
+          controllers.routes.UploadSupportingDocumentsController.onPageLoad(
+            Index(nextIndex),
+            CheckMode,
+            userAnswers.draftId,
+            None,
+            None
+          )
+        case false =>
+          resolveAffinityGroup(affinityGroup)(
+            checkYourAnswers(userAnswers.draftId),
+            checkYourAnswersForAgents(userAnswers.draftId)
+          )
+      }
+      .getOrElse(controllers.routes.JourneyRecoveryController.onPageLoad())
+
+  private def deleteSupportingDocumentPage(implicit
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup
+  ): Call = {
+    val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
+    if (numberOfDocuments > 0) {
+      controllers.routes.UploadAnotherSupportingDocumentController
+        .onPageLoad(CheckMode, userAnswers.draftId)
+    } else {
+      controllers.routes.DoYouWantToUploadDocumentsController
+        .onPageLoad(CheckMode, userAnswers.draftId)
     }
+  }
 
   // Valuation Method
   private def valuationMethod(implicit userAnswers: UserAnswers): Call =
@@ -438,8 +454,10 @@ object CheckModeNavigator {
       case HaveTheGoodsBeenSubjectToLegalChallengesPage => haveBeenSubjectToLegalChallenges
       case HasCommodityCodePage                         => hasCommodityCode
       case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments
-      case IsThisFileConfidentialPage                   => isThisFileConfidential
+      case UploadSupportingDocumentPage(index)          => uploadSupportingDocumentPage(index)
+      case IsThisFileConfidentialPage(index)            => isThisFileConfidential(index)
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument
+      case DeleteSupportingDocumentPage(_)              => deleteSupportingDocumentPage
       case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter
 
       // method 1
