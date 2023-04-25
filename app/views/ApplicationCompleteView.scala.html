@@ -64,9 +64,17 @@
         )
     }
 
-@advanceValuationRulingServiceEmailLink = {
+@advanceValuationRulingServiceEmailLinkOne = {
     @link(
             id = "advance_valuation_ruling_service_email",
+            text = messages("applicationComplete.email.link"),
+            call = Call("POST", config.advanceValuationRulingServiceEmailUrl)
+        )
+    }
+
+@advanceValuationRulingServiceEmailLinkTwo = {
+    @link(
+            id = "advance_valuation_ruling_service_appeal_decision_email",
             text = messages("applicationComplete.email.link"),
             call = Call("POST", config.advanceValuationRulingServiceEmailUrl)
         )
@@ -108,13 +116,13 @@
 <!--If you have any questions about your application-->
     @h3(messages("applicationComplete.questions.subheading"))
     @paragraph( Html(messages("applicationComplete.questions.para.1",
-                    advanceValuationRulingServiceEmailLink)
+advanceValuationRulingServiceEmailLinkOne)
     ))
 
 
 <!--Appeal a ruling decision-->
     @h3(messages("applicationComplete.appeal.subheading"))
-    @paragraph(Html(messages("applicationComplete.appeal.paragraph.1", advanceValuationRulingServiceEmailLink)))
+    @paragraph(Html(messages("applicationComplete.appeal.paragraph.1", advanceValuationRulingServiceEmailLinkTwo)))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.2")))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.3", appealLink)))
 
