@@ -62,12 +62,20 @@ class IsThisFileConfidentialController @Inject() (
           NotFound
         } else {
 
-          val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage(index)) match {
-            case None        => form
-            case Some(value) => form.fill(value)
-          }
+          if (request.userAnswers.get(UploadSupportingDocumentPage(index)).exists(_.isSuccessful)) {
 
-          Ok(view(preparedForm, index, mode, draftId))
+            val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage(index)) match {
+              case None        => form
+              case Some(value) => form.fill(value)
+            }
+
+            Ok(view(preparedForm, index, mode, draftId))
+          } else {
+            Redirect(
+              routes.UploadSupportingDocumentsController
+                .onPageLoad(index, mode, request.userAnswers.draftId, None, None)
+            )
+          }
         }
     }
 
