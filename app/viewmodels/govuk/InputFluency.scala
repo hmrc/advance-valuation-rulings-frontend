@@ -59,7 +59,17 @@ trait InputFluency {
     def asTelephone(): Input =
       input
         .withInputMode("tel")
+        .withInputType("tel")
+        .withAutocomplete("tel")
         .withPattern("[0-9]*")
+        .withSpellcheck(on = false)
+
+    def asName(): Input =
+      input
+        .withInputMode("text")
+        .withInputType("text")
+        .withAutocomplete("name")
+        .withSpellcheck(on = false)
 
     def withId(id: String): Input =
       input.copy(id = id)
