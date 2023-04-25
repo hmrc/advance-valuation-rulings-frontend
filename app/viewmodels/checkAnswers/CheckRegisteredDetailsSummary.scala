@@ -22,14 +22,14 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, CheckRegisteredDetails, EoriNumber, UserAnswers}
+import models.{CheckMode, CheckRegisteredDetails, DraftId, EoriNumber, UserAnswers}
 import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object CheckRegisteredDetailsSummary {
 
-  private def registeredNameRow(answer: CheckRegisteredDetails)(implicit
+  private def registeredNameRow(answer: CheckRegisteredDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -38,13 +38,13 @@ object CheckRegisteredDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
+          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkRegisteredDetails.name.change.hidden"))
       )
     )
 
-  private def registeredAddressRow(answer: CheckRegisteredDetails)(implicit
+  private def registeredAddressRow(answer: CheckRegisteredDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -64,20 +64,22 @@ object CheckRegisteredDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
+          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkRegisteredDetails.address.change.hidden"))
       )
     )
 
-  private def registeredNumberRow(eoriNumber: EoriNumber)(implicit messages: Messages) =
+  private def registeredNumberRow(eoriNumber: EoriNumber, draftId: DraftId)(implicit
+    messages: Messages
+  ) =
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.number.label",
       value = ValueViewModel(HtmlFormat.escape(eoriNumber.value).body),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode).url
+          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkRegisteredDetails.eori.change.hidden"))
       )
@@ -86,15 +88,16 @@ object CheckRegisteredDetailsSummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
-      number          = registeredNumberRow(EoriNumber(contactDetails.eori))
-    } yield number +: getPersonalDetails(contactDetails)
+      number          = registeredNumberRow(EoriNumber(contactDetails.eori), userAnswer.draftId)
+    } yield number +: getPersonalDetails(contactDetails, userAnswer.draftId)
 
   private def getPersonalDetails(
-    registeredDetails: CheckRegisteredDetails
+    registeredDetails: CheckRegisteredDetails,
+    draftId: DraftId
   )(implicit messages: Messages) =
     if (registeredDetails.consentToDisclosureOfPersonalData) {
-      val name    = registeredNameRow(registeredDetails)
-      val address = registeredAddressRow(registeredDetails)
+      val name    = registeredNameRow(registeredDetails, draftId)
+      val address = registeredAddressRow(registeredDetails, draftId)
       Seq(name, address)
     } else {
       Nil

@@ -23,15 +23,25 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
 import base.SpecBase
+import models.DraftId
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import repositories.SessionRepository
+import services.UserAnswersService
 
-class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
+class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  class Harness(sessionRepository: SessionRepository)
-      extends DataRetrievalActionImpl(sessionRepository) {
+  private val mockUserAnswersService = mock[UserAnswersService]
+
+  override def beforeEach(): Unit = {
+    Mockito.reset(mockUserAnswersService)
+    super.beforeEach()
+  }
+
+  class Harness(draftId: DraftId) extends DataRetrievalAction(draftId, mockUserAnswersService) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(
       request
     )
@@ -43,9 +53,8 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
       "must set userAnswers to 'None' in the request" in {
 
-        val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(None)
-        val action            = new Harness(sessionRepository)
+        when(mockUserAnswersService.get(any())(any())) thenReturn Future(None)
+        val action = new Harness(draftId)
 
         val result =
           action
@@ -60,16 +69,15 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
 
       "must build a userAnswers object and add it to the request" in {
 
-        val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(
+        when(mockUserAnswersService.get(any())(any())) thenReturn Future(
           Some(emptyUserAnswers)
         )
-        val action            = new Harness(sessionRepository)
+        val action = new Harness(draftId)
 
         val result =
           action
             .callTransform(
-              new IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual, None)
+              IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual, None)
             )
             .futureValue
 

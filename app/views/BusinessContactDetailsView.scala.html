@@ -22,18 +22,18 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    cancelApplicationLink: CancelApplicationLink
+    cancelApplicationLink: CancelApplicationLink,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("businessContactDetails.title"))) {
+@layout(pageTitle = title(form, messages("businessContactDetails.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.BusinessContactDetailsController.onSubmit(mode)) {
+    @formHelper(action = routes.BusinessContactDetailsController.onSubmit(mode, draftId)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -70,9 +70,7 @@
             .withWidth(OneHalf)
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
-@cancelApplicationLink()
+@cancelApplicationLink(draftId)
 }

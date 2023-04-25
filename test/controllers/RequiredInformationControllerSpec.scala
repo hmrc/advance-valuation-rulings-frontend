@@ -26,13 +26,13 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import forms.RequiredInformationFormProvider
-import models.RequiredInformation
+import models.{Done, RequiredInformation}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.RequiredInformationPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.RequiredInformationView
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
@@ -40,7 +40,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   lazy val requiredInformationRoute =
-    routes.RequiredInformationController.onPageLoad().url
+    routes.RequiredInformationController.onPageLoad(draftId).url
 
   val formProvider = new RequiredInformationFormProvider()
   val form         = formProvider()
@@ -60,7 +60,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, AffinityGroup.Individual)(
+        contentAsString(result) mustEqual view(form, AffinityGroup.Individual, draftId)(
           request,
           messages(application)
         ).toString
@@ -86,22 +86,23 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(RequiredInformation.values.toSet),
-          AffinityGroup.Individual
+          AffinityGroup.Individual,
+          draftId
         )(request, messages(application)).toString
       }
     }
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -125,15 +126,15 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
     }
     "must display an error on the page when not all checkbox are submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -150,7 +151,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
           form.bind(Map("value[0]" -> RequiredInformation.values.head.toString))
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual)(
+        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual, draftId)(
           request,
           messages(application)
         ).toString
@@ -173,7 +174,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual)(
+        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual, draftId)(
           request,
           messages(application)
         ).toString

@@ -23,17 +23,17 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
     cancelApplicationLink: CancelApplicationLink,
     caption: Caption,
     heading: Heading,
     subheading: Subheading,
     paragraph: Paragraph,
     link: Link,
-    config: FrontendAppConfig
+    config: FrontendAppConfig,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @overviewLink = {@link(
             id = "overview-of-methods-link",
@@ -41,10 +41,10 @@
             call = Call("GET", config.overviewForMethodsUrl)
         )}
 
-@layout(pageTitle = title(form, messages("valuationMethod.title"))) {
+@layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
 
-    @formHelper(action = routes.ValuationMethodController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.ValuationMethodController.onSubmit(mode, draftId), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -66,10 +66,8 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

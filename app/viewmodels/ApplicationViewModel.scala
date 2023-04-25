@@ -20,7 +20,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
 import models.requests._
-import viewmodels.application.{ContactDetailsSummary, GoodsDetailsSummary, RegisteredDetailsSummary, RequestedMethodSummary}
+import viewmodels.application._
 import viewmodels.checkAnswers._
 
 case class ApplicationViewModel(
@@ -35,7 +35,7 @@ object ApplicationViewModel {
     messages: Messages
   ): ApplicationViewModel = {
     val eoriRow       = RegisteredDetailsSummary.rows(application.trader)
-    val agentRows     = AgentCompanySummary.rows(application.agent)
+    val agentRows     = application.agent.map(agent => AgentDetailsSummary.rows(agent)).getOrElse(Nil)
     val applicant     = ContactDetailsSummary.rows(application.contact)
     val dateSubmitted = DateSubmittedSummary.row(application)
     val goodsDetails  = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
@@ -43,7 +43,7 @@ object ApplicationViewModel {
 
     ApplicationViewModel(
       eori = SummaryList(eoriRow),
-      applicant = SummaryList(applicant :++ agentRows :+ dateSubmitted),
+      applicant = SummaryList(applicant ++ agentRows :+ dateSubmitted),
       details = SummaryList(goodsDetails),
       method = SummaryList(methodDetails)
     )

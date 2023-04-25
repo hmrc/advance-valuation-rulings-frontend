@@ -25,7 +25,8 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction, IdentifyAgentAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
+import models.DraftId
 import models.requests._
 import pages.Page
 import pages.WhatIsYourRoleAsImporterPage
@@ -36,7 +37,7 @@ import views.html.CheckYourAnswersForAgentsView
 class CheckYourAnswersForAgentsController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   isAgent: IdentifyAgentAction,
   val controllerComponents: MessagesControllerComponents,
@@ -48,22 +49,23 @@ class CheckYourAnswersForAgentsController @Inject() (
 
   private val logger = Logger(this.getClass)
 
-  def onPageLoad(): Action[AnyContent] =
-    (identify andThen isAgent andThen getData andThen requireData) {
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+    (identify andThen isAgent andThen getData(draftId) andThen requireData) {
       implicit request =>
         val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
+
         request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-          case Some(role) => Ok(view(applicationSummary, role))
+          case Some(role) => Ok(view(applicationSummary, role, draftId))
           case None       =>
             logger.warn(
-              "Invalid journey: User naviaged to check your answers without specifying agent role"
+              "Invalid journey: User navigated to check your answers without specifying agent role"
             )
             Redirect(routes.JourneyRecoveryController.onPageLoad())
         }
     }
 
-  def onSubmit(): Action[AnyContent] =
-    (identify andThen isAgent andThen getData andThen requireData).async {
+  def onSubmit(draftId: DraftId): Action[AnyContent] =
+    (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
       implicit request =>
         ApplicationRequest(request.userAnswers, request.affinityGroup) match {
           case Invalid(errors: cats.data.NonEmptyList[Page]) =>

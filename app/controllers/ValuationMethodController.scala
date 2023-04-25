@@ -26,19 +26,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ValuationMethodFormProvider
-import models.Mode
-import models.UserAnswers
+import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ValuationMethodPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ValuationMethodView
 
 class ValuationMethodController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: ValuationMethodFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,28 +48,29 @@ class ValuationMethodController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm =
-        request.userAnswers.get(ValuationMethodPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        val preparedForm =
+          request.userAnswers.get(ValuationMethodPage) match {
+            case None        => form
+            case Some(value) => form.fill(value)
+          }
 
-      Ok(view(preparedForm, mode))
-  }
+        Ok(view(preparedForm, mode, draftId))
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
                 ua <- Future.fromTry(UserAnswers.updateValuationMethod(request.userAnswers, value))
-                _  <- sessionRepository.set(ua)
+                _  <- userAnswersService.set(ua)
               } yield Redirect(
                 navigator.nextPage(ValuationMethodPage, mode, ua)(request.affinityGroup)
               )

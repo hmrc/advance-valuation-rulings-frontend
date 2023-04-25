@@ -22,15 +22,14 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{AgentCompanyDetails, CheckMode, Country, UserAnswers}
-import models.requests.TraderDetail
+import models.{AgentCompanyDetails, CheckMode, DraftId, UserAnswers}
 import pages.AgentCompanyDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AgentCompanySummary {
 
-  private def registeredNameRow(answer: AgentCompanyDetails)(implicit
+  private def registeredNameRow(answer: AgentCompanyDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -39,13 +38,13 @@ object AgentCompanySummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+          routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.name.hidden"))
       )
     )
 
-  private def registeredAddressRow(answer: AgentCompanyDetails)(implicit
+  private def registeredAddressRow(answer: AgentCompanyDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -65,13 +64,13 @@ object AgentCompanySummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+          routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.address.hidden"))
       )
     )
 
-  private def registeredEoriNumberRow(answer: AgentCompanyDetails)(implicit
+  private def registeredEoriNumberRow(answer: AgentCompanyDetails, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -80,7 +79,7 @@ object AgentCompanySummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+          routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages("checkYourAnswersForAgents.agent.eori.number.hidden"))
       )
@@ -89,36 +88,9 @@ object AgentCompanySummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(AgentCompanyDetailsPage)
-      eori            = registeredEoriNumberRow(contactDetails)
-      name            = registeredNameRow(contactDetails)
-      address         = registeredAddressRow(contactDetails)
+      eori            = registeredEoriNumberRow(contactDetails, userAnswer.draftId)
+      name            = registeredNameRow(contactDetails, userAnswer.draftId)
+      address         = registeredAddressRow(contactDetails, userAnswer.draftId)
       result          = Seq(eori, name, address)
     } yield result
-
-  def rows(
-    agentTraderDetails: Option[TraderDetail]
-  )(implicit messages: Messages): Seq[SummaryListRow] =
-    agentTraderDetails match {
-      case None          => Seq.empty
-      case Some(details) =>
-        val postCode =
-          if (details.postcode.isEmpty) None else Some(details.postcode)
-
-        val country =
-          Country.fromCountryCode(details.countryCode)
-
-        val contactDetails = models.AgentCompanyDetails(
-          agentEori = details.eori,
-          agentCompanyName = details.businessName,
-          agentStreetAndNumber = details.addressLine1,
-          agentCity = details.addressLine2.getOrElse(""),
-          agentCountry = country,
-          agentPostalCode = postCode
-        )
-        Seq(
-          registeredEoriNumberRow(contactDetails),
-          registeredNameRow(contactDetails),
-          registeredAddressRow(contactDetails)
-        ).map(row => row.copy(actions = None))
-    }
 }

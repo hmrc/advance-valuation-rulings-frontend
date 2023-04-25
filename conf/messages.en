@@ -16,6 +16,8 @@ site.cancel = Cancel application
 site.printApplication = Print your application
 site.saveApplication = Save your application
 site.page = Page {0} of {1}
+site.saveAndContinue = Save and continue
+site.saveAsDraft = Save as draft
 
 
 site.1 = one
@@ -267,6 +269,15 @@ accountHome.title = Your applications and rulings
 accountHome.heading = Your applications and rulings
 accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
+accountHome.viewApplication = View application
+accountHome.continueApplication = Continue application
+accountHome.deleteApplication = Delete application
+accountHome.reference = Reference
+accountHome.goodsName = Name of goods
+accountHome.date = Date submitted
+accountHome.status = Status
+accountHome.status.submitted = Submitted
+accountHome.status.draft = In progress
 
 checkRegisteredDetails.title = Check the name and address for EORI number {0}
 checkRegisteredDetails.private.title = The registration details for EORI number {0} are private
@@ -372,13 +383,14 @@ uploadSupportingDocuments.button.inProgress=  Uploading file
 uploadSupportingDocuments.checkYourAnswersLabel = Supporting documents uploaded
 uploadSupportingDocuments.change.hidden = upload a document
 
-uploadSupportingDocuments.entitytoolarge = The selected file must be smaller than {0}MB
-uploadSupportingDocuments.entitytoosmall = The selected file is empty
-uploadSupportingDocuments.failed = The selected file failed to upload
-uploadSupportingDocuments.rejected = The selected file must be a pdf or jpeg
-uploadSupportingDocuments.quarantine = The selected file contains a virus
-uploadSupportingDocuments.nofileprovided = Select a file to upload
-uploadSupportingDocuments.duplicatefile = You can only upload distinct files
+uploadSupportingDocuments.error.entitytoolarge = The selected file must be smaller than {0}MB
+uploadSupportingDocuments.error.entitytoosmall = The selected file is empty
+uploadSupportingDocuments.error.invalidargument = Select a file to upload
+uploadSupportingDocuments.error.duplicate = You can only upload distinct files
+uploadSupportingDocuments.error.failed = The selected file failed to upload
+uploadSupportingDocuments.error.quarantine = The selected file contains a virus
+uploadSupportingDocuments.error.rejected = The selected file must be a pdf or jpeg
+uploadSupportingDocuments.error.unknown = There was a problem uploading your file
 
 explainReasonComputedValue.title = Explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods
@@ -801,3 +813,8 @@ checkYourAnswersForAgents.applicant.role.hidden = the description of your role
 checkYourAnswersForAgents.applicant.name.change.hidden = your contact name
 checkYourAnswersForAgents.applicant.email.change.hidden = your email address
 checkYourAnswersForAgents.applicant.phone.change.hidden = your telephone number
+
+deleteDraft.title = Are you sure you want to delete your application?
+deleteDraft.heading = Are you sure you want to delete your application?
+deleteDraft.error.required = Select yes if you want to delete your application
+deleteDraft.guidance = If you delete your application now, any data will be lost and you will need to make a new application.

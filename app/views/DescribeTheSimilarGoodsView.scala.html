@@ -22,20 +22,20 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukTextarea: GovukTextarea,
-    govukButton: GovukButton,
     bulletList: BulletList,
     cancelLink: CancelApplicationLink,
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    list: BulletList
+    list: BulletList,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("describeTheSimilarGoods.title"))) {
+@layout(pageTitle = title(form, messages("describeTheSimilarGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.DescribeTheSimilarGoodsController.onSubmit(mode)) {
+    @formHelper(action = routes.DescribeTheSimilarGoodsController.onSubmit(mode, draftId)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -66,9 +66,7 @@
             .withAttribute("maxlength","8167")
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
-    @cancelLink()
+    @cancelLink(draftId)
 }

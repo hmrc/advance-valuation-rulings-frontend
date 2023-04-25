@@ -21,14 +21,18 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{BusinessContactDetails, CheckMode, UserAnswers, WhatIsYourRoleAsImporter}
+import models.{BusinessContactDetails, CheckMode, DraftId, UserAnswers, WhatIsYourRoleAsImporter}
 import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object BusinessContactDetailsSummary {
 
-  private def nameRow(answer: BusinessContactDetails, role: WhatIsYourRoleAsImporter)(implicit
+  private def nameRow(
+    answer: BusinessContactDetails,
+    role: WhatIsYourRoleAsImporter,
+    draftId: DraftId
+  )(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -37,13 +41,17 @@ object BusinessContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages(getAriaMessageKey(role, "name")))
       )
     )
 
-  private def emailRow(answer: BusinessContactDetails, role: WhatIsYourRoleAsImporter)(implicit
+  private def emailRow(
+    answer: BusinessContactDetails,
+    role: WhatIsYourRoleAsImporter,
+    draftId: DraftId
+  )(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -52,13 +60,18 @@ object BusinessContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages(getAriaMessageKey(role, "email")))
       )
     )
-  private def contactNumberRow(answer: BusinessContactDetails, role: WhatIsYourRoleAsImporter)(
-    implicit messages: Messages
+
+  private def contactNumberRow(
+    answer: BusinessContactDetails,
+    role: WhatIsYourRoleAsImporter,
+    draftId: DraftId
+  )(implicit
+    messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = getMessageKey(role, "phone"),
@@ -66,7 +79,7 @@ object BusinessContactDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.BusinessContactDetailsController.onPageLoad(CheckMode).url
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(messages(getAriaMessageKey(role, "phone")))
       )
@@ -76,9 +89,9 @@ object BusinessContactDetailsSummary {
     for {
       contactDetails <- userAnswer.get(BusinessContactDetailsPage)
       role           <- userAnswer.get(WhatIsYourRoleAsImporterPage)
-      name            = nameRow(contactDetails, role)
-      email           = emailRow(contactDetails, role)
-      contactNumber   = contactNumberRow(contactDetails, role)
+      name            = nameRow(contactDetails, role, userAnswer.draftId)
+      email           = emailRow(contactDetails, role, userAnswer.draftId)
+      contactNumber   = contactNumberRow(contactDetails, role, userAnswer.draftId)
       result          = Seq(name, email, contactNumber)
     } yield result
 

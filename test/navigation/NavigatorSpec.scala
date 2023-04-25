@@ -16,26 +16,36 @@
 
 package navigation
 
+import java.time.Instant
+
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup._
 
 import base.SpecBase
 import controllers.routes
 import models._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import models.fileupload._
 import pages._
 import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers  = emptyUserAnswers
-  val navigator                      = new Navigator
-  val fileDetails: UpscanFileDetails =
-    UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
+  val EmptyUserAnswers: UserAnswers = emptyUserAnswers
+  val navigator                     = new Navigator
+
+  private val successfulFile = UploadedFile.Success(
+    reference = "reference",
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.now(),
+      checksum = "checksum",
+      size = 1337
+    )
+  )
 
   "Navigator" - {
 
@@ -69,21 +79,29 @@ class NavigatorSpec extends SpecBase {
     }
 
     "Account Home" - {
+
       "should navigate to RequiredInformation page when Individual" in {
-        navigator.startApplicationRouting(Individual) mustBe routes.RequiredInformationController
-          .onPageLoad()
-
+        navigator.startApplicationRouting(
+          AffinityGroup.Individual,
+          draftId
+        ) mustBe routes.RequiredInformationController
+          .onPageLoad(draftId)
       }
+
       "should navigate to WhatIsYourRole page when Agent" in {
-        navigator.startApplicationRouting(Agent) mustBe routes.WhatIsYourRoleAsImporterController
-          .onPageLoad(NormalMode)
-
+        navigator.startApplicationRouting(
+          AffinityGroup.Agent,
+          draftId
+        ) mustBe routes.WhatIsYourRoleAsImporterController
+          .onPageLoad(NormalMode, draftId)
       }
+
       "should navigate to WhatIsYourRole page when Org" in {
         navigator.startApplicationRouting(
-          Organisation
+          AffinityGroup.Organisation,
+          draftId
         ) mustBe routes.WhatIsYourRoleAsImporterController
-          .onPageLoad(NormalMode)
+          .onPageLoad(NormalMode, draftId)
       }
     }
 
@@ -98,7 +116,7 @@ class NavigatorSpec extends SpecBase {
             WhatIsYourRoleAsImporterPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.RequiredInformationController.onPageLoad()
+          ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
 
         }
       }
@@ -112,7 +130,10 @@ class NavigatorSpec extends SpecBase {
             WhyTransactionValueOfSimilarGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode)
+          ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
+            NormalMode,
+            draftId
+          )
 
         }
       }
@@ -125,7 +146,7 @@ class NavigatorSpec extends SpecBase {
             HaveYouUsedMethodOneInPastPage,
             NormalMode,
             ans
-          ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode, draftId)
         }
 
         "must navigate to ValuationMethod Page when False" in {
@@ -134,7 +155,7 @@ class NavigatorSpec extends SpecBase {
             HaveYouUsedMethodOneInPastPage,
             NormalMode,
             ans
-          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -146,7 +167,7 @@ class NavigatorSpec extends SpecBase {
             HaveYouUsedMethodOneForSimilarGoodsInPastPage,
             NormalMode,
             ans
-          ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode, draftId)
         }
 
         "must navigate to ValuationMethod Page when False" in {
@@ -155,7 +176,7 @@ class NavigatorSpec extends SpecBase {
             HaveYouUsedMethodOneForSimilarGoodsInPastPage,
             NormalMode,
             ans
-          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
 
         }
       }
@@ -168,7 +189,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheSimilarGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -180,7 +201,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheIdenticalGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -192,7 +213,7 @@ class NavigatorSpec extends SpecBase {
             RequiredInformationPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ImportGoodsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to self when no values are set" in {
@@ -200,7 +221,7 @@ class NavigatorSpec extends SpecBase {
             RequiredInformationPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.RequiredInformationController.onPageLoad()
+          ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
         }
       }
 
@@ -212,7 +233,7 @@ class NavigatorSpec extends SpecBase {
             ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode)
+          ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -224,7 +245,7 @@ class NavigatorSpec extends SpecBase {
             ExplainWhyYouChoseMethodFourPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -236,7 +257,7 @@ class NavigatorSpec extends SpecBase {
             ImportGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ContactPageController.onPageLoad()
+          ) mustBe routes.ContactPageController.onPageLoad(NormalMode, draftId)
         }
 
         "and navigate to ImportingGoodsPage when False" in {
@@ -245,7 +266,7 @@ class NavigatorSpec extends SpecBase {
             ImportGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ImportingGoodsController.onPageLoad()
+          ) mustBe routes.ImportingGoodsController.onPageLoad(draftId)
         }
 
         "navigate to ImportingGoodsPage when no value is set" in {
@@ -253,7 +274,7 @@ class NavigatorSpec extends SpecBase {
             ImportGoodsPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.ImportGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ImportGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -264,7 +285,7 @@ class NavigatorSpec extends SpecBase {
             HasCommodityCodePage,
             NormalMode,
             userAnswers
-          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode)
+          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode, draftId)
         }
 
         "and navigate to HaveTheGoodsBeenSubjectToLegalChallenges when False" in {
@@ -273,7 +294,10 @@ class NavigatorSpec extends SpecBase {
             HasCommodityCodePage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode)
+          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
+            NormalMode,
+            draftId
+          )
         }
 
       }
@@ -285,7 +309,7 @@ class NavigatorSpec extends SpecBase {
             HaveTheGoodsBeenSubjectToLegalChallengesPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(NormalMode, draftId)
         }
 
         "and navigate to HasConfidentialInformation when No" in {
@@ -295,7 +319,7 @@ class NavigatorSpec extends SpecBase {
             HaveTheGoodsBeenSubjectToLegalChallengesPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HasConfidentialInformationController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.HasConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -307,7 +331,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheLegalChallengesPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HasConfidentialInformationController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.HasConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to self when no values are set" in {
@@ -315,7 +339,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheLegalChallengesPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(NormalMode)
+          ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -326,7 +350,7 @@ class NavigatorSpec extends SpecBase {
             HasConfidentialInformationPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ConfidentialInformationController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
 
         "and navigate to DoYouWantToUploadDocuments when No" in {
@@ -335,7 +359,7 @@ class NavigatorSpec extends SpecBase {
             HasConfidentialInformationPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
 
         }
       }
@@ -348,7 +372,7 @@ class NavigatorSpec extends SpecBase {
             ConfidentialInformationPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to self when no values are set" in {
@@ -356,7 +380,7 @@ class NavigatorSpec extends SpecBase {
             ConfidentialInformationPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode)
+          ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -374,7 +398,7 @@ class NavigatorSpec extends SpecBase {
         )
 
         "when Individual" - {
-          val aff: AffinityGroup = Individual
+          val aff: AffinityGroup = AffinityGroup.Individual
 
           "navigate to ApplicationContactDetailsPage when Yes" in {
             val userAnswers =
@@ -383,7 +407,7 @@ class NavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(mode = NormalMode)
+            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
           }
 
           "and navigate to EORIBeUpToDatePage when No" in {
@@ -393,12 +417,12 @@ class NavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.EORIBeUpToDateController.onPageLoad()
+            )(aff) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
           }
         }
 
         "when Organisation" - {
-          val aff: AffinityGroup = Organisation
+          val aff: AffinityGroup = AffinityGroup.Organisation
 
           "navigate to BusinessContactDetailsPage when Yes" in {
             val userAnswers =
@@ -407,7 +431,7 @@ class NavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.BusinessContactDetailsController.onPageLoad(mode = NormalMode)
+            )(aff) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
           }
         }
       }
@@ -429,7 +453,7 @@ class NavigatorSpec extends SpecBase {
               BusinessContactDetailsPage,
               NormalMode,
               ua
-            ) mustBe routes.AgentCompanyDetailsController.onPageLoad(mode = NormalMode)
+            ) mustBe routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId)
           }
         }
 
@@ -440,7 +464,7 @@ class NavigatorSpec extends SpecBase {
               BusinessContactDetailsPage,
               NormalMode,
               userAnswers.set(WhatIsYourRoleAsImporterPage, value = EmployeeOfOrg).success.value
-            ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
           }
         }
       }
@@ -462,7 +486,7 @@ class NavigatorSpec extends SpecBase {
           AgentCompanyDetailsPage,
           NormalMode,
           userAnswers
-        ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+        ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
       }
 
       "ApplicationContactDetailsPage must" in {
@@ -475,7 +499,7 @@ class NavigatorSpec extends SpecBase {
           ApplicationContactDetailsPage,
           NormalMode,
           userAnswers
-        ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+        ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
       }
 
       "DoYouWantToUploadDocumentsPage must" - {
@@ -484,7 +508,7 @@ class NavigatorSpec extends SpecBase {
             DoYouWantToUploadDocumentsPage,
             NormalMode,
             emptyUserAnswers
-          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
@@ -495,7 +519,7 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None, NormalMode)
+            .onPageLoad(Index(0), NormalMode, draftId, None, None)
         }
 
         "CheckYourAnswers page when No is selected" in {
@@ -505,18 +529,33 @@ class NavigatorSpec extends SpecBase {
             DoYouWantToUploadDocumentsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.CheckYourAnswersController.onPageLoad
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
         }
       }
 
-      "UploadAnotherSupportingDocumentPage must" - {
-        "self when no answer is selected" in {
+      "UploadSupportingDocumentPage must navigate to" - {
+
+        "IsThisFileConfidential page" in {
           navigator.nextPage(
-            UploadAnotherSupportingDocumentPage,
+            UploadSupportingDocumentPage(Index(0)),
             NormalMode,
             emptyUserAnswers
-          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId)
         }
+      }
+
+      "IsThisFileConfidentialPage must navigate to" - {
+
+        "UploadAnotherSupportingDocument page" in {
+          navigator.nextPage(
+            IsThisFileConfidentialPage(Index(0)),
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "UploadAnotherSupportingDocumentPage must navigate to" - {
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
@@ -526,56 +565,83 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None, NormalMode)
+            .onPageLoad(Index(0), NormalMode, draftId, None, None)
         }
 
-        "CheckYourAnswers page when No is selected" in {
+        "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
+          val userAnswers =
+            emptyUserAnswers
+              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .success
+              .value
+              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .success
+              .value
+              .set(UploadAnotherSupportingDocumentPage, true)
+              .get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe controllers.routes.UploadSupportingDocumentsController
+            .onPageLoad(Index(1), NormalMode, draftId, None, None)
+        }
+
+        "CheckYourAnswers page when No is selected and the user is not an agent" in {
           val userAnswers =
             emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.CheckYourAnswersController.onPageLoad
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
+        }
+
+        "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
+          val userAnswers =
+            emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            draftId
+          )
+        }
+
+        "JourneyRecovery page when the page is not answered" in {
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
 
-      "IsThisFileConfidentialPage must" - {
+      "DeleteSupportingDocumentPage must navigate to" - {
 
-        "redirect to UploadSupportingDocumentsPage user has no files" in {
+        "UploadAnotherSupportingDocument page when there are more documents" in {
+          val answers =
+            emptyUserAnswers
+              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .success
+              .value
+              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .success
+              .value
           navigator.nextPage(
-            IsThisFileConfidentialPage,
+            DeleteSupportingDocumentPage(Index(0)),
+            NormalMode,
+            answers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
+        }
+
+        "DoYouWantToUploadSupportingDocuments page when there are no more documents" in {
+          navigator.nextPage(
+            DeleteSupportingDocumentPage(Index(0)),
             NormalMode,
             emptyUserAnswers
-          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(mode = NormalMode)
-        }
-
-        "redirect to self when user has a file without confidentiality info" in {
-          val userAnswers = emptyUserAnswers
-            .set(
-              UploadSupportingDocumentPage,
-              UploadedFiles.initialise(fileDetails)
-            )
-            .get
-          navigator.nextPage(
-            IsThisFileConfidentialPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.IsThisFileConfidentialController.onPageLoad(mode = NormalMode)
-        }
-
-        "UploadSupportingDocumentsPage when an answer is selected" in {
-          val userAnswers = emptyUserAnswers
-            .set(
-              UploadSupportingDocumentPage,
-              UploadedFiles.initialise(fileDetails).setConfidentiality(false)
-            )
-            .get
-          navigator.nextPage(
-            IsThisFileConfidentialPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode)
+          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -585,7 +651,7 @@ class NavigatorSpec extends SpecBase {
             ValuationMethodPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.ValuationMethodController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
         }
 
         "isThereASaleInvolved page when method 1 is selected" in {
@@ -595,7 +661,7 @@ class NavigatorSpec extends SpecBase {
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(NormalMode, draftId)
         }
 
         "WhyIdenticalGoods page when method 2 is selected" in {
@@ -605,7 +671,7 @@ class NavigatorSpec extends SpecBase {
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(NormalMode, draftId)
         }
 
         "WhyTransactionValueOfSimilarGoods page when method 3 is selected" in {
@@ -615,7 +681,10 @@ class NavigatorSpec extends SpecBase {
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(
+            NormalMode,
+            draftId
+          )
         }
 
         "ExplainWhyYouHaveNotSelectedMethodOneToThree page when method 4 is selected" in {
@@ -625,8 +694,9 @@ class NavigatorSpec extends SpecBase {
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode =
-            NormalMode
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
+            mode = NormalMode,
+            draftId
           )
         }
 
@@ -637,7 +707,7 @@ class NavigatorSpec extends SpecBase {
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.WhyComputedValueController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.WhyComputedValueController.onPageLoad(NormalMode, draftId)
         }
 
         "ExplainWhyYouHaveNotSelectedMethodOneToFiveController page when method 6 is selected" in {
@@ -647,8 +717,9 @@ class NavigatorSpec extends SpecBase {
             ValuationMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode =
-            NormalMode
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
+            mode = NormalMode,
+            draftId
           )
         }
       }
@@ -659,14 +730,14 @@ class NavigatorSpec extends SpecBase {
             IsThereASaleInvolvedPage,
             NormalMode,
             emptyUserAnswers.set(IsThereASaleInvolvedPage, true).success.value
-          ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode)
+          ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, draftId)
         }
         "navigate to valuationMethod page when no" in {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
             emptyUserAnswers.set(IsThereASaleInvolvedPage, false).success.value
-          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode)
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -679,7 +750,7 @@ class NavigatorSpec extends SpecBase {
               .set(IsSaleBetweenRelatedPartiesPage, true)
               .success
               .value
-          ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode)
+          ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode, draftId)
         }
         "navigate to restrictions page when no" in {
           navigator.nextPage(
@@ -689,7 +760,7 @@ class NavigatorSpec extends SpecBase {
               .set(IsSaleBetweenRelatedPartiesPage, false)
               .success
               .value
-          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -702,7 +773,7 @@ class NavigatorSpec extends SpecBase {
               .set(ExplainHowPartiesAreRelatedPage, "explain")
               .success
               .value
-          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -712,7 +783,7 @@ class NavigatorSpec extends SpecBase {
             HasCommodityCodePage,
             NormalMode,
             userAnswersWith(HasCommodityCodePage, true)
-          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode)
+          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -722,7 +793,10 @@ class NavigatorSpec extends SpecBase {
             CommodityCodePage,
             NormalMode,
             userAnswersWith(CommodityCodePage, "1234567890")
-          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode)
+          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
+            NormalMode,
+            draftId
+          )
         }
       }
 
@@ -732,7 +806,7 @@ class NavigatorSpec extends SpecBase {
             AreThereRestrictionsOnTheGoodsPage,
             NormalMode,
             userAnswersWith(AreThereRestrictionsOnTheGoodsPage, true)
-          ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to IsTheSaleSubjectToConditions when False" in {
@@ -740,7 +814,7 @@ class NavigatorSpec extends SpecBase {
             AreThereRestrictionsOnTheGoodsPage,
             NormalMode,
             userAnswersWith(AreThereRestrictionsOnTheGoodsPage, false)
-          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to itself when user has no data for the page" in {
@@ -748,7 +822,7 @@ class NavigatorSpec extends SpecBase {
             AreThereRestrictionsOnTheGoodsPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -758,7 +832,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheRestrictionsPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to IsTheSaleSubjectToConditions when answers has data" in {
@@ -766,7 +840,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheRestrictionsPage,
             NormalMode,
             userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions")
-          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -776,7 +850,7 @@ class NavigatorSpec extends SpecBase {
             IsTheSaleSubjectToConditionsPage,
             NormalMode,
             userAnswersWith(IsTheSaleSubjectToConditionsPage, true)
-          ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to DescriptionOfGoods when False" in {
@@ -784,7 +858,7 @@ class NavigatorSpec extends SpecBase {
             IsTheSaleSubjectToConditionsPage,
             NormalMode,
             userAnswersWith(IsTheSaleSubjectToConditionsPage, false)
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to itself when user has no data for the page" in {
@@ -792,7 +866,7 @@ class NavigatorSpec extends SpecBase {
             IsTheSaleSubjectToConditionsPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode)
+          ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -802,7 +876,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheConditionsPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to DescriptionOfGoods when answers has data" in {
@@ -810,7 +884,7 @@ class NavigatorSpec extends SpecBase {
             DescribeTheConditionsPage,
             NormalMode,
             userAnswersWith(DescribeTheConditionsPage, "Some conditions")
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -821,7 +895,7 @@ class NavigatorSpec extends SpecBase {
             WhyIdenticalGoodsPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to itself when user has no data for the page" in {
@@ -829,7 +903,7 @@ class NavigatorSpec extends SpecBase {
             WhyIdenticalGoodsPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -840,7 +914,7 @@ class NavigatorSpec extends SpecBase {
             WhyComputedValuePage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -851,8 +925,9 @@ class NavigatorSpec extends SpecBase {
             ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode =
-            NormalMode
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
+            mode = NormalMode,
+            draftId
           )
         }
 
@@ -863,7 +938,7 @@ class NavigatorSpec extends SpecBase {
             ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
             NormalMode,
             userAnswers
-          ) mustBe routes.AdaptMethodController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.AdaptMethodController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -873,7 +948,7 @@ class NavigatorSpec extends SpecBase {
             AdaptMethodPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.AdaptMethodController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.AdaptMethodController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to explainHowYouWillUseMethodSixPage when user has data for the page" in {
@@ -882,7 +957,7 @@ class NavigatorSpec extends SpecBase {
             AdaptMethodPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -892,7 +967,7 @@ class NavigatorSpec extends SpecBase {
             ExplainHowYouWillUseMethodSixPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to descriptionOfTheGoodsPage when user has data for the page" in {
@@ -901,23 +976,27 @@ class NavigatorSpec extends SpecBase {
             ExplainHowYouWillUseMethodSixPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(mode = NormalMode)
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
     }
 
-    "in Check mode" - {
+    "must go from Delete Draft to Account Home" in {
 
-      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(
-          UnknownPage,
-          CheckMode,
-          EmptyUserAnswers
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
-      }
+      navigator.nextPage(
+        DeleteDraftPage,
+        NormalMode,
+        emptyUserAnswers
+      ) mustBe routes.AccountHomeController.onPageLoad()
     }
 
+    "must go from ContactPage to CheckRegisteredDetails" in {
+
+      navigator.nextPage(
+        ContactPagePage,
+        NormalMode,
+        emptyUserAnswers
+      ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+    }
   }
 }

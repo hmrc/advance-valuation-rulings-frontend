@@ -26,26 +26,27 @@ import viewmodels.implicits._
 
 object HaveTheGoodsBeenSubjectToLegalChallengesSummary {
 
-  private def makeRow(answer: Boolean)(implicit messages: Messages) = {
-    val value = if (answer) "site.yes" else "site.no"
-    val label = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
-    SummaryListRowViewModel(
-      key = label,
-      value = ValueViewModel(value),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(
-            messages("haveTheGoodsBeenSubjectToLegalChallenges.change.hidden")
-          )
-      )
-    )
-  }
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage).map {
+      answer =>
+        val value = if (answer) "site.yes" else "site.no"
 
-  def row(answers: UserAnswers)(implicit
-    messages: Messages
-  ): Option[SummaryListRow] =
-    answers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage).map(makeRow)
+        val label = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
+
+        SummaryListRowViewModel(
+          key = label,
+          value = ValueViewModel(value),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.HaveTheGoodsBeenSubjectToLegalChallengesController
+                .onPageLoad(CheckMode, answers.draftId)
+                .url
+            )
+              .withVisuallyHiddenText(
+                messages("haveTheGoodsBeenSubjectToLegalChallenges.change.hidden")
+              )
+          )
+        )
+    }
 }

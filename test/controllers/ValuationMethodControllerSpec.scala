@@ -25,20 +25,21 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ValuationMethodFormProvider
-import models.{NormalMode, ValuationMethod}
+import models.{Done, NormalMode, ValuationMethod}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ValuationMethodPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ValuationMethodView
 
 class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val valuationMethodRoute = routes.ValuationMethodController.onPageLoad(NormalMode).url
+  lazy val valuationMethodRoute =
+    routes.ValuationMethodController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new ValuationMethodFormProvider()
   val form         = formProvider()
@@ -57,7 +58,7 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ValuationMethodView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -81,7 +82,11 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ValuationMethod.values.head), NormalMode)(
+        contentAsString(result) mustEqual view(
+          form.fill(ValuationMethod.values.head),
+          NormalMode,
+          draftId
+        )(
           request,
           messages(application)
         ).toString
@@ -90,15 +95,15 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -130,7 +135,7 @@ class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

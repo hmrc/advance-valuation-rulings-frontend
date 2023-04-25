@@ -26,18 +26,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.RequiredInformationFormProvider
-import models.NormalMode
+import models.{DraftId, NormalMode}
 import navigation.Navigator
 import pages.RequiredInformationPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.RequiredInformationView
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: RequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,8 +49,8 @@ class RequiredInformationController @Inject() (
   val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
-  def onPageLoad: Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         logger.info("RequiredInformationController onPageLoad")
 
@@ -60,24 +60,24 @@ class RequiredInformationController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm, request.affinityGroup))
+        Ok(view(preparedForm, request.affinityGroup, draftId))
     }
 
-  def onSubmit(): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, request.affinityGroup))),
+              Future.successful(BadRequest(view(formWithErrors, request.affinityGroup, draftId))),
             value =>
               for {
                 updatedAnswers <-
                   Future.fromTry(
                     request.userAnswers.set(RequiredInformationPage, value)
                   )
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)(
                   request.affinityGroup

@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import components._
 @import viewmodels.InputWidth._
 
 @this(
@@ -22,14 +23,14 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukSelect: GovukSelect,
-    govukButton: GovukButton
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("agentCompanyDetails.title"))) {
+@layout(pageTitle = title(form, messages("agentCompanyDetails.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.AgentCompanyDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.AgentCompanyDetailsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -86,8 +87,6 @@
             .withCssClass("autocomplete")
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 }

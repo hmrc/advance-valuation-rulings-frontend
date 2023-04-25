@@ -28,20 +28,25 @@ import viewmodels.implicits._
 
 object AgentRoleSummary {
 
-  def row(role: WhatIsYourRoleAsImporter)(implicit messages: Messages): SummaryListRow =
-    SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.applicant.role.label",
-      value =
-        ValueViewModel(HtmlFormat.escape(messages(s"whatIsYourRoleAsImporter.$role")).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.applicant.role.hidden"))
-      )
-    )
-
   def row(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    userAnswer.get(WhatIsYourRoleAsImporterPage).map(role => Seq(row(role)))
+    userAnswer.get(WhatIsYourRoleAsImporterPage).map {
+      role =>
+        Seq(
+          SummaryListRowViewModel(
+            key = "checkYourAnswersForAgents.applicant.role.label",
+            value = ValueViewModel(
+              HtmlFormat.escape(messages(s"whatIsYourRoleAsImporter.$role")).toString
+            ),
+            actions = Seq(
+              ActionItemViewModel(
+                "site.change",
+                routes.WhatIsYourRoleAsImporterController
+                  .onPageLoad(CheckMode, userAnswer.draftId)
+                  .url
+              )
+                .withVisuallyHiddenText(messages("businessContactDetails.role.change.hidden"))
+            )
+          )
+        )
+    }
 }

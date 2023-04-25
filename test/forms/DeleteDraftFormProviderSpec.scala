@@ -14,19 +14,33 @@
  * limitations under the License.
  */
 
-package models.fileupload
+package forms
 
-import play.api.libs.json._
-import play.api.libs.json.Reads
+import play.api.data.FormError
 
-case class Reference(value: String) extends AnyVal
+import forms.behaviours.BooleanFieldBehaviours
 
-object Reference {
-  implicit val referenceFormat: Format[Reference] =
-    Format(
-      Reads.StringReads.map(Reference(_)),
-      Writes.StringWrites.contramap[Reference](_.value)
+class DeleteDraftFormProviderSpec extends BooleanFieldBehaviours {
+
+  val requiredKey = "deleteDraft.error.required"
+  val invalidKey  = "error.boolean"
+
+  val form = new DeleteDraftFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
     )
 
-  implicit val referenceReader: Reads[Reference] = Reads.StringReads.map(Reference(_))
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

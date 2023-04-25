@@ -22,6 +22,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 
 import audit.AuditService
 import base.SpecBase
@@ -33,11 +34,12 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
 
+  private implicit val hc: HeaderCarrier     = HeaderCarrier()
   private val mockAuditService: AuditService = mock[AuditService]
 
   override def beforeEach(): Unit = {
@@ -48,7 +50,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val whatIsYourRoleAsImporterRoute =
-    routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode).url
+    routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new WhatIsYourRoleAsImporterFormProvider()
   val form         = formProvider()
@@ -69,7 +71,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -97,15 +99,18 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(WhatIsYourRoleAsImporter.values.head),
-          NormalMode
+          NormalMode,
+          draftId
         )(request, messages(application)).toString
       }
     }
 
     "must redirect to the next page when valid data is submitted" in {
-      val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
       val userAnswers = emptyUserAnswers
         .set(
           AgentCompanyDetailsPage,
@@ -125,7 +130,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         applicationBuilderAsAgent(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
             bind[AuditService].to(mockAuditService)
           )
           .build()
@@ -147,15 +152,15 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
           .success
           .value
 
-      verify(mockSessionRepository, times(1)).set(eqTo(expectedUserAnswers))
+      verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
       verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
     }
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {
-      val emptyAnswers          = UserAnswers(userAnswersId, draftId)
-      val mockSessionRepository = mock[SessionRepository]
+      val emptyAnswers           = UserAnswers(userAnswersId, draftId)
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       val userAnswers = emptyAnswers
         .set(
           AgentCompanyDetailsPage,
@@ -175,7 +180,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         applicationBuilderAsAgent(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
             bind[AuditService].to(mockAuditService)
           )
           .build()
@@ -195,7 +200,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .success
         .value
 
-      verify(mockSessionRepository, times(1)).set(eqTo(expectedUserAnswers))
+      verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
       verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
     }
 
@@ -217,7 +222,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

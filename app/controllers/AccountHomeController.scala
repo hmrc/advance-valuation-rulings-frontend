@@ -16,7 +16,6 @@
 
 package controllers
 
-import java.time.Instant
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
@@ -29,19 +28,19 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import audit.AuditService
 import connectors.BackendConnector
 import controllers.actions._
-import models.{ApplicationForAccountHome, UserAnswers}
+import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
 import navigation.Navigator
-import repositories.SessionRepository
+import repositories.CounterRepository
+import services.UserAnswersService
 import views.html.AccountHomeView
 
 class AccountHomeController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
+  counterRepository: CounterRepository,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
   backendConnector: BackendConnector,
   auditService: AuditService,
-  generateDraftId: DraftIdGenerationAction,
   navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
@@ -51,22 +50,34 @@ class AccountHomeController @Inject() (
     with Retrievals {
 
   def onPageLoad: Action[AnyContent] =
-    (identify andThen getData).async {
+    identify.async {
       implicit request =>
         auditService.sendUserTypeEvent()
+
         for {
-          response    <- backendConnector.applicationSummaries
-          summaries    = response.summaries.sortBy(_.dateSubmitted)(Ordering[Instant].reverse)
-          applications = summaries.map(ApplicationForAccountHome(_))
-        } yield Ok(view(applications))
+          applications <- backendConnector.applicationSummaries.map(_.summaries)
+          drafts       <- userAnswersService.summaries().map(_.summaries)
+        } yield {
+          val applicationViewModels = applications.map(ApplicationForAccountHome(_))
+          val draftViewModels       = drafts.map {
+            draft =>
+              ApplicationForAccountHome(
+                draft,
+                navigator.startApplicationRouting(request.affinityGroup, draft.id)
+              )
+          }
+
+          val viewModels = (applicationViewModels ++ draftViewModels).sortBy(_.date).reverse
+          Ok(view(viewModels))
+        }
     }
 
   def startApplication: Action[AnyContent] =
-    (identify andThen getData andThen generateDraftId).async {
+    identify.async {
       implicit request =>
         for {
-          _ <-
-            sessionRepository.set(UserAnswers(request.userId, request.draftId))
-        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup))
+          draftId <- counterRepository.nextId(CounterId.DraftId)
+          _       <- userAnswersService.set(UserAnswers(request.userId, DraftId(draftId)))
+        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, DraftId(draftId)))
     }
 }

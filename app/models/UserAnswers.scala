@@ -27,7 +27,7 @@ import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import models.ValuationMethod._
 import pages._
-import queries.Modifiable
+import queries.{Gettable, Modifiable}
 
 final case class UserAnswers(
   userId: String,
@@ -36,7 +36,7 @@ final case class UserAnswers(
   lastUpdated: Instant = Instant.now
 ) {
 
-  def get[A](page: Modifiable[A])(implicit rds: Reads[A]): Option[A] =
+  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
 
   def getOrElse[A](page: Modifiable[A], default: => A)(implicit rds: Reads[A]): A =
@@ -133,7 +133,7 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "_id").read[String] and
+      (__ \ "userId").read[String] and
         (__ \ "draftId").read[DraftId] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
@@ -145,7 +145,7 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "_id").write[String] and
+      (__ \ "userId").write[String] and
         (__ \ "draftId").write[DraftId] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)

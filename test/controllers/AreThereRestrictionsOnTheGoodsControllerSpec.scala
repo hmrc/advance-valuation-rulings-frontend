@@ -25,13 +25,13 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.AreThereRestrictionsOnTheGoodsFormProvider
-import models.NormalMode
+import models.{Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.AreThereRestrictionsOnTheGoodsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.AreThereRestrictionsOnTheGoodsView
 
 class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with MockitoSugar {
@@ -42,7 +42,7 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
   val form         = formProvider()
 
   lazy val areThereRestrictionsOnTheGoodsRoute =
-    routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode).url
+    routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId).url
 
   "AreThereRestrictionsOnTheGoods Controller" - {
 
@@ -58,7 +58,7 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
         val view = application.injector.instanceOf[AreThereRestrictionsOnTheGoodsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -83,7 +83,7 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -92,15 +92,15 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -132,7 +132,7 @@ class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with Mockito
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

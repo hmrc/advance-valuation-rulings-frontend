@@ -25,13 +25,13 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.WhyComputedValueFormProvider
-import models.NormalMode
+import models.{Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhyComputedValuePage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.WhyComputedValueView
 
 class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
@@ -41,7 +41,8 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new WhyComputedValueFormProvider()
   val form         = formProvider()
 
-  lazy val whyComputedValueRoute = routes.WhyComputedValueController.onPageLoad(NormalMode).url
+  lazy val whyComputedValueRoute =
+    routes.WhyComputedValueController.onPageLoad(NormalMode, draftId).url
 
   "WhyComputedValue Controller" - {
 
@@ -57,7 +58,7 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[WhyComputedValueView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -81,7 +82,7 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill("answer"), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -90,15 +91,15 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -130,7 +131,7 @@ class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

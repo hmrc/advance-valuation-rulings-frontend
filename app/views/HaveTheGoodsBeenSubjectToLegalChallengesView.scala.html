@@ -21,18 +21,18 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("haveTheGoodsBeenSubjectToLegalChallenges.title"))) {
+@layout(pageTitle = title(form, messages("haveTheGoodsBeenSubjectToLegalChallenges.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode, draftId), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -50,9 +50,7 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

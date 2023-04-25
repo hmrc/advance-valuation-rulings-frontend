@@ -23,10 +23,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import models.Done
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
 
@@ -36,23 +38,26 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
 
       "must keep the answers alive and return OK" in {
 
-        val mockSessionRepository = mock[SessionRepository]
+        val mockUserAnswersService = mock[UserAnswersService]
 
-        when(mockSessionRepository.keepAlive(any[String])) thenReturn Future.successful(true)
+        when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
+          Done
+        )
 
         val application =
           applicationBuilder(Some(emptyUserAnswers))
-            .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+            .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
             .build()
 
         running(application) {
 
-          val request = FakeRequest(GET, routes.KeepAliveController.keepAlive.url)
+          val request = FakeRequest(GET, routes.KeepAliveController.keepAlive(draftId).url)
 
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockSessionRepository, times(1)).keepAlive(emptyUserAnswers.userId)
+          verify(mockUserAnswersService, times(1))
+            .keepAlive(eqTo(draftId))(any())
         }
       }
     }
@@ -61,22 +66,24 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
 
       "must return OK" in {
 
-        val mockSessionRepository = mock[SessionRepository]
-        when(mockSessionRepository.keepAlive(any[String])) thenReturn Future.successful(true)
+        val mockUserAnswersService = mock[UserAnswersService]
+        when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
+          Done
+        )
 
         val application =
           applicationBuilder(None)
-            .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+            .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
             .build()
 
         running(application) {
 
-          val request = FakeRequest(GET, routes.KeepAliveController.keepAlive.url)
+          val request = FakeRequest(GET, routes.KeepAliveController.keepAlive(draftId).url)
 
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockSessionRepository, never()).keepAlive(any[String])
+          verify(mockUserAnswersService, never()).keepAlive(any())(any())
         }
       }
     }

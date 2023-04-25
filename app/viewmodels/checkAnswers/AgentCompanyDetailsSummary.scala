@@ -45,7 +45,7 @@ object AgentCompanyDetailsSummary {
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.AgentCompanyDetailsController.onPageLoad(CheckMode).url
+              routes.AgentCompanyDetailsController.onPageLoad(CheckMode, answers.draftId).url
             )
               .withVisuallyHiddenText(messages("agentCompanyDetails.change.hidden"))
           )

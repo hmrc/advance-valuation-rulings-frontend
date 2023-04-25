@@ -20,71 +20,91 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.Configuration
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import controllers.actions._
+import actions.{DataRequiredAction, DataRetrievalAction, DataRetrievalActionProvider, IdentifierAction}
 import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
-import repositories.SessionRepository
+import queries.AllDocuments
+import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
 class IsThisFileConfidentialController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: IsThisFileConfidentialFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: IsThisFileConfidentialView
+  view: IsThisFileConfidentialView,
+  configuration: Configuration
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  private val maxFiles = configuration.get[Int]("upscan.maxFiles")
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+  private val form = formProvider()
+
+  def onPageLoad(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val result = for {
-          fileUploads   <- UploadSupportingDocumentPage.get()
-          theUpload     <- fileUploads.lastUpload
-          isConfidential = fileUploads.files.get(theUpload.uploadId).map(_.isConfidential)
-          preparedForm   = isConfidential.map(form.fill).getOrElse(form)
-        } yield Ok(view(preparedForm, mode))
+        val attachments = request.userAnswers.get(AllDocuments).getOrElse(Seq.empty)
 
-        result.getOrElse {
-          Redirect(
-            controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(None, None, None, mode)
-          )
+        if (index.position > attachments.size || index.position >= maxFiles) {
+          NotFound
+        } else {
+
+          if (request.userAnswers.get(UploadSupportingDocumentPage(index)).exists(_.isSuccessful)) {
+
+            val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage(index)) match {
+              case None        => form
+              case Some(value) => form.fill(value)
+            }
+
+            Ok(view(preparedForm, index, mode, draftId))
+          } else {
+            Redirect(
+              routes.UploadSupportingDocumentsController
+                .onPageLoad(index, mode, request.userAnswers.draftId, None, None)
+            )
+          }
         }
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            (value: Boolean) =>
-              for {
-                updatedAnswers <- UploadSupportingDocumentPage.modify(
-                                    (files: UploadedFiles) => files.setConfidentiality(value)
-                                  )
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(IsThisFileConfidentialPage, mode, updatedAnswers)(
-                  request.affinityGroup
-                )
-              )
-          )
+        val attachments = request.userAnswers.get(AllDocuments).getOrElse(Seq.empty)
 
+        if (index.position > attachments.size || index.position >= maxFiles) {
+          Future.successful(NotFound)
+        } else {
+
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                Future.successful(BadRequest(view(formWithErrors, index, mode, draftId))),
+              value =>
+                for {
+                  updatedAnswers <-
+                    Future
+                      .fromTry(request.userAnswers.set(IsThisFileConfidentialPage(index), value))
+                  _              <- userAnswersService.set(updatedAnswers)
+                } yield Redirect(
+                  navigator.nextPage(IsThisFileConfidentialPage(index), mode, updatedAnswers)(
+                    request.affinityGroup
+                  )
+                )
+            )
+        }
     }
 }

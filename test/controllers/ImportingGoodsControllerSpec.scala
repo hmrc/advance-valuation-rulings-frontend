@@ -31,14 +31,14 @@ class ImportingGoodsControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ImportingGoodsController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ImportingGoodsController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ImportingGoodsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
       }
     }
   }

@@ -23,17 +23,30 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
+import models.{DraftId, Mode}
+import navigation.Navigator
+import pages.ContactPagePage
 import views.html.ContactPageView
 
 class ContactPageController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
+  navigator: Navigator,
   val controllerComponents: MessagesControllerComponents,
   view: ContactPageView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData)(implicit request => Ok(view()))
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId))(implicit request => Ok(view(mode, draftId)))
+
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        Redirect(
+          navigator.nextPage(ContactPagePage, mode, request.userAnswers)(request.affinityGroup)
+        )
+    }
 }

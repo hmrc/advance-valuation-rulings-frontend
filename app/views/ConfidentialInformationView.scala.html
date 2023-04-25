@@ -20,22 +20,22 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukButton: GovukButton,
     govukTextarea: GovukTextarea,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    insetPara: InsetPara
+    insetPara: InsetPara,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("confidentialInformation.title"))) {
+@layout(pageTitle = title(form, messages("confidentialInformation.title")), draftId = Some(draftId)) {
 
 
-    @formHelper(action = routes.ConfidentialInformationController.onSubmit(mode)) {
+    @formHelper(action = routes.ConfidentialInformationController.onSubmit(mode, draftId: DraftId)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -65,10 +65,8 @@
                     .withAttribute("maxlength","8167")
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

@@ -140,7 +140,7 @@ class ApplicationViewModelSpec extends SpecBase {
         addressLine2 = Some("AgentCity"),
         addressLine3 = None,
         postcode = "postcode",
-        countryCode = "country:GB",
+        countryCode = "GB",
         phoneNumber = None
       )
       val agentApplication = application.copy(agent = Some(agent))
@@ -195,7 +195,7 @@ class ApplicationViewModelSpec extends SpecBase {
             Key(Text("checkYourAnswersForAgents.agent.address.label")),
             Value(
               HtmlContent(
-                "agent address line 1<br>AgentCity<br>postcode<br>Unknown"
+                "agent address line 1<br/>AgentCity<br/>postcode<br/>United Kingdom"
               )
             )
           )

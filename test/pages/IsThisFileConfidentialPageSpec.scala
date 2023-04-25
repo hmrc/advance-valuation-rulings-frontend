@@ -16,16 +16,17 @@
 
 package pages
 
+import models.Index
 import pages.behaviours.PageBehaviours
 
 class IsThisFileConfidentialPageSpec extends PageBehaviours {
 
   "IsThisFileConfidentialPage" - {
 
-    beRetrievable[Boolean](IsThisFileConfidentialPage)
+    beRetrievable[Boolean](IsThisFileConfidentialPage(Index(0)))
 
-    beSettable[Boolean](IsThisFileConfidentialPage)
+    beSettable[Boolean](IsThisFileConfidentialPage(Index(0)))
 
-    beRemovable[Boolean](IsThisFileConfidentialPage)
+    beRemovable[Boolean](IsThisFileConfidentialPage(Index(0)))
   }
 }

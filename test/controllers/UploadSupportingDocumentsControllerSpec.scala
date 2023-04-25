@@ -16,37 +16,473 @@
 
 package controllers
 
+import java.time.Instant
+
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import config.FrontendAppConfig
-import org.mockito.MockitoSugar.{mock, when}
+import models.{Index, NormalMode, UploadedFile}
+import models.upscan.UpscanInitiateResponse
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.Mockito.{verify, when}
+import org.mockito.MockitoSugar.{reset, times}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
+import pages.UploadSupportingDocumentPage
+import services.UserAnswersService
+import services.fileupload.FileService
+import views.html.UploadSupportingDocumentsView
 
-class UploadSupportingDocumentsControllerSpec extends SpecBase {
+class UploadSupportingDocumentsControllerSpec
+    extends SpecBase
+    with MockitoSugar
+    with BeforeAndAfterEach {
 
-  private val mockAppConf = mock[FrontendAppConfig]
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockFileService, mockUserAnswersService)
+  }
 
-  "UploadSupportingDocuments Controller" - {
-    "must return OK and the correct view for a GET" in {
+  private val mockFileService        = mock[FileService]
+  private val mockUserAnswersService = mock[UserAnswersService]
+
+  private val upscanInitiateResponse = UpscanInitiateResponse(
+    reference = "reference",
+    uploadRequest = UpscanInitiateResponse.UploadRequest(
+      href = "href",
+      fields = Map(
+        "field1" -> "value1",
+        "field2" -> "value2"
+      )
+    )
+  )
+
+  private val initiatedFile =
+    UploadedFile.Initiated("reference")
+
+  private val successfulFile = UploadedFile.Success(
+    reference = "reference",
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.now(),
+      checksum = "checksum",
+      size = 1337
+    )
+  )
+
+  private val failedFile = UploadedFile.Failure(
+    reference = "reference",
+    failureDetails = UploadedFile.FailureDetails(
+      failureReason = UploadedFile.FailureReason.Quarantine,
+      failureMessage = Some("failureMessage")
+    )
+  )
+
+  "when there is no existing file" - {
+
+    "must initiate a file upload and display the page" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[FileService].toInstance(mockFileService)
+        )
         .build()
 
-      running(application) {
-        when(mockAppConf.host).thenReturn("any-url")
+      val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+      when(mockFileService.initiate(any(), any(), any())(any()))
+        .thenReturn(Future.successful(upscanInitiateResponse))
+
+      val request = FakeRequest(
+        GET,
+        controllers.routes.UploadSupportingDocumentsController
+          .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+          .url
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        draftId = draftId,
+        upscanInitiateResponse = Some(upscanInitiateResponse),
+        errorMessage = None
+      )(messages(application), request).toString
+
+      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+    }
+  }
+
+  "when there is an initiated file" - {
+
+    val userAnswers = emptyUserAnswers
+      .set(UploadSupportingDocumentPage(Index(0)), initiatedFile)
+      .success
+      .value
+
+    "when there is an error code" - {
+
+      "must initiate a file upload and display the page with errors" in {
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[FileService].toInstance(mockFileService)
+          )
+          .build()
+
+        val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+        when(mockFileService.initiate(any(), any(), any())(any()))
+          .thenReturn(Future.successful(upscanInitiateResponse))
 
         val request = FakeRequest(
           GET,
           controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(None, None, None, models.NormalMode)
+            .onPageLoad(Index(0), models.NormalMode, draftId, Some("errorCode"), None)
+            .url
+        )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          draftId = draftId,
+          upscanInitiateResponse = Some(upscanInitiateResponse),
+          errorMessage = Some(messages(application)("uploadSupportingDocuments.error.unknown"))
+        )(messages(application), request).toString
+
+        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+      }
+    }
+
+    "when there is no error code" - {
+
+      "when the key matches the file" - {
+
+        "must show the interstitial page" in {
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(
+              bind[FileService].toInstance(mockFileService)
+            )
+            .build()
+
+          val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+          val request = FakeRequest(
+            GET,
+            controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("reference"))
+              .url
+          )
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            draftId = draftId,
+            upscanInitiateResponse = None,
+            errorMessage = None
+          )(messages(application), request).toString
+
+          verify(mockFileService, times(0)).initiate(any(), any(), any())(any())
+        }
+      }
+
+      "when the key does not match the file" - {
+
+        "must initiate a file upload and display the page" in {
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(
+              bind[FileService].toInstance(mockFileService)
+            )
+            .build()
+
+          val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+          when(mockFileService.initiate(any(), any(), any())(any()))
+            .thenReturn(Future.successful(upscanInitiateResponse))
+
+          val request = FakeRequest(
+            GET,
+            controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("otherReference"))
+              .url
+          )
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            draftId = draftId,
+            upscanInitiateResponse = Some(upscanInitiateResponse),
+            errorMessage = None
+          )(messages(application), request).toString
+
+          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+        }
+      }
+
+      "when the key does not exist" - {
+
+        "must initiate a file upload and display the page" in {
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(
+              bind[FileService].toInstance(mockFileService)
+            )
+            .build()
+
+          val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+          when(mockFileService.initiate(any(), any(), any())(any()))
+            .thenReturn(Future.successful(upscanInitiateResponse))
+
+          val request = FakeRequest(
+            GET,
+            controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+              .url
+          )
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            draftId = draftId,
+            upscanInitiateResponse = Some(upscanInitiateResponse),
+            errorMessage = None
+          )(messages(application), request).toString
+
+          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+        }
+      }
+    }
+  }
+
+  "when there is a successful file" - {
+
+    val userAnswers = emptyUserAnswers
+      .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      .success
+      .value
+
+    "when the key matches the file" - {
+
+      "must redirect to the next page" in {
+
+        val onwardRoute = Call("GET", "/foo")
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[FileService].toInstance(mockFileService),
+            bind[Navigator].to(new FakeNavigator(onwardRoute))
+          )
+          .build()
+
+        val request = FakeRequest(
+          GET,
+          controllers.routes.UploadSupportingDocumentsController
+            .onPageLoad(
+              Index(0),
+              models.NormalMode,
+              draftId,
+              None,
+              Some(successfulFile.reference)
+            )
+            .url
+        )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockFileService, times(0)).initiate(any(), any(), any())(any())
+      }
+    }
+
+    "when the key does not match the file" - {
+
+      "must initiate a file upload and display the page" in {
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[FileService].toInstance(mockFileService)
+          )
+          .build()
+
+        val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+        when(mockFileService.initiate(any(), any(), any())(any()))
+          .thenReturn(Future.successful(upscanInitiateResponse))
+
+        val request = FakeRequest(
+          GET,
+          controllers.routes.UploadSupportingDocumentsController
+            .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("otherReference"))
             .url
         )
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          draftId = draftId,
+          upscanInitiateResponse = Some(upscanInitiateResponse),
+          errorMessage = None
+        )(messages(application), request).toString
+
+        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
       }
     }
+
+    "when there is no key" - {
+
+      "must initiate a file upload and display the page" in {
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[FileService].toInstance(mockFileService)
+          )
+          .build()
+
+        val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+        when(mockFileService.initiate(any(), any(), any())(any()))
+          .thenReturn(Future.successful(upscanInitiateResponse))
+
+        val request = FakeRequest(
+          GET,
+          controllers.routes.UploadSupportingDocumentsController
+            .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+            .url
+        )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          draftId = draftId,
+          upscanInitiateResponse = Some(upscanInitiateResponse),
+          errorMessage = None
+        )(messages(application), request).toString
+
+        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+      }
+    }
+  }
+
+  "when there is a failed file" - {
+
+    val userAnswers =
+      emptyUserAnswers.set(UploadSupportingDocumentPage(Index(0)), failedFile).success.value
+
+    "must initiate a file upload and redirect back to the page with the relevant error code" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[FileService].toInstance(mockFileService)
+        )
+        .build()
+
+      when(mockFileService.initiate(any(), any(), any())(any()))
+        .thenReturn(Future.successful(upscanInitiateResponse))
+
+      val request = FakeRequest(
+        GET,
+        controllers.routes.UploadSupportingDocumentsController
+          .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("key"))
+          .url
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(0), models.NormalMode, draftId, Some("Quarantine"), Some("key"))
+        .url
+
+      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+    }
+  }
+
+  "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
+
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      .configure(
+        "upscan.maxFiles" -> 1
+      )
+      .build()
+
+    when(mockFileService.initiate(any(), any(), any())(any()))
+      .thenReturn(Future.successful(upscanInitiateResponse))
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(1), models.NormalMode, draftId, None, Some("key"))
+        .url
+    )
+
+    val result = route(application, request).value
+
+    status(result) mustEqual NOT_FOUND
+  }
+
+  "must return NOT_FOUND when the index is greater than the greatest existing index + 1" in {
+
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      .configure(
+        "upscan.maxFiles" -> 5
+      )
+      .build()
+
+    when(mockFileService.initiate(any(), any(), any())(any()))
+      .thenReturn(Future.successful(upscanInitiateResponse))
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(1), models.NormalMode, draftId, None, Some("key"))
+        .url
+    )
+
+    val result = route(application, request).value
+
+    status(result) mustEqual NOT_FOUND
+  }
+
+  "must redirect to the JourneyRecovery page when there are no user answers" in {
+
+    val application = applicationBuilder(userAnswers = None)
+      .overrides(
+        bind[FileService].toInstance(mockFileService)
+      )
+      .build()
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+        .url
+    )
+
+    val result = route(application, request).value
+
+    status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+
+    verify(mockFileService, times(0)).initiate(any(), any(), any())(any())
   }
 }
