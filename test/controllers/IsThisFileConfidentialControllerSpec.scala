@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.time.Instant
+
 import scala.concurrent.Future
 
 import play.api.inject.bind
@@ -25,12 +27,12 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
-import models.{Done, Index, NormalMode}
+import models.{Done, Index, NormalMode, UploadedFile}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.IsThisFileConfidentialPage
+import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
@@ -41,13 +43,28 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
   private val formProvider = new IsThisFileConfidentialFormProvider()
   private val form         = formProvider()
 
+  private val successfulFile = UploadedFile.Success(
+    reference = "reference",
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.now(),
+      checksum = "checksum",
+      size = 1337
+    )
+  )
+
   private lazy val isThisFileConfidentialRoute =
     routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId).url
+
+  private val userAnswers =
+    emptyUserAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile).success.value
 
   "IsThisFileConfidential Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
       val request     = FakeRequest(GET, isThisFileConfidentialRoute)
       val result      = route(application, request).value
       val view        = application.injector.instanceOf[IsThisFileConfidentialView]
@@ -61,7 +78,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the form on a GET when the question has previously been answered" in {
 
-      val answers     = emptyUserAnswers.set(IsThisFileConfidentialPage(Index(0)), true).success.value
+      val answers     = userAnswers.set(IsThisFileConfidentialPage(Index(0)), true).success.value
       val application = applicationBuilder(userAnswers = Some(answers)).build()
       val request     = FakeRequest(GET, isThisFileConfidentialRoute)
       val view        = application.injector.instanceOf[IsThisFileConfidentialView]
@@ -189,6 +206,27 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       val result = route(application, request).value
 
       status(result) mustEqual NOT_FOUND
+    }
+
+    "must redirect to UploadSupportingDocument page if the file is not successful" in {
+
+      val failedFile  = UploadedFile.Failure(
+        reference = "reference",
+        failureDetails = UploadedFile.FailureDetails(
+          failureReason = UploadedFile.FailureReason.Quarantine,
+          failureMessage = Some("failureMessage")
+        )
+      )
+      val answers     =
+        emptyUserAnswers.set(UploadSupportingDocumentPage(Index(0)), failedFile).success.value
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+      val request     = FakeRequest(GET, isThisFileConfidentialRoute)
+      val result      = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
+        .onPageLoad(Index(0), NormalMode, draftId, None, None)
+        .url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {

@@ -28,6 +28,7 @@ sealed abstract class UploadedFile extends Product with Serializable {
   def reference: String
   def fileName: Option[String]
   def fileUrl: Option[String]
+  def isSuccessful: Boolean
 }
 
 object UploadedFile {
@@ -37,6 +38,7 @@ object UploadedFile {
   ) extends UploadedFile {
     override val fileName: Option[String] = None
     override val fileUrl: Option[String]  = None
+    override val isSuccessful: Boolean    = false
   }
 
   object Initiated {
@@ -53,6 +55,7 @@ object UploadedFile {
       Some(uploadDetails.fileName)
     override val fileUrl: Option[String]  =
       Some(downloadUrl)
+    override val isSuccessful: Boolean    = true
   }
 
   object Success {
@@ -66,6 +69,7 @@ object UploadedFile {
   ) extends UploadedFile {
     override val fileName: Option[String] = None
     override val fileUrl: Option[String]  = None
+    override val isSuccessful: Boolean    = false
   }
 
   object Failure {
