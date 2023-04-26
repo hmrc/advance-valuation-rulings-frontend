@@ -28,6 +28,7 @@ import uk.gov.hmrc.objectstore.client.{Md5Hash, Path}
 import uk.gov.hmrc.objectstore.client.config.ObjectStoreClientConfig
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
+import config.Service
 import connectors.UpscanConnector
 import models.{Done, DraftId, Index, Mode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
@@ -46,7 +47,8 @@ class FileService @Inject() (
 )(implicit ec: ExecutionContext) {
 
   private val host: String            = configuration.get[String]("host")
-  private val callbackBaseUrl: String = configuration.get[String]("upscan.callbackBaseUrl")
+  private val callbackBaseUrl: String =
+    configuration.get[Service]("microservice.services.advance-valuation-rulings-frontend")
   private val minimumFileSize: Long   = configuration.underlying.getBytes("upscan.minFileSize")
   private val maximumFileSize: Long   = configuration.underlying.getBytes("upscan.maxFileSize")
 
