@@ -45,10 +45,13 @@ object ApplicationSummary {
       case AffinityGroup.Individual                         =>
         (
           IndividualApplicantSummary(userAnswers),
-          IndividualEoriDetailsSummary(???, userAnswers.draftId)
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
       case AffinityGroup.Organisation | AffinityGroup.Agent =>
-        (AgentSummary(userAnswers), BusinessEoriDetailsSummary(???, userAnswers.draftId))
+        (
+          AgentSummary(userAnswers),
+          BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+        )
       case unexpected                                       =>
         logger.error(s"Unsupported affinity group [$unexpected] encountered")
         throw UnsupportedAffinityGroup("Unexpected affinity group")

@@ -22,7 +22,6 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -78,7 +77,7 @@ class CheckRegisteredDetailsControllerSpec
     )
 
     val userAnswers = emptyUserAnswers
-      .set(CheckRegisteredDetailsPage, ???)
+      .set(CheckRegisteredDetailsPage, true)
       .success
       .value
 
@@ -179,11 +178,6 @@ class CheckRegisteredDetailsControllerSpec
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
-
-      val userAnswers = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, ???)
-        .success
-        .value
 
       when(mockUserAnswersService.get(any())(any()))
         .thenReturn(Future.successful(Some(userAnswers)))
