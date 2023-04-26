@@ -16,38 +16,52 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, DraftId, EoriNumber, UserAnswers}
-import pages.CheckRegisteredDetailsPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, Country, DraftId, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object CheckRegisteredDetailsForAgentsSummary {
 
-  private def registeredNameRow(answer: Boolean, draftId: DraftId)(implicit
+  private def registeredNameRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
-  ): SummaryListRow = ???
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswersForAgents.business.name.label",
+      value = ValueViewModel(HtmlFormat.escape(details.CDSFullName).body),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
+        )
+          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.business.name.hidden"))
+      )
+    )
 
-  private def registeredAddressRow(answer: Boolean, draftId: DraftId)(implicit
+  private def registeredAddressRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.business.address.label",
       value = ValueViewModel(
-        // HtmlContent(
-        // Html(
-        // s"${HtmlFormat.escape(answer.streetAndNumber).body}<br>" +
-        //   s"${HtmlFormat.escape(answer.city).body}<br>" +
-        //   answer.postalCode
-        //     .map(value => s"${HtmlFormat.escape(value).body}<br>")
-        //     .getOrElse("") +
-        //   s"${HtmlFormat.escape(answer.country).body}"
-        ???
-        // )
-        // )
+        HtmlContent(
+          Html(
+            s"${HtmlFormat.escape(details.CDSEstablishmentAddress.streetAndNumber).body}<br>" +
+              s"${HtmlFormat.escape(details.CDSEstablishmentAddress.city).body}<br>" +
+              details.CDSEstablishmentAddress.postalCode
+                .map(value => s"${HtmlFormat.escape(value).body}<br>")
+                .getOrElse("") +
+              HtmlFormat.escape(
+                Country.fromCountryCode(details.CDSEstablishmentAddress.countryCode).name
+              )
+          )
+        )
       ),
       actions = Seq(
         ActionItemViewModel(
@@ -73,18 +87,17 @@ object CheckRegisteredDetailsForAgentsSummary {
       )
     )
 
-  def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    for {
-      contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
-      number          = registeredNumberRow(EoriNumber(???), userAnswer.draftId)
-    } yield {
-      val personalDetails = if (???) {
-        val name    = registeredNameRow(contactDetails, userAnswer.draftId)
-        val address = registeredAddressRow(contactDetails, userAnswer.draftId)
-        Seq(name, address)
-      } else {
-        Nil
-      }
-      number +: personalDetails
+  def rows(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
+    messages: Messages
+  ): Option[Seq[SummaryListRow]] = {
+    val number          = registeredNumberRow(EoriNumber(details.EORINo), draftId)
+    val personalDetails = if (details.consentToDisclosureOfPersonalData) {
+      val name    = registeredNameRow(details, draftId)
+      val address = registeredAddressRow(details, draftId)
+      Seq(name, address)
+    } else {
+      Nil
     }
+    Some(number +: personalDetails)
+  }
 }

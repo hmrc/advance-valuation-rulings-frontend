@@ -47,7 +47,7 @@ class CheckRegisteredDetailsControllerSpec
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider(AffinityGroup.Individual, true)
+  val form         = formProvider()
 
   "CheckRegisteredDetails Controller" - {
 

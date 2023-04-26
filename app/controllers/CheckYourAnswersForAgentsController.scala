@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import models.DraftId
+import models.TraderDetailsWithCountryCode
 import models.requests._
 import pages.Page
 import pages.WhatIsYourRoleAsImporterPage
@@ -52,7 +53,9 @@ class CheckYourAnswersForAgentsController @Inject() (
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen isAgent andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
+        val traderDetails: Future[TraderDetailsWithCountryCode] = ???
+
+        val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup, ???)
 
         request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
           case Some(role) => Ok(view(applicationSummary, role, draftId))

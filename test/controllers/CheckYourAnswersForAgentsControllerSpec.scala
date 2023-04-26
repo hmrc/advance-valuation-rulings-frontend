@@ -46,9 +46,20 @@ class CheckYourAnswersForAgentsControllerSpec
 
   private val userAnswers = emptyUserAnswers
 
-  private val mockSubmissionService = mock[SubmissionService]
-
-  override def beforeEach(): Unit = {
+  private val mockSubmissionService                           = mock[SubmissionService]
+  private val registeredDetails: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = EoriNumber,
+    consentToDisclosureOfPersonalData = true,
+    CDSFullName = RegisteredName,
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = StreetAndNumber,
+      city = City,
+      countryCode = country,
+      postalCode = Some(Postcode)
+    ),
+    contactInformation = None
+  )
+  override def beforeEach(): Unit                             = {
     Mockito.reset(mockSubmissionService)
     super.beforeEach()
   }
@@ -56,6 +67,7 @@ class CheckYourAnswersForAgentsControllerSpec
   "Check Your Answers for Agents Controller" - {
 
     "must return OK and the correct view for a GET as Employee of Organisation" in {
+
       val ua: UserAnswers =
         userAnswers.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg).get
 
@@ -70,7 +82,7 @@ class CheckYourAnswersForAgentsControllerSpec
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-        val list = ApplicationSummary(ua, AffinityGroup.Organisation)
+        val list = ApplicationSummary(ua, AffinityGroup.Organisation, registeredDetails)
 
         status(result) mustEqual OK
 
@@ -99,7 +111,7 @@ class CheckYourAnswersForAgentsControllerSpec
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-        val list = ApplicationSummary(ua, AffinityGroup.Organisation)
+        val list = ApplicationSummary(ua, AffinityGroup.Organisation, registeredDetails)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(

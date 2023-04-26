@@ -27,6 +27,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
+import models.TraderDetails
+import models.TraderDetailsWithCountryCode
 import models.requests._
 import pages.Page
 import services.SubmissionService
@@ -48,10 +50,16 @@ class CheckYourAnswersController @Inject() (
   private val logger = Logger(this.getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
-        Ok(view(applicationSummary, draftId))
+        val traderDetails: Future[TraderDetailsWithCountryCode] = ???
+
+        traderDetails.map {
+          traderDetails =>
+            val applicationSummary =
+              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
+            Ok(view(applicationSummary, draftId))
+        }
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =

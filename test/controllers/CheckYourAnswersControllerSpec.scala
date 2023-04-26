@@ -41,7 +41,19 @@ class CheckYourAnswersControllerSpec
     with MockitoSugar
     with BeforeAndAfterEach {
 
-  private val mockSubmissionService = mock[SubmissionService]
+  private val registeredDetails: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = EoriNumber,
+    consentToDisclosureOfPersonalData = true,
+    CDSFullName = RegisteredName,
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = StreetAndNumber,
+      city = City,
+      countryCode = country,
+      postalCode = Some(Postcode)
+    ),
+    contactInformation = None
+  )
+  private val mockSubmissionService                           = mock[SubmissionService]
 
   override def beforeEach(): Unit = {
     Mockito.reset(mockSubmissionService)
@@ -64,7 +76,7 @@ class CheckYourAnswersControllerSpec
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
-        val list = ApplicationSummary(userAnswers, AffinityGroup.Individual)
+        val list = ApplicationSummary(userAnswers, AffinityGroup.Individual, registeredDetails)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(list, draftId).toString

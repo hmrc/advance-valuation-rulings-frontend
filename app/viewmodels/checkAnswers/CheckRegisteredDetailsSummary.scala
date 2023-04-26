@@ -16,23 +16,25 @@
 
 package viewmodels.checkAnswers
 
-import controllers.routes
-import models.{CheckMode, DraftId, EoriNumber, UserAnswers}
-import pages.CheckRegisteredDetailsPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import controllers.routes
+import models.{CheckMode, Country, DraftId, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
+import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object CheckRegisteredDetailsSummary {
 
-  private def registeredNameRow(answer: Boolean, draftId: DraftId)(implicit
+  private def registeredNameRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.name.label",
-      value = ValueViewModel(HtmlFormat.escape(???).body),
+      value = ValueViewModel(HtmlFormat.escape(details.CDSFullName).body),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
@@ -42,27 +44,63 @@ object CheckRegisteredDetailsSummary {
       )
     )
 
-  private def registeredAddressRow(answer: Boolean, draftId: DraftId)(implicit
+  private def registeredAddressRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
-  ): SummaryListRow = ???
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswers.eori.address.label",
+      value = ValueViewModel(
+        HtmlContent(
+          Html(
+            s"${HtmlFormat.escape(details.CDSEstablishmentAddress.streetAndNumber).body}<br>" +
+              s"${HtmlFormat.escape(details.CDSEstablishmentAddress.city).body}<br>" +
+              details.CDSEstablishmentAddress.postalCode
+                .map(value => s"${HtmlFormat.escape(value).body}<br>")
+                .getOrElse("") +
+              HtmlFormat.escape(
+                Country.fromCountryCode(details.CDSEstablishmentAddress.countryCode).name
+              )
+          )
+        )
+      ),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
+        )
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.address.change.hidden"))
+      )
+    )
 
   private def registeredNumberRow(eoriNumber: EoriNumber, draftId: DraftId)(implicit
     messages: Messages
-  ) = ???
+  ) =
+    SummaryListRowViewModel(
+      key = "checkYourAnswers.eori.number.label",
+      value = ValueViewModel(HtmlFormat.escape(eoriNumber.value).body),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
+        )
+          .withVisuallyHiddenText(messages("checkRegisteredDetails.eori.change.hidden"))
+      )
+    )
 
-  def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    for {
-      contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
-      number          = registeredNumberRow(EoriNumber(???), userAnswer.draftId)
-    } yield number +: getPersonalDetails(???, userAnswer.draftId)
+  def rows(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
+    messages: Messages
+  ): Option[Seq[SummaryListRow]] = {
+    val number = registeredNumberRow(EoriNumber(details.EORINo), draftId)
+    Some(number +: getPersonalDetails(details, draftId))
+  }
 
   private def getPersonalDetails(
-    registeredDetails: Boolean,
+    details: TraderDetailsWithCountryCode,
     draftId: DraftId
   )(implicit messages: Messages) =
-    if (???) {
-      val name    = registeredNameRow(registeredDetails, draftId)
-      val address = registeredAddressRow(registeredDetails, draftId)
+    if (details.consentToDisclosureOfPersonalData) {
+      val name    = registeredNameRow(details, draftId)
+      val address = registeredAddressRow(details, draftId)
       Seq(name, address)
     } else {
       Nil
