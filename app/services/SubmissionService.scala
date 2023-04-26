@@ -24,6 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import connectors.BackendConnector
 import logging.Logging
+import models.Done
 import models.requests.{ApplicationId, ApplicationRequest, ApplicationSubmissionResponse}
 import services.email.EmailService
 
@@ -45,15 +46,15 @@ class SubmissionService @Inject() (
       contactDetails      = applicationRequest.contact
       _                  <- userAnswersService
                               .clear(applicationRequest.draftId)
-                              .map(_ => ())
                               .recover(logError(applicationId, "Failed to clear user answers")(_))
       _                  <- emailService
                               .sendConfirmationEmail(contactDetails.email, contactDetails.name)
-                              .map(_ => ())
                               .recover(logError(applicationId, "Failed to send an email")(_))
     } yield submissionResponse
 
-  private def logError(applicationId: ApplicationId, message: String): Throwable => Unit = {
-    err: Throwable => logger.warn(s"$message for application $applicationId", err)
+  private def logError(applicationId: ApplicationId, message: String): Throwable => Done = {
+    err: Throwable =>
+      logger.warn(s"$message for application $applicationId", err)
+      Done
   }
 }
