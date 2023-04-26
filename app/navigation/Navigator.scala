@@ -345,14 +345,26 @@ class Navigator @Inject() () {
       case Some(true)  =>
         ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
-        DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
+        if (numberOfDocuments > 0) {
+          controllers.routes.UploadAnotherSupportingDocumentController
+            .onPageLoad(NormalMode, userAnswers.draftId)
+        } else {
+          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        }
     }
 
   private def confidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ConfidentialInformationPage) match {
       case None    => ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) =>
-        DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
+        if (numberOfDocuments > 0) {
+          controllers.routes.UploadAnotherSupportingDocumentController
+            .onPageLoad(NormalMode, userAnswers.draftId)
+        } else {
+          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        }
     }
 
   private def doYouWantToUploadDocumentsPage(

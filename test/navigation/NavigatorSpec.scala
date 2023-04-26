@@ -353,19 +353,46 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
 
-        "and navigate to DoYouWantToUploadDocuments when No" in {
-          val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
-          navigator.nextPage(
-            HasConfidentialInformationPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
+        "when no" - {
 
+          "when there are no documents" - {
+
+            "must navigate to DoYouWantToUploadDocuments" in {
+              val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
+              navigator.nextPage(
+                HasConfidentialInformationPage,
+                NormalMode,
+                userAnswers
+              ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
+            }
+          }
+
+          "when there are existing documents" - {
+
+            "must navigate to UploadAnotherSupportingDocument" in {
+              val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
+                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+                .success
+                .value
+                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .success
+                .value
+              navigator.nextPage(
+                HasConfidentialInformationPage,
+                NormalMode,
+                userAnswers
+              ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(
+                NormalMode,
+                draftId
+              )
+            }
+          }
         }
       }
 
       "ConfidentialInformation page" - {
-        "navigate to DoYouWantToUploadDocuments page when all values are set" in {
+
+        "navigate to DoYouWantToUploadDocuments page when there are no documents" in {
           val userAnswers =
             userAnswersWith(ConfidentialInformationPage, "top secret")
           navigator.nextPage(
@@ -373,6 +400,22 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate to UploadAnotherSupportingDocument page when there are existing documents" in {
+          val userAnswers =
+            userAnswersWith(ConfidentialInformationPage, "top secret")
+              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .success
+              .value
+              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .success
+              .value
+          navigator.nextPage(
+            ConfidentialInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to self when no values are set" in {
