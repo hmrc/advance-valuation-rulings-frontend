@@ -32,7 +32,6 @@ import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.Navigator
-import org.apache.commons.lang3.StringUtils
 import pages.CheckRegisteredDetailsPage
 import services.UserAnswersService
 import views.html.CheckRegisteredDetailsView

@@ -32,7 +32,7 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
     CDSEstablishmentAddress = CDSEstablishmentAddress(
       streetAndNumber = StreetAndNumber,
       city = City,
-      countryCode = country,
+      countryCode = countryCode,
       postalCode = Some(Postcode)
     ),
     contactInformation = None
@@ -40,15 +40,6 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
 
   "IndividualEoriDetailsSummary" - {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
-
-    "when given empty user answers" - {
-      val summary = IndividualEoriDetailsSummary(registeredDetails, DraftId(0))
-      val rows    = summary.rows.rows
-
-      "must create no rows" in {
-        rows mustBe empty
-      }
-    }
 
     "when the user has answers for all relevant pages" - {
       val summary = IndividualEoriDetailsSummary(registeredDetails, DraftId(0))

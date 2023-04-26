@@ -24,11 +24,11 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import connectors.BackendConnector
 import com.google.inject.Inject
+import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
-import models.requests._
 import models._
+import models.requests._
 import pages.Page
 import pages.WhatIsYourRoleAsImporterPage
 import services.SubmissionService
@@ -44,7 +44,7 @@ class CheckYourAnswersForAgentsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersForAgentsView,
   submissionService: SubmissionService,
-    backendConnector: BackendConnector
+  backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -52,56 +52,63 @@ class CheckYourAnswersForAgentsController @Inject() (
   private val logger = Logger(this.getClass)
 
   private def getTraderDetails(
-    handleSuccess: TraderDetailsWithCountryCode => play.api.mvc.Result
+    handleSuccess: TraderDetailsWithCountryCode => Future[play.api.mvc.Result]
   )(implicit request: DataRequest[AnyContent]) =
     backendConnector
       .getTraderDetails(
         AcknowledgementReference(request.userAnswers.draftId),
         EoriNumber(request.eoriNumber)
       )
-      .map {
+      .flatMap {
         case Right(traderDetails) =>
           handleSuccess(traderDetails)
         case Left(backendError)   =>
           logger.error(s"Failed to get trader details from backend: $backendError")
-          Redirect(routes.JourneyRecoveryController.onPageLoad())
+          Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       }
-
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
       implicit request =>
-       
-        getTraderDetails { traderDetails =>
-          val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
+        getTraderDetails {
+          traderDetails =>
+            val applicationSummary =
+              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
 
-          request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-            case Some(role) => Ok(view(applicationSummary, role, draftId))
-            case None       =>
-              logger.warn(
-                "Invalid journey: User navigated to check your answers without specifying agent role"
-              )
-              Redirect(routes.JourneyRecoveryController.onPageLoad())
-          }
+            request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+              case Some(role) => Future.successful(Ok(view(applicationSummary, role, draftId)))
+              case None       =>
+                logger.warn(
+                  "Invalid journey: User navigated to check your answers without specifying agent role"
+                )
+                Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+            }
         }
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
     (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        ApplicationRequest(request.userAnswers, request.affinityGroup) match {
-          case Invalid(errors: cats.data.NonEmptyList[Page]) =>
-            logger.error(s"Failed to create application request: ${errors.toList.mkString(", ")}}")
-            Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-          case Valid(applicationRequest)                     =>
-            submissionService
-              .submitApplication(applicationRequest, request.userId)
-              .map {
-                response =>
-                  Redirect(
-                    routes.ApplicationCompleteController.onPageLoad(response.applicationId.toString)
-                  )
-              }
-        }
+        getTraderDetails(
+          traderDetails =>
+            ApplicationRequest(request.userAnswers, request.affinityGroup, traderDetails) match {
+              case Invalid(errors: cats.data.NonEmptyList[Page]) =>
+                logger.error(
+                  s"Failed to create application request: ${errors.toList.mkString(", ")}}"
+                )
+                Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+              case Valid(applicationRequest)                     =>
+                submissionService
+                  .submitApplication(applicationRequest, request.userId)
+                  .map {
+                    response =>
+                      Redirect(
+                        routes.ApplicationCompleteController
+                          .onPageLoad(response.applicationId.toString)
+                      )
+                  }
+            }
+        )
+
     }
 }

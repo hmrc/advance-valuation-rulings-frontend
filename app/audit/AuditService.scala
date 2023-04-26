@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import models.WhatIsYourRoleAsImporter
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
 import models.events.{AgentIndicatorEvent, UserTypeEvent}
-import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
+import models.requests.{DataRequest, IdentifierRequest}
 
 @Singleton
 class AuditService @Inject() (auditConnector: AuditConnector) {

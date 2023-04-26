@@ -25,10 +25,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
+import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import models._
 import models.DraftId
-import models.TraderDetails
-import models.TraderDetailsWithCountryCode
 import models.requests._
 import pages.Page
 import services.SubmissionService
@@ -42,19 +42,34 @@ class CheckYourAnswersController @Inject() (
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView,
-  submissionService: SubmissionService
+  submissionService: SubmissionService,
+  backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   private val logger = Logger(this.getClass)
 
+  private def getTraderDetails(
+    handleSuccess: TraderDetailsWithCountryCode => play.api.mvc.Result
+  )(implicit request: DataRequest[AnyContent]) =
+    backendConnector
+      .getTraderDetails(
+        AcknowledgementReference(request.userAnswers.draftId),
+        EoriNumber(request.eoriNumber)
+      )
+      .map {
+        case Right(traderDetails) =>
+          handleSuccess(traderDetails)
+        case Left(backendError)   =>
+          logger.error(s"Failed to get trader details from backend: $backendError")
+          Redirect(routes.JourneyRecoveryController.onPageLoad())
+      }
+
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val traderDetails: Future[TraderDetailsWithCountryCode] = ???
-
-        traderDetails.map {
+        getTraderDetails {
           traderDetails =>
             val applicationSummary =
               ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
@@ -65,7 +80,7 @@ class CheckYourAnswersController @Inject() (
   def onSubmit(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        ApplicationRequest(request.userAnswers, request.affinityGroup) match {
+        ApplicationRequest(request.userAnswers, request.affinityGroup, ???) match {
           case Invalid(errors: cats.data.NonEmptyList[Page]) =>
             logger.warn(s"Failed to create application request: ${errors.toList.mkString(", ")}}")
             Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))

@@ -45,9 +45,11 @@ class SubmissionService @Inject() (
       contactDetails      = applicationRequest.contact
       _                  <- userAnswersService
                               .clear(applicationRequest.draftId)
+                              .map(_ => ())
                               .recover(logError(applicationId, "Failed to clear user answers")(_))
       _                  <- emailService
                               .sendConfirmationEmail(contactDetails.email, contactDetails.name)
+                              .map(_ => ())
                               .recover(logError(applicationId, "Failed to send an email")(_))
     } yield submissionResponse
 

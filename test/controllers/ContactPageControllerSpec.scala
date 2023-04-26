@@ -16,19 +16,14 @@
 
 package controllers
 
-import scala.concurrent.Future
-
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.{Done, NormalMode}
+import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import services.UserAnswersService
 import views.html.ContactPageView
 
 class ContactPageControllerSpec extends SpecBase {

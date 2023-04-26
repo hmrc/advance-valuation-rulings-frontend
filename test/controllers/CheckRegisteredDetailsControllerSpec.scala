@@ -123,6 +123,7 @@ class CheckRegisteredDetailsControllerSpec
         s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
 
           val mockUserAnswersService = mock[UserAnswersService]
+          val mockBackendConnector   = mock[BackendConnector]
           val previousUserAnswers    = emptyUserAnswers
             .set(
               CheckRegisteredDetailsPage,
@@ -133,10 +134,15 @@ class CheckRegisteredDetailsControllerSpec
 
           when(mockUserAnswersService.get(any())(any()))
             .thenReturn(Future.successful(Some(previousUserAnswers)))
+          when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
+            .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
 
           val application =
             applicationBuilder(userAnswers = Some(previousUserAnswers))
-              .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+              .overrides(
+                bind[UserAnswersService].toInstance(mockUserAnswersService),
+                bind[BackendConnector].toInstance(mockBackendConnector)
+              )
               .build()
 
           running(application) {
@@ -178,13 +184,19 @@ class CheckRegisteredDetailsControllerSpec
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
+      val mockBackendConnector   = mock[BackendConnector]
 
+      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
       when(mockUserAnswersService.get(any())(any()))
         .thenReturn(Future.successful(Some(userAnswers)))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[BackendConnector].toInstance(mockBackendConnector)
+          )
           .build()
 
       running(application) {

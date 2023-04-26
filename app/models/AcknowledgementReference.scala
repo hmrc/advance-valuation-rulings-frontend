@@ -19,8 +19,8 @@ import org.apache.commons.lang3.StringUtils
 final case class AcknowledgementReference(value: String)
 
 object AcknowledgementReference {
-  private val AckRefLength                              = 32
-  private val AckRefPad                                 = "0"
+  private val AckRefLength = 32
+  private val AckRefPad    = "0"
 
   def apply(draftId: DraftId): AcknowledgementReference = AcknowledgementReference(
     StringUtils
