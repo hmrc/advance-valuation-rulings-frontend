@@ -122,7 +122,7 @@ class CheckYourAnswersControllerSpec
 
         running(application) {
           val request =
-            FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit(draftId).url)
+            FakeRequest(POST, routes.CheckYourAnswersController.onSubmit(draftId).url)
 
           val result = route(application, request).value
 
@@ -133,6 +133,36 @@ class CheckYourAnswersControllerSpec
         }
       }
   }
+
+  "must redirect to journey Recovery when unable to fetch trader details" in
+    new CheckYourAnswersControllerSpecSetup {
+      val applicationId = ApplicationId(1)
+      val response      = ApplicationSubmissionResponse(applicationId)
+
+      when(mockSubmissionService.submitApplication(any(), any())(any()))
+        .thenReturn(Future.successful(response))
+      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Left(BackendError(500, "error"))))
+
+      val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        .overrides(
+          bind[SubmissionService].toInstance(mockSubmissionService),
+          bind[BackendConnector].toInstance(mockBackendConnector)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, routes.CheckYourAnswersController.onSubmit(draftId).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController
+          .onPageLoad()
+          .url
+      }
+    }
 }
 
 trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues {
