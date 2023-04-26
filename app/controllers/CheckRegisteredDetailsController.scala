@@ -54,18 +54,12 @@ class CheckRegisteredDetailsController @Inject() (
 
   private val logger = Logger(this.getClass)
 
-  private val AckRefLength = 32
-  private val AckRefPad    = "0"
-
   private def getTraderDetails(
     handleSuccess: TraderDetailsWithCountryCode => Result
   )(implicit request: DataRequest[AnyContent]) =
     backendConnector
       .getTraderDetails(
-        AcknowledgementReference(
-          StringUtils
-            .rightPad(request.userAnswers.draftId.toString, AckRefLength, AckRefPad)
-        ),
+        AcknowledgementReference(request.userAnswers.draftId),
         EoriNumber(request.eoriNumber)
       )
       .map {

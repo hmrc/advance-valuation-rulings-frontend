@@ -24,11 +24,11 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.BackendConnector
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
-import models.DraftId
-import models.TraderDetailsWithCountryCode
 import models.requests._
+import models._
 import pages.Page
 import pages.WhatIsYourRoleAsImporterPage
 import services.SubmissionService
@@ -43,27 +43,46 @@ class CheckYourAnswersForAgentsController @Inject() (
   isAgent: IdentifyAgentAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersForAgentsView,
-  submissionService: SubmissionService
+  submissionService: SubmissionService,
+    backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   private val logger = Logger(this.getClass)
 
+  private def getTraderDetails(
+    handleSuccess: TraderDetailsWithCountryCode => play.api.mvc.Result
+  )(implicit request: DataRequest[AnyContent]) =
+    backendConnector
+      .getTraderDetails(
+        AcknowledgementReference(request.userAnswers.draftId),
+        EoriNumber(request.eoriNumber)
+      )
+      .map {
+        case Right(traderDetails) =>
+          handleSuccess(traderDetails)
+        case Left(backendError)   =>
+          logger.error(s"Failed to get trader details from backend: $backendError")
+          Redirect(routes.JourneyRecoveryController.onPageLoad())
+      }
+
+
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen isAgent andThen getData(draftId) andThen requireData) {
+    (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val traderDetails: Future[TraderDetailsWithCountryCode] = ???
+       
+        getTraderDetails { traderDetails =>
+          val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
 
-        val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup, ???)
-
-        request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-          case Some(role) => Ok(view(applicationSummary, role, draftId))
-          case None       =>
-            logger.warn(
-              "Invalid journey: User navigated to check your answers without specifying agent role"
-            )
-            Redirect(routes.JourneyRecoveryController.onPageLoad())
+          request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+            case Some(role) => Ok(view(applicationSummary, role, draftId))
+            case None       =>
+              logger.warn(
+                "Invalid journey: User navigated to check your answers without specifying agent role"
+              )
+              Redirect(routes.JourneyRecoveryController.onPageLoad())
+          }
         }
     }
 
