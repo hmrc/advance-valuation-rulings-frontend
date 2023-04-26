@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.{CheckRegisteredDetails, Done}
+import models.Done
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -37,19 +37,8 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val checkRegisteredDetailRoute           =
+  lazy val checkRegisteredDetailRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url
-  val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
-    value = false,
-    eori = "GB123456789012345",
-    consentToDisclosureOfPersonalData = true,
-    name = "Test Name",
-    streetAndNumber = "Test Street 1",
-    city = "Test City",
-    country = "Test Country",
-    postalCode = Some("Test Postal Code"),
-    phoneNumber = Some("Test Telephone Number")
-  )
 
   "EORIBeUpToDate Controller" - {
 
@@ -73,11 +62,10 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      val userAnswers: models.UserAnswers = ???
-      // val userAnswers = emptyUserAnswers
-      //   .set(CheckRegisteredDetailsPage, registeredDetails)
-      //   .success
-      //   .value
+      val userAnswers = emptyUserAnswers
+        .set(CheckRegisteredDetailsPage, false)
+        .success
+        .value
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
@@ -106,12 +94,11 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when 'no' is submitted" in {
 
-      val mockUserAnswersService          = mock[UserAnswersService]
-      val userAnswers: models.UserAnswers = ???
-      // val userAnswers            = emptyUserAnswers
-      //   .set(CheckRegisteredDetailsPage, registeredDetails)
-      //   .success
-      //   .value
+      val mockUserAnswersService = mock[UserAnswersService]
+      val userAnswers            = emptyUserAnswers
+        .set(CheckRegisteredDetailsPage, false)
+        .success
+        .value
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(

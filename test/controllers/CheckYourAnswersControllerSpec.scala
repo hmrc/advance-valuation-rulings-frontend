@@ -96,17 +96,6 @@ class CheckYourAnswersControllerSpec
         ua <- ua.set(
                 CheckRegisteredDetailsPage,
                 true
-                // CheckRegisteredDetails(
-                //   value = true,
-                //   eori = "eori",
-                //   consentToDisclosureOfPersonalData = true,
-                //   name = "name",
-                //   streetAndNumber = "streetAndNumber",
-                //   city = "city",
-                //   country = "country",
-                //   postalCode = Some("postalCode"),
-                //   phoneNumber = Some("phoneNumber")
-                // )
               )
         ua <- ua.set(
                 BusinessContactDetailsPage,

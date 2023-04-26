@@ -22,6 +22,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -46,21 +47,9 @@ class CheckRegisteredDetailsControllerSpec
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider()
+  val form         = formProvider(AffinityGroup.Individual, true)
 
   "CheckRegisteredDetails Controller" - {
-
-    val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
-      value = false,
-      eori = "GB123456789012345",
-      consentToDisclosureOfPersonalData = true,
-      name = "Test Name",
-      streetAndNumber = "Test Street 1",
-      city = "Test City",
-      country = "Test Country",
-      postalCode = Some("Test Postal Code"),
-      phoneNumber = Some("Test Telephone Number")
-    )
 
     val contactInformation = ContactInformation(
       personOfContact = Some("Test Person"),
@@ -76,20 +65,20 @@ class CheckRegisteredDetailsControllerSpec
     )
 
     val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
-      EORINo = registeredDetails.eori,
+      EORINo = "GB123456789012345",
       consentToDisclosureOfPersonalData = true,
-      CDSFullName = registeredDetails.name,
+      CDSFullName = "Test Name",
       CDSEstablishmentAddress = CDSEstablishmentAddress(
-        streetAndNumber = registeredDetails.streetAndNumber,
-        city = registeredDetails.city,
+        streetAndNumber = "Test Street 1",
+        city = "Test City",
         countryCode = "GB",
-        postalCode = registeredDetails.postalCode
+        postalCode = Some("Test Postal Code")
       ),
       contactInformation = Some(contactInformation)
     )
 
     val userAnswers = emptyUserAnswers
-      .set(CheckRegisteredDetailsPage, true)
+      .set(CheckRegisteredDetailsPage, ???)
       .success
       .value
 
@@ -121,8 +110,7 @@ class CheckRegisteredDetailsControllerSpec
 
           when(mockUserAnswersService.get(any())(any()))
             .thenReturn(Future.successful(Some(userAnswers)))
-
-          // when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+          when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
           running(application) {
             val request = FakeRequest(GET, checkRegisteredDetailsRoute)
@@ -136,34 +124,20 @@ class CheckRegisteredDetailsControllerSpec
         s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
 
           val mockUserAnswersService = mock[UserAnswersService]
-          val mockBackendConnector   = mock[BackendConnector]
-
-          val previousUserAnswers = emptyUserAnswers
+          val previousUserAnswers    = emptyUserAnswers
             .set(
               CheckRegisteredDetailsPage,
-              true
-              // registeredDetails.copy(consentToDisclosureOfPersonalData = consentValue)
+              consentValue
             )
             .success
             .value
 
           when(mockUserAnswersService.get(any())(any()))
             .thenReturn(Future.successful(Some(previousUserAnswers)))
-          when(
-            mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-          ) thenReturn Future
-            .successful(
-              Right(
-                traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = consentValue)
-              )
-            )
 
           val application =
             applicationBuilder(userAnswers = Some(previousUserAnswers))
-              .overrides(
-                bind[UserAnswersService].toInstance(mockUserAnswersService),
-                bind[BackendConnector].toInstance(mockBackendConnector)
-              )
+              .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
               .build()
 
           running(application) {
@@ -205,26 +179,18 @@ class CheckRegisteredDetailsControllerSpec
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
-      val mockBackendConnector   = mock[BackendConnector]
+
+      val userAnswers = emptyUserAnswers
+        .set(CheckRegisteredDetailsPage, ???)
+        .success
+        .value
 
       when(mockUserAnswersService.get(any())(any()))
-        .thenReturn(Future.successful(Some(emptyUserAnswers)))
-
-      when(
-        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future
-        .successful(
-          Right(
-            traderDetailsWithCountryCode
-          )
-        )
+        .thenReturn(Future.successful(Some(userAnswers)))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
           .build()
 
       running(application) {
@@ -298,7 +264,7 @@ class CheckRegisteredDetailsControllerSpec
       when(
         mockBackendConnector.getTraderDetails(any(), any())(any(), any())
       ) thenReturn Future.successful(
-        Left(BackendError(code = 500, message = "some backend error"))
+        Left(BackendError(code = 500, message = "some backed error"))
       )
 
       running(application) {

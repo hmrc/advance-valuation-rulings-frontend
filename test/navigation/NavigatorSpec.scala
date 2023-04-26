@@ -428,12 +428,13 @@ class NavigatorSpec extends SpecBase {
       }
 
       "CheckRegisteredDetailsPage must" - {
+
         "when Individual" - {
           val aff: AffinityGroup = AffinityGroup.Individual
 
           "navigate to ApplicationContactDetailsPage when Yes" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, true)
+              userAnswersWith(CheckRegisteredDetailsPage, value = true)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
@@ -443,7 +444,7 @@ class NavigatorSpec extends SpecBase {
 
           "and navigate to EORIBeUpToDatePage when No" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, false)
+              userAnswersWith(CheckRegisteredDetailsPage, value = false)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
@@ -457,7 +458,7 @@ class NavigatorSpec extends SpecBase {
 
           "navigate to BusinessContactDetailsPage when Yes" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, true)
+              userAnswersWith(CheckRegisteredDetailsPage, value = true)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,

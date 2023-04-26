@@ -21,29 +21,28 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 import base.SpecBase
-import models.CheckRegisteredDetails
-import models.UserAnswers
-import pages.CheckRegisteredDetailsPage
+import models.{CDSEstablishmentAddress, DraftId, TraderDetailsWithCountryCode}
 
 class IndividualEoriDetailsSummarySpec extends SpecBase {
 
-  private val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
-    value = true,
-    EoriNumber,
+  private val registeredDetails: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = EoriNumber,
     consentToDisclosureOfPersonalData = true,
-    RegisteredName,
-    StreetAndNumber,
-    City,
-    country,
-    Some(Postcode),
-    Some(phoneNumber)
+    CDSFullName = RegisteredName,
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = StreetAndNumber,
+      city = City,
+      countryCode = country,
+      postalCode = Some(Postcode)
+    ),
+    contactInformation = None
   )
 
   "IndividualEoriDetailsSummary" - {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
-      val summary = IndividualEoriDetailsSummary(emptyUserAnswers)
+      val summary = IndividualEoriDetailsSummary(registeredDetails, DraftId(0))
       val rows    = summary.rows.rows
 
       "must create no rows" in {
@@ -52,10 +51,8 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
     }
 
     "when the user has answers for all relevant pages" - {
-      val userAnswers: UserAnswers = ???
-      // emptyUserAnswers // .set(CheckRegisteredDetailsPage, registeredDetails).success.value
-      val summary                  = IndividualEoriDetailsSummary(userAnswers)
-      val rows                     = summary.rows.rows.map(row => (row.key, row.value))
+      val summary = IndividualEoriDetailsSummary(registeredDetails, DraftId(0))
+      val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
         rows.length mustBe 3
@@ -90,24 +87,19 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
     }
 
     "when consentToDisclosureOfPersonalData is false" - {
-      // val userAnswers = ???
-      // emptyUserAnswers
-      //   .set(
-      //     CheckRegisteredDetailsPage,
-      //     registeredDetails.copy(consentToDisclosureOfPersonalData = false)
-      //   )
-      //   .success
-      //   .value
-      // val summary     = IndividualEoriDetailsSummary(userAnswers)
-      // val rows        = summary.rows.rows.map(row => (row.key, row.value))
+      val summary = IndividualEoriDetailsSummary(
+        registeredDetails.copy(consentToDisclosureOfPersonalData = false),
+        DraftId(0)
+      )
+      val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "create only EORI number row" in {
-        // rows must contain theSameElementsAs Seq(
-        //   (
-        //     Key(Text("checkYourAnswers.eori.number.label")),
-        //     Value(Text(EoriNumber))
-        //   )
-        // )
+        rows must contain theSameElementsAs Seq(
+          (
+            Key(Text("checkYourAnswers.eori.number.label")),
+            Value(Text(EoriNumber))
+          )
+        )
       }
     }
   }

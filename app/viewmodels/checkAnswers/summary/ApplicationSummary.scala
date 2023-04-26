@@ -38,9 +38,12 @@ object ApplicationSummary {
   ): ApplicationSummary = {
     val (applicant, company) = affinityGroup match {
       case AffinityGroup.Individual                         =>
-        (IndividualApplicantSummary(userAnswers), IndividualEoriDetailsSummary(userAnswers))
+        (
+          IndividualApplicantSummary(userAnswers),
+          IndividualEoriDetailsSummary(???, userAnswers.draftId)
+        )
       case AffinityGroup.Organisation | AffinityGroup.Agent =>
-        (AgentSummary(userAnswers), BusinessEoriDetailsSummary(userAnswers))
+        (AgentSummary(userAnswers), BusinessEoriDetailsSummary(???, userAnswers.draftId))
       case unexpected                                       =>
         logger.error(s"Unsupported affinity group [$unexpected] encountered")
         throw UnsupportedAffinityGroup("Unexpected affinity group")

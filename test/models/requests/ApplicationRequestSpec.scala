@@ -178,17 +178,6 @@ class ApplicationRequestSpec
           ua <- ua.set(
                   CheckRegisteredDetailsPage,
                   true
-                  // CheckRegisteredDetails(
-                  //   value = true,
-                  //   eori = randomString,
-                  //   consentToDisclosureOfPersonalData = randomBoolean,
-                  //   name = randomString,
-                  //   streetAndNumber = randomString,
-                  //   city = randomString,
-                  //   country = country.code,
-                  //   postalCode = Some(randomString),
-                  //   phoneNumber = Some(randomString)
-                  // )
                 )
           ua <- ua.set(
                   BusinessContactDetailsPage,
@@ -256,7 +245,10 @@ class ApplicationRequestSpec
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
           ua <- ua.set(HasConfidentialInformationPage, false)
-          ua <- ua.set(CheckRegisteredDetailsPage, true)
+          ua <- ua.set(
+                  CheckRegisteredDetailsPage,
+                  true
+                )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
           ua <- ua.set(IsThereASaleInvolvedPage, true)
           ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
