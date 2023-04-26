@@ -136,7 +136,9 @@ class CheckRegisteredDetailsControllerSpec
         s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
 
           val mockUserAnswersService = mock[UserAnswersService]
-          val previousUserAnswers    = emptyUserAnswers
+          val mockBackendConnector   = mock[BackendConnector]
+
+          val previousUserAnswers = emptyUserAnswers
             .set(
               CheckRegisteredDetailsPage,
               true
@@ -147,10 +149,21 @@ class CheckRegisteredDetailsControllerSpec
 
           when(mockUserAnswersService.get(any())(any()))
             .thenReturn(Future.successful(Some(previousUserAnswers)))
+          when(
+            mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+          ) thenReturn Future
+            .successful(
+              Right(
+                traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = consentValue)
+              )
+            )
 
           val application =
             applicationBuilder(userAnswers = Some(previousUserAnswers))
-              .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+              .overrides(
+                bind[UserAnswersService].toInstance(mockUserAnswersService),
+                bind[BackendConnector].toInstance(mockBackendConnector)
+              )
               .build()
 
           running(application) {
@@ -192,19 +205,26 @@ class CheckRegisteredDetailsControllerSpec
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
-
-      val userAnswers: UserAnswers = ???
-      // val userAnswers = emptyUserAnswers
-      //   .set(CheckRegisteredDetailsPage, registeredDetails)
-      //   .success
-      //   .value
+      val mockBackendConnector   = mock[BackendConnector]
 
       when(mockUserAnswersService.get(any())(any()))
-        .thenReturn(Future.successful(Some(userAnswers)))
+        .thenReturn(Future.successful(Some(emptyUserAnswers)))
+
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(
+            traderDetailsWithCountryCode
+          )
+        )
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[BackendConnector].toInstance(mockBackendConnector)
+          )
           .build()
 
       running(application) {
