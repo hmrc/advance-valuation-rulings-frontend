@@ -22,7 +22,6 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -47,7 +46,7 @@ class CheckRegisteredDetailsControllerSpec
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider(AffinityGroup.Individual, true)
+  val form         = formProvider()
 
   "CheckRegisteredDetails Controller" - {
 
@@ -90,7 +89,7 @@ class CheckRegisteredDetailsControllerSpec
     )
 
     val userAnswers = emptyUserAnswers
-      .set(CheckRegisteredDetailsPage, registeredDetails)
+      .set(CheckRegisteredDetailsPage, true)
       .success
       .value
 
@@ -122,7 +121,8 @@ class CheckRegisteredDetailsControllerSpec
 
           when(mockUserAnswersService.get(any())(any()))
             .thenReturn(Future.successful(Some(userAnswers)))
-          when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+          // when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
           running(application) {
             val request = FakeRequest(GET, checkRegisteredDetailsRoute)
@@ -139,7 +139,8 @@ class CheckRegisteredDetailsControllerSpec
           val previousUserAnswers    = emptyUserAnswers
             .set(
               CheckRegisteredDetailsPage,
-              registeredDetails.copy(consentToDisclosureOfPersonalData = consentValue)
+              true
+              // registeredDetails.copy(consentToDisclosureOfPersonalData = consentValue)
             )
             .success
             .value
@@ -192,10 +193,11 @@ class CheckRegisteredDetailsControllerSpec
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      val userAnswers = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, registeredDetails)
-        .success
-        .value
+      val userAnswers: UserAnswers = ???
+      // val userAnswers = emptyUserAnswers
+      //   .set(CheckRegisteredDetailsPage, registeredDetails)
+      //   .success
+      //   .value
 
       when(mockUserAnswersService.get(any())(any()))
         .thenReturn(Future.successful(Some(userAnswers)))
@@ -276,7 +278,7 @@ class CheckRegisteredDetailsControllerSpec
       when(
         mockBackendConnector.getTraderDetails(any(), any())(any(), any())
       ) thenReturn Future.successful(
-        Left(BackendError(code = 500, message = "some backed error"))
+        Left(BackendError(code = 500, message = "some backend error"))
       )
 
       running(application) {

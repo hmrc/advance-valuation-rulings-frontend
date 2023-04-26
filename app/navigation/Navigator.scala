@@ -454,14 +454,15 @@ class Navigator @Inject() () {
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
-      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(registeredDetails) =>
-        if (registeredDetails.value) {
-          resolveAffinityGroup(affinityGroup)(
-            ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
-            BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-          )
-        } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
+      case None    => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => ???
+      // case Some(registeredDetails) =>
+      //   if (registeredDetails.value) {
+      //     resolveAffinityGroup(affinityGroup)(
+      //       ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
+      //       BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      //     )
+      //   } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =

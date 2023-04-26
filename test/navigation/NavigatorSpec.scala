@@ -428,24 +428,12 @@ class NavigatorSpec extends SpecBase {
       }
 
       "CheckRegisteredDetailsPage must" - {
-        val data = CheckRegisteredDetails(
-          value = true,
-          eori = "GB1234567890",
-          consentToDisclosureOfPersonalData = true,
-          name = "name",
-          streetAndNumber = "street",
-          city = "city",
-          postalCode = Some("postcode"),
-          country = "GB",
-          phoneNumber = Some("1234567890")
-        )
-
         "when Individual" - {
           val aff: AffinityGroup = AffinityGroup.Individual
 
           "navigate to ApplicationContactDetailsPage when Yes" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+              userAnswersWith(CheckRegisteredDetailsPage, true)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
@@ -455,7 +443,7 @@ class NavigatorSpec extends SpecBase {
 
           "and navigate to EORIBeUpToDatePage when No" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = data.copy(value = false))
+              userAnswersWith(CheckRegisteredDetailsPage, false)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
@@ -469,7 +457,7 @@ class NavigatorSpec extends SpecBase {
 
           "navigate to BusinessContactDetailsPage when Yes" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+              userAnswersWith(CheckRegisteredDetailsPage, true)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,

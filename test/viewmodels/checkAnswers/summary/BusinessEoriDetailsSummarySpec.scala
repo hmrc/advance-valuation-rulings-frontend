@@ -23,6 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 import base.SpecBase
 import generators.Generators
 import models.CheckRegisteredDetails
+import models.UserAnswers
 import pages.CheckRegisteredDetailsPage
 
 class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
@@ -52,10 +53,11 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
     }
 
     "when the user has answers for all relevant pages" - {
-      val userAnswers =
-        emptyUserAnswers.set(CheckRegisteredDetailsPage, registeredDetails).success.value
-      val summary     = BusinessEoriDetailsSummary(userAnswers)
-      val rows        = summary.rows.rows.map(row => (row.key, row.value))
+      val userAnswers: UserAnswers = ???
+      // val userAnswers =
+      //   emptyUserAnswers.set(CheckRegisteredDetailsPage, registeredDetails).success.value
+      val summary                  = BusinessEoriDetailsSummary(userAnswers)
+      val rows                     = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
         rows.length mustBe 3
@@ -90,15 +92,16 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
     }
 
     "when consentToDisclosureOfPersonalData is false" - {
-      val userAnswers = emptyUserAnswers
-        .set(
-          CheckRegisteredDetailsPage,
-          registeredDetails.copy(consentToDisclosureOfPersonalData = false)
-        )
-        .success
-        .value
-      val summary     = BusinessEoriDetailsSummary(userAnswers)
-      val rows        = summary.rows.rows.map(row => (row.key, row.value))
+      val userAnswers: UserAnswers = ???
+      // val userAnswers = emptyUserAnswers
+      //   .set(
+      //     CheckRegisteredDetailsPage,
+      //     registeredDetails.copy(consentToDisclosureOfPersonalData = false)
+      //   )
+      //   .success
+      //   .value
+      val summary                  = BusinessEoriDetailsSummary(userAnswers)
+      val rows                     = summary.rows.rows.map(row => (row.key, row.value))
 
       "create only EORI number row" in {
         rows must contain theSameElementsAs Seq(

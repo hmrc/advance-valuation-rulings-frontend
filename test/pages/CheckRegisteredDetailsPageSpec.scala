@@ -16,17 +16,16 @@
 
 package pages
 
-import models.CheckRegisteredDetails
 import pages.behaviours.PageBehaviours
 
 class CheckRegisteredDetailsSpec extends PageBehaviours {
 
   "CheckRegisteredDetailsPage" - {
 
-    beRetrievable[CheckRegisteredDetails](CheckRegisteredDetailsPage)
+    beRetrievable[Boolean](CheckRegisteredDetailsPage)
 
-    beSettable[CheckRegisteredDetails](CheckRegisteredDetailsPage)
+    beSettable[Boolean](CheckRegisteredDetailsPage)
 
-    beRemovable[CheckRegisteredDetails](CheckRegisteredDetailsPage)
+    beRemovable[Boolean](CheckRegisteredDetailsPage)
   }
 }

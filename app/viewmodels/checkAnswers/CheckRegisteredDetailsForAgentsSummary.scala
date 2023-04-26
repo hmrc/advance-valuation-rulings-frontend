@@ -29,37 +29,27 @@ import viewmodels.implicits._
 
 object CheckRegisteredDetailsForAgentsSummary {
 
-  private def registeredNameRow(answer: CheckRegisteredDetails, draftId: DraftId)(implicit
+  private def registeredNameRow(answer: Boolean, draftId: DraftId)(implicit
     messages: Messages
-  ): SummaryListRow =
-    SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.business.name.label",
-      value = ValueViewModel(HtmlFormat.escape(answer.name).body),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
-        )
-          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.business.name.hidden"))
-      )
-    )
+  ): SummaryListRow = ???
 
-  private def registeredAddressRow(answer: CheckRegisteredDetails, draftId: DraftId)(implicit
+  private def registeredAddressRow(answer: Boolean, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.business.address.label",
       value = ValueViewModel(
-        HtmlContent(
-          Html(
-            s"${HtmlFormat.escape(answer.streetAndNumber).body}<br>" +
-              s"${HtmlFormat.escape(answer.city).body}<br>" +
-              answer.postalCode
-                .map(value => s"${HtmlFormat.escape(value).body}<br>")
-                .getOrElse("") +
-              s"${HtmlFormat.escape(answer.country).body}"
-          )
-        )
+        // HtmlContent(
+        // Html(
+        // s"${HtmlFormat.escape(answer.streetAndNumber).body}<br>" +
+        //   s"${HtmlFormat.escape(answer.city).body}<br>" +
+        //   answer.postalCode
+        //     .map(value => s"${HtmlFormat.escape(value).body}<br>")
+        //     .getOrElse("") +
+        //   s"${HtmlFormat.escape(answer.country).body}"
+        ???
+        // )
+        // )
       ),
       actions = Seq(
         ActionItemViewModel(
@@ -88,9 +78,9 @@ object CheckRegisteredDetailsForAgentsSummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
-      number          = registeredNumberRow(EoriNumber(contactDetails.eori), userAnswer.draftId)
+      number          = registeredNumberRow(EoriNumber(???), userAnswer.draftId)
     } yield {
-      val personalDetails = if (contactDetails.consentToDisclosureOfPersonalData) {
+      val personalDetails = if (???) {
         val name    = registeredNameRow(contactDetails, userAnswer.draftId)
         val address = registeredAddressRow(contactDetails, userAnswer.draftId)
         Seq(name, address)

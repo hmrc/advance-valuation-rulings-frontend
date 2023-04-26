@@ -44,8 +44,6 @@ class CheckYourAnswersForAgentsControllerSpec
     with BeforeAndAfterEach
     with EitherValues {
 
-  private implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
-
   private val userAnswers = emptyUserAnswers
 
   private val mockSubmissionService = mock[SubmissionService]
@@ -152,17 +150,7 @@ class CheckYourAnswersForAgentsControllerSpec
         ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         ua <- ua.set(
                 CheckRegisteredDetailsPage,
-                CheckRegisteredDetails(
-                  value = true,
-                  eori = "eori",
-                  consentToDisclosureOfPersonalData = true,
-                  name = "name",
-                  streetAndNumber = "streetAndNumber",
-                  city = "city",
-                  country = "country",
-                  postalCode = Some("postalCode"),
-                  phoneNumber = Some("phoneNumber")
-                )
+                true
               )
         ua <- ua.set(
                 BusinessContactDetailsPage,

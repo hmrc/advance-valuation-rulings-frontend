@@ -109,21 +109,21 @@ object TraderDetail {
     }
   }
 
-  def trader(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
-    userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
-      CheckRegisteredDetailsPage,
-      (crd: CheckRegisteredDetails) =>
-        TraderDetail(
-          eori = crd.eori,
-          businessName = crd.name,
-          addressLine1 = crd.streetAndNumber,
-          addressLine2 = Some(crd.city),
-          addressLine3 = None,
-          postcode = crd.postalCode.getOrElse(""),
-          countryCode = crd.country,
-          phoneNumber = crd.phoneNumber
-        )
-    )
+  def trader(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] = ???
+  // userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
+  //   CheckRegisteredDetailsPage,
+  //   (crd: CheckRegisteredDetails) =>
+  //     TraderDetail(
+  //       eori = crd.eori,
+  //       businessName = crd.name,
+  //       addressLine1 = crd.streetAndNumber,
+  //       addressLine2 = Some(crd.city),
+  //       addressLine3 = None,
+  //       postcode = crd.postalCode.getOrElse(""),
+  //       countryCode = crd.country,
+  //       phoneNumber = crd.phoneNumber
+  //     )
+  // )
 }
 
 case class ApplicationRequest(

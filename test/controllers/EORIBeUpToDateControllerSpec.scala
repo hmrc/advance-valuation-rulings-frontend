@@ -73,10 +73,11 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      val userAnswers = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, registeredDetails)
-        .success
-        .value
+      val userAnswers: models.UserAnswers = ???
+      // val userAnswers = emptyUserAnswers
+      //   .set(CheckRegisteredDetailsPage, registeredDetails)
+      //   .success
+      //   .value
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
@@ -105,11 +106,12 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when 'no' is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-      val userAnswers            = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, registeredDetails)
-        .success
-        .value
+      val mockUserAnswersService          = mock[UserAnswersService]
+      val userAnswers: models.UserAnswers = ???
+      // val userAnswers            = emptyUserAnswers
+      //   .set(CheckRegisteredDetailsPage, registeredDetails)
+      //   .success
+      //   .value
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
