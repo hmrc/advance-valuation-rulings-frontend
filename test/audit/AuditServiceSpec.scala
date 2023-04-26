@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import base.SpecBase
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.events.{AgentIndicatorEvent, UserTypeEvent}
-import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
+import models.requests.{DataRequest, IdentifierRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{times, verify}

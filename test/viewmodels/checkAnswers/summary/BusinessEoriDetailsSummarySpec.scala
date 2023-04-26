@@ -22,40 +22,29 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 import base.SpecBase
 import generators.Generators
-import models.CheckRegisteredDetails
-import pages.CheckRegisteredDetailsPage
+import models.{CDSEstablishmentAddress, DraftId, TraderDetailsWithCountryCode}
 
 class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
 
-  private val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
-    value = true,
-    EoriNumber,
+  private val registeredDetails: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = EoriNumber,
     consentToDisclosureOfPersonalData = true,
-    RegisteredName,
-    StreetAndNumber,
-    City,
-    country,
-    Some(Postcode),
-    Some(phoneNumber)
+    CDSFullName = RegisteredName,
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = StreetAndNumber,
+      city = City,
+      countryCode = countryCode,
+      postalCode = Some(Postcode)
+    ),
+    contactInformation = None
   )
 
   "IndividualEoriDetailsSummary" - {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
-    "when given empty user answers" - {
-      val summary = BusinessEoriDetailsSummary(emptyUserAnswers)
-      val rows    = summary.rows.rows
-
-      "must create no rows" in {
-        rows mustBe empty
-      }
-    }
-
     "when the user has answers for all relevant pages" - {
-      val userAnswers =
-        emptyUserAnswers.set(CheckRegisteredDetailsPage, registeredDetails).success.value
-      val summary     = BusinessEoriDetailsSummary(userAnswers)
-      val rows        = summary.rows.rows.map(row => (row.key, row.value))
+      val summary = BusinessEoriDetailsSummary(registeredDetails, DraftId(0))
+      val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
         rows.length mustBe 3
@@ -90,15 +79,9 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
     }
 
     "when consentToDisclosureOfPersonalData is false" - {
-      val userAnswers = emptyUserAnswers
-        .set(
-          CheckRegisteredDetailsPage,
-          registeredDetails.copy(consentToDisclosureOfPersonalData = false)
-        )
-        .success
-        .value
-      val summary     = BusinessEoriDetailsSummary(userAnswers)
-      val rows        = summary.rows.rows.map(row => (row.key, row.value))
+      val details = registeredDetails.copy(consentToDisclosureOfPersonalData = false)
+      val summary = BusinessEoriDetailsSummary(details, DraftId(0))
+      val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "create only EORI number row" in {
         rows must contain theSameElementsAs Seq(

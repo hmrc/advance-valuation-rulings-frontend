@@ -763,19 +763,8 @@ class CheckModeNavigatorSpec extends SpecBase {
       // Pre method pages
       "Pre Method Navigation" - {
         "CheckRegisteredDetails page" - {
-          def registeredDetails(value: Boolean) = CheckRegisteredDetails(
-            value,
-            eori = "eori",
-            consentToDisclosureOfPersonalData = true,
-            name = "name",
-            streetAndNumber = "streetAndNumber",
-            city = "city",
-            country = "country",
-            postalCode = None,
-            phoneNumber = Some("phoneNumber")
-          )
           "navigate to CheckYourAnswers when Yes" in {
-            val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, registeredDetails(true))
+            val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, true)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               CheckMode,
@@ -784,7 +773,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           }
 
           "and navigate to EORI Be Up To Date when No" in {
-            val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, registeredDetails(false))
+            val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, false)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               CheckMode,

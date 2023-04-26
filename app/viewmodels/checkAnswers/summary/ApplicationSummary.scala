@@ -20,6 +20,7 @@ import play.api.Logger
 import play.api.i18n.Messages
 import uk.gov.hmrc.auth.core.{AffinityGroup, UnsupportedAffinityGroup}
 
+import models.TraderDetailsWithCountryCode
 import models.UserAnswers
 
 case class ApplicationSummary(
@@ -33,14 +34,24 @@ object ApplicationSummary {
 
   private val logger = Logger(this.getClass)
 
-  def apply(userAnswers: UserAnswers, affinityGroup: AffinityGroup)(implicit
+  def apply(
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup,
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+  )(implicit
     messages: Messages
   ): ApplicationSummary = {
     val (applicant, company) = affinityGroup match {
       case AffinityGroup.Individual                         =>
-        (IndividualApplicantSummary(userAnswers), IndividualEoriDetailsSummary(userAnswers))
+        (
+          IndividualApplicantSummary(userAnswers),
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+        )
       case AffinityGroup.Organisation | AffinityGroup.Agent =>
-        (AgentSummary(userAnswers), BusinessEoriDetailsSummary(userAnswers))
+        (
+          AgentSummary(userAnswers),
+          BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+        )
       case unexpected                                       =>
         logger.error(s"Unsupported affinity group [$unexpected] encountered")
         throw UnsupportedAffinityGroup("Unexpected affinity group")

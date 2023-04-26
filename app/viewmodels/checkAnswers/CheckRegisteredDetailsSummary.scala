@@ -22,19 +22,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, CheckRegisteredDetails, DraftId, EoriNumber, UserAnswers}
+import models.{CheckMode, Country, DraftId, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
 import pages.CheckRegisteredDetailsPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object CheckRegisteredDetailsSummary {
 
-  private def registeredNameRow(answer: CheckRegisteredDetails, draftId: DraftId)(implicit
+  private def registeredNameRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.name.label",
-      value = ValueViewModel(HtmlFormat.escape(answer.name).body),
+      value = ValueViewModel(HtmlFormat.escape(details.CDSFullName).body),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
@@ -44,7 +44,7 @@ object CheckRegisteredDetailsSummary {
       )
     )
 
-  private def registeredAddressRow(answer: CheckRegisteredDetails, draftId: DraftId)(implicit
+  private def registeredAddressRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
@@ -52,12 +52,14 @@ object CheckRegisteredDetailsSummary {
       value = ValueViewModel(
         HtmlContent(
           Html(
-            s"${HtmlFormat.escape(answer.streetAndNumber).body}<br>" +
-              s"${HtmlFormat.escape(answer.city).body}<br>" +
-              answer.postalCode
+            s"${HtmlFormat.escape(details.CDSEstablishmentAddress.streetAndNumber).body}<br>" +
+              s"${HtmlFormat.escape(details.CDSEstablishmentAddress.city).body}<br>" +
+              details.CDSEstablishmentAddress.postalCode
                 .map(value => s"${HtmlFormat.escape(value).body}<br>")
                 .getOrElse("") +
-              s"${HtmlFormat.escape(answer.country).body}"
+              HtmlFormat.escape(
+                Country.fromCountryCode(details.CDSEstablishmentAddress.countryCode).name
+              )
           )
         )
       ),
@@ -85,19 +87,20 @@ object CheckRegisteredDetailsSummary {
       )
     )
 
-  def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    for {
-      contactDetails <- userAnswer.get(CheckRegisteredDetailsPage)
-      number          = registeredNumberRow(EoriNumber(contactDetails.eori), userAnswer.draftId)
-    } yield number +: getPersonalDetails(contactDetails, userAnswer.draftId)
+  def rows(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
+    messages: Messages
+  ): Option[Seq[SummaryListRow]] = {
+    val number = registeredNumberRow(EoriNumber(details.EORINo), draftId)
+    Some(number +: getPersonalDetails(details, draftId))
+  }
 
   private def getPersonalDetails(
-    registeredDetails: CheckRegisteredDetails,
+    details: TraderDetailsWithCountryCode,
     draftId: DraftId
   )(implicit messages: Messages) =
-    if (registeredDetails.consentToDisclosureOfPersonalData) {
-      val name    = registeredNameRow(registeredDetails, draftId)
-      val address = registeredAddressRow(registeredDetails, draftId)
+    if (details.consentToDisclosureOfPersonalData) {
+      val name    = registeredNameRow(details, draftId)
+      val address = registeredAddressRow(details, draftId)
       Seq(name, address)
     } else {
       Nil

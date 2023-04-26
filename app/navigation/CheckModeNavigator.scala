@@ -41,9 +41,9 @@ object CheckModeNavigator {
     affinityGroup: AffinityGroup
   ): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
-      case None                    => CheckRegisteredDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(registeredDetails) =>
-        if (registeredDetails.value) {
+      case None        => CheckRegisteredDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(value) =>
+        if (value) {
           resolveAffinityGroup(affinityGroup)(
             checkYourAnswers(userAnswers.draftId),
             checkYourAnswersForAgents(userAnswers.draftId)

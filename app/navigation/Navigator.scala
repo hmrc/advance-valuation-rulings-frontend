@@ -454,9 +454,9 @@ class Navigator @Inject() () {
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
-      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(registeredDetails) =>
-        if (registeredDetails.value) {
+      case None        => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(value) =>
+        if (value) {
           resolveAffinityGroup(affinityGroup)(
             ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
             BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
