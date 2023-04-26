@@ -16,13 +16,127 @@
 
 package pages
 
+import scala.util.Try
+
 import play.api.libs.json.JsPath
 
-import models.ValuationMethod
+import models.{UserAnswers, ValuationMethod}
 
 case object ValuationMethodPage extends QuestionPage[ValuationMethod] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "valuationMethod"
+
+  private def removeMethod1(ua: UserAnswers): Try[UserAnswers] =
+    for {
+      ua <- ua.remove(IsThereASaleInvolvedPage)
+      ua <- ua.remove(IsSaleBetweenRelatedPartiesPage)
+      ua <- ua.remove(ExplainHowPartiesAreRelatedPage)
+      ua <- ua.remove(AreThereRestrictionsOnTheGoodsPage)
+      ua <- ua.remove(DescribeTheRestrictionsPage)
+      ua <- ua.remove(IsTheSaleSubjectToConditionsPage)
+      ua <- ua.remove(DescribeTheConditionsPage)
+    } yield ua
+
+  private def removeMethod2(ua: UserAnswers): Try[UserAnswers] =
+    for {
+      ua <- ua.remove(WhyIdenticalGoodsPage)
+      ua <- ua.remove(HaveYouUsedMethodOneInPastPage)
+      ua <- ua.remove(DescribeTheIdenticalGoodsPage)
+    } yield ua
+
+  private def removeMethod3(ua: UserAnswers): Try[UserAnswers] =
+    for {
+      ua <- ua.remove(WhyTransactionValueOfSimilarGoodsPage)
+      ua <- ua.remove(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+      ua <- ua.remove(DescribeTheSimilarGoodsPage)
+    } yield ua
+
+  private def removeMethod4(ua: UserAnswers): Try[UserAnswers] =
+    for {
+      ua <- ua.remove(ExplainWhyYouHaveNotSelectedMethodOneToThreePage)
+      ua <- ua.remove(ExplainWhyYouChoseMethodFourPage)
+    } yield ua
+
+  private def removeMethod5(ua: UserAnswers): Try[UserAnswers] =
+    for {
+      ua <- ua.remove(WhyComputedValuePage)
+      ua <- ua.remove(ExplainReasonComputedValuePage)
+    } yield ua
+
+  private def removeMethod6(ua: UserAnswers): Try[UserAnswers] =
+    for {
+      ua <- ua.remove(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
+      ua <- ua.remove(AdaptMethodPage)
+      ua <- ua.remove(ExplainHowYouWillUseMethodSixPage)
+    } yield ua
+
+  override def cleanup(value: Option[ValuationMethod], userAnswers: UserAnswers): Try[UserAnswers] =
+    value match {
+      case None =>
+        for {
+          ua <- removeMethod1(userAnswers)
+          ua <- removeMethod2(ua)
+          ua <- removeMethod3(ua)
+          ua <- removeMethod4(ua)
+          ua <- removeMethod5(ua)
+          ua <- removeMethod6(ua)
+        } yield ua
+
+      case Some(ValuationMethod.Method1) =>
+        for {
+          ua <- removeMethod2(userAnswers)
+          ua <- removeMethod3(ua)
+          ua <- removeMethod4(ua)
+          ua <- removeMethod5(ua)
+          ua <- removeMethod6(ua)
+        } yield ua
+
+      case Some(ValuationMethod.Method2) =>
+        for {
+          ua <- removeMethod1(userAnswers)
+          ua <- removeMethod3(ua)
+          ua <- removeMethod4(ua)
+          ua <- removeMethod5(ua)
+          ua <- removeMethod6(ua)
+        } yield ua
+
+      case Some(ValuationMethod.Method3) =>
+        for {
+          ua <- removeMethod1(userAnswers)
+          ua <- removeMethod2(ua)
+          ua <- removeMethod4(ua)
+          ua <- removeMethod5(ua)
+          ua <- removeMethod6(ua)
+        } yield ua
+
+      case Some(ValuationMethod.Method4) =>
+        for {
+          ua <- removeMethod1(userAnswers)
+          ua <- removeMethod2(ua)
+          ua <- removeMethod3(ua)
+          ua <- removeMethod5(ua)
+          ua <- removeMethod6(ua)
+        } yield ua
+
+      case Some(ValuationMethod.Method5) =>
+        for {
+          ua <- removeMethod1(userAnswers)
+          ua <- removeMethod2(ua)
+          ua <- removeMethod3(ua)
+          ua <- removeMethod4(ua)
+          ua <- removeMethod6(ua)
+        } yield ua
+
+      case Some(ValuationMethod.Method6) =>
+        for {
+          ua <- removeMethod1(userAnswers)
+          ua <- removeMethod2(ua)
+          ua <- removeMethod3(ua)
+          ua <- removeMethod4(ua)
+          ua <- removeMethod5(ua)
+        } yield ua
+
+    }
 }
