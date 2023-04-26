@@ -31,9 +31,9 @@
     formHelper: FormWithCSRF,
 )
 
-@(applicationSummary: ApplicationSummary, role: WhatIsYourRoleAsImporter)(implicit request: Request[_], messages: Messages)
+@(applicationSummary: ApplicationSummary, role: WhatIsYourRoleAsImporter, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title"))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title")), draftId = Some(draftId)) {
 
     <h1 class="govuk-heading-l">@(messages("checkYourAnswersForAgents.heading"))</h1>
 
@@ -78,11 +78,11 @@
         Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.3"))
     ))
 
-    @formHelper(action = routes.CheckYourAnswersController.onSubmit) {
+    @formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
         @govukButton(
             ButtonViewModel(messages("checkYourAnswersForAgents.button.continue"))
         )
     }
 
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

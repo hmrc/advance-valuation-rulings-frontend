@@ -16,6 +16,9 @@
 
 package pages
 
+import java.time.Instant
+
+import models.{DraftId, Index, UploadedFile, UserAnswers}
 import pages.behaviours.PageBehaviours
 
 class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
@@ -27,5 +30,42 @@ class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
     beSettable[Boolean](DoYouWantToUploadDocumentsPage)
 
     beRemovable[Boolean](DoYouWantToUploadDocumentsPage)
+
+    "must remove any uploaded documents when the user chooses no" in {
+
+      val successfulFile = UploadedFile.Success(
+        reference = "reference",
+        downloadUrl = "downloadUrl",
+        uploadDetails = UploadedFile.UploadDetails(
+          fileName = "fileName",
+          fileMimeType = "fileMimeType",
+          uploadTimestamp = Instant.now(),
+          checksum = "checksum",
+          size = 1337
+        )
+      )
+
+      val existingAnswers = UserAnswers("userId", DraftId(0))
+        .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+        .success
+        .value
+        .set(IsThisFileConfidentialPage(Index(0)), true)
+        .success
+        .value
+        .set(UploadSupportingDocumentPage(Index(1)), successfulFile)
+        .success
+        .value
+        .set(IsThisFileConfidentialPage(Index(1)), false)
+        .success
+        .value
+
+      val cleanedUpAnswers =
+        existingAnswers.set(DoYouWantToUploadDocumentsPage, false).success.value
+
+      cleanedUpAnswers.get(UploadSupportingDocumentPage(Index(0))) mustBe empty
+      cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
+      cleanedUpAnswers.get(UploadSupportingDocumentPage(Index(1))) mustBe empty
+      cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(1))) mustBe empty
+    }
   }
 }

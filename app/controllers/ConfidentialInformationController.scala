@@ -27,18 +27,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ConfidentialInformationFormProvider
-import models.Mode
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ConfidentialInformationPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.ConfidentialInformationView
 
 class ConfidentialInformationController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: ConfidentialInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -47,24 +47,25 @@ class ConfidentialInformationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form: Form[String]                         = formProvider()
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = ConfidentialInformationPage.fill(form)
-      Ok(view(preparedForm, mode))
-  }
+  val form: Form[String]                                           = formProvider()
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        val preparedForm = ConfidentialInformationPage.fill(form)
+        Ok(view(preparedForm, mode, draftId))
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
                 updatedAnswers <- ConfidentialInformationPage.set(value)
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers)(
                   request.affinityGroup

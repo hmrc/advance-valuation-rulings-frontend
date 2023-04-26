@@ -28,22 +28,19 @@ import viewmodels.implicits._
 
 object DescriptionOfGoodsSummary {
 
-  private def makeRow(answer: String)(implicit
-    messages: Messages
-  ) =
-    SummaryListRowViewModel(
-      key = "descriptionOfGoods.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(answer).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.DescriptionOfGoodsController.onPageLoad(CheckMode).url
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(DescriptionOfGoodsPage).map {
+      answer =>
+        SummaryListRowViewModel(
+          key = "descriptionOfGoods.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.DescriptionOfGoodsController.onPageLoad(CheckMode, answers.draftId).url
+            )
+              .withVisuallyHiddenText(messages("descriptionOfGoods.change.hidden"))
+          )
         )
-          .withVisuallyHiddenText(messages("descriptionOfGoods.change.hidden"))
-      )
-    )
-  def row(answers: UserAnswers)(implicit
-    messages: Messages
-  ): Option[SummaryListRow] =
-    answers.get(DescriptionOfGoodsPage).map(makeRow)
+    }
 }

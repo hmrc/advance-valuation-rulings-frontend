@@ -21,20 +21,20 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton,
     govukTextarea: GovukTextarea,
     cancelLink: CancelApplicationLink,
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
-    bulletList: BulletList
+    bulletList: BulletList,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("whyTransactionValueOfSimilarGoods.title"))) {
+@layout(pageTitle = title(form, messages("whyTransactionValueOfSimilarGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode)) {
+    @formHelper(action = routes.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode, draftId)) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -68,10 +68,8 @@
                 .withAttribute("maxlength","8167")
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
-@cancelLink()
+@cancelLink(draftId)
 }
 

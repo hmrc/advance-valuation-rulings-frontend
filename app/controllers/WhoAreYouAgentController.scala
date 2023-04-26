@@ -27,18 +27,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.WhoAreYouAgentFormProvider
-import models.Mode
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.WhoAreYouAgentPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.WhoAreYouAgentView
 
 class WhoAreYouAgentController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: WhoAreYouAgentFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -49,27 +49,29 @@ class WhoAreYouAgentController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(WhoAreYouAgentPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      } // TODO: implement agent details page after MVP
-      Redirect(controllers.routes.AccountHomeController.onPageLoad())
-    // Ok(view(preparedForm, mode))
-  }
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(WhoAreYouAgentPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        } // TODO: implement agent details page after MVP
+        Redirect(controllers.routes.AccountHomeController.onPageLoad())
+      // Ok(view(preparedForm, mode))
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, mode, draftId: DraftId))),
             value =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(WhoAreYouAgentPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers)(request.affinityGroup)
               )

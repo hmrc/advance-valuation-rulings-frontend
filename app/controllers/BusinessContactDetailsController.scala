@@ -26,18 +26,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.BusinessContactDetailsFormProvider
-import models.Mode
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.BusinessContactDetailsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: BusinessContactDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -48,29 +48,29 @@ class BusinessContactDetailsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) {
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm = request.userAnswers.get(BusinessContactDetailsPage) match {
           case None        => form
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(BusinessContactDetailsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)(
                   request.affinityGroup

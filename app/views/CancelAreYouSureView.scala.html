@@ -26,20 +26,20 @@
         govukBackLink: GovukBackLink
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
 
     @heading(messages("cancelAreYouSure.heading"))
     @para(Html(messages("cancelAreYouSure.inset.text")))
 
-    @formHelper(action = routes.CancelApplicationController.confirmCancel()) {
+    @formHelper(action = routes.CancelApplicationController.confirmCancel(draftId)) {
         @govukButton(
              ButtonViewModel(messages("cancelAreYouSure.button"))
         )
     }
 
-    <a href = "javascript:history.back()" class="govuk-link" id = "return_to_application">
+    <a href = "javascript:history.back()" class="govuk-link js-visible" id = "return_to_application">
         @messages("cancelAreYouSure.return")
     </a>
 

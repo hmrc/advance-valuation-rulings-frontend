@@ -26,18 +26,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.HaveYouUsedMethodOneInPastFormProvider
-import models.{Mode, UserAnswers}
+import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.HaveYouUsedMethodOneInPastPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.HaveYouUsedMethodOneInPastView
 
 class HaveYouUsedMethodOneInPastController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: HaveYouUsedMethodOneInPastFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -48,30 +48,31 @@ class HaveYouUsedMethodOneInPastController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val preparedForm = request.userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
-  }
+        Ok(view(preparedForm, mode, draftId))
+    }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value => {
               val userAnswers =
                 if (value) request.userAnswers
                 else UserAnswers.clearValuationMethod(request.userAnswers)
               for {
                 ua <- userAnswers.setFuture(HaveYouUsedMethodOneInPastPage, value)
-                _  <- sessionRepository.set(ua)
+                _  <- userAnswersService.set(ua)
               } yield Redirect(
                 navigator.nextPage(HaveYouUsedMethodOneInPastPage, mode, ua)(
                   request.affinityGroup

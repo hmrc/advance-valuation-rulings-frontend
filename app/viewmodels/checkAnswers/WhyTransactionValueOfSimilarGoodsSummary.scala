@@ -28,19 +28,21 @@ import viewmodels.implicits._
 
 object WhyTransactionValueOfSimilarGoodsSummary {
 
-  def row(answer: String)(implicit messages: Messages): SummaryListRow =
-    SummaryListRowViewModel(
-      key = "whyTransactionValueOfSimilarGoods.checkYourAnswersLabel",
-      value = ValueViewModel(HtmlFormat.escape(answer).toString),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("whyTransactionValueOfSimilarGoods.change.hidden"))
-      )
-    )
-
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WhyTransactionValueOfSimilarGoodsPage).map(row)
+    answers.get(WhyTransactionValueOfSimilarGoodsPage).map {
+      answer =>
+        SummaryListRowViewModel(
+          key = "whyTransactionValueOfSimilarGoods.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.WhyTransactionValueOfSimilarGoodsController
+                .onPageLoad(CheckMode, answers.draftId)
+                .url
+            )
+              .withVisuallyHiddenText(messages("whyTransactionValueOfSimilarGoods.change.hidden"))
+          )
+        )
+    }
 }

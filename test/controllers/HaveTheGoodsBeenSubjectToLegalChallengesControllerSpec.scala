@@ -25,13 +25,13 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.HaveTheGoodsBeenSubjectToLegalChallengesFormProvider
-import models.NormalMode
+import models.{Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.HaveTheGoodsBeenSubjectToLegalChallengesPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.HaveTheGoodsBeenSubjectToLegalChallengesView
 
 class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase with MockitoSugar {
@@ -42,7 +42,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
   val form         = formProvider()
 
   lazy val haveTheGoodsBeenSubjectToLegalChallengesRoute =
-    routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode).url
+    routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode, draftId).url
 
   "HaveTheGoodsBeenSubjectToLegalChallenges Controller" - {
 
@@ -58,7 +58,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
         val view = application.injector.instanceOf[HaveTheGoodsBeenSubjectToLegalChallengesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(
+        contentAsString(result) mustEqual view(form, NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -82,7 +82,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
           request,
           messages(application)
         ).toString
@@ -91,15 +91,15 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -131,7 +131,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
           request,
           messages(application)
         ).toString

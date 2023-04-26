@@ -22,17 +22,17 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
     headingH3: headingH3,
     warning: Warning,
     paragraph: Paragraph,
     subheading: Subheading,
-    cancelApplicationLink: CancelApplicationLink
+    cancelApplicationLink: CancelApplicationLink,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = title(
@@ -41,11 +41,12 @@
             if (registeredDetails.consentToDisclosureOfPersonalData) "checkRegisteredDetails.title" else "checkRegisteredDetails.private.title",
             registeredDetails.eori
         )
-    )
+    ),
+    draftId = Some(draftId)
 ) {
 
 
-    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
@@ -100,10 +101,8 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 
-    @cancelApplicationLink()
+    @cancelApplicationLink(draftId)
 }

@@ -25,13 +25,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import connectors.BackendConnector
 import logging.Logging
 import models.requests.{ApplicationId, ApplicationRequest, ApplicationSubmissionResponse}
-import repositories.SessionRepository
 import services.email.EmailService
 
 class SubmissionService @Inject() (
   backendConnector: BackendConnector,
   emailService: EmailService,
-  sessionRepository: SessionRepository
+  userAnswersService: UserAnswersService
 )(implicit
   ec: ExecutionContext
 ) extends Logging {
@@ -44,8 +43,8 @@ class SubmissionService @Inject() (
       submissionResponse <- backendConnector.submitApplication(applicationRequest)
       applicationId       = submissionResponse.applicationId
       contactDetails      = applicationRequest.contact
-      _                  <- sessionRepository
-                              .clear(userId)
+      _                  <- userAnswersService
+                              .clear(applicationRequest.draftId)
                               .recover(logError(applicationId, "Failed to clear user answers")(_))
       _                  <- emailService
                               .sendConfirmationEmail(contactDetails.email, contactDetails.name)

@@ -15,26 +15,24 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.table._
 @import models._
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
-@import viewmodels.checkAnswers.summary._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton,
     govukTable: GovukTable,
+    govukLink: Link,
     caption: Caption,
     heading: Heading,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    saveButtons: SaveButtons
 )
 
-@(uploadedFiles: Table, form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(attachments: Seq[DraftAttachment], form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{
     if (numOfDocs == 1) {
@@ -53,20 +51,40 @@
 }
 
 @numOfDocs = @{
-    uploadedFiles.rows.length
+    attachments.length
 }
 
-@layout(pageTitle = title(form, titleMessage)) {
+@layout(pageTitle = title(form, titleMessage), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
     
         @caption(messages("uploadAnotherSupportingDocument.caption"))
+
         @heading(pageHeading)
     
-        @govukTable(uploadedFiles)
+        @govukTable(Table(
+          rows = attachments.zipWithIndex.map { case (attachment, i) =>
+            Seq(
+              TableRow(content = Text(attachment.file.fileName.getOrElse(""))),
+              TableRow(content = Text(if(attachment.isThisFileConfidential.contains(true)) messages("uploadAnotherSupportingDocument.keepConfidential") else "")),
+              TableRow(
+                HtmlContent(
+                  govukLink(
+                    id = attachment.file.reference,
+                    text = messages("site.remove"),
+                    call = controllers.routes.DeleteSupportingDocumentController.onDelete(Index(i), mode, draftId),
+                    newTab = false
+                  )
+                )
+              )
+            )
+          },
+          classes = "govuk-body-s"
+        ))
 
         @subheading(messages("uploadAnotherSupportingDocument.subHeading"))
 
@@ -77,9 +95,8 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
-    @cancelApplicationLink()
+
+    @cancelApplicationLink(draftId)
 }

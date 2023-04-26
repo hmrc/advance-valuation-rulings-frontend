@@ -24,64 +24,62 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import controllers.routes
 import models._
 import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
+import queries.AllDocuments
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object DoYouWantToUploadDocumentsSummary {
 
-  private def makeRow(answer: Boolean)(implicit messages: Messages) = {
-
-    val value = if (answer) "site.yes" else "site.no"
-
-    SummaryListRowViewModel(
-      key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
-      value = ValueViewModel(value),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode).url
-        )
-          .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
-      )
-    )
-  }
-
   def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    userAnswers
-      .get(DoYouWantToUploadDocumentsPage)
-      .map(makeRow)
+    userAnswers.get(DoYouWantToUploadDocumentsPage).map {
+      answer =>
+        val value = if (answer) "site.yes" else "site.no"
+
+        SummaryListRowViewModel(
+          key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
+          value = ValueViewModel(value),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.DoYouWantToUploadDocumentsController
+                .onPageLoad(CheckMode, userAnswers.draftId)
+                .url
+            )
+              .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+          )
+        )
+    }
 }
 
 object UploadedDocumentsSummary {
 
-  private def makeRow(fileNames: Seq[String])(implicit messages: Messages) =
-    if (fileNames.isEmpty) {
-      None
-    } else {
-      Some(
+  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    userAnswers.get(AllDocuments).map {
+      attachments =>
         SummaryListRowViewModel(
           key = "uploadSupportingDocuments.checkYourAnswersLabel",
           value = ValueViewModel(
             HtmlContent(
               Html(
-                fileNames.map(fileName => Html(s"${HtmlFormat.escape(fileName).body}<br>")).mkString
+                attachments
+                  .map {
+                    attachment =>
+                      attachment.file.fileName
+                        .map(fileName => HtmlFormat.escape(fileName).body)
+                        .getOrElse("")
+                  }
+                  .mkString("<br>")
               )
             )
           ),
           actions = Seq(
             ActionItemViewModel(
               "site.change",
-              routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode).url
-            )
-              .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+              routes.UploadAnotherSupportingDocumentController
+                .onPageLoad(CheckMode, userAnswers.draftId)
+                .url
+            ).withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
           )
         )
-      )
     }
-
-  def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    userAnswers
-      .get(UploadSupportingDocumentPage)
-      .map(_.files.map(_._2.fileName).toSeq)
-      .flatMap(makeRow)
 }

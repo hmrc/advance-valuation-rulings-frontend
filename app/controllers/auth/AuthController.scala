@@ -26,34 +26,25 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
 import controllers.actions.IdentifierAction
-import repositories.SessionRepository
+import services.UserAnswersService
 
 class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   config: FrontendAppConfig,
-  sessionRepository: SessionRepository,
   identify: IdentifierAction
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] = identify.async {
-    implicit request =>
-      sessionRepository
-        .clear(request.userId)
-        .map(_ => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+  def signOut(): Action[AnyContent] = identify {
+    implicit request => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
   }
 
-  def signOutNoSurvey(): Action[AnyContent] = identify.async {
+  def signOutNoSurvey(): Action[AnyContent] = identify {
     implicit request =>
-      sessionRepository
-        .clear(request.userId)
-        .map {
-          _ =>
-            Redirect(
-              config.signOutUrl,
-              Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url))
-            )
-        }
+      Redirect(
+        config.signOutUrl,
+        Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url))
+      )
   }
 }

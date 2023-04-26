@@ -44,7 +44,7 @@ class CheckYourAnswersForAgentsControllerSpec
     with BeforeAndAfterEach
     with EitherValues {
 
-  implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
+  private implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   private val userAnswers = emptyUserAnswers
 
@@ -67,7 +67,7 @@ class CheckYourAnswersForAgentsControllerSpec
 
       running(application) {
         implicit val request =
-          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
@@ -75,12 +75,15 @@ class CheckYourAnswersForAgentsControllerSpec
         val list = ApplicationSummary(ua, AffinityGroup.Organisation)
 
         status(result) mustEqual OK
+
         contentAsString(result) mustEqual view(
           list,
-          role = WhatIsYourRoleAsImporter.EmployeeOfOrg
+          role = WhatIsYourRoleAsImporter.EmployeeOfOrg,
+          draftId
         ).toString
       }
     }
+
     "must return OK and the correct view for a GET as Agent on behalf of Organisation" in {
       val ua: UserAnswers =
         userAnswers
@@ -93,7 +96,7 @@ class CheckYourAnswersForAgentsControllerSpec
 
       running(application) {
         implicit val request =
-          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
@@ -103,7 +106,8 @@ class CheckYourAnswersForAgentsControllerSpec
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           list,
-          role = WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
+          role = WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg,
+          draftId
         ).toString
       }
     }
@@ -113,7 +117,8 @@ class CheckYourAnswersForAgentsControllerSpec
       val application = applicationBuilderAsOrg(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+        val request =
+          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
@@ -127,7 +132,8 @@ class CheckYourAnswersForAgentsControllerSpec
       val application = applicationBuilderAsOrg(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad.url)
+        val request =
+          FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
@@ -187,7 +193,8 @@ class CheckYourAnswersForAgentsControllerSpec
         .build()
 
       running(application) {
-        val request = FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit.url)
+        val request =
+          FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit(draftId).url)
 
         val result = route(application, request).value
 

@@ -29,20 +29,19 @@ import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar
-import repositories.SessionRepository
 import services.email.EmailService
 
 class SubmissionServiceSpec extends SpecBase with MockitoSugar {
 
-  private val mockBackendConnector = mock[BackendConnector]
-  private val mockEmailService     = mock[EmailService]
-  private val mockSessionRepo      = mock[SessionRepository]
+  private val mockBackendConnector   = mock[BackendConnector]
+  private val mockEmailService       = mock[EmailService]
+  private val mockUserAnswersService = mock[UserAnswersService]
 
   private val app =
     GuiceApplicationBuilder()
       .overrides(
         bind[BackendConnector].toInstance(mockBackendConnector),
-        bind[SessionRepository].toInstance(mockSessionRepo),
+        bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[EmailService].toInstance(mockEmailService)
       )
       .build()
@@ -50,7 +49,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
   private val service = app.injector.instanceOf[SubmissionService]
 
   private val applicationRequest = ApplicationRequest(
-    draftId = DraftId(0),
+    draftId = draftId,
     trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
     agent = None,
     contact = ContactDetails("name", "email", None),
@@ -62,7 +61,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
-    reset(mockBackendConnector, mockEmailService, mockSessionRepo)
+    reset(mockBackendConnector, mockEmailService, mockUserAnswersService)
     super.beforeEach()
   }
 
@@ -74,7 +73,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
 
       when(mockBackendConnector.submitApplication(any())(any()))
         .thenReturn(Future.successful(response))
-      when(mockSessionRepo.clear(any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
       when(mockEmailService.sendConfirmationEmail(any(), any())(any()))
         .thenReturn(Future.successful(Done))
 
@@ -82,7 +81,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
       result mustEqual response
 
       verify(mockBackendConnector, times(1)).submitApplication(eqTo(applicationRequest))(any())
-      verify(mockSessionRepo, times(1)).clear(eqTo(userAnswersId))
+      verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
       verify(mockEmailService, times(1)).sendConfirmationEmail(
         eqTo(applicationRequest.contact.email),
         eqTo(applicationRequest.contact.name)
@@ -95,7 +94,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
 
       when(mockBackendConnector.submitApplication(any())(any()))
         .thenReturn(Future.successful(response))
-      when(mockSessionRepo.clear(any())).thenReturn(Future.successful(true))
+      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
       when(mockEmailService.sendConfirmationEmail(any(), any())(any()))
         .thenReturn(Future.failed(new RuntimeException("foo")))
 
@@ -103,7 +102,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
       result mustEqual response
 
       verify(mockBackendConnector, times(1)).submitApplication(eqTo(applicationRequest))(any())
-      verify(mockSessionRepo, times(1)).clear(eqTo(userAnswersId))
+      verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
       verify(mockEmailService, times(1)).sendConfirmationEmail(
         eqTo(applicationRequest.contact.email),
         eqTo(applicationRequest.contact.name)
@@ -116,7 +115,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
 
       when(mockBackendConnector.submitApplication(any())(any()))
         .thenReturn(Future.successful(response))
-      when(mockSessionRepo.clear(any()))
+      when(mockUserAnswersService.clear(any())(any()))
         .thenReturn(Future.failed(new Exception("Failed to clear user answers")))
       when(mockEmailService.sendConfirmationEmail(any(), any())(any()))
         .thenReturn(Future.successful(Done))
@@ -125,7 +124,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
       result mustEqual response
 
       verify(mockBackendConnector, times(1)).submitApplication(eqTo(applicationRequest))(any())
-      verify(mockSessionRepo, times(1)).clear(eqTo(userAnswersId))
+      verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
       verify(mockEmailService, times(1)).sendConfirmationEmail(
         eqTo(applicationRequest.contact.email),
         eqTo(applicationRequest.contact.name)

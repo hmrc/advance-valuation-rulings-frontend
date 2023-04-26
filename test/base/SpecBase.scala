@@ -35,8 +35,6 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import repositories.CounterRepository
-import services.FakeFileUploadService
-import services.fileupload.FileUploadService
 
 trait SpecBase
     extends AnyFreeSpec
@@ -60,7 +58,6 @@ trait SpecBase
   val phoneNumber     = "01234567890"
 
   val userAnswersId: String = "id"
-  val DraftIdPrefix         = "DRAFT"
   val DraftIdSequence       = 123456789L
   val draftId               = DraftId(DraftIdSequence)
 
@@ -84,8 +81,9 @@ trait SpecBase
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[IdentifyIndividualAction].to[FakeIdentifyIndividualAction],
-        bind[FileUploadService].to[FakeFileUploadService],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[DataRetrievalActionProvider].toInstance(
+          new FakeDataRetrievalActionProvider(userAnswers)
+        ),
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
@@ -97,8 +95,9 @@ trait SpecBase
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeAgentIdentifierAction],
         bind[IdentifyAgentAction].to[FakeIdentifyAgentAction],
-        bind[FileUploadService].to[FakeFileUploadService],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[DataRetrievalActionProvider].toInstance(
+          new FakeDataRetrievalActionProvider(userAnswers)
+        ),
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
@@ -110,8 +109,9 @@ trait SpecBase
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeOrgIdentifierAction],
         bind[IdentifyAgentAction].to[FakeIdentifyOrgAction],
-        bind[FileUploadService].to[FakeFileUploadService],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[DataRetrievalActionProvider].toInstance(
+          new FakeDataRetrievalActionProvider(userAnswers)
+        ),
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )

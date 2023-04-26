@@ -22,17 +22,17 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukCheckboxes: GovukCheckboxes,
-    govukButton: GovukButton,
     caption: Caption,
     heading: Heading,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    saveButtons: SaveButtons
 )
 
-@(form: Form[_], affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("requiredInformation.title"))) {
+@layout(pageTitle = title(form, messages("requiredInformation.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.RequiredInformationController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = routes.RequiredInformationController.onSubmit(draftId), 'autoComplete -> "off") {
 
         
         @if(form.errors.nonEmpty) {
@@ -51,8 +51,6 @@
             )
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons()
     }
 }

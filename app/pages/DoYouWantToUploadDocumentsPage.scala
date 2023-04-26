@@ -16,11 +16,24 @@
 
 package pages
 
+import scala.util.Try
+
 import play.api.libs.json.JsPath
+
+import models.UserAnswers
+import queries.AllDocuments
 
 case object DoYouWantToUploadDocumentsPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "doYouWantToUploadDocuments"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value
+      .map {
+        case false => userAnswers.remove(AllDocuments)
+        case true  => super.cleanup(value, userAnswers)
+      }
+      .getOrElse(super.cleanup(value, userAnswers))
 }

@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package models.fileupload
+package models.upscan
 
-case class UpscanFileReference(reference: String)
+import play.api.libs.json.{Json, OFormat}
 
-case class UpscanInitiateResponse(
-  fileReference: UpscanFileReference,
-  postTarget: String,
-  formFields: Map[String, String]
+final case class UpscanInitiateRequest(
+  callbackUrl: String,
+  successRedirect: String,
+  errorRedirect: String,
+  minimumFileSize: Long,
+  maximumFileSize: Long
 )
+
+object UpscanInitiateRequest {
+
+  implicit lazy val format: OFormat[UpscanInitiateRequest] = Json.format
+}

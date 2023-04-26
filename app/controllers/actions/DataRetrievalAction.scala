@@ -21,19 +21,25 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.mvc.ActionTransformer
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import models.DraftId
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import repositories.SessionRepository
+import services.UserAnswersService
 
-class DataRetrievalActionImpl @Inject() (
-  val sessionRepository: SessionRepository
+class DataRetrievalAction @Inject() (
+  draftId: DraftId,
+  val userAnswersService: UserAnswersService
 )(implicit val executionContext: ExecutionContext)
-    extends DataRetrievalAction {
+    extends ActionTransformer[IdentifierRequest, OptionalDataRequest] {
 
   override protected def transform[A](
     request: IdentifierRequest[A]
-  ): Future[OptionalDataRequest[A]] =
-    sessionRepository.get(request.userId).map {
+  ): Future[OptionalDataRequest[A]] = {
+
+    val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+    userAnswersService.get(draftId)(hc).map {
       OptionalDataRequest(
         request.request,
         request.userId,
@@ -43,6 +49,13 @@ class DataRetrievalActionImpl @Inject() (
         _
       )
     }
+  }
 }
 
-trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]
+class DataRetrievalActionProvider @Inject() (userAnswersService: UserAnswersService)(implicit
+  ec: ExecutionContext
+) {
+
+  def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
+    new DataRetrievalAction(draftId, userAnswersService)
+}

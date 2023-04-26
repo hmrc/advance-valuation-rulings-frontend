@@ -29,21 +29,20 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
-import models.{AcknowledgementReference, CheckRegisteredDetails, EoriNumber, Mode}
-import models.TraderDetails
+import models.{AcknowledgementReference, CheckRegisteredDetails, DraftId, EoriNumber, Mode}
 import models.requests.DataRequest
 import navigation.Navigator
 import org.apache.commons.lang3.StringUtils
 import pages.CheckRegisteredDetailsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
+  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
+  getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -58,16 +57,16 @@ class CheckRegisteredDetailsController @Inject() (
   private val AckRefLength = 32
   private val AckRefPad    = "0"
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         request.userAnswers.get(CheckRegisteredDetailsPage) match {
           case Some(value) =>
-            handleForm {
+            handleForm(draftId) {
               (details: CheckRegisteredDetails) =>
                 val form =
                   formProvider(request.affinityGroup, details.consentToDisclosureOfPersonalData)
-                Ok(view(form.fill(value.value), mode, details, request.affinityGroup))
+                Ok(view(form.fill(value.value), mode, details, request.affinityGroup, draftId))
             }
           case None        =>
             backendConnector
@@ -84,12 +83,14 @@ class CheckRegisteredDetailsController @Inject() (
                     answers <-
                       request.userAnswers
                         .setFuture(CheckRegisteredDetailsPage, traderDetails.details)
-                    _       <- sessionRepository.set(answers)
+                    _       <- userAnswersService.set(answers)
                     form     = formProvider(
                                  request.affinityGroup,
                                  traderDetails.details.consentToDisclosureOfPersonalData
                                )
-                  } yield Ok(view(form, mode, traderDetails.details, request.affinityGroup))
+                  } yield Ok(
+                    view(form, mode, traderDetails.details, request.affinityGroup, draftId)
+                  )
                 case Left(backendError)   =>
                   logger.error(s"Failed to get trader details from backend: $backendError")
                   Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
@@ -97,8 +98,8 @@ class CheckRegisteredDetailsController @Inject() (
         }
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val checkRegisteredDetails: Option[CheckRegisteredDetails] =
           request.userAnswers.get(CheckRegisteredDetailsPage)
@@ -117,16 +118,18 @@ class CheckRegisteredDetailsController @Inject() (
               .bindFromRequest()
               .fold(
                 formWithErrors =>
-                  handleForm(
+                  handleForm(draftId)(
                     (details: CheckRegisteredDetails) =>
-                      BadRequest(view(formWithErrors, mode, details, request.affinityGroup))
+                      BadRequest(
+                        view(formWithErrors, mode, details, request.affinityGroup, draftId)
+                      )
                   ),
                 value => {
                   val updatedDetails = registeredDetails.copy(value = value)
                   for {
                     updatedAnswers <-
                       request.userAnswers.setFuture(CheckRegisteredDetailsPage, updatedDetails)
-                    _              <- sessionRepository.set(updatedAnswers)
+                    _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
                     navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)(
                       request.affinityGroup
@@ -137,11 +140,11 @@ class CheckRegisteredDetailsController @Inject() (
         }
     }
 
-  private def handleForm(
+  private def handleForm(draftId: DraftId)(
     detailsToResult: CheckRegisteredDetails => Result
   )(implicit request: DataRequest[AnyContent]): Future[Result] =
     for {
-      userAnswers <- sessionRepository.get(request.userAnswers.userId)
+      userAnswers <- userAnswersService.get(draftId)
       details      = userAnswers.flatMap(_.get(CheckRegisteredDetailsPage))
       result       = details match {
                        case Some(registrationDetails) =>

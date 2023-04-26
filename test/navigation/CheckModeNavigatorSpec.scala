@@ -16,30 +16,34 @@
 
 package navigation
 
+import java.time.Instant
+
 import play.api.libs.json.Writes
 import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import controllers.routes
 import models._
-import models.fileupload._
 import pages._
 import queries.Modifiable
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers  = emptyUserAnswers
-  val navigator                      = new Navigator
-  val fileDetails: UpscanFileDetails =
-    UpscanFileDetails(UploadId("id"), "name", "some.url", "txt", 1L)
-  val uploadedFile: UploadedFile     = UploadedFile(
-    fileDetails.fileName,
-    fileDetails.downloadUrl,
-    isConfidential = false,
-    fileDetails.mimeType,
-    fileDetails.size
+  val EmptyUserAnswers: UserAnswers = emptyUserAnswers
+  val navigator                     = new Navigator
+  val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
+
+  private val successfulFile = UploadedFile.Success(
+    reference = "reference",
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.now(),
+      checksum = "checksum",
+      size = 1337
+    )
   )
-  val checkYourAnswers               = routes.CheckYourAnswersController.onPageLoad
 
   "Navigator" - {
 
@@ -68,7 +72,10 @@ class CheckModeNavigatorSpec extends SpecBase {
             ValuationMethodPage,
             CheckMode,
             userAnswers
-          ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(mode = CheckMode)
+          ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(
+            mode = CheckMode,
+            draftId = draftId
+          )
         }
 
         "WhyIdenticalGoods page when method 2 is selected" in {
@@ -78,7 +85,10 @@ class CheckModeNavigatorSpec extends SpecBase {
             ValuationMethodPage,
             CheckMode,
             userAnswers
-          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = CheckMode)
+          ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(
+            mode = CheckMode,
+            draftId = draftId
+          )
         }
 
         "WhyTransactionValueOfSimilarGoods page when method 3 is selected" in {
@@ -88,7 +98,10 @@ class CheckModeNavigatorSpec extends SpecBase {
             ValuationMethodPage,
             CheckMode,
             userAnswers
-          ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode = CheckMode)
+          ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(
+            mode = CheckMode,
+            draftId = draftId
+          )
         }
 
         "ExplainWhyYouHaveNotSelectedMethodOneToThree page when method 4 is selected" in {
@@ -98,8 +111,9 @@ class CheckModeNavigatorSpec extends SpecBase {
             ValuationMethodPage,
             CheckMode,
             userAnswers
-          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode =
-            CheckMode
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
+            mode = CheckMode,
+            draftId
           )
         }
 
@@ -110,7 +124,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             ValuationMethodPage,
             CheckMode,
             userAnswers
-          ) mustBe routes.WhyComputedValueController.onPageLoad(mode = CheckMode)
+          ) mustBe routes.WhyComputedValueController.onPageLoad(mode = CheckMode, draftId = draftId)
         }
 
         "ExplainWhyYouHaveNotSelectedMethodOneToFiveController page when method 6 is selected" in {
@@ -120,8 +134,9 @@ class CheckModeNavigatorSpec extends SpecBase {
             ValuationMethodPage,
             CheckMode,
             userAnswers
-          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode =
-            CheckMode
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
+            mode = CheckMode,
+            draftId
           )
         }
       }
@@ -133,7 +148,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsThereASaleInvolvedPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to IsSaleBetweenRelatedParties page when yes" in {
@@ -143,7 +161,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsThereASaleInvolvedPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to valuationMethod page when no" in {
@@ -153,7 +174,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsThereASaleInvolvedPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.ValuationMethodController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ValuationMethodController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to checkYourAnswers if yes and user has answered all other questions" in {
@@ -196,7 +220,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsSaleBetweenRelatedPartiesPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to ExplainHowPartiesAreRelated page when yes" in {
@@ -206,7 +233,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsSaleBetweenRelatedPartiesPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to AreThereRestrictionsOnTheGoods page when no" in {
@@ -216,7 +246,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsSaleBetweenRelatedPartiesPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
         }
 
@@ -229,7 +262,7 @@ class CheckModeNavigatorSpec extends SpecBase {
                 .set(ExplainHowPartiesAreRelatedPage, "explain")
                 .success
                 .value
-            ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode)
+            ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode, draftId)
           }
         }
 
@@ -239,7 +272,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               AreThereRestrictionsOnTheGoodsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode)
+            ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode, draftId)
           }
         }
 
@@ -249,7 +282,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               DescribeTheRestrictionsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(CheckMode)
+            ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(CheckMode, draftId)
           }
 
           "navigate to IsTheSaleSubjectToConditions when answers has data" in {
@@ -257,7 +290,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               DescribeTheRestrictionsPage,
               CheckMode,
               userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions")
-            ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode)
+            ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode, draftId)
           }
         }
 
@@ -267,7 +300,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsTheSaleSubjectToConditionsPage,
               CheckMode,
               userAnswersWith(IsTheSaleSubjectToConditionsPage, true)
-            ) mustBe routes.DescribeTheConditionsController.onPageLoad(CheckMode)
+            ) mustBe routes.DescribeTheConditionsController.onPageLoad(CheckMode, draftId)
           }
 
           "navigate to checkYourAnswers when False" in {
@@ -283,7 +316,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               IsTheSaleSubjectToConditionsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode)
+            ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode, draftId)
           }
         }
 
@@ -293,7 +326,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               DescribeTheConditionsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.DescribeTheConditionsController.onPageLoad(CheckMode)
+            ) mustBe routes.DescribeTheConditionsController.onPageLoad(CheckMode, draftId)
           }
 
           "navigate to checkYourAnswers when answer has data" in {
@@ -314,7 +347,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               WhyIdenticalGoodsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to HaveYouUsedMethodOneInPastPage" in {
@@ -323,7 +359,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               WhyIdenticalGoodsPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to checkYourAnswers when user has answers for remaining pages" in {
@@ -347,7 +386,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               HaveYouUsedMethodOneInPastPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "must navigate to describeTheIdenticalGoods Page when True" in {
@@ -356,7 +398,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               HaveYouUsedMethodOneInPastPage,
               CheckMode,
               ans
-            ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(CheckMode)
+            ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(CheckMode, draftId)
           }
 
           "must navigate to valuationMethod Page when False" in {
@@ -365,7 +407,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               HaveYouUsedMethodOneInPastPage,
               CheckMode,
               ans
-            ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode)
+            ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode, draftId)
           }
         }
 
@@ -375,7 +417,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               DescribeTheIdenticalGoodsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
           "must navigate to checkYourAnswers Page when set" in {
             val userAnswers =
@@ -397,7 +442,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               WhyTransactionValueOfSimilarGoodsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "must navigate to haveYouUsedMethodOneForSimilarGoodsInPast page when user has data for the page" in {
@@ -408,7 +456,8 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckMode,
               userAnswers
             ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
-              mode = CheckMode
+              mode = CheckMode,
+              draftId = draftId
             )
           }
 
@@ -434,7 +483,8 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckMode,
               EmptyUserAnswers
             ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
-              mode = CheckMode
+              mode = CheckMode,
+              draftId = draftId
             )
           }
 
@@ -444,7 +494,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               HaveYouUsedMethodOneForSimilarGoodsInPastPage,
               CheckMode,
               ans
-            ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(CheckMode)
+            ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(CheckMode, draftId)
           }
 
           "must navigate to valuationMethod Page when False" in {
@@ -453,7 +503,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               HaveYouUsedMethodOneForSimilarGoodsInPastPage,
               CheckMode,
               ans
-            ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode)
+            ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode, draftId)
           }
         }
 
@@ -463,7 +513,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               DescribeTheSimilarGoodsPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
           "must navigate to checkYourAnswers Page when set" in {
             val userAnswers =
@@ -485,8 +538,9 @@ class CheckModeNavigatorSpec extends SpecBase {
               ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode =
-              CheckMode
+            ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
+              mode = CheckMode,
+              draftId
             )
           }
 
@@ -497,7 +551,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
               CheckMode,
               userAnswers
-            ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to checkYourAnswersPage when user has data for the remaining questions" in {
@@ -521,7 +578,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               ExplainWhyYouChoseMethodFourPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to checkYourAnswersPage when user has data for the page" in {
@@ -544,7 +604,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               WhyComputedValuePage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.WhyComputedValueController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.WhyComputedValueController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to explainReasonComputedValuePage when user has data for the page" in {
@@ -554,7 +617,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               WhyComputedValuePage,
               CheckMode,
               userAnswers
-            ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to checkYourAnswersPage when user has data for the remaining questions" in {
@@ -577,7 +643,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               ExplainReasonComputedValuePage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to checkYourAnswersPage when user has data for the page" in {
@@ -600,8 +669,9 @@ class CheckModeNavigatorSpec extends SpecBase {
               ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode =
-              CheckMode
+            ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
+              mode = CheckMode,
+              draftId
             )
           }
 
@@ -612,7 +682,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
               CheckMode,
               userAnswers
-            ) mustBe routes.AdaptMethodController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.AdaptMethodController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
 
           "navigate to checkYourAnswersPage when user has data for the remaining questions" in {
@@ -637,7 +707,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               AdaptMethodPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.AdaptMethodController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.AdaptMethodController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
 
           "navigate to explainHowYouWillUseMethodSixPage when user has data for the page" in {
@@ -646,7 +716,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               AdaptMethodPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to checkYourAnswersPage when user has data for the remaining questions" in {
@@ -670,7 +743,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               ExplainHowYouWillUseMethodSixPage,
               CheckMode,
               EmptyUserAnswers
-            ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "navigate to descriptionOfTheGoodsPage when user has data for the page" in {
@@ -713,7 +789,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.EORIBeUpToDateController.onPageLoad()
+            ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
           }
         }
       }
@@ -727,7 +803,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               HasConfidentialInformationPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.ConfidentialInformationController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.ConfidentialInformationController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "and navigate to CheckYourAnswers when No" in {
@@ -747,7 +826,10 @@ class CheckModeNavigatorSpec extends SpecBase {
               HaveTheGoodsBeenSubjectToLegalChallengesPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
           }
 
           "and navigate to CheckYourAnswers when No" in {
@@ -767,7 +849,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               HasCommodityCodePage,
               CheckMode,
               userAnswers
-            ) mustBe routes.CommodityCodeController.onPageLoad(mode = CheckMode)
+            ) mustBe routes.CommodityCodeController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
 
           "and navigate to DoYouWantToUploadSupportingDocuments when No" in {
@@ -788,10 +870,11 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckMode,
               userAnswers
             ) mustBe controllers.routes.UploadSupportingDocumentsController.onPageLoad(
+              Index(0),
+              CheckMode,
+              draftId,
               None,
-              None,
-              None,
-              CheckMode
+              None
             )
           }
 
@@ -805,81 +888,119 @@ class CheckModeNavigatorSpec extends SpecBase {
           }
         }
 
-        "IsThisFileConfidential page" - {
-          "navigate to self if file confidentiality not set" in {
-            val userAnswers = userAnswersWith(
-              UploadSupportingDocumentPage,
-              UploadedFiles(
-                lastUpload = Some(fileDetails),
-                files = Map.empty
-              )
-            )
+        "UploadSupportingDocumentPage must navigate to" - {
+
+          "IsThisFileConfidential page" in {
             navigator.nextPage(
-              IsThisFileConfidentialPage,
+              UploadSupportingDocumentPage(Index(0)),
               CheckMode,
-              userAnswers
+              emptyUserAnswers
             ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
-              CheckMode
+              Index(0),
+              CheckMode,
+              draftId
+            )
+          }
+        }
+
+        "IsThisFileConfidentialPage must navigate to" - {
+
+          "UploadAnotherSupportingDocument page" in {
+            navigator.nextPage(
+              IsThisFileConfidentialPage(Index(0)),
+              CheckMode,
+              emptyUserAnswers
+            ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
+          }
+        }
+
+        "UploadAnotherSupportingDocumentPage must navigate to" - {
+
+          "UploadSupportingDocumentsPage when Yes is selected" in {
+            val userAnswers =
+              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, true).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(Index(0), CheckMode, draftId, None, None)
+          }
+
+          "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
+            val userAnswers =
+              emptyUserAnswers
+                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+                .success
+                .value
+                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .success
+                .value
+                .set(UploadAnotherSupportingDocumentPage, true)
+                .get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(Index(1), CheckMode, draftId, None, None)
+          }
+
+          "CheckYourAnswers page when No is selected and the user is not an agent" in {
+            val userAnswers =
+              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
+          }
+
+          "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
+            val userAnswers =
+              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+              draftId
             )
           }
 
-          "navigate to upload another if file confidentiality not set" in {
-            val userAnswers = userAnswersWith(
-              UploadSupportingDocumentPage,
-              UploadedFiles(
-                lastUpload = Some(fileDetails),
-                files = Map.empty
-              )
-            )
+          "JourneyRecovery page when the page is not answered" in {
             navigator.nextPage(
-              IsThisFileConfidentialPage,
+              UploadAnotherSupportingDocumentPage,
               CheckMode,
-              userAnswers
-            ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
-              CheckMode
-            )
+              emptyUserAnswers
+            ) mustBe routes.JourneyRecoveryController.onPageLoad()
+          }
+        }
+
+        "DeleteSupportingDocumentPage must navigate to" - {
+
+          "UploadAnotherSupportingDocument page when there are more documents" in {
+            val answers =
+              emptyUserAnswers
+                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+                .success
+                .value
+                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .success
+                .value
+            navigator.nextPage(
+              DeleteSupportingDocumentPage(Index(0)),
+              CheckMode,
+              answers
+            ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
           }
 
-          "navigate to UploadAnotherSupportingDocument when set" in {
-            val userAnswers = userAnswersWith(
-              UploadSupportingDocumentPage,
-              UploadedFiles(
-                lastUpload = None,
-                files = Map(
-                  UploadId("id") ->
-                    uploadedFile
-                )
-              )
-            )
+          "DoYouWantToUploadSupportingDocuments page when there are no more documents" in {
             navigator.nextPage(
-              IsThisFileConfidentialPage,
+              DeleteSupportingDocumentPage(Index(0)),
               CheckMode,
-              userAnswers
-            ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode)
-          }
-
-          "navigate to DoYouWantToUploadDocuments when there are no uploaded documents" in {
-            val userAnswers = userAnswersWith(
-              UploadSupportingDocumentPage,
-              UploadedFiles(
-                lastUpload = None,
-                files = Map.empty
-              )
-            )
-            navigator.nextPage(
-              IsThisFileConfidentialPage,
-              CheckMode,
-              userAnswers
-            ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode)
-          }
-
-          "navigate to DoYouWantToUploadDocuments when the question has no answer" in {
-            val userAnswers = EmptyUserAnswers
-            navigator.nextPage(
-              IsThisFileConfidentialPage,
-              CheckMode,
-              userAnswers
-            ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode)
+              emptyUserAnswers
+            ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
           }
         }
       }
@@ -906,7 +1027,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             WhatIsYourRoleAsImporterPage,
             CheckMode,
             userAnswers
-          ) mustBe routes.AgentCompanyDetailsController.onPageLoad(CheckMode)
+          ) mustBe routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId)
         }
       }
 
@@ -922,6 +1043,5 @@ class CheckModeNavigatorSpec extends SpecBase {
         }
       }
     }
-
   }
 }

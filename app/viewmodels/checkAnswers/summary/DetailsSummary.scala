@@ -23,10 +23,7 @@ import models.UserAnswers
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
-case class DetailsSummary(rows: SummaryList) extends AnyVal {
-  def removeActions(): DetailsSummary =
-    DetailsSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
-}
+case class DetailsSummary(rows: SummaryList) extends AnyVal
 
 object DetailsSummary {
   def apply(userAnswers: UserAnswers)(implicit

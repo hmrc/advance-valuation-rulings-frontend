@@ -24,13 +24,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.CheckRegisteredDetails
+import models.{CheckRegisteredDetails, Done}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CheckRegisteredDetailsPage
-import repositories.SessionRepository
+import services.UserAnswersService
 import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
@@ -38,7 +38,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   lazy val checkRegisteredDetailRoute           =
-    routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode).url
+    routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url
   val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
     value = false,
     eori = "GB123456789012345",
@@ -58,34 +58,36 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.EORIBeUpToDateController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.EORIBeUpToDateController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[EORIBeUpToDateView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
       }
     }
 
     "must redirect to the next page when yes is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val mockUserAnswersService = mock[UserAnswersService]
 
       val userAnswers = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+        Some(userAnswers)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -103,20 +105,22 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when 'no' is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = emptyUserAnswers
+      val mockUserAnswersService = mock[UserAnswersService]
+      val userAnswers            = emptyUserAnswers
         .set(CheckRegisteredDetailsPage, registeredDetails)
         .success
         .value
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-      when(mockSessionRepository.get(any())) thenReturn Future.successful(Some(userAnswers))
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+        Some(userAnswers)
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 

@@ -18,11 +18,11 @@
 
 @this(link: Link)
 
-@()(implicit messages: Messages)
+@(draftId: DraftId)(implicit messages: Messages)
 
     @link(
         id = "cancel_application",
         text = messages("site.cancel"),
         newTab = false,
-        call = routes.CancelApplicationController.onPageLoad()
+        call = routes.CancelApplicationController.onPageLoad(draftId)
     )
