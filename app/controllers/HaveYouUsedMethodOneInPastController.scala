@@ -66,19 +66,15 @@ class HaveYouUsedMethodOneInPastController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
-            value => {
-              val userAnswers =
-                if (value) request.userAnswers
-                else UserAnswers.clearValuationMethod(request.userAnswers)
+            value =>
               for {
-                ua <- userAnswers.setFuture(HaveYouUsedMethodOneInPastPage, value)
+                ua <- request.userAnswers.setFuture(HaveYouUsedMethodOneInPastPage, value)
                 _  <- userAnswersService.set(ua)
               } yield Redirect(
                 navigator.nextPage(HaveYouUsedMethodOneInPastPage, mode, ua)(
                   request.affinityGroup
                 )
               )
-            }
           )
     }
 }

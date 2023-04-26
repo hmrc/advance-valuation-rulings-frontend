@@ -69,10 +69,11 @@ class ValuationMethodController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
-                ua <- Future.fromTry(UserAnswers.updateValuationMethod(request.userAnswers, value))
-                _  <- userAnswersService.set(ua)
+                updatedAnswers <-
+                  Future.fromTry(request.userAnswers.set(ValuationMethodPage, value))
+                _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ValuationMethodPage, mode, ua)(request.affinityGroup)
+                navigator.nextPage(ValuationMethodPage, mode, updatedAnswers)(request.affinityGroup)
               )
           )
     }

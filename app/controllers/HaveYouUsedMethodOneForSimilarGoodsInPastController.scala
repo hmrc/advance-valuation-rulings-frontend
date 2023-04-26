@@ -67,19 +67,16 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
-            value => {
-              val userAnswers =
-                if (value) request.userAnswers
-                else UserAnswers.clearValuationMethod(request.userAnswers)
+            value =>
               for {
-                ua <- userAnswers.setFuture(HaveYouUsedMethodOneForSimilarGoodsInPastPage, value)
+                ua <- request.userAnswers
+                        .setFuture(HaveYouUsedMethodOneForSimilarGoodsInPastPage, value)
                 _  <- userAnswersService.set(ua)
               } yield Redirect(
                 navigator.nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, mode, ua)(
                   request.affinityGroup
                 )
               )
-            }
           )
     }
 }
