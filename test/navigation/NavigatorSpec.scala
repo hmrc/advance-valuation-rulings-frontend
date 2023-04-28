@@ -21,16 +21,17 @@ import java.time.Instant
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, User}
 
 import base.SpecBase
 import controllers.routes
 import models._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import org.scalatest.prop.TableDrivenPropertyChecks
 import pages._
 import queries.Modifiable
 
-class NavigatorSpec extends SpecBase {
+class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
 
   val EmptyUserAnswers: UserAnswers = emptyUserAnswers
   val navigator                     = new Navigator
@@ -80,26 +81,54 @@ class NavigatorSpec extends SpecBase {
 
     "Account Home" - {
 
-      "should navigate to RequiredInformation page when Individual" in {
-        navigator.startApplicationRouting(
-          AffinityGroup.Individual,
-          draftId
-        ) mustBe routes.RequiredInformationController
-          .onPageLoad(draftId)
+      val credentialRoles = Table(
+        "credentialRoles",
+        Set(Option(User), Option(Assistant), None).toList: _*
+      )
+
+      forAll(credentialRoles) {
+        credentialRole =>
+          s"should navigate to RequiredInformation page for Individual with credentialRole $credentialRole" in {
+            navigator.startApplicationRouting(
+              draftId,
+              AffinityGroup.Individual,
+              credentialRole
+            ) mustBe routes.RequiredInformationController
+              .onPageLoad(draftId)
+          }
+
+          s"should navigate to WhatIsYourRole page for Agent with credentialRole $credentialRole" in {
+            navigator.startApplicationRouting(
+              draftId,
+              AffinityGroup.Agent,
+              credentialRole
+            ) mustBe routes.WhatIsYourRoleAsImporterController
+              .onPageLoad(NormalMode, draftId)
+          }
       }
 
-      "should navigate to WhatIsYourRole page when Agent" in {
+      "should navigate to WhatIsYourRole page for Org User" in {
         navigator.startApplicationRouting(
-          AffinityGroup.Agent,
-          draftId
+          draftId,
+          AffinityGroup.Organisation,
+          Option(User)
+        ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
+      }
+
+      "should navigate to WhatIsYourRole page for Org Assistant" in {
+        navigator.startApplicationRouting(
+          draftId,
+          AffinityGroup.Organisation,
+          Option(Assistant)
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
-      "should navigate to WhatIsYourRole page when Org" in {
+      "should navigate to WhatIsYourRole page for Org with no credentialRole" in {
         navigator.startApplicationRouting(
+          draftId,
           AffinityGroup.Organisation,
-          draftId
+          None
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }

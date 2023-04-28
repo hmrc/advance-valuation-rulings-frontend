@@ -23,7 +23,7 @@ import scala.concurrent.Future
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, User}
 
 import audit.AuditService
 import base.SpecBase
@@ -154,7 +154,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           d =>
             ApplicationForAccountHome(
               d,
-              navigator.startApplicationRouting(AffinityGroup.Individual, d.id)
+              navigator.startApplicationRouting(d.id, AffinityGroup.Individual, Option(User))
             )(messages(application))
         }
 
@@ -208,7 +208,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           d =>
             ApplicationForAccountHome(
               d,
-              navigator.startApplicationRouting(AffinityGroup.Individual, d.id)
+              navigator.startApplicationRouting(d.id, AffinityGroup.Individual, Option(User))
             )(messages(application))
         }
 

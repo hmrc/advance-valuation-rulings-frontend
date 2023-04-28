@@ -19,8 +19,8 @@ package navigation
 import javax.inject.Inject
 
 import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
+import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole, User}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 
 import controllers.routes._
 import models._
@@ -500,10 +500,17 @@ class Navigator @Inject() () {
       CheckModeNavigator.nextPage(page)(userAnswers, affinityGroup)
   }
 
-  def startApplicationRouting(affinityGroup: AffinityGroup, draftId: DraftId): Call =
+  def startApplicationRouting(
+    draftId: DraftId,
+    affinityGroup: AffinityGroup,
+    credentialRole: Option[CredentialRole]
+  ): Call =
     affinityGroup match {
-      case Individual => RequiredInformationController.onPageLoad(draftId)
-      case _          =>
+      case Individual                                    =>
+        RequiredInformationController.onPageLoad(draftId)
+      case Organisation if credentialRole.contains(User) =>
+        RequiredInformationController.onPageLoad(draftId)
+      case _                                             =>
         WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
     }
 }

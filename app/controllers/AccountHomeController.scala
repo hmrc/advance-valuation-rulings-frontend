@@ -63,7 +63,11 @@ class AccountHomeController @Inject() (
             draft =>
               ApplicationForAccountHome(
                 draft,
-                navigator.startApplicationRouting(request.affinityGroup, draft.id)
+                navigator.startApplicationRouting(
+                  draft.id,
+                  request.affinityGroup,
+                  request.credentialRole
+                )
               )
           }
 
@@ -78,6 +82,12 @@ class AccountHomeController @Inject() (
         for {
           draftId <- counterRepository.nextId(CounterId.DraftId)
           _       <- userAnswersService.set(UserAnswers(request.userId, DraftId(draftId)))
-        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, DraftId(draftId)))
+        } yield Redirect(
+          navigator.startApplicationRouting(
+            DraftId(draftId),
+            request.affinityGroup,
+            request.credentialRole
+          )
+        )
     }
 }
