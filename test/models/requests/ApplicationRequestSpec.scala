@@ -112,17 +112,7 @@ class ApplicationRequestSpec
           ua <- ua.set(HasConfidentialInformationPage, false)
           ua <- ua.set(
                   CheckRegisteredDetailsPage,
-                  CheckRegisteredDetails(
-                    value = true,
-                    eori = randomString,
-                    consentToDisclosureOfPersonalData = randomBoolean,
-                    name = randomString,
-                    streetAndNumber = randomString,
-                    city = randomString,
-                    country = country.code,
-                    postalCode = Some(randomString),
-                    phoneNumber = Some(randomString)
-                  )
+                  true
                 )
           ua <- ua.set(
                   ApplicationContactDetailsPage,
@@ -142,12 +132,13 @@ class ApplicationRequestSpec
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
         } yield ua).success.get
 
-        val result = ApplicationRequest(userAnswers, AffinityGroup.Individual)
+        val result =
+          ApplicationRequest(userAnswers, AffinityGroup.Individual, traderDetailsWithCountryCode)
 
         result shouldBe Valid(
           ApplicationRequest(
             draftId = draftId,
-            trader = eoriDetails,
+            trader = traderDetails,
             agent = None,
             contact = contact,
             requestedMethod = MethodOne(
@@ -161,8 +152,49 @@ class ApplicationRequestSpec
         )
       }
 
+      "return invalid when user states registered details are incorrect" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(CheckRegisteredDetailsPage, false)
+          ua <- ua.set(
+                  ApplicationContactDetailsPage,
+                  ApplicationContactDetails(
+                    name = randomString,
+                    email = randomString,
+                    phone = randomString
+                  )
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+        } yield ua).success.get
+
+        val result =
+          ApplicationRequest(userAnswers, AffinityGroup.Individual, traderDetailsWithCountryCode)
+
+        result shouldBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage
+          )
+        )
+      }
+
       "return invalid for an Individual when built from empty userAnswers" in {
-        val result = ApplicationRequest(emptyUserAnswers, AffinityGroup.Individual)
+        val result = ApplicationRequest(
+          emptyUserAnswers,
+          AffinityGroup.Individual,
+          traderDetailsWithCountryCode
+        )
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -187,17 +219,7 @@ class ApplicationRequestSpec
           ua <- ua.set(HasConfidentialInformationPage, false)
           ua <- ua.set(
                   CheckRegisteredDetailsPage,
-                  CheckRegisteredDetails(
-                    value = true,
-                    eori = randomString,
-                    consentToDisclosureOfPersonalData = randomBoolean,
-                    name = randomString,
-                    streetAndNumber = randomString,
-                    city = randomString,
-                    country = country.code,
-                    postalCode = Some(randomString),
-                    phoneNumber = Some(randomString)
-                  )
+                  true
                 )
           ua <- ua.set(
                   BusinessContactDetailsPage,
@@ -218,12 +240,13 @@ class ApplicationRequestSpec
           ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
         } yield ua).success.get
 
-        val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
+        val result =
+          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
 
         result shouldBe Valid(
           ApplicationRequest(
             draftId = draftId,
-            trader = eoriDetails,
+            trader = traderDetails,
             agent = None,
             contact = contact,
             requestedMethod = MethodOne(
@@ -242,7 +265,8 @@ class ApplicationRequestSpec
           .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
           .get
 
-        val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
+        val result =
+          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -267,17 +291,7 @@ class ApplicationRequestSpec
           ua <- ua.set(HasConfidentialInformationPage, false)
           ua <- ua.set(
                   CheckRegisteredDetailsPage,
-                  CheckRegisteredDetails(
-                    value = true,
-                    eori = randomString,
-                    consentToDisclosureOfPersonalData = randomBoolean,
-                    name = randomString,
-                    streetAndNumber = randomString,
-                    city = randomString,
-                    country = country.code,
-                    postalCode = Some(randomString),
-                    phoneNumber = Some(randomString)
-                  )
+                  true
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
           ua <- ua.set(IsThereASaleInvolvedPage, true)
@@ -309,12 +323,13 @@ class ApplicationRequestSpec
                 )
         } yield ua).success.get
 
-        val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
+        val result =
+          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
 
         result shouldBe Valid(
           ApplicationRequest(
             draftId = draftId,
-            trader = eoriDetails,
+            trader = traderDetails,
             agent = Some(agentEoriDetails),
             contact = contact,
             requestedMethod = MethodOne(
@@ -333,7 +348,8 @@ class ApplicationRequestSpec
           .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
           .get
 
-        val result = ApplicationRequest(userAnswers, AffinityGroup.Organisation)
+        val result =
+          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -363,6 +379,43 @@ object ApplicationRequestSpec extends Generators {
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
   val country = Country("GB", "United Kingdom")
+
+  val contactInformation = ContactInformation(
+    personOfContact = Some("Test Person"),
+    sepCorrAddrIndicator = Some(false),
+    streetAndNumber = Some("Test Street 1"),
+    city = Some("Test City"),
+    postalCode = Some("Test Postal Code"),
+    countryCode = Some("GB"),
+    telephoneNumber = Some("Test Telephone Number"),
+    faxNumber = Some("Test Fax Number"),
+    emailAddress = Some("Test Email Address"),
+    emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
+  )
+
+  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = "GB123456789012345",
+    consentToDisclosureOfPersonalData = true,
+    CDSFullName = "Test Name",
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = "Test Street 1",
+      city = "Test City",
+      countryCode = "GB",
+      postalCode = Some("Test Postal Code")
+    ),
+    contactInformation = Some(contactInformation)
+  )
+
+  val traderDetails = TraderDetail(
+    eori = traderDetailsWithCountryCode.EORINo,
+    businessName = traderDetailsWithCountryCode.CDSFullName,
+    addressLine1 = traderDetailsWithCountryCode.CDSEstablishmentAddress.streetAndNumber,
+    addressLine2 = Some(traderDetailsWithCountryCode.CDSEstablishmentAddress.city),
+    addressLine3 = None,
+    postcode = traderDetailsWithCountryCode.CDSEstablishmentAddress.postalCode.getOrElse(""),
+    countryCode = traderDetailsWithCountryCode.CDSEstablishmentAddress.countryCode,
+    phoneNumber = traderDetailsWithCountryCode.contactInformation.flatMap(_.telephoneNumber)
+  )
 
   val eoriDetails = TraderDetail(
     eori = randomString,

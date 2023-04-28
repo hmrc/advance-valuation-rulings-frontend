@@ -25,7 +25,9 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
+import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import models._
 import models.DraftId
 import models.requests._
 import pages.Page
@@ -40,36 +42,64 @@ class CheckYourAnswersController @Inject() (
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView,
-  submissionService: SubmissionService
+  submissionService: SubmissionService,
+  backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   private val logger = Logger(this.getClass)
 
+  private def getTraderDetails(
+    handleSuccess: TraderDetailsWithCountryCode => Future[play.api.mvc.Result]
+  )(implicit request: DataRequest[AnyContent]) =
+    backendConnector
+      .getTraderDetails(
+        AcknowledgementReference(request.userAnswers.draftId),
+        EoriNumber(request.eoriNumber)
+      )
+      .flatMap {
+        case Right(traderDetails) =>
+          handleSuccess(traderDetails)
+        case Left(backendError)   =>
+          logger.error(s"Failed to get trader details from backend: $backendError")
+          Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      }
+
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val applicationSummary = ApplicationSummary(request.userAnswers, request.affinityGroup)
-        Ok(view(applicationSummary, draftId))
+        getTraderDetails {
+          traderDetails =>
+            val applicationSummary =
+              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
+            Future.successful(Ok(view(applicationSummary, draftId)))
+        }
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        ApplicationRequest(request.userAnswers, request.affinityGroup) match {
-          case Invalid(errors: cats.data.NonEmptyList[Page]) =>
-            logger.warn(s"Failed to create application request: ${errors.toList.mkString(", ")}}")
-            Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-          case Valid(applicationRequest)                     =>
-            submissionService
-              .submitApplication(applicationRequest, request.userId)
-              .map {
-                response =>
-                  Redirect(
-                    routes.ApplicationCompleteController.onPageLoad(response.applicationId.toString)
-                  )
-              }
+        getTraderDetails {
+          traderDetails =>
+            ApplicationRequest(request.userAnswers, request.affinityGroup, traderDetails) match {
+              case Invalid(errors: cats.data.NonEmptyList[Page]) =>
+                logger.warn(
+                  s"Failed to create application request: ${errors.toList.mkString(", ")}}"
+                )
+                Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+              case Valid(applicationRequest)                     =>
+                submissionService
+                  .submitApplication(applicationRequest, request.userId)
+                  .map {
+                    response =>
+                      Redirect(
+                        routes.ApplicationCompleteController
+                          .onPageLoad(response.applicationId.toString)
+                      )
+                  }
+            }
+
         }
     }
 }

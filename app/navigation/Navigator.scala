@@ -345,14 +345,26 @@ class Navigator @Inject() () {
       case Some(true)  =>
         ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
-        DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
+        if (numberOfDocuments > 0) {
+          controllers.routes.UploadAnotherSupportingDocumentController
+            .onPageLoad(NormalMode, userAnswers.draftId)
+        } else {
+          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        }
     }
 
   private def confidentialInformationPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ConfidentialInformationPage) match {
       case None    => ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) =>
-        DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
+        if (numberOfDocuments > 0) {
+          controllers.routes.UploadAnotherSupportingDocumentController
+            .onPageLoad(NormalMode, userAnswers.draftId)
+        } else {
+          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        }
     }
 
   private def doYouWantToUploadDocumentsPage(
@@ -442,9 +454,9 @@ class Navigator @Inject() () {
     userAnswers: UserAnswers
   )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
-      case None                    => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(registeredDetails) =>
-        if (registeredDetails.value) {
+      case None        => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(value) =>
+        if (value) {
           resolveAffinityGroup(affinityGroup)(
             ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
             BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)

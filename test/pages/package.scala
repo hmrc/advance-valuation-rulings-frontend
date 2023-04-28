@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package models
+import play.api.libs.json.Writes
 
-import play.api.libs.json.{Json, OFormat}
+import models.UserAnswers
+import org.scalatest.TryValues._
+import queries.Modifiable
 
-case class CheckRegisteredDetails(
-  value: Boolean,
-  eori: String,
-  consentToDisclosureOfPersonalData: Boolean,
-  name: String,
-  streetAndNumber: String,
-  city: String,
-  country: String,
-  postalCode: Option[String],
-  phoneNumber: Option[String]
-)
+package object pages {
 
-object CheckRegisteredDetails {
-  implicit val format: OFormat[CheckRegisteredDetails] = Json.format[CheckRegisteredDetails]
+  implicit class UserAnswersSetHelper(ua: UserAnswers) {
+    def unsafeSet[A](page: Modifiable[A])(value: A)(implicit writes: Writes[A]): UserAnswers =
+      ua.set(page, value).success.value
+  }
+
 }

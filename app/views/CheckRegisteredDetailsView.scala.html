@@ -32,14 +32,14 @@
     saveButtons: SaveButtons
 )
 
-@(form: Form[_], mode: Mode, registeredDetails: CheckRegisteredDetails, affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = title(
         form,
         messages(
             if (registeredDetails.consentToDisclosureOfPersonalData) "checkRegisteredDetails.title" else "checkRegisteredDetails.private.title",
-            registeredDetails.eori
+            registeredDetails.EORINo
         )
     ),
     draftId = Some(draftId)
@@ -49,16 +49,16 @@
     @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value")))
         }
 
 
         @caption(messages("checkRegisteredDetails.caption"))
 
         @if(registeredDetails.consentToDisclosureOfPersonalData) {
-            @heading(messages("checkRegisteredDetails.heading.1", registeredDetails.eori))
+            @heading(messages("checkRegisteredDetails.heading.1", registeredDetails.EORINo))
         } else {
-            @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.eori))
+            @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.EORINo))
         }
 
         @if(registeredDetails.consentToDisclosureOfPersonalData) {
@@ -69,22 +69,22 @@
             } else if(affinityGroup == AffinityGroup.Agent) {
                 @warning(content=Html(messages("checkRegisteredDetails.warning.agent")))
             }
-            
+
             @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
 
             @subheading(messages("checkRegisteredDetails.subheading.1"))
 
-            @if(registeredDetails.name.trim != "") {
+            @if(registeredDetails.CDSFullName.trim != "") {
                 @headingH3(messages("checkRegisteredDetails.heading.2"), "s")
-                @paragraph(content=Html(registeredDetails.name))
+                @paragraph(content=Html(registeredDetails.CDSFullName))
             }
 
             @headingH3(messages("checkRegisteredDetails.heading.3"), "s")
             @paragraph(content=Html(
-                registeredDetails.streetAndNumber + "<br>" +
-                registeredDetails.city + "<br>" +
-                registeredDetails.postalCode.map(_ + "<br>").getOrElse("") +
-                registeredDetails.country
+                registeredDetails.CDSEstablishmentAddress.streetAndNumber + "<br>" +
+                registeredDetails.CDSEstablishmentAddress.city + "<br>" +
+                registeredDetails.CDSEstablishmentAddress.postalCode.map(_ + "<br>").getOrElse("") +
+                Country.fromCountryCode(registeredDetails.CDSEstablishmentAddress.countryCode).name
             ))
 
             @subheading(messages("checkRegisteredDetails.subheading.2"))

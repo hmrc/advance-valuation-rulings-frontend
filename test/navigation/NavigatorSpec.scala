@@ -353,19 +353,46 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
 
-        "and navigate to DoYouWantToUploadDocuments when No" in {
-          val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
-          navigator.nextPage(
-            HasConfidentialInformationPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
+        "when no" - {
 
+          "when there are no documents" - {
+
+            "must navigate to DoYouWantToUploadDocuments" in {
+              val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
+              navigator.nextPage(
+                HasConfidentialInformationPage,
+                NormalMode,
+                userAnswers
+              ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
+            }
+          }
+
+          "when there are existing documents" - {
+
+            "must navigate to UploadAnotherSupportingDocument" in {
+              val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
+                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+                .success
+                .value
+                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .success
+                .value
+              navigator.nextPage(
+                HasConfidentialInformationPage,
+                NormalMode,
+                userAnswers
+              ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(
+                NormalMode,
+                draftId
+              )
+            }
+          }
         }
       }
 
       "ConfidentialInformation page" - {
-        "navigate to DoYouWantToUploadDocuments page when all values are set" in {
+
+        "navigate to DoYouWantToUploadDocuments page when there are no documents" in {
           val userAnswers =
             userAnswersWith(ConfidentialInformationPage, "top secret")
           navigator.nextPage(
@@ -373,6 +400,22 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate to UploadAnotherSupportingDocument page when there are existing documents" in {
+          val userAnswers =
+            userAnswersWith(ConfidentialInformationPage, "top secret")
+              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .success
+              .value
+              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .success
+              .value
+          navigator.nextPage(
+            ConfidentialInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
         }
 
         "navigate to self when no values are set" in {
@@ -385,24 +428,13 @@ class NavigatorSpec extends SpecBase {
       }
 
       "CheckRegisteredDetailsPage must" - {
-        val data = CheckRegisteredDetails(
-          value = true,
-          eori = "GB1234567890",
-          consentToDisclosureOfPersonalData = true,
-          name = "name",
-          streetAndNumber = "street",
-          city = "city",
-          postalCode = Some("postcode"),
-          country = "GB",
-          phoneNumber = Some("1234567890")
-        )
 
         "when Individual" - {
           val aff: AffinityGroup = AffinityGroup.Individual
 
           "navigate to ApplicationContactDetailsPage when Yes" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+              userAnswersWith(CheckRegisteredDetailsPage, value = true)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
@@ -412,7 +444,7 @@ class NavigatorSpec extends SpecBase {
 
           "and navigate to EORIBeUpToDatePage when No" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = data.copy(value = false))
+              userAnswersWith(CheckRegisteredDetailsPage, value = false)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
@@ -426,7 +458,7 @@ class NavigatorSpec extends SpecBase {
 
           "navigate to BusinessContactDetailsPage when Yes" in {
             val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = data)
+              userAnswersWith(CheckRegisteredDetailsPage, value = true)
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,

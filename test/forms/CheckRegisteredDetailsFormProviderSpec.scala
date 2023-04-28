@@ -17,105 +17,29 @@
 package forms
 
 import play.api.data.FormError
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import forms.behaviours.BooleanFieldBehaviours
 
 class CheckRegisteredDetailsFormProviderSpec extends BooleanFieldBehaviours {
 
-  "for individuals" - {
+  val form = new CheckRegisteredDetailsFormProvider()()
 
-    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Individual, true)
+  ".value" - {
 
-    ".value" - {
+    val fieldName   = "value"
+    val requiredKey = "checkRegisteredDetails.error.required.consent"
+    val invalidKey  = "error.boolean"
 
-      val fieldName   = "value"
-      val requiredKey = "checkRegisteredDetails.error.required.individual"
-      val invalidKey  = "error.boolean"
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
 
-      behave like booleanField(
-        form,
-        fieldName,
-        invalidError = FormError(fieldName, invalidKey)
-      )
-
-      behave like mandatoryField(
-        form,
-        fieldName,
-        requiredError = FormError(fieldName, requiredKey)
-      )
-    }
-  }
-
-  "for organisations" - {
-
-    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Organisation, true)
-
-    ".value" - {
-
-      val fieldName   = "value"
-      val requiredKey = "checkRegisteredDetails.error.required.organisation"
-      val invalidKey  = "error.boolean"
-
-      behave like booleanField(
-        form,
-        fieldName,
-        invalidError = FormError(fieldName, invalidKey)
-      )
-
-      behave like mandatoryField(
-        form,
-        fieldName,
-        requiredError = FormError(fieldName, requiredKey)
-      )
-    }
-  }
-
-  "for agents" - {
-
-    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Agent, true)
-
-    ".value" - {
-
-      val fieldName   = "value"
-      val requiredKey = "checkRegisteredDetails.error.required.agent"
-      val invalidKey  = "error.boolean"
-
-      behave like booleanField(
-        form,
-        fieldName,
-        invalidError = FormError(fieldName, invalidKey)
-      )
-
-      behave like mandatoryField(
-        form,
-        fieldName,
-        requiredError = FormError(fieldName, requiredKey)
-      )
-    }
-  }
-
-  "without consent to disclosure of personal data" - {
-
-    val form = new CheckRegisteredDetailsFormProvider()(AffinityGroup.Agent, false)
-
-    ".value" - {
-
-      val fieldName   = "value"
-      val requiredKey = "checkRegisteredDetails.error.required.consent"
-      val invalidKey  = "error.boolean"
-
-      behave like booleanField(
-        form,
-        fieldName,
-        invalidError = FormError(fieldName, invalidKey)
-      )
-
-      behave like mandatoryField(
-        form,
-        fieldName,
-        requiredError = FormError(fieldName, requiredKey)
-      )
-    }
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

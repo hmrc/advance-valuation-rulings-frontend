@@ -16,13 +16,13 @@
 
 package models.requests
 
-import cats.data.{Validated, ValidatedNel}
+import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
 
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-import models.{AgentCompanyDetails, CheckRegisteredDetails, DraftId, UserAnswers}
+import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
 import pages._
 
@@ -109,21 +109,29 @@ object TraderDetail {
     }
   }
 
-  def trader(userAnswers: UserAnswers): ValidatedNel[Page, TraderDetail] =
-    userAnswers.validatedF[CheckRegisteredDetails, TraderDetail](
-      CheckRegisteredDetailsPage,
-      (crd: CheckRegisteredDetails) =>
+  def trader(
+    userAnswers: UserAnswers,
+    crd: TraderDetailsWithCountryCode
+  ): ValidatedNel[Page, TraderDetail] = {
+
+    val registeredDetails = userAnswers
+      .validated(CheckRegisteredDetailsPage)
+      .ensure(NonEmptyList.one(CheckRegisteredDetailsPage))(_ == true)
+
+    registeredDetails.map(
+      _ =>
         TraderDetail(
-          eori = crd.eori,
-          businessName = crd.name,
-          addressLine1 = crd.streetAndNumber,
-          addressLine2 = Some(crd.city),
+          eori = crd.EORINo,
+          businessName = crd.CDSFullName,
+          addressLine1 = crd.CDSEstablishmentAddress.streetAndNumber,
+          addressLine2 = Some(crd.CDSEstablishmentAddress.city),
           addressLine3 = None,
-          postcode = crd.postalCode.getOrElse(""),
-          countryCode = crd.country,
-          phoneNumber = crd.phoneNumber
+          postcode = crd.CDSEstablishmentAddress.postalCode.getOrElse(""),
+          countryCode = crd.CDSEstablishmentAddress.countryCode,
+          phoneNumber = crd.contactInformation.flatMap(_.telephoneNumber)
         )
     )
+  }
 }
 
 case class ApplicationRequest(
@@ -149,9 +157,10 @@ object ApplicationRequest {
 
   def apply(
     userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
+    affinityGroup: AffinityGroup,
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val traderDetail    = TraderDetail.trader(userAnswers)
+    val traderDetail    = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
     val agentDetails    = TraderDetail.agent(userAnswers)
     val goodsDetails    = GoodsDetails(userAnswers)
     val contact         = ContactDetails(userAnswers, affinityGroup)

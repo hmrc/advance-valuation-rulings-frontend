@@ -22,7 +22,6 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -47,21 +46,9 @@ class CheckRegisteredDetailsControllerSpec
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
   val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider(AffinityGroup.Individual, true)
+  val form         = formProvider()
 
   "CheckRegisteredDetails Controller" - {
-
-    val registeredDetails: CheckRegisteredDetails = CheckRegisteredDetails(
-      value = false,
-      eori = "GB123456789012345",
-      consentToDisclosureOfPersonalData = true,
-      name = "Test Name",
-      streetAndNumber = "Test Street 1",
-      city = "Test City",
-      country = "Test Country",
-      postalCode = Some("Test Postal Code"),
-      phoneNumber = Some("Test Telephone Number")
-    )
 
     val contactInformation = ContactInformation(
       personOfContact = Some("Test Person"),
@@ -77,20 +64,20 @@ class CheckRegisteredDetailsControllerSpec
     )
 
     val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
-      EORINo = registeredDetails.eori,
+      EORINo = "GB123456789012345",
       consentToDisclosureOfPersonalData = true,
-      CDSFullName = registeredDetails.name,
+      CDSFullName = "Test Name",
       CDSEstablishmentAddress = CDSEstablishmentAddress(
-        streetAndNumber = registeredDetails.streetAndNumber,
-        city = registeredDetails.city,
+        streetAndNumber = "Test Street 1",
+        city = "Test City",
         countryCode = "GB",
-        postalCode = registeredDetails.postalCode
+        postalCode = Some("Test Postal Code")
       ),
       contactInformation = Some(contactInformation)
     )
 
     val userAnswers = emptyUserAnswers
-      .set(CheckRegisteredDetailsPage, registeredDetails)
+      .set(CheckRegisteredDetailsPage, true)
       .success
       .value
 
@@ -136,20 +123,26 @@ class CheckRegisteredDetailsControllerSpec
         s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
 
           val mockUserAnswersService = mock[UserAnswersService]
+          val mockBackendConnector   = mock[BackendConnector]
           val previousUserAnswers    = emptyUserAnswers
             .set(
               CheckRegisteredDetailsPage,
-              registeredDetails.copy(consentToDisclosureOfPersonalData = consentValue)
+              consentValue
             )
             .success
             .value
 
           when(mockUserAnswersService.get(any())(any()))
             .thenReturn(Future.successful(Some(previousUserAnswers)))
+          when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
+            .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
 
           val application =
             applicationBuilder(userAnswers = Some(previousUserAnswers))
-              .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+              .overrides(
+                bind[UserAnswersService].toInstance(mockUserAnswersService),
+                bind[BackendConnector].toInstance(mockBackendConnector)
+              )
               .build()
 
           running(application) {
@@ -191,18 +184,19 @@ class CheckRegisteredDetailsControllerSpec
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
+      val mockBackendConnector   = mock[BackendConnector]
 
-      val userAnswers = emptyUserAnswers
-        .set(CheckRegisteredDetailsPage, registeredDetails)
-        .success
-        .value
-
+      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
       when(mockUserAnswersService.get(any())(any()))
         .thenReturn(Future.successful(Some(userAnswers)))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[BackendConnector].toInstance(mockBackendConnector)
+          )
           .build()
 
       running(application) {

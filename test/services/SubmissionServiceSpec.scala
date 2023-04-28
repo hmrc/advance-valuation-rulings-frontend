@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import base.SpecBase
 import connectors.BackendConnector
-import models.{Done, DraftId}
+import models.Done
 import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo

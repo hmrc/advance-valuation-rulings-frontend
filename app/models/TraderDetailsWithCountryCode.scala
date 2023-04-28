@@ -24,20 +24,7 @@ final case class TraderDetailsWithCountryCode(
   CDSFullName: String,
   CDSEstablishmentAddress: CDSEstablishmentAddress,
   contactInformation: Option[ContactInformation]
-) {
-  def details: CheckRegisteredDetails =
-    CheckRegisteredDetails(
-      value = false,
-      eori = EORINo,
-      consentToDisclosureOfPersonalData = consentToDisclosureOfPersonalData,
-      name = CDSFullName,
-      streetAndNumber = CDSEstablishmentAddress.streetAndNumber,
-      city = CDSEstablishmentAddress.city,
-      country = CountrySelectOptions.countryCodeToCountry(CDSEstablishmentAddress.countryCode),
-      postalCode = CDSEstablishmentAddress.postalCode,
-      phoneNumber = contactInformation.flatMap(_.telephoneNumber)
-    )
-}
+)
 
 object TraderDetailsWithCountryCode {
   implicit val format: OFormat[TraderDetailsWithCountryCode] =

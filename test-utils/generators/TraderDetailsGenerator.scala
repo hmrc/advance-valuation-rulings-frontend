@@ -78,7 +78,7 @@ trait TraderDetailsGenerator extends Generators {
     }
 
   implicit lazy val arbitraryAcknowledgementReferenceGen: Arbitrary[AcknowledgementReference] =
-    Arbitrary(stringsWithMaxLength(32).map(AcknowledgementReference))
+    Arbitrary(stringsWithMaxLength(32).map(value => AcknowledgementReference(value)))
 
   private val error5xx = Seq(
     Status.INTERNAL_SERVER_ERROR,

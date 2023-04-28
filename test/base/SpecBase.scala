@@ -53,6 +53,7 @@ trait SpecBase
   val RegisteredName  = "My Test Company"
   val StreetAndNumber = "1 Somewhere"
   val City            = "London"
+  val countryCode     = "GB"
   val country         = "United Kingdom"
   val Postcode        = "A12 2AB"
   val phoneNumber     = "01234567890"
