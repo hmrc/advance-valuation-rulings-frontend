@@ -42,10 +42,9 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend(),
+                legend = Legend(content = messages("isThereASaleInvolved.no.hint"), classes = "govuk-hint"),
                 noText = messages("isThereASaleInvolved.no.text")
             )
-            .withHint(Hint(content = messages("isThereASaleInvolved.no.hint")))
         )
 
         @saveButtons()

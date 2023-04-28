@@ -18,6 +18,7 @@ site.saveApplication = Save your application
 site.page = Page {0} of {1}
 site.saveAndContinue = Save and continue
 site.saveAsDraft = Save as draft
+site.warning = Warning
 
 
 site.1 = one
@@ -57,6 +58,8 @@ error.summary.title = There is a problem
 
 caption.prefix = This section is
 caption.applicant = About the applicant
+
+countrySelect.label = select a country
 
 checkYourAnswers.title = Check your answers before sending your application
 checkYourAnswers.heading = Check your answers before sending your application

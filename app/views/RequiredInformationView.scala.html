@@ -46,9 +46,9 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = Legend(),
+                legend = Legend(content = messages("requiredInformation.hint"), classes = "govuk-hint"),
                 items  = RequiredInformation.checkboxItems(affinityGroup)
-            ).withHint(Hint(content=Text(messages("requiredInformation.hint"))))
+            )
         )
 
         @saveButtons()

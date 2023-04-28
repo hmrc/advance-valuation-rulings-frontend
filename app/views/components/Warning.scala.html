@@ -16,9 +16,10 @@
 
 @this()
 
-@(content: Html, classes: String = "govuk-warning-text__text", id: Option[String] = Some("warning-notice"))
+@(content: Html, classes: String = "govuk-warning-text__text", id: Option[String] = Some("warning-notice"))(implicit messages: Messages)
 
 <div class = "govuk-warning-text">
     <span class = "govuk-warning-text__icon" aria-hidden = "true">!</span>
+    <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
     <strong class = "@classes" @id.map{id => id="@id"}>@content</strong>
 </div>
