@@ -83,9 +83,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
                 ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)
                 _  <- userAnswersService.set(ua)
               } yield Redirect(
-                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, ua)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, ua, request.affinityGroup)
               )
             }
           )

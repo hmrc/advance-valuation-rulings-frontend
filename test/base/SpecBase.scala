@@ -102,14 +102,29 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
-  protected def applicationBuilderAsOrg(
+  protected def applicationBuilderAsOrgEmployee(
     userAnswers: Option[UserAnswers] = None
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeOrgIdentifierAction],
-        bind[IdentifyAgentAction].to[FakeIdentifyOrgAction],
+        bind[IdentifierAction].to[FakeOrgEmployeeIdentifierAction],
+        bind[IdentifyAgentAction].to[FakeIdentifyOrgEmployeeAction],
+        bind[DataRetrievalActionProvider].toInstance(
+          new FakeDataRetrievalActionProvider(userAnswers)
+        ),
+        bind[CounterRepository].to(mockDraftIdRepo),
+        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
+      )
+
+  protected def applicationBuilderAsOrgAssistant(
+    userAnswers: Option[UserAnswers] = None
+  ): GuiceApplicationBuilder =
+    new GuiceApplicationBuilder()
+      .overrides(
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[IdentifierAction].to[FakeOrgAssistantIdentifierAction],
+        bind[IdentifyAgentAction].to[FakeIdentifyOrgAssistantAction],
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),

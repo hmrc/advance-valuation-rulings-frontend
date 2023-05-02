@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.summary
 
 import play.api.Logger
 import play.api.i18n.Messages
-import uk.gov.hmrc.auth.core.{AffinityGroup, UnsupportedAffinityGroup}
+import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, CredentialRole, UnsupportedAffinityGroup}
 
 import models.TraderDetailsWithCountryCode
 import models.UserAnswers
@@ -37,22 +37,23 @@ object ApplicationSummary {
   def apply(
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup,
-    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode,
+    credentialRole: Option[CredentialRole] = None
   )(implicit
     messages: Messages
   ): ApplicationSummary = {
     val (applicant, company) = affinityGroup match {
-      case AffinityGroup.Individual                         =>
+      case AffinityGroup.Individual   =>
         (
           IndividualApplicantSummary(userAnswers),
           IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
-      case AffinityGroup.Organisation | AffinityGroup.Agent =>
+      case AffinityGroup.Organisation =>
         (
-          AgentSummary(userAnswers),
+          AgentSummary(userAnswers, isAssistantRole = credentialRole.contains(Assistant)),
           BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
-      case unexpected                                       =>
+      case unexpected                 =>
         logger.error(s"Unsupported affinity group [$unexpected] encountered")
         throw UnsupportedAffinityGroup("Unexpected affinity group")
     }

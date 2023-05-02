@@ -18,11 +18,13 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, User}
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -53,7 +55,7 @@ class CheckYourAnswersForAgentsControllerSpec
             .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
             .get
 
-        val application = applicationBuilderAsOrg(userAnswers = Option(ua))
+        val application: Application = applicationBuilderAsOrgEmployee(userAnswers = Option(ua))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
@@ -70,14 +72,19 @@ class CheckYourAnswersForAgentsControllerSpec
           )
 
         running(application) {
-          implicit val request =
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
           val list =
-            ApplicationSummary(ua, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+            ApplicationSummary(
+              ua,
+              AffinityGroup.Organisation,
+              traderDetailsWithCountryCode,
+              credentialRole = Option(User)
+            )
 
           status(result) mustEqual OK
 
@@ -97,7 +104,7 @@ class CheckYourAnswersForAgentsControllerSpec
             .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
             .get
 
-        val application = applicationBuilderAsOrg(userAnswers = Option(ua))
+        val application: Application = applicationBuilderAsOrgAssistant(userAnswers = Option(ua))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
@@ -114,14 +121,19 @@ class CheckYourAnswersForAgentsControllerSpec
           )
 
         running(application) {
-          implicit val request =
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
           val list =
-            ApplicationSummary(ua, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+            ApplicationSummary(
+              ua,
+              AffinityGroup.Organisation,
+              traderDetailsWithCountryCode,
+              Option(Assistant)
+            )
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
@@ -135,7 +147,8 @@ class CheckYourAnswersForAgentsControllerSpec
     "must redirect to Journey Recovery for a GET if no existing data is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application = applicationBuilderAsOrg(userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderAsOrgEmployee(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
           val request =
@@ -151,7 +164,7 @@ class CheckYourAnswersForAgentsControllerSpec
     "must redirect to Journey Recovery for a GET if no importer role is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application = applicationBuilderAsOrg(userAnswers = None).build()
+        val application: Application = applicationBuilderAsOrgEmployee(userAnswers = None).build()
 
         running(application) {
           val request =
@@ -181,7 +194,7 @@ class CheckYourAnswersForAgentsControllerSpec
             )
           )
 
-        val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        val application: Application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector)
@@ -216,7 +229,7 @@ class CheckYourAnswersForAgentsControllerSpec
             Left(BackendError(500, "Internal Server Error"))
           )
 
-        val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        val application: Application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector)

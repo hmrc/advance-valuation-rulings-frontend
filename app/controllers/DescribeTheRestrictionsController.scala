@@ -72,7 +72,10 @@ class DescribeTheRestrictionsController @Inject() (
                   Future.fromTry(request.userAnswers.set(DescribeTheRestrictionsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(DescribeTheRestrictionsPage, mode, updatedAnswers)(
+                navigator.nextPage(
+                  DescribeTheRestrictionsPage,
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )

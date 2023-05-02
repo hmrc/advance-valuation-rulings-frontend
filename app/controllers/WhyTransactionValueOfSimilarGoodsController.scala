@@ -73,7 +73,10 @@ class WhyTransactionValueOfSimilarGoodsController @Inject() (
                     .fromTry(request.userAnswers.set(WhyTransactionValueOfSimilarGoodsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(WhyTransactionValueOfSimilarGoodsPage, mode, updatedAnswers)(
+                navigator.nextPage(
+                  WhyTransactionValueOfSimilarGoodsPage,
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )

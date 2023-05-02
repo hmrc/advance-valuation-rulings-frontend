@@ -72,7 +72,10 @@ class DescribeTheLegalChallengesController @Inject() (
                   Future.fromTry(request.userAnswers.set(DescribeTheLegalChallengesPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(DescribeTheLegalChallengesPage, mode, updatedAnswers)(
+                navigator.nextPage(
+                  DescribeTheLegalChallengesPage,
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )

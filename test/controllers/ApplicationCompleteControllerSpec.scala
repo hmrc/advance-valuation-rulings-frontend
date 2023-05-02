@@ -53,7 +53,7 @@ class ApplicationCompleteControllerSpec
     val affinityGroupScenarios = Table(
       ("affinityGroup", "applicationBuilder", "isIndividual"),
       (AffinityGroup.Individual, applicationBuilder(), true),
-      (AffinityGroup.Organisation, applicationBuilderAsOrg(), false),
+      (AffinityGroup.Organisation, applicationBuilderAsOrgEmployee(), false),
       (AffinityGroup.Agent, applicationBuilderAsAgent(), false)
     )
 

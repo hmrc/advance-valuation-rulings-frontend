@@ -73,7 +73,12 @@ class CheckYourAnswersForAgentsController @Inject() (
         getTraderDetails {
           traderDetails =>
             val applicationSummary =
-              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
+              ApplicationSummary(
+                request.userAnswers,
+                request.affinityGroup,
+                traderDetails,
+                request.credentialRole
+              )
 
             request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
               case Some(role) => Future.successful(Ok(view(applicationSummary, role, draftId)))

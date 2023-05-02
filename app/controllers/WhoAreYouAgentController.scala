@@ -22,7 +22,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.AccountHome
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
@@ -73,7 +72,7 @@ class WhoAreYouAgentController @Inject() (
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(WhoAreYouAgentPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers)(request.affinityGroup)
+                navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers, request.affinityGroup)
               )
           )
     }

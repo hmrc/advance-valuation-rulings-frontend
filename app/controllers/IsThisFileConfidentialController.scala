@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import actions.{DataRequiredAction, DataRetrievalAction, DataRetrievalActionProvider, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
@@ -100,7 +100,10 @@ class IsThisFileConfidentialController @Inject() (
                       .fromTry(request.userAnswers.set(IsThisFileConfidentialPage(index), value))
                   _              <- userAnswersService.set(updatedAnswers)
                 } yield Redirect(
-                  navigator.nextPage(IsThisFileConfidentialPage(index), mode, updatedAnswers)(
+                  navigator.nextPage(
+                    IsThisFileConfidentialPage(index),
+                    mode,
+                    updatedAnswers,
                     request.affinityGroup
                   )
                 )

@@ -72,7 +72,10 @@ class ExplainReasonComputedValueController @Inject() (
                   Future.fromTry(request.userAnswers.set(ExplainReasonComputedValuePage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ExplainReasonComputedValuePage, mode, updatedAnswers)(
+                navigator.nextPage(
+                  ExplainReasonComputedValuePage,
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )

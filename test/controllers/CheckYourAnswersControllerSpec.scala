@@ -113,7 +113,7 @@ class CheckYourAnswersControllerSpec
         when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
           .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
 
-        val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        val application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector)
@@ -144,7 +144,7 @@ class CheckYourAnswersControllerSpec
       when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
         .thenReturn(Future.successful(Left(BackendError(500, "error"))))
 
-      val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+      val application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
         .overrides(
           bind[SubmissionService].toInstance(mockSubmissionService),
           bind[BackendConnector].toInstance(mockBackendConnector)

@@ -56,7 +56,7 @@ class AgentSummarySpec extends SpecBase {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
-      val summary = AgentSummary(emptyUserAnswers)
+      val summary = AgentSummary(emptyUserAnswers, isAssistantRole = true)
       val rows    = summary.rows.rows
 
       "must create no rows" in {
@@ -65,7 +65,7 @@ class AgentSummarySpec extends SpecBase {
     }
 
     "when the user has answers for all relevant pages" - {
-      val summary = AgentSummary(answers)
+      val summary = AgentSummary(answers, isAssistantRole = true)
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
@@ -128,6 +128,19 @@ class AgentSummarySpec extends SpecBase {
             Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$country"))
           )
         )
+      }
+    }
+
+    "when the user has answers for all relevant pages and includeAgentRole is false" - {
+      val summary = AgentSummary(answers, isAssistantRole = false)
+      val rows    = summary.rows.rows.map(_.key)
+
+      "must create rows for each page" in {
+        rows.length mustBe 6
+      }
+
+      "create row for agent applicant role" in {
+        rows must not contain Key(Text("checkYourAnswersForAgents.applicant.role.label"))
       }
     }
   }

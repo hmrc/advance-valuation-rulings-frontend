@@ -17,15 +17,19 @@
 package navigation
 
 import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 
 import models.{Mode, UserAnswers}
 import pages._
 
 class FakeNavigator(desiredRoute: Call) extends Navigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit
-    affinityGroup: AffinityGroup
+  override def nextPage(
+    page: Page,
+    mode: Mode,
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup,
+    credentialRole: Option[CredentialRole]
   ): Call =
     desiredRoute
 }

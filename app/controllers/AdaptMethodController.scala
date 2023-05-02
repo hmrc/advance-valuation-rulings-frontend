@@ -71,7 +71,7 @@ class AdaptMethodController @Inject() (
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(AdaptMethodPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(AdaptMethodPage, mode, updatedAnswers)(request.affinityGroup)
+                navigator.nextPage(AdaptMethodPage, mode, updatedAnswers, request.affinityGroup)
               )
           )
     }

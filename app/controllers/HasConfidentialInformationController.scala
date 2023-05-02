@@ -72,7 +72,10 @@ class HasConfidentialInformationController @Inject() (
                   Future.fromTry(request.userAnswers.set(HasConfidentialInformationPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(HasConfidentialInformationPage, mode, updatedAnswers)(
+                navigator.nextPage(
+                  HasConfidentialInformationPage,
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )

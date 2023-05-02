@@ -25,7 +25,8 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, User}
 
 import models.requests.IdentifierRequest
 
-class FakeOrgIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction {
+class FakeIdentifyOrgEmployeeAction @Inject() (bodyParsers: PlayBodyParsers)
+    extends IdentifyAgentAction {
 
   override def invokeBlock[A](
     request: Request[A],

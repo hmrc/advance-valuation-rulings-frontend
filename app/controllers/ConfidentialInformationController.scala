@@ -67,7 +67,10 @@ class ConfidentialInformationController @Inject() (
                 updatedAnswers <- ConfidentialInformationPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers)(
+                navigator.nextPage(
+                  ConfidentialInformationPage,
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )

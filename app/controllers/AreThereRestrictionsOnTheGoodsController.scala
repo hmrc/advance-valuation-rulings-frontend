@@ -72,7 +72,10 @@ class AreThereRestrictionsOnTheGoodsController @Inject() (
                   Future.fromTry(request.userAnswers.set(AreThereRestrictionsOnTheGoodsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(AreThereRestrictionsOnTheGoodsPage, mode, updatedAnswers)(
+                navigator.nextPage(
+                  AreThereRestrictionsOnTheGoodsPage,
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )

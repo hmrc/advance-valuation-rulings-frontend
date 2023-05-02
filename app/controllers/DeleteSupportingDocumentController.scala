@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models.{DraftId, Index, Mode}
 import navigation.Navigator
-import pages.{DeleteSupportingDocumentPage, UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
+import pages.{DeleteSupportingDocumentPage, UploadSupportingDocumentPage}
 import queries.DraftAttachmentQuery
 import services.UserAnswersService
 
@@ -61,7 +61,10 @@ class DeleteSupportingDocumentController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
                 _              <- osClient.deleteObject(Path.File(url))
               } yield Redirect(
-                navigator.nextPage(DeleteSupportingDocumentPage(index), mode, updatedAnswers)(
+                navigator.nextPage(
+                  DeleteSupportingDocumentPage(index),
+                  mode,
+                  updatedAnswers,
                   request.affinityGroup
                 )
               )
@@ -69,7 +72,10 @@ class DeleteSupportingDocumentController @Inject() (
           .getOrElse {
             Future.successful(
               Redirect(
-                navigator.nextPage(DeleteSupportingDocumentPage(index), mode, request.userAnswers)(
+                navigator.nextPage(
+                  DeleteSupportingDocumentPage(index),
+                  mode,
+                  request.userAnswers,
                   request.affinityGroup
                 )
               )

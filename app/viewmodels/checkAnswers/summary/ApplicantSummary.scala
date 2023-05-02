@@ -49,9 +49,11 @@ case class AgentSummary(rows: SummaryList) extends ApplicantSummary {
 }
 
 object AgentSummary {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): AgentSummary = {
+  def apply(userAnswers: UserAnswers, isAssistantRole: Boolean)(implicit
+    messages: Messages
+  ): AgentSummary = {
     val contactDetailsRows = BusinessContactDetailsSummary.rows(userAnswers).orEmpty
-    val roleRow            = AgentRoleSummary.row(userAnswers).orEmpty
+    val roleRow            = if (isAssistantRole) AgentRoleSummary.row(userAnswers).orEmpty else None
     val agentCompanyRow    = AgentCompanySummary.rows(userAnswers).orEmpty
 
     AgentSummary(SummaryListViewModel(contactDetailsRows ++ roleRow ++ agentCompanyRow))

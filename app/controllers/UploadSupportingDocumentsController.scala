@@ -164,7 +164,10 @@ class UploadSupportingDocumentsController @Inject() (
   ): Future[Result] =
     Future.successful(
       Redirect(
-        navigator.nextPage(UploadSupportingDocumentPage(index), mode, answers)(
+        navigator.nextPage(
+          UploadSupportingDocumentPage(index),
+          mode,
+          answers,
           request.affinityGroup
         )
       )
