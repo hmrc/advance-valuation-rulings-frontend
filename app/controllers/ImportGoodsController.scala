@@ -76,7 +76,7 @@ class ImportGoodsController @Inject() (
                   )
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ImportGoodsPage, mode, updatedAnswers, request.affinityGroup)
+                navigator.nextPage(ImportGoodsPage, mode, updatedAnswers)(request.affinityGroup)
               )
           )
     }

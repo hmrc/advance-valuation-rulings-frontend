@@ -73,7 +73,7 @@ class ValuationMethodController @Inject() (
                   Future.fromTry(request.userAnswers.set(ValuationMethodPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ValuationMethodPage, mode, updatedAnswers, request.affinityGroup)
+                navigator.nextPage(ValuationMethodPage, mode, updatedAnswers)(request.affinityGroup)
               )
           )
     }

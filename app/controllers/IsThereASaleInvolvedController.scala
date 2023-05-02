@@ -73,7 +73,9 @@ class IsThereASaleInvolvedController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(IsThereASaleInvolvedPage, mode, updatedAnswers, request.affinityGroup)
+                  .nextPage(IsThereASaleInvolvedPage, mode, updatedAnswers)(
+                    request.affinityGroup
+                  )
               )
           )
     }

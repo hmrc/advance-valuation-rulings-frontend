@@ -68,10 +68,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
                              request.userAnswers.set(UploadAnotherSupportingDocumentPage, value)
                            )
               } yield Redirect {
-                navigator.nextPage(
-                  UploadAnotherSupportingDocumentPage,
-                  mode,
-                  answers,
+                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)(
                   request.affinityGroup
                 )
               }

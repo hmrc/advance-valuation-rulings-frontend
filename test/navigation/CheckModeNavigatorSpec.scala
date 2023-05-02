@@ -29,8 +29,9 @@ import queries.Modifiable
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val navigator        = new Navigator
-  val checkYourAnswers = routes.CheckYourAnswersController.onPageLoad(draftId)
+  val EmptyUserAnswers: UserAnswers = emptyUserAnswers
+  val navigator                     = new Navigator
+  val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
@@ -47,7 +48,9 @@ class CheckModeNavigatorSpec extends SpecBase {
   "Navigator" - {
 
     def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
-      emptyUserAnswers.set(page, value).success.value
+      EmptyUserAnswers.set(page, value).success.value
+
+    implicit val affinityGroup: AffinityGroup.Individual.type = (AffinityGroup.Individual)
 
     "in Check mode" - {
 
@@ -57,8 +60,7 @@ class CheckModeNavigatorSpec extends SpecBase {
         navigator.nextPage(
           UnknownPage,
           CheckMode,
-          emptyUserAnswers,
-          AffinityGroup.Individual
+          EmptyUserAnswers
         ) mustBe checkYourAnswers
       }
 
@@ -69,8 +71,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             ValuationMethodPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(
             mode = CheckMode,
             draftId = draftId
@@ -83,8 +84,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             ValuationMethodPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(
             mode = CheckMode,
             draftId = draftId
@@ -97,8 +97,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             ValuationMethodPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(
             mode = CheckMode,
             draftId = draftId
@@ -111,8 +110,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             ValuationMethodPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
             mode = CheckMode,
             draftId
@@ -125,8 +123,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             ValuationMethodPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.WhyComputedValueController.onPageLoad(mode = CheckMode, draftId = draftId)
         }
 
@@ -136,8 +133,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             ValuationMethodPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
             mode = CheckMode,
             draftId
@@ -151,8 +147,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThereASaleInvolvedPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -165,8 +160,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThereASaleInvolvedPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -179,8 +173,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThereASaleInvolvedPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.ValuationMethodController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -189,7 +182,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "navigate to checkYourAnswers if yes and user has answered all other questions" in {
             val userAnswers = (for {
-              ua <- emptyUserAnswers.set(IsThereASaleInvolvedPage, true)
+              ua <- EmptyUserAnswers.set(IsThereASaleInvolvedPage, true)
               ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
               ua <- ua.set(ExplainHowPartiesAreRelatedPage, "test")
               ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
@@ -201,14 +194,13 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThereASaleInvolvedPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
 
           "navigate to checkYourAnswers if yes and user has answered other questions" in {
             val userAnswers = (for {
-              ua <- emptyUserAnswers.set(IsThereASaleInvolvedPage, true)
+              ua <- EmptyUserAnswers.set(IsThereASaleInvolvedPage, true)
               ua <- ua.set(IsSaleBetweenRelatedPartiesPage, false)
               ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, false)
               ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
@@ -217,8 +209,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThereASaleInvolvedPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -228,8 +219,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsSaleBetweenRelatedPartiesPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -242,8 +232,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsSaleBetweenRelatedPartiesPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -256,8 +245,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsSaleBetweenRelatedPartiesPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -273,8 +261,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               emptyUserAnswers
                 .set(ExplainHowPartiesAreRelatedPage, "explain")
                 .success
-                .value,
-              AffinityGroup.Individual
+                .value
             ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -284,8 +271,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               AreThereRestrictionsOnTheGoodsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -295,8 +281,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheRestrictionsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(CheckMode, draftId)
           }
 
@@ -304,8 +289,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheRestrictionsPage,
               CheckMode,
-              userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions"),
-              AffinityGroup.Individual
+              userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions")
             ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -315,8 +299,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsTheSaleSubjectToConditionsPage,
               CheckMode,
-              userAnswersWith(IsTheSaleSubjectToConditionsPage, true),
-              AffinityGroup.Individual
+              userAnswersWith(IsTheSaleSubjectToConditionsPage, true)
             ) mustBe routes.DescribeTheConditionsController.onPageLoad(CheckMode, draftId)
           }
 
@@ -324,8 +307,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsTheSaleSubjectToConditionsPage,
               CheckMode,
-              userAnswersWith(IsTheSaleSubjectToConditionsPage, false),
-              AffinityGroup.Individual
+              userAnswersWith(IsTheSaleSubjectToConditionsPage, false)
             ) mustBe checkYourAnswers
           }
 
@@ -333,8 +315,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsTheSaleSubjectToConditionsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -344,8 +325,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheConditionsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.DescribeTheConditionsController.onPageLoad(CheckMode, draftId)
           }
 
@@ -353,8 +333,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheConditionsPage,
               CheckMode,
-              userAnswersWith(DescribeTheConditionsPage, "Some conditions"),
-              AffinityGroup.Individual
+              userAnswersWith(DescribeTheConditionsPage, "Some conditions")
             ) mustBe checkYourAnswers
           }
         }
@@ -367,8 +346,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyIdenticalGoodsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -380,8 +358,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyIdenticalGoodsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -390,7 +367,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "navigate to checkYourAnswers when user has answers for remaining pages" in {
             val userAnswers = (for {
-              ua <- emptyUserAnswers.set(WhyIdenticalGoodsPage, "reason")
+              ua <- EmptyUserAnswers.set(WhyIdenticalGoodsPage, "reason")
               ua <- ua.set(HaveYouUsedMethodOneInPastPage, true)
               ua <- ua.set(DescribeTheIdenticalGoodsPage, "reason")
             } yield ua).success.value
@@ -398,8 +375,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyIdenticalGoodsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -409,8 +385,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveYouUsedMethodOneInPastPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -422,8 +397,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveYouUsedMethodOneInPastPage,
               CheckMode,
-              ans,
-              AffinityGroup.Individual
+              ans
             ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(CheckMode, draftId)
           }
 
@@ -432,8 +406,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveYouUsedMethodOneInPastPage,
               CheckMode,
-              ans,
-              AffinityGroup.Individual
+              ans
             ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -443,8 +416,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheIdenticalGoodsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -456,8 +428,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheIdenticalGoodsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -470,8 +441,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyTransactionValueOfSimilarGoodsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -484,8 +454,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyTransactionValueOfSimilarGoodsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -494,7 +463,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "navigate to checkYourAnswers when user has answers for remaining pages" in {
             val userAnswers = (for {
-              ua <- emptyUserAnswers.set(WhyTransactionValueOfSimilarGoodsPage, "reason")
+              ua <- EmptyUserAnswers.set(WhyTransactionValueOfSimilarGoodsPage, "reason")
               ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
               ua <- ua.set(DescribeTheSimilarGoodsPage, "reason")
             } yield ua).success.value
@@ -502,8 +471,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyTransactionValueOfSimilarGoodsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -513,8 +481,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveYouUsedMethodOneForSimilarGoodsInPastPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -526,8 +493,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveYouUsedMethodOneForSimilarGoodsInPastPage,
               CheckMode,
-              ans,
-              AffinityGroup.Individual
+              ans
             ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(CheckMode, draftId)
           }
 
@@ -536,8 +502,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveYouUsedMethodOneForSimilarGoodsInPastPage,
               CheckMode,
-              ans,
-              AffinityGroup.Individual
+              ans
             ) mustBe routes.ValuationMethodController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -547,8 +512,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheSimilarGoodsPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -560,8 +524,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DescribeTheSimilarGoodsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -574,8 +537,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
               mode = CheckMode,
               draftId
@@ -588,8 +550,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -600,14 +561,13 @@ class CheckModeNavigatorSpec extends SpecBase {
             val userAnswers =
               (for {
                 ua <-
-                  emptyUserAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "reason")
+                  EmptyUserAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "reason")
                 ua <- ua.set(ExplainWhyYouChoseMethodFourPage, "reason")
               } yield ua).success.value
             navigator.nextPage(
               ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -617,8 +577,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainWhyYouChoseMethodFourPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -631,8 +590,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainWhyYouChoseMethodFourPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -645,8 +603,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyComputedValuePage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.WhyComputedValueController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -659,8 +616,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               WhyComputedValuePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -670,14 +626,13 @@ class CheckModeNavigatorSpec extends SpecBase {
           "navigate to checkYourAnswersPage when user has data for the remaining questions" in {
             val userAnswers =
               (for {
-                ua <- emptyUserAnswers.set(WhyComputedValuePage, "reason")
+                ua <- EmptyUserAnswers.set(WhyComputedValuePage, "reason")
                 ua <- ua.set(ExplainReasonComputedValuePage, "reason")
               } yield ua).success.value
             navigator.nextPage(
               WhyComputedValuePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -687,8 +642,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainReasonComputedValuePage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -701,8 +655,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainReasonComputedValuePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -715,8 +668,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
               mode = CheckMode,
               draftId
@@ -729,15 +681,14 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.AdaptMethodController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
 
           "navigate to checkYourAnswersPage when user has data for the remaining questions" in {
             val userAnswers =
               (for {
-                ua <- emptyUserAnswers.set(AdaptMethodPage, AdaptMethod.values.head)
+                ua <- EmptyUserAnswers.set(AdaptMethodPage, AdaptMethod.values.head)
                 ua <- ua.set(ExplainHowYouWillUseMethodSixPage, "reason")
                 ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, "reason")
               } yield ua).success.value
@@ -745,8 +696,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -756,8 +706,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               AdaptMethodPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.AdaptMethodController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
 
@@ -766,8 +715,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               AdaptMethodPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -777,15 +725,14 @@ class CheckModeNavigatorSpec extends SpecBase {
           "navigate to checkYourAnswersPage when user has data for the remaining questions" in {
             val userAnswers =
               (for {
-                ua <- emptyUserAnswers.set(AdaptMethodPage, AdaptMethod.values.head)
+                ua <- EmptyUserAnswers.set(AdaptMethodPage, AdaptMethod.values.head)
                 ua <- ua.set(ExplainHowYouWillUseMethodSixPage, "reason")
                 ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, "reason")
               } yield ua).success.value
             navigator.nextPage(
               AdaptMethodPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -795,8 +742,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainHowYouWillUseMethodSixPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              EmptyUserAnswers
             ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -808,8 +754,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainHowYouWillUseMethodSixPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -823,8 +768,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
 
@@ -833,8 +777,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
           }
         }
@@ -848,8 +791,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HasConfidentialInformationPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.ConfidentialInformationController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -861,8 +803,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HasConfidentialInformationPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -873,8 +814,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveTheGoodsBeenSubjectToLegalChallengesPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
@@ -886,8 +826,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HaveTheGoodsBeenSubjectToLegalChallengesPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -898,8 +837,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HasCommodityCodePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.CommodityCodeController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
 
@@ -908,8 +846,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               HasCommodityCodePage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -920,8 +857,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DoYouWantToUploadDocumentsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe controllers.routes.UploadSupportingDocumentsController.onPageLoad(
               Index(0),
               CheckMode,
@@ -936,8 +872,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DoYouWantToUploadDocumentsPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe checkYourAnswers
           }
         }
@@ -948,8 +883,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadSupportingDocumentPage(Index(0)),
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              emptyUserAnswers
             ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
               Index(0),
               CheckMode,
@@ -964,8 +898,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThisFileConfidentialPage(Index(0)),
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              emptyUserAnswers
             ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -978,8 +911,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe controllers.routes.UploadSupportingDocumentsController
               .onPageLoad(Index(0), CheckMode, draftId, None, None)
           }
@@ -998,8 +930,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe controllers.routes.UploadSupportingDocumentsController
               .onPageLoad(Index(1), CheckMode, draftId, None, None)
           }
@@ -1010,8 +941,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Individual
+              userAnswers
             ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
           }
 
@@ -1021,9 +951,8 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
-              userAnswers,
-              AffinityGroup.Agent
-            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+              userAnswers
+            )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
               draftId
             )
           }
@@ -1032,8 +961,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              emptyUserAnswers
             ) mustBe routes.JourneyRecoveryController.onPageLoad()
           }
         }
@@ -1052,8 +980,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DeleteSupportingDocumentPage(Index(0)),
               CheckMode,
-              answers,
-              AffinityGroup.Individual
+              answers
             ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
           }
 
@@ -1061,8 +988,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DeleteSupportingDocumentPage(Index(0)),
               CheckMode,
-              emptyUserAnswers,
-              AffinityGroup.Individual
+              emptyUserAnswers
             ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -1077,8 +1003,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             WhatIsYourRoleAsImporterPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe checkYourAnswers
         }
 
@@ -1090,8 +1015,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             WhatIsYourRoleAsImporterPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId)
         }
       }
@@ -1103,8 +1027,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           navigator.nextPage(
             ConfidentialInformationPage,
             CheckMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe checkYourAnswers
         }
       }

@@ -76,10 +76,7 @@ class HaveTheGoodsBeenSubjectToLegalChallengesController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(
-                    HaveTheGoodsBeenSubjectToLegalChallengesPage,
-                    mode,
-                    updatedAnswers,
+                  .nextPage(HaveTheGoodsBeenSubjectToLegalChallengesPage, mode, updatedAnswers)(
                     request.affinityGroup
                   )
               )

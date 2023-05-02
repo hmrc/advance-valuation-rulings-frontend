@@ -118,7 +118,7 @@ class CheckRegisteredDetailsController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers, request.affinityGroup)
+                  .nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)(request.affinityGroup)
               )
           )
     }

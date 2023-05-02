@@ -37,10 +37,7 @@ class Navigator @Inject() () {
   private def checkYourAnswersForAgents(draftId: DraftId): Call =
     CheckYourAnswersForAgentsController.onPageLoad(draftId)
 
-  private def routes(
-    affinityGroup: AffinityGroup,
-    credentialRole: Option[CredentialRole]
-  ): Page => UserAnswers => Call = {
+  private def routes(implicit affinityGroup: AffinityGroup): Page => UserAnswers => Call = {
     case ValuationMethodPage                              => valuationMethodPage
     case IsThereASaleInvolvedPage                         => isThereASaleInvolvedPage
     case IsSaleBetweenRelatedPartiesPage                  => isSaleBetweenRelatedPartiesPage
@@ -58,14 +55,14 @@ class Navigator @Inject() () {
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
     case ContactPagePage                                  =>
       ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
-    case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage(affinityGroup)
+    case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
-    case BusinessContactDetailsPage                       => businessContactDetailsPage(credentialRole)
+    case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
-    case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage(affinityGroup)
+    case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
     case UploadSupportingDocumentPage(index)              => uploadSupportingDocumentPage(index)
     case IsThisFileConfidentialPage(index)                => isThisFileConfidentialPage(index)
-    case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage(affinityGroup)
+    case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
     case DeleteSupportingDocumentPage(_)                  => deleteSupportingDocumentPage
     case WhyComputedValuePage                             => whyComputedValuePage
     case ExplainReasonComputedValuePage                   => explainReasonComputedValuePage
@@ -371,8 +368,8 @@ class Navigator @Inject() () {
     }
 
   private def doYouWantToUploadDocumentsPage(
-    affinityGroup: AffinityGroup
-  )(userAnswers: UserAnswers): Call =
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
@@ -387,7 +384,7 @@ class Navigator @Inject() () {
 
   private def uploadSupportingDocumentPage(index: Index)(
     userAnswers: UserAnswers
-  ): Call =
+  )(implicit affinityGroup: AffinityGroup): Call =
     controllers.routes.IsThisFileConfidentialController.onPageLoad(
       index,
       NormalMode,
@@ -396,13 +393,13 @@ class Navigator @Inject() () {
 
   private def isThisFileConfidentialPage(index: Index)(
     userAnswers: UserAnswers
-  ): Call =
+  )(implicit affinityGroup: AffinityGroup): Call =
     controllers.routes.UploadAnotherSupportingDocumentController
       .onPageLoad(NormalMode, userAnswers.draftId)
 
   private def uploadAnotherSupportingDocumentPage(
-    affinityGroup: AffinityGroup
-  )(userAnswers: UserAnswers): Call =
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers
       .get(UploadAnotherSupportingDocumentPage)
       .map {
@@ -454,8 +451,8 @@ class Navigator @Inject() () {
       case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
     }
   private def checkRegisteredDetailsPage(
-    affinityGroup: AffinityGroup
-  )(userAnswers: UserAnswers): Call =
+    userAnswers: UserAnswers
+  )(implicit affinityGroup: AffinityGroup): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
       case None        => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(value) =>
@@ -473,27 +470,19 @@ class Navigator @Inject() () {
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
-  private def businessContactDetailsPage(
-    credentialRole: Option[CredentialRole]
-  )(userAnswers: UserAnswers): Call =
+  private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(BusinessContactDetailsPage) match {
       case None    => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => agentContactDetailsNavigation(userAnswers, credentialRole)
+      case Some(_) => agentContactDetailsNavigation(userAnswers)
     }
 
-  private def agentContactDetailsNavigation(
-    userAnswers: UserAnswers,
-    credentialRole: Option[CredentialRole]
-  ): Call =
+  private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case Some(EmployeeOfOrg)                =>
+      case Some(EmployeeOfOrg)      =>
         ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(AgentOnBehalfOfOrg)           =>
+      case Some(AgentOnBehalfOfOrg) =>
         AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _ if credentialRole.contains(User) =>
-        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                                  =>
-        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                        => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
@@ -502,15 +491,11 @@ class Navigator @Inject() () {
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
-  def nextPage(
-    page: Page,
-    mode: Mode,
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup,
-    credentialRole: Option[CredentialRole] = None
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit
+    affinityGroup: AffinityGroup
   ): Call = mode match {
     case NormalMode =>
-      routes(affinityGroup, credentialRole)(page)(userAnswers)
+      routes(affinityGroup)(page)(userAnswers)
     case CheckMode  =>
       CheckModeNavigator.nextPage(page)(userAnswers, affinityGroup)
   }

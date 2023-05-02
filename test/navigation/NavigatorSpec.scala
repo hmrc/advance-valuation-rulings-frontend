@@ -33,7 +33,8 @@ import queries.Modifiable
 
 class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
 
-  val navigator = new Navigator
+  val EmptyUserAnswers: UserAnswers = emptyUserAnswers
+  val navigator                     = new Navigator
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
@@ -50,7 +51,9 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
   "Navigator" - {
 
     def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
-      emptyUserAnswers.set(page, value).success.value
+      EmptyUserAnswers.set(page, value).success.value
+
+    implicit val affinityGroup: AffinityGroup.Individual.type = AffinityGroup.Individual
 
     "/ must navigate to AccountHome" in {
 
@@ -72,8 +75,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
       navigator.nextPage(
         UnknownPage,
         NormalMode,
-        emptyUserAnswers,
-        AffinityGroup.Individual
+        EmptyUserAnswers
       ) mustBe routes.AccountHomeController.onPageLoad
     }
 
@@ -142,8 +144,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             WhatIsYourRoleAsImporterPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
 
         }
@@ -157,8 +158,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             WhyTransactionValueOfSimilarGoodsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
             NormalMode,
             draftId
@@ -174,8 +174,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HaveYouUsedMethodOneInPastPage,
             NormalMode,
-            ans,
-            AffinityGroup.Individual
+            ans
           ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -184,8 +183,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HaveYouUsedMethodOneInPastPage,
             NormalMode,
-            ans,
-            AffinityGroup.Individual
+            ans
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -197,8 +195,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HaveYouUsedMethodOneForSimilarGoodsInPastPage,
             NormalMode,
-            ans,
-            AffinityGroup.Individual
+            ans
           ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -207,8 +204,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HaveYouUsedMethodOneForSimilarGoodsInPastPage,
             NormalMode,
-            ans,
-            AffinityGroup.Individual
+            ans
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
 
         }
@@ -221,8 +217,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheSimilarGoodsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -234,8 +229,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheIdenticalGoodsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -247,8 +241,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             RequiredInformationPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ImportGoodsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -256,8 +249,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             RequiredInformationPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
         }
       }
@@ -269,8 +261,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -282,8 +273,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ExplainWhyYouChoseMethodFourPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -295,8 +285,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ImportGoodsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ContactPageController.onPageLoad(NormalMode, draftId)
         }
 
@@ -305,8 +294,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ImportGoodsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ImportingGoodsController.onPageLoad(draftId)
         }
 
@@ -314,8 +302,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ImportGoodsPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.ImportGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -326,8 +313,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HasCommodityCodePage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode, draftId)
         }
 
@@ -336,8 +322,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HasCommodityCodePage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
             NormalMode,
             draftId
@@ -352,8 +337,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HaveTheGoodsBeenSubjectToLegalChallengesPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(NormalMode, draftId)
         }
 
@@ -363,8 +347,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HaveTheGoodsBeenSubjectToLegalChallengesPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.HasConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -376,8 +359,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheLegalChallengesPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.HasConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
 
@@ -385,8 +367,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheLegalChallengesPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -397,8 +378,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HasConfidentialInformationPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
 
@@ -411,8 +391,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
               navigator.nextPage(
                 HasConfidentialInformationPage,
                 NormalMode,
-                userAnswers,
-                AffinityGroup.Individual
+                userAnswers
               ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
             }
           }
@@ -430,8 +409,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
               navigator.nextPage(
                 HasConfidentialInformationPage,
                 NormalMode,
-                userAnswers,
-                AffinityGroup.Individual
+                userAnswers
               ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(
                 NormalMode,
                 draftId
@@ -449,8 +427,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ConfidentialInformationPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -466,8 +443,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ConfidentialInformationPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
         }
 
@@ -475,8 +451,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ConfidentialInformationPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -492,9 +467,8 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
-              userAnswers,
-              aff
-            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
+              userAnswers
+            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
           }
 
           "and navigate to EORIBeUpToDatePage when No" in {
@@ -503,9 +477,8 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
-              userAnswers,
-              aff
-            ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
+              userAnswers
+            )(aff) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
           }
         }
 
@@ -518,56 +491,8 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
-              userAnswers,
-              aff
-            ) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
-          }
-        }
-      }
-
-      "BusinessContactDetailsPage must" - {
-        val userAnswers =
-          userAnswersWith(
-            BusinessContactDetailsPage,
-            BusinessContactDetails("name", "email", "phone")
-          )
-
-        "when Agent" - {
-          "navigate to AgentCompanyDetailsPage when Yes" in {
-            val ua = userAnswers
-              .set(WhatIsYourRoleAsImporterPage, value = AgentOnBehalfOfOrg)
-              .success
-              .value
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              ua,
-              AffinityGroup.Organisation,
-              Option(Assistant)
-            ) mustBe routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId)
-          }
-        }
-
-        "when an Employee" - {
-          "navigate to ValuationMethodPage when WhatIsYourRoleAsImporterPage is answered as EmployeeOfOrg" in {
-
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              userAnswers.set(WhatIsYourRoleAsImporterPage, value = EmployeeOfOrg).success.value,
-              AffinityGroup.Organisation,
-              Option(User)
-            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
-          }
-
-          "navigate to ValuationMethodPage when AffinityGroup Organisation and CredentialRole Assistant" in {
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              userAnswers,
-              AffinityGroup.Organisation,
-              Option(User)
-            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+              userAnswers
+            )(aff) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
           }
         }
       }
@@ -588,8 +513,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
         navigator.nextPage(
           AgentCompanyDetailsPage,
           NormalMode,
-          userAnswers,
-          AffinityGroup.Individual
+          userAnswers
         ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
       }
 
@@ -602,8 +526,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
         navigator.nextPage(
           ApplicationContactDetailsPage,
           NormalMode,
-          userAnswers,
-          AffinityGroup.Individual
+          userAnswers
         ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
       }
 
@@ -612,8 +535,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            emptyUserAnswers
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -623,8 +545,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
             .onPageLoad(Index(0), NormalMode, draftId, None, None)
         }
@@ -635,8 +556,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
         }
       }
@@ -647,8 +567,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             UploadSupportingDocumentPage(Index(0)),
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            emptyUserAnswers
           ) mustBe routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId)
         }
       }
@@ -659,8 +578,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             IsThisFileConfidentialPage(Index(0)),
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            emptyUserAnswers
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -673,8 +591,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
             .onPageLoad(Index(0), NormalMode, draftId, None, None)
         }
@@ -693,8 +610,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
             .onPageLoad(Index(1), NormalMode, draftId, None, None)
         }
@@ -705,8 +621,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
         }
 
@@ -716,9 +631,8 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Agent
-          ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            userAnswers
+          )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
             draftId
           )
         }
@@ -727,8 +641,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            emptyUserAnswers
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -747,8 +660,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DeleteSupportingDocumentPage(Index(0)),
             NormalMode,
-            answers,
-            AffinityGroup.Individual
+            answers
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
         }
 
@@ -756,8 +668,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DeleteSupportingDocumentPage(Index(0)),
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            emptyUserAnswers
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -767,8 +678,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
         }
 
@@ -778,8 +688,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(NormalMode, draftId)
         }
 
@@ -789,8 +698,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -800,8 +708,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(
             NormalMode,
             draftId
@@ -814,8 +721,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
             mode = NormalMode,
             draftId
@@ -828,8 +734,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.WhyComputedValueController.onPageLoad(NormalMode, draftId)
         }
 
@@ -839,8 +744,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
             mode = NormalMode,
             draftId
@@ -853,16 +757,14 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            emptyUserAnswers.set(IsThereASaleInvolvedPage, true).success.value,
-            AffinityGroup.Individual
+            emptyUserAnswers.set(IsThereASaleInvolvedPage, true).success.value
           ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, draftId)
         }
         "navigate to valuationMethod page when no" in {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            emptyUserAnswers.set(IsThereASaleInvolvedPage, false).success.value,
-            AffinityGroup.Individual
+            emptyUserAnswers.set(IsThereASaleInvolvedPage, false).success.value
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -875,8 +777,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
             emptyUserAnswers
               .set(IsSaleBetweenRelatedPartiesPage, true)
               .success
-              .value,
-            AffinityGroup.Individual
+              .value
           ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode, draftId)
         }
         "navigate to restrictions page when no" in {
@@ -886,8 +787,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
             emptyUserAnswers
               .set(IsSaleBetweenRelatedPartiesPage, false)
               .success
-              .value,
-            AffinityGroup.Individual
+              .value
           ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -900,8 +800,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
             emptyUserAnswers
               .set(ExplainHowPartiesAreRelatedPage, "explain")
               .success
-              .value,
-            AffinityGroup.Individual
+              .value
           ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -911,8 +810,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             HasCommodityCodePage,
             NormalMode,
-            userAnswersWith(HasCommodityCodePage, true),
-            AffinityGroup.Individual
+            userAnswersWith(HasCommodityCodePage, true)
           ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -922,8 +820,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             CommodityCodePage,
             NormalMode,
-            userAnswersWith(CommodityCodePage, "1234567890"),
-            AffinityGroup.Individual
+            userAnswersWith(CommodityCodePage, "1234567890")
           ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
             NormalMode,
             draftId
@@ -936,8 +833,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             AreThereRestrictionsOnTheGoodsPage,
             NormalMode,
-            userAnswersWith(AreThereRestrictionsOnTheGoodsPage, true),
-            AffinityGroup.Individual
+            userAnswersWith(AreThereRestrictionsOnTheGoodsPage, true)
           ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -945,8 +841,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             AreThereRestrictionsOnTheGoodsPage,
             NormalMode,
-            userAnswersWith(AreThereRestrictionsOnTheGoodsPage, false),
-            AffinityGroup.Individual
+            userAnswersWith(AreThereRestrictionsOnTheGoodsPage, false)
           ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -954,8 +849,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             AreThereRestrictionsOnTheGoodsPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -965,8 +859,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheRestrictionsPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.DescribeTheRestrictionsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -974,8 +867,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheRestrictionsPage,
             NormalMode,
-            userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions"),
-            AffinityGroup.Individual
+            userAnswersWith(DescribeTheRestrictionsPage, "Some restrictions")
           ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -985,8 +877,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             IsTheSaleSubjectToConditionsPage,
             NormalMode,
-            userAnswersWith(IsTheSaleSubjectToConditionsPage, true),
-            AffinityGroup.Individual
+            userAnswersWith(IsTheSaleSubjectToConditionsPage, true)
           ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -994,8 +885,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             IsTheSaleSubjectToConditionsPage,
             NormalMode,
-            userAnswersWith(IsTheSaleSubjectToConditionsPage, false),
-            AffinityGroup.Individual
+            userAnswersWith(IsTheSaleSubjectToConditionsPage, false)
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -1003,8 +893,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             IsTheSaleSubjectToConditionsPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.IsTheSaleSubjectToConditionsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -1014,8 +903,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheConditionsPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.DescribeTheConditionsController.onPageLoad(NormalMode, draftId)
         }
 
@@ -1023,8 +911,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             DescribeTheConditionsPage,
             NormalMode,
-            userAnswersWith(DescribeTheConditionsPage, "Some conditions"),
-            AffinityGroup.Individual
+            userAnswersWith(DescribeTheConditionsPage, "Some conditions")
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -1035,8 +922,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             WhyIdenticalGoodsPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode, draftId)
         }
 
@@ -1044,8 +930,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             WhyIdenticalGoodsPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.WhyIdenticalGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -1056,8 +941,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             WhyComputedValuePage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -1068,8 +952,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
             mode = NormalMode,
             draftId
@@ -1082,8 +965,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.AdaptMethodController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -1093,8 +975,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             AdaptMethodPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.AdaptMethodController.onPageLoad(NormalMode, draftId)
         }
 
@@ -1103,8 +984,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             AdaptMethodPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -1114,8 +994,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ExplainHowYouWillUseMethodSixPage,
             NormalMode,
-            emptyUserAnswers,
-            AffinityGroup.Individual
+            EmptyUserAnswers
           ) mustBe routes.ExplainHowYouWillUseMethodSixController.onPageLoad(NormalMode, draftId)
         }
 
@@ -1124,8 +1003,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           navigator.nextPage(
             ExplainHowYouWillUseMethodSixPage,
             NormalMode,
-            userAnswers,
-            AffinityGroup.Individual
+            userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -1136,8 +1014,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
       navigator.nextPage(
         DeleteDraftPage,
         NormalMode,
-        emptyUserAnswers,
-        AffinityGroup.Individual
+        emptyUserAnswers
       ) mustBe routes.AccountHomeController.onPageLoad()
     }
 
@@ -1146,8 +1023,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
-        emptyUserAnswers,
-        AffinityGroup.Individual
+        emptyUserAnswers
       ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
     }
   }

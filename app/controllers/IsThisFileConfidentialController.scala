@@ -100,10 +100,7 @@ class IsThisFileConfidentialController @Inject() (
                       .fromTry(request.userAnswers.set(IsThisFileConfidentialPage(index), value))
                   _              <- userAnswersService.set(updatedAnswers)
                 } yield Redirect(
-                  navigator.nextPage(
-                    IsThisFileConfidentialPage(index),
-                    mode,
-                    updatedAnswers,
+                  navigator.nextPage(IsThisFileConfidentialPage(index), mode, updatedAnswers)(
                     request.affinityGroup
                   )
                 )

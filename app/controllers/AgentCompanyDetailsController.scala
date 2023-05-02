@@ -73,7 +73,7 @@ class AgentCompanyDetailsController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(AgentCompanyDetailsPage, mode, updatedAnswers, request.affinityGroup)
+                  .nextPage(AgentCompanyDetailsPage, mode, updatedAnswers)(request.affinityGroup)
               )
           )
     }

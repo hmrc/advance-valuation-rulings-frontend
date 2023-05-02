@@ -71,7 +71,7 @@ class CommodityCodeController @Inject() (
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(CommodityCodePage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(CommodityCodePage, mode, updatedAnswers, request.affinityGroup)
+                navigator.nextPage(CommodityCodePage, mode, updatedAnswers)(request.affinityGroup)
               )
           )
     }

@@ -73,10 +73,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
                         .setFuture(HaveYouUsedMethodOneForSimilarGoodsInPastPage, value)
                 _  <- userAnswersService.set(ua)
               } yield Redirect(
-                navigator.nextPage(
-                  HaveYouUsedMethodOneForSimilarGoodsInPastPage,
-                  mode,
-                  ua,
+                navigator.nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, mode, ua)(
                   request.affinityGroup
                 )
               )

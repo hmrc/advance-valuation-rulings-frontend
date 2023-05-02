@@ -24,12 +24,8 @@ import pages._
 
 class FakeNavigator(desiredRoute: Call) extends Navigator {
 
-  override def nextPage(
-    page: Page,
-    mode: Mode,
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup,
-    credentialRole: Option[CredentialRole]
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit
+    affinityGroup: AffinityGroup
   ): Call =
     desiredRoute
 }

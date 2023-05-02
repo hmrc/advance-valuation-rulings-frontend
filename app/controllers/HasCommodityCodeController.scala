@@ -72,8 +72,9 @@ class HasCommodityCodeController @Inject() (
                   Future.fromTry(request.userAnswers.set(HasCommodityCodePage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator
-                  .nextPage(HasCommodityCodePage, mode, updatedAnswers, request.affinityGroup)
+                navigator.nextPage(HasCommodityCodePage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

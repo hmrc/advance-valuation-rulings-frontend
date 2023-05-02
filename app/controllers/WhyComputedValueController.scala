@@ -73,7 +73,9 @@ class WhyComputedValueController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(WhyComputedValuePage, mode, updatedAnswers, request.affinityGroup)
+                  .nextPage(WhyComputedValuePage, mode, updatedAnswers)(
+                    request.affinityGroup
+                  )
               )
           )
     }

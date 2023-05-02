@@ -17,12 +17,57 @@
 package pages
 
 import play.api.libs.json.JsPath
+import play.api.mvc.Call
+import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole, User}
 
-import models.BusinessContactDetails
+import controllers.routes
+import controllers.routes._
+import models.{BusinessContactDetails, CheckMode, Mode, NormalMode, UserAnswers}
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import navigation.resolveAffinityGroup
 
 case object BusinessContactDetailsPage extends QuestionPage[BusinessContactDetails] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "businessContactDetails"
+
+  def nextPage(
+    mode: Mode,
+    userAnswers: UserAnswers,
+    affinityGroup: AffinityGroup,
+    credentialRole: Option[CredentialRole]
+  ): Call = mode match {
+    case NormalMode =>
+      businessContactDetailsPage(userAnswers, credentialRole)
+    case CheckMode  =>
+      resolveAffinityGroup(affinityGroup)(
+        routes.CheckYourAnswersController.onPageLoad(userAnswers.draftId),
+        routes.CheckYourAnswersForAgentsController.onPageLoad(userAnswers.draftId)
+      )
+  }
+
+  private def businessContactDetailsPage(
+    userAnswers: UserAnswers,
+    credentialRole: Option[CredentialRole]
+  ): Call =
+    userAnswers.get(BusinessContactDetailsPage) match {
+      case None    => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => agentContactDetailsNavigation(userAnswers, credentialRole)
+    }
+
+  private def agentContactDetailsNavigation(
+    userAnswers: UserAnswers,
+    credentialRole: Option[CredentialRole]
+  ): Call =
+    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+      case Some(EmployeeOfOrg)                =>
+        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(AgentOnBehalfOfOrg)           =>
+        AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _ if credentialRole.contains(User) =>
+        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                                  =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+    }
 }

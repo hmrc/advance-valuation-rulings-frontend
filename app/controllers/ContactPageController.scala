@@ -46,7 +46,7 @@ class ContactPageController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         Redirect(
-          navigator.nextPage(ContactPagePage, mode, request.userAnswers, request.affinityGroup)
+          navigator.nextPage(ContactPagePage, mode, request.userAnswers)(request.affinityGroup)
         )
     }
 }

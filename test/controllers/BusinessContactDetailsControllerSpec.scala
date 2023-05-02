@@ -36,7 +36,8 @@ import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute =
+    Call("GET", s"advance-valuation-ruling/$draftId/select-valuation-method") // TODO
 
   val formProvider = new BusinessContactDetailsFormProvider()
   val form         = formProvider()
