@@ -34,6 +34,7 @@ import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{reset, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.AccountHomePage
 import services.UserAnswersService
 import views.html.AccountHomeView
 
@@ -147,14 +148,13 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view      = application.injector.instanceOf[AccountHomeView]
-        val navigator = application.injector.instanceOf[Navigator]
+        val view = application.injector.instanceOf[AccountHomeView]
 
         val draftsForAccountHome = draftSummaries.map {
           d =>
             ApplicationForAccountHome(
               d,
-              navigator.startApplicationRouting(d.id, AffinityGroup.Individual, Option(User))
+              AccountHomePage.nextPage(d.id, AffinityGroup.Individual, Option(User))
             )(messages(application))
         }
 
@@ -208,7 +208,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           d =>
             ApplicationForAccountHome(
               d,
-              navigator.startApplicationRouting(d.id, AffinityGroup.Individual, Option(User))
+              AccountHomePage.nextPage(d.id, AffinityGroup.Individual, Option(User))
             )(messages(application))
         }
 

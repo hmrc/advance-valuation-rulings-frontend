@@ -17,7 +17,7 @@
 package navigation
 
 import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import models.{Mode, UserAnswers}
 import pages._

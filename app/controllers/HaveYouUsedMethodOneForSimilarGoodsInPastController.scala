@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider
-import models.{DraftId, Mode}
+import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.HaveYouUsedMethodOneForSimilarGoodsInPastPage
 import services.UserAnswersService

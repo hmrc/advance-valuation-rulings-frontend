@@ -29,10 +29,10 @@ import queries.AllDocuments
 object CheckModeNavigator {
   import controllers._
 
-  def checkYourAnswers(draftId: DraftId): Call =
+  private def checkYourAnswers(draftId: DraftId) =
     routes.CheckYourAnswersController.onPageLoad(draftId)
 
-  def checkYourAnswersForAgents(draftId: DraftId): Call =
+  private def checkYourAnswersForAgents(draftId: DraftId) =
     routes.CheckYourAnswersForAgentsController.onPageLoad(draftId)
 
   // Pre nav

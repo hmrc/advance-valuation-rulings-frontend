@@ -30,6 +30,7 @@ import connectors.BackendConnector
 import controllers.actions._
 import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
 import navigation.Navigator
+import pages.AccountHomePage
 import repositories.CounterRepository
 import services.UserAnswersService
 import views.html.AccountHomeView
@@ -63,11 +64,7 @@ class AccountHomeController @Inject() (
             draft =>
               ApplicationForAccountHome(
                 draft,
-                navigator.startApplicationRouting(
-                  draft.id,
-                  request.affinityGroup,
-                  request.credentialRole
-                )
+                AccountHomePage.nextPage(draft.id, request.affinityGroup, request.credentialRole)
               )
           }
 
@@ -83,11 +80,7 @@ class AccountHomeController @Inject() (
           draftId <- counterRepository.nextId(CounterId.DraftId)
           _       <- userAnswersService.set(UserAnswers(request.userId, DraftId(draftId)))
         } yield Redirect(
-          navigator.startApplicationRouting(
-            DraftId(draftId),
-            request.affinityGroup,
-            request.credentialRole
-          )
+          AccountHomePage.nextPage(DraftId(draftId), request.affinityGroup, request.credentialRole)
         )
     }
 }

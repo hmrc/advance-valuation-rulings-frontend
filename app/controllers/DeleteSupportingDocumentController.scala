@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models.{DraftId, Index, Mode}
 import navigation.Navigator
-import pages.{DeleteSupportingDocumentPage, UploadSupportingDocumentPage}
+import pages.{DeleteSupportingDocumentPage, UploadAnotherSupportingDocumentPage, UploadSupportingDocumentPage}
 import queries.DraftAttachmentQuery
 import services.UserAnswersService
 

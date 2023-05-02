@@ -72,10 +72,9 @@ class WhyIdenticalGoodsController @Inject() (
                   Future.fromTry(request.userAnswers.set(WhyIdenticalGoodsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator
-                  .nextPage(WhyIdenticalGoodsPage, mode, updatedAnswers)(
-                    request.affinityGroup
-                  )
+                navigator.nextPage(WhyIdenticalGoodsPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

@@ -72,10 +72,9 @@ class IsThereASaleInvolvedController @Inject() (
                   Future.fromTry(request.userAnswers.set(IsThereASaleInvolvedPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator
-                  .nextPage(IsThereASaleInvolvedPage, mode, updatedAnswers)(
-                    request.affinityGroup
-                  )
+                navigator.nextPage(IsThereASaleInvolvedPage, mode, updatedAnswers)(
+                  request.affinityGroup
+                )
               )
           )
     }

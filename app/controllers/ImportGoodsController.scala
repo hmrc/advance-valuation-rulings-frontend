@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ImportGoodsFormProvider
-import models.{DraftId, Mode}
+import models.{DraftId, Mode, UserAnswers}
 import navigation.Navigator
 import pages.ImportGoodsPage
 import services.UserAnswersService

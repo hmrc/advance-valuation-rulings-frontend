@@ -89,7 +89,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
       forAll(credentialRoles) {
         credentialRole =>
           s"should navigate to RequiredInformation page for Individual with credentialRole $credentialRole" in {
-            navigator.startApplicationRouting(
+            AccountHomePage.nextPage(
               draftId,
               AffinityGroup.Individual,
               credentialRole
@@ -98,7 +98,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
           }
 
           s"should navigate to WhatIsYourRole page for Agent with credentialRole $credentialRole" in {
-            navigator.startApplicationRouting(
+            AccountHomePage.nextPage(
               draftId,
               AffinityGroup.Agent,
               credentialRole
@@ -108,7 +108,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
       }
 
       "should navigate to WhatIsYourRole page for Org User" in {
-        navigator.startApplicationRouting(
+        AccountHomePage.nextPage(
           draftId,
           AffinityGroup.Organisation,
           Option(User)
@@ -116,7 +116,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
       }
 
       "should navigate to WhatIsYourRole page for Org Assistant" in {
-        navigator.startApplicationRouting(
+        AccountHomePage.nextPage(
           draftId,
           AffinityGroup.Organisation,
           Option(Assistant)
@@ -125,7 +125,7 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
       }
 
       "should navigate to WhatIsYourRole page for Org with no credentialRole" in {
-        navigator.startApplicationRouting(
+        AccountHomePage.nextPage(
           draftId,
           AffinityGroup.Organisation,
           None
