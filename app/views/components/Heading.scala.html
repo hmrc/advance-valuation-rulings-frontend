@@ -16,6 +16,8 @@
 
 @this()
 
-@(message: String, size: String = "xl")
+@(headingContent: String, size: String = "xl")
 
-<h1 class="govuk-heading-@size wrappable">@message</h1>
+<h1 class="govuk-label-wrapper">
+ <label class="govuk-label govuk-label--@size wrappable" >@headingContent</label>
+</h1>
