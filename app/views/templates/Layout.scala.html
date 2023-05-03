@@ -79,7 +79,7 @@
     pageTitle = Some(pageTitle),
     isWelshTranslationAvailable = false, /* false if your service has not been translated */
     serviceUrl = Some(routes.AccountHomeController.onPageLoad.url),
-    signOutUrl = if(showBackLink) Some(controllers.auth.routes.AuthController.signOut.url) else None,
+    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
     phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
     nonce = CSPNonce.get,
     additionalScriptsBlock = Some(additionalScripts),
