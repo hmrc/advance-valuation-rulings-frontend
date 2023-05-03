@@ -19,8 +19,7 @@ package navigation
 import javax.inject.Inject
 
 import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole, User}
-import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import controllers.routes._
 import models._
