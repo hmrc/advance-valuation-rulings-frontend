@@ -19,14 +19,13 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import controllers.routes.{AgentCompanyDetailsController, ValuationMethodController}
 import forms.BusinessContactDetailsFormProvider
 import models.{BusinessContactDetails, Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,9 +34,6 @@ import services.UserAnswersService
 import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute =
-    Call("GET", s"/advance-valuation-ruling/$draftId/select-valuation-method")
 
   val formProvider = new BusinessContactDetailsFormProvider()
   val form         = formProvider()
@@ -101,16 +97,15 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to ValuationMethodPage when valid data is submitted for Organization User" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+        applicationBuilderAsOrgEmployee(userAnswers = Some(emptyUserAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
@@ -127,7 +122,69 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual ValuationMethodController
+          .onPageLoad(NormalMode, draftId)
+          .url
+      }
+    }
+
+    "must redirect to AgentCompanyDetailsPage when valid data is submitted for Organization Assistant" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilderAsOrgAssistant(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, businessContactDetailsRoute)
+            .withFormUrlEncodedBody(
+              ("name", "my name"),
+              ("email", "email@example.co.uk"),
+              ("phone", "07123456789")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual AgentCompanyDetailsController
+          .onPageLoad(NormalMode, draftId)
+          .url
+      }
+    }
+
+    "must redirect to Journey Recovery for an Agent" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, businessContactDetailsRoute)
+            .withFormUrlEncodedBody(
+              ("name", "my name"),
+              ("email", "email@example.co.uk"),
+              ("phone", "07123456789")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 

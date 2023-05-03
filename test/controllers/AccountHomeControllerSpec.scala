@@ -28,9 +28,9 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, User}
 import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
-import models.{ApplicationForAccountHome, Done, DraftId}
+import controllers.routes.{RequiredInformationController, WhatIsYourRoleAsImporterController}
+import models.{ApplicationForAccountHome, Done, DraftId, NormalMode}
 import models.requests._
-import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{reset, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -198,8 +198,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view      = application.injector.instanceOf[AccountHomeView]
-        val navigator = application.injector.instanceOf[Navigator]
+        val view = application.injector.instanceOf[AccountHomeView]
 
         val appsForAccountHome: Seq[ApplicationForAccountHome] =
           for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
@@ -224,7 +223,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
     }
 
-    "must REDIRECT on startApplication" in {
+    "must REDIRECT to RequiredInformationPage on startApplication for Individual User" in {
 
       val application =
         applicationBuilder(userAnswers = None)
@@ -239,6 +238,55 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual RequiredInformationController
+          .onPageLoad(draftId)
+          .url
+
+        verify(mockUserAnswersService, times(1)).set(any())(any())
+      }
+    }
+
+    "must REDIRECT to RequiredInformationPage on startApplication for Organization User" in {
+
+      val application =
+        applicationBuilderAsOrgEmployee(userAnswers = None)
+          .overrides(bind[UserAnswersService].to(mockUserAnswersService))
+          .build()
+
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+      running(application) {
+        val request = FakeRequest(POST, routes.AccountHomeController.startApplication().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual RequiredInformationController
+          .onPageLoad(draftId)
+          .url
+
+        verify(mockUserAnswersService, times(1)).set(any())(any())
+      }
+    }
+
+    "must REDIRECT to WhatIsYourRoleAsImporterPage on startApplication for Organization Assistant" in {
+
+      val application =
+        applicationBuilderAsOrgAssistant(userAnswers = None)
+          .overrides(bind[UserAnswersService].to(mockUserAnswersService))
+          .build()
+
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+      running(application) {
+        val request = FakeRequest(POST, routes.AccountHomeController.startApplication().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual WhatIsYourRoleAsImporterController
+          .onPageLoad(NormalMode, draftId)
+          .url
 
         verify(mockUserAnswersService, times(1)).set(any())(any())
       }

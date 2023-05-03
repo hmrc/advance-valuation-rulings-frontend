@@ -237,7 +237,6 @@ class ApplicationRequestSpec
           ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
           ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
         } yield ua).success.get
 
         val result =

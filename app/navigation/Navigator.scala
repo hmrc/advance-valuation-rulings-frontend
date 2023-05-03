@@ -20,10 +20,12 @@ import javax.inject.Inject
 
 import play.api.mvc.Call
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
 import controllers.routes._
 import models._
 import models.ValuationMethod._
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 
@@ -55,6 +57,7 @@ class Navigator @Inject() () {
       ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
+    case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
     case UploadSupportingDocumentPage(index)              => uploadSupportingDocumentPage(index)
@@ -467,6 +470,21 @@ class Navigator @Inject() () {
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
+  private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(BusinessContactDetailsPage) match {
+      case None    => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => agentContactDetailsNavigation(userAnswers)
+    }
+
+  private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+      case Some(EmployeeOfOrg)      =>
+        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(AgentOnBehalfOfOrg) =>
+        AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                        => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+    }
+
   private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AgentCompanyDetailsPage) match {
       case None    => AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
@@ -481,4 +499,11 @@ class Navigator @Inject() () {
     case CheckMode  =>
       CheckModeNavigator.nextPage(page)(userAnswers, affinityGroup)
   }
+
+  def startApplicationRouting(affinityGroup: AffinityGroup, draftId: DraftId): Call =
+    affinityGroup match {
+      case Individual => RequiredInformationController.onPageLoad(draftId)
+      case _          =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+    }
 }

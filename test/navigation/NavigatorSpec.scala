@@ -21,17 +21,16 @@ import java.time.Instant
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, User}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import controllers.routes
 import models._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import org.scalatest.prop.TableDrivenPropertyChecks
 import pages._
 import queries.Modifiable
 
-class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
+class NavigatorSpec extends SpecBase {
 
   val EmptyUserAnswers: UserAnswers = emptyUserAnswers
   val navigator                     = new Navigator
@@ -81,54 +80,26 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
 
     "Account Home" - {
 
-      val credentialRoles = Table(
-        "credentialRoles",
-        Set(Option(User), Option(Assistant), None).toList: _*
-      )
-
-      forAll(credentialRoles) {
-        credentialRole =>
-          s"should navigate to RequiredInformation page for Individual with credentialRole $credentialRole" in {
-            AccountHomePage.nextPage(
-              draftId,
-              AffinityGroup.Individual,
-              credentialRole
-            ) mustBe routes.RequiredInformationController
-              .onPageLoad(draftId)
-          }
-
-          s"should navigate to WhatIsYourRole page for Agent with credentialRole $credentialRole" in {
-            AccountHomePage.nextPage(
-              draftId,
-              AffinityGroup.Agent,
-              credentialRole
-            ) mustBe routes.WhatIsYourRoleAsImporterController
-              .onPageLoad(NormalMode, draftId)
-          }
+      "should navigate to RequiredInformation page when Individual" in {
+        navigator.startApplicationRouting(
+          AffinityGroup.Individual,
+          draftId
+        ) mustBe routes.RequiredInformationController
+          .onPageLoad(draftId)
       }
 
-      "should navigate to WhatIsYourRole page for Org User" in {
-        AccountHomePage.nextPage(
-          draftId,
-          AffinityGroup.Organisation,
-          Option(User)
-        ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
-      }
-
-      "should navigate to WhatIsYourRole page for Org Assistant" in {
-        AccountHomePage.nextPage(
-          draftId,
-          AffinityGroup.Organisation,
-          Option(Assistant)
+      "should navigate to WhatIsYourRole page when Agent" in {
+        navigator.startApplicationRouting(
+          AffinityGroup.Agent,
+          draftId
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
-      "should navigate to WhatIsYourRole page for Org with no credentialRole" in {
-        AccountHomePage.nextPage(
-          draftId,
+      "should navigate to WhatIsYourRole page when Org" in {
+        navigator.startApplicationRouting(
           AffinityGroup.Organisation,
-          None
+          draftId
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
@@ -493,6 +464,39 @@ class NavigatorSpec extends SpecBase with TableDrivenPropertyChecks {
               NormalMode,
               userAnswers
             )(aff) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
+          }
+        }
+      }
+
+      "BusinessContactDetailsPage must" - {
+        val userAnswers =
+          userAnswersWith(
+            BusinessContactDetailsPage,
+            BusinessContactDetails("name", "email", "phone")
+          )
+
+        "when Agent" - {
+          "navigate to AgentCompanyDetailsPage when Yes" in {
+            val ua = userAnswers
+              .set(WhatIsYourRoleAsImporterPage, value = AgentOnBehalfOfOrg)
+              .success
+              .value
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              ua
+            ) mustBe routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId)
+          }
+        }
+
+        "when an Employee" - {
+          "navigate to valuation method page" in {
+
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              userAnswers.set(WhatIsYourRoleAsImporterPage, value = EmployeeOfOrg).success.value
+            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
           }
         }
       }

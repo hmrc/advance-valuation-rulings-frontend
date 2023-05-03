@@ -18,10 +18,8 @@ package controllers
 
 import scala.concurrent.Future
 
-import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, User}
@@ -55,7 +53,7 @@ class CheckYourAnswersForAgentsControllerSpec
             .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
             .get
 
-        val application: Application = applicationBuilderAsOrgEmployee(userAnswers = Option(ua))
+        val application = applicationBuilderAsOrgEmployee(userAnswers = Option(ua))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
@@ -72,7 +70,7 @@ class CheckYourAnswersForAgentsControllerSpec
           )
 
         running(application) {
-          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+          implicit val request =
             FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
@@ -104,7 +102,7 @@ class CheckYourAnswersForAgentsControllerSpec
             .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
             .get
 
-        val application: Application = applicationBuilderAsOrgAssistant(userAnswers = Option(ua))
+        val application = applicationBuilderAsOrgAssistant(userAnswers = Option(ua))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
@@ -121,7 +119,7 @@ class CheckYourAnswersForAgentsControllerSpec
           )
 
         running(application) {
-          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+          implicit val request =
             FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
@@ -147,7 +145,7 @@ class CheckYourAnswersForAgentsControllerSpec
     "must redirect to Journey Recovery for a GET if no existing data is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application: Application =
+        val application =
           applicationBuilderAsOrgEmployee(userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
@@ -164,7 +162,7 @@ class CheckYourAnswersForAgentsControllerSpec
     "must redirect to Journey Recovery for a GET if no importer role is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application: Application = applicationBuilderAsOrgEmployee(userAnswers = None).build()
+        val application = applicationBuilderAsOrgEmployee(userAnswers = None).build()
 
         running(application) {
           val request =
@@ -194,7 +192,7 @@ class CheckYourAnswersForAgentsControllerSpec
             )
           )
 
-        val application: Application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
+        val application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector)
@@ -229,7 +227,7 @@ class CheckYourAnswersForAgentsControllerSpec
             Left(BackendError(500, "Internal Server Error"))
           )
 
-        val application: Application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
+        val application = applicationBuilderAsOrgEmployee(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector)

@@ -19,6 +19,7 @@ package pages
 import play.api.libs.json.JsPath
 import play.api.mvc.Call
 import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole, User}
+import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 
 import controllers.routes
 import controllers.routes._
@@ -37,15 +38,20 @@ case object BusinessContactDetailsPage extends QuestionPage[BusinessContactDetai
     userAnswers: UserAnswers,
     affinityGroup: AffinityGroup,
     credentialRole: Option[CredentialRole]
-  ): Call = mode match {
-    case NormalMode =>
-      businessContactDetailsPage(userAnswers, credentialRole)
-    case CheckMode  =>
-      resolveAffinityGroup(affinityGroup)(
-        routes.CheckYourAnswersController.onPageLoad(userAnswers.draftId),
-        routes.CheckYourAnswersForAgentsController.onPageLoad(userAnswers.draftId)
-      )
-  }
+  ): Call =
+    if (affinityGroup == Organisation && credentialRole.nonEmpty) {
+      mode match {
+        case NormalMode =>
+          businessContactDetailsPage(userAnswers, credentialRole)
+        case CheckMode  =>
+          resolveAffinityGroup(affinityGroup)(
+            routes.CheckYourAnswersController.onPageLoad(userAnswers.draftId),
+            routes.CheckYourAnswersForAgentsController.onPageLoad(userAnswers.draftId)
+          )
+      }
+    } else {
+      routes.JourneyRecoveryController.onPageLoad()
+    }
 
   private def businessContactDetailsPage(
     userAnswers: UserAnswers,
@@ -53,21 +59,21 @@ case object BusinessContactDetailsPage extends QuestionPage[BusinessContactDetai
   ): Call =
     userAnswers.get(BusinessContactDetailsPage) match {
       case None    => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => agentContactDetailsNavigation(userAnswers, credentialRole)
+      case Some(_) => businessAgentContactDetailsNavigation(userAnswers, credentialRole)
     }
 
-  private def agentContactDetailsNavigation(
+  private def businessAgentContactDetailsNavigation(
     userAnswers: UserAnswers,
     credentialRole: Option[CredentialRole]
   ): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case Some(EmployeeOfOrg)                =>
+      case None if credentialRole.contains(User) =>
         ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(AgentOnBehalfOfOrg)           =>
+      case Some(EmployeeOfOrg)                   =>
+        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(AgentOnBehalfOfOrg)              =>
         AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _ if credentialRole.contains(User) =>
-        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                                  =>
+      case _                                     =>
         WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 }
