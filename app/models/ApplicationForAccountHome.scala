@@ -16,6 +16,7 @@
 
 package models
 
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -30,10 +31,13 @@ import models.requests._
 final case class ApplicationForAccountHome(
   id: String,
   goodsName: String,
-  date: String,
+  date: Instant,
   statusTag: Tag,
   actions: Seq[ActionItem]
-)
+) {
+  def dateString(): String =
+    ApplicationForAccountHome.formatter.format(date)
+}
 
 object ApplicationForAccountHome {
 
@@ -48,7 +52,7 @@ object ApplicationForAccountHome {
     ApplicationForAccountHome(
       id = applicationSummary.id.toString,
       goodsName = applicationSummary.goodsName,
-      date = formatter.format(applicationSummary.dateSubmitted),
+      date = applicationSummary.dateSubmitted,
       statusTag = Tag(content = Text(messages("accountHome.status.submitted"))),
       actions = Seq(
         ActionItem(
@@ -64,7 +68,7 @@ object ApplicationForAccountHome {
     ApplicationForAccountHome(
       id = draftSummary.id.toString,
       goodsName = draftSummary.goodsName.getOrElse(""),
-      date = formatter.format(draftSummary.lastUpdated),
+      date = draftSummary.lastUpdated,
       statusTag =
         Tag(content = Text(messages("accountHome.status.draft")), classes = "govuk-tag--grey"),
       actions = Seq(
