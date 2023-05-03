@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import controllers.routes.{AgentCompanyDetailsController, ValuationMethodController}
+import controllers.routes.{ValuationMethodController, WhatIsYourRoleAsImporterController}
 import forms.BusinessContactDetailsFormProvider
 import models.{BusinessContactDetails, Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
@@ -128,7 +128,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to AgentCompanyDetailsPage when valid data is submitted for Organization Assistant" in {
+    "must redirect to WhatIsYourRoleAsImporterController when empty data is submitted for Organization Assistant" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
@@ -153,7 +153,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual AgentCompanyDetailsController
+        redirectLocation(result).value mustEqual WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
           .url
       }

@@ -22,12 +22,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.auth.core.User
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import models._
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.requests._
 import pages.Page
 import pages.WhatIsYourRoleAsImporterPage
@@ -81,8 +83,11 @@ class CheckYourAnswersForAgentsController @Inject() (
               )
 
             request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-              case Some(role) => Future.successful(Ok(view(applicationSummary, role, draftId)))
-              case None       =>
+              case Some(role)                                    =>
+                Future.successful(Ok(view(applicationSummary, role, draftId)))
+              case None if request.credentialRole.contains(User) =>
+                Future.successful(Ok(view(applicationSummary, EmployeeOfOrg, draftId)))
+              case None                                          =>
                 logger.warn(
                   "Invalid journey: User navigated to check your answers without specifying agent role"
                 )

@@ -22,6 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{BusinessContactDetails, CheckMode, DraftId, UserAnswers, WhatIsYourRoleAsImporter}
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -88,7 +89,7 @@ object BusinessContactDetailsSummary {
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(BusinessContactDetailsPage)
-      role           <- userAnswer.get(WhatIsYourRoleAsImporterPage)
+      role            = userAnswer.getOrElse(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
       name            = nameRow(contactDetails, role, userAnswer.draftId)
       email           = emailRow(contactDetails, role, userAnswer.draftId)
       contactNumber   = contactNumberRow(contactDetails, role, userAnswer.draftId)
