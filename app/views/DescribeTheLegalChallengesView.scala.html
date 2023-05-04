@@ -31,6 +31,8 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@paraContent = {@paragraph(Html(messages("describeTheLegalChallenges.para")))}
+
 @layout(pageTitle = title(form, messages("describeTheLegalChallenges.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.DescribeTheLegalChallengesController.onSubmit(mode, draftId)) {
@@ -40,20 +42,16 @@
         }
 
         @caption(messages("describeTheLegalChallenges.caption"))
-        @heading(messages("describeTheLegalChallenges.heading"))
-
-        @paragraph(Html(messages("describeTheLegalChallenges.para")))
 
         @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("describeTheLegalChallenges.label")),
-                    classes = "govuk-visually-hidden",
-                    )
-            )   
+                label = LabelViewModel(messages("describeTheLegalChallenges.heading")).asPageHeading()
+                )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
+                .withHint(Hint(content = HtmlContent(paraContent)))
+                .withId("value")
         )
 
         @saveButtons()

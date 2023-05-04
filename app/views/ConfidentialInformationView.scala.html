@@ -32,6 +32,16 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@paraContent = {@paragraph(Html(messages("confidentialInformation.paragraph.1")))
+                @bulletList(Seq(
+                    Html(messages("confidentialInformation.bulletPoint.1")),
+                    Html(messages("confidentialInformation.bulletPoint.2")),
+                    Html(messages("confidentialInformation.bulletPoint.3")),
+                    Html(messages("confidentialInformation.bulletPoint.4"))
+                ))
+                @paragraph(Html(messages("confidentialInformation.paragraph.2")))
+            }
+
 @layout(pageTitle = title(form, messages("confidentialInformation.title")), draftId = Some(draftId)) {
 
 
@@ -42,27 +52,16 @@
         }
 
         @caption(messages("confidentialInformation.caption"))
-        @heading(messages("confidentialInformation.heading"))
-
-        @paragraph(Html(messages("confidentialInformation.paragraph.1")))
-        @bulletList(Seq(
-            Html(messages("confidentialInformation.bulletPoint.1")),
-            Html(messages("confidentialInformation.bulletPoint.2")),
-            Html(messages("confidentialInformation.bulletPoint.3")),
-            Html(messages("confidentialInformation.bulletPoint.4"))
-        ))
-        @paragraph(Html(messages("confidentialInformation.paragraph.2")))
 
         @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("confidentialInformation.label")),
-                    classes = "govuk-visually-hidden",
-                    )
-            )
-                    .withRows(15)
-                    .withAttribute("maxlength","8167")
+                label = LabelViewModel(messages("confidentialInformation.heading")).asPageHeading()
+                )
+                .withRows(15)
+                .withAttribute("maxlength","8167")
+                .withHint(Hint(content = HtmlContent(paraContent)))
+                .withId("value")
         )
 
         @saveButtons()
