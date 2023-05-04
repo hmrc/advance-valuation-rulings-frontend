@@ -230,7 +230,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must REDIRECT and set ApplicantUserType on startApplication" in {
-      val fixedTime = Instant.parse("2018-08-22T10:00:00Z")
+      val fixedTime   = Instant.parse("2018-08-22T10:00:00Z")
       val application =
         applicationBuilder(userAnswers = None)
           .overrides(bind[UserAnswersService].to(mockUserAnswersService))
