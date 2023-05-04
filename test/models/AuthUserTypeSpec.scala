@@ -16,9 +16,7 @@
 
 package models
 
-import play.api.libs.json.Json
-import play.api.libs.json.JsString
-import play.api.libs.json.JsSuccess
+import play.api.libs.json._
 import uk.gov.hmrc.auth.core.{Admin, AffinityGroup, Assistant, User}
 
 import org.scalatest.freespec.AnyFreeSpec
@@ -53,8 +51,18 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
       result mustBe Some(AuthUserType.OrganisationAdmin)
     }
 
-    "identifies an Agent" in {
-      val result = AuthUserType(AffinityGroup.Agent, None)
+    val credentialRoles = Table("credentialRole", Admin, Assistant, User)
+    "returns None for unsupported `Agent` AffinityGroup" in {
+      forAll(credentialRoles) {
+        credentialRole =>
+          val result = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
+
+          result mustBe None
+      }
+    }
+
+    "returns None for an Organisation without a CredentialRole" in {
+      val result = AuthUserType(AffinityGroup.Organisation, None)
 
       result mustBe None
     }
