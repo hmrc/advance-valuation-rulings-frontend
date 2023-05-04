@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.time.{Clock, Instant}
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
@@ -29,7 +30,9 @@ import audit.AuditService
 import connectors.BackendConnector
 import controllers.actions._
 import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
+import models.AuthUserType
 import navigation.Navigator
+import pages.ApplicantUserType
 import repositories.CounterRepository
 import services.UserAnswersService
 import views.html.AccountHomeView
@@ -42,6 +45,7 @@ class AccountHomeController @Inject() (
   backendConnector: BackendConnector,
   auditService: AuditService,
   navigator: Navigator,
+  clock: Clock,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
 )(implicit ec: ExecutionContext)
@@ -76,8 +80,11 @@ class AccountHomeController @Inject() (
     identify.async {
       implicit request =>
         for {
-          draftId <- counterRepository.nextId(CounterId.DraftId)
-          _       <- userAnswersService.set(UserAnswers(request.userId, DraftId(draftId)))
-        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, DraftId(draftId)))
+          nextId      <- counterRepository.nextId(CounterId.DraftId)
+          draftId      = DraftId(nextId)
+          userAnswers  = UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
+          userAnswers <- userAnswers.setFuture(ApplicantUserType, AuthUserType.IndividualTrader)
+          _           <- userAnswersService.set(userAnswers)
+        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, draftId))
     }
 }

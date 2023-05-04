@@ -16,11 +16,12 @@
 
 package controllers
 
-import java.time.Instant
+import java.time.{Clock, Instant, ZoneOffset}
 
 import scala.concurrent.Future
 
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -29,9 +30,10 @@ import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
 import models.{ApplicationForAccountHome, Done, DraftId}
+import models.UserAnswers
 import models.requests._
 import navigation.Navigator
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.MockitoSugar.{reset, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import services.UserAnswersService
@@ -227,11 +229,15 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
     }
 
-    "must REDIRECT on startApplication" in {
-
+    "must REDIRECT and set ApplicantUserType on startApplication" in {
+      val fixedTime = Instant.parse("2018-08-22T10:00:00Z")
       val application =
         applicationBuilder(userAnswers = None)
           .overrides(bind[UserAnswersService].to(mockUserAnswersService))
+          .overrides(
+            bind[Clock]
+              .toInstance(Clock.fixed(fixedTime, ZoneOffset.UTC))
+          )
           .build()
 
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
@@ -243,7 +249,16 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockUserAnswersService, times(1)).set(any())(any())
+        val expect = UserAnswers(
+          userId = "id",
+          draftId = DraftId(DraftIdSequence),
+          data = Json.obj(
+            "applicantUserType" -> "IndividualTrader"
+          ),
+          lastUpdated = fixedTime
+        )
+
+        verify(mockUserAnswersService, times(1)).set(eqTo(expect))(any())
       }
     }
   }
