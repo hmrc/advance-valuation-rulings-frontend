@@ -22,43 +22,59 @@ import forms.behaviours.StringFieldBehaviours
 
 class CommodityCodeFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey  = "commodityCode.error.required"
-  val minLengthKey = "commodityCode.error.length.min"
-  val maxLengthKey = "commodityCode.error.length.max"
-  val minLength    = 4
-  val maxLength    = 10
+  val requiredKey       = "commodityCode.error.required"
+  val minLengthKey      = "commodityCode.error.length.min"
+  val maxLengthKey      = "commodityCode.error.length.max"
+  val minLength         = 4
+  val maxLength         = 10
+  val invalidNumericKey = "commodityCode.error.nonNumeric"
 
   val form = new CommodityCodeFormProvider()()
 
-  ".value" - {
+  "CommodityCodeFormProvider" - {
+    ".value" - {
 
-    val fieldName = "value"
+      val fieldName = "value"
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      numericStringsBetweenRange(minLength, maxLength)
-    )
+      behave like fieldThatBindsValidData(
+        form,
+        fieldName,
+        numericStringsBetweenRange(minLength, maxLength)
+      )
 
-    behave like numericStringWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, maxLengthKey, Seq(maxLength))
-    )
+      behave like numericStringWithMaxLength(
+        form,
+        fieldName,
+        maxLength = maxLength,
+        lengthError = FormError(fieldName, maxLengthKey, Seq(maxLength))
+      )
 
-    behave like fieldWithRange(
-      form,
-      fieldName,
-      minLength = minLength,
-      maxLength = maxLength
-    )
+      behave like fieldWithRange(
+        form,
+        fieldName,
+        minLength = minLength,
+        maxLength = maxLength
+      )
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+      behave like mandatoryField(
+        form,
+        fieldName,
+        requiredError = FormError(fieldName, requiredKey)
+      )
+    }
+
+    "binds numeric string with spaces" in {
+      val result = form.bind(Map("value" -> "8528 711")).apply("value")
+      result.errors mustBe Seq.empty
+    }
+
+    "binds numeric string with 10 digits but with spaces" in {
+      val result = form.bind(Map("value" -> "8528 711 00")).apply("value")
+      result.errors mustBe Seq.empty
+    }
+    "does not bind numeric string with more than 10 digits" in {
+      val result = form.bind(Map("value" -> "8528 711 00 937645")).apply("value")
+      result.errors must contain only FormError("value", maxLengthKey, Array(10))
+    }
   }
-
 }
