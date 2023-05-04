@@ -25,6 +25,12 @@ import models.Enumerable
 
 trait Mappings extends Formatters with Constraints {
 
+  protected def commodityCode(
+    errorKey: String = "error.required",
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[String] =
+    of(commodityCodeFormatter(errorKey, args))
+
   protected def text(
     errorKey: String = "error.required",
     args: Seq[String] = Seq.empty

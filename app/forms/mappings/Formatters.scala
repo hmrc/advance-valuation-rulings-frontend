@@ -26,6 +26,24 @@ import utils.PostcodeValidator
 
 trait Formatters {
 
+  private[mappings] def commodityCodeFormatter(
+    errorKey: String,
+    args: Seq[String] = Seq.empty
+  ): Formatter[String] = new Formatter[String] {
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
+      val code: String = data.getOrElse(key, "").filterNot(_.isWhitespace)
+
+      code match {
+        case "" => Left(Seq(FormError(key, errorKey, args)))
+        case s  => Right(s)
+      }
+    }
+
+    override def unbind(key: String, value: String): Map[String, String] =
+      Map(key -> value)
+  }
+
   private[mappings] def stringFormatter(
     errorKey: String,
     args: Seq[String] = Seq.empty
@@ -143,4 +161,5 @@ trait Formatters {
       Map(key -> value.getOrElse(""))
 
   }
+
 }

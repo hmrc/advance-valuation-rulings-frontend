@@ -26,7 +26,7 @@ class CommodityCodeFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("commodityCode.error.required")
+      "value" -> commodityCode("commodityCode.error.required")
         .verifying(numericString("commodityCode.error.nonNumeric"))
         .verifying(minLength(4, "commodityCode.error.length.min"))
         .verifying(maxLength(10, "commodityCode.error.length.max"))

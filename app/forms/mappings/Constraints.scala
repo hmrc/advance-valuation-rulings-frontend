@@ -123,9 +123,9 @@ trait Constraints {
 
   protected def numericString(errorKey: String): Constraint[String] =
     Constraint {
-      case str if str.forall(_.isDigit) =>
+      case str if str.filterNot(_.isWhitespace).forall(_.isDigit) =>
         Valid
-      case _                            =>
+      case _                                                      =>
         Invalid(errorKey)
     }
 
