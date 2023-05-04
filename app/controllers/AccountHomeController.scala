@@ -20,6 +20,7 @@ import java.time.{Clock, Instant}
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -79,12 +80,18 @@ class AccountHomeController @Inject() (
   def startApplication: Action[AnyContent] =
     identify.async {
       implicit request =>
-        for {
-          nextId      <- counterRepository.nextId(CounterId.DraftId)
-          draftId      = DraftId(nextId)
-          userAnswers  = UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
-          userAnswers <- userAnswers.setFuture(ApplicantUserType, AuthUserType.IndividualTrader)
-          _           <- userAnswersService.set(userAnswers)
-        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, draftId))
+        AuthUserType(request) match {
+          case None           =>
+            // TODO: Update error handling
+            Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+          case Some(authType) =>
+            for {
+              nextId      <- counterRepository.nextId(CounterId.DraftId)
+              draftId      = DraftId(nextId)
+              userAnswers  = UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
+              userAnswers <- userAnswers.setFuture(ApplicantUserType, authType)
+              _           <- userAnswersService.set(userAnswers)
+            } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, draftId))
+        }
     }
 }
