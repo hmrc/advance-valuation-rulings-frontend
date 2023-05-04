@@ -40,34 +40,20 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("explainHowPartiesAreRelated.caption"))
-        @heading(messages("explainHowPartiesAreRelated.heading"))
-        @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
-        @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
 
-         @govukTextarea(
-            TextareaViewModel(
-                field = form("value"),
-                label = Label(
-                    content = Text(messages("explainHowPartiesAreRelated.label")),
-                    classes = "govuk-visually-hidden"),
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-        )
+    @caption(messages("explainHowPartiesAreRelated.caption"))
+    @heading(messages("explainHowPartiesAreRelated.heading"))
+
+  <div id="more-detail-hint" class="govuk-hint">
+      @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
+      @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
+  </div>
+  <textarea class="govuk-textarea" name="value" id="value" rows="15" maxlength="8167"></textarea>
+
+
 
         @saveButtons()
     }
     @cancelLink(draftId)
 }
-
-<!--@caption(messages("explainHowPartiesAreRelated.caption"))-->
-<!--@heading(messages("explainHowPartiesAreRelated.heading"))-->
-
-<!--<div id="more-detail-hint" class="govuk-hint">-->
-<!--    @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))-->
-<!--    @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))-->
-<!--</div>-->
-<!--<textarea class="govuk-textarea" name="value" id="value" rows="15" maxlength="8167"></textarea>-->
-
 
