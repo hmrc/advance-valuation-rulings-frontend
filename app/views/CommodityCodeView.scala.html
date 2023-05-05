@@ -40,15 +40,12 @@
         }
 
         @caption(messages("commodityCode.caption"))
-        @heading(messages("commodityCode.heading"))
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("commodityCode.label")),
-                    classes = "govuk-visually-hidden"),
-                )
+                label = LabelViewModel(messages("commodityCode.heading")).asPageHeading()
+            )
             .withWidth(Full)
             .withHint(Hint(
                 id = Some("commodity-code-hint"),
