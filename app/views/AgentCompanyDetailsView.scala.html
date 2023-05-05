@@ -23,7 +23,8 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukSelect: GovukSelect,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    heading: Heading
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -36,7 +37,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("agentCompanyDetails.heading")</h1>
+        @heading(messages("agentCompanyDetails.heading"))
 
         @govukInput(
             InputViewModel(
