@@ -22,7 +22,7 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -30,8 +30,10 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import audit.AuditService
 import connectors.BackendConnector
 import controllers.actions._
+import controllers.routes.UnauthorisedController
 import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
 import models.AuthUserType
+import models.requests.DraftSummary
 import navigation.Navigator
 import pages.ApplicantUserType
 import repositories.CounterRepository
@@ -59,21 +61,20 @@ class AccountHomeController @Inject() (
       implicit request =>
         auditService.sendUserTypeEvent()
 
-        for {
-          applications <- backendConnector.applicationSummaries.map(_.summaries)
-          drafts       <- userAnswersService.summaries().map(_.summaries)
-        } yield {
-          val applicationViewModels = applications.map(ApplicationForAccountHome(_))
-          val draftViewModels       = drafts.map {
-            draft =>
-              ApplicationForAccountHome(
-                draft,
-                navigator.startApplicationRouting(request.affinityGroup, draft.id)
-              )
-          }
-
-          val viewModels = (applicationViewModels ++ draftViewModels).sortBy(_.date).reverse
-          Ok(view(viewModels))
+        AuthUserType(request) match {
+          case None           =>
+            Future.successful(Redirect(UnauthorisedController.onPageLoad))
+          case Some(authType) =>
+            for {
+              applications    <- backendConnector.applicationSummaries.map(_.summaries)
+              drafts          <- userAnswersService.summaries().map(_.summaries)
+              draftViewModels <-
+                Future.sequence(createDraftViewModels(request.userId, authType, drafts))
+            } yield {
+              val applicationViewModels = applications.map(ApplicationForAccountHome(_))
+              val viewModels            = (applicationViewModels ++ draftViewModels).sortBy(_.date).reverse
+              Ok(view(viewModels))
+            }
         }
     }
 
@@ -82,16 +83,33 @@ class AccountHomeController @Inject() (
       implicit request =>
         AuthUserType(request) match {
           case None           =>
-            // TODO: Update error handling
-            Future.successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+            Future.successful(Redirect(UnauthorisedController.onPageLoad))
           case Some(authType) =>
             for {
               nextId      <- counterRepository.nextId(CounterId.DraftId)
               draftId      = DraftId(nextId)
-              userAnswers  = UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
-              userAnswers <- userAnswers.setFuture(ApplicantUserType, authType)
+              userAnswers <- UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
+                               .setFuture(ApplicantUserType, authType)
               _           <- userAnswersService.set(userAnswers)
-            } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, draftId))
+            } yield Redirect(navigator.startApplicationRouting(userAnswers))
         }
+    }
+
+  private def createDraftViewModels(
+    userId: String,
+    authType: AuthUserType,
+    drafts: Seq[DraftSummary]
+  )(implicit messages: Messages): Seq[Future[ApplicationForAccountHome]] =
+    drafts.map {
+      draft =>
+        UserAnswers(userId, draft.id)
+          .setFuture(ApplicantUserType, authType)
+          .map(
+            userAnswers =>
+              ApplicationForAccountHome(
+                draft,
+                navigator.startApplicationRouting(userAnswers)
+              )
+          )
     }
 }

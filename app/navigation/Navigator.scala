@@ -20,12 +20,11 @@ import javax.inject.Inject
 
 import play.api.mvc.Call
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
 import controllers.routes._
 import models._
+import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 
@@ -477,12 +476,13 @@ class Navigator @Inject() () {
     }
 
   private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
-    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case Some(EmployeeOfOrg)      =>
+    userAnswers.get(ApplicantUserType) match {
+      case Some(OrganisationAdmin)     =>
         ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(AgentOnBehalfOfOrg) =>
+      case Some(OrganisationAssistant) =>
         AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                        => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                           =>
+        UnauthorisedController.onPageLoad
     }
 
   private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
@@ -500,10 +500,15 @@ class Navigator @Inject() () {
       CheckModeNavigator.nextPage(page)(userAnswers, affinityGroup)
   }
 
-  def startApplicationRouting(affinityGroup: AffinityGroup, draftId: DraftId): Call =
-    affinityGroup match {
-      case Individual => RequiredInformationController.onPageLoad(draftId)
-      case _          =>
-        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+  def startApplicationRouting(userAnswers: UserAnswers): Call =
+    userAnswers.get(ApplicantUserType) match {
+      case Some(IndividualTrader)      =>
+        RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case Some(OrganisationAdmin)     =>
+        RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case Some(OrganisationAssistant) =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                           =>
+        UnauthorisedController.onPageLoad
     }
 }

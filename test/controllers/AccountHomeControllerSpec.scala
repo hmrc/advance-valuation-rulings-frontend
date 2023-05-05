@@ -24,18 +24,19 @@ import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
 import models.{ApplicationForAccountHome, Done, DraftId}
+import models.AuthUserType.IndividualTrader
 import models.UserAnswers
 import models.requests._
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.MockitoSugar.{reset, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.ApplicantUserType
 import services.UserAnswersService
 import views.html.AccountHomeView
 
@@ -129,7 +130,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET with some drafts and no applications" in {
 
-      val draftSummaries = Seq(DraftSummary(DraftId(0), None, Instant.now, None))
+      val draftSummaries = Seq(DraftSummary(draftId, None, Instant.now, None))
 
       val application = applicationBuilder()
         .overrides(
@@ -156,10 +157,12 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val navigator = application.injector.instanceOf[Navigator]
 
         val draftsForAccountHome = draftSummaries.map {
-          d =>
+          draftSummary =>
+            val userAnswers =
+              emptyUserAnswers.setFuture(ApplicantUserType, IndividualTrader).futureValue
             ApplicationForAccountHome(
-              d,
-              navigator.startApplicationRouting(AffinityGroup.Individual, d.id)
+              draftSummary,
+              navigator.startApplicationRouting(userAnswers)
             )(messages(application))
         }
 
@@ -180,7 +183,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           ApplicationSummary(ApplicationId(1235L), "shoes", secondApplicationDate, "eoriStr")
         )
 
-      val draftSummaries = Seq(DraftSummary(DraftId(0), None, Instant.now, None))
+      val draftSummaries = Seq(DraftSummary(draftId, None, Instant.now, None))
 
       val application = applicationBuilder()
         .overrides(
@@ -210,10 +213,12 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
 
         val draftsForAccountHome = draftSummaries.map {
-          d =>
+          draftSummary =>
+            val userAnswers =
+              emptyUserAnswers.setFuture(ApplicantUserType, IndividualTrader).futureValue
             ApplicationForAccountHome(
-              d,
-              navigator.startApplicationRouting(AffinityGroup.Individual, d.id)
+              draftSummary,
+              navigator.startApplicationRouting(userAnswers)
             )(messages(application))
         }
 
