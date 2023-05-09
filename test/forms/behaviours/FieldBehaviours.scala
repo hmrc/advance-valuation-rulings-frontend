@@ -70,6 +70,24 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
     }
   }
 
+  def commodityCodeField(form: Form[_], fieldName: String, maxLengthKey: Seq[FormError]): Unit = {
+
+    "binds numeric string with spaces" in {
+      val result = form.bind(Map(fieldName -> "8528 711")).apply(fieldName)
+      result.errors mustBe Seq.empty
+    }
+
+    "binds numeric string with 10 digits but with spaces" in {
+      val result = form.bind(Map(fieldName -> "8528 711 00")).apply(fieldName)
+      result.errors mustBe Seq.empty
+    }
+
+    "does not bind numeric string with more than 10 digits" in {
+      val result = form.bind(Map(fieldName -> "8528 711 00 937645")).apply(fieldName)
+      result.errors mustBe maxLengthKey
+    }
+  }
+
   def postcodeField(
     form: Form[_],
     fieldName: String,

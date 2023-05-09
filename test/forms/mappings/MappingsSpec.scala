@@ -168,4 +168,15 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       result.errors must contain(FormError("value", "error.required"))
     }
   }
+
+  "commodityCode" - {
+    val testForm = Form(
+      "value" -> commodityCode()
+    )
+
+    "must format ignoring whitespace" in {
+      val result = testForm.bind(Map("value" -> "4251 4235 00"))
+      result.get mustEqual "4251423500"
+    }
+  }
 }
