@@ -11,3 +11,10 @@
     display: inline-block;
     word-break: break-word;
 }
+
+
+@media(min-width: 40.0625em) {
+    .segmented-commodity-code span {
+        padding:0 .12em
+    }
+}
