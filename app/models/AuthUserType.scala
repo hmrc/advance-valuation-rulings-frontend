@@ -20,6 +20,7 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, CredentialRole, User}
 import uk.gov.hmrc.auth.core.Admin
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import models.requests.IdentifierRequest
 
 sealed abstract class AuthUserType(override val entryName: String) extends EnumEntry
 
@@ -42,4 +43,7 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
       case (AffinityGroup.Organisation, Some(User))      => Some(OrganisationAdmin)
       case _                                             => None
     }
+
+  def apply(request: IdentifierRequest[_]): Option[AuthUserType] =
+    AuthUserType(request.affinityGroup, request.credentialRole)
 }

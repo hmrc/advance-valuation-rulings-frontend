@@ -26,6 +26,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import base.SpecBase
 import controllers.routes
 import models._
+import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.Modifiable
@@ -80,28 +81,31 @@ class NavigatorSpec extends SpecBase {
 
     "Account Home" - {
 
-      "should navigate to RequiredInformation page when Individual" in {
+      "should navigate to RequiredInformation page for a IndividualTrader" in {
         navigator.startApplicationRouting(
-          AffinityGroup.Individual,
-          draftId
+          emptyUserAnswers.setFuture(ApplicantUserType, IndividualTrader).futureValue
         ) mustBe routes.RequiredInformationController
           .onPageLoad(draftId)
       }
 
-      "should navigate to WhatIsYourRole page when Agent" in {
+      "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
         navigator.startApplicationRouting(
-          AffinityGroup.Agent,
-          draftId
+          emptyUserAnswers.setFuture(ApplicantUserType, OrganisationAssistant).futureValue
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
-      "should navigate to WhatIsYourRole page when Org" in {
+      "should navigate to WhatIsYourRole page for an OrganisationAdmin" in {
         navigator.startApplicationRouting(
-          AffinityGroup.Organisation,
-          draftId
-        ) mustBe routes.WhatIsYourRoleAsImporterController
-          .onPageLoad(NormalMode, draftId)
+          emptyUserAnswers.setFuture(ApplicantUserType, OrganisationAdmin).futureValue
+        ) mustBe routes.RequiredInformationController
+          .onPageLoad(draftId)
+      }
+
+      "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
+        navigator.startApplicationRouting(
+          emptyUserAnswers
+        ) mustBe routes.UnauthorisedController.onPageLoad
       }
     }
 
@@ -475,10 +479,10 @@ class NavigatorSpec extends SpecBase {
             BusinessContactDetails("name", "email", "phone")
           )
 
-        "when Agent" - {
+        "when OrganisationAssistant" - {
           "navigate to AgentCompanyDetailsPage when Yes" in {
             val ua = userAnswers
-              .set(WhatIsYourRoleAsImporterPage, value = AgentOnBehalfOfOrg)
+              .set(ApplicantUserType, value = OrganisationAssistant)
               .success
               .value
             navigator.nextPage(
@@ -489,14 +493,36 @@ class NavigatorSpec extends SpecBase {
           }
         }
 
-        "when an Employee" - {
+        "when an OrganisationAdmin" - {
           "navigate to valuation method page" in {
 
             navigator.nextPage(
               BusinessContactDetailsPage,
               NormalMode,
-              userAnswers.set(WhatIsYourRoleAsImporterPage, value = EmployeeOfOrg).success.value
+              userAnswers.set(ApplicantUserType, value = OrganisationAdmin).success.value
             ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+          }
+        }
+
+        "when an IndividualTrader" - {
+          "navigate to JourneyRecovery page" in {
+
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              userAnswers.set(ApplicantUserType, value = IndividualTrader).success.value
+            ) mustBe routes.UnauthorisedController.onPageLoad
+          }
+        }
+
+        "when ApplicantUserType is missing from user answers" - {
+          "navigate to JourneyRecovery page" in {
+
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              userAnswers
+            ) mustBe routes.UnauthorisedController.onPageLoad
           }
         }
       }

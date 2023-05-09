@@ -16,11 +16,13 @@
 
 package controllers
 
+import java.time.{Clock, Instant}
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -28,8 +30,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import audit.AuditService
 import connectors.BackendConnector
 import controllers.actions._
+import controllers.routes.UnauthorisedController
 import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
+import models.AuthUserType
+import models.requests.DraftSummary
 import navigation.Navigator
+import pages.ApplicantUserType
 import repositories.CounterRepository
 import services.UserAnswersService
 import views.html.AccountHomeView
@@ -42,6 +48,7 @@ class AccountHomeController @Inject() (
   backendConnector: BackendConnector,
   auditService: AuditService,
   navigator: Navigator,
+  clock: Clock,
   val controllerComponents: MessagesControllerComponents,
   view: AccountHomeView
 )(implicit ec: ExecutionContext)
@@ -54,30 +61,55 @@ class AccountHomeController @Inject() (
       implicit request =>
         auditService.sendUserTypeEvent()
 
-        for {
-          applications <- backendConnector.applicationSummaries.map(_.summaries)
-          drafts       <- userAnswersService.summaries().map(_.summaries)
-        } yield {
-          val applicationViewModels = applications.map(ApplicationForAccountHome(_))
-          val draftViewModels       = drafts.map {
-            draft =>
-              ApplicationForAccountHome(
-                draft,
-                navigator.startApplicationRouting(request.affinityGroup, draft.id)
-              )
-          }
-
-          val viewModels = (applicationViewModels ++ draftViewModels).sortBy(_.date).reverse
-          Ok(view(viewModels))
+        AuthUserType(request) match {
+          case None           =>
+            Future.successful(Redirect(UnauthorisedController.onPageLoad))
+          case Some(authType) =>
+            for {
+              applications    <- backendConnector.applicationSummaries.map(_.summaries)
+              drafts          <- userAnswersService.summaries().map(_.summaries)
+              draftViewModels <-
+                Future.sequence(createDraftViewModels(request.userId, authType, drafts))
+            } yield {
+              val applicationViewModels = applications.map(ApplicationForAccountHome(_))
+              val viewModels            = (applicationViewModels ++ draftViewModels).sortBy(_.date).reverse
+              Ok(view(viewModels))
+            }
         }
     }
 
   def startApplication: Action[AnyContent] =
     identify.async {
       implicit request =>
-        for {
-          draftId <- counterRepository.nextId(CounterId.DraftId)
-          _       <- userAnswersService.set(UserAnswers(request.userId, DraftId(draftId)))
-        } yield Redirect(navigator.startApplicationRouting(request.affinityGroup, DraftId(draftId)))
+        AuthUserType(request) match {
+          case None           =>
+            Future.successful(Redirect(UnauthorisedController.onPageLoad))
+          case Some(authType) =>
+            for {
+              nextId      <- counterRepository.nextId(CounterId.DraftId)
+              draftId      = DraftId(nextId)
+              userAnswers <- UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
+                               .setFuture(ApplicantUserType, authType)
+              _           <- userAnswersService.set(userAnswers)
+            } yield Redirect(navigator.startApplicationRouting(userAnswers))
+        }
+    }
+
+  private def createDraftViewModels(
+    userId: String,
+    authType: AuthUserType,
+    drafts: Seq[DraftSummary]
+  )(implicit messages: Messages): Seq[Future[ApplicationForAccountHome]] =
+    drafts.map {
+      draft =>
+        UserAnswers(userId, draft.id)
+          .setFuture(ApplicantUserType, authType)
+          .map(
+            userAnswers =>
+              ApplicationForAccountHome(
+                draft,
+                navigator.startApplicationRouting(userAnswers)
+              )
+          )
     }
 }
