@@ -72,4 +72,4 @@ class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase 
       )
     }
   }
-}
+

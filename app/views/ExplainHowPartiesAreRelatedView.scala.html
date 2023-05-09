@@ -32,6 +32,10 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@paraContent = {    @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
+                    @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
+                }
+
 @layout(pageTitle = title(form, messages("explainHowPartiesAreRelated.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.ExplainHowPartiesAreRelatedController.onSubmit(mode, draftId)) {
@@ -41,22 +45,21 @@
         }
 
         @caption(messages("explainHowPartiesAreRelated.caption"))
-        @heading(messages("explainHowPartiesAreRelated.heading"))
-        @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
-        @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
 
          @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("explainHowPartiesAreRelated.label")),
-                    classes = "govuk-visually-hidden"),
+                label = LabelViewModel(messages("explainHowPartiesAreRelated.heading")).asPageHeading()
                 )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
+                .withHint(Hint(content = HtmlContent(paraContent)))
+                .withId("value")
+
         )
 
         @saveButtons()
     }
     @cancelLink(draftId)
 }
+

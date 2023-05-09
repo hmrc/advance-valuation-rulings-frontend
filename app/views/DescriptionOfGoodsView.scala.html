@@ -39,15 +39,11 @@
         }
 
         @caption(messages("descriptionOfGoods.caption"))
-        @heading(messages("descriptionOfGoods.heading"))
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("descriptionOfGoods.label")),
-                    classes = "govuk-visually-hidden",
-                    )
+                label = LabelViewModel(messages("descriptionOfGoods.heading")).asPageHeading()
             )
             .withWidth(Full)
             .withHint(Hint(

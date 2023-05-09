@@ -32,6 +32,8 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@paraContent = {@paragraph(Html(messages("explainReasonComputedValue.paragraph")))}
+
 @layout(pageTitle = title(form, messages("explainReasonComputedValue.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.ExplainReasonComputedValueController.onSubmit(mode, draftId)) {
@@ -42,21 +44,16 @@
 
     @caption(messages("explainReasonComputedValue.caption"))
 
-    @heading(messages("explainReasonComputedValue.heading"))
-
-    @paragraph(Html(messages("explainReasonComputedValue.paragraph")))
-
     @govukTextarea(
-            TextareaViewModel(
-                field = form("value"),
-                label = Label(
-                    content = Text(messages("explainReasonComputedValue.label")),
-                    classes = "govuk-visually-hidden",
-                    )
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-        )
+        TextareaViewModel(
+            field = form("value"),
+            label = LabelViewModel(messages("explainReasonComputedValue.heading")).asPageHeading()
+            )
+            .withRows(15)
+            .withAttribute("maxlength","8167")
+            .withHint(Hint(content = HtmlContent(paraContent)))
+            .withId("value")
+    )
 
         @saveButtons()
     }

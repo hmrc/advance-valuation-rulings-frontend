@@ -33,6 +33,17 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@paraContent = {@paragraph(Html(messages("describeTheSimilarGoods.paragraph.1")))
+                    @list(
+                        Seq(
+                            Html(messages("describeTheSimilarGoods.bulletPoint.1")),
+                            Html(messages("describeTheSimilarGoods.bulletPoint.2")),
+                            Html(messages("describeTheSimilarGoods.bulletPoint.3"))
+                        ),
+                    "govuk-list govuk-list--bullet",
+                    )
+                }
+
 @layout(pageTitle = title(form, messages("describeTheSimilarGoods.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.DescribeTheSimilarGoodsController.onSubmit(mode, draftId)) {
@@ -42,28 +53,17 @@
         }
 
         @caption(messages("describeTheSimilarGoods.caption"))
-        @heading(messages("describeTheSimilarGoods.heading"))
 
-        @paragraph(Html(messages("describeTheSimilarGoods.paragraph.1")))
-        @list(
-            Seq(
-                Html(messages("describeTheSimilarGoods.bulletPoint.1")),
-                Html(messages("describeTheSimilarGoods.bulletPoint.2")),
-                Html(messages("describeTheSimilarGoods.bulletPoint.3"))
-            ),
-        "govuk-list govuk-list--bullet",
-        )
-
-        @govukTextarea(
-        TextareaViewModel(
-            field = form("value"),
-            label = Label(
-                content = Text(messages("describeTheSimilarGoods.label")),
-                classes = "govuk-visually-hidden",
+         @govukTextarea(
+            TextareaViewModel(
+                field = form("value"),
+                label = LabelViewModel(messages("describeTheSimilarGoods.heading")).asPageHeading()
                 )
-            )
-            .withRows(15)
-            .withAttribute("maxlength","8167")
+                .withRows(15)
+                .withAttribute("maxlength","8167")
+                .withHint(Hint(content = HtmlContent(paraContent)))
+                .withId("value")
+
         )
 
         @saveButtons()

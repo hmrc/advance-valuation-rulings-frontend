@@ -48,6 +48,9 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
     super.beforeEach()
   }
 
+  private val firstApplicationDate  = Instant.ofEpochMilli(1682525788) // April 2023
+  private val secondApplicationDate = Instant.ofEpochMilli(1683130564) // May 2023
+
   "AccountHome Controller" - {
 
     "must return OK and the correct view for a GET with no applications or drafts" in {
@@ -82,8 +85,8 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
     "must return OK and the correct view for a GET with some applications and no drafts" in {
       val appsSummary: Seq[ApplicationSummary] =
         Seq(
-          ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, "eoriStr"),
-          ApplicationSummary(ApplicationId(1235L), "shoes", Instant.now, "eoriStr")
+          ApplicationSummary(ApplicationId(1234L), "socks", firstApplicationDate, "eoriStr"),
+          ApplicationSummary(ApplicationId(1235L), "shoes", secondApplicationDate, "eoriStr")
         )
 
       val application = applicationBuilder()
@@ -171,8 +174,8 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
     "must return OK and the correct view for a GET with some drafts and some applications" in {
       val appsSummary: Seq[ApplicationSummary] =
         Seq(
-          ApplicationSummary(ApplicationId(1234L), "socks", Instant.now, "eoriStr"),
-          ApplicationSummary(ApplicationId(1235L), "shoes", Instant.now, "eoriStr")
+          ApplicationSummary(ApplicationId(1234L), "socks", firstApplicationDate, "eoriStr"),
+          ApplicationSummary(ApplicationId(1235L), "shoes", secondApplicationDate, "eoriStr")
         )
 
       val draftSummaries = Seq(DraftSummary(DraftId(0), None, Instant.now, None))

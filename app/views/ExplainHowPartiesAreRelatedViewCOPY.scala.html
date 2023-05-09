@@ -15,46 +15,45 @@
  *@
 
 @import components._
+@import viewmodels.InputWidth._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
     govukTextarea: GovukTextarea,
-    bulletList: BulletList,
-    cancelLink: CancelApplicationLink,
+    paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
-    paragraph: Paragraph,
+    cancelLink: CancelApplicationLink,
     saveButtons: SaveButtons
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@paraContent = {@paragraph(Html(messages("describeTheRestrictions.paragraph.1")))}
+@layout(pageTitle = title(form, messages("explainHowPartiesAreRelated.title")), draftId = Some(draftId)) {
 
-@layout(pageTitle = title(form, messages("describeTheRestrictions.title")), draftId = Some(draftId)) {
-
-    @formHelper(action = routes.DescribeTheRestrictionsController.onSubmit(mode, draftId)) {
+    @formHelper(action = routes.ExplainHowPartiesAreRelatedController.onSubmit(mode, draftId)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("describeTheRestrictions.caption"))
 
-        @govukTextarea(
-            TextareaViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("describeTheRestrictions.heading")).asPageHeading()
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-                .withHint(Hint(content = HtmlContent(paraContent)))
-                .withId("value")
-        )
+    @caption(messages("explainHowPartiesAreRelated.caption"))
+    @heading(messages("explainHowPartiesAreRelated.heading"))
+
+  <div id="more-detail-hint" class="govuk-hint">
+      @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
+      @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
+  </div>
+  <textarea class="govuk-textarea" name="value" id="value" rows="15" maxlength="8167"></textarea>
+
+
 
         @saveButtons()
     }
     @cancelLink(draftId)
 }
+

@@ -33,6 +33,13 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@paraContent = {@paragraph(Html(messages("whyIdenticalGoods.paragraph.1")))
+                @bulletList(Seq(
+                    Html(messages("whyIdenticalGoods.bulletPoint.1"))
+                ))
+                @paragraph(Html(messages("whyIdenticalGoods.paragraph.2")))
+                }
+
 @layout(pageTitle = title(form, messages("whyIdenticalGoods.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.WhyIdenticalGoodsController.onSubmit(mode, draftId)) {
@@ -43,27 +50,16 @@
 
     @caption(messages("whyIdenticalGoods.caption"))
 
-    @heading(messages("whyIdenticalGoods.heading"))
-
-    @paragraph(Html(messages("whyIdenticalGoods.paragraph.1")))
-
-    @bulletList(Seq(
-        Html(messages("whyIdenticalGoods.bulletPoint.1"))
-    ))
-
-    @paragraph(Html(messages("whyIdenticalGoods.paragraph.2")))
-
-       @govukTextarea(
-            TextareaViewModel(
-                field = form("value"),
-                label = Label(
-                    content = Text(messages("whyIdenticalGoods.label")),
-                    classes = "govuk-visually-hidden",
-                    )
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-        )
+    @govukTextarea(
+        TextareaViewModel(
+            field = form("value"),
+            label = LabelViewModel(messages("whyIdenticalGoods.heading")).asPageHeading()
+            )
+            .withRows(15)
+            .withAttribute("maxlength","8167")
+            .withHint(Hint(content = HtmlContent(paraContent)))
+            .withId("value")
+    )
 
         @saveButtons()
     }
