@@ -23,6 +23,9 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 
 import models._
+import models.AuthUserType.IndividualTrader
+import models.AuthUserType.OrganisationAdmin
+import models.AuthUserType.OrganisationAssistant
 import pages._
 
 case class CompanyContactDetails(
@@ -42,26 +45,34 @@ case class ContactDetails(
 object ContactDetails {
   implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
 
+  // Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
+
   def apply(
-    answers: UserAnswers,
-    affinityGroup: AffinityGroup
+    answers: UserAnswers
   ): ValidatedNel[Page, ContactDetails] =
-    affinityGroup match {
-      case Individual =>
-        answers
-          .validatedF[ApplicationContactDetails, ContactDetails](
-            ApplicationContactDetailsPage,
-            cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
-          )
+    answers
+      .validated(AccountHomePage)
+      .andThen(
+        authUserType =>
+          authUserType match {
+            case IndividualTrader      =>
+              answers.validatedF[ApplicationContactDetails, ContactDetails](
+                ApplicationContactDetailsPage,
+                cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+              )
+            case OrganisationAdmin     =>
+              answers
+                .validatedF[ApplicationContactDetails, ContactDetails](
+                  ApplicationContactDetailsPage,
+                  cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+                )
+            case OrganisationAssistant =>
+              answers
+                .validatedF[BusinessContactDetails, ContactDetails](
+                  BusinessContactDetailsPage,
+                  cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+                )
+          }
+      )
 
-      case Organisation =>
-        answers
-          .validatedF[BusinessContactDetails, ContactDetails](
-            BusinessContactDetailsPage,
-            cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
-          )
-
-      case _ =>
-        Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
-    }
 }

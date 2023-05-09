@@ -33,9 +33,9 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
+import pages.AccountHomePage
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
-import pages.AccountHomePage
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
 
@@ -156,7 +156,10 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
     }
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {
-      val emptyAnswers           = UserAnswers(userAnswersId, draftId).set(AccountHomePage, AuthUserType.OrganisationAdmin).success.value
+      val emptyAnswers           = UserAnswers(userAnswersId, draftId)
+        .set(AccountHomePage, AuthUserType.OrganisationAdmin)
+        .success
+        .value
       val mockUserAnswersService = mock[UserAnswersService]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)

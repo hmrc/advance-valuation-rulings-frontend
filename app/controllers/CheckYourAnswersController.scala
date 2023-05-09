@@ -81,7 +81,7 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            ApplicationRequest(request.userAnswers, request.affinityGroup, traderDetails) match {
+            ApplicationRequest(request.userAnswers, traderDetails) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.warn(
                   s"Failed to create application request: ${errors.toList.mkString(", ")}}"

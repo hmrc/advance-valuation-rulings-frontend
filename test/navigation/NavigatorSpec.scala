@@ -27,7 +27,7 @@ import base.SpecBase
 import controllers.routes
 import models._
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import pages._
 import queries.Modifiable
 

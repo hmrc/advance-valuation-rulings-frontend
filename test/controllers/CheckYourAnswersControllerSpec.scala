@@ -21,7 +21,6 @@ import scala.concurrent.Future
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import connectors.BackendConnector
@@ -113,7 +112,7 @@ class CheckYourAnswersControllerSpec
         when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
           .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
 
-        val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        val application = applicationBuilder(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector)
@@ -187,8 +186,8 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
             true
           )
     ua <- ua.set(
-            BusinessContactDetailsPage,
-            BusinessContactDetails(
+            ApplicationContactDetailsPage,
+            ApplicationContactDetails(
               name = "name",
               email = "email",
               phone = "phone"

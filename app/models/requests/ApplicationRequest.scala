@@ -157,13 +157,12 @@ object ApplicationRequest {
 
   def apply(
     userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode
   ): ValidatedNel[Page, ApplicationRequest] = {
     val traderDetail    = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
     val agentDetails    = TraderDetail.agent(userAnswers)
     val goodsDetails    = GoodsDetails(userAnswers)
-    val contact         = ContactDetails(userAnswers, affinityGroup)
+    val contact         = ContactDetails(userAnswers)
     val requestedMethod = RequestedMethod(userAnswers)
     val attachments     = AttachmentRequest(userAnswers)
 

@@ -22,7 +22,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.AccountHome
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
