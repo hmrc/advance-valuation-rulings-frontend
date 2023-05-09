@@ -22,7 +22,6 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HeaderCarrier
 
 import audit.AuditService
 import base.SpecBase
@@ -36,10 +35,10 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
+import pages.AccountHomePage
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
 
-  private implicit val hc: HeaderCarrier     = HeaderCarrier()
   private val mockAuditService: AuditService = mock[AuditService]
 
   override def beforeEach(): Unit = {
@@ -157,7 +156,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
     }
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {
-      val emptyAnswers           = UserAnswers(userAnswersId, draftId)
+      val emptyAnswers           = UserAnswers(userAnswersId, draftId).set(AccountHomePage, AuthUserType.OrganisationAdmin).success.value
       val mockUserAnswersService = mock[UserAnswersService]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
@@ -195,7 +194,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         status(result) mustEqual SEE_OTHER
       }
 
-      val expectedUserAnswers = UserAnswers(userAnswersId, draftId)
+      val expectedUserAnswers = emptyAnswers
         .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         .success
         .value
