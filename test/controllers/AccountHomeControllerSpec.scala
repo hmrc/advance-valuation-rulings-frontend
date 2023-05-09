@@ -36,7 +36,7 @@ import navigation.Navigator
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.MockitoSugar.{reset, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ApplicantUserType
+import pages.AccountHomePage
 import services.UserAnswersService
 import views.html.AccountHomeView
 
@@ -159,7 +159,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val draftsForAccountHome = draftSummaries.map {
           draftSummary =>
             val userAnswers =
-              emptyUserAnswers.setFuture(ApplicantUserType, IndividualTrader).futureValue
+              userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
             ApplicationForAccountHome(
               draftSummary,
               navigator.startApplicationRouting(userAnswers)
@@ -215,7 +215,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val draftsForAccountHome = draftSummaries.map {
           draftSummary =>
             val userAnswers =
-              emptyUserAnswers.setFuture(ApplicantUserType, IndividualTrader).futureValue
+              userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
             ApplicationForAccountHome(
               draftSummary,
               navigator.startApplicationRouting(userAnswers)

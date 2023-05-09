@@ -31,25 +31,27 @@
     formHelper: FormWithCSRF,
 )
 
-@(applicationSummary: ApplicationSummary, role: WhatIsYourRoleAsImporter, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(applicationSummary: ApplicationSummary, authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title")), draftId = Some(draftId)) {
 
     <h1 class="govuk-heading-l">@(messages("checkYourAnswersForAgents.heading"))</h1>
 
     @subheading(
-        {role match {
-            case WhatIsYourRoleAsImporter.EmployeeOfOrg         => messages("checkYourAnswersForAgents.company.org.heading")
-            case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    => messages("checkYourAnswersForAgents.company.agent.heading")
+        {authUserType match {
+            case AuthUserType.OrganisationAdmin        => messages("checkYourAnswersForAgents.company.org.heading")
+            case AuthUserType.OrganisationAssistant    => messages("checkYourAnswersForAgents.company.agent.heading")
+            case _                                     => messages("")
         }}
     )
 
     @govukSummaryList(applicationSummary.eoriDetails.rows.withCssClass("govuk-!-margin-bottom-9"))
 
     @subheading(
-        {role match {
-            case WhatIsYourRoleAsImporter.EmployeeOfOrg         => messages("checkYourAnswersForAgents.applicant.org.heading")
-            case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    => messages("checkYourAnswersForAgents.applicant.agent.heading")
+        {authUserType match {
+            case AuthUserType.OrganisationAdmin        => messages("checkYourAnswersForAgents.applicant.org.heading")
+            case AuthUserType.OrganisationAssistant    => messages("checkYourAnswersForAgents.applicant.agent.heading")
+            case _                                     => messages("")
         }}
     )
     @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))

@@ -71,8 +71,7 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            val applicationSummary =
-              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
+            val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
             Future.successful(Ok(view(applicationSummary, draftId)))
         }
     }

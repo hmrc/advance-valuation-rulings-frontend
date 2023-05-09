@@ -22,11 +22,11 @@ import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import connectors.BackendConnector
 import models._
+import models.AuthUserType.{OrganisationAdmin, OrganisationAssistant}
 import models.requests.{ApplicationId, ApplicationSubmissionResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar
@@ -45,12 +45,12 @@ class CheckYourAnswersForAgentsControllerSpec
 
   "Check Your Answers for Agents Controller" - {
 
-    "must return OK and the correct view for a GET as Employee of Organisation" in
+    "must return OK and the correct view for a GET as OrganisationAdmin" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
         val ua: UserAnswers =
           emptyUserAnswers
-            .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+            .set(AccountHomePage, OrganisationAdmin)
             .get
 
         val application = applicationBuilderAsOrg(userAnswers = Option(ua))
@@ -76,25 +76,24 @@ class CheckYourAnswersForAgentsControllerSpec
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-          val list =
-            ApplicationSummary(ua, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+          val list = ApplicationSummary(ua, traderDetailsWithCountryCode)
 
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual view(
             list,
-            role = WhatIsYourRoleAsImporter.EmployeeOfOrg,
+            authUserType = OrganisationAdmin,
             draftId
           ).toString
         }
       }
 
-    "must return OK and the correct view for a GET as Agent on behalf of Organisation" in
+    "must return OK and the correct view for a GET as OrganisationAssistant" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
         val ua: UserAnswers =
           emptyUserAnswers
-            .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+            .set(AccountHomePage, OrganisationAssistant)
             .get
 
         val application = applicationBuilderAsOrg(userAnswers = Option(ua))
@@ -120,13 +119,12 @@ class CheckYourAnswersForAgentsControllerSpec
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-          val list =
-            ApplicationSummary(ua, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+          val list = ApplicationSummary(ua, traderDetailsWithCountryCode)
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
             list,
-            role = WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg,
+            authUserType = OrganisationAssistant,
             draftId
           ).toString
         }

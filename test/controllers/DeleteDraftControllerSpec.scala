@@ -47,7 +47,8 @@ class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request = FakeRequest(GET, deleteDraftRoute)
@@ -71,7 +72,7 @@ class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.clear(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -87,7 +88,9 @@ class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
-        verify(mockUserAnswersService, times(1)).clear(eqTo(emptyUserAnswers.draftId))(any())
+        verify(mockUserAnswersService, times(1)).clear(eqTo(userAnswersAsIndividualTrader.draftId))(
+          any()
+        )
       }
     }
 
@@ -98,7 +101,7 @@ class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.clear(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -114,13 +117,16 @@ class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
-        verify(mockUserAnswersService, never()).clear(eqTo(emptyUserAnswers.draftId))(any())
+        verify(mockUserAnswersService, never()).clear(eqTo(userAnswersAsIndividualTrader.draftId))(
+          any()
+        )
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request =

@@ -70,7 +70,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndA
       "must build a userAnswers object and add it to the request" in {
 
         when(mockUserAnswersService.get(any())(any())) thenReturn Future(
-          Some(emptyUserAnswers)
+          Some(userAnswersAsIndividualTrader)
         )
         val action = new Harness(draftId)
 

@@ -20,22 +20,26 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.Logger
 import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.Redirect
 
 import controllers.routes
 import models.requests.{DataRequest, OptionalDataRequest}
+import pages.AccountHomePage
 
 class DataRequiredActionImpl @Inject() (implicit val executionContext: ExecutionContext)
     extends DataRequiredAction {
+
+  private val logger = Logger(this.getClass)
 
   override protected def refine[A](
     request: OptionalDataRequest[A]
   ): Future[Either[Result, DataRequest[A]]] =
     request.userAnswers match {
-      case None       =>
+      case None                                             =>
         Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
-      case Some(data) =>
+      case Some(data) if data.get(AccountHomePage).nonEmpty =>
         Future.successful(
           Right(
             DataRequest(
@@ -48,6 +52,11 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
             )
           )
         )
+      case _                                                =>
+        logger.warn(
+          "Invalid journey: User navigated to check your answers without specifying agent role"
+        )
+        Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
     }
 }
 

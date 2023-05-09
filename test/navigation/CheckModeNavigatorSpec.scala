@@ -29,7 +29,7 @@ import queries.Modifiable
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers = emptyUserAnswers
+  val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val navigator                     = new Navigator
   val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
 
@@ -258,7 +258,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainHowPartiesAreRelatedPage,
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
                 .set(ExplainHowPartiesAreRelatedPage, "explain")
                 .success
                 .value
@@ -883,7 +883,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadSupportingDocumentPage(Index(0)),
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
               Index(0),
               CheckMode,
@@ -898,7 +898,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThisFileConfidentialPage(Index(0)),
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -907,7 +907,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadSupportingDocumentsPage when Yes is selected" in {
             val userAnswers =
-              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, true).get
+              userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, true).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
@@ -918,7 +918,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
             val userAnswers =
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
                 .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
                 .success
                 .value
@@ -937,7 +937,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "CheckYourAnswers page when No is selected and the user is not an agent" in {
             val userAnswers =
-              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+              userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
@@ -947,7 +947,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
             val userAnswers =
-              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+              userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
@@ -961,7 +961,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.JourneyRecoveryController.onPageLoad()
           }
         }
@@ -970,7 +970,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadAnotherSupportingDocument page when there are more documents" in {
             val answers =
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
                 .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
                 .success
                 .value
@@ -988,7 +988,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DeleteSupportingDocumentPage(Index(0)),
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
           }
         }

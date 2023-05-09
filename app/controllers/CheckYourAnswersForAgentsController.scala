@@ -29,8 +29,7 @@ import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import models._
 import models.requests._
-import pages.Page
-import pages.WhatIsYourRoleAsImporterPage
+import pages.{AccountHomePage, Page}
 import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
@@ -72,14 +71,13 @@ class CheckYourAnswersForAgentsController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            val applicationSummary =
-              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
-
-            request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-              case Some(role) => Future.successful(Ok(view(applicationSummary, role, draftId)))
-              case None       =>
+            val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
+            AccountHomePage.get match {
+              case Some(authUserType) =>
+                Future.successful(Ok(view(applicationSummary, authUserType, draftId)))
+              case None               =>
                 logger.warn(
-                  "Invalid journey: User navigated to check your answers without specifying agent role"
+                  "Invalid journey: User navigated to check your answers without auth user type"
                 )
                 Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
             }

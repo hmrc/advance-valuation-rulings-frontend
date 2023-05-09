@@ -59,7 +59,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 
@@ -80,7 +80,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = userAnswersAsIndividualTrader
         .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.values.head)
         .success
         .value
@@ -111,7 +111,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = userAnswersAsIndividualTrader
         .set(
           AgentCompanyDetailsPage,
           AgentCompanyDetails(
@@ -195,7 +195,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         status(result) mustEqual SEE_OTHER
       }
 
-      val expectedUserAnswers = emptyAnswers
+      val expectedUserAnswers = UserAnswers(userAnswersId, draftId)
         .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         .success
         .value
@@ -206,7 +206,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 

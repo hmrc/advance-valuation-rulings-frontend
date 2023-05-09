@@ -27,7 +27,7 @@ import pages.{AgentCompanyDetailsPage, BusinessContactDetailsPage, WhatIsYourRol
 class AgentSummarySpec extends SpecBase {
 
   val answers: UserAnswers =
-    emptyUserAnswers
+    userAnswersAsIndividualTrader
       .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
       .success
       .value
@@ -56,7 +56,7 @@ class AgentSummarySpec extends SpecBase {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
-      val summary = AgentSummary(emptyUserAnswers)
+      val summary = AgentSummary(userAnswersAsIndividualTrader)
       val rows    = summary.rows.rows
 
       "must create no rows" in {

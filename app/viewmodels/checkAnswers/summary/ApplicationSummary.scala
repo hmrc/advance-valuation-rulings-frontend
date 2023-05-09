@@ -18,10 +18,12 @@ package viewmodels.checkAnswers.summary
 
 import play.api.Logger
 import play.api.i18n.Messages
-import uk.gov.hmrc.auth.core.{AffinityGroup, UnsupportedAffinityGroup}
+import uk.gov.hmrc.auth.core.InsufficientEnrolments
 
+import models.AuthUserType._
 import models.TraderDetailsWithCountryCode
 import models.UserAnswers
+import pages.AccountHomePage
 
 case class ApplicationSummary(
   eoriDetails: EoriDetailsSummary,
@@ -36,25 +38,24 @@ object ApplicationSummary {
 
   def apply(
     userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode
   )(implicit
     messages: Messages
   ): ApplicationSummary = {
-    val (applicant, company) = affinityGroup match {
-      case AffinityGroup.Individual                         =>
+    val (applicant, company) = userAnswers.get(AccountHomePage) match {
+      case Some(IndividualTrader)                                =>
         (
           IndividualApplicantSummary(userAnswers),
           IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
-      case AffinityGroup.Organisation | AffinityGroup.Agent =>
+      case Some(OrganisationAdmin) | Some(OrganisationAssistant) =>
         (
           AgentSummary(userAnswers),
           BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
-      case unexpected                                       =>
-        logger.error(s"Unsupported affinity group [$unexpected] encountered")
-        throw UnsupportedAffinityGroup("Unexpected affinity group")
+      case unexpected                                            =>
+        logger.error(s"Unsupported authUserType [$unexpected] encountered")
+        throw InsufficientEnrolments("Unexpected authUserType")
     }
 
     ApplicationSummary(

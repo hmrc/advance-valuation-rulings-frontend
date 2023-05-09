@@ -35,7 +35,7 @@ import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
 import models.AuthUserType
 import models.requests.DraftSummary
 import navigation.Navigator
-import pages.ApplicantUserType
+import pages.AccountHomePage
 import repositories.CounterRepository
 import services.UserAnswersService
 import views.html.AccountHomeView
@@ -89,7 +89,7 @@ class AccountHomeController @Inject() (
               nextId      <- counterRepository.nextId(CounterId.DraftId)
               draftId      = DraftId(nextId)
               userAnswers <- UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
-                               .setFuture(ApplicantUserType, authType)
+                               .setFuture(AccountHomePage, authType)
               _           <- userAnswersService.set(userAnswers)
             } yield Redirect(navigator.startApplicationRouting(userAnswers))
         }
@@ -103,7 +103,7 @@ class AccountHomeController @Inject() (
     drafts.map {
       draft =>
         UserAnswers(userId, draft.id)
-          .setFuture(ApplicantUserType, authType)
+          .setFuture(AccountHomePage, authType)
           .map(
             userAnswers =>
               ApplicationForAccountHome(

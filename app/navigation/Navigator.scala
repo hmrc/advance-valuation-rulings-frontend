@@ -476,7 +476,7 @@ class Navigator @Inject() () {
     }
 
   private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
-    userAnswers.get(ApplicantUserType) match {
+    userAnswers.get(AccountHomePage) match {
       case Some(OrganisationAdmin)     =>
         ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(OrganisationAssistant) =>
@@ -501,7 +501,7 @@ class Navigator @Inject() () {
   }
 
   def startApplicationRouting(userAnswers: UserAnswers): Call =
-    userAnswers.get(ApplicantUserType) match {
+    userAnswers.get(AccountHomePage) match {
       case Some(IndividualTrader)      =>
         RequiredInformationController.onPageLoad(userAnswers.draftId)
       case Some(OrganisationAdmin)     =>

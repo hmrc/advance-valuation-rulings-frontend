@@ -26,11 +26,13 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import base.SpecBase
 import connectors.BackendConnector
 import models._
+import models.AuthUserType.IndividualTrader
 import models.requests._
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.TryValues
+import org.scalatest.concurrent.ScalaFutures
 import pages._
 import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
@@ -55,7 +57,6 @@ class CheckYourAnswersControllerSpec
     "must return OK and the correct view for a GET with affinityGroup Individual" in
       new CheckYourAnswersControllerSpecSetup {
 
-        val userAnswers = emptyUserAnswers
         val application = applicationBuilder(userAnswers = Option(userAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
@@ -80,8 +81,7 @@ class CheckYourAnswersControllerSpec
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersView]
-          val list =
-            ApplicationSummary(userAnswers, AffinityGroup.Individual, traderDetailsWithCountryCode)
+          val list = ApplicationSummary(userAnswers, traderDetailsWithCountryCode)
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(list, draftId).toString
@@ -165,17 +165,19 @@ class CheckYourAnswersControllerSpec
     }
 }
 
-trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues {
-  val userAnswersId: String         = "id"
-  val DraftIdSequence               = 123456789L
-  val draftId                       = DraftId(DraftIdSequence)
-  val emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
+trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues with ScalaFutures {
+  val userAnswersId: String    = "id"
+  val DraftIdSequence          = 123456789L
+  val draftId                  = DraftId(DraftIdSequence)
+  val userAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
+    .setFuture(AccountHomePage, IndividualTrader)
+    .futureValue
 
   val mockSubmissionService = mock[SubmissionService]
   val mockBackendConnector  = mock[BackendConnector]
 
   val fullUserAnswers = (for {
-    ua <- emptyUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
+    ua <- userAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
     ua <- ua.set(HasCommodityCodePage, false)
     ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
     ua <- ua.set(HasConfidentialInformationPage, false)
