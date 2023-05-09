@@ -19,6 +19,8 @@ import play.api.mvc.Call
 import uk.gov.hmrc.auth.core.AffinityGroup
 
 import controllers.routes
+import models.AuthUserType
+import models.AuthUserType._
 
 package object navigation {
 
@@ -36,5 +38,16 @@ package object navigation {
       case unexpected                                       =>
         logger.error(s"Unexpected affinity group [$unexpected] encountered")
         routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  def resolveAuthUserType(authUserType: AuthUserType)(
+    isTrader: Call,
+    isEmployee: Call,
+    isAgent: Call
+  ): Call =
+    authUserType match {
+      case IndividualTrader      => isTrader
+      case OrganisationAdmin     => isEmployee
+      case OrganisationAssistant => isAgent
     }
 }

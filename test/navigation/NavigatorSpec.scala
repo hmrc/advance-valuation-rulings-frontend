@@ -470,7 +470,7 @@ class NavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
+            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
           }
         }
       }

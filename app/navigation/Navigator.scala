@@ -25,6 +25,7 @@ import controllers.routes._
 import models._
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
+import navigation._
 import pages._
 import queries.AllDocuments
 
@@ -451,15 +452,23 @@ class Navigator @Inject() () {
     }
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
-  )(implicit affinityGroup: AffinityGroup): Call =
+  ): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
       case None        => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(value) =>
         if (value) {
-          resolveAffinityGroup(affinityGroup)(
-            ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
-            BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-          )
+          userAnswers.get(AccountHomePage) match {
+            case None        => JourneyRecoveryController.onPageLoad() // TODO: handle this case
+            case Some(value) =>
+              resolveAuthUserType(value)(
+                isTrader =
+                  ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
+                isEmployee =
+                  ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
+                isAgent =
+                  BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+              )
+          }
         } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
 

@@ -45,8 +45,6 @@ case class ContactDetails(
 object ContactDetails {
   implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
 
-  // Invalid(NonEmptyList.one(WhatIsYourRoleAsImporterPage))
-
   def apply(
     answers: UserAnswers
   ): ValidatedNel[Page, ContactDetails] =
