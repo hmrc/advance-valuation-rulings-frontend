@@ -54,6 +54,6 @@ object AgentSummary {
     val roleRow            = AgentRoleSummary.row(userAnswers).orEmpty
     val agentCompanyRow    = AgentCompanySummary.rows(userAnswers).orEmpty
 
-    AgentSummary(SummaryListViewModel(contactDetailsRows ++ roleRow ++ agentCompanyRow))
+    AgentSummary(SummaryListViewModel(contactDetailsRows ++ agentCompanyRow ++ roleRow))
   }
 }
