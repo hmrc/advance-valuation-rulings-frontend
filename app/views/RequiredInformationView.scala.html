@@ -30,6 +30,8 @@
 
 @(form: Form[_], affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@paraContent = {@paragraph(Html(messages("requiredInformation.hint")))}
+
 @layout(pageTitle = title(form, messages("requiredInformation.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.RequiredInformationController.onSubmit(draftId), 'autoComplete -> "off") {
@@ -40,15 +42,15 @@
         }
         
         @caption(messages("requiredInformation.caption"))
-        @heading(messages("requiredInformation.heading"))
 
         @govukCheckboxes(
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = Legend(content = messages("requiredInformation.hint"), classes = "govuk-hint"),
+                legend = LegendViewModel(messages("requiredInformation.heading")).asPageHeading(),
                 items  = RequiredInformation.checkboxItems(affinityGroup)
             )
+            .withHint(Hint(content = HtmlContent(paraContent)))
         )
 
         @saveButtons()

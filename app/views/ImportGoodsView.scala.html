@@ -39,12 +39,11 @@
         }
 
         @caption(messages("importGoods.caption"))
-        @heading(messages("importGoods.heading"))
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend()
+                legend = LegendViewModel(messages("importGoods.heading")).asPageHeading()
             )
         )
 
