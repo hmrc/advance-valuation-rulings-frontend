@@ -20,7 +20,6 @@ import cats.data.{NonEmptyList, Validated, ValidatedNel}
 import cats.implicits._
 
 import play.api.libs.json._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg

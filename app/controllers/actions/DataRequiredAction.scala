@@ -20,44 +20,39 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import play.api.Logger
 import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.Redirect
 
 import controllers.routes
+import controllers.routes.UnauthorisedController
 import models.requests.{DataRequest, OptionalDataRequest}
 import pages.AccountHomePage
 
 class DataRequiredActionImpl @Inject() (implicit val executionContext: ExecutionContext)
     extends DataRequiredAction {
 
-  private val logger = Logger(this.getClass)
-
   override protected def refine[A](
     request: OptionalDataRequest[A]
-  ): Future[Either[Result, DataRequest[A]]] =
-    request.userAnswers match {
-      case None                                             =>
-        Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
-      case Some(data) if data.get(AccountHomePage).nonEmpty =>
-        Future.successful(
-          Right(
-            DataRequest(
-              request.request,
-              request.userId,
-              request.eoriNumber,
-              request.affinityGroup,
-              data,
-              request.credentialRole
-            )
-          )
+  ): Future[Either[Result, DataRequest[A]]] = {
+    val result = request.userAnswers match {
+      case None       => Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      case Some(data) =>
+        Either.cond(
+          data.get(AccountHomePage).nonEmpty,
+          DataRequest(
+            request.request,
+            request.userId,
+            request.eoriNumber,
+            request.affinityGroup,
+            data,
+            request.credentialRole
+          ),
+          Redirect(UnauthorisedController.onPageLoad)
         )
-      case _                                                =>
-        logger.warn(
-          "Invalid journey: User navigated to check your answers without specifying agent role"
-        )
-        Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
     }
+
+    Future.successful(result)
+  }
 }
 
 trait DataRequiredAction extends ActionRefiner[OptionalDataRequest, DataRequest]

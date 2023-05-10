@@ -80,9 +80,9 @@ class CheckYourAnswersForAgentsController @Inject() (
                 Future.successful(Ok(view(applicationSummary, isOrgAssistant = true, draftId)))
               case _                           =>
                 logger.warn(
-                  "Invalid journey: User navigated to check your answers without auth user type"
+                  "Invalid journey: User navigated to check your answers with without an org user type"
                 )
-                Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+                Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
             }
         }
     }

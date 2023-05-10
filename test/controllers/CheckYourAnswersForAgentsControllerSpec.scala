@@ -232,9 +232,9 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
   val draftId               = DraftId(DraftIdSequence)
 
   val orgAssistantUserAnswers: UserAnswers =
-    UserAnswers(userAnswersId, draftId).set(AccountHomePage, OrganisationAssistant).get
+    UserAnswers(userAnswersId, draftId).set(AccountHomePage, OrganisationAssistant).success.get
   val orgAdminUserAnswers: UserAnswers     =
-    UserAnswers(userAnswersId, draftId).set(AccountHomePage, OrganisationAdmin).get
+    UserAnswers(userAnswersId, draftId).set(AccountHomePage, OrganisationAdmin).success.get
 
   val mockSubmissionService = mock[SubmissionService]
   val mockBackendConnector  = mock[BackendConnector]

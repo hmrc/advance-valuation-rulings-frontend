@@ -458,9 +458,9 @@ class Navigator @Inject() () {
       case Some(value) =>
         if (value) {
           userAnswers.get(AccountHomePage) match {
-            case None        => JourneyRecoveryController.onPageLoad() // TODO: handle this case
-            case Some(value) =>
-              resolveAuthUserType(value)(
+            case None               => UnauthorisedController.onPageLoad
+            case Some(authUserType) =>
+              resolveAuthUserType(authUserType)(
                 isTrader =
                   ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
                 isEmployee =
