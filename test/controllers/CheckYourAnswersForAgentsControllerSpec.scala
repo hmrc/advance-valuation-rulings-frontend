@@ -76,7 +76,7 @@ class CheckYourAnswersForAgentsControllerSpec
 
           contentAsString(result) mustEqual view(
             list,
-            authUserType = OrganisationAdmin,
+            isOrgAssistant = false,
             draftId
           ).toString
         }
@@ -113,7 +113,7 @@ class CheckYourAnswersForAgentsControllerSpec
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
             list,
-            authUserType = OrganisationAssistant,
+            isOrgAssistant = true,
             draftId
           ).toString
         }

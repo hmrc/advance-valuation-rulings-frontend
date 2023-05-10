@@ -28,6 +28,7 @@ import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import models._
+import models.AuthUserType.{OrganisationAdmin, OrganisationAssistant}
 import models.requests._
 import pages.{AccountHomePage, Page}
 import services.SubmissionService
@@ -73,9 +74,11 @@ class CheckYourAnswersForAgentsController @Inject() (
           traderDetails =>
             val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
             AccountHomePage.get match {
-              case Some(authUserType) =>
-                Future.successful(Ok(view(applicationSummary, authUserType, draftId)))
-              case None               =>
+              case Some(OrganisationAdmin)     =>
+                Future.successful(Ok(view(applicationSummary, isOrgAssistant = false, draftId)))
+              case Some(OrganisationAssistant) =>
+                Future.successful(Ok(view(applicationSummary, isOrgAssistant = true, draftId)))
+              case _                           =>
                 logger.warn(
                   "Invalid journey: User navigated to check your answers without auth user type"
                 )

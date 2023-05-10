@@ -31,28 +31,28 @@
     formHelper: FormWithCSRF,
 )
 
-@(applicationSummary: ApplicationSummary, authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(applicationSummary: ApplicationSummary, isOrgAssistant: Boolean, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title")), draftId = Some(draftId)) {
 
     <h1 class="govuk-heading-l">@(messages("checkYourAnswersForAgents.heading"))</h1>
 
     @subheading(
-        {authUserType match {
-            case AuthUserType.OrganisationAdmin        => messages("checkYourAnswersForAgents.company.org.heading")
-            case AuthUserType.OrganisationAssistant    => messages("checkYourAnswersForAgents.company.agent.heading")
-            case _                                     => messages("")
-        }}
+        if (isOrgAssistant) {
+            messages("checkYourAnswersForAgents.company.agent.heading")
+        } else {
+            messages("checkYourAnswersForAgents.company.org.heading")
+        }
     )
 
     @govukSummaryList(applicationSummary.eoriDetails.rows.withCssClass("govuk-!-margin-bottom-9"))
 
     @subheading(
-        {authUserType match {
-            case AuthUserType.OrganisationAdmin        => messages("checkYourAnswersForAgents.applicant.org.heading")
-            case AuthUserType.OrganisationAssistant    => messages("checkYourAnswersForAgents.applicant.agent.heading")
-            case _                                     => messages("")
-        }}
+        if (isOrgAssistant) {
+            messages("checkYourAnswersForAgents.applicant.agent.heading")
+        } else {
+            messages("checkYourAnswersForAgents.applicant.org.heading")
+        }
     )
     @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
 
