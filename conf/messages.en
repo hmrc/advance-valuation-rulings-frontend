@@ -331,8 +331,12 @@ eoriBeUpToDate.title.org = The organisation’s EORI details must be correct to 
 eoriBeUpToDate.heading = Your EORI number details must be correct to use this service
 eoriBeUpToDate.heading.org = The organisation’s EORI details must be correct to use this service
 eoriBeUpToDate.caption = About the applicant
+
 eoriBeUpToDate.paragraph.1 = To update the name or address we have on record, you will need to report a change of circumstances.
 eoriBeUpToDate.paragraph.2 = For an EORI number starting with GB, you can either:
+eoriBeUpToDate.paragraph.1.org = To update the name or address we have on record, the organisation will need to report a change of circumstances.
+eoriBeUpToDate.paragraph.2.org = For an EORI number starting with GB, the organisation can either:
+
 eoriBeUpToDate.bulletPoint.1.link = fill in an enquiry form
 eoriBeUpToDate.bulletPoint.1 = {0}
 eoriBeUpToDate.bulletPoint.2.link = import and export: general enquiries

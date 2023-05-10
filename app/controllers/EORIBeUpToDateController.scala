@@ -37,5 +37,7 @@ class EORIBeUpToDateController @Inject() (
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData)(implicit _request => Ok(view(draftId)))
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit _request => Ok(view(draftId, _request.affinityGroup))
+    }
 }
