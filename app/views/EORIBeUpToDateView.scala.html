@@ -51,13 +51,13 @@
 @layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title")), draftId = Some(draftId)) {
 
 @caption(messages("eoriBeUpToDate.caption"))
-
-@heading(messages("eoriBeUpToDate.heading"))
 <!-- todo: update logic when authUserypes come in   -->
 @if(affinityGroup == AffinityGroup.Organisation) {
+    @heading(messages("eoriBeUpToDate.heading.org"))
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))
     } else {
+    @heading(messages("eoriBeUpToDate.heading"))
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
 }
