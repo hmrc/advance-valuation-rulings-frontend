@@ -19,8 +19,6 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import generators._
 import models._
 import org.scalatest.matchers.should.Matchers
@@ -44,36 +42,58 @@ class ContactDetailsSpec
 
       val userAnswers = (for {
         ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
+        ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
+
       } yield ua).success.get
 
-      val result = ContactDetails(userAnswers, AffinityGroup.Individual)
+      val result = ContactDetails(userAnswers)
 
       result shouldBe Valid(contactDetails)
     }
 
-    "succeed for an organisation" in {
+    "succeed for an organisation admin" in {
+
+      val ua = emptyUserAnswers
+
+      val userAnswers = (for {
+        ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
+        ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
+
+      } yield ua).success.get
+
+      val result = ContactDetails(userAnswers)
+
+      result shouldBe Valid(contactDetails)
+    }
+
+    "succeed for an organisation assistant" in {
 
       val ua = emptyUserAnswers
 
       val userAnswers = (for {
         ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
+        ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
+
       } yield ua).success.get
 
-      val result = ContactDetails(userAnswers, AffinityGroup.Organisation)
+      val result = ContactDetails(userAnswers)
 
       result shouldBe Valid(contactDetails)
     }
 
     "fail when individual contact details are missing" in {
+      val userAnswers = emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader).get
 
-      val result = ContactDetails(emptyUserAnswers, AffinityGroup.Individual)
+      val result = ContactDetails(userAnswers)
 
       result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
     }
 
     "fail when organisation contact details are missing" in {
+      val userAnswers =
+        emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant).get
 
-      val result = ContactDetails(emptyUserAnswers, AffinityGroup.Organisation)
+      val result = ContactDetails(userAnswers)
 
       result shouldBe Invalid(NonEmptyList.one(BusinessContactDetailsPage))
     }

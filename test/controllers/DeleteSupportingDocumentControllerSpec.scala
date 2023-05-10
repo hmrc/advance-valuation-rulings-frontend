@@ -71,7 +71,7 @@ class DeleteSupportingDocumentControllerSpec extends SpecBase with MockitoSugar 
     when(osClient.deleteObject(any(), any())(any()))
       .thenReturn(Future.successful(()))
 
-    val answers = emptyUserAnswers
+    val answers = userAnswersAsIndividualTrader
       .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
       .success
       .value
@@ -106,7 +106,7 @@ class DeleteSupportingDocumentControllerSpec extends SpecBase with MockitoSugar 
     val mockUserAnswersService = mock[UserAnswersService]
     val osClient               = mock[PlayObjectStoreClient]
 
-    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+    val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
       .overrides(
         bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[PlayObjectStoreClient].toInstance(osClient),
@@ -125,7 +125,7 @@ class DeleteSupportingDocumentControllerSpec extends SpecBase with MockitoSugar 
 
   "does not call object store if the file has no download url" in {
 
-    val answers = emptyUserAnswers
+    val answers = userAnswersAsIndividualTrader
       .set(UploadSupportingDocumentPage(Index(0)), UploadedFile.Initiated("reference"))
       .success
       .value

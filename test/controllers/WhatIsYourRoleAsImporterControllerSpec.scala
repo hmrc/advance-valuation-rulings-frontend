@@ -22,7 +22,6 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HeaderCarrier
 
 import audit.AuditService
 import base.SpecBase
@@ -34,12 +33,12 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
+import pages.AccountHomePage
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
 
-  private implicit val hc: HeaderCarrier     = HeaderCarrier()
   private val mockAuditService: AuditService = mock[AuditService]
 
   override def beforeEach(): Unit = {
@@ -59,7 +58,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 
@@ -80,7 +79,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = userAnswersAsIndividualTrader
         .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.values.head)
         .success
         .value
@@ -111,7 +110,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = userAnswersAsIndividualTrader
         .set(
           AgentCompanyDetailsPage,
           AgentCompanyDetails(
@@ -158,6 +157,9 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {
       val emptyAnswers           = UserAnswers(userAnswersId, draftId)
+        .set(AccountHomePage, AuthUserType.OrganisationAdmin)
+        .success
+        .value
       val mockUserAnswersService = mock[UserAnswersService]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
@@ -206,7 +208,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 

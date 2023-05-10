@@ -33,7 +33,7 @@ class MethodSummarySpec extends MethodSummaryFixtureSpec {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
-      val summary: MethodSummary = MethodSummary(emptyUserAnswers)
+      val summary: MethodSummary = MethodSummary(userAnswersAsIndividualTrader)
       val rows                   = summary.rows.rows
 
       "must create no rows" in {
@@ -267,7 +267,7 @@ trait MethodSummaryFixtureSpec extends SpecBase {
 
   val methodOneAllAnswersInput: Try[UserAnswers] =
     for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+      ua <- userAnswersAsIndividualTrader.set(ValuationMethodPage, ValuationMethod.Method1)
       ua <- ua.set(IsThereASaleInvolvedPage, true)
       ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
       ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
@@ -278,7 +278,7 @@ trait MethodSummaryFixtureSpec extends SpecBase {
 
   val methodOneShortFlow: Try[UserAnswers] =
     for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method1)
+      ua <- userAnswersAsIndividualTrader.set(ValuationMethodPage, ValuationMethod.Method1)
       ua <- ua.set(IsThereASaleInvolvedPage, true)
       ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
       ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, false)
@@ -290,7 +290,7 @@ trait MethodSummaryFixtureSpec extends SpecBase {
 
   val methodTwoUsedMethodOneInPast: Try[UserAnswers] =
     for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method2)
+      ua <- userAnswersAsIndividualTrader.set(ValuationMethodPage, ValuationMethod.Method2)
       ua <- ua.set(WhyIdenticalGoodsPage, "test")
       ua <- ua.set(HaveYouUsedMethodOneInPastPage, true)
       ua <- ua.set(DescribeTheIdenticalGoodsPage, "test")
@@ -298,7 +298,7 @@ trait MethodSummaryFixtureSpec extends SpecBase {
 
   val methodThreeAllAnswersInput: Try[UserAnswers] =
     for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method3)
+      ua <- userAnswersAsIndividualTrader.set(ValuationMethodPage, ValuationMethod.Method3)
       ua <- ua.set(WhyTransactionValueOfSimilarGoodsPage, "test")
       ua <- ua.set(HaveYouUsedMethodOneForSimilarGoodsInPastPage, true)
       ua <- ua.set(DescribeTheSimilarGoodsPage, "test")
@@ -306,21 +306,21 @@ trait MethodSummaryFixtureSpec extends SpecBase {
 
   val methodFourAllAnswersInput: Try[UserAnswers] =
     for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method4)
+      ua <- userAnswersAsIndividualTrader.set(ValuationMethodPage, ValuationMethod.Method4)
       ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "test")
       ua <- ua.set(ExplainWhyYouChoseMethodFourPage, "test")
     } yield ua
 
   val methodFiveAllAnswersInput: Try[UserAnswers] =
     for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method5)
+      ua <- userAnswersAsIndividualTrader.set(ValuationMethodPage, ValuationMethod.Method5)
       ua <- ua.set(WhyComputedValuePage, "test")
       ua <- ua.set(ExplainReasonComputedValuePage, "test")
     } yield ua
 
   val methodSixAllAnswersInput: Try[UserAnswers] =
     for {
-      ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method6)
+      ua <- userAnswersAsIndividualTrader.set(ValuationMethodPage, ValuationMethod.Method6)
       ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, "test")
       ua <- ua.set(AdaptMethodPage, AdaptMethod.NoOtherMethod)
       ua <- ua.set(ExplainHowYouWillUseMethodSixPage, "test")

@@ -59,7 +59,10 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
     routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId).url
 
   private val userAnswers =
-    emptyUserAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile).success.value
+    userAnswersAsIndividualTrader
+      .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      .success
+      .value
 
   "IsThisFileConfidential Controller" - {
 
@@ -102,7 +105,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -121,7 +124,8 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
       val request     =
         FakeRequest(POST, isThisFileConfidentialRoute)
           .withFormUrlEncodedBody(("value", ""))
@@ -138,7 +142,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .configure(
           "upscan.maxFiles" -> 1
         )
@@ -156,7 +160,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return NOT_FOUND when the index is greater than the greatest existing index + 1" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .configure(
           "upscan.maxFiles" -> 5
         )
@@ -174,7 +178,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload for POST" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .configure(
           "upscan.maxFiles" -> 1
         )
@@ -192,7 +196,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return NOT_FOUND when the index is greater than the greatest existing index + 1 for POST" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .configure(
           "upscan.maxFiles" -> 5
         )
@@ -218,7 +222,10 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         )
       )
       val answers     =
-        emptyUserAnswers.set(UploadSupportingDocumentPage(Index(0)), failedFile).success.value
+        userAnswersAsIndividualTrader
+          .set(UploadSupportingDocumentPage(Index(0)), failedFile)
+          .success
+          .value
       val application = applicationBuilder(userAnswers = Some(answers)).build()
       val request     = FakeRequest(GET, isThisFileConfidentialRoute)
       val result      = route(application, request).value

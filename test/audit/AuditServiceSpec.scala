@@ -79,7 +79,7 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
       eoriNumber = EoriNumber,
       affinityGroup = AffinityGroup.Individual,
       credentialRole = Option(User),
-      userAnswers = emptyUserAnswers
+      userAnswers = userAnswersAsIndividualTrader
     )
 
     val importerRoles = Table(

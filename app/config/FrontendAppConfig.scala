@@ -31,7 +31,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val appName: String = configuration.get[String]("appName")
 
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
-  private val internalAuthServiceName      = "advance-valuation-rulings-frontend"
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
 
   lazy val emailBaseUrl = servicesConfig.baseUrl("email")
@@ -104,10 +103,4 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration
       .get[Service]("microservice.services.upscan-initiate")
       .baseUrl + "/upscan/v2/initiate"
-
-  private def loadConfig(key: String) =
-    configuration
-      .getOptional[String](key)
-      .getOrElse(throw new Exception(s"Missing configuration key: $key"))
-
 }

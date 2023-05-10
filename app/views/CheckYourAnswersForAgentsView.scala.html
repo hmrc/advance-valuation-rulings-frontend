@@ -31,26 +31,28 @@
     formHelper: FormWithCSRF,
 )
 
-@(applicationSummary: ApplicationSummary, role: WhatIsYourRoleAsImporter, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(applicationSummary: ApplicationSummary, isOrgAssistant: Boolean, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title")), draftId = Some(draftId)) {
 
     <h1 class="govuk-heading-l">@(messages("checkYourAnswersForAgents.heading"))</h1>
 
     @subheading(
-        {role match {
-            case WhatIsYourRoleAsImporter.EmployeeOfOrg         => messages("checkYourAnswersForAgents.company.org.heading")
-            case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    => messages("checkYourAnswersForAgents.company.agent.heading")
-        }}
+        if (isOrgAssistant) {
+            messages("checkYourAnswersForAgents.company.agent.heading")
+        } else {
+            messages("checkYourAnswersForAgents.company.org.heading")
+        }
     )
 
     @govukSummaryList(applicationSummary.eoriDetails.rows.withCssClass("govuk-!-margin-bottom-9"))
 
     @subheading(
-        {role match {
-            case WhatIsYourRoleAsImporter.EmployeeOfOrg         => messages("checkYourAnswersForAgents.applicant.org.heading")
-            case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    => messages("checkYourAnswersForAgents.applicant.agent.heading")
-        }}
+        if (isOrgAssistant) {
+            messages("checkYourAnswersForAgents.applicant.agent.heading")
+        } else {
+            messages("checkYourAnswersForAgents.applicant.org.heading")
+        }
     )
     @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
 

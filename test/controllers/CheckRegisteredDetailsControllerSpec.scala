@@ -76,7 +76,7 @@ class CheckRegisteredDetailsControllerSpec
       contactInformation = Some(contactInformation)
     )
 
-    val userAnswers = emptyUserAnswers
+    val userAnswers = userAnswersAsIndividualTrader
       .set(CheckRegisteredDetailsPage, true)
       .success
       .value
@@ -91,7 +91,7 @@ class CheckRegisteredDetailsControllerSpec
           val mockBackendConnector   = mock[BackendConnector]
           val mockUserAnswersService = mock[UserAnswersService]
 
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
             .overrides(
               bind[BackendConnector].toInstance(mockBackendConnector),
               bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -124,7 +124,7 @@ class CheckRegisteredDetailsControllerSpec
 
           val mockUserAnswersService = mock[UserAnswersService]
           val mockBackendConnector   = mock[BackendConnector]
-          val previousUserAnswers    = emptyUserAnswers
+          val previousUserAnswers    = userAnswersAsIndividualTrader
             .set(
               CheckRegisteredDetailsPage,
               consentValue
@@ -212,7 +212,8 @@ class CheckRegisteredDetailsControllerSpec
 
     "must redirect to Journey Recovery on submit when user has no answers" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request =
@@ -261,7 +262,7 @@ class CheckRegisteredDetailsControllerSpec
 
       val mockBackendConnector = mock[BackendConnector]
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(
           bind[BackendConnector].toInstance(mockBackendConnector)
         )

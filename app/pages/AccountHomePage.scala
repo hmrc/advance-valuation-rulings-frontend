@@ -19,9 +19,8 @@ package pages
 import play.api.libs.json.JsPath
 
 import models.AuthUserType
-import queries.Modifiable
 
-case object ApplicantUserType extends Modifiable[AuthUserType] {
+case object AccountHomePage extends QuestionPage[AuthUserType] {
 
   override def path: JsPath = JsPath \ toString
 

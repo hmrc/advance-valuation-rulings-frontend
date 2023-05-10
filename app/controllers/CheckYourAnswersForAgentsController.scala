@@ -28,9 +28,9 @@ import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import models._
+import models.AuthUserType.{OrganisationAdmin, OrganisationAssistant}
 import models.requests._
-import pages.Page
-import pages.WhatIsYourRoleAsImporterPage
+import pages.{AccountHomePage, Page}
 import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
@@ -72,16 +72,17 @@ class CheckYourAnswersForAgentsController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            val applicationSummary =
-              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
-
-            request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-              case Some(role) => Future.successful(Ok(view(applicationSummary, role, draftId)))
-              case None       =>
+            val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
+            AccountHomePage.get match {
+              case Some(OrganisationAdmin)     =>
+                Future.successful(Ok(view(applicationSummary, isOrgAssistant = false, draftId)))
+              case Some(OrganisationAssistant) =>
+                Future.successful(Ok(view(applicationSummary, isOrgAssistant = true, draftId)))
+              case _                           =>
                 logger.warn(
-                  "Invalid journey: User navigated to check your answers without specifying agent role"
+                  "Invalid journey: User navigated to check your answers with without an org user type"
                 )
-                Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+                Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
             }
         }
     }
@@ -91,7 +92,7 @@ class CheckYourAnswersForAgentsController @Inject() (
       implicit request =>
         getTraderDetails(
           traderDetails =>
-            ApplicationRequest(request.userAnswers, request.affinityGroup, traderDetails) match {
+            ApplicationRequest(request.userAnswers, traderDetails) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.error(
                   s"Failed to create application request: ${errors.toList.mkString(", ")}}"

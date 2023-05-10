@@ -48,7 +48,8 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request = FakeRequest(GET, confidentialInformationRoute)
@@ -68,7 +69,8 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = (for {
-        withInformation <- emptyUserAnswers.set(ConfidentialInformationPage, "top secret")
+        withInformation <-
+          userAnswersAsIndividualTrader.set(ConfidentialInformationPage, "top secret")
       } yield withInformation).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -90,7 +92,8 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
       val userAnswers = (for {
-        withInformation <- emptyUserAnswers.set(ConfidentialInformationPage, "top secret")
+        withInformation <-
+          userAnswersAsIndividualTrader.set(ConfidentialInformationPage, "top secret")
       } yield withInformation).success.value
 
       val mockUserAnswersService = mock[UserAnswersService]
@@ -119,7 +122,8 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request =

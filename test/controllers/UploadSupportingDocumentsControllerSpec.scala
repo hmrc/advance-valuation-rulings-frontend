@@ -91,7 +91,7 @@ class UploadSupportingDocumentsControllerSpec
 
     "must initiate a file upload and display the page" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(
           bind[FileService].toInstance(mockFileService)
         )
@@ -124,7 +124,7 @@ class UploadSupportingDocumentsControllerSpec
 
   "when there is an initiated file" - {
 
-    val userAnswers = emptyUserAnswers
+    val userAnswers = userAnswersAsIndividualTrader
       .set(UploadSupportingDocumentPage(Index(0)), initiatedFile)
       .success
       .value
@@ -272,7 +272,7 @@ class UploadSupportingDocumentsControllerSpec
 
   "when there is a successful file" - {
 
-    val userAnswers = emptyUserAnswers
+    val userAnswers = userAnswersAsIndividualTrader
       .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
       .success
       .value
@@ -386,7 +386,10 @@ class UploadSupportingDocumentsControllerSpec
   "when there is a failed file" - {
 
     val userAnswers =
-      emptyUserAnswers.set(UploadSupportingDocumentPage(Index(0)), failedFile).success.value
+      userAnswersAsIndividualTrader
+        .set(UploadSupportingDocumentPage(Index(0)), failedFile)
+        .success
+        .value
 
     "must initiate a file upload and redirect back to the page with the relevant error code" in {
 
@@ -419,7 +422,7 @@ class UploadSupportingDocumentsControllerSpec
 
   "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
 
-    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+    val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
       .configure(
         "upscan.maxFiles" -> 1
       )
@@ -442,7 +445,7 @@ class UploadSupportingDocumentsControllerSpec
 
   "must return NOT_FOUND when the index is greater than the greatest existing index + 1" in {
 
-    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+    val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
       .configure(
         "upscan.maxFiles" -> 5
       )

@@ -32,7 +32,8 @@ class ContactPageControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request =
@@ -55,7 +56,7 @@ class ContactPageControllerSpec extends SpecBase {
       val onwardRoute = Call("GET", "/foo")
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )

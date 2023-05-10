@@ -27,13 +27,13 @@ import base.SpecBase
 import controllers.routes
 import models._
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import pages._
 import queries.Modifiable
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers = emptyUserAnswers
+  val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val navigator                     = new Navigator
 
   private val successfulFile = UploadedFile.Success(
@@ -59,7 +59,8 @@ class NavigatorSpec extends SpecBase {
 
       def redirectRoute = routes.AccountHomeController.onPageLoad()
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       val request = FakeRequest(GET, "/advance-valuation-ruling/")
 
@@ -83,28 +84,30 @@ class NavigatorSpec extends SpecBase {
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
         navigator.startApplicationRouting(
-          emptyUserAnswers.setFuture(ApplicantUserType, IndividualTrader).futureValue
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
         ) mustBe routes.RequiredInformationController
           .onPageLoad(draftId)
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
         navigator.startApplicationRouting(
-          emptyUserAnswers.setFuture(ApplicantUserType, OrganisationAssistant).futureValue
+          userAnswersAsIndividualTrader
+            .setFuture(AccountHomePage, OrganisationAssistant)
+            .futureValue
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAdmin" in {
         navigator.startApplicationRouting(
-          emptyUserAnswers.setFuture(ApplicantUserType, OrganisationAdmin).futureValue
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
         ) mustBe routes.RequiredInformationController
           .onPageLoad(draftId)
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
         navigator.startApplicationRouting(
-          emptyUserAnswers
+          UserAnswers(userAnswersId, draftId)
         ) mustBe routes.UnauthorisedController.onPageLoad
       }
     }
@@ -467,7 +470,7 @@ class NavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
+            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
           }
         }
       }
@@ -482,7 +485,7 @@ class NavigatorSpec extends SpecBase {
         "when OrganisationAssistant" - {
           "navigate to AgentCompanyDetailsPage when Yes" in {
             val ua = userAnswers
-              .set(ApplicantUserType, value = OrganisationAssistant)
+              .set(AccountHomePage, value = OrganisationAssistant)
               .success
               .value
             navigator.nextPage(
@@ -499,7 +502,7 @@ class NavigatorSpec extends SpecBase {
             navigator.nextPage(
               BusinessContactDetailsPage,
               NormalMode,
-              userAnswers.set(ApplicantUserType, value = OrganisationAdmin).success.value
+              userAnswers.set(AccountHomePage, value = OrganisationAdmin).success.value
             ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
           }
         }
@@ -510,7 +513,7 @@ class NavigatorSpec extends SpecBase {
             navigator.nextPage(
               BusinessContactDetailsPage,
               NormalMode,
-              userAnswers.set(ApplicantUserType, value = IndividualTrader).success.value
+              userAnswers.set(AccountHomePage, value = IndividualTrader).success.value
             ) mustBe routes.UnauthorisedController.onPageLoad
           }
         }
@@ -565,13 +568,13 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
-            emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true).get
+            userAnswersAsIndividualTrader.set(DoYouWantToUploadDocumentsPage, true).get
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
@@ -582,7 +585,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswers page when No is selected" in {
           val userAnswers =
-            emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, false).get
+            userAnswersAsIndividualTrader.set(DoYouWantToUploadDocumentsPage, false).get
           navigator.nextPage(
             DoYouWantToUploadDocumentsPage,
             NormalMode,
@@ -597,7 +600,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             UploadSupportingDocumentPage(Index(0)),
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
           ) mustBe routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId)
         }
       }
@@ -608,7 +611,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsThisFileConfidentialPage(Index(0)),
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -617,7 +620,7 @@ class NavigatorSpec extends SpecBase {
 
         "UploadSupportingDocumentsPage when Yes is selected" in {
           val userAnswers =
-            emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, true).get
+            userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, true).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -628,7 +631,7 @@ class NavigatorSpec extends SpecBase {
 
         "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
           val userAnswers =
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
               .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
               .success
               .value
@@ -647,7 +650,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswers page when No is selected and the user is not an agent" in {
           val userAnswers =
-            emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+            userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -657,7 +660,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
           val userAnswers =
-            emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+            userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
@@ -671,7 +674,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
           ) mustBe routes.JourneyRecoveryController.onPageLoad()
         }
       }
@@ -680,7 +683,7 @@ class NavigatorSpec extends SpecBase {
 
         "UploadAnotherSupportingDocument page when there are more documents" in {
           val answers =
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
               .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
               .success
               .value
@@ -698,7 +701,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             DeleteSupportingDocumentPage(Index(0)),
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -787,14 +790,14 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            emptyUserAnswers.set(IsThereASaleInvolvedPage, true).success.value
+            userAnswersAsIndividualTrader.set(IsThereASaleInvolvedPage, true).success.value
           ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, draftId)
         }
         "navigate to valuationMethod page when no" in {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
             NormalMode,
-            emptyUserAnswers.set(IsThereASaleInvolvedPage, false).success.value
+            userAnswersAsIndividualTrader.set(IsThereASaleInvolvedPage, false).success.value
           ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
         }
       }
@@ -804,7 +807,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsSaleBetweenRelatedPartiesPage,
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
               .set(IsSaleBetweenRelatedPartiesPage, true)
               .success
               .value
@@ -814,7 +817,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             IsSaleBetweenRelatedPartiesPage,
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
               .set(IsSaleBetweenRelatedPartiesPage, false)
               .success
               .value
@@ -827,7 +830,7 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(
             ExplainHowPartiesAreRelatedPage,
             NormalMode,
-            emptyUserAnswers
+            userAnswersAsIndividualTrader
               .set(ExplainHowPartiesAreRelatedPage, "explain")
               .success
               .value
@@ -1044,7 +1047,7 @@ class NavigatorSpec extends SpecBase {
       navigator.nextPage(
         DeleteDraftPage,
         NormalMode,
-        emptyUserAnswers
+        userAnswersAsIndividualTrader
       ) mustBe routes.AccountHomeController.onPageLoad()
     }
 
@@ -1053,7 +1056,7 @@ class NavigatorSpec extends SpecBase {
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
-        emptyUserAnswers
+        userAnswersAsIndividualTrader
       ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
     }
   }

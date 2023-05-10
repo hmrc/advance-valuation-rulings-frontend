@@ -24,31 +24,35 @@ import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.Redirect
 
 import controllers.routes
+import controllers.routes.UnauthorisedController
 import models.requests.{DataRequest, OptionalDataRequest}
+import pages.AccountHomePage
 
 class DataRequiredActionImpl @Inject() (implicit val executionContext: ExecutionContext)
     extends DataRequiredAction {
 
   override protected def refine[A](
     request: OptionalDataRequest[A]
-  ): Future[Either[Result, DataRequest[A]]] =
-    request.userAnswers match {
-      case None       =>
-        Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+  ): Future[Either[Result, DataRequest[A]]] = {
+    val result = request.userAnswers match {
+      case None       => Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       case Some(data) =>
-        Future.successful(
-          Right(
-            DataRequest(
-              request.request,
-              request.userId,
-              request.eoriNumber,
-              request.affinityGroup,
-              data,
-              request.credentialRole
-            )
-          )
+        Either.cond(
+          data.get(AccountHomePage).nonEmpty,
+          DataRequest(
+            request.request,
+            request.userId,
+            request.eoriNumber,
+            request.affinityGroup,
+            data,
+            request.credentialRole
+          ),
+          Redirect(UnauthorisedController.onPageLoad)
         )
     }
+
+    Future.successful(result)
+  }
 }
 
 trait DataRequiredAction extends ActionRefiner[OptionalDataRequest, DataRequest]
