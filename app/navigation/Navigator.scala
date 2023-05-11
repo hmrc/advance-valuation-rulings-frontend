@@ -24,6 +24,7 @@ import controllers.routes._
 import models._
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 
@@ -508,7 +509,14 @@ class Navigator @Inject() () {
       case Some(OrganisationAdmin)     =>
         ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(OrganisationAssistant) =>
-        AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+        userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+          case Some(EmployeeOfOrg)      =>
+            ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+          case Some(AgentOnBehalfOfOrg) =>
+            AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+          case _                        =>
+            WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+        }
       case _                           =>
         UnauthorisedController.onPageLoad
     }
