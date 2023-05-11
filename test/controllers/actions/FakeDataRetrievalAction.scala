@@ -22,31 +22,31 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.mvc.ActionTransformer
 
 import models.{DraftId, UserAnswers}
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.requests.{DataRequest, IdentifierRequest}
 import org.mockito.MockitoSugar.mock
 import services.UserAnswersService
 
-class FakeDataRetrievalActionProvider(dataToReturn: Option[UserAnswers])
+class FakeDataRetrievalActionProvider(dataToReturn: UserAnswers)
     extends DataRetrievalActionProvider(mock[UserAnswersService]) {
 
-  override def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
+  override def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, DataRequest] =
     new FakeDataRetrievalAction(dataToReturn)
 }
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers])
+class FakeDataRetrievalAction(dataToReturn: UserAnswers)
     extends DataRetrievalAction(DraftId(0), mock[UserAnswersService]) {
 
   override protected def transform[A](
     request: IdentifierRequest[A]
-  ): Future[OptionalDataRequest[A]] =
+  ): Future[DataRequest[A]] =
     Future(
-      OptionalDataRequest(
+      DataRequest(
         request.request,
         request.userId,
         request.eoriNumber,
+        dataToReturn,
         request.affinityGroup,
-        request.credentialRole,
-        dataToReturn
+        request.credentialRole
       )
     )(executionContext)
 

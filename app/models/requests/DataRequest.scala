@@ -21,20 +21,11 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 
 import models.UserAnswers
 
-case class OptionalDataRequest[A](
-  request: Request[A],
-  userId: String,
-  eoriNumber: String,
-  affinityGroup: AffinityGroup,
-  credentialRole: Option[CredentialRole],
-  userAnswers: Option[UserAnswers]
-) extends WrappedRequest[A](request)
-
 case class DataRequest[A](
   request: Request[A],
   userId: String,
   eoriNumber: String,
-  affinityGroup: AffinityGroup,
   userAnswers: UserAnswers,
+  affinityGroup: AffinityGroup,
   credentialRole: Option[CredentialRole]
 ) extends WrappedRequest[A](request)

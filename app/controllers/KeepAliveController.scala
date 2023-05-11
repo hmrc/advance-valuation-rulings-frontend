@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -36,9 +36,6 @@ class KeepAliveController @Inject() (
     extends FrontendBaseController {
 
   def keepAlive(draftId: DraftId): Action[AnyContent] = (identify andThen getData(draftId)).async {
-    implicit request =>
-      request.userAnswers
-        .map(answers => userAnswersService.keepAlive(draftId).map(_ => Ok))
-        .getOrElse(Future.successful(Ok))
+    implicit request => userAnswersService.keepAlive(draftId).map(_ => Ok)
   }
 }

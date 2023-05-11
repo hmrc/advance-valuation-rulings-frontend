@@ -58,7 +58,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
+      val application = applicationBuilderAsAgent(userAnswersAsIndividualTrader)
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 
@@ -84,7 +84,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .success
         .value
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+      val application = applicationBuilderAsAgent(userAnswers)
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 
@@ -126,7 +126,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .value
 
       val application =
-        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+        applicationBuilderAsAgent(userAnswers)
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
@@ -179,7 +179,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .value
 
       val application =
-        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+        applicationBuilderAsAgent(userAnswers)
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
@@ -208,7 +208,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
+      val application = applicationBuilderAsAgent(userAnswersAsIndividualTrader)
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 
@@ -235,7 +235,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
     "redirect to Journey Recovery for a POST if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None)
+      val application = applicationBuilder()
         .overrides(bind[AuditService].to(mockAuditService))
         .build()
 

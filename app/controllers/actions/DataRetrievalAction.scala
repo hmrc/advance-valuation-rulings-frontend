@@ -21,33 +21,43 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.mvc.ActionTransformer
+import uk.gov.hmrc.auth.core.InsufficientEnrolments
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import models.DraftId
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.{AuthUserType, DraftId}
+import models.requests.{DataRequest, IdentifierRequest}
+import pages.AccountHomePage
 import services.UserAnswersService
 
 class DataRetrievalAction @Inject() (
   draftId: DraftId,
   val userAnswersService: UserAnswersService
 )(implicit val executionContext: ExecutionContext)
-    extends ActionTransformer[IdentifierRequest, OptionalDataRequest] {
+    extends ActionTransformer[IdentifierRequest, DataRequest] {
 
   override protected def transform[A](
     request: IdentifierRequest[A]
-  ): Future[OptionalDataRequest[A]] = {
+  ): Future[DataRequest[A]] = {
 
     val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    userAnswersService.get(draftId)(hc).map {
-      OptionalDataRequest(
-        request.request,
-        request.userId,
-        request.eoriNumber,
-        request.affinityGroup,
-        request.credentialRole,
-        _
-      )
+    AuthUserType(request) match {
+      case None               => throw InsufficientEnrolments("Auth user type could not be created from request")
+      case Some(authUserType) =>
+        for {
+          maybeUserAnswers        <- userAnswersService.get(draftId)(hc)
+          userAnswers              =
+            maybeUserAnswers
+              .getOrElse(throw new IllegalStateException("Unable to retrieve user answers"))
+          userAnswersWithAuthType <- userAnswers.setFuture(AccountHomePage, authUserType)
+        } yield DataRequest(
+          request.request,
+          request.userId,
+          request.eoriNumber,
+          userAnswersWithAuthType,
+          request.affinityGroup,
+          request.credentialRole
+        )
     }
   }
 }
@@ -56,6 +66,6 @@ class DataRetrievalActionProvider @Inject() (userAnswersService: UserAnswersServ
   ec: ExecutionContext
 ) {
 
-  def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
+  def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, DataRequest] =
     new DataRetrievalAction(draftId, userAnswersService)
 }
