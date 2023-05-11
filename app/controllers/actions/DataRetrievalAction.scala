@@ -21,10 +21,12 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.mvc.ActionTransformer
+import uk.gov.hmrc.auth.core.InsufficientEnrolments
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import models.DraftId
+import models.{AuthUserType, DraftId}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import pages.AccountHomePage
 import services.UserAnswersService
 
 class DataRetrievalAction @Inject() (
@@ -39,15 +41,21 @@ class DataRetrievalAction @Inject() (
 
     val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    userAnswersService.get(draftId)(hc).map {
-      OptionalDataRequest(
-        request.request,
-        request.userId,
-        request.eoriNumber,
-        request.affinityGroup,
-        request.credentialRole,
-        _
-      )
+    AuthUserType(request) match {
+      case None               => throw InsufficientEnrolments("Auth user type could not be created from request")
+      case Some(authUserType) =>
+        for {
+          maybeUserAnswers       <- userAnswersService.get(draftId)(hc)
+          userAnswersWithAuthType =
+            maybeUserAnswers.flatMap(_.set(AccountHomePage, authUserType).toOption)
+        } yield OptionalDataRequest(
+          request.request,
+          request.userId,
+          request.eoriNumber,
+          request.affinityGroup,
+          request.credentialRole,
+          userAnswersWithAuthType
+        )
     }
   }
 }

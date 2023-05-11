@@ -43,8 +43,8 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
             request.request,
             request.userId,
             request.eoriNumber,
-            request.affinityGroup,
             data,
+            request.affinityGroup,
             request.credentialRole
           ),
           Redirect(UnauthorisedController.onPageLoad)

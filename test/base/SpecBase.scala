@@ -64,15 +64,17 @@ trait SpecBase
   val DraftIdSequence       = 123456789L
   val draftId               = DraftId(DraftIdSequence)
 
-  val userAnswersAsIndividualTrader: UserAnswers = UserAnswers(userAnswersId, draftId)
+  val emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
+
+  val userAnswersAsIndividualTrader: UserAnswers = emptyUserAnswers
     .setFuture(AccountHomePage, IndividualTrader)
     .futureValue
 
-  val userAnswersAsOrgAdmin: UserAnswers = UserAnswers(userAnswersId, draftId)
+  val userAnswersAsOrgAdmin: UserAnswers = emptyUserAnswers
     .setFuture(AccountHomePage, OrganisationAdmin)
     .futureValue
 
-  val userAnswersAsOrgAssistant: UserAnswers = UserAnswers(userAnswersId, draftId)
+  val userAnswersAsOrgAssistant: UserAnswers = emptyUserAnswers
     .setFuture(AccountHomePage, OrganisationAssistant)
     .futureValue
 
