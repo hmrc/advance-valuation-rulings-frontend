@@ -31,8 +31,7 @@ import audit.AuditService
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.routes.UnauthorisedController
-import models.{ApplicationForAccountHome, CounterId, DraftId, UserAnswers}
-import models.AuthUserType
+import models.{ApplicationForAccountHome, AuthUserType, CounterId, DraftId, NormalMode, UserAnswers}
 import models.requests.DraftSummary
 import navigation.Navigator
 import pages.AccountHomePage
@@ -91,7 +90,7 @@ class AccountHomeController @Inject() (
               userAnswers <- UserAnswers(request.userId, draftId, lastUpdated = Instant.now(clock))
                                .setFuture(AccountHomePage, authType)
               _           <- userAnswersService.set(userAnswers)
-            } yield Redirect(navigator.startApplicationRouting(userAnswers))
+            } yield Redirect(navigator.nextPage(AccountHomePage, NormalMode, userAnswers))
         }
     }
 
@@ -108,7 +107,7 @@ class AccountHomeController @Inject() (
             userAnswers =>
               ApplicationForAccountHome(
                 draft,
-                navigator.startApplicationRouting(userAnswers)
+                navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
               )
           )
     }

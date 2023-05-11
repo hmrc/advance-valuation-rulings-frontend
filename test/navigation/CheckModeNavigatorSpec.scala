@@ -19,7 +19,6 @@ package navigation
 import java.time.Instant
 
 import play.api.libs.json.Writes
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import controllers.routes
@@ -49,8 +48,6 @@ class CheckModeNavigatorSpec extends SpecBase {
 
     def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
       EmptyUserAnswers.set(page, value).success.value
-
-    implicit val affinityGroup: AffinityGroup.Individual.type = (AffinityGroup.Individual)
 
     "in Check mode" - {
 
@@ -935,7 +932,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               .onPageLoad(Index(1), CheckMode, draftId, None, None)
           }
 
-          "CheckYourAnswers page when No is selected and the user is not an agent" in {
+          "CheckYourAnswers page when No is selected and the user is an IndividualTrader" in {
             val userAnswers =
               userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
             navigator.nextPage(
@@ -945,14 +942,26 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
           }
 
-          "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
+          "CheckYourAnswersForAgents page when No is selected and the user is not an OrganisationAdmin" in {
             val userAnswers =
-              userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
+              userAnswersAsOrgAdmin.set(UploadAnotherSupportingDocumentPage, false).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
               userAnswers
-            )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+              draftId
+            )
+          }
+
+          "CheckYourAnswersForAgents page when No is selected and the user is not an OrganisationAssistant" in {
+            val userAnswers =
+              userAnswersAsOrgAssistant.set(UploadAnotherSupportingDocumentPage, false).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
               draftId
             )
           }

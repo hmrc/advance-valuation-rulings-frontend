@@ -28,9 +28,8 @@ import play.api.test.Helpers._
 import audit.AuditService
 import base.SpecBase
 import connectors.BackendConnector
-import models.{ApplicationForAccountHome, Done, DraftId}
+import models.{ApplicationForAccountHome, Done, DraftId, NormalMode, UserAnswers}
 import models.AuthUserType.IndividualTrader
-import models.UserAnswers
 import models.requests._
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -162,7 +161,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
               userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
             ApplicationForAccountHome(
               draftSummary,
-              navigator.startApplicationRouting(userAnswers)
+              navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
             )(messages(application))
         }
 
@@ -218,7 +217,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
               userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
             ApplicationForAccountHome(
               draftSummary,
-              navigator.startApplicationRouting(userAnswers)
+              navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
             )(messages(application))
         }
 

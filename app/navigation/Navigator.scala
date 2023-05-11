@@ -19,13 +19,11 @@ package navigation
 import javax.inject.Inject
 
 import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import controllers.routes._
 import models._
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
-import navigation._
 import pages._
 import queries.AllDocuments
 
@@ -37,7 +35,8 @@ class Navigator @Inject() () {
   private def checkYourAnswersForAgents(draftId: DraftId): Call =
     CheckYourAnswersForAgentsController.onPageLoad(draftId)
 
-  private def routes(implicit affinityGroup: AffinityGroup): Page => UserAnswers => Call = {
+  private def routes: Page => UserAnswers => Call = {
+    case AccountHomePage                                  => startApplicationRouting
     case ValuationMethodPage                              => valuationMethodPage
     case IsThereASaleInvolvedPage                         => isThereASaleInvolvedPage
     case IsSaleBetweenRelatedPartiesPage                  => isSaleBetweenRelatedPartiesPage
@@ -87,6 +86,18 @@ class Navigator @Inject() () {
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
+
+  private def startApplicationRouting(userAnswers: UserAnswers): Call =
+    userAnswers.get(AccountHomePage) match {
+      case Some(IndividualTrader)      =>
+        RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case Some(OrganisationAdmin)     =>
+        RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case Some(OrganisationAssistant) =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                           =>
+        UnauthorisedController.onPageLoad
+    }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
@@ -367,24 +378,27 @@ class Navigator @Inject() () {
         }
     }
 
-  private def doYouWantToUploadDocumentsPage(
-    userAnswers: UserAnswers
-  )(implicit affinityGroup: AffinityGroup): Call =
+  private def doYouWantToUploadDocumentsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
           .onPageLoad(Index(0), NormalMode, userAnswers.draftId, None, None)
       case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+        userAnswers.get(AccountHomePage) match {
+          case None               => UnauthorisedController.onPageLoad
+          case Some(authUserType) =>
+            resolveAuthUserType(authUserType)(
+              checkYourAnswers(userAnswers.draftId),
+              checkYourAnswersForAgents(userAnswers.draftId),
+              checkYourAnswersForAgents(userAnswers.draftId)
+            )
+        }
     }
 
   private def uploadSupportingDocumentPage(index: Index)(
     userAnswers: UserAnswers
-  )(implicit affinityGroup: AffinityGroup): Call =
+  ): Call =
     controllers.routes.IsThisFileConfidentialController.onPageLoad(
       index,
       NormalMode,
@@ -393,13 +407,13 @@ class Navigator @Inject() () {
 
   private def isThisFileConfidentialPage(index: Index)(
     userAnswers: UserAnswers
-  )(implicit affinityGroup: AffinityGroup): Call =
+  ): Call =
     controllers.routes.UploadAnotherSupportingDocumentController
       .onPageLoad(NormalMode, userAnswers.draftId)
 
   private def uploadAnotherSupportingDocumentPage(
     userAnswers: UserAnswers
-  )(implicit affinityGroup: AffinityGroup): Call =
+  ): Call =
     userAnswers
       .get(UploadAnotherSupportingDocumentPage)
       .map {
@@ -413,10 +427,15 @@ class Navigator @Inject() () {
             None
           )
         case false =>
-          resolveAffinityGroup(affinityGroup)(
-            checkYourAnswers(userAnswers.draftId),
-            checkYourAnswersForAgents(userAnswers.draftId)
-          )
+          userAnswers.get(AccountHomePage) match {
+            case None               => UnauthorisedController.onPageLoad
+            case Some(authUserType) =>
+              resolveAuthUserType(authUserType)(
+                checkYourAnswers(userAnswers.draftId),
+                checkYourAnswersForAgents(userAnswers.draftId),
+                checkYourAnswersForAgents(userAnswers.draftId)
+              )
+          }
       }
       .getOrElse(controllers.routes.JourneyRecoveryController.onPageLoad())
 
@@ -500,24 +519,10 @@ class Navigator @Inject() () {
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit
-    affinityGroup: AffinityGroup
-  ): Call = mode match {
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
-      routes(affinityGroup)(page)(userAnswers)
+      routes(page)(userAnswers)
     case CheckMode  =>
-      CheckModeNavigator.nextPage(page)(userAnswers, affinityGroup)
+      CheckModeNavigator.nextPage(page, userAnswers)
   }
-
-  def startApplicationRouting(userAnswers: UserAnswers): Call =
-    userAnswers.get(AccountHomePage) match {
-      case Some(IndividualTrader)      =>
-        RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAdmin)     =>
-        RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAssistant) =>
-        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                           =>
-        UnauthorisedController.onPageLoad
-    }
 }

@@ -72,9 +72,7 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
                   Future.fromTry(request.userAnswers.set(ExplainHowYouWillUseMethodSixPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ExplainHowYouWillUseMethodSixPage, mode, updatedAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(ExplainHowYouWillUseMethodSixPage, mode, updatedAnswers)
               )
           )
     }

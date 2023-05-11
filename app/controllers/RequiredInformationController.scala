@@ -79,9 +79,7 @@ class RequiredInformationController @Inject() (
                   )
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
               )
           )
     }

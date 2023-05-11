@@ -72,7 +72,7 @@ class WhoAreYouAgentController @Inject() (
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(WhoAreYouAgentPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers)(request.affinityGroup)
+                navigator.nextPage(WhoAreYouAgentPage, mode, updatedAnswers)
               )
           )
     }
