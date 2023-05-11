@@ -25,7 +25,7 @@ import uk.gov.hmrc.auth.core.InsufficientEnrolments
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import models.{AuthUserType, DraftId}
-import models.requests.{DataRequest, IdentifierRequest}
+import models.requests.{IdentifierRequest, OptionalDataRequest}
 import pages.AccountHomePage
 import services.UserAnswersService
 
@@ -33,11 +33,11 @@ class DataRetrievalAction @Inject() (
   draftId: DraftId,
   val userAnswersService: UserAnswersService
 )(implicit val executionContext: ExecutionContext)
-    extends ActionTransformer[IdentifierRequest, DataRequest] {
+    extends ActionTransformer[IdentifierRequest, OptionalDataRequest] {
 
   override protected def transform[A](
     request: IdentifierRequest[A]
-  ): Future[DataRequest[A]] = {
+  ): Future[OptionalDataRequest[A]] = {
 
     val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
@@ -45,18 +45,16 @@ class DataRetrievalAction @Inject() (
       case None               => throw InsufficientEnrolments("Auth user type could not be created from request")
       case Some(authUserType) =>
         for {
-          maybeUserAnswers        <- userAnswersService.get(draftId)(hc)
-          userAnswers              =
-            maybeUserAnswers
-              .getOrElse(throw new IllegalStateException("Unable to retrieve user answers"))
-          userAnswersWithAuthType <- userAnswers.setFuture(AccountHomePage, authUserType)
-        } yield DataRequest(
+          maybeUserAnswers       <- userAnswersService.get(draftId)(hc)
+          userAnswersWithAuthType =
+            maybeUserAnswers.flatMap(_.set(AccountHomePage, authUserType).toOption)
+        } yield OptionalDataRequest(
           request.request,
           request.userId,
           request.eoriNumber,
-          userAnswersWithAuthType,
           request.affinityGroup,
-          request.credentialRole
+          request.credentialRole,
+          userAnswersWithAuthType
         )
     }
   }
@@ -66,6 +64,6 @@ class DataRetrievalActionProvider @Inject() (userAnswersService: UserAnswersServ
   ec: ExecutionContext
 ) {
 
-  def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, DataRequest] =
+  def apply(draftId: DraftId): ActionTransformer[IdentifierRequest, OptionalDataRequest] =
     new DataRetrievalAction(draftId, userAnswersService)
 }

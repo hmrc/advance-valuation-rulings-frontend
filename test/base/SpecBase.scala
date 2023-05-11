@@ -89,7 +89,7 @@ trait SpecBase
   )
 
   protected def applicationBuilder(
-    userAnswers: UserAnswers = emptyUserAnswers
+    userAnswers: Option[UserAnswers] = None
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
@@ -103,7 +103,7 @@ trait SpecBase
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
   protected def applicationBuilderAsAgent(
-    userAnswers: UserAnswers = emptyUserAnswers
+    userAnswers: Option[UserAnswers] = None
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
@@ -117,7 +117,7 @@ trait SpecBase
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
   protected def applicationBuilderAsOrg(
-    userAnswers: UserAnswers = emptyUserAnswers
+    userAnswers: Option[UserAnswers] = None
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(

@@ -26,7 +26,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import base.SpecBase
 import models.{DraftId, UserAnswers}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.requests.{DataRequest, IdentifierRequest}
+import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito._
@@ -51,7 +51,7 @@ class DataRetrievalActionSpec
   }
 
   class Harness(draftId: DraftId) extends DataRetrievalAction(draftId, mockUserAnswersService) {
-    def callTransform[A](request: IdentifierRequest[A]): Future[DataRequest[A]] = transform(
+    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(
       request
     )
   }
@@ -60,37 +60,17 @@ class DataRetrievalActionSpec
 
     "when there is no data in the cache" - {
 
-      "must throw exception when unable to retrieve user answers" in {
+      "must set userAnswers to 'None' in the request" in {
 
         when(mockUserAnswersService.get(any())(any())) thenReturn Future(None)
         val action = new Harness(draftId)
 
-        the[IllegalStateException] thrownBy {
+        val result =
           action
-            .callTransform(
-              IdentifierRequest(FakeRequest(), userAnswersId, EoriNumber, Individual, None)
-            )
+            .callTransform(IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual, None))
             .futureValue
-        } should have message "Unable to retrieve user answers"
-      }
-    }
 
-    "must throw exception when the auth user type could not be determined" in {
-
-      val scenarios = Table("credentialRole", None, Option(User), Option(Admin), Option(Assistant))
-
-      forAll(scenarios) {
-        credentialRole =>
-          when(mockUserAnswersService.get(any())(any())) thenReturn Future(None)
-          val action = new Harness(draftId)
-
-          the[InsufficientEnrolments] thrownBy {
-            action
-              .callTransform(
-                IdentifierRequest(FakeRequest(), userAnswersId, EoriNumber, Agent, credentialRole)
-              )
-              .futureValue
-          } should have message "Auth user type could not be created from request"
+        result.userAnswers must not be defined
       }
     }
 
@@ -126,7 +106,7 @@ class DataRetrievalActionSpec
                 )
                 .futureValue
 
-            val resultUserType = result.userAnswers.get(AccountHomePage)
+            val resultUserType = result.userAnswers.value.get(AccountHomePage)
 
             resultUserType mustBe defined
             resultUserType.value mustBe expectedAuthUserType
