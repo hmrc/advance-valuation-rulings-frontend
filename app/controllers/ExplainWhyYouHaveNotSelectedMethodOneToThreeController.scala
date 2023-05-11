@@ -76,9 +76,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, mode, updatedAnswers)(
-                    request.affinityGroup
-                  )
+                  .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, mode, updatedAnswers)
               )
           )
     }

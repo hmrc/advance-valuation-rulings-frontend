@@ -72,9 +72,7 @@ class DescriptionOfGoodsController @Inject() (
                   Future.fromTry(request.userAnswers.set(DescriptionOfGoodsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(DescriptionOfGoodsPage, mode, updatedAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(DescriptionOfGoodsPage, mode, updatedAnswers)
               )
           )
     }

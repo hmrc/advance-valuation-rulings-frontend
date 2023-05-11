@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ValuationMethodFormProvider
-import models.{DraftId, Mode, UserAnswers}
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ValuationMethodPage
 import services.UserAnswersService
@@ -73,7 +73,7 @@ class ValuationMethodController @Inject() (
                   Future.fromTry(request.userAnswers.set(ValuationMethodPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ValuationMethodPage, mode, updatedAnswers)(request.affinityGroup)
+                navigator.nextPage(ValuationMethodPage, mode, updatedAnswers)
               )
           )
     }

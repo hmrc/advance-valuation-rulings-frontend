@@ -72,9 +72,7 @@ class ApplicationContactDetailsController @Inject() (
                   request.userAnswers.setFuture(ApplicationContactDetailsPage, value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)
               )
           )
     }

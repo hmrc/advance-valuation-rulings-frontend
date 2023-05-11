@@ -53,8 +53,6 @@ class NavigatorSpec extends SpecBase {
     def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
       EmptyUserAnswers.set(page, value).success.value
 
-    implicit val affinityGroup: AffinityGroup.Individual.type = AffinityGroup.Individual
-
     "/ must navigate to AccountHome" in {
 
       def redirectRoute = routes.AccountHomeController.onPageLoad()
@@ -83,14 +81,18 @@ class NavigatorSpec extends SpecBase {
     "Account Home" - {
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
-        navigator.startApplicationRouting(
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
         ) mustBe routes.RequiredInformationController
           .onPageLoad(draftId)
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
-        navigator.startApplicationRouting(
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
           userAnswersAsIndividualTrader
             .setFuture(AccountHomePage, OrganisationAssistant)
             .futureValue
@@ -99,14 +101,18 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAdmin" in {
-        navigator.startApplicationRouting(
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
         ) mustBe routes.RequiredInformationController
           .onPageLoad(draftId)
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
-        navigator.startApplicationRouting(
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
           UserAnswers(userAnswersId, draftId)
         ) mustBe routes.UnauthorisedController.onPageLoad
       }
@@ -437,40 +443,61 @@ class NavigatorSpec extends SpecBase {
       "CheckRegisteredDetailsPage must" - {
 
         "when Individual" - {
-          val aff: AffinityGroup = AffinityGroup.Individual
 
           "navigate to ApplicationContactDetailsPage when Yes" in {
-            val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = true)
+            val userAnswers = userAnswersAsIndividualTrader
+              .setFuture(CheckRegisteredDetailsPage, value = true)
+              .futureValue
+
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
+            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
           }
 
           "and navigate to EORIBeUpToDatePage when No" in {
-            val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = false)
+            val userAnswers = userAnswersAsIndividualTrader
+              .setFuture(CheckRegisteredDetailsPage, value = false)
+              .futureValue
+
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
+            ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
           }
         }
 
-        "when Organisation" - {
-          val aff: AffinityGroup = AffinityGroup.Organisation
+        "when OrganisationAdmin" - {
 
-          "navigate to BusinessContactDetailsPage when Yes" in {
-            val userAnswers =
-              userAnswersWith(CheckRegisteredDetailsPage, value = true)
+          "navigate to ApplicationContactDetailsController when Yes" in {
+
+            val userAnswers = userAnswersAsOrgAdmin
+              .setFuture(CheckRegisteredDetailsPage, value = true)
+              .futureValue
+
             navigator.nextPage(
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            )(aff) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
+            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
+          }
+        }
+
+        "when OrganisationAssistant" - {
+
+          "navigate to BusinessContactDetailsPage when Yes" in {
+
+            val userAnswers = userAnswersAsOrgAssistant
+              .setFuture(CheckRegisteredDetailsPage, value = true)
+              .futureValue
+
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              NormalMode,
+              userAnswers
+            ) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
           }
         }
       }
@@ -648,7 +675,7 @@ class NavigatorSpec extends SpecBase {
             .onPageLoad(Index(1), NormalMode, draftId, None, None)
         }
 
-        "CheckYourAnswers page when No is selected and the user is not an agent" in {
+        "CheckYourAnswers page when No is selected and the user is an IndividualTrader" in {
           val userAnswers =
             userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
@@ -658,14 +685,26 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
         }
 
-        "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
+        "CheckYourAnswersForAgents page when No is selected and the user is an OrganisationAdmin" in {
           val userAnswers =
-            userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
+            userAnswersAsOrgAdmin.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+          ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            draftId
+          )
+        }
+
+        "CheckYourAnswersForAgents page when No is selected and the user is an OrganisationAssistant" in {
+          val userAnswers =
+            userAnswersAsOrgAssistant.set(UploadAnotherSupportingDocumentPage, false).get
+          navigator.nextPage(
+            UploadAnotherSupportingDocumentPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
             draftId
           )
         }

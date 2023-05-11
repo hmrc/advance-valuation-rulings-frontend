@@ -76,9 +76,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator
-                  .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, mode, updatedAnswers)(
-                    request.affinityGroup
-                  )
+                  .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, mode, updatedAnswers)
               )
           )
     }

@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
 import models.{CounterId, DraftId, UserAnswers}
-import models.AuthUserType.IndividualTrader
+import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
@@ -64,8 +64,16 @@ trait SpecBase
   val DraftIdSequence       = 123456789L
   val draftId               = DraftId(DraftIdSequence)
 
-  def userAnswersAsIndividualTrader: UserAnswers = UserAnswers(userAnswersId, draftId)
+  val userAnswersAsIndividualTrader: UserAnswers = UserAnswers(userAnswersId, draftId)
     .setFuture(AccountHomePage, IndividualTrader)
+    .futureValue
+
+  val userAnswersAsOrgAdmin: UserAnswers = UserAnswers(userAnswersId, draftId)
+    .setFuture(AccountHomePage, OrganisationAdmin)
+    .futureValue
+
+  val userAnswersAsOrgAssistant: UserAnswers = UserAnswers(userAnswersId, draftId)
+    .setFuture(AccountHomePage, OrganisationAssistant)
     .futureValue
 
   def messages(app: Application): Messages =
