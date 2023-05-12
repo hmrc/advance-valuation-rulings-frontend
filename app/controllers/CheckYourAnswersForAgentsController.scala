@@ -27,10 +27,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
+import controllers.routes.WhatIsYourRoleAsImporterController
 import models._
 import models.AuthUserType.{OrganisationAdmin, OrganisationAssistant}
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.requests._
-import pages.{AccountHomePage, Page}
+import pages.{AccountHomePage, Page, WhatIsYourRoleAsImporterPage}
 import services.SubmissionService
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
@@ -75,9 +77,21 @@ class CheckYourAnswersForAgentsController @Inject() (
             val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
             AccountHomePage.get match {
               case Some(OrganisationAdmin)     =>
-                Future.successful(Ok(view(applicationSummary, isOrgAssistant = false, draftId)))
+                Future.successful(Ok(view(applicationSummary, EmployeeOfOrg, draftId)))
               case Some(OrganisationAssistant) =>
-                Future.successful(Ok(view(applicationSummary, isOrgAssistant = true, draftId)))
+                request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+                  case Some(importerRole) =>
+                    Future.successful(Ok(view(applicationSummary, importerRole, draftId)))
+                  case None               =>
+                    Future.successful(
+                      Redirect(
+                        WhatIsYourRoleAsImporterController.onPageLoad(
+                          CheckMode,
+                          request.userAnswers.draftId
+                        )
+                      )
+                    )
+                }
               case _                           =>
                 logger.warn(
                   "Invalid journey: User navigated to check your answers with without an org user type"

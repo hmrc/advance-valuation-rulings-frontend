@@ -21,13 +21,12 @@ import java.time.Instant
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import controllers.routes
 import models._
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.Modifiable
 
@@ -509,17 +508,50 @@ class NavigatorSpec extends SpecBase {
             BusinessContactDetails("name", "email", "phone")
           )
 
-        "when OrganisationAssistant" - {
+        "when OrganisationAssistant claiming to be AgentOnBehalfOfOrg" - {
           "navigate to AgentCompanyDetailsPage when Yes" in {
             val ua = userAnswers
               .set(AccountHomePage, value = OrganisationAssistant)
+              .flatMap(_.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg))
               .success
               .value
+
             navigator.nextPage(
               BusinessContactDetailsPage,
               NormalMode,
               ua
             ) mustBe routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId)
+          }
+        }
+
+        "when OrganisationAssistant claiming to be EmployeeOfOrg" - {
+          "navigate to ValuationMethodPage when Yes" in {
+            val ua = userAnswers
+              .set(AccountHomePage, value = OrganisationAssistant)
+              .flatMap(_.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg))
+              .success
+              .value
+
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              ua
+            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+          }
+        }
+
+        "when OrganisationAssistant without Importer role" - {
+          "navigate to WhatIsYourRoleAsImporterPage when Yes" in {
+            val ua = userAnswers
+              .set(AccountHomePage, value = OrganisationAssistant)
+              .success
+              .value
+
+            navigator.nextPage(
+              BusinessContactDetailsPage,
+              NormalMode,
+              ua
+            ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
           }
         }
 
