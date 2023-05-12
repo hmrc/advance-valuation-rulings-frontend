@@ -470,7 +470,7 @@ class NavigatorSpec extends SpecBase {
 
         "when OrganisationAdmin" - {
 
-          "navigate to ApplicationContactDetailsController when Yes" in {
+          "navigate to BusinessContactDetailsController when Yes" in {
 
             val userAnswers = userAnswersAsOrgAdmin
               .setFuture(CheckRegisteredDetailsPage, value = true)
@@ -480,7 +480,7 @@ class NavigatorSpec extends SpecBase {
               CheckRegisteredDetailsPage,
               NormalMode,
               userAnswers
-            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
+            ) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
           }
         }
 

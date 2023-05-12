@@ -484,7 +484,7 @@ class Navigator @Inject() () {
                 isTrader =
                   ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
                 isEmployee =
-                  ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
+                  BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
                 isAgent =
                   BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
               )
