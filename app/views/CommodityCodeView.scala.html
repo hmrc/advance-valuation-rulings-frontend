@@ -31,6 +31,22 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+
+@codeSpan = {
+    <span class="segmented-commodity-code">
+        <span>@messages("commodityCode.hint.pt.1")</span>
+        <span>@messages("commodityCode.hint.pt.2")</span>
+        <span>@messages("commodityCode.hint.pt.3")</span>
+    </span>
+    }
+
+@hintContent = {
+<div id="value-hint" class="govuk-hint">
+    @messages("commodityCode.hint")
+    @codeSpan
+</div>
+}
+
 @layout(pageTitle = title(form, messages("commodityCode.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.CommodityCodeController.onSubmit(mode, draftId)) {
@@ -44,13 +60,12 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("commodityCode.heading")).asPageHeading()
-            )
-            .withWidth(Full)
-            .withHint(Hint(
-                id = Some("commodity-code-hint"),
-                content = messages("commodityCode.hint")
-                ))
+                label = LabelViewModel(messages("commodityCode.heading")).asPageHeading(),
+                )
+                .withWidth(Full)
+                .withHint(
+                    Hint(content = HtmlContent(hintContent))
+                )
         )
 
         @saveButtons()
@@ -58,3 +73,4 @@
 
     @cancelApplicationLink(draftId)
 }
+

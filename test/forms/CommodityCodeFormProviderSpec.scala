@@ -17,10 +17,13 @@
 package forms
 
 import play.api.data.FormError
+import uk.gov.hmrc.play.json.Mappings
 
+import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
+import pages.CommodityCodePage
 
-class CommodityCodeFormProviderSpec extends StringFieldBehaviours {
+class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase {
 
   val requiredKey       = "commodityCode.error.required"
   val minLengthKey      = "commodityCode.error.length.min"
@@ -61,20 +64,12 @@ class CommodityCodeFormProviderSpec extends StringFieldBehaviours {
         fieldName,
         requiredError = FormError(fieldName, requiredKey)
       )
-    }
 
-    "binds numeric string with spaces" in {
-      val result = form.bind(Map("value" -> "8528 711")).apply("value")
-      result.errors mustBe Seq.empty
-    }
-
-    "binds numeric string with 10 digits but with spaces" in {
-      val result = form.bind(Map("value" -> "8528 711 00")).apply("value")
-      result.errors mustBe Seq.empty
-    }
-    "does not bind numeric string with more than 10 digits" in {
-      val result = form.bind(Map("value" -> "8528 711 00 937645")).apply("value")
-      result.errors must contain only FormError("value", maxLengthKey, Array(10))
+      behave like commodityCodeField(
+        form,
+        fieldName,
+        Seq(FormError(fieldName, maxLengthKey, Array(maxLength)))
+      )
     }
   }
 }
