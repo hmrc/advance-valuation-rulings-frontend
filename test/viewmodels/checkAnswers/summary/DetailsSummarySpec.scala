@@ -38,7 +38,7 @@ class DetailsSummarySpec extends DetailsSummaryFixtureSpec {
     val keys                    = rows.map(_.key)
 
     "when given empty user answers" - {
-      val summary: DetailsSummary = DetailsSummary(emptyUserAnswers)
+      val summary: DetailsSummary = DetailsSummary(userAnswersAsIndividualTrader)
       val rows                    = summary.rows.rows
 
       "must create no rows" in {
@@ -94,7 +94,7 @@ class DetailsSummarySpec extends DetailsSummaryFixtureSpec {
 trait DetailsSummaryFixtureSpec extends SpecBase with Generators {
 
   val allAnswersInput: Try[UserAnswers] =
-    emptyUserAnswers
+    userAnswersAsIndividualTrader
       .set(DescriptionOfGoodsPage, "test")
       .flatMap(_.set(HasCommodityCodePage, true))
       .flatMap(_.set(CommodityCodePage, "test"))

@@ -46,7 +46,8 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
   "WhoAreYouAgent Controller" - {
     "must redirect to account home" in {
       // TODO: this test and ignored tests related to redirecting away from unfinished page - agent details page to be revisited after MVP
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       val request = FakeRequest(GET, whoAreYouAgentRoute)
 
@@ -60,7 +61,8 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" ignore {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request = FakeRequest(GET, whoAreYouAgentRoute)
@@ -79,7 +81,7 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" ignore {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = userAnswersAsIndividualTrader
         .set(WhoAreYouAgentPage, "answer")
         .success
         .value
@@ -108,7 +110,7 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -129,7 +131,8 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request =

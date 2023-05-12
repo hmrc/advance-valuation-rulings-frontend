@@ -19,7 +19,6 @@ package navigation
 import java.time.Instant
 
 import play.api.libs.json.Writes
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import controllers.routes
@@ -29,7 +28,7 @@ import queries.Modifiable
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers = emptyUserAnswers
+  val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val navigator                     = new Navigator
   val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
 
@@ -49,8 +48,6 @@ class CheckModeNavigatorSpec extends SpecBase {
 
     def userAnswersWith[A: Writes](page: Modifiable[A], value: A): UserAnswers =
       EmptyUserAnswers.set(page, value).success.value
-
-    implicit val affinityGroup: AffinityGroup.Individual.type = (AffinityGroup.Individual)
 
     "in Check mode" - {
 
@@ -258,7 +255,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               ExplainHowPartiesAreRelatedPage,
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
                 .set(ExplainHowPartiesAreRelatedPage, "explain")
                 .success
                 .value
@@ -883,7 +880,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadSupportingDocumentPage(Index(0)),
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
               Index(0),
               CheckMode,
@@ -898,7 +895,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               IsThisFileConfidentialPage(Index(0)),
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
           }
         }
@@ -907,7 +904,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadSupportingDocumentsPage when Yes is selected" in {
             val userAnswers =
-              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, true).get
+              userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, true).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
@@ -918,7 +915,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
             val userAnswers =
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
                 .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
                 .success
                 .value
@@ -935,9 +932,9 @@ class CheckModeNavigatorSpec extends SpecBase {
               .onPageLoad(Index(1), CheckMode, draftId, None, None)
           }
 
-          "CheckYourAnswers page when No is selected and the user is not an agent" in {
+          "CheckYourAnswers page when No is selected and the user is an IndividualTrader" in {
             val userAnswers =
-              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+              userAnswersAsIndividualTrader.set(UploadAnotherSupportingDocumentPage, false).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
@@ -945,14 +942,26 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
           }
 
-          "CheckYourAnswersForAgents page when No is selected and the user is not an agent" in {
+          "CheckYourAnswersForAgents page when No is selected and the user is not an OrganisationAdmin" in {
             val userAnswers =
-              emptyUserAnswers.set(UploadAnotherSupportingDocumentPage, false).get
+              userAnswersAsOrgAdmin.set(UploadAnotherSupportingDocumentPage, false).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
               userAnswers
-            )(AffinityGroup.Agent) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+              draftId
+            )
+          }
+
+          "CheckYourAnswersForAgents page when No is selected and the user is not an OrganisationAssistant" in {
+            val userAnswers =
+              userAnswersAsOrgAssistant.set(UploadAnotherSupportingDocumentPage, false).get
+            navigator.nextPage(
+              UploadAnotherSupportingDocumentPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
               draftId
             )
           }
@@ -961,7 +970,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.JourneyRecoveryController.onPageLoad()
           }
         }
@@ -970,7 +979,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadAnotherSupportingDocument page when there are more documents" in {
             val answers =
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
                 .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
                 .success
                 .value
@@ -988,7 +997,7 @@ class CheckModeNavigatorSpec extends SpecBase {
             navigator.nextPage(
               DeleteSupportingDocumentPage(Index(0)),
               CheckMode,
-              emptyUserAnswers
+              userAnswersAsIndividualTrader
             ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
           }
         }

@@ -20,19 +20,28 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
+import uk.gov.hmrc.auth.core.{Admin, Assistant, InsufficientEnrolments, User}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 
 import base.SpecBase
-import models.DraftId
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.{DraftId, UserAnswers}
+import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
+import pages.AccountHomePage
 import services.UserAnswersService
 
-class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class DataRetrievalActionSpec
+    extends SpecBase
+    with MockitoSugar
+    with BeforeAndAfterEach
+    with TableDrivenPropertyChecks {
 
   private val mockUserAnswersService = mock[UserAnswersService]
 
@@ -67,21 +76,41 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with BeforeAndA
 
     "when there is data in the cache" - {
 
-      "must build a userAnswers object and add it to the request" in {
+      val scenarios = Table(
+        ("affinityGroup", "credentialRole", "expectedAuthUserType"),
+        (Individual, None, IndividualTrader),
+        (Organisation, Option(User), OrganisationAdmin),
+        (Organisation, Option(Admin), OrganisationAdmin),
+        (Organisation, Option(Assistant), OrganisationAssistant)
+      )
 
-        when(mockUserAnswersService.get(any())(any())) thenReturn Future(
-          Some(emptyUserAnswers)
-        )
-        val action = new Harness(draftId)
-
-        val result =
-          action
-            .callTransform(
-              IdentifierRequest(FakeRequest(), "id", "eoriNumber", Individual, None)
+      forAll(scenarios) {
+        (affinityGroup, credentialRole, expectedAuthUserType) =>
+          s"must add the AuthUserType $expectedAuthUserType to UserAnswers for $affinityGroup and $credentialRole" in {
+            when(mockUserAnswersService.get(any())(any())) thenReturn Future(
+              Option(UserAnswers(userAnswersId, draftId))
             )
-            .futureValue
 
-        result.userAnswers mustBe defined
+            val action = new Harness(draftId)
+
+            val result =
+              action
+                .callTransform(
+                  IdentifierRequest(
+                    FakeRequest(),
+                    userAnswersId,
+                    EoriNumber,
+                    affinityGroup,
+                    credentialRole
+                  )
+                )
+                .futureValue
+
+            val resultUserType = result.userAnswers.value.get(AccountHomePage)
+
+            resultUserType mustBe defined
+            resultUserType.value mustBe expectedAuthUserType
+          }
       }
     }
   }

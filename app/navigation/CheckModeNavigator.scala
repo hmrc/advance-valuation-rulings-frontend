@@ -17,7 +17,6 @@
 package navigation
 
 import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import controllers.routes._
 import models._
@@ -35,44 +34,39 @@ object CheckModeNavigator {
   private def checkYourAnswersForAgents(draftId: DraftId) =
     routes.CheckYourAnswersForAgentsController.onPageLoad(draftId)
 
+  private def navigateWithAuthUserType(userAnswers: UserAnswers) =
+    userAnswers.get(AccountHomePage) match {
+      case None               => UnauthorisedController.onPageLoad
+      case Some(authUserType) =>
+        resolveAuthUserType(authUserType)(
+          checkYourAnswers(userAnswers.draftId),
+          checkYourAnswersForAgents(userAnswers.draftId),
+          checkYourAnswersForAgents(userAnswers.draftId)
+        )
+    }
+
   // Pre nav
-  private def checkRegisteredDetails(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def checkRegisteredDetails(userAnswers: UserAnswers): Call =
     userAnswers.get(CheckRegisteredDetailsPage) match {
       case None        => CheckRegisteredDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(value) =>
         if (value) {
-          resolveAffinityGroup(affinityGroup)(
-            checkYourAnswers(userAnswers.draftId),
-            checkYourAnswersForAgents(userAnswers.draftId)
-          )
+          navigateWithAuthUserType(userAnswers)
         } else {
           EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
         }
     }
 
   // Post navigation
-  private def hasConfidentialInformation(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def hasConfidentialInformation(userAnswers: UserAnswers): Call =
     userAnswers.get(HasConfidentialInformationPage) match {
       case None        => HasConfidentialInformationController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
         ConfidentialInformationController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(false) => navigateWithAuthUserType(userAnswers)
     }
 
-  private def haveBeenSubjectToLegalChallenges(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def haveBeenSubjectToLegalChallenges(userAnswers: UserAnswers): Call =
     userAnswers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage) match {
       case None        =>
         HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
@@ -81,78 +75,48 @@ object CheckModeNavigator {
         )
       case Some(true)  =>
         DescribeTheLegalChallengesController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(false) => navigateWithAuthUserType(userAnswers)
     }
 
-  private def hasCommodityCode(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def hasCommodityCode(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
       case None        => HasCommodityCodeController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  => CommodityCodeController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(false) => navigateWithAuthUserType(userAnswers)
     }
 
-  private def whatIsYourRoleAsImporter(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def whatIsYourRoleAsImporter(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case None                                              => WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+      case None                                              =>
+        WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
         AgentCompanyDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      => navigateWithAuthUserType(userAnswers)
     }
 
-  private def doYouWantToUploadDocuments(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def doYouWantToUploadDocuments(userAnswers: UserAnswers): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
         controllers.routes.UploadSupportingDocumentsController
           .onPageLoad(Index(0), CheckMode, userAnswers.draftId, None, None)
-      case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(false) => navigateWithAuthUserType(userAnswers)
     }
 
   private def uploadSupportingDocumentPage(
     index: Index
-  )(implicit userAnswers: UserAnswers, affinityGroup: AffinityGroup): Call =
+  )(userAnswers: UserAnswers): Call =
     controllers.routes.IsThisFileConfidentialController.onPageLoad(
       index,
       CheckMode,
       userAnswers.draftId
     )
 
-  private def isThisFileConfidential(index: Index)(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def isThisFileConfidential(index: Index)(userAnswers: UserAnswers): Call =
     controllers.routes.UploadAnotherSupportingDocumentController
       .onPageLoad(CheckMode, userAnswers.draftId)
 
-  private def uploadAnotherSupportingDocument(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def uploadAnotherSupportingDocument(userAnswers: UserAnswers): Call =
     userAnswers
       .get(UploadAnotherSupportingDocumentPage)
       .map {
@@ -165,18 +129,11 @@ object CheckModeNavigator {
             None,
             None
           )
-        case false =>
-          resolveAffinityGroup(affinityGroup)(
-            checkYourAnswers(userAnswers.draftId),
-            checkYourAnswersForAgents(userAnswers.draftId)
-          )
+        case false => navigateWithAuthUserType(userAnswers)
       }
       .getOrElse(controllers.routes.JourneyRecoveryController.onPageLoad())
 
-  private def deleteSupportingDocumentPage(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call = {
+  private def deleteSupportingDocumentPage(userAnswers: UserAnswers): Call = {
     val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
     if (numberOfDocuments > 0) {
       controllers.routes.UploadAnotherSupportingDocumentController
@@ -188,7 +145,7 @@ object CheckModeNavigator {
   }
 
   // Valuation Method
-  private def valuationMethod(implicit userAnswers: UserAnswers): Call =
+  private def valuationMethod(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
       case None          => ValuationMethodController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(Method1) =>
@@ -210,294 +167,203 @@ object CheckModeNavigator {
     }
 
   // Method 1----------------------------------------------------------------
-  private def isThereASaleInvolved(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def isThereASaleInvolved(userAnswers: UserAnswers): Call =
     userAnswers.get(IsThereASaleInvolvedPage) match {
       case None        => IsThereASaleInvolvedController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(true)  => nextPage(IsSaleBetweenRelatedPartiesPage)
+      case Some(true)  => nextPage(IsSaleBetweenRelatedPartiesPage, userAnswers)
       case Some(false) => ValuationMethodController.onPageLoad(CheckMode, userAnswers.draftId)
     }
 
-  private def isSaleBetweenRelatedParties(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def isSaleBetweenRelatedParties(userAnswers: UserAnswers): Call =
     userAnswers.get(IsSaleBetweenRelatedPartiesPage) match {
       case None        => IsSaleBetweenRelatedPartiesController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(true)  => nextPage(ExplainHowPartiesAreRelatedPage)
-      case Some(false) => nextPage(AreThereRestrictionsOnTheGoodsPage)
+      case Some(true)  => nextPage(ExplainHowPartiesAreRelatedPage, userAnswers)
+      case Some(false) => nextPage(AreThereRestrictionsOnTheGoodsPage, userAnswers)
     }
 
-  private def explainHowPartiesAreRelated(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainHowPartiesAreRelated(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainHowPartiesAreRelatedPage) match {
       case None    => ExplainHowPartiesAreRelatedController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => nextPage(AreThereRestrictionsOnTheGoodsPage)
+      case Some(_) => nextPage(AreThereRestrictionsOnTheGoodsPage, userAnswers)
     }
 
-  private def areThereRestrictionsOnTheGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def areThereRestrictionsOnTheGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(AreThereRestrictionsOnTheGoodsPage) match {
       case None        =>
         AreThereRestrictionsOnTheGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(true)  => nextPage(DescribeTheRestrictionsPage)
-      case Some(false) => nextPage(IsTheSaleSubjectToConditionsPage)
+      case Some(true)  => nextPage(DescribeTheRestrictionsPage, userAnswers)
+      case Some(false) => nextPage(IsTheSaleSubjectToConditionsPage, userAnswers)
     }
 
-  private def explainRestrictionsOnTheGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainRestrictionsOnTheGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheRestrictionsPage) match {
       case None    => DescribeTheRestrictionsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => nextPage(IsTheSaleSubjectToConditionsPage)
+      case Some(_) => nextPage(IsTheSaleSubjectToConditionsPage, userAnswers)
     }
 
-  private def isTheSaleSubjectToConditions(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def isTheSaleSubjectToConditions(userAnswers: UserAnswers): Call =
     userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
       case None        => IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(true)  => nextPage(DescribeTheConditionsPage)
-      case Some(false) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(true)  => nextPage(DescribeTheConditionsPage, userAnswers)
+      case Some(false) => navigateWithAuthUserType(userAnswers)
     }
 
-  private def explainTheConditions(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainTheConditions(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheConditionsPage) match {
       case None    => DescribeTheConditionsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(_) => navigateWithAuthUserType(userAnswers)
     }
 
   // Method 2----------------------------------------------------------------
-  private def whyIdenticalGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def whyIdenticalGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyIdenticalGoodsPage) match {
       case None    => WhyIdenticalGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => nextPage(HaveYouUsedMethodOneInPastPage)
+      case Some(_) => nextPage(HaveYouUsedMethodOneInPastPage, userAnswers)
     }
 
-  private def haveYouUsedMethodOneInPast(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def haveYouUsedMethodOneInPast(userAnswers: UserAnswers): Call =
     userAnswers.get(HaveYouUsedMethodOneInPastPage) match {
       case None        => HaveYouUsedMethodOneInPastController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(true)  => nextPage(DescribeTheIdenticalGoodsPage)
-      case Some(false) => nextPage(ValuationMethodPage)
+      case Some(true)  => nextPage(DescribeTheIdenticalGoodsPage, userAnswers)
+      case Some(false) => nextPage(ValuationMethodPage, userAnswers)
     }
 
-  private def describeTheIdenticalGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def describeTheIdenticalGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
       case None    => DescribeTheIdenticalGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(_) => navigateWithAuthUserType(userAnswers)
     }
 
   // Method 3----------------------------------------------------------------
-  private def whyTransactionValueOfSimilarGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def whyTransactionValueOfSimilarGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
       case None    =>
         WhyTransactionValueOfSimilarGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(_) =>
-        nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
+        nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, userAnswers)
     }
 
-  private def haveYouUsedMethodOneForSimilarGoodsInPast(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def haveYouUsedMethodOneForSimilarGoodsInPast(userAnswers: UserAnswers): Call =
     userAnswers.get(HaveYouUsedMethodOneForSimilarGoodsInPastPage) match {
       case None        =>
         HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(
           CheckMode,
           userAnswers.draftId
         )
-      case Some(true)  => nextPage(DescribeTheSimilarGoodsPage)
-      case Some(false) => nextPage(ValuationMethodPage)
+      case Some(true)  => nextPage(DescribeTheSimilarGoodsPage, userAnswers)
+      case Some(false) => nextPage(ValuationMethodPage, userAnswers)
     }
 
-  private def describeTheSimilarGoods(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def describeTheSimilarGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheSimilarGoodsPage) match {
       case None    => DescribeTheSimilarGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(_) => navigateWithAuthUserType(userAnswers)
     }
 
   // method 4 ----------------------------------------------------------------
-  private def explainWhyYouHaveNotSelectedMethodOneToThree(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainWhyYouHaveNotSelectedMethodOneToThree(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage) match {
       case None    =>
         ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(
           CheckMode,
           userAnswers.draftId
         )
-      case Some(_) => nextPage(ExplainWhyYouChoseMethodFourPage)
+      case Some(_) => nextPage(ExplainWhyYouChoseMethodFourPage, userAnswers)
     }
 
-  private def explainWhyYouChoseMethodFour(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainWhyYouChoseMethodFour(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouChoseMethodFourPage) match {
       case None    => ExplainWhyYouChoseMethodFourController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(_) => navigateWithAuthUserType(userAnswers)
     }
 
   // method 5----------------------------------------------------------------
-  private def whyComputedValue(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def whyComputedValue(userAnswers: UserAnswers): Call =
     userAnswers.get(WhyComputedValuePage) match {
       case None    => WhyComputedValueController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => nextPage(ExplainReasonComputedValuePage)
+      case Some(_) => nextPage(ExplainReasonComputedValuePage, userAnswers)
     }
 
-  private def explainReasonComputedValue(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainReasonComputedValue(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainReasonComputedValuePage) match {
       case None    => ExplainReasonComputedValueController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(_) => navigateWithAuthUserType(userAnswers)
     }
 
   // method 6----------------------------------------------------------------
-  private def explainWhyYouHaveNotSelectedMethodOneToFivePage(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainWhyYouHaveNotSelectedMethodOneToFivePage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToFivePage) match {
       case None    =>
         ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(
           CheckMode,
           userAnswers.draftId
         )
-      case Some(_) => nextPage(AdaptMethodPage)
+      case Some(_) => nextPage(AdaptMethodPage, userAnswers)
     }
 
-  private def adaptMethodPage(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def adaptMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AdaptMethodPage) match {
       case None    => AdaptMethodController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => nextPage(ExplainHowYouWillUseMethodSixPage)
+      case Some(_) => nextPage(ExplainHowYouWillUseMethodSixPage, userAnswers)
     }
 
-  private def explainHowYouWillUseMethodSixPage(implicit
-    userAnswers: UserAnswers,
-    affinityGroup: AffinityGroup
-  ): Call =
+  private def explainHowYouWillUseMethodSixPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainHowYouWillUseMethodSixPage) match {
       case None    =>
         ExplainHowYouWillUseMethodSixController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+      case Some(_) => navigateWithAuthUserType(userAnswers)
     }
 
-  def nextPage(page: Page)(implicit userAnswers: UserAnswers, affinityGroup: AffinityGroup): Call =
+  def nextPage(page: Page, userAnswers: UserAnswers): Call =
     page match {
-      case CheckRegisteredDetailsPage => checkRegisteredDetails
+      case CheckRegisteredDetailsPage => checkRegisteredDetails(userAnswers)
 
-      case ValuationMethodPage                          => valuationMethod
-      case HasConfidentialInformationPage               => hasConfidentialInformation
-      case HaveTheGoodsBeenSubjectToLegalChallengesPage => haveBeenSubjectToLegalChallenges
-      case HasCommodityCodePage                         => hasCommodityCode
-      case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments
-      case UploadSupportingDocumentPage(index)          => uploadSupportingDocumentPage(index)
-      case IsThisFileConfidentialPage(index)            => isThisFileConfidential(index)
-      case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument
-      case DeleteSupportingDocumentPage(_)              => deleteSupportingDocumentPage
-      case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter
+      case ValuationMethodPage                          => valuationMethod(userAnswers)
+      case HasConfidentialInformationPage               => hasConfidentialInformation(userAnswers)
+      case HaveTheGoodsBeenSubjectToLegalChallengesPage =>
+        haveBeenSubjectToLegalChallenges(userAnswers)
+      case HasCommodityCodePage                         => hasCommodityCode(userAnswers)
+      case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments(userAnswers)
+      case UploadSupportingDocumentPage(index)          => uploadSupportingDocumentPage(index)(userAnswers)
+      case IsThisFileConfidentialPage(index)            => isThisFileConfidential(index)(userAnswers)
+      case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
+      case DeleteSupportingDocumentPage(_)              => deleteSupportingDocumentPage(userAnswers)
+      case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)
 
       // method 1
-      case IsThereASaleInvolvedPage           => isThereASaleInvolved
-      case IsSaleBetweenRelatedPartiesPage    => isSaleBetweenRelatedParties
-      case ExplainHowPartiesAreRelatedPage    => explainHowPartiesAreRelated
-      case AreThereRestrictionsOnTheGoodsPage => areThereRestrictionsOnTheGoods
-      case DescribeTheRestrictionsPage        => explainRestrictionsOnTheGoods
-      case IsTheSaleSubjectToConditionsPage   => isTheSaleSubjectToConditions
-      case DescribeTheConditionsPage          => explainTheConditions
+      case IsThereASaleInvolvedPage           => isThereASaleInvolved(userAnswers)
+      case IsSaleBetweenRelatedPartiesPage    => isSaleBetweenRelatedParties(userAnswers)
+      case ExplainHowPartiesAreRelatedPage    => explainHowPartiesAreRelated(userAnswers)
+      case AreThereRestrictionsOnTheGoodsPage => areThereRestrictionsOnTheGoods(userAnswers)
+      case DescribeTheRestrictionsPage        => explainRestrictionsOnTheGoods(userAnswers)
+      case IsTheSaleSubjectToConditionsPage   => isTheSaleSubjectToConditions(userAnswers)
+      case DescribeTheConditionsPage          => explainTheConditions(userAnswers)
 
       // method 2
-      case WhyIdenticalGoodsPage          => whyIdenticalGoods
-      case HaveYouUsedMethodOneInPastPage => haveYouUsedMethodOneInPast
-      case DescribeTheIdenticalGoodsPage  => describeTheIdenticalGoods
+      case WhyIdenticalGoodsPage          => whyIdenticalGoods(userAnswers)
+      case HaveYouUsedMethodOneInPastPage => haveYouUsedMethodOneInPast(userAnswers)
+      case DescribeTheIdenticalGoodsPage  => describeTheIdenticalGoods(userAnswers)
 
       // method 3
-      case WhyTransactionValueOfSimilarGoodsPage         => whyTransactionValueOfSimilarGoods
+      case WhyTransactionValueOfSimilarGoodsPage         => whyTransactionValueOfSimilarGoods(userAnswers)
       case HaveYouUsedMethodOneForSimilarGoodsInPastPage =>
-        haveYouUsedMethodOneForSimilarGoodsInPast
-      case DescribeTheSimilarGoodsPage                   => describeTheSimilarGoods
+        haveYouUsedMethodOneForSimilarGoodsInPast(userAnswers)
+      case DescribeTheSimilarGoodsPage                   => describeTheSimilarGoods(userAnswers)
 
       // method 4
       case ExplainWhyYouHaveNotSelectedMethodOneToThreePage =>
-        explainWhyYouHaveNotSelectedMethodOneToThree
-      case ExplainWhyYouChoseMethodFourPage                 => explainWhyYouChoseMethodFour
+        explainWhyYouHaveNotSelectedMethodOneToThree(userAnswers)
+      case ExplainWhyYouChoseMethodFourPage                 => explainWhyYouChoseMethodFour(userAnswers)
 
       // method 5
-      case WhyComputedValuePage           => whyComputedValue
-      case ExplainReasonComputedValuePage => explainReasonComputedValue
+      case WhyComputedValuePage           => whyComputedValue(userAnswers)
+      case ExplainReasonComputedValuePage => explainReasonComputedValue(userAnswers)
 
       // method 6
       case ExplainWhyYouHaveNotSelectedMethodOneToFivePage =>
-        explainWhyYouHaveNotSelectedMethodOneToFivePage
-      case ExplainHowYouWillUseMethodSixPage               => explainHowYouWillUseMethodSixPage
-      case AdaptMethodPage                                 => adaptMethodPage
-      case _                                               =>
-        resolveAffinityGroup(affinityGroup)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
+        explainWhyYouHaveNotSelectedMethodOneToFivePage(userAnswers)
+      case ExplainHowYouWillUseMethodSixPage               => explainHowYouWillUseMethodSixPage(userAnswers)
+      case AdaptMethodPage                                 => adaptMethodPage(userAnswers)
+      case _                                               => navigateWithAuthUserType(userAnswers)
     }
 }

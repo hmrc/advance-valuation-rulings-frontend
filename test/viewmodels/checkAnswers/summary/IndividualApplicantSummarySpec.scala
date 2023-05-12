@@ -29,7 +29,7 @@ import pages._
 class IndividualApplicantSummarySpec extends SpecBase {
 
   val answers: Try[UserAnswers] =
-    emptyUserAnswers
+    userAnswersAsIndividualTrader
       .set(
         ApplicationContactDetailsPage,
         ApplicationContactDetails(ContactName, ContactEmail, ContactPhoneNumber)
@@ -40,7 +40,7 @@ class IndividualApplicantSummarySpec extends SpecBase {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
-      val summary = IndividualApplicantSummary(emptyUserAnswers)
+      val summary = IndividualApplicantSummary(userAnswersAsIndividualTrader)
       val rows    = summary.rows.rows
 
       "must create no rows" in {

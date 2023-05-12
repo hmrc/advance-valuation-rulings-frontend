@@ -45,7 +45,7 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
         )
 
         val application =
-          applicationBuilder(Some(emptyUserAnswers))
+          applicationBuilder(Some(userAnswersAsIndividualTrader))
             .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
             .build()
 

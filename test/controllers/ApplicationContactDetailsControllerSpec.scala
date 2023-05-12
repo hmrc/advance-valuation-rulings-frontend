@@ -49,7 +49,8 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request = FakeRequest(GET, applicationContactDetailsRoute)
@@ -73,7 +74,7 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
         phone = "07123456789"
       )
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = userAnswersAsIndividualTrader
         .set(ApplicationContactDetailsPage, applicationContactDetails)
         .success
         .value
@@ -103,7 +104,7 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -128,7 +129,8 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request =

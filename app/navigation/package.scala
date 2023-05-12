@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-import play.api.Logger
 import play.api.mvc.Call
-import uk.gov.hmrc.auth.core.AffinityGroup
 
-import controllers.routes
+import models.AuthUserType
+import models.AuthUserType._
 
 package object navigation {
 
-  private val logger = Logger(this.getClass)
-
-  def resolveAffinityGroup(affinityGroup: AffinityGroup)(
-    isIndividual: Call,
-    isOrgAgent: Call
+  def resolveAuthUserType(authUserType: AuthUserType)(
+    isTrader: Call,
+    isEmployee: Call,
+    isAgent: Call
   ): Call =
-    affinityGroup match {
-      case AffinityGroup.Individual                         =>
-        isIndividual
-      case AffinityGroup.Organisation | AffinityGroup.Agent =>
-        isOrgAgent
-      case unexpected                                       =>
-        logger.error(s"Unexpected affinity group [$unexpected] encountered")
-        routes.JourneyRecoveryController.onPageLoad()
+    authUserType match {
+      case IndividualTrader      => isTrader
+      case OrganisationAdmin     => isEmployee
+      case OrganisationAssistant => isAgent
     }
 }

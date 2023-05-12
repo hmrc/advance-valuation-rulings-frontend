@@ -72,9 +72,7 @@ class BusinessContactDetailsController @Inject() (
                   Future.fromTry(request.userAnswers.set(BusinessContactDetailsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
               )
           )
     }

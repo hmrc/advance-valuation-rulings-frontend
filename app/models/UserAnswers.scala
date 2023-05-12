@@ -25,7 +25,6 @@ import scala.util.{Failure, Success, Try}
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import models.ValuationMethod._
 import pages._
 import queries.{Gettable, Modifiable}
 

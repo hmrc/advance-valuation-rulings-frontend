@@ -65,17 +65,13 @@ class DeleteDraftController @Inject() (
                 userAnswersService.clear(draftId).map {
                   _ =>
                     Redirect(
-                      navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)(
-                        request.affinityGroup
-                      )
+                      navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)
                     )
                 }
               } else {
                 Future.successful(
                   Redirect(
-                    navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)(
-                      request.affinityGroup
-                    )
+                    navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)
                   )
                 )
               }

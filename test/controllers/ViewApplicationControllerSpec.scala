@@ -44,7 +44,7 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
 
       val mockBackendConnector = mock[BackendConnector]
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(
           bind[BackendConnector].toInstance(mockBackendConnector)
         )

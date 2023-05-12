@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ImportGoodsFormProvider
-import models.{DraftId, Mode, UserAnswers}
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ImportGoodsPage
 import services.UserAnswersService
@@ -76,7 +76,7 @@ class ImportGoodsController @Inject() (
                   )
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ImportGoodsPage, mode, updatedAnswers)(request.affinityGroup)
+                navigator.nextPage(ImportGoodsPage, mode, updatedAnswers)
               )
           )
     }

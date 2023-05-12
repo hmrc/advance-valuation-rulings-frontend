@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider
-import models.{DraftId, Mode, UserAnswers}
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.HaveYouUsedMethodOneForSimilarGoodsInPastPage
 import services.UserAnswersService
@@ -73,9 +73,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
                         .setFuture(HaveYouUsedMethodOneForSimilarGoodsInPastPage, value)
                 _  <- userAnswersService.set(ua)
               } yield Redirect(
-                navigator.nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, mode, ua)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(HaveYouUsedMethodOneForSimilarGoodsInPastPage, mode, ua)
               )
           )
     }

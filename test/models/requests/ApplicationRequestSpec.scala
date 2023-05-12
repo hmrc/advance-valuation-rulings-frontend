@@ -20,11 +20,9 @@ import cats.data.NonEmptyList
 import cats.data.Validated._
 
 import play.api.libs.json.{Json, JsSuccess}
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import generators._
 import models._
-import models.DraftId
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import org.scalacheck.Arbitrary
 import org.scalatest.matchers.should.Matchers
@@ -106,6 +104,7 @@ class ApplicationRequestSpec
         val ua = emptyUserAnswers
 
         val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
           ua <- ua.set(DescriptionOfGoodsPage, randomString)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
@@ -133,7 +132,7 @@ class ApplicationRequestSpec
         } yield ua).success.get
 
         val result =
-          ApplicationRequest(userAnswers, AffinityGroup.Individual, traderDetailsWithCountryCode)
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
 
         result shouldBe Valid(
           ApplicationRequest(
@@ -156,6 +155,7 @@ class ApplicationRequestSpec
         val ua = emptyUserAnswers
 
         val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
           ua <- ua.set(DescriptionOfGoodsPage, randomString)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
@@ -180,7 +180,7 @@ class ApplicationRequestSpec
         } yield ua).success.get
 
         val result =
-          ApplicationRequest(userAnswers, AffinityGroup.Individual, traderDetailsWithCountryCode)
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -191,8 +191,7 @@ class ApplicationRequestSpec
 
       "return invalid for an Individual when built from empty userAnswers" in {
         val result = ApplicationRequest(
-          emptyUserAnswers,
-          AffinityGroup.Individual,
+          emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader).success.get,
           traderDetailsWithCountryCode
         )
 
@@ -208,11 +207,12 @@ class ApplicationRequestSpec
       }
     }
 
-    "when the user is an employee of an organisation" when {
+    "when the user is an admin of an organisation" when {
       "return valid when built from correctly structured userAnswers" in {
         val ua = emptyUserAnswers
 
         val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
           ua <- ua.set(DescriptionOfGoodsPage, randomString)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
@@ -222,8 +222,8 @@ class ApplicationRequestSpec
                   true
                 )
           ua <- ua.set(
-                  BusinessContactDetailsPage,
-                  BusinessContactDetails(
+                  ApplicationContactDetailsPage,
+                  ApplicationContactDetails(
                     name = randomString,
                     email = randomString,
                     phone = randomString
@@ -241,7 +241,7 @@ class ApplicationRequestSpec
         } yield ua).success.get
 
         val result =
-          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
 
         result shouldBe Valid(
           ApplicationRequest(
@@ -261,17 +261,18 @@ class ApplicationRequestSpec
       }
 
       "return invalid when only answered is an employee on behalf of an org" in {
-        val userAnswers = emptyUserAnswers
-          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-          .get
+        val userAnswers = (for {
+          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAdmin)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+        } yield ua).get
 
         val result =
-          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
 
         result shouldBe Invalid(
           NonEmptyList.of(
             CheckRegisteredDetailsPage,
-            BusinessContactDetailsPage,
+            ApplicationContactDetailsPage,
             ValuationMethodPage,
             DescriptionOfGoodsPage,
             DoYouWantToUploadDocumentsPage
@@ -285,6 +286,7 @@ class ApplicationRequestSpec
         val ua = emptyUserAnswers
 
         val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
           ua <- ua.set(DescriptionOfGoodsPage, randomString)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
@@ -324,7 +326,7 @@ class ApplicationRequestSpec
         } yield ua).success.get
 
         val result =
-          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
 
         result shouldBe Valid(
           ApplicationRequest(
@@ -344,12 +346,13 @@ class ApplicationRequestSpec
       }
 
       "return invalid when only page answered is the agent on behalf of an org" in {
-        val userAnswers = emptyUserAnswers
-          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
-          .get
+        val userAnswers = (for {
+          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+        } yield ua).get
 
         val result =
-          ApplicationRequest(userAnswers, AffinityGroup.Organisation, traderDetailsWithCountryCode)
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
 
         result shouldBe Invalid(
           NonEmptyList.of(

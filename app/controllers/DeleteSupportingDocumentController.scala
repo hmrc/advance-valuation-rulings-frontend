@@ -61,17 +61,13 @@ class DeleteSupportingDocumentController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
                 _              <- osClient.deleteObject(Path.File(url))
               } yield Redirect(
-                navigator.nextPage(DeleteSupportingDocumentPage(index), mode, updatedAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(DeleteSupportingDocumentPage(index), mode, updatedAnswers)
               )
           }
           .getOrElse {
             Future.successful(
               Redirect(
-                navigator.nextPage(DeleteSupportingDocumentPage(index), mode, request.userAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(DeleteSupportingDocumentPage(index), mode, request.userAnswers)
               )
             )
           }

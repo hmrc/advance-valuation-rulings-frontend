@@ -71,8 +71,7 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            val applicationSummary =
-              ApplicationSummary(request.userAnswers, request.affinityGroup, traderDetails)
+            val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
             Future.successful(Ok(view(applicationSummary, draftId)))
         }
     }
@@ -82,7 +81,7 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            ApplicationRequest(request.userAnswers, request.affinityGroup, traderDetails) match {
+            ApplicationRequest(request.userAnswers, traderDetails) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.warn(
                   s"Failed to create application request: ${errors.toList.mkString(", ")}}"

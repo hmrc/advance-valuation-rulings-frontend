@@ -72,9 +72,7 @@ class ExplainHowPartiesAreRelatedController @Inject() (
                   Future.fromTry(request.userAnswers.set(ExplainHowPartiesAreRelatedPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(ExplainHowPartiesAreRelatedPage, mode, updatedAnswers)(
-                  request.affinityGroup
-                )
+                navigator.nextPage(ExplainHowPartiesAreRelatedPage, mode, updatedAnswers)
               )
           )
     }

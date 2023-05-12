@@ -38,7 +38,8 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad(draftId).url)
@@ -60,7 +61,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
         .build()
 
