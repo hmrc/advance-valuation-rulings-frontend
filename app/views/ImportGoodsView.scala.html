@@ -24,7 +24,8 @@
     heading: Heading,
     caption: Caption,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+govukButton:GovukButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -32,23 +33,27 @@
 @layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
-        
+
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("importGoods.caption"))
+            @caption(messages("importGoods.caption"))
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(messages("importGoods.heading")).asPageHeading()
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("value"),
+                    legend = LegendViewModel(messages("importGoods.heading")).asPageHeading()
+                )
             )
-        )
 
-        @saveButtons()
-    }
+            @saveButtons()
+
+            <a href="@routes.ImportGoodsController.onSubmit(mode, draftId, true).url" role="button" class="govuk-button govuk-button--secondary">
+                @messages("site.saveAsDraft")
+            </a>
+        }
 
     @cancelApplicationLink(draftId)
 }
