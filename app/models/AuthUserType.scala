@@ -32,6 +32,8 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
   case object OrganisationAdmin extends AuthUserType("OrganisationAdmin") // org + user/admin
   case object OrganisationAssistant extends AuthUserType("OrganisationAssistant") // org + assistant
 
+  case object Agent extends AuthUserType("Agent")
+
   def apply(
     affinityGroup: AffinityGroup,
     credentialRole: Option[CredentialRole]
@@ -41,6 +43,7 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
       case (AffinityGroup.Organisation, Some(Assistant)) => Some(OrganisationAssistant)
       case (AffinityGroup.Organisation, Some(Admin))     => Some(OrganisationAdmin)
       case (AffinityGroup.Organisation, Some(User))      => Some(OrganisationAdmin)
+      case (AffinityGroup.Agent, _)                      => Some(Agent)
       case _                                             => None
     }
 

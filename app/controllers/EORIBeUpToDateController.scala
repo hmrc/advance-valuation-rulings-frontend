@@ -24,6 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import models.DraftId
+import pages.AccountHomePage
 import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateController @Inject() (
@@ -38,6 +39,13 @@ class EORIBeUpToDateController @Inject() (
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit _request => Ok(view(draftId, _request.affinityGroup))
+      implicit request =>
+        request.userAnswers
+          .get(AccountHomePage) match {
+          case None               =>
+            Redirect(routes.UnauthorisedController.onPageLoad)
+          case Some(authUserType) =>
+            Ok(view(draftId, authUserType))
+        }
     }
 }

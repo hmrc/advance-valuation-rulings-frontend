@@ -29,7 +29,7 @@ import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import controllers.routes.WhatIsYourRoleAsImporterController
 import models._
-import models.AuthUserType.{OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.requests._
 import pages.{AccountHomePage, Page, WhatIsYourRoleAsImporterPage}
@@ -76,9 +76,9 @@ class CheckYourAnswersForAgentsController @Inject() (
           traderDetails =>
             val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
             AccountHomePage.get match {
-              case Some(OrganisationAdmin)     =>
+              case Some(OrganisationAdmin)                   =>
                 Future.successful(Ok(view(applicationSummary, EmployeeOfOrg, draftId)))
-              case Some(OrganisationAssistant) =>
+              case Some(OrganisationAssistant) | Some(Agent) =>
                 request.userAnswers.get(WhatIsYourRoleAsImporterPage) match {
                   case Some(importerRole) =>
                     Future.successful(Ok(view(applicationSummary, importerRole, draftId)))
@@ -92,7 +92,7 @@ class CheckYourAnswersForAgentsController @Inject() (
                       )
                     )
                 }
-              case _                           =>
+              case _                                         =>
                 logger.warn(
                   "Invalid journey: User navigated to check your answers with without an org user type"
                 )

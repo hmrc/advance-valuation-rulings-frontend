@@ -22,7 +22,7 @@ import play.api.mvc.Call
 
 import controllers.routes._
 import models._
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
@@ -90,13 +90,13 @@ class Navigator @Inject() () {
 
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
-      case Some(IndividualTrader)      =>
+      case Some(IndividualTrader)                    =>
         RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAdmin)     =>
+      case Some(OrganisationAdmin)                   =>
         RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAssistant) =>
+      case Some(OrganisationAssistant) | Some(Agent) =>
         WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                           =>
+      case _                                         =>
         UnauthorisedController.onPageLoad
     }
 
@@ -506,9 +506,9 @@ class Navigator @Inject() () {
 
   private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
-      case Some(OrganisationAdmin)     =>
+      case Some(OrganisationAdmin)                   =>
         ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(OrganisationAssistant) =>
+      case Some(OrganisationAssistant) | Some(Agent) =>
         userAnswers.get(WhatIsYourRoleAsImporterPage) match {
           case Some(EmployeeOfOrg)      =>
             ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
@@ -517,7 +517,7 @@ class Navigator @Inject() () {
           case _                        =>
             WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
         }
-      case _                           =>
+      case _                                         =>
         UnauthorisedController.onPageLoad
     }
 
