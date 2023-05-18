@@ -23,7 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models._
-import pages.{DoYouWantToUploadDocumentsPage, UploadSupportingDocumentPage}
+import pages.DoYouWantToUploadDocumentsPage
 import queries.AllDocuments
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
