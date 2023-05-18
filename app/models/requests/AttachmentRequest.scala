@@ -21,7 +21,7 @@ import cats.implicits._
 
 import play.api.libs.json.{Json, OFormat}
 
-import models.{DraftAttachment, Index, UploadedFile, UserAnswers}
+import models.{Index, UploadedFile, UserAnswers}
 import pages.{DoYouWantToUploadDocumentsPage, IsThisFileConfidentialPage, Page, UploadSupportingDocumentPage}
 import queries.AllDocuments
 

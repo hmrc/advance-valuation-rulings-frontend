@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.ImportGoodsFormProvider
-import models.{DraftId, Mode, NormalMode}
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ImportGoodsPage
 import services.UserAnswersService
@@ -60,7 +60,7 @@ class ImportGoodsController @Inject() (
         Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean = false): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
@@ -81,25 +81,6 @@ class ImportGoodsController @Inject() (
                 case true => Redirect(routes.AccountHomeController.onPageLoad())
                 case _    => Redirect(navigator.nextPage(ImportGoodsPage, mode, updatedAnswers))
               }
-          )
-    }
-  def saveDraft(draftId: DraftId): Action[AnyContent]                                        =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, models.NormalMode, draftId))),
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(
-                    request.userAnswers
-                      .set(ImportGoodsPage, value)
-                  )
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(routes.AccountHomeController.onPageLoad())
           )
     }
 }

@@ -23,7 +23,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, DataRetrievalActionProvider, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
 import services.UserAnswersService
 import views.html.CancelAreYouSureView

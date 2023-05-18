@@ -25,14 +25,14 @@
     caption: Caption,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
-govukButton:GovukButton
+    govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, dId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(dId)) {
 
-    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, dId, false), 'autoComplete -> "off") {
 
 
         @if(form.errors.nonEmpty) {
@@ -48,12 +48,18 @@ govukButton:GovukButton
                 )
             )
 
-            @saveButtons()
+            <div class="govuk-button-group">
+                @govukButton(
+                    ButtonViewModel("continue button")
+                )
 
-            <a href="@routes.ImportGoodsController.onSubmit(mode, draftId, true).url" role="button" class="govuk-button govuk-button--secondary">
-                @messages("site.saveAsDraft")
-            </a>
+                @govukButton(
+                    ButtonViewModel("draft button")
+                .withAttribute("formaction",routes.ImportGoodsController.onSubmit(mode, dId, true).toString())
+                .asSecondaryButton()
+                )
+            </div>
         }
 
-    @cancelApplicationLink(draftId)
+    @cancelApplicationLink(dId)
 }

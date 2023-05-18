@@ -18,6 +18,7 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -36,13 +37,19 @@ import views.html.ImportGoodsView
 
 class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider = new ImportGoodsFormProvider()
-  val form         = formProvider()
+  val formProvider        = new ImportGoodsFormProvider()
+  val form: Form[Boolean] = formProvider()
 
-  lazy val importGoodsRoute = routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url
-  lazy val saveDraftRoute   = routes.ImportGoodsController.saveDraft(draftId).url
+  lazy val importGoodsRoute: String =
+    routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url
+
+  lazy val saveDraftRoute: String =
+    routes.ImportGoodsController.onSubmit(NormalMode, draftId, saveDraft = true).url
+
+  lazy val continueRoute: String =
+    routes.ImportGoodsController.onSubmit(NormalMode, draftId, saveDraft = false).url
 
   "ImportGoods Controller" - {
 
@@ -96,107 +103,107 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
         ).toString
       }
     }
-//
-//    "must populate the view correctly on a GET when the question has previously been answered" in {
-//
-//      val userAnswers =
-//        userAnswersAsIndividualTrader.set(ImportGoodsPage, true).success.value
-//
-//      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, importGoodsRoute)
-//
-//        val view = application.injector.instanceOf[ImportGoodsView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual OK
-//        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
-//          request,
-//          messages(application)
-//        ).toString
-//      }
-//    }
-//
-//    "must redirect to the next page when valid data is submitted" in {
-//
-//      val mockUserAnswersService = mock[UserAnswersService]
-//
-//      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-//
-//      val application =
-//        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-//          .overrides(
-//            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-//            bind[UserAnswersService].toInstance(mockUserAnswersService)
-//          )
-//          .build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, importGoodsRoute)
-//            .withFormUrlEncodedBody(("value", "true"))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual onwardRoute.url
-//      }
-//    }
-//
-//    "must return a Bad Request and errors when invalid data is submitted" in {
-//
-//      val application =
-//        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, importGoodsRoute)
-//            .withFormUrlEncodedBody(("value", ""))
-//
-//        val boundForm = form.bind(Map("value" -> ""))
-//
-//        val view = application.injector.instanceOf[ImportGoodsView]
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual BAD_REQUEST
-//        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
-//          request,
-//          messages(application)
-//        ).toString
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a GET if no existing data is found" ignore {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request = FakeRequest(GET, importGoodsRoute)
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
-//
-//    "must redirect to Journey Recovery for a POST if no existing data is found" ignore {
-//
-//      val application = applicationBuilder(userAnswers = None).build()
-//
-//      running(application) {
-//        val request =
-//          FakeRequest(POST, importGoodsRoute)
-//            .withFormUrlEncodedBody(("value", "true"))
-//
-//        val result = route(application, request).value
-//
-//        status(result) mustEqual SEE_OTHER
-//        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-//      }
-//    }
+
+    "must populate the view correctly on a GET when the question has previously been answered" in {
+
+      val userAnswers =
+        userAnswersAsIndividualTrader.set(ImportGoodsPage, true).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, importGoodsRoute)
+
+        val view = application.injector.instanceOf[ImportGoodsView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, draftId)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must redirect to the next page when valid data is submitted" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, continueRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must return a Bad Request and errors when invalid data is submitted" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, continueRoute)
+            .withFormUrlEncodedBody(("value", ""))
+
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val view = application.injector.instanceOf[ImportGoodsView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, importGoodsRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to Journey Recovery for a POST if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, continueRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
   }
 }
