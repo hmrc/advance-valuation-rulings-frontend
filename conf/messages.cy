@@ -1,6 +1,6 @@
 service.name = Advance Valuation Ruling
 
-site.back = Back
+site.back = Yn ôl
 site.remove = Remove
 site.change = Change
 site.no = Na
@@ -224,7 +224,7 @@ describeTheRestrictions.change.hidden = your description of the restrictions on 
 isTheSaleSubjectToConditions.caption = Ynglŷn â’r nwyddau
 isTheSaleSubjectToConditions.title = A yw’r gwerthiant yn destun i unrhyw amodau neu amgylchiadau y gallai eich atal rhag prisio’r nwyddau?
 isTheSaleSubjectToConditions.heading = A yw’r gwerthiant yn destun i unrhyw amodau neu amgylchiadau y gallai eich atal rhag prisio’r nwyddau?
-isTheSaleSubjectToConditions.checkYourAnswersLabel = Is the sale subject to conditions or circumstances which cannot be calculated?
+isTheSaleSubjectToConditions.checkYourAnswersLabel = A yw’r gwerthiant yn destun i unrhyw amodau neu amgylchiadau y gallai eich atal rhag prisio’r nwyddau?
 isTheSaleSubjectToConditions.error.required = Dewiswch ‘Iawn’ os yw’r gwerthiant yn destun unrhyw amodau neu amgylchiadau a allai eich rhwystro rhag prisio’r nwyddau
 isTheSaleSubjectToConditions.paragraph.1 = Ni ddylai gwerthiant neu bris fod yn seiliedig ar amodau neu amgylchiadau na ellir eu cyfrifo mewn perthynas â’r nwyddau. Mae enghreifftiau’n cynnwys:
 isTheSaleSubjectToConditions.bulletPoint.1 = pan fydd y gwerthwr yn gosod y pris ar yr amod eich bod yn prynu nwyddau eraill ganddyn nhw mewn symiau penodedig
@@ -294,7 +294,7 @@ haveYouUsedMethodOneForSimilarGoodsInPast.title = Allwch chi ddarparu tystiolaet
 haveYouUsedMethodOneForSimilarGoodsInPast.heading = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
 haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Mae Dull 3 yn seiliedig ar werth nwyddau tebyg sy’n cael eu hallforio i’r DU ar yr un adeg neu tua’r un adeg (cyn pen 90 diwrnod) â’r nwyddau sy’n cael eu prisio.
 haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
-haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if you can provide evidence of a Method 1 declaration
+haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Dewiswch ‘Iawn’ os gallwch roi tystiolaeth o ddatganiad Dull 1
 haveYouUsedMethodOneForSimilarGoodsInPast.no.text = Na – os byddwch yn dewis ‘Na’ bydd angen i chi ddewis dull prisio amgen
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued
 
@@ -423,11 +423,11 @@ hasCommodityCode.paragraph.1 = Cyfeirnod sy’n cael ei gydnabod yn rhyngwladol 
 hasCommodityCode.paragraph.1.link = Dod o hyd i’ch cod nwyddau (yn agor tab newydd)
 hasCommodityCode.change.hidden = your response to whether you have a commodity code for the goods
 
-contactPage.title = If we need to contact you about your application
-contactPage.heading = If we need to contact you about your application
-contactPage.caption = About the applicant
-contactPage.paragraph.1 = We might contact you by phone or email if we need more information about your application.
-contactPage.paragraph.2 = Please note that email communication may not always be secure, as emails can be read or changed by someone else. If you choose to continue your application, you accept the risks involved.
+contactPage.caption = Ynglŷn â’r ymgeisydd
+contactPage.title = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
+contactPage.heading = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
+contactPage.paragraph.1 = Efallai y byddwn yn cysylltu â chi dros y ffôn neu drwy e-bost os bydd angen mwy o wybodaeth arnom ynghylch eich cais.
+contactPage.paragraph.2 = Sylwer – efallai na fydd cyfathrebu drwy e-bost bob amser yn ddiogel, gan ei bod hi’n bosib y gall e-byst gael eu darllen neu eu newid gan rywun arall. Os ydych yn dewis i barhau â’ch cais, rydych yn derbyn y risgiau cysylltiedig.
 
 commodityCode.caption = Ynglŷn â’r nwyddau
 commodityCode.title = Beth yw’r cod nwyddau ar gyfer y nwyddau?
@@ -561,7 +561,7 @@ checkYourAnswers.applicant.phone.label = Rhif ffôn yr ymgeisydd
 checkYourAnswer.applicant.dateSubmitted.label = Date submitted
 checkYourAnswers.goods.uploaddocuments.label = Documents uploaded
 
-checkYourAnswers.agent.heading = About the agent
+checkYourAnswers.agent.heading = Ynglŷn â'r asiant
 checkYourAnswers.goods.heading = Ynglŷn â'r ymgeisydd
 
 checkYourAnswers.declaration.heading = Eich datganiad
@@ -592,7 +592,7 @@ checkYourAnswersForAgents.company.org.heading = Ynglŷn â’r cwmni
 checkYourAnswersForAgents.company.agent.heading = Ynglŷn â’r cwmni yr ydych yn ei gynrychioli
 
 checkYourAnswersForAgents.applicant.org.heading = Ynglŷn â’r ymgeisydd
-checkYourAnswersForAgents.applicant.agent.heading = About the agent
+checkYourAnswersForAgents.applicant.agent.heading = Ynglŷn â'r asiant
 
 checkYourAnswersForAgents.agent.eori.number.label = Your company’s registered EORI number
 checkYourAnswersForAgents.agent.name.label = Your company’s registered business name
@@ -664,7 +664,7 @@ applicationComplete.applicant.heading = Ynglŷn â'r ymgeisydd
 applicationComplete.agent.heading = Ynglŷn â'r asiant
 applicationComplete.company.heading = Ynglŷn â'r cwmni
 applicationComplete.goods.heading = Ynglŷn â'r nwyddau
-applicationComplete.continue.button = Go to your applications and rulings
+applicationComplete.continue.button = Ewch i’ch ceisiadau a’ch dyfarniadau
 
 whatIsYourRoleAsImporter.title = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
 whatIsYourRoleAsImporter.heading = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
@@ -702,20 +702,20 @@ businessContactDetails.name.change.hidden = your contact name
 businessContactDetails.email.change.hidden = your email address
 businessContactDetails.telephoneNumber.change.hidden = your telephone number
 
-importingGoods.title = This service is for importing goods into Great Britain
-importingGoods.heading = This service is for importing goods into Great Britain
 importingGoods.caption = Ynglŷn â’r ymgeisydd
-importingGoods.h2 = Information and services to help you import and export:
-importingGoods.point.1 = {0} - for legally binding decisions on the commodity code used to import into or export from Great Britain
-importingGoods.point.1.link = Advance Tariff Rulings
-importingGoods.point.2 = {0} - for legally binding decisions on the origin of the goods being imported into or exported from Great Britain
-importingGoods.point.2.link = Advance Origin Rulings
-importingGoods.point.3 = {0} to importing goods into the UK
-importingGoods.point.3.link = Step-by-step guide
-importingGoods.point.4 = {0} on importing, exporting and customs for businesses
-importingGoods.point.4.link = General information
-importingGoods.point.5 = {0} - HMRC email alerts, videos and webinars about importing and exporting
-importingGoods.point.5.link = Help and support
+importingGoods.title = Mae’r gwasanaeth hwn ar gyfer mewnforio nwyddau i Brydain Fawr
+importingGoods.heading = Mae’r gwasanaeth hwn ar gyfer mewnforio nwyddau i Brydain Fawr
+importingGoods.h2 = Gwybodaeth a gwasanaethau i’ch helpu chi i fewnforio ac allforio:
+importingGoods.point.1 = {0} - ar gyfer penderfyniadau sy’n gyfreithiol rwymol ar y cod nwyddau a ddefnyddir i fewnforio i Brydain Fawr neu allforio nwyddau ohoni
+importingGoods.point.1.link = Dyfarniadau Tariffau Uwch
+importingGoods.point.2 = {0} - am benderfyniadau sy’n gyfreithiol rwymol ar darddiad y nwyddau sy’n cael eu mewnforio i Brydain Fawr neu eu hallforio ohoni
+importingGoods.point.2.link = Dyfarniadau Tarddiad Uwch
+importingGoods.point.3 = {0} ynghylch mewnforio nwyddau i’r DU
+importingGoods.point.3.link = Canllaw cam wrth gam
+importingGoods.point.4 = {0} ynghylch mewnforio, allforio a thollau i fusnesau
+importingGoods.point.4.link = Gwybodaeth gyffredinol
+importingGoods.point.5 = {0} - e-byst hysbysu gan CThEF, fideos a gweminarau ynghylch mewnforio ac allforio
+importingGoods.point.5.link = Help a chefnogaeth
 
 accountHome.title = Your applications and rulings
 accountHome.heading = Your applications and rulings
