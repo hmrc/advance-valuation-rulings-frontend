@@ -77,7 +77,7 @@
 
  @hmrcLayout(
     pageTitle = Some(pageTitle),
-    isWelshTranslationAvailable = false, /* false if your service has not been translated */
+    isWelshTranslationAvailable = true, /* false if your service has not been translated */
     serviceUrl = Some(routes.AccountHomeController.onPageLoad.url),
     signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
     phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),

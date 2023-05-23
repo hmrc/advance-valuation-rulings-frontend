@@ -812,6 +812,18 @@ agentCompanyDetails.agentCity.change.hidden = Tref neu ddinas
 agentCompanyDetails.agentCountry.change.hidden = Gwlad
 agentCompanyDetails.agentPostalCode.change.hidden = Cod post
 
+checkYourAnswersForAgents.agent.org.name.label = Agent’s full name
+checkYourAnswersForAgents.agent.org.email.label = Agent’s email address
+checkYourAnswersForAgents.agent.org.phone.label = Agent’s telephone number
+checkYourAnswersForAgents.agent.org.name.change.hidden = your contact name
+checkYourAnswersForAgents.agent.org.email.change.hidden = your email address
+checkYourAnswersForAgents.agent.org.phone.change.hidden = your telephone number
+
+checkYourAnswersForAgents.applicant.role.hidden = the description of your role
+checkYourAnswersForAgents.applicant.name.change.hidden = your contact name
+checkYourAnswersForAgents.applicant.email.change.hidden = your email address
+checkYourAnswersForAgents.applicant.phone.change.hidden = your telephone number
+
 deleteDraft.title = Are you sure you want to delete your application?
 deleteDraft.heading = Are you sure you want to delete your application?
 deleteDraft.error.required = Select yes if you want to delete your application
