@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import base.SpecBase
+import scala.reflect.ClassTag
+
 import play.api.i18n.MessagesApi
 import play.api.test.Helpers.baseApplicationBuilder.injector
 
-import scala.reflect.ClassTag
+import base.SpecBase
 
 class MessagesSpec extends SpecBase {
 
