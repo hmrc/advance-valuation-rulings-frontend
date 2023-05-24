@@ -17,6 +17,8 @@
 @import components._
 @import viewmodels.checkAnswers.summary._
 @import viewmodels.ApplicationViewModel
+@import models.requests.Attachment
+@import models.requests.Privacy._
 
 @this(
     layout: templates.Layout,
@@ -24,19 +26,34 @@
     applicationSummaryList: ApplicationSummaryList,
     heading: Heading,
     headingH3: headingH3,
-    paragraph: Paragraph
+    paragraph: Paragraph,
+    govukTable: GovukTable
 )
 
-@(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String)(implicit messages: Messages)
+@(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String, attachments: Seq[Attachment])(implicit messages: Messages)
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     @headingH3(messages("viewApplication.aboutTheGoods.heading"))
   </div>
-  
+
   <div class="govuk-grid-column-full">
     @govukSummaryList(appModel.method)
 
     @govukSummaryList(appModel.details)
+
+      @*
+      * @govukTable(
+      * Table(
+      * rows = attachments.zipWithIndex.map { case (attachment, i) =>
+      * Seq(
+      * TableRow(content = Text(attachment.name)),
+      * TableRow(content = Text(if(attachment.privacy == Confidential) messages("uploadAnotherSupportingDocument.keepConfidential") else ""))
+      * )
+      * },
+      * classes = "govuk-body-s"
+      * ))
+      *@
+
   </div>
 </div>
 

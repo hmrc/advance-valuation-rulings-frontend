@@ -16,16 +16,21 @@
 
 package viewmodels.application
 
+import cats.implicits.catsSyntaxOptionId
+
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Content, TableRow}
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.table.Table
 
 import models.requests.{Attachment, GoodsDetails}
+import models.requests.Privacy.Confidential
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object GoodsDetailsSummary {
-
   def rows(goodsDetails: GoodsDetails, attachments: Seq[Attachment])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
@@ -53,21 +58,34 @@ object GoodsDetailsSummary {
         )
     }
 
-    val confidentialInformationRow = goodsDetails.confidentialInformation.map {
-      info =>
-        SummaryListRowViewModel(
-          key = "confidentialInformation.checkYourAnswersLabel",
-          value = ValueViewModel(info)
-        )
-    }
+    val confidentialInformationRow: Option[SummaryListRow] =
+      goodsDetails.confidentialInformation.map {
+        info =>
+          SummaryListRowViewModel(
+            key = "confidentialInformation.checkYourAnswersLabel",
+            value = ValueViewModel(info)
+          )
+      }
 
-    val attachmentsRow = if (attachments.nonEmpty) {
-      Some(
-        SummaryListRowViewModel(
-          key = "uploadSupportingDocuments.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(attachments.map(_.name).mkString("<br/>")))
-        )
-      )
+    val attachmentsRow: Option[SummaryListRow] = if (attachments.nonEmpty) {
+
+      val z = Table(rows = attachments.zipWithIndex.map {
+        case (attachment, i) =>
+          Seq(
+            TableRow(content = Text(attachment.name)),
+            TableRow(content =
+              Text(
+                if (attachment.privacy == Confidential)
+                  messages("uploadAnotherSupportingDocument.keepConfidential")
+                else ""
+              )
+            )
+          )
+      })
+
+      Some(SummaryListRow(key = "uploadSupportingDocuments.checkYourAnswersLabel",
+        value = ValueViewModel()))
+
     } else {
       None
     }
