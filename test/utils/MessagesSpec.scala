@@ -15,6 +15,7 @@
  */
 
 import scala.reflect.ClassTag
+import scala.util.matching.Regex
 
 import play.api.i18n.MessagesApi
 import play.api.test.Helpers.baseApplicationBuilder.injector
@@ -26,6 +27,16 @@ class MessagesSpec extends SpecBase {
   def inject[T](implicit evidence: ClassTag[T]): T = injector.instanceOf[T]
 
   implicit lazy val realMessagesApi: MessagesApi = inject[MessagesApi]
+
+  private lazy val defaultMessages: Map[String, String] = getExpectedMessages("default")
+
+  private lazy val welshMessages: Map[String, String] = getExpectedMessages("cy")
+
+  private def getExpectedMessages(languageCode: String) =
+    realMessagesApi.messages.getOrElse(
+      languageCode,
+      throw new Exception(s"Missing messages for $languageCode")
+    )
 
   "all english messages" - {
     "have a welsh translation" in {
@@ -46,5 +57,46 @@ class MessagesSpec extends SpecBase {
         fail(failureText)
       }
     }
+    "have a non-empty message for each key" in {
+      assertNonEmptyValuesForDefaultMessages()
+      assertNonEmptyValuesForWelshMessages()
+    }
+    "have no unescaped single quotes in value" in {
+      assertCorrectUseOfQuotesForDefaultMessages()
+      assertCorrectUseOfQuotesForWelshMessages()
+    }
   }
+
+  private def assertNonEmptyValuesForDefaultMessages() =
+    assertNonEmptyNonTemporaryValues("Default", defaultMessages)
+
+  private def assertNonEmptyValuesForWelshMessages() =
+    assertNonEmptyNonTemporaryValues("Welsh", welshMessages)
+
+  private def assertCorrectUseOfQuotesForDefaultMessages() =
+    assertCorrectUseOfQuotes("Default", defaultMessages)
+
+  private def assertCorrectUseOfQuotesForWelshMessages() =
+    assertCorrectUseOfQuotes("Welsh", welshMessages)
+
+  private def assertNonEmptyNonTemporaryValues(label: String, messages: Map[String, String]) =
+    messages.foreach {
+      case (key: String, value: String) =>
+        withClue(s"In $label, there is an empty value for the key:[$key][$value]") {
+          value.trim.isEmpty mustBe false
+        }
+    }
+
+  private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]) =
+    messages.foreach {
+      case (key: String, value: String) =>
+        withClue(s"In $label, there is an unescaped or invalid quote:[$key][$value]") {
+          MatchSingleQuoteOnly.findFirstIn(value).isDefined mustBe false
+          MatchBacktickQuoteOnly.findFirstIn(value).isDefined mustBe false
+        }
+    }
+
+  val MatchSingleQuoteOnly: Regex   = """\w+'{1}\w+""".r
+  val MatchBacktickQuoteOnly: Regex = """`+""".r
+
 }
