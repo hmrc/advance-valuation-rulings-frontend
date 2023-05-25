@@ -67,25 +67,22 @@ object GoodsDetailsSummary {
           )
       }
 
-    val attachmentsRow: Option[SummaryListRow] = if (attachments.nonEmpty) {
+    val attachmentRowContent = attachments
+      .map(
+        file =>
+          s"${file.name} ${if (file.privacy == Confidential)
+              s"<strong>- ${messages("uploadAnotherSupportingDocument.keepConfidential")}</strong>"
+            else ""}"
+      )
+      .mkString("<br/>")
 
-      val z = Table(rows = attachments.zipWithIndex.map {
-        case (attachment, i) =>
-          Seq(
-            TableRow(content = Text(attachment.name)),
-            TableRow(content =
-              Text(
-                if (attachment.privacy == Confidential)
-                  messages("uploadAnotherSupportingDocument.keepConfidential")
-                else ""
-              )
-            )
-          )
-      })
-
-      Some(SummaryListRow(key = "uploadSupportingDocuments.checkYourAnswersLabel",
-        value = ValueViewModel()))
-
+    val attachmentsRow = if (attachments.nonEmpty) {
+      Some(
+        SummaryListRowViewModel(
+          key = "uploadSupportingDocuments.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlContent(attachmentRowContent))
+        )
+      )
     } else {
       None
     }

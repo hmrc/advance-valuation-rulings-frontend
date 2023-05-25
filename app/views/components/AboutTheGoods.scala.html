@@ -21,48 +21,40 @@
 @import models.requests.Privacy._
 
 @this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList,
-    applicationSummaryList: ApplicationSummaryList,
-    heading: Heading,
-    headingH3: headingH3,
-    paragraph: Paragraph,
-    govukTable: GovukTable
+layout: templates.Layout,
+govukSummaryList: GovukSummaryList,
+applicationSummaryList: ApplicationSummaryList,
+heading: Heading,
+headingH3: headingH3,
+paragraph: Paragraph,
+govukTable: GovukTable,
+attachmentsTable: ApplicationAttachmentsTable
 )
 
 @(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String, attachments: Seq[Attachment])(implicit messages: Messages)
+
+
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    @headingH3(messages("viewApplication.aboutTheGoods.heading"))
-  </div>
+    <div class="govuk-grid-column-full">
+        @headingH3(messages("viewApplication.aboutTheGoods.heading"))
+    </div>
 
-  <div class="govuk-grid-column-full">
-    @govukSummaryList(appModel.method)
+    <div class="govuk-grid-column-full">
+        @govukSummaryList(appModel.method)
 
-    @govukSummaryList(appModel.details)
+        @govukSummaryList(appModel.details)
 
-      @*
-      * @govukTable(
-      * Table(
-      * rows = attachments.zipWithIndex.map { case (attachment, i) =>
-      * Seq(
-      * TableRow(content = Text(attachment.name)),
-      * TableRow(content = Text(if(attachment.privacy == Confidential) messages("uploadAnotherSupportingDocument.keepConfidential") else ""))
-      * )
-      * },
-      * classes = "govuk-body-s"
-      * ))
-      *@
+        @attachmentsTable(attachments)
 
-  </div>
+    </div>
 </div>
 
 
 <div class="govuk-grid-row main-content">
-  <div class="govuk-grid-column-full">
-    <div class="footer-info">
-      <span class="footer-page-no">@messages("site.page", 2, 2)</span>
-      <span class="footer-page-date">HMRC @lastUpdated</span>
+    <div class="govuk-grid-column-full">
+        <div class="footer-info">
+            <span class="footer-page-no">@messages("site.page", 2, 2)</span>
+            <span class="footer-page-date">HMRC @lastUpdated</span>
+        </div>
     </div>
-  </div>
 </div>
