@@ -76,8 +76,7 @@ class CheckRegisteredDetailsController @Inject() (
           case Some(value) =>
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
-                request.userAnswers
-                  .get(AccountHomePage) match {
+                AccountHomePage.get match {
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
@@ -88,8 +87,7 @@ class CheckRegisteredDetailsController @Inject() (
           case None =>
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
-                request.userAnswers
-                  .get(AccountHomePage) match {
+                AccountHomePage.get match {
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
@@ -110,8 +108,7 @@ class CheckRegisteredDetailsController @Inject() (
             formWithErrors =>
               getTraderDetails(
                 (details: TraderDetailsWithCountryCode) =>
-                  request.userAnswers
-                    .get(AccountHomePage) match {
+                  AccountHomePage.get match {
                     case None               =>
                       Redirect(routes.UnauthorisedController.onPageLoad)
                     case Some(authUserType) =>

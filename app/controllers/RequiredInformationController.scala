@@ -60,8 +60,7 @@ class RequiredInformationController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-        request.userAnswers
-          .get(AccountHomePage) match {
+        AccountHomePage.get match {
           case None               =>
             Redirect(routes.UnauthorisedController.onPageLoad)
           case Some(authUserType) =>
@@ -76,8 +75,7 @@ class RequiredInformationController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              request.userAnswers
-                .get(AccountHomePage) match {
+              AccountHomePage.get match {
                 case None               =>
                   Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                 case Some(authUserType) =>

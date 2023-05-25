@@ -40,8 +40,7 @@ class EORIBeUpToDateController @Inject() (
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        request.userAnswers
-          .get(AccountHomePage) match {
+        AccountHomePage.get match {
           case None               =>
             Redirect(routes.UnauthorisedController.onPageLoad)
           case Some(authUserType) =>

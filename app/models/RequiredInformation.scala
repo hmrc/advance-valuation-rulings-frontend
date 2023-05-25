@@ -50,7 +50,6 @@ object RequiredInformation extends Enumerable.Implicits {
           case AuthUserType.OrganisationAssistant => "organisation"
           case AuthUserType.OrganisationAdmin     => "organisation"
           case AuthUserType.Agent                 => "organisation"
-          case _                                  => "unknown"
         }
         CheckboxItemViewModel(
           content = Text(messages(s"requiredInformation.${value.toString}.$suffix")),
