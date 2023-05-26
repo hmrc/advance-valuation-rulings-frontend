@@ -237,6 +237,7 @@ GET        /your-application-ruling/:id               controllers.ViewRulingCont
 
 GET        /:draftId/cancel                                          controllers.CancelApplicationController.onPageLoad(draftId: DraftId)
 GET        /:draftId/confirm-cancel                                  controllers.CancelApplicationController.confirmCancel(draftId: DraftId)
+POST       /:draftId/confirm-cancel-two                              controllers.CancelApplicationController.onSubmit(draftId: DraftId)
 
 GET        /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)

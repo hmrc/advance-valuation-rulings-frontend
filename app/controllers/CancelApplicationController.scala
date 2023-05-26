@@ -16,7 +16,7 @@
 
 package controllers
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -24,6 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import forms.CancelApplicationFormProvider
 import models.DraftId
 import services.UserAnswersService
 import views.html.CancelAreYouSureView
@@ -35,10 +36,13 @@ class CancelApplicationController @Inject() (
   requireData: DataRequiredAction,
   userAnswersService: UserAnswersService,
   val controllerComponents: MessagesControllerComponents,
+  formProvider: CancelApplicationFormProvider,
   view: CancelAreYouSureView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
+
+  lazy val form = formProvider()
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
@@ -49,5 +53,23 @@ class CancelApplicationController @Inject() (
         for {
           _ <- userAnswersService.clear(draftId)
         } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
+    }
+
+  def onSubmit(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(draftId))),
+            value =>
+              if (value) {
+                userAnswersService
+                  .clear(draftId)
+                  .map(_ => Redirect(controllers.routes.AccountHomeController.onPageLoad()))
+              } else {
+                Future.successful(Redirect(controllers.routes.AccountHomeController.onPageLoad()))
+              }
+          )
     }
 }
