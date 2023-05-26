@@ -92,9 +92,10 @@ class CheckYourAnswersForAgentsController @Inject() (
                       )
                     )
                 }
-              case _                                         =>
+              case unauthorised                              =>
                 logger.warn(
-                  "Invalid journey: User navigated to check your answers with without an org user type"
+                  s"Invalid journey: User navigated to check your answers for agents with ${unauthorised
+                      .getOrElse("empty")} user type"
                 )
                 Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
             }
