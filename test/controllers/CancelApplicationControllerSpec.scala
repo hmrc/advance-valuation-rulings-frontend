@@ -23,6 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import forms.CancelApplicationFormProvider
 import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -32,6 +33,9 @@ import services.UserAnswersService
 import views.html.CancelAreYouSureView
 
 class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
+
+  val formProvider = new CancelApplicationFormProvider()
+  val form         = formProvider()
 
   "CancelApplication Controller" - {
 
@@ -48,7 +52,10 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[CancelAreYouSureView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, draftId)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -93,7 +100,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-     "must not clear answers when the user selects 'No'" in {
+    "must not clear answers when the user selects 'No'" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
 

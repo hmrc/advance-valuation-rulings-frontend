@@ -42,10 +42,12 @@ class CancelApplicationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  lazy val form = formProvider()
+  val form = formProvider()
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
+    (identify andThen getData(draftId) andThen requireData)(
+      implicit request => Ok(view(form, draftId))
+    )
 
   def confirmCancel(draftId: DraftId): Action[AnyContent] =
     identify.async {
@@ -61,7 +63,7 @@ class CancelApplicationController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(draftId))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, draftId))),
             value =>
               if (value) {
                 userAnswersService

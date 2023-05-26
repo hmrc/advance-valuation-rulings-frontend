@@ -17,31 +17,44 @@
 @import components._
 
 @this(
-        formHelper: FormWithCSRF,
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        para: InsetPara,
-        heading: Heading,
-        link: Link,
-        govukBackLink: GovukBackLink
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    para: InsetPara,
+    heading: Heading,
+    link: Link,
+    govukBackLink: GovukBackLink
 )
 
-@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
 
-    @heading(messages("cancelAreYouSure.heading"))
-    @para(Html(messages("cancelAreYouSure.inset.text")))
+    @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), 'autoComplete -> "off") {
+    
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-    @formHelper(action = routes.CancelApplicationController.confirmCancel(draftId)) {
+        @heading(messages("cancelAreYouSure.heading"))
+        
+        @para(Html(messages("cancelAreYouSure.inset.text")))
+        
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(messages("cancelAreYouSure.heading")).visuallyHidden()
+            )
+        )
+                
         @govukButton(
-             ButtonViewModel(messages("cancelAreYouSure.button"))
+            ButtonViewModel(messages("cancelAreYouSure.button"))
         )
     }
 
     <a href = "javascript:history.back()" class="govuk-link js-visible" id = "return_to_application">
         @messages("cancelAreYouSure.return")
     </a>
-
-
 }
