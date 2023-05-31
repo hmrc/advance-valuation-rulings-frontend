@@ -29,7 +29,7 @@
 )
 
 @(form: Form[_], draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
+@paraContent = {@para(Html(messages("cancelAreYouSure.inset.text")))}
 @layout(pageTitle = title(form, messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
 
     @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), 'autoComplete -> "off") {
@@ -38,15 +38,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @heading(messages("cancelAreYouSure.heading"))
-        
-        @para(Html(messages("cancelAreYouSure.inset.text")))
-        
-        @govukRadios(
+ @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("cancelAreYouSure.heading")).visuallyHidden()
+                legend = LegendViewModel(messages("cancelAreYouSure.heading")).asPageHeading()
             )
+            .withHint(Hint(content = HtmlContent(paraContent)))
         )
                 
         @govukButton(
