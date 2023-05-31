@@ -24,6 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import controllers.routes.AccountHomeController
 import forms.CancelApplicationFormProvider
 import models.DraftId
 import services.UserAnswersService
@@ -49,14 +50,6 @@ class CancelApplicationController @Inject() (
       implicit request => Ok(view(form, draftId))
     )
 
-  def confirmCancel(draftId: DraftId): Action[AnyContent] =
-    identify.async {
-      implicit request =>
-        for {
-          _ <- userAnswersService.clear(draftId)
-        } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
-    }
-
   def onSubmit(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
@@ -64,14 +57,14 @@ class CancelApplicationController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, draftId))),
-            value =>
-              if (value) {
+            {
+              case true  =>
                 userAnswersService
                   .clear(draftId)
-                  .map(_ => Redirect(controllers.routes.AccountHomeController.onPageLoad()))
-              } else {
-                Future.successful(Redirect(controllers.routes.AccountHomeController.onPageLoad()))
-              }
+                  .map(_ => Redirect(AccountHomeController.onPageLoad()))
+              case false =>
+                Future.successful(Redirect(AccountHomeController.onPageLoad()))
+            }
           )
     }
 }

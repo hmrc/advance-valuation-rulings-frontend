@@ -59,26 +59,6 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must clear answers and redirect" in {
-
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(GET, routes.CancelApplicationController.confirmCancel(draftId).url)
-        val result  = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
-      }
-    }
-
     "must clear answers and redirect when the user selects 'Yes'" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
