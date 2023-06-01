@@ -35,8 +35,7 @@
         forYourRecords: ForYourRecords,
         appConfig: FrontendAppConfig,
         fullMainContent: FullLayoutMainContent,
-        printApplicationLink: PrintApplicationLink,
-        govukTable: GovukTable
+        printApplicationLink: PrintApplicationLink
 )
 
 @(appModel: ApplicationViewModel, applicationId: String, lastUpdated: String, attachments: Seq[Attachment])(implicit request: Request[_], messages:
@@ -95,7 +94,7 @@ Messages)
                     <h2 class="govuk-heading-m">@messages("viewApplication.yourRuling")</h2>
                 </div>
             </div>
-            @aboutTheGoods(appModel, applicationId, lastUpdated, attachments)
+            @aboutTheGoods(appModel, applicationId, lastUpdated)
         </div>
     </div>
 </div>

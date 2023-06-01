@@ -30,6 +30,7 @@ import connectors.BackendConnector
 import generators.Generators
 import models._
 import models.requests._
+import models.requests.Privacy.Public
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -69,7 +70,18 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
         contentAsString(result) mustEqual view(
           applicationViewModel,
           ruling.id.toString,
-          lastUpdatedString
+          lastUpdatedString,
+          Seq(
+            Attachment(
+              1234L,
+              "fileName",
+              Some("fileDescription"),
+              "fileLocation",
+              Public,
+              "MIME.PDF",
+              1234L
+            )
+          )
         )(
           request,
           messages(application)

@@ -17,7 +17,6 @@
 @import components._
 @import viewmodels.checkAnswers.summary._
 @import viewmodels.ApplicationViewModel
-@import models.requests.Attachment
 @import models.requests.Privacy._
 
 @this(
@@ -26,11 +25,10 @@ govukSummaryList: GovukSummaryList,
 applicationSummaryList: ApplicationSummaryList,
 heading: Heading,
 headingH3: headingH3,
-paragraph: Paragraph,
-govukTable: GovukTable,
+paragraph: Paragraph
 )
 
-@(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String, attachments: Seq[Attachment])(implicit messages: Messages)
+@(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String)(implicit messages: Messages)
 
 
 <div class="govuk-grid-row">
