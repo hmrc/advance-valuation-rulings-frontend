@@ -28,7 +28,6 @@ heading: Heading,
 headingH3: headingH3,
 paragraph: Paragraph,
 govukTable: GovukTable,
-attachmentsTable: ApplicationAttachmentsTable
 )
 
 @(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String, attachments: Seq[Attachment])(implicit messages: Messages)
@@ -43,9 +42,6 @@ attachmentsTable: ApplicationAttachmentsTable
         @govukSummaryList(appModel.method)
 
         @govukSummaryList(appModel.details)
-
-        @attachmentsTable(attachments)
-
     </div>
 </div>
 
