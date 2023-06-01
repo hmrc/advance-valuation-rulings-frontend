@@ -145,7 +145,6 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
-unauthorised.guidance =
 
 valuationMethod.title = Select the most appropriate method to value your goods
 valuationMethod.heading = Select the most appropriate method to value your goods
