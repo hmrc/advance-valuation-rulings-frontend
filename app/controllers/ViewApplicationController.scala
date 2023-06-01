@@ -51,8 +51,6 @@ class ViewApplicationController @Inject() (
             val viewModel                    = ApplicationViewModel(application)
             val lastUpdated                  = formatter.format(application.lastUpdated)
             val attachments: Seq[Attachment] = application.attachments
-            val priv: Privacy                = application.attachments.last.privacy
-            println(priv)
             Ok(view(viewModel, applicationId, lastUpdated, attachments))
         }
     }
