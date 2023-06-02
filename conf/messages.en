@@ -374,7 +374,7 @@ uploadAnotherSupportingDocument.error.required = Select yes if you want to uploa
 uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} files
 uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
-uploadAnotherSupportingDocument.keepConfidential = Keep confidential
+uploadAnotherSupportingDocument.keepConfidential = Confidential
 
 uploadSupportingDocuments.title = Upload supporting documents
 uploadSupportingDocuments.heading = Upload supporting documents
