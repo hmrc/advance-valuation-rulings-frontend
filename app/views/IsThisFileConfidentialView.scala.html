@@ -26,7 +26,7 @@
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
-    saveButtons: SaveButtons
+    govukButton: GovukButton
 )
 
 @(form: Form[_], index: Index, mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -53,7 +53,9 @@
             )
         )
 
-        @saveButtons()
+        @govukButton(
+            ButtonViewModel(messages("site.saveAndContinue"))
+        )
     }
     @cancelApplicationLink(draftId)
 }
