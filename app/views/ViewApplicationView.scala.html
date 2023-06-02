@@ -19,7 +19,6 @@
 @import viewmodels.checkAnswers.summary._
 @import viewmodels.ApplicationViewModel
 @import templates.FullLayoutMainContent
-@import models.requests.Attachment
 @import models.requests.Privacy._
 
 
@@ -38,7 +37,7 @@
         printApplicationLink: PrintApplicationLink
 )
 
-@(appModel: ApplicationViewModel, applicationId: String, lastUpdated: String, attachments: Seq[Attachment])(implicit request: Request[_], messages:
+@(appModel: ApplicationViewModel, applicationId: String, lastUpdated: String)(implicit request: Request[_], messages:
 Messages)
 
 @layout(

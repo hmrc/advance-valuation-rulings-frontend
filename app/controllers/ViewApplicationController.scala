@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
-import models.requests.{Attachment, Privacy}
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
 
@@ -48,10 +47,9 @@ class ViewApplicationController @Inject() (
       implicit request =>
         backendConnector.getApplication(applicationId).map {
           application =>
-            val viewModel                    = ApplicationViewModel(application)
-            val lastUpdated                  = formatter.format(application.lastUpdated)
-            val attachments: Seq[Attachment] = application.attachments
-            Ok(view(viewModel, applicationId, lastUpdated, attachments))
+            val viewModel   = ApplicationViewModel(application)
+            val lastUpdated = formatter.format(application.lastUpdated)
+            Ok(view(viewModel, applicationId, lastUpdated))
         }
     }
 }
