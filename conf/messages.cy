@@ -776,6 +776,7 @@ viewRuling.subHeading.2 = Your ruling certificate
 
 cancelAreYouSure.title = Are you sure you want to cancel your application?
 cancelAreYouSure.heading = Are you sure you want to cancel your application?
+cancelAreYouSure.error.required = Select yes if you want to cancel your application
 cancelAreYouSure.return = Return to application
 cancelAreYouSure.button = Confirm
 cancelAreYouSure.inset.text = If you cancel now any data will be lost and you will need to make a new application.
