@@ -58,9 +58,9 @@
             countdown           = Some(appConfig.countdown),
             keepAliveUrl        = Some(routes.KeepAliveController.keepAlive(id).url),
             keepAliveButtonText = Some(messages("timeout.keepAlive")),
-            signOutUrl          = controllers.auth.routes.AuthController.signOut.url,
+            signOutUrl          = controllers.auth.routes.AuthController.signOut().url,
             signOutButtonText   = Some(messages("timeout.signOut")),
-            timeoutUrl          = Some(controllers.auth.routes.AuthController.signOutNoSurvey.url),
+            timeoutUrl          = Some(controllers.auth.routes.AuthController.signOutNoSurvey().url),
             title               = Some(messages("timeout.title")),
             message             = Some(messages("timeout.message"))
         )
@@ -78,8 +78,8 @@
  @hmrcLayout(
     pageTitle = Some(pageTitle),
     isWelshTranslationAvailable = true, /* false if your service has not been translated */
-    serviceUrl = Some(routes.AccountHomeController.onPageLoad.url),
-    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
+    serviceUrl = Some(routes.AccountHomeController.onPageLoad().url),
+    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
     phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
     nonce = CSPNonce.get,
     additionalScriptsBlock = Some(additionalScripts),

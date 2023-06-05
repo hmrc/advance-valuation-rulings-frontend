@@ -33,7 +33,7 @@
 
 @layout(pageTitle = title(form, messages("doYouWantToUploadDocuments.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.DoYouWantToUploadDocumentsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.DoYouWantToUploadDocumentsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }

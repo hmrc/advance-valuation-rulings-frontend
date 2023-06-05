@@ -33,7 +33,7 @@
 
 @layout(pageTitle = title(form, messages("areThereRestrictionsOnTheGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.AreThereRestrictionsOnTheGoodsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.AreThereRestrictionsOnTheGoodsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

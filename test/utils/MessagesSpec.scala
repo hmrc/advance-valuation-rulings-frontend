@@ -24,7 +24,7 @@ import base.SpecBase
 
 class MessagesSpec extends SpecBase {
 
-  def inject[T](implicit evidence: ClassTag[T]): T = injector.instanceOf[T]
+  def inject[T](implicit evidence: ClassTag[T]): T = injector().instanceOf[T]
 
   implicit lazy val realMessagesApi: MessagesApi = inject[MessagesApi]
 

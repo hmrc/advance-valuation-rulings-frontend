@@ -30,7 +30,7 @@
     <p class="govuk-body">
         @govukButton(
             ButtonViewModel(messages("site.startAgain"))
-                .asLink(routes.AccountHomeController.onPageLoad.url)
+                .asLink(routes.AccountHomeController.onPageLoad().url)
         )
     </p>
 

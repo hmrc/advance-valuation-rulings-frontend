@@ -32,7 +32,7 @@
 @paraContent = {@para(Html(messages("cancelAreYouSure.inset.text")))}
 @layout(pageTitle = title(form, messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
 
-    @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
     
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

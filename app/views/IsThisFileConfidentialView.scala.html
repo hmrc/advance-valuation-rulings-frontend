@@ -44,7 +44,7 @@
     @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
 
-    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(index, mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(index, mode, draftId), Symbol("autoComplete") -> "off") {
         
         @govukRadios(
             RadiosViewModel.yesNo(

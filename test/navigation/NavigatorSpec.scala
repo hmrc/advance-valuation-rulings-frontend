@@ -74,7 +74,7 @@ class NavigatorSpec extends SpecBase {
         UnknownPage,
         NormalMode,
         EmptyUserAnswers
-      ) mustBe routes.AccountHomeController.onPageLoad
+      ) mustBe routes.AccountHomeController.onPageLoad()
     }
 
     "Account Home" - {

@@ -54,7 +54,7 @@ class CounterRepository @Inject() (
   def ensureDraftIdIsCorrect(): Future[Unit] =
     collection
       .find(byId(CounterId.DraftId))
-      .headOption
+      .headOption()
       .flatMap(_.map {
         draftId =>
           if (draftId.index < startingIndex) {

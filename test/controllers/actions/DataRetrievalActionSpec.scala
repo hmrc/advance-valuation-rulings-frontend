@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -75,6 +76,7 @@ class DataRetrievalActionSpec
 
     "when there is data in the cache" - {
 
+      @nowarn("cat=deprecation")
       val scenarios = Table(
         ("affinityGroup", "credentialRole", "expectedAuthUserType"),
         (Individual, None, IndividualTrader),
