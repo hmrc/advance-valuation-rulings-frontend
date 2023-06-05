@@ -47,7 +47,7 @@ lazy val root = (project in file("."))
       "-rootdir",
       baseDirectory.value.getCanonicalPath,
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s",
-      "-deprecation",                      // Emit warning when using deprecated APIs. cannot enable due to twirl...
+      "-deprecation", // Emit warning when using deprecated APIs.
       "-explaintypes", // Explain type errors in more detail.
       "-language:existentials", // Existential types (besides wildcard types) can be written and inferred
       "-language:higherKinds", // Allow higher-kinded types
@@ -57,8 +57,8 @@ lazy val root = (project in file("."))
       "-Wunused:patvars", // Warn if a variable bound in a pattern is unused.
       "-Wvalue-discard", // Warn when non-Unit expression results are unused.
       "-Ycache-plugin-class-loader:last-modified", // Enables caching of classloaders for compiler plugins
-      "-Ycache-macro-class-loader:last-modified" // and macro definitions. This can lead to performance improvements.
-      // "-Xfatal-warnings" // Fail the compilation if there are any warnings.
+      "-Ycache-macro-class-loader:last-modified", // and macro definitions. This can lead to performance improvements.
+      "-Xfatal-warnings" // Fail the compilation if there are any warnings.
     ),
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
