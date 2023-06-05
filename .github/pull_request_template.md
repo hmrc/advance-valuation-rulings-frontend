@@ -1,7 +1,7 @@
 ### Type of change
-- [] Breaking change
-- [] Non breaking change
-- [] Cosmetic change
+- [ ] Breaking change
+- [ ] Non-breaking change
+- [ ] Cosmetic change
 
 ### Description
 Jira link: [Jira title](https://jira.tools.tax.service.gov.uk/browse/ARSSTB-151)
