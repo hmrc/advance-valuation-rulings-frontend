@@ -17,35 +17,38 @@
 @import components._
 @import viewmodels.checkAnswers.summary._
 @import viewmodels.ApplicationViewModel
+@import models.requests.Privacy._
 
 @this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList,
-    applicationSummaryList: ApplicationSummaryList,
-    heading: Heading,
-    headingH3: headingH3,
-    paragraph: Paragraph
+layout: templates.Layout,
+govukSummaryList: GovukSummaryList,
+applicationSummaryList: ApplicationSummaryList,
+heading: Heading,
+headingH3: headingH3,
+paragraph: Paragraph
 )
 
 @(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String)(implicit messages: Messages)
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    @headingH3(messages("viewApplication.aboutTheGoods.heading"))
-  </div>
-  
-  <div class="govuk-grid-column-full">
-    @govukSummaryList(appModel.method)
 
-    @govukSummaryList(appModel.details)
-  </div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @headingH3(messages("viewApplication.aboutTheGoods.heading"))
+    </div>
+
+    <div class="govuk-grid-column-full">
+        @govukSummaryList(appModel.method)
+
+        @govukSummaryList(appModel.details)
+    </div>
 </div>
 
 
 <div class="govuk-grid-row main-content">
-  <div class="govuk-grid-column-full">
-    <div class="footer-info">
-      <span class="footer-page-no">@messages("site.page", 2, 2)</span>
-      <span class="footer-page-date">HMRC @lastUpdated</span>
+    <div class="govuk-grid-column-full">
+        <div class="footer-info">
+            <span class="footer-page-no">@messages("site.page", 2, 2)</span>
+            <span class="footer-page-date">HMRC @lastUpdated</span>
+        </div>
     </div>
-  </div>
 </div>

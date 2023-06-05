@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package forms
 
-@(summaryList: SummaryList)
+import javax.inject.Inject
 
-@for(row <- summaryList.rows) {
-   <dl class="govuk-summary-list govuk-summary-list--no-border">
-     <dt class="govuk-!-font-weight-bold">
-       @row.key.content.asHtml
-     </dt>
-     <dd class="stack">
-       @row.value.content.asHtml
-     </dd>
-   </dl>
-  </dl>
- }
+import play.api.data.Form
 
+import forms.mappings.Mappings
+
+class CancelApplicationFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("cancelAreYouSure.error.required")
+    )
+}
