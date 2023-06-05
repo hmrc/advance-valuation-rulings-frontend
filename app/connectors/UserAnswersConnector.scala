@@ -18,12 +18,12 @@ package connectors
 
 import javax.inject.Inject
 
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Configuration
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
-import uk.gov.hmrc.http.HttpReads.Implicits.{readFromJson, readOptionOfNotFound, readRaw}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.client.HttpClientV2
 
@@ -31,6 +31,7 @@ import config.FrontendAppConfig
 import models.{Done, DraftId, UserAnswers}
 import models.requests.DraftSummaryResponse
 
+@nowarn("cat=deprecation")
 class UserAnswersConnector @Inject() (
   config: FrontendAppConfig,
   configuration: Configuration,

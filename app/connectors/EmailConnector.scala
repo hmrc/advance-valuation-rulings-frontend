@@ -18,16 +18,17 @@ package connectors
 
 import javax.inject.Inject
 
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
-import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import config.FrontendAppConfig
 import models.requests.EmailRequest
 
+@nowarn("cat=deprecation")
 class EmailConnector @Inject() (
   httpClient: HttpClientV2,
   appConfig: FrontendAppConfig
