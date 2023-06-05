@@ -171,7 +171,6 @@ class CheckYourAnswersForAgentsControllerSpec
           )
           .build()
 
-        implicit val msgs: Messages = messages(application)
         when(
           mockBackendConnector.getTraderDetails(any(), any())(any(), any())
         ) thenReturn Future

@@ -28,7 +28,6 @@ import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import base.SpecBase
-import controllers.ViewApplicationControllerSpec.hc
 import models.{Done, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentCaptor

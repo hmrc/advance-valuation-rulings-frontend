@@ -17,11 +17,9 @@
 package forms
 
 import play.api.data.FormError
-import uk.gov.hmrc.play.json.Mappings
 
 import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
-import pages.CommodityCodePage
 
 class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase {
 

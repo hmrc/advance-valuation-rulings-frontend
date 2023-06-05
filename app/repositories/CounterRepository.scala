@@ -25,7 +25,7 @@ import scala.jdk.CollectionConverters._
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
-import models.{CounterId, CounterWrapper, Done}
+import models.{CounterId, CounterWrapper}
 import org.mongodb.scala.MongoBulkWriteException
 import org.mongodb.scala.model._
 
@@ -51,7 +51,7 @@ class CounterRepository @Inject() (
     CounterWrapper(CounterId.DraftId, startingIndex)
   )
 
-  def ensureDraftIdIsCorrect(): Future[Done] =
+  def ensureDraftIdIsCorrect(): Future[Unit] =
     collection
       .find(byId(CounterId.DraftId))
       .headOption
@@ -68,21 +68,21 @@ class CounterRepository @Inject() (
                   .returnDocument(ReturnDocument.AFTER)
               )
               .toFuture()
-              .map(_ => Done)
+              .map(_ => ())
           } else {
-            Future.successful(Done)
+            Future.successful(())
           }
-      }.getOrElse(Future.successful(Done)))
+      }.getOrElse(Future.successful(())))
 
   @nowarn
   private val seedDatabase =
     seed // Eagerly call seed to ensure records are created on startup if needed
 
-  def seed: Future[Done] =
+  def seed: Future[Unit] =
     collection
       .insertMany(seeds)
       .toFuture()
-      .map(_ => Done)
+      .map(_ => ())
       .recoverWith {
         case e: MongoBulkWriteException
             if e.getWriteErrors.asScala.forall(x => x.getCode == duplicateErrorCode) =>

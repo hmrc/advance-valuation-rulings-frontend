@@ -16,14 +16,9 @@
 
 package viewmodels.application
 
-import cats.implicits.catsSyntaxOptionId
-
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{Content, TableRow}
-import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryListRow, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.table.Table
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import models.requests.{Attachment, GoodsDetails}
 import models.requests.Privacy.Confidential
