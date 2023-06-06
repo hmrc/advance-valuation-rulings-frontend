@@ -236,7 +236,7 @@ GET        /application/:id                            controllers.ViewApplicati
 GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)
 
 GET        /:draftId/cancel                                          controllers.CancelApplicationController.onPageLoad(draftId: DraftId)
-POST       /:draftId/confirm-cancel                                  controllers.CancelApplicationController.onSubmit(draftId: DraftId)
+GET        /:draftId/confirm-cancel                                  controllers.CancelApplicationController.confirmCancel(draftId: DraftId)
 
 GET        /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)

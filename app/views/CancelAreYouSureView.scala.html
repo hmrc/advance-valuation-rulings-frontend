@@ -17,37 +17,25 @@
 @import components._
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    para: InsetPara,
-    heading: Heading,
-    link: Link,
-    govukBackLink: GovukBackLink
+        formHelper: FormWithCSRF,
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        para: InsetPara,
+        heading: Heading,
+        link: Link,
+        govukBackLink: GovukBackLink
 )
 
-@(form: Form[_], draftId: DraftId)(implicit request: Request[_], messages: Messages)
-@paraContent = {@para(Html(messages("cancelAreYouSure.inset.text")))}
-@layout(pageTitle = title(form, messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-    @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
-    
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
 
- @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(messages("cancelAreYouSure.heading")).asPageHeading()
-            )
-            .withHint(Hint(content = HtmlContent(paraContent)))
-        )
-                
+    @heading(messages("cancelAreYouSure.heading"))
+    @para(Html(messages("cancelAreYouSure.inset.text")))
+
+    @formHelper(action = routes.CancelApplicationController.confirmCancel(draftId)) {
         @govukButton(
-            ButtonViewModel(messages("cancelAreYouSure.button"))
+             ButtonViewModel(messages("cancelAreYouSure.button"))
         )
     }
 
