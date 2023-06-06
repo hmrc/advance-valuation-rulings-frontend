@@ -15,12 +15,10 @@
  */
 
 package models.requests
+
 import cats.data._
-import cats.data.Validated._
 
 import play.api.libs.json._
-import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 
 import models._
 import models.AuthUserType.IndividualTrader

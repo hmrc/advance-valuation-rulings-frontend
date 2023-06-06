@@ -20,14 +20,10 @@ import play.api.i18n.Messages
 import play.api.libs.json.{JsError, Json, JsString}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 
 import base.SpecBase
 import generators.ModelGenerators
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest.OptionValues
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {

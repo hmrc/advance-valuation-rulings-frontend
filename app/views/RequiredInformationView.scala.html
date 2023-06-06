@@ -34,7 +34,7 @@
 
 @layout(pageTitle = title(form, messages("requiredInformation.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.RequiredInformationController.onSubmit(draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.RequiredInformationController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
         
         @if(form.errors.nonEmpty) {

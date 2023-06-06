@@ -18,8 +18,8 @@ POST       /:draftId/check-your-answers                          controllers.Che
 GET        /:draftId/check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onPageLoad(draftId: DraftId)
 POST       /:draftId/check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onSubmit(draftId: DraftId)
 
-GET        /account/sign-out-survey                     controllers.auth.AuthController.signOut
-GET        /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey
+GET        /account/sign-out-survey                     controllers.auth.AuthController.signOut()
+GET        /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
 GET        /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad

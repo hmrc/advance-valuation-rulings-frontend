@@ -56,7 +56,7 @@
 
 @layout(pageTitle = title(form, titleMessage), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

@@ -32,7 +32,7 @@
 
 @layout(pageTitle = title(form, messages("adaptMethod.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.AdaptMethodController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.AdaptMethodController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

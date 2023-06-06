@@ -18,17 +18,20 @@ package connectors
 
 import javax.inject.Inject
 
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Configuration
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import config.FrontendAppConfig
 import models.{Done, DraftId, UserAnswers}
 import models.requests.DraftSummaryResponse
 
+@nowarn("cat=deprecation")
 class UserAnswersConnector @Inject() (
   config: FrontendAppConfig,
   configuration: Configuration,
@@ -44,7 +47,7 @@ class UserAnswersConnector @Inject() (
     httpClient
       .post(url"$backendUrl/user-answers")
       .withBody(Json.toJson(answers))
-      .execute
+      .execute[HttpResponse]
       .map(_ => Done)
 
   def setInternal(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
@@ -52,7 +55,7 @@ class UserAnswersConnector @Inject() (
       .post(url"$backendUrl/internal/user-answers")
       .setHeader("Authorization" -> internalAuthToken)
       .withBody(Json.toJson(answers))
-      .execute
+      .execute[HttpResponse]
       .map(_ => Done)
 
   def get(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
@@ -69,13 +72,13 @@ class UserAnswersConnector @Inject() (
   def clear(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .delete(url"$backendUrl/user-answers/${draftId.toString}")
-      .execute
+      .execute[HttpResponse]
       .map(_ => Done)
 
   def keepAlive(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(url"$backendUrl/user-answers/${draftId.toString}/keep-alive")
-      .execute
+      .execute[HttpResponse]
       .map(_ => Done)
 
   def summaries()(implicit headerCarrier: HeaderCarrier): Future[DraftSummaryResponse] =

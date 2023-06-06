@@ -74,7 +74,7 @@ class FileServiceSpec
       bind[PlayObjectStoreClient].toInstance(mockObjectStoreClient)
     )
 
-  private lazy val service = app.injector.instanceOf[FileService]
+  private lazy val service = app.injector().instanceOf[FileService]
 
   private val hc: HeaderCarrier = HeaderCarrier()
 

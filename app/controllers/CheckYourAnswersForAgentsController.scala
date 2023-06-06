@@ -75,7 +75,7 @@ class CheckYourAnswersForAgentsController @Inject() (
         getTraderDetails {
           traderDetails =>
             val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
-            AccountHomePage.get match {
+            AccountHomePage.get() match {
               case Some(OrganisationAdmin)     =>
                 Future.successful(Ok(view(applicationSummary, EmployeeOfOrg, draftId)))
               case Some(OrganisationAssistant) =>

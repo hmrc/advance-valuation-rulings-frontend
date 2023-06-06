@@ -31,7 +31,7 @@
 
 @layout(pageTitle = title(form, messages("agentCompanyDetails.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.AgentCompanyDetailsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.AgentCompanyDetailsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
