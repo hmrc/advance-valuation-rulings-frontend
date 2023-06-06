@@ -23,19 +23,16 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.CancelApplicationFormProvider
 import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import services.UserAnswersService
 import views.html.CancelAreYouSureView
 
 class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
-
-  val formProvider = new CancelApplicationFormProvider()
-  val form         = formProvider()
 
   "CancelApplication Controller" - {
 
@@ -52,16 +49,15 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[CancelAreYouSureView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, draftId)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
       }
     }
 
-    "must clear answers and redirect when the user selects 'Yes'" in {
+    "must clear answers and redirect" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
+
+      Mockito.reset(mockUserAnswersService)
 
       when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
 
@@ -71,33 +67,11 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, routes.CancelApplicationController.onSubmit(draftId).url)
-            .withFormUrlEncodedBody(("value", "true"))
+          FakeRequest(GET, routes.CancelApplicationController.confirmCancel(draftId).url)
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         verify(mockUserAnswersService, times(1)).clear(eqTo(draftId))(any())
-      }
-    }
-
-    "must not clear answers when the user selects 'No'" in {
-
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, routes.CancelApplicationController.onSubmit(draftId).url)
-            .withFormUrlEncodedBody(("value", "false"))
-        val result  = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        verify(mockUserAnswersService, times(0)).clear(eqTo(draftId))(any())
       }
     }
   }

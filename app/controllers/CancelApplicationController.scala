@@ -16,7 +16,7 @@
 
 package controllers
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -24,8 +24,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
-import controllers.routes.AccountHomeController
-import forms.CancelApplicationFormProvider
 import models.DraftId
 import services.UserAnswersService
 import views.html.CancelAreYouSureView
@@ -37,34 +35,20 @@ class CancelApplicationController @Inject() (
   requireData: DataRequiredAction,
   userAnswersService: UserAnswersService,
   val controllerComponents: MessagesControllerComponents,
-  formProvider: CancelApplicationFormProvider,
   view: CancelAreYouSureView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
+  // @nowarn("cat=unused")
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData)(
-      implicit request => Ok(view(form, draftId))
-    )
+    (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
 
-  def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+  def confirmCancel(draftId: DraftId): Action[AnyContent] =
+    identify.async {
       implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, draftId))),
-            {
-              case true  =>
-                userAnswersService
-                  .clear(draftId)
-                  .map(_ => Redirect(AccountHomeController.onPageLoad()))
-              case false =>
-                Future.successful(Redirect(AccountHomeController.onPageLoad()))
-            }
-          )
+        for {
+          _ <- userAnswersService.clear(draftId)
+        } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
     }
 }
