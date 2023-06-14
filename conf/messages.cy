@@ -155,7 +155,7 @@ valuationMethod.paragraph.2 = Yna, byddwn yn adolygu’ch dull arfaethedig ac yn
 valuationMethod.paragraph.3 = Efallai y byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom neu i argymell dull sy’n fwy priodol.
 valuationMethod.link.text = gyfrifo gwerth tollau eich mewnforion.
 valuationMethod.h2 = Pa ddull ydych am ei ddefnyddio i brisio’ch nwyddau?
-valuationMethod.hint = Dewiswch un opsiwn.
+valuationMethod.hint = Select one method.
 valuationMethod.method1 = Dull 1: Gwerth trafodiad
 valuationMethod.method1.hint = Mae hyn yn seiliedig ar y pris a dalwyd neu sy’n daladwy pan fydd y nwyddau’n cael eu gwerthu i’w hallforio i’r DU. Gellir ond defnyddio Dull 1 os oes gwerthiant dan sylw.
 valuationMethod.method2 = Dull 2: Gwerth trafodiad nwyddau unfath
@@ -537,7 +537,7 @@ uploadAnotherSupportingDocument.error.required = Dewiswch ‘Iawn’ os hoffech 
 uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} files
 uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
-uploadAnotherSupportingDocument.keepConfidential = Gyfrinachol
+uploadAnotherSupportingDocument.keepConfidential = Keep confidential
 
 isThisFileConfidential.title = Do you want this file to be marked as confidential?
 isThisFileConfidential.heading = Do you want this file to be marked as confidential?
