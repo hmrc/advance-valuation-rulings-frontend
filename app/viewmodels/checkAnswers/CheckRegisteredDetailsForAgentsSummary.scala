@@ -22,8 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
-import models.{CheckMode, Country, DraftId, EoriNumber, TraderDetailsWithCountryCode, UserAnswers}
-import pages.CheckRegisteredDetailsPage
+import models.{CheckMode, Country, DraftId, EoriNumber, TraderDetailsWithCountryCode}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

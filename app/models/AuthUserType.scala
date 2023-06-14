@@ -16,6 +16,8 @@
 
 package models
 
+import scala.annotation.nowarn
+
 import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, CredentialRole, User}
 import uk.gov.hmrc.auth.core.Admin
 
@@ -33,7 +35,8 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
   case object OrganisationAssistant extends AuthUserType("OrganisationAssistant") // org + assistant
 
   case object Agent extends AuthUserType("Agent")
-
+  
+  @nowarn("cat=deprecation")
   def apply(
     affinityGroup: AffinityGroup,
     credentialRole: Option[CredentialRole]

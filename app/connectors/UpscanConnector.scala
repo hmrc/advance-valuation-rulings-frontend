@@ -21,13 +21,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Configuration
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import config.Service
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
+
 @Singleton
 class UpscanConnector @Inject() (
   httpClient: HttpClientV2,

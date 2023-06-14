@@ -29,6 +29,25 @@ import org.scalatest.matchers.must.Matchers
 class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
   private implicit val m: Messages = stubMessages()
+  val goods                        =
+    GoodsDetails(
+      "name",
+      "description",
+      Some("commodity code"),
+      Some("legal proceedings"),
+      Some("confidential info")
+    )
+
+  private val attachments: Seq[Attachment]                     =
+    Seq(
+      Attachment(1L, "name 1", None, "url 1", Privacy.Public, "mime", 1L),
+      Attachment(2L, "name 2", None, "url 2", Privacy.Public, "mime", 2L)
+    )
+  private val attachmentsWithConfidentialElem: Seq[Attachment] =
+    Seq(
+      Attachment(1L, "name 1", None, "url 1", Privacy.Confidential, "mime", 1L),
+      Attachment(2L, "name 2", None, "url 2", Privacy.Public, "mime", 2L)
+    )
 
   ".rows" - {
 
@@ -51,19 +70,6 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
     "must contain rows for all fields when optional values are present" in {
 
-      val goods = GoodsDetails(
-        "name",
-        "description",
-        Some("commodity code"),
-        Some("legal proceedings"),
-        Some("confidential info")
-      )
-
-      val attachments = Seq(
-        Attachment(1L, "name 1", None, "url 1", Privacy.Public, "mime", 1L),
-        Attachment(2L, "name 2", None, "url 2", Privacy.Public, "mime", 2L)
-      )
-
       GoodsDetailsSummary.rows(goods, attachments) must contain theSameElementsInOrderAs Seq(
         SummaryListRow(
           Key(Text(m("descriptionOfGoods.checkYourAnswersLabel"))),
@@ -83,9 +89,31 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
         ),
         SummaryListRow(
           Key(Text(m("uploadSupportingDocuments.checkYourAnswersLabel"))),
-          Value(HtmlContent("name 1<br/>name 2"))
+          Value(
+            HtmlContent(
+              "name 1 <br/>name 2 "
+            )
+          )
         )
       )
+    }
+
+    "Attachments row" - {
+      "must suffix confidential files with 'keep confidential'" in {
+        GoodsDetailsSummary.rows(
+          goods,
+          attachmentsWithConfidentialElem
+        ) must contain atLeastOneElementOf Seq(
+          SummaryListRow(
+            Key(Text(m("uploadSupportingDocuments.checkYourAnswersLabel"))),
+            Value(
+              HtmlContent(
+                "name 1 <strong>- uploadAnotherSupportingDocument.keepConfidential</strong><br/>name 2 "
+              )
+            )
+          )
+        )
+      }
     }
   }
 }

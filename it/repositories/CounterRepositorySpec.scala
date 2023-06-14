@@ -4,7 +4,7 @@ import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import com.codahale.metrics.SharedMetricRegistries
 import models.{CounterId, CounterWrapper}
-import org.mongodb.scala.model.{Filters, FindOneAndUpdateOptions, ReturnDocument, Updates}
+import org.mongodb.scala.model.{Filters, FindOneAndUpdateOptions, Updates}
 import utils.BaseIntegrationSpec
 
 class CounterRepositorySpec

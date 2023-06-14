@@ -115,7 +115,7 @@
 ) {
 
 
-    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value")))

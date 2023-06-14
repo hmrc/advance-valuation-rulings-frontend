@@ -32,7 +32,7 @@
 
 @layout(pageTitle = title(form, messages("haveYouUsedMethodOneInPast.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.HaveYouUsedMethodOneInPastController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.HaveYouUsedMethodOneInPastController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))

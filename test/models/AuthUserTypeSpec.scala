@@ -16,6 +16,8 @@
 
 package models
 
+import scala.annotation.nowarn
+
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.{Admin, AffinityGroup, Assistant, User}
 
@@ -23,6 +25,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
 
+@nowarn("cat=deprecation")
 class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropertyChecks {
 
   "AuthUserType" - {

@@ -31,7 +31,7 @@
 
 @layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
         
 
         @if(form.errors.nonEmpty) {

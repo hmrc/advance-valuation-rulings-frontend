@@ -18,6 +18,7 @@ package controllers.auth
 
 import javax.inject.Inject
 
+import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 
 import play.api.i18n.I18nSupport
@@ -26,7 +27,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import config.FrontendAppConfig
 import controllers.actions.IdentifierAction
+import models.requests.IdentifierRequest
 
+@nowarn("cat=unused")
 class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   config: FrontendAppConfig,
@@ -35,12 +38,12 @@ class AuthController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] = identify {
+  def signOut(): Action[AnyContent] = identify(
     implicit request => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
-  }
+  )
 
   def signOutNoSurvey(): Action[AnyContent] = identify {
-    implicit request =>
+    implicit request: IdentifierRequest[AnyContent] =>
       Redirect(
         config.signOutUrl,
         Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url))
