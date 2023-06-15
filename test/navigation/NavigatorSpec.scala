@@ -758,7 +758,7 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "DeleteSupportingDocumentPage must navigate to" - {
+      "RemoveSupportingDocumentPage must navigate to" - {
 
         "UploadAnotherSupportingDocument page when there are more documents" in {
           val answers =
@@ -770,7 +770,7 @@ class NavigatorSpec extends SpecBase {
               .success
               .value
           navigator.nextPage(
-            DeleteSupportingDocumentPage(Index(0)),
+            RemoveSupportingDocumentPage(Index(0)),
             NormalMode,
             answers
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
@@ -778,7 +778,7 @@ class NavigatorSpec extends SpecBase {
 
         "DoYouWantToUploadSupportingDocuments page when there are no more documents" in {
           navigator.nextPage(
-            DeleteSupportingDocumentPage(Index(0)),
+            RemoveSupportingDocumentPage(Index(0)),
             NormalMode,
             userAnswersAsIndividualTrader
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)
