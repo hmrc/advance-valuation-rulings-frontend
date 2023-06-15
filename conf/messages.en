@@ -231,6 +231,17 @@ requiredInformation.error.selectAll = Select each item in the checklist to start
 requiredInformation.change.hidden = required information
 requiredInformation.caption = Starter checklist
 
+trader.agent.requiredInformation.caption = Starter checklist
+trader.agent.requiredInformation.title = Before you start your application
+trader.agent.requiredInformation.heading = Before you start your application
+trader.agent.requiredInformation.hint = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
+trader.agent.requiredInformation.precondition1 = I am aware that I will need to propose a method to value the goods
+trader.agent.requiredInformation.precondition2 = I will supply HMRC with my contact email and phone number as part of this application
+trader.agent.requiredInformation.precondition3 = I have an EORI number starting with GB
+trader.agent.requiredInformation.precondition4 = The name and address registered to my EORI number is up to date
+trader.agent.requiredInformation.precondition5 = I am aware that it can take up to 120 days after I submit my application to get a decision
+trader.agent.requiredInformation.precondition6 = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
+
 confidentialInformation.title = Describe any confidential information you would like to add about the goods
 confidentialInformation.heading = Describe any confidential information you would like to add about the goods
 confidentialInformation.label = Describe any confidential information you would like to add about the goods
