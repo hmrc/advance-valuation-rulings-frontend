@@ -55,14 +55,6 @@ class CheckYourAnswersForAgentsControllerSpec
           .build()
 
         implicit val msgs: Messages = messages(application)
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
 
         running(application) {
           implicit val request =
@@ -338,6 +330,15 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
     ),
     contactInformation = Some(contactInformation)
   )
+
+  when(
+    mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+  ) thenReturn Future
+    .successful(
+      Right(
+        traderDetailsWithCountryCode
+      )
+    )
 
   val fullUserAnswers = (for {
     ua <- orgAssistantUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")

@@ -73,7 +73,7 @@ class CheckRegisteredDetailsController @Inject() (
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         request.userAnswers.get(CheckRegisteredDetailsPage) match {
-          case Some(value) =>
+          case Some(value: Boolean) =>
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
                 Ok(

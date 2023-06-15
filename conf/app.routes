@@ -97,9 +97,6 @@ POST       /:draftId/supporting-documents/:index/mark-confidential              
 GET        /:draftId/supporting-documents/:index/change-mark-confidential          controllers.IsThisFileConfidentialController.onPageLoad(index: Index, mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/supporting-documents/:index/change-mark-confidential          controllers.IsThisFileConfidentialController.onSubmit(index: Index, mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /:draftId/supporting-documents/:index/remove                            controllers.DeleteSupportingDocumentController.onDelete(index: Index, mode: Mode = NormalMode, draftId: DraftId)
-GET        /:draftId/supporting-documents/:index/change-remove                     controllers.DeleteSupportingDocumentController.onDelete(index: Index, mode: Mode = CheckMode, draftId: DraftId)
-
 GET        /:draftId/supporting-documents/uploaded                                 controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/supporting-documents/uploaded                                 controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/supporting-documents/change-uploaded                          controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
@@ -251,4 +248,7 @@ POST       /:draftId/change-agent-company-details                  controllers.A
 GET        /:draftId/delete-application                        controllers.DeleteDraftController.onPageLoad(draftId: DraftId)
 POST       /:draftId/delete-application                        controllers.DeleteDraftController.onSubmit(draftId: DraftId)
 
-
+GET        /:draftId/supporting-documents/:index/remove                        controllers.RemoveSupportingDocumentController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, index: Index)
+POST       /:draftId/supporting-documents/:index/remove                        controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, index: Index)
+GET        /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, index: Index)
+POST       /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, index: Index)
