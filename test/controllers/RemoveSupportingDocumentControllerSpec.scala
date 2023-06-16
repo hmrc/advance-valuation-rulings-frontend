@@ -40,10 +40,11 @@ import views.html.RemoveSupportingDocumentView
 
 class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
+  val userAnswers = userAnswersAsIndividualTrader
+
   "must return OK and the correct view for a GET" in new SpecSetup {
     val answers = (for {
-      ua <-
-        userAnswersAsIndividualTrader.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
       ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
@@ -63,7 +64,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
       val result = route(application, request).value
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode, draftId, Index(0))(
+      contentAsString(result) mustEqual view(form, NormalMode, draftId, Index(0), fileName)(
         request,
         messages(application)
       ).toString
@@ -78,8 +79,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
       .thenReturn(Future.successful(()))
 
     val answers = (for {
-      ua <-
-        userAnswersAsIndividualTrader.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
       ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
@@ -108,8 +108,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
   "does not call the object store if the user answers 'No'" in new SpecSetup {
     val answers = (for {
-      ua <-
-        userAnswersAsIndividualTrader.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
       ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
@@ -134,7 +133,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
   "does not call object store if the file does not exist" in new SpecSetup {
 
-    val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
       .overrides(
         bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[PlayObjectStoreClient].toInstance(osClient),
@@ -154,7 +153,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
   "does not call object store if the file has no download url" in new SpecSetup {
 
-    val answers = userAnswersAsIndividualTrader
+    val answers = userAnswers
       .set(UploadSupportingDocumentPage(Index(0)), UploadedFile.Initiated("reference"))
       .success
       .value
@@ -191,13 +190,13 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
 trait SpecSetup extends MockitoSugar {
   import java.time.Instant
-
+  val fileName       = "fileName"
   val onwardRoute    = Call("GET", "/foo")
   val successfulFile = UploadedFile.Success(
     reference = "reference",
     downloadUrl = "downloadUrl",
     uploadDetails = UploadedFile.UploadDetails(
-      fileName = "fileName",
+      fileName = fileName,
       fileMimeType = "fileMimeType",
       uploadTimestamp = Instant.now(),
       checksum = "checksum",

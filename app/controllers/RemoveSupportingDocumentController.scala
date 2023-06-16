@@ -55,40 +55,46 @@ class RemoveSupportingDocumentController @Inject() (
 
   def onPageLoad(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(form, mode, draftId, index))
+      implicit request =>
+        UploadSupportingDocumentPage(index).get().flatMap(_.fileName) match {
+          case Some(fileName) =>
+            Ok(view(form, mode, draftId, index, fileName))
+          case None           =>
+            nextPage(index, mode)
+        }
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, mode, draftId, index))),
-            {
-              case true  => attemptToDelete(mode, draftId, index)
-              case false => Future.successful(nextPage(index, mode))
-            }
-          )
-    }
+        val urlAndFileName = for {
+          file     <- UploadSupportingDocumentPage(index).get()
+          url      <- file.fileUrl
+          fileName <- file.fileName
+        } yield (url, fileName)
 
-  private def attemptToDelete(mode: Mode, draftId: DraftId, index: Index)(implicit
-    request: DataRequest[AnyContent]
-  ) = {
-    val fileUrl = UploadSupportingDocumentPage(index).get().flatMap(_.fileUrl)
-
-    fileUrl match {
-      case None      =>
-        Future.successful(nextPage(index, mode))
-      case Some(url) =>
-        for {
-          updatedAnswers <- DraftAttachmentQuery(index).remove()
-          _              <- userAnswersService.set(updatedAnswers)
-          _              <- osClient.deleteObject(Path.File(url))
-        } yield nextPage(index, mode)
+        urlAndFileName match {
+          case None                  =>
+            Future.successful(nextPage(index, mode))
+          case Some((url, fileName)) =>
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors =>
+                  Future
+                    .successful(BadRequest(view(formWithErrors, mode, draftId, index, fileName))),
+                {
+                  case false => Future.successful(nextPage(index, mode))
+                  case true  =>
+                    for {
+                      updatedAnswers <- DraftAttachmentQuery(index).remove()
+                      _              <- userAnswersService.set(updatedAnswers)
+                      _              <- osClient.deleteObject(Path.File(url))
+                    } yield nextPage(index, mode)
+                }
+              )
+        }
     }
-  }
 
   private def nextPage(index: Index, mode: Mode)(implicit request: DataRequest[AnyContent]) =
     Redirect(

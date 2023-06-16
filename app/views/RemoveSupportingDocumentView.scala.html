@@ -22,20 +22,22 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId, index: Index)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId, index: Index, fileName: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("removeSupportingDocument.title"))) {
+@layout(pageTitle = title(form, messages("removeSupportingDocument.title", fileName))) {
 
-    @formHelper(action = routes.RemoveSupportingDocumentController.onSubmit(mode, draftId, index), 'autoComplete -> "off") {
+    @formHelper(action = routes.RemoveSupportingDocumentController.onSubmit(mode, draftId, index)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl">@messages("deleteDraft.heading")</h1>
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("removeSupportingDocument.heading")).asPageHeading()
+                legend = LegendViewModel(messages("removeSupportingDocument.heading", fileName)).visuallyHidden()
             )
         )
 
