@@ -35,7 +35,7 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
   case object OrganisationAssistant extends AuthUserType("OrganisationAssistant") // org + assistant
 
   case object Agent extends AuthUserType("Agent")
-  
+
   @nowarn("cat=deprecation")
   def apply(
     affinityGroup: AffinityGroup,
