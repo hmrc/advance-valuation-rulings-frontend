@@ -31,8 +31,6 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
 
   case object IndividualTrader extends AuthUserType("IndividualTrader")
 
-  case object Vip extends AuthUserType("Vip")
-
   case object OrganisationAdmin extends AuthUserType("OrganisationAdmin") // org + user/admin
   case object OrganisationAssistant extends AuthUserType("OrganisationAssistant") // org + assistant
 

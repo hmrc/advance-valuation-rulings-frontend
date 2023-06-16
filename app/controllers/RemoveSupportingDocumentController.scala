@@ -22,13 +22,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.objectstore.client.Path
+import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.RemoveSupportingDocumentFormProvider
 import models.{DraftId, Index, Mode}
+import models.requests.DataRequest
 import navigation.Navigator
-import pages.RemoveSupportingDocumentPage
+import pages.{RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
+import queries.DraftAttachmentQuery
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
 
@@ -41,7 +45,8 @@ class RemoveSupportingDocumentController @Inject() (
   requireData: DataRequiredAction,
   formProvider: RemoveSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: RemoveSupportingDocumentView
+  view: RemoveSupportingDocumentView,
+  osClient: PlayObjectStoreClient
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -50,13 +55,7 @@ class RemoveSupportingDocumentController @Inject() (
 
   def onPageLoad(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val preparedForm = request.userAnswers.get(RemoveSupportingDocumentPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
-
-        Ok(view(preparedForm, mode, draftId, index))
+      implicit request => Ok(view(form, mode, draftId, index))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
@@ -67,14 +66,32 @@ class RemoveSupportingDocumentController @Inject() (
           .fold(
             formWithErrors =>
               Future.successful(BadRequest(view(formWithErrors, mode, draftId, index))),
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(RemoveSupportingDocumentPage, value))
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(RemoveSupportingDocumentPage, mode, updatedAnswers)
-              )
+            {
+              case true  => attemptToDelete(mode, draftId, index)
+              case false => Future.successful(nextPage(index, mode))
+            }
           )
     }
+
+  private def attemptToDelete(mode: Mode, draftId: DraftId, index: Index)(implicit
+    request: DataRequest[AnyContent]
+  ) = {
+    val fileUrl = UploadSupportingDocumentPage(index).get().flatMap(_.fileUrl)
+
+    fileUrl match {
+      case None      =>
+        Future.successful(nextPage(index, mode))
+      case Some(url) =>
+        for {
+          updatedAnswers <- DraftAttachmentQuery(index).remove()
+          _              <- userAnswersService.set(updatedAnswers)
+          _              <- osClient.deleteObject(Path.File(url))
+        } yield nextPage(index, mode)
+    }
+  }
+
+  private def nextPage(index: Index, mode: Mode)(implicit request: DataRequest[AnyContent]) =
+    Redirect(
+      navigator.nextPage(RemoveSupportingDocumentPage(index), mode, request.userAnswers)
+    )
 }
