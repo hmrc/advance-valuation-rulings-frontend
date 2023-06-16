@@ -774,8 +774,8 @@ viewRuling.heading = Your ruling documents for {0}
 viewRuling.subHeading.1 = Your ruling cover letter
 viewRuling.subHeading.2 = Your ruling certificate
 
-cancelAreYouSure.title = A ydych yn siŵr eich bod am ganslo’ch cais??
-cancelAreYouSure.heading = A ydych yn siŵr eich bod am ganslo’ch cais??
+cancelAreYouSure.title = A ydych yn siŵr eich bod am ganslo’ch cais?
+cancelAreYouSure.heading = A ydych yn siŵr eich bod am ganslo’ch cais?
 cancelAreYouSure.error.required = Select yes if you want to cancel your application
 cancelAreYouSure.return = Return to application
 cancelAreYouSure.button = Confirm
