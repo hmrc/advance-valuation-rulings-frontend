@@ -32,7 +32,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <h1 class="govuk-heading-xl">@messages("deleteDraft.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("removeSupportingDocument.heading", fileName)</h1>
 
         @govukRadios(
             RadiosViewModel.yesNo(
