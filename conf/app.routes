@@ -60,11 +60,6 @@ POST       /:draftId/provide-confidential-information                           
 GET        /:draftId/change-provide-confidential-information                        controllers.ConfidentialInformationController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-provide-confidential-information                        controllers.ConfidentialInformationController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /:draftId/add-confidential-information                                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/add-confidential-information                                  controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
-GET        /:draftId/change-add-confidential-information                            controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-add-confidential-information                            controllers.HasConfidentialInformationController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
-
 GET        /:draftId/importing-goods-great-britain                                 controllers.ImportingGoodsController.onPageLoad(draftId: DraftId)
 
 GET        /:draftId/check-EORI-details                                            controllers.CheckRegisteredDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
