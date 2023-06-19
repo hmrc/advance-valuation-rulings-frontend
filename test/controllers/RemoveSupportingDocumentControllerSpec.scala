@@ -34,11 +34,10 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
-import pages.RemoveSupportingDocumentPage
+import pages.{IsThisFileConfidentialPage, RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
+import queries.AllDocuments
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
-import queries.AllDocuments
 
 class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
@@ -115,7 +114,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     updatedAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
     updatedAnswers.get(AllDocuments) mustBe empty
   }
-  
+
   "does not call the object store if the user answers 'No'" in new SpecSetup {
     val answers = (for {
       ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
