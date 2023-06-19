@@ -35,8 +35,10 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import pages.RemoveSupportingDocumentPage
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
+import queries.AllDocuments
 
 class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
@@ -52,7 +54,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
       .overrides(
         bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[PlayObjectStoreClient].toInstance(osClient),
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
+        bind[Navigator].toInstance(mockNavigator)
       )
       .build()
 
@@ -77,6 +79,8 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
       .thenReturn(Future.successful(Done))
     when(osClient.deleteObject(any(), any())(any()))
       .thenReturn(Future.successful(()))
+    when(mockNavigator.nextPage(any(), any(), any()))
+      .thenReturn(onwardRoute)
 
     val answers = (for {
       ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
@@ -87,7 +91,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
       .overrides(
         bind[UserAnswersService].toInstance(mockUserAnswersService),
         bind[PlayObjectStoreClient].toInstance(osClient),
-        bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
+        bind[Navigator].toInstance(mockNavigator)
       )
       .build()
 
@@ -100,12 +104,18 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
     verify(mockUserAnswersService, times(1)).set(userAnswersCaptor.capture())(any())
     verify(osClient, times(1)).deleteObject(eqTo(Path.File("downloadUrl")), any())(any())
+    verify(mockNavigator, times(1)).nextPage(
+      eqTo(RemoveSupportingDocumentPage(Index(0))),
+      eqTo(NormalMode),
+      eqTo(userAnswers)
+    )
 
     val updatedAnswers = userAnswersCaptor.getValue
     updatedAnswers.get(UploadSupportingDocumentPage(Index(0))) mustBe empty
     updatedAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
+    updatedAnswers.get(AllDocuments) mustBe empty
   }
-
+  
   "does not call the object store if the user answers 'No'" in new SpecSetup {
     val answers = (for {
       ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
@@ -217,6 +227,7 @@ trait SpecSetup extends MockitoSugar {
   val userAnswersCaptor: ArgumentCaptor[UserAnswers] =
     ArgumentCaptor.forClass(classOf[UserAnswers])
 
+  val mockNavigator          = mock[Navigator]
   val mockUserAnswersService = mock[UserAnswersService]
   val osClient               = mock[PlayObjectStoreClient]
 }
