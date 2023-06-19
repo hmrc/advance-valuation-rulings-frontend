@@ -29,7 +29,7 @@ import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import controllers.routes.WhatIsYourRoleAsImporterController
 import models._
-import models.AuthUserType._
+import models.AuthUserType.{OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.requests._
 import pages.{AccountHomePage, Page, WhatIsYourRoleAsImporterPage}

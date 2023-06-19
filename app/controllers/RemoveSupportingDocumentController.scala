@@ -28,11 +28,10 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.RemoveSupportingDocumentFormProvider
-import models.{DraftId, Index, Mode}
-import models.requests.DataRequest
+import models.{DraftId, Index, Mode, UserAnswers}
 import navigation.Navigator
 import pages.{RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
-import queries.DraftAttachmentQuery
+import queries.{AllDocuments, DraftAttachmentQuery}
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
 
@@ -60,7 +59,7 @@ class RemoveSupportingDocumentController @Inject() (
           case Some(fileName) =>
             Ok(view(form, mode, draftId, index, fileName))
           case None           =>
-            nextPage(index, mode)
+            nextPage(index, mode, request.userAnswers)
         }
     }
 
@@ -75,7 +74,7 @@ class RemoveSupportingDocumentController @Inject() (
 
         urlAndFileName match {
           case None                  =>
-            Future.successful(nextPage(index, mode))
+            Future.successful(nextPage(index, mode, request.userAnswers))
           case Some((url, fileName)) =>
             form
               .bindFromRequest()
@@ -84,20 +83,22 @@ class RemoveSupportingDocumentController @Inject() (
                   Future
                     .successful(BadRequest(view(formWithErrors, mode, draftId, index, fileName))),
                 {
-                  case false => Future.successful(nextPage(index, mode))
+                  case false => Future.successful(nextPage(index, mode, request.userAnswers))
                   case true  =>
                     for {
-                      updatedAnswers <- DraftAttachmentQuery(index).remove()
-                      _              <- userAnswersService.set(updatedAnswers)
-                      _              <- osClient.deleteObject(Path.File(url))
-                    } yield nextPage(index, mode)
+                      ua        <- DraftAttachmentQuery(index).remove()
+                      allRemoved = ua.get(AllDocuments).fold(false)(_.isEmpty)
+                      ua        <- if (allRemoved) ua.removeFuture(AllDocuments) else Future.successful(ua)
+                      _         <- userAnswersService.set(ua)
+                      _         <- osClient.deleteObject(Path.File(url))
+                    } yield nextPage(index, mode, ua)
                 }
               )
         }
     }
 
-  private def nextPage(index: Index, mode: Mode)(implicit request: DataRequest[AnyContent]) =
+  private def nextPage(index: Index, mode: Mode, userAnswers: UserAnswers) =
     Redirect(
-      navigator.nextPage(RemoveSupportingDocumentPage(index), mode, request.userAnswers)
+      navigator.nextPage(RemoveSupportingDocumentPage(index), mode, userAnswers)
     )
 }
