@@ -1,11 +1,54 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components._
+@import java.time.LocalDate
+@import java.time.format.DateTimeFormatter
+
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        para: Paragraph,
+        heading: Heading,
+        link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
+@formattedDate = @{
+    LocalDate.now().plusDays(28).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+}
+
+@homeLink = {
+    @link(
+        id = "return_to_applications_link",
+        text = messages("draftHasBeenSaved.para.link.text"),
+        newTab = false,
+        call = routes.AccountHomeController.onPageLoad()
+    )
+}
+
+
+
 @layout(pageTitle = titleNoForm(messages("draftHasBeenSaved.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("draftHasBeenSaved.heading")</h1>
+    @heading(messages("draftHasBeenSaved.heading"))
+    @para(Html(messages("draftHasBeenSaved.para.1",formattedDate)))
+    @para(Html(messages("draftHasBeenSaved.para.2")))
+    @para(Html(messages("draftHasBeenSaved.para.3", homeLink)))
+
 }

@@ -246,6 +246,4 @@ POST       /:draftId/change-agent-company-details                  controllers.A
 GET        /:draftId/delete-application                        controllers.DeleteDraftController.onPageLoad(draftId: DraftId)
 POST       /:draftId/delete-application                        controllers.DeleteDraftController.onSubmit(draftId: DraftId)
 
-
-
-GET        /draftHasBeenSaved                       controllers.DraftHasBeenSavedController.onPageLoad()
+GET        /save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad()
