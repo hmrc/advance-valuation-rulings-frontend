@@ -247,3 +247,5 @@ GET        /:draftId/delete-application                        controllers.Delet
 POST       /:draftId/delete-application                        controllers.DeleteDraftController.onSubmit(draftId: DraftId)
 
 
+
+GET        /draftHasBeenSaved                       controllers.DraftHasBeenSavedController.onPageLoad()
