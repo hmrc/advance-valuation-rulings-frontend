@@ -837,5 +837,3 @@ draftHasBeenSaved.para.1 = You have until {0} to submit your application.
 draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
 draftHasBeenSaved.para.link.text = your applications and rulings
-
-
