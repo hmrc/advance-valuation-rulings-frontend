@@ -16,13 +16,13 @@
 
 package models.requests
 
-import cats.data.{NonEmptyList, Validated, ValidatedNel}
+import cats.data._
 import cats.implicits._
 
 import play.api.libs.json._
 
-import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
-import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
+import models.{AgentCompanyDetails, AuthUserType, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 
 case class GoodsDetails(
@@ -82,31 +82,44 @@ final case class TraderDetail(
 object TraderDetail {
   implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
-  def agent(userAnswers: UserAnswers): ValidatedNel[Page, Option[TraderDetail]] = {
-    // TODO: Refactor this to so that we use `validateF` instead of `get`
-    val isAgent = userAnswers.get(WhatIsYourRoleAsImporterPage).contains(AgentOnBehalfOfOrg)
+  def agent(
+    userAnswers: UserAnswers
+  ): ValidatedNel[Page, Option[TraderDetail]] =
+    userAnswers
+      .validated(AccountHomePage)
+      .andThen {
+        (authUserType: AuthUserType) =>
+          authUserType match {
+            case AuthUserType.IndividualTrader                           => Validated.Valid(None)
+            case AuthUserType.OrganisationAdmin                          => Validated.Valid(None)
+            case AuthUserType.OrganisationAssistant | AuthUserType.Agent =>
+              validateAgentTraderDetails(userAnswers)
+          }
+      }
 
-    if (isAgent) {
-      userAnswers.validatedF[AgentCompanyDetails, Option[TraderDetail]](
-        AgentCompanyDetailsPage,
-        acd =>
-          Some(
-            TraderDetail(
-              eori = acd.agentEori,
-              businessName = acd.agentCompanyName,
-              addressLine1 = acd.agentStreetAndNumber,
-              addressLine2 = Some(acd.agentCity),
-              addressLine3 = None,
-              postcode = acd.agentPostalCode.getOrElse(""),
-              countryCode = acd.agentCountry.code,
-              phoneNumber = None
-            )
+  private def validateAgentTraderDetails(userAnswers: UserAnswers) =
+    userAnswers
+      .validated(WhatIsYourRoleAsImporterPage)
+      .andThen {
+        case EmployeeOfOrg      => Validated.Valid(None)
+        case AgentOnBehalfOfOrg =>
+          userAnswers.validatedF[AgentCompanyDetails, Option[TraderDetail]](
+            AgentCompanyDetailsPage,
+            acd =>
+              Some(
+                TraderDetail(
+                  eori = acd.agentEori,
+                  businessName = acd.agentCompanyName,
+                  addressLine1 = acd.agentStreetAndNumber,
+                  addressLine2 = Some(acd.agentCity),
+                  addressLine3 = None,
+                  postcode = acd.agentPostalCode.getOrElse(""),
+                  countryCode = acd.agentCountry.code,
+                  phoneNumber = None
+                )
+              )
           )
-      )
-    } else {
-      Validated.Valid(None)
-    }
-  }
+      }
 
   def trader(
     userAnswers: UserAnswers,
@@ -158,24 +171,31 @@ object ApplicationRequest {
     userAnswers: UserAnswers,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val traderDetail    = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
     val agentDetails    = TraderDetail.agent(userAnswers)
+    val traderDetail    = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
     val goodsDetails    = GoodsDetails(userAnswers)
     val contact         = ContactDetails(userAnswers)
     val requestedMethod = RequestedMethod(userAnswers)
     val attachments     = AttachmentRequest(userAnswers)
 
-    (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments).mapN(
-      (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments) =>
-        ApplicationRequest(
-          userAnswers.draftId,
-          traderDetail,
-          agentDetails,
-          contact,
-          requestedMethod,
-          goodsDetails,
-          attachments
-        )
-    )
+    (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments)
+      .mapN(
+        (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments) =>
+          ApplicationRequest(
+            userAnswers.draftId,
+            traderDetail,
+            agentDetails,
+            contact,
+            requestedMethod,
+            goodsDetails,
+            attachments
+          )
+      )
+      .leftMap( // Removing duplicates whilst retaining order
+        ps =>
+          ps.tail.foldLeft(NonEmptyList.of(ps.head))(
+            (acc, next) => if (acc.exists(p => p == next)) acc else acc :+ next
+          )
+      )
   }
 }

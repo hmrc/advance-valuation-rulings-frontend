@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import controllers.routes
 import models._
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.Modifiable
@@ -99,13 +99,21 @@ class NavigatorSpec extends SpecBase {
           .onPageLoad(NormalMode, draftId)
       }
 
-      "should navigate to WhatIsYourRole page for an OrganisationAdmin" in {
+      "should navigate to RequiredInformation page for an OrganisationAdmin" in {
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
         ) mustBe routes.RequiredInformationController
           .onPageLoad(draftId)
+      }
+
+      "should navigate to WhatIsYourRole page for an Agent" in {
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
+        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {

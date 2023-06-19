@@ -213,6 +213,7 @@ class ApplicationRequestSpec
 
         val userAnswers = (for {
           ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
           ua <- ua.set(DescriptionOfGoodsPage, randomString)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
@@ -237,7 +238,6 @@ class ApplicationRequestSpec
           ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
           ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
         } yield ua).success.get
 
         val result =
@@ -278,6 +278,20 @@ class ApplicationRequestSpec
             DoYouWantToUploadDocumentsPage
           )
         )
+      }
+
+      "return invalid when missing AccountHomePage in userAnswers" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg) // not populated
+          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+        } yield ua).success.get
+
+        val result =
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
+
+        result shouldBe Invalid(NonEmptyList.of(AccountHomePage))
       }
     }
 
@@ -345,6 +359,56 @@ class ApplicationRequestSpec
         )
       }
 
+      "return invalid when missing importer role useranswer" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
+          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(
+                  CheckRegisteredDetailsPage,
+                  true
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+          ua <- ua.set(
+                  BusinessContactDetailsPage,
+                  BusinessContactDetails(
+                    name = randomString,
+                    email = randomString,
+                    phone = randomString
+                  )
+                )
+          ua <- ua.set(
+                  AgentCompanyDetailsPage,
+                  AgentCompanyDetails(
+                    agentEoriDetails.eori,
+                    agentEoriDetails.businessName,
+                    agentEoriDetails.addressLine1,
+                    agentEoriDetails.addressLine2.getOrElse(""),
+                    country,
+                    Some(agentEoriDetails.postcode)
+                  )
+                )
+        } yield ua).success.get
+
+        val result =
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
+
+        result shouldBe Invalid(
+          NonEmptyList.one(WhatIsYourRoleAsImporterPage)
+        )
+      }
+
       "return invalid when only page answered is the agent on behalf of an org" in {
         val userAnswers = (for {
           ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant)
@@ -366,6 +430,26 @@ class ApplicationRequestSpec
         )
       }
 
+      "return invalid when missing AccountHomePage" in {
+        val userAnswers = (for {
+          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+        } yield ua).get
+
+        val result =
+          ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
+
+        result shouldBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage,
+            AgentCompanyDetailsPage,
+            BusinessContactDetailsPage,
+            ValuationMethodPage,
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
+          )
+        )
+      }
     }
   }
 }
