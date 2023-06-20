@@ -34,17 +34,26 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
   case object OrganisationAdmin extends AuthUserType("OrganisationAdmin") // org + user/admin
   case object OrganisationAssistant extends AuthUserType("OrganisationAssistant") // org + assistant
 
-  @nowarn("cat=deprecation")
+  case object Agent extends AuthUserType("Agent")
+
   def apply(
     affinityGroup: AffinityGroup,
     credentialRole: Option[CredentialRole]
   ): Option[AuthUserType] =
-    (affinityGroup, credentialRole) match {
-      case (AffinityGroup.Individual, _)                 => Some(IndividualTrader)
-      case (AffinityGroup.Organisation, Some(Assistant)) => Some(OrganisationAssistant)
-      case (AffinityGroup.Organisation, Some(Admin))     => Some(OrganisationAdmin)
-      case (AffinityGroup.Organisation, Some(User))      => Some(OrganisationAdmin)
-      case _                                             => None
+    affinityGroup match {
+      case AffinityGroup.Individual   => Some(IndividualTrader)
+      case AffinityGroup.Agent        => Some(Agent)
+      case AffinityGroup.Organisation => fromCredentialRole(credentialRole)
+      case _                          => None // impossible
+    }
+
+  @nowarn("cat=deprecation")
+  private def fromCredentialRole(credentialRole: Option[CredentialRole]) =
+    credentialRole match {
+      case Some(Assistant) => Some(OrganisationAssistant)
+      case Some(Admin)     => Some(OrganisationAdmin)
+      case Some(User)      => Some(OrganisationAdmin)
+      case _               => None
     }
 
   def apply(request: IdentifierRequest[_]): Option[AuthUserType] =

@@ -16,7 +16,7 @@
 
 @import components._
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.auth.core.AffinityGroup
+@import AuthUserType._
 
 @this(
   layout: templates.Layout,
@@ -30,7 +30,7 @@
   config: FrontendAppConfig
 )
 
-@(draftId: DraftId, affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId, authUserType: AuthUserType)(implicit request: Request[_], messages: Messages)
 
 @fillInAnEnquiryLink = {
   @link(
@@ -50,25 +50,24 @@
 
 @layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title")), draftId = Some(draftId)) {
 
-@caption(messages("eoriBeUpToDate.caption"))
-<!-- todo: update logic when authUserypes come in   -->
-@if(affinityGroup == AffinityGroup.Organisation) {
-    @heading(messages("eoriBeUpToDate.heading.org"))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))
+    @caption(messages("eoriBeUpToDate.caption"))
+    @if(Set(OrganisationAdmin, OrganisationAssistant, Agent).exists(_ == authUserType)) {
+        @heading(messages("eoriBeUpToDate.heading.org"))
+        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
+        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))
     } else {
-    @heading(messages("eoriBeUpToDate.heading"))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
-}
+        @heading(messages("eoriBeUpToDate.heading"))
+        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
+        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
+    }
 
-@bulletList(
-  Seq(
-    Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
-    Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
-  ),
-  "govuk-list govuk-list--bullet govuk-list--spaced",
-)
+    @bulletList(
+      Seq(
+        Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
+        Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
+      ),
+      "govuk-list govuk-list--bullet govuk-list--spaced",
+    )
 
-@cancelApplicationLink(draftId)
+    @cancelApplicationLink(draftId)
 }

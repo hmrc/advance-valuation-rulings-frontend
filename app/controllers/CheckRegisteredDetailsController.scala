@@ -32,7 +32,7 @@ import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.CheckRegisteredDetailsPage
+import pages.{AccountHomePage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
 import views.html.CheckRegisteredDetailsView
 
@@ -76,23 +76,24 @@ class CheckRegisteredDetailsController @Inject() (
           case Some(value) =>
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
-                Ok(
-                  view(
-                    formProvider().fill(value),
-                    details,
-                    mode,
-                    request.affinityGroup,
-                    draftId
-                  )
-                )
+                AccountHomePage.get() match {
+                  case None               =>
+                    Redirect(routes.UnauthorisedController.onPageLoad)
+                  case Some(authUserType) =>
+                    Ok(view(formProvider().fill(value), details, mode, authUserType, draftId))
+                }
             )
 
           case None =>
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
-                Ok(view(formProvider(), details, mode, request.affinityGroup, draftId))
+                AccountHomePage.get() match {
+                  case None               =>
+                    Redirect(routes.UnauthorisedController.onPageLoad)
+                  case Some(authUserType) =>
+                    Ok(view(formProvider(), details, mode, authUserType, draftId))
+                }
             )
-
         }
     }
 
@@ -107,9 +108,14 @@ class CheckRegisteredDetailsController @Inject() (
             formWithErrors =>
               getTraderDetails(
                 (details: TraderDetailsWithCountryCode) =>
-                  BadRequest(
-                    view(formWithErrors, details, mode, request.affinityGroup, draftId)
-                  )
+                  AccountHomePage.get() match {
+                    case None               =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case Some(authUserType) =>
+                      BadRequest(
+                        view(formWithErrors, details, mode, authUserType, draftId)
+                      )
+                  }
               ),
             value =>
               for {

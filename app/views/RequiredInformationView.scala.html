@@ -15,7 +15,6 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.auth.core.AffinityGroup
 
 @this(
     layout: templates.Layout,
@@ -28,7 +27,7 @@
     saveButtons: SaveButtons
 )
 
-@(form: Form[_], affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @paraContent = {@paragraph(Html(messages("requiredInformation.hint")))}
 
@@ -48,7 +47,7 @@
                 form   = form,
                 name   = "value",
                 legend = LegendViewModel(messages("requiredInformation.heading")).asPageHeading(),
-                items  = RequiredInformation.checkboxItems(affinityGroup)
+                items  = RequiredInformation.checkboxItems(authUserType)
             )
             .withHint(Hint(content = HtmlContent(paraContent)))
         )

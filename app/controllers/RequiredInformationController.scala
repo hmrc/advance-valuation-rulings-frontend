@@ -28,7 +28,7 @@ import controllers.actions._
 import forms.RequiredInformationFormProvider
 import models.{DraftId, NormalMode}
 import navigation.Navigator
-import pages.RequiredInformationPage
+import pages.{AccountHomePage, RequiredInformationPage}
 import services.UserAnswersService
 import views.html.RequiredInformationView
 
@@ -60,7 +60,12 @@ class RequiredInformationController @Inject() (
           case Some(value) => form.fill(value)
         }
 
-        Ok(view(preparedForm, request.affinityGroup, draftId))
+        AccountHomePage.get() match {
+          case None               =>
+            Redirect(routes.UnauthorisedController.onPageLoad)
+          case Some(authUserType) =>
+            Ok(view(preparedForm, authUserType, draftId))
+        }
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
@@ -70,7 +75,12 @@ class RequiredInformationController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, request.affinityGroup, draftId))),
+              AccountHomePage.get() match {
+                case None               =>
+                  Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
+                case Some(authUserType) =>
+                  Future.successful(BadRequest(view(formWithErrors, authUserType, draftId)))
+              },
             value =>
               for {
                 updatedAnswers <-

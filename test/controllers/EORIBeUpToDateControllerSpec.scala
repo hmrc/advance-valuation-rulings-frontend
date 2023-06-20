@@ -22,10 +22,9 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
-import models.Done
+import models.{AuthUserType, Done}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -56,7 +55,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[EORIBeUpToDateView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(draftId, AffinityGroup.Individual)(
+        contentAsString(result) mustEqual view(draftId, AuthUserType.IndividualTrader)(
           request,
           messages(application)
         ).toString

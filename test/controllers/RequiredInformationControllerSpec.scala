@@ -22,11 +22,10 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 import base.SpecBase
 import forms.RequiredInformationFormProvider
-import models.{Done, RequiredInformation}
+import models.{AuthUserType, Done, RequiredInformation}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -61,7 +60,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, AffinityGroup.Individual, draftId)(
+        contentAsString(result) mustEqual view(form, AuthUserType.IndividualTrader, draftId)(
           request,
           messages(application)
         ).toString
@@ -87,7 +86,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(RequiredInformation.values.toSet),
-          AffinityGroup.Individual,
+          AuthUserType.IndividualTrader,
           draftId
         )(request, messages(application)).toString
       }
@@ -152,7 +151,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
           form.bind(Map("value[0]" -> RequiredInformation.values.head.toString))
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual, draftId)(
+        contentAsString(result) mustEqual view(boundForm, AuthUserType.IndividualTrader, draftId)(
           request,
           messages(application)
         ).toString
@@ -176,7 +175,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, AffinityGroup.Individual, draftId)(
+        contentAsString(result) mustEqual view(boundForm, AuthUserType.IndividualTrader, draftId)(
           request,
           messages(application)
         ).toString

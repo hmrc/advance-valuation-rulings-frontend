@@ -31,7 +31,6 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.auth.core.AffinityGroup
 
 @this(
     layout: templates.Layout,
@@ -48,7 +47,7 @@
     saveButtons: SaveButtons
 )
 
-@(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @headingContent = {
                 @if(registeredDetails.consentToDisclosureOfPersonalData) {
@@ -68,12 +67,12 @@
 
 @paraContent = {
         @if(registeredDetails.consentToDisclosureOfPersonalData) {
-            @if(affinityGroup == AffinityGroup.Individual) {
+            @if(authUserType == AuthUserType.IndividualTrader) {
                 @warning(content=Html(messages("checkRegisteredDetails.warning.individual")))
-            } else if(affinityGroup == AffinityGroup.Organisation) {
-                @warning(content=Html(messages("checkRegisteredDetails.warning.organisation")))
-            } else if(affinityGroup == AffinityGroup.Agent) {
+            } else if(authUserType == AuthUserType.Agent) {
                 @warning(content=Html(messages("checkRegisteredDetails.warning.agent")))
+            } else {
+                @warning(content=Html(messages("checkRegisteredDetails.warning.organisation")))
             }
 
         @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
