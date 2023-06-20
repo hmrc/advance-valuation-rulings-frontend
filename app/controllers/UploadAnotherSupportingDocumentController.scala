@@ -48,7 +48,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val attachments = request.userAnswers.get(AllDocuments).getOrElse(List.empty)
+        val attachments = AllDocuments.get().getOrElse(List.empty)
         val form        = formProvider(attachments)
         Ok(view(attachments, form, mode, draftId))
     }
@@ -56,7 +56,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val attachments = request.userAnswers.get(AllDocuments).getOrElse(List.empty)
+        val attachments = AllDocuments.get().getOrElse(List.empty)
         formProvider(attachments)
           .bindFromRequest()
           .fold(
@@ -64,9 +64,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
               Future.successful(BadRequest(view(attachments, formWithErrors, mode, draftId))),
             value =>
               for {
-                answers <- Future.fromTry(
-                             request.userAnswers.set(UploadAnotherSupportingDocumentPage, value)
-                           )
+                answers <- UploadAnotherSupportingDocumentPage.set(value)
               } yield Redirect {
                 navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
               }

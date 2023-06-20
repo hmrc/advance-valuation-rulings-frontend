@@ -828,3 +828,7 @@ deleteDraft.title = Are you sure you want to delete your application?
 deleteDraft.heading = Are you sure you want to delete your application?
 deleteDraft.error.required = Select yes if you want to delete your application
 deleteDraft.guidance = If you delete your application now, any data will be lost and you will need to make a new application.
+
+removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu {0}?
+removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu {0}?
+removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu’r ffeil hon

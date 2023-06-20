@@ -18,4 +18,6 @@ package pages
 
 import models.Index
 
-final case class DeleteSupportingDocumentPage(index: Index) extends Page
+case class RemoveSupportingDocumentPage(index: Index) extends Page {
+  override def toString: String = "removeSupportingDocument"
+}

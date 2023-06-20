@@ -975,7 +975,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           }
         }
 
-        "DeleteSupportingDocumentPage must navigate to" - {
+        "RemoveSupportingDocumentPage must navigate to" - {
 
           "UploadAnotherSupportingDocument page when there are more documents" in {
             val answers =
@@ -987,7 +987,7 @@ class CheckModeNavigatorSpec extends SpecBase {
                 .success
                 .value
             navigator.nextPage(
-              DeleteSupportingDocumentPage(Index(0)),
+              RemoveSupportingDocumentPage(Index(0)),
               CheckMode,
               answers
             ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
@@ -995,7 +995,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "DoYouWantToUploadSupportingDocuments page when there are no more documents" in {
             navigator.nextPage(
-              DeleteSupportingDocumentPage(Index(0)),
+              RemoveSupportingDocumentPage(Index(0)),
               CheckMode,
               userAnswersAsIndividualTrader
             ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)

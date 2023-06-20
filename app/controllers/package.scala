@@ -23,7 +23,7 @@ import models.UserAnswers
 import models.requests.DataRequest
 
 package object controllers {
-  implicit class PageOps[A: Format](page: pages.QuestionPage[A]) {
+  implicit class ModifiableOps[A: Format](page: queries.Modifiable[A]) {
 
     def set(value: A)(implicit request: DataRequest[_]): Future[UserAnswers] =
       request.userAnswers.setFuture(page, value)
