@@ -284,14 +284,21 @@ class ApplicationRequestSpec
         val ua = emptyUserAnswers
 
         val userAnswers = (for {
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg) // not populated
-          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
         } yield ua).success.get
 
         val result =
           ApplicationRequest(userAnswers, traderDetailsWithCountryCode)
 
-        result shouldBe Invalid(NonEmptyList.of(AccountHomePage))
+        result shouldBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage,
+            AccountHomePage,
+            ValuationMethodPage,
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
+          )
+        )
       }
     }
 
