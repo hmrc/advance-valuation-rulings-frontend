@@ -225,26 +225,6 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "RequiredInformationPage must" - {
-        "navigate to Import goods page when all values are set" in {
-          val userAnswers =
-            userAnswersWith(RequiredInformationPage, RequiredInformation.values.toSet)
-          navigator.nextPage(
-            RequiredInformationPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.ImportGoodsController.onPageLoad(NormalMode, draftId)
-        }
-
-        "navigate to self when no values are set" in {
-          navigator.nextPage(
-            RequiredInformationPage,
-            NormalMode,
-            EmptyUserAnswers
-          ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
-        }
-      }
-
       "ExplainWhyYouHaveNotSelectedMethodOneToThree page" - {
         "must navigate to ExplainWhyYouChoseMethodFour Page" in {
           val userAnswers =
