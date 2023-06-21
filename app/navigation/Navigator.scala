@@ -53,8 +53,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig) {
     case ConfidentialInformationPage                      => confidentialInformationPage
     case ImportGoodsPage                                  => importGoodsPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
-    case ContactPagePage                                  =>
-      ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
+    case ContactPagePage                                  => contactsNextPage
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
     case BusinessContactDetailsPage                       => businessContactDetailsPage
@@ -477,6 +476,12 @@ class Navigator @Inject() (appConfig: FrontendAppConfig) {
       case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
     }
+  private def contactsNextPage(userAnswers: UserAnswers): Call             = {
+    val isAgent =
+      false // fixme fetch from userAnswers once Martin G has added the field (ARSSTB-160)
+    if (isAgent) ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
+    else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+  }
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   ): Call =
