@@ -25,28 +25,26 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import forms.RequiredInformationFormProvider
 import models.{DraftId, NormalMode}
+import models.AuthUserType.IndividualTrader
 import navigation.Navigator
 import pages.{AccountHomePage, RequiredInformationPage}
 import services.UserAnswersService
-import views.html.RequiredInformationView
+import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
-  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  formProvider: RequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: RequiredInformationView
+  individualView: RequiredInformationView,
+  agentView: TraderAgentRequiredInformationView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
@@ -54,43 +52,22 @@ class RequiredInformationController @Inject() (
       implicit request =>
         logger.info("RequiredInformationController onPageLoad")
 
-        val preparedForm = request.userAnswers
-          .get(RequiredInformationPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
-
         AccountHomePage.get() match {
-          case None               =>
+          case None =>
             Redirect(routes.UnauthorisedController.onPageLoad)
-          case Some(authUserType) =>
-            Ok(view(preparedForm, authUserType, draftId))
+
+          case Some(IndividualTrader) =>
+            Ok(individualView(draftId))
+          case Some(_)                =>
+            Ok(agentView(draftId))
         }
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              AccountHomePage.get() match {
-                case None               =>
-                  Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                case Some(authUserType) =>
-                  Future.successful(BadRequest(view(formWithErrors, authUserType, draftId)))
-              },
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(
-                    request.userAnswers.set(RequiredInformationPage, value)
-                  )
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(RequiredInformationPage, NormalMode, updatedAnswers)
-              )
-          )
+        Redirect(
+          navigator.nextPage(RequiredInformationPage, NormalMode, request.userAnswers)
+        )
     }
 }

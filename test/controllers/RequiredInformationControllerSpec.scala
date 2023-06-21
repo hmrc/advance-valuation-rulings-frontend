@@ -24,7 +24,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.RequiredInformationFormProvider
 import models.{AuthUserType, Done, RequiredInformation}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -40,9 +39,6 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val requiredInformationRoute =
     routes.RequiredInformationController.onPageLoad(draftId).url
-
-  val formProvider = new RequiredInformationFormProvider()
-  val form         = formProvider()
 
   "RequiredInformation Controller" - {
 

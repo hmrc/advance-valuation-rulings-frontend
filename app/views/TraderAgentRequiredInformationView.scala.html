@@ -18,13 +18,12 @@
 
 @this(
     layout: templates.Layout,
-    govukErrorSummary: GovukErrorSummary,
     caption: Caption,
+    bulletList: BulletList,
+    para: InsetPara,
     heading: Heading,
-    paragraph: Paragraph,
-    saveButtons: SaveButtons,
-    insetPara: InsetPara,
-    bulletList: BulletList
+    cancelLink: CancelApplicationLink,
+    saveButtons: SaveButtons
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -35,21 +34,20 @@
 
         @heading(messages("requiredInformation.heading"))
 
-        @insetPara(Html(messages("requiredInformation.inset.para")))
+        @para(Html(messages("requiredInformation.inset.para")))
 
         @bulletList(
             Seq(
-                Html(messages("requiredInformation.option1.individual")),
-                Html(messages("requiredInformation.option2.individual")),
-                Html(messages("requiredInformation.option3.individual")),
-                Html(messages("requiredInformation.option4.individual")),
-                Html(messages("requiredInformation.option5.individual")),
-                Html(messages("requiredInformation.option6.individual"))
+               Html(messages("requiredInformation.option1.organisation")),
+               Html(messages("requiredInformation.option2.organisation")),
+               Html(messages("requiredInformation.option3.organisation")),
+               Html(messages("requiredInformation.option4.organisation")),
+               Html(messages("requiredInformation.option5.organisation")),
+               Html(messages("requiredInformation.option6.organisation"))
             )
         )
         <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button">
             @messages("site.saveAndContinue")
         </a>
-        @saveButtons()
-
+    @saveButtons()
 }
