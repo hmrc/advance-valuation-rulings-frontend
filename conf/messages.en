@@ -212,22 +212,21 @@ importGoods.change.hidden = are you importing goods
 
 requiredInformation.title = Before you start your application
 requiredInformation.heading = Before you start your application
+requiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
 requiredInformation.option1.individual = I am aware that I will need to propose a method to value my goods.
 requiredInformation.option2.individual = I will supply HMRC with my contact email and phone number as part of this application.
 requiredInformation.option3.individual = I have an EORI number starting with GB.
 requiredInformation.option4.individual = The name and address registered to my EORI number is up to date.
 requiredInformation.option5.individual = I am aware that it can take up to 120 days after I submit my application to get a decision.
 requiredInformation.option6.individual = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for up to three years from the date of issue.
+
 requiredInformation.option1.organisation = I am aware that I will need to propose a method to value the goods.
 requiredInformation.option2.organisation = I will supply HMRC with my contact email, phone number and registered EORI details as part of this application.
 requiredInformation.option3.organisation = I have the organisation’s EORI number starting with GB.
 requiredInformation.option4.organisation = The name and address registered to the organisation’s EORI number is up to date.
 requiredInformation.option5.organisation = I am aware that it can take up to 120 days after I submit my application to get a decision.
 requiredInformation.option6.organisation = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for up to three years from the date of issue.
-requiredInformation.hint = You need to tick each item to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Before you start your application
-requiredInformation.error.required = Select each item in the checklist to start your application
-requiredInformation.error.selectAll = Select each item in the checklist to start your application
 requiredInformation.change.hidden = required information
 requiredInformation.caption = Starter checklist
 

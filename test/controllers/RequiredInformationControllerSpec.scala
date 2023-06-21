@@ -24,15 +24,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.RequiredInformationFormProvider
-import models.{AuthUserType, Done, RequiredInformation}
+import models.{Done, RequiredInformation}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.RequiredInformationPage
 import services.UserAnswersService
-import views.html.RequiredInformationView
+import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
@@ -41,12 +39,9 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
   lazy val requiredInformationRoute =
     routes.RequiredInformationController.onPageLoad(draftId).url
 
-  val formProvider = new RequiredInformationFormProvider()
-  val form         = formProvider()
-
   "RequiredInformation Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "must return OK and the correct view for individual user type" in {
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
@@ -60,149 +55,32 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, AuthUserType.IndividualTrader, draftId)(
+        contentAsString(result) mustEqual view(draftId)(
           request,
           messages(application)
         ).toString
       }
     }
+    "must return OK and the correct view for non individual user type" in {
 
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = userAnswersAsIndividualTrader
-        .set(RequiredInformationPage, RequiredInformation.values.toSet)
-        .success
-        .value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsOrgAdmin)).build()
 
       running(application) {
         val request = FakeRequest(GET, requiredInformationRoute)
 
-        val view = application.injector.instanceOf[RequiredInformationView]
-
         val result = route(application, request).value
+
+        val view = application.injector.instanceOf[TraderAgentRequiredInformationView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(RequiredInformation.values.toSet),
-          AuthUserType.IndividualTrader,
-          draftId
-        )(request, messages(application)).toString
-      }
-    }
 
-    "must redirect to the next page when valid data is submitted" in {
-
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, requiredInformationRoute)
-            .withFormUrlEncodedBody(
-              "value[0]" -> RequiredInformation.Option1.toString,
-              "value[1]" -> RequiredInformation.Option2.toString,
-              "value[2]" -> RequiredInformation.Option3.toString,
-              "value[3]" -> RequiredInformation.Option4.toString,
-              "value[4]" -> RequiredInformation.Option5.toString,
-              "value[5]" -> RequiredInformation.Option6.toString
-            )
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
-    }
-    "must display an error on the page when not all checkbox are submitted" in {
-
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, requiredInformationRoute)
-            .withFormUrlEncodedBody(("value[0]", RequiredInformation.values.head.toString))
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[RequiredInformationView]
-
-        val boundForm =
-          form.bind(Map("value[0]" -> RequiredInformation.values.head.toString))
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, AuthUserType.IndividualTrader, draftId)(
+        contentAsString(result) mustEqual view(draftId)(
           request,
           messages(application)
         ).toString
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, requiredInformationRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
-
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-
-        val view = application.injector.instanceOf[RequiredInformationView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, AuthUserType.IndividualTrader, draftId)(
-          request,
-          messages(application)
-        ).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" ignore {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, requiredInformationRoute)
-            .withFormUrlEncodedBody(
-              "value[0]" -> RequiredInformation.Option1.toString,
-              "value[1]" -> RequiredInformation.Option2.toString,
-              "value[2]" -> RequiredInformation.Option3.toString,
-              "value[3]" -> RequiredInformation.Option4.toString,
-              "value[4]" -> RequiredInformation.Option5.toString,
-              "value[5]" -> RequiredInformation.Option6.toString
-            )
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
   }
 }
