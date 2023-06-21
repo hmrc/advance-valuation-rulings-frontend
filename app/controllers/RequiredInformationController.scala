@@ -27,7 +27,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import models.AuthUserType.IndividualTrader
 import models.DraftId
-import navigation.Navigator
 import pages.AccountHomePage
 import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
@@ -39,8 +38,7 @@ class RequiredInformationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   individualView: RequiredInformationView,
   agentView: TraderAgentRequiredInformationView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+) extends FrontendBaseController
     with I18nSupport {
 
   private val logger = play.api.Logger(getClass)
