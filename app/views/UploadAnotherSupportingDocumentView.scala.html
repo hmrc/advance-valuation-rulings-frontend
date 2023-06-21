@@ -74,7 +74,7 @@
               TableRow(
                 HtmlContent(
                   govukLink(
-                    id = "remove-link-" + i,
+                    id = "remove-file-" + i,
                     text = messages("site.remove"),
                     call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
                     newTab = false
