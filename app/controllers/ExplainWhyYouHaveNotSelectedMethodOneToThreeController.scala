@@ -51,11 +51,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm =
-          request.userAnswers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage) match {
-            case None        => form
-            case Some(value) => form.fill(value)
-          }
+        val preparedForm = ExplainWhyYouHaveNotSelectedMethodOneToThreePage.fill(form)
 
         Ok(view(preparedForm, mode, draftId))
     }
@@ -69,10 +65,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(
-                    request.userAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, value)
-                  )
+                updatedAnswers <- ExplainWhyYouHaveNotSelectedMethodOneToThreePage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator

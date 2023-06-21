@@ -16,20 +16,12 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.{Done, RequiredInformation}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import services.UserAnswersService
 import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
