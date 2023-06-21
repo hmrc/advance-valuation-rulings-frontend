@@ -47,9 +47,13 @@
                 Html(messages("requiredInformation.option6.individual"))
             )
         )
-        <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button">
-            @messages("site.saveAndContinue")
-        </a>
-        @saveButtons()
 
+        <span class="govuk-button-group">
+                <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button" id="continue-button">
+                    @messages("site.saveAndContinue")
+                </a>
+                <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+                    @messages("site.saveAsDraft")
+                </a>
+        </span>
 }

@@ -18,23 +18,21 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import models.{DraftId, NormalMode}
 import models.AuthUserType.IndividualTrader
+import models.DraftId
 import navigation.Navigator
-import pages.{AccountHomePage, RequiredInformationPage}
-import services.UserAnswersService
+import pages.AccountHomePage
 import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
-  navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
@@ -63,11 +61,4 @@ class RequiredInformationController @Inject() (
         }
     }
 
-  def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        Redirect(
-          navigator.nextPage(RequiredInformationPage, NormalMode, request.userAnswers)
-        )
-    }
 }
