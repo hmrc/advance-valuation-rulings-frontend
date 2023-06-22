@@ -19,6 +19,7 @@ package controllers
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -31,7 +32,6 @@ import navigation.Navigator
 import pages.BusinessContactDetailsPage
 import services.UserAnswersService
 import views.html.BusinessContactDetailsView
-import scala.concurrent.Future
 
 class BusinessContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
