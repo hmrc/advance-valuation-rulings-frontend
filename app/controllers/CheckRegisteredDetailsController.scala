@@ -72,7 +72,7 @@ class CheckRegisteredDetailsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        request.userAnswers.get(CheckRegisteredDetailsPage) match {
+        CheckRegisteredDetailsPage.get() match {
           case Some(value) =>
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
@@ -119,8 +119,7 @@ class CheckRegisteredDetailsController @Inject() (
               ),
             value =>
               for {
-                updatedAnswers <-
-                  request.userAnswers.setFuture(CheckRegisteredDetailsPage, value)
+                updatedAnswers <- CheckRegisteredDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)

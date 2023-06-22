@@ -51,10 +51,7 @@ class WhyTransactionValueOfSimilarGoodsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers.get(WhyTransactionValueOfSimilarGoodsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+        val preparedForm = WhyTransactionValueOfSimilarGoodsPage.fill(form)
 
         Ok(view(preparedForm, mode, draftId))
     }
@@ -68,9 +65,7 @@ class WhyTransactionValueOfSimilarGoodsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
-                updatedAnswers <-
-                  Future
-                    .fromTry(request.userAnswers.set(WhyTransactionValueOfSimilarGoodsPage, value))
+                updatedAnswers <- WhyTransactionValueOfSimilarGoodsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(WhyTransactionValueOfSimilarGoodsPage, mode, updatedAnswers)
