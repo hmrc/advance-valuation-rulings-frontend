@@ -16,13 +16,18 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import models.DraftHasBeenSavedModel
 import views.html.DraftHasBeenSavedView
 
 class DraftHasBeenSavedControllerSpec extends SpecBase {
+
+  val date = DraftHasBeenSavedModel().getDate(LocalDate.now())
 
   "DraftHasBeenSaved Controller" - {
 
@@ -38,8 +43,12 @@ class DraftHasBeenSavedControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[DraftHasBeenSavedView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(date)(
+          request,
+          messages(application)
+        ).toString
       }
     }
+
   }
 }

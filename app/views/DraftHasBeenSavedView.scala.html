@@ -27,11 +27,8 @@
         link: Link
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(date: String)(implicit request: Request[_], messages: Messages)
 
-@formattedDate = @{
-    LocalDate.now().plusDays(28).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
-}
 
 @homeLink = {
     @link(
@@ -47,7 +44,7 @@
 @layout(pageTitle = titleNoForm(messages("draftHasBeenSaved.title"))) {
 
     @heading(messages("draftHasBeenSaved.heading"))
-    @para(Html(messages("draftHasBeenSaved.para.1",formattedDate)))
+    @para(Html(messages("draftHasBeenSaved.para.1",date)))
     @para(Html(messages("draftHasBeenSaved.para.2")))
     @para(Html(messages("draftHasBeenSaved.para.3", homeLink)))
 
