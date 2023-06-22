@@ -37,18 +37,20 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
     val result = request.userAnswers match {
       case None       => Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       case Some(data) =>
-        Either.cond(
-          data.get(AccountHomePage).nonEmpty,
-          DataRequest(
-            request.request,
-            request.userId,
-            request.eoriNumber,
-            data,
-            request.affinityGroup,
-            request.credentialRole
-          ),
-          Redirect(UnauthorisedController.onPageLoad)
-        )
+        data.get(AccountHomePage) match {
+          case Some(_) =>
+            Right(
+              DataRequest(
+                request.request,
+                request.userId,
+                request.eoriNumber,
+                data,
+                request.affinityGroup,
+                request.credentialRole
+              )
+            )
+          case None    => Left(Redirect(UnauthorisedController.onPageLoad))
+        }
     }
 
     Future.successful(result)

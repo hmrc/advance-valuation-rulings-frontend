@@ -22,6 +22,7 @@ import play.api.inject.{bind => binding}
 import play.api.inject.Binding
 
 import controllers.actions._
+import services._
 
 class Module extends play.api.inject.Module {
 
@@ -38,7 +39,8 @@ class Module extends play.api.inject.Module {
       binding[Clock].to(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)),
       binding[IdentifierAction].to[AuthenticatedIdentifierAction].eagerly(),
       binding[IdentifyIndividualAction].to[IdentifyIndividual].eagerly(),
-      binding[IdentifyAgentAction].to[IdentifyAgent].eagerly()
+      binding[IdentifyAgentAction].to[IdentifyAgent].eagerly(),
+      binding[UserAnswersService].to[BackendUserAnswersService].eagerly()
     ) ++ authTokenInitialiserBindings
   }
 }

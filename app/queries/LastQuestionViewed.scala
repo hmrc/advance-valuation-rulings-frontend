@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package pages
+package queries
 
-import models.Index
+import play.api.libs.json.{__, JsPath}
 
-case class RemoveSupportingDocumentPage(index: Index) extends QuestionPage[Boolean] {
-  override def toString: String = "removeSupportingDocument"
+import pages.QuestionPage
+
+case object LastQuestionViewed extends Modifiable[QuestionPage[_]] {
+  override def path: JsPath = __ \ "lastQuestionViewed"
 }
-
-object RemoveSupportingDocumentPage extends WithIndexedKeys

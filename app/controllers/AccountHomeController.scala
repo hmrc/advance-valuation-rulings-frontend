@@ -25,6 +25,7 @@ import scala.concurrent.Future
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import audit.AuditService
@@ -98,17 +99,36 @@ class AccountHomeController @Inject() (
     userId: String,
     authType: AuthUserType,
     drafts: Seq[DraftSummary]
-  )(implicit messages: Messages): Seq[Future[ApplicationForAccountHome]] =
+  )(implicit messages: Messages, hc: HeaderCarrier): Seq[Future[ApplicationForAccountHome]] =
     drafts.map {
       draft =>
         UserAnswers(userId, draft.id)
           .setFuture(AccountHomePage, authType)
-          .map(
+          .flatMap {
             userAnswers =>
-              ApplicationForAccountHome(
-                draft,
-                navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
-              )
-          )
+              // val lastVisited: Option[pages.QuestionPage[_]] =
+              //   userAnswers.get(queries.LastQuestionViewed)
+              userAnswersService
+                .get(userAnswers.draftId)
+                .map {
+                  userAns =>
+                    val lastViewed = userAns.flatMap(_.get(queries.LastQuestionViewed))
+                    lastViewed match {
+                      case Some(page) =>
+                        println("lastVisited: " + lastViewed)
+
+                        ApplicationForAccountHome(
+                          draft,
+                          navigator.nextPage(page, NormalMode, userAnswers)
+                        )
+                      case None       =>
+                        println("No last visited")
+                        ApplicationForAccountHome(
+                          draft,
+                          navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
+                        )
+                    }
+                }
+          }
     }
 }

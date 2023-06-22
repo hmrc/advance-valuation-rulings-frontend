@@ -26,3 +26,7 @@ final case class UploadSupportingDocumentPage(index: Index) extends QuestionPage
 
   override def toString: String = "file"
 }
+
+object UploadSupportingDocumentPage extends WithIndexedKeys {
+  def apply(index: Int): UploadSupportingDocumentPage = UploadSupportingDocumentPage(Index(index))
+}

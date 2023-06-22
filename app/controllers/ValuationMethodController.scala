@@ -36,9 +36,7 @@ class ValuationMethodController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ValuationMethodFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ValuationMethodView
@@ -49,7 +47,7 @@ class ValuationMethodController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyWithHistory(draftId, ValuationMethodPage)) {
       implicit request =>
         val preparedForm = ValuationMethodPage.fill(form)
 
@@ -57,7 +55,7 @@ class ValuationMethodController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    actions.identifyDraft(draftId).async {
       implicit request =>
         form
           .bindFromRequest()

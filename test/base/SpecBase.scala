@@ -37,6 +37,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import pages.AccountHomePage
 import repositories.CounterRepository
+import services._
 
 trait SpecBase
     extends AnyFreeSpec
@@ -89,13 +90,15 @@ trait SpecBase
   )
 
   protected def applicationBuilder(
-    userAnswers: Option[UserAnswers] = None
+    userAnswers: Option[UserAnswers] = None,
+    userAnswersService: UserAnswersService = new InMemoryUserAnswersService()
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[IdentifyIndividualAction].to[FakeIdentifyIndividualAction],
+        bind[UserAnswersService].toInstance(userAnswersService),
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),
@@ -103,7 +106,8 @@ trait SpecBase
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
   protected def applicationBuilderAsAgent(
-    userAnswers: Option[UserAnswers] = None
+    userAnswers: Option[UserAnswers] = None,
+    userAnswersService: UserAnswersService = new InMemoryUserAnswersService()
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
@@ -114,10 +118,12 @@ trait SpecBase
           new FakeDataRetrievalActionProvider(userAnswers)
         ),
         bind[CounterRepository].to(mockDraftIdRepo),
-        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
+        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser],
+        bind[UserAnswersService].toInstance(userAnswersService)
       )
   protected def applicationBuilderAsOrg(
-    userAnswers: Option[UserAnswers] = None
+    userAnswers: Option[UserAnswers] = None,
+    userAnswersService: UserAnswersService = new InMemoryUserAnswersService()
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
@@ -128,6 +134,7 @@ trait SpecBase
           new FakeDataRetrievalActionProvider(userAnswers)
         ),
         bind[CounterRepository].to(mockDraftIdRepo),
-        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
+        bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser],
+        bind[UserAnswersService].toInstance(userAnswersService)
       )
 }

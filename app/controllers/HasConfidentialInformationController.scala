@@ -36,9 +36,7 @@ class HasConfidentialInformationController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: HasConfidentialInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: HasConfidentialInformationView
@@ -49,7 +47,7 @@ class HasConfidentialInformationController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyWithHistory(draftId, HasConfidentialInformationPage)) {
       implicit request =>
         val preparedForm = HasConfidentialInformationPage.fill(form)
 
@@ -57,7 +55,7 @@ class HasConfidentialInformationController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         form
           .bindFromRequest()

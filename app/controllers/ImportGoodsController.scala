@@ -24,7 +24,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import controllers.actions._
+import controllers.actions.Actions
 import forms.ImportGoodsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
@@ -36,10 +36,8 @@ class ImportGoodsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
   formProvider: ImportGoodsFormProvider,
+  actions: Actions,
   val controllerComponents: MessagesControllerComponents,
   view: ImportGoodsView
 )(implicit ec: ExecutionContext)
@@ -49,14 +47,14 @@ class ImportGoodsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyWithHistory(draftId, ImportGoodsPage)) {
       implicit request =>
         val preparedForm = ImportGoodsPage.fill(form)
         Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         form
           .bindFromRequest()

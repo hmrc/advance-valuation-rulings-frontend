@@ -52,7 +52,7 @@ class UserAnswersServiceSpec
   private val userId  = "user id"
   private val draftId = DraftId(0)
   private val answers = UserAnswers(userId, draftId, Json.obj())
-  private val service = new UserAnswersService(mockUserAnswersConnector)
+  private val service = new BackendUserAnswersService(mockUserAnswersConnector)
 
   ".get" - {
 

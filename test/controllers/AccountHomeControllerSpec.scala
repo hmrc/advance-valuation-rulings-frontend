@@ -62,11 +62,12 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(Nil)))
 
-      val application = applicationBuilder()
+      val application = applicationBuilder(
+        userAnswersService = mockUserAnswersService
+      )
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService),
-          bind[UserAnswersService].to(mockUserAnswersService)
+          bind[AuditService].to(mockAuditService)
         )
         .build()
 
@@ -91,11 +92,12 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
           ApplicationSummary(ApplicationId(1235L), "shoes", secondApplicationDate, "eoriStr")
         )
 
-      val application = applicationBuilder()
+      val application = applicationBuilder(
+        userAnswersService = mockUserAnswersService
+      )
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService),
-          bind[UserAnswersService].to(mockUserAnswersService)
+          bind[AuditService].to(mockAuditService)
         )
         .build()
 
@@ -131,11 +133,12 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
       val draftSummaries = Seq(DraftSummary(draftId, None, Instant.now, None))
 
-      val application = applicationBuilder()
+      val application = applicationBuilder(
+        userAnswersService = mockUserAnswersService
+      )
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService),
-          bind[UserAnswersService].to(mockUserAnswersService)
+          bind[AuditService].to(mockAuditService)
         )
         .build()
 
@@ -146,6 +149,10 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))
+
+      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+        Some(userAnswersAsIndividualTrader)
+      )
 
       running(application) {
         val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
@@ -173,6 +180,7 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       }
 
       verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
+      verify(mockUserAnswersService, times(1)).get(eqTo(draftId))(any())
     }
 
     "must return OK and the correct view for a GET with some drafts and some applications" in {
@@ -184,11 +192,12 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
 
       val draftSummaries = Seq(DraftSummary(draftId, None, Instant.now, None))
 
-      val application = applicationBuilder()
+      val application = applicationBuilder(
+        userAnswersService = mockUserAnswersService
+      )
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService),
-          bind[UserAnswersService].to(mockUserAnswersService)
+          bind[AuditService].to(mockAuditService)
         )
         .build()
 
@@ -200,6 +209,9 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))
 
+      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+        Some(userAnswersAsIndividualTrader)
+      )
       running(application) {
         val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
 
@@ -231,13 +243,13 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       }
 
       verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
+      verify(mockUserAnswersService, times(1)).get(eqTo(draftId))(any())
     }
 
     "must REDIRECT and set ApplicantUserType on startApplication" in {
       val fixedTime   = Instant.parse("2018-08-22T10:00:00Z")
       val application =
-        applicationBuilder(userAnswers = None)
-          .overrides(bind[UserAnswersService].to(mockUserAnswersService))
+        applicationBuilder(userAnswers = None, userAnswersService = mockUserAnswersService)
           .overrides(
             bind[Clock]
               .toInstance(Clock.fixed(fixedTime, ZoneOffset.UTC))
