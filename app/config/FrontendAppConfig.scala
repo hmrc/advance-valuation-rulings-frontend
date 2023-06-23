@@ -30,6 +30,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
+  private val logger = play.api.Logger(getClass)
+
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
 
@@ -82,6 +84,16 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
+
+  val traderDetailsCacheEnabled: Boolean = {
+    val path = "features.traderDetailsCacheEnabled"
+    configuration
+      .getOptional[Boolean]("features.traderDetailsCacheEnabled")
+      .getOrElse {
+        logger.error(s"Missing config key for config value $path")
+        false
+      }
+  }
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),

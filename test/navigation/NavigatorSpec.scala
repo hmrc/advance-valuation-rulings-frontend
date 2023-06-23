@@ -84,8 +84,8 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-        ) mustBe routes.RequiredInformationController
-          .onPageLoad(draftId)
+        ) mustBe routes.WhoAreYouAgentController
+          .onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
@@ -95,7 +95,7 @@ class NavigatorSpec extends SpecBase {
           userAnswersAsIndividualTrader
             .setFuture(AccountHomePage, OrganisationAssistant)
             .futureValue
-        ) mustBe routes.WhatIsYourRoleAsImporterController
+        ) mustBe routes.WhoAreYouAgentController
           .onPageLoad(NormalMode, draftId)
       }
 
@@ -104,8 +104,17 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
-        ) mustBe routes.RequiredInformationController
-          .onPageLoad(draftId)
+        ) mustBe routes.WhoAreYouAgentController
+          .onPageLoad(NormalMode, draftId)
+      }
+
+      "should navigate to WhatIsYourRole page for an Agent" in {
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
+//        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.UnauthorisedController.onPageLoad
       }
 
       "should navigate to WhatIsYourRole page for an Agent" in {

@@ -46,18 +46,20 @@ class WhoAreYouAgentController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form           = formProvider()
+  private val logger = play.api.Logger(getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val _ = request.userAnswers.get(WhoAreYouAgentPage) match {
+        logger.info("WhoAreYouAgentController onPageLoad")
+
+        val preparedForm = request.userAnswers.get(WhoAreYouAgentPage) match {
           case None        => form
           case Some(value) => form.fill(value)
         }
-        // TODO: implement agent details page after MVP
-        Redirect(controllers.routes.AccountHomeController.onPageLoad())
-      // Ok(view(preparedForm, mode))
+
+        Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
