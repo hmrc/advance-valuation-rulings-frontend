@@ -16,8 +16,7 @@
 
 package controllers
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.Instant
 import javax.inject.Inject
 
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -25,23 +24,25 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import models.DraftHasBeenSavedModel
+import models.{DraftHasBeenSavedModel, DraftId}
 import views.html.DraftHasBeenSavedView
 
 class DraftHasBeenSavedController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
+  getData: DataRetrievalActionProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DraftHasBeenSavedView,
   model: DraftHasBeenSavedModel
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] =
-    identify {
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId)) {
       implicit request =>
-        val date = LocalDate.now()
-        Ok(view(model.getDate(date)))
+        val date: Instant = request.userAnswers.map(_.lastUpdated).get
+
+        Ok(view(model.get28DaysLater(date)))
     }
 
 }

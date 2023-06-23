@@ -16,7 +16,7 @@
 
 package models
 
-import java.time.LocalDate
+import java.time.{Clock, Instant, ZoneId}
 
 import base.SpecBase
 
@@ -26,16 +26,23 @@ class DraftHasBeenSavedModelSpec extends SpecBase {
 
   "GetDate returns a formatted date for 28 days from" - {
     "1st of feb" in {
-      val date           = LocalDate.of(2002, 2, 1)
+
+      val fixedClock =
+        Clock.fixed(Instant.parse("2002-02-01T00:00:00Z"), ZoneId.of("Europe/London"))
+      val date       = Instant.now(fixedClock)
+
       val expectedResult = "01 March 2002"
-      val result         = sut.getDate(date)
+      val result         = sut.get28DaysLater(date)
 
       result mustBe expectedResult
     }
     "1st of Feb on a leap year" in {
-      val date           = LocalDate.of(2000, 2, 1)
+      val fixedClock =
+        Clock.fixed(Instant.parse("2000-02-01T00:00:00Z"), ZoneId.of("Europe/London"))
+      val date       = Instant.now(fixedClock)
+
       val expectedResult = "29 February 2000"
-      val result         = sut.getDate(date)
+      val result         = sut.get28DaysLater(date)
 
       result mustBe expectedResult
     }

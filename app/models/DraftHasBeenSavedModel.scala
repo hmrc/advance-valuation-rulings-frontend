@@ -16,12 +16,22 @@
 
 package models
 
-import java.time.LocalDate
+import java.time.{Instant, ZoneId}
 import java.time.format.DateTimeFormatter
-
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 case class DraftHasBeenSavedModel() {
 
-  def getDate(date: LocalDate): String =
-    date.plusDays(28).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+  def get28DaysLater(date: Instant): String = {
+
+    val instant: Instant             = date.plus(28, ChronoUnit.DAYS)
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH)
+    val timeZone: ZoneId             = ZoneId.systemDefault()
+
+    instant
+      .atZone(timeZone)
+      .format(formatter)
+
+  }
 
 }

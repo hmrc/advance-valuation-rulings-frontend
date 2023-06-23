@@ -16,27 +16,33 @@
 
 package controllers
 
-import java.time.LocalDate
+import java.time.{Clock, Instant, ZoneId}
 
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.DraftHasBeenSavedModel
+import models.{DraftHasBeenSavedModel, DraftId, UserAnswers}
 import views.html.DraftHasBeenSavedView
 
 class DraftHasBeenSavedControllerSpec extends SpecBase {
 
-  val date = DraftHasBeenSavedModel().getDate(LocalDate.now())
+  val fixedInstant: Instant = Instant.parse("2023-04-05T00:00:00Z")
+  val fixedClock: Clock     =
+    Clock.fixed(fixedInstant, ZoneId.of("Europe/London"))
+  val date: String          = DraftHasBeenSavedModel().get28DaysLater(Instant.now(fixedClock))
 
   "DraftHasBeenSaved Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = UserAnswers(userAnswersId, draftId, lastUpdated = fixedInstant)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.DraftHasBeenSavedController.onPageLoad().url)
+        val request =
+          FakeRequest(GET, routes.DraftHasBeenSavedController.onPageLoad(DraftId(12345)).url)
 
         val result = route(application, request).value
 
