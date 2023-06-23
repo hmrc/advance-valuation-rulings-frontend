@@ -30,5 +30,6 @@ package object navigation {
       case IndividualTrader      => isTrader
       case OrganisationAdmin     => isEmployee
       case OrganisationAssistant => isAgent
+      case Agent                 => isAgent
     }
 }

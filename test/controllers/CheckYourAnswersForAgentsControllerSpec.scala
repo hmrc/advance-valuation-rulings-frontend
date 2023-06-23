@@ -18,15 +18,17 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
+import play.api.mvc.{AnyContentAsEmpty, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import connectors.BackendConnector
 import models._
-import models.AuthUserType.{OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.requests.{ApplicationId, ApplicationSubmissionResponse}
 import org.mockito.ArgumentMatchers.any
@@ -48,24 +50,16 @@ class CheckYourAnswersForAgentsControllerSpec
     "must return OK and the correct view for a GET as OrganisationAdmin" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application = applicationBuilderAsOrg(userAnswers = Option(orgAdminUserAnswers))
+        private val application = applicationBuilderAsOrg(userAnswers = Option(orgAdminUserAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
           .build()
 
         implicit val msgs: Messages = messages(application)
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
 
         running(application) {
-          implicit val request =
+          implicit val request: Request[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
@@ -86,26 +80,18 @@ class CheckYourAnswersForAgentsControllerSpec
     "must return OK and the correct view for a GET as OrganisationAssistant claiming to be EmployeeOfOrg" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val userAnswers =
+        private val userAnswers =
           orgAssistantUserAnswers.setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg).futureValue
-        val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers))
+        private val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
           .build()
 
         implicit val msgs: Messages = messages(application)
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
 
         running(application) {
-          implicit val request =
+          implicit val request: Request[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
@@ -125,32 +111,25 @@ class CheckYourAnswersForAgentsControllerSpec
     "must return OK and the correct view for a GET as OrganisationAssistant claiming to be AgentOnBehalfOfOrg" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val userAnswers = orgAssistantUserAnswers
+        private val userAnswers = orgAssistantUserAnswers
           .setFuture(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
           .futureValue
-        val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers))
+        private val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
           .build()
 
         implicit val msgs: Messages = messages(application)
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
 
         running(application) {
-          implicit val request =
+          implicit val request: Request[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
+
           val list = ApplicationSummary(userAnswers, traderDetailsWithCountryCode)
 
           status(result) mustEqual OK
@@ -165,72 +144,84 @@ class CheckYourAnswersForAgentsControllerSpec
     "must redirect to WhatIsYourRoleAsImporterPage for a GET as OrganisationAssistant if no importer role is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application = applicationBuilderAsOrg(userAnswers = Option(orgAssistantUserAnswers))
+        private val application =
+          applicationBuilderAsOrg(userAnswers = Option(orgAssistantUserAnswers))
+            .overrides(
+              bind[BackendConnector].toInstance(mockBackendConnector)
+            )
+            .build()
+
+        private val redirectPage: String =
+          routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
+
+        runApplication(application, redirectPage)
+
+      }
+
+    "must redirect to WhatIsYourRoleAsImporterPage for a GET as Agent if no importer role is found" in
+      new CheckYourAnswersForAgentsControllerSpecSetup {
+
+        private val application = applicationBuilderAsAgent(userAnswers = Option(agentUserAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
           .build()
 
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
+        private val redirectPage: String =
+          routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
 
-        running(application) {
-          val request =
-            FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
+        runApplication(application, redirectPage)
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.WhatIsYourRoleAsImporterController
-            .onPageLoad(CheckMode, draftId)
-            .url
-        }
       }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in
+    "must redirect to UnauthorisedController for a GET as Trader" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application =
-          applicationBuilderAsOrg(userAnswers = Some(orgAssistantUserAnswers)).build()
+        private val application = applicationBuilderAsAgent(userAnswers = Option(traderUserAnswers))
+          .overrides(
+            bind[BackendConnector].toInstance(mockBackendConnector)
+          )
+          .build()
 
-        running(application) {
-          val request =
-            FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
+        private val redirectPage: String =
+          routes.UnauthorisedController.onPageLoad.url
 
-          val result = route(application, request).value
+        runApplication(application, redirectPage)
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-        }
+      }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found for orgAssistant" in
+      new CheckYourAnswersForAgentsControllerSpecSetup {
+
+        private val application =
+          applicationBuilderAsAgent(userAnswers = Some(orgAssistantUserAnswers)).build()
+
+        runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
+
+      }
+
+    "must redirect to Journey Recovery for a GET if no existing data is found for agent" in
+      new CheckYourAnswersForAgentsControllerSpecSetup {
+
+        private val application =
+          applicationBuilderAsAgent(userAnswers = Some(agentUserAnswers)).build()
+
+        runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
       }
 
     "must redirect to Journey Recovery for a GET if no importer role is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val application = applicationBuilderAsOrg(userAnswers = None).build()
+        private val application = applicationBuilderAsOrg(userAnswers = None).build()
 
-        running(application) {
-          val request =
-            FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-        }
+        runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
       }
 
     "must redirect to Application Complete when application submission succeeds" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
-        val applicationId = ApplicationId(1)
-        val response      = ApplicationSubmissionResponse(applicationId)
+        private val applicationId = ApplicationId(1)
+        private val response      = ApplicationSubmissionResponse(applicationId)
 
         when(mockSubmissionService.submitApplication(any(), any())(any()))
           .thenReturn(Future.successful(response))
@@ -243,77 +234,81 @@ class CheckYourAnswersForAgentsControllerSpec
             )
           )
 
-        val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        private val application = applicationBuilderAsOrg(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
           .build()
 
-        running(application) {
-          val request =
-            FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit(draftId).url)
+        private val redirectUrl =
+          routes.ApplicationCompleteController.onPageLoad(applicationId.toString).url
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.ApplicationCompleteController
-            .onPageLoad(applicationId.toString)
-            .url
-        }
-      }
-
-    "must redirect to JourneyRecoveryController when backend call fails" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        val applicationId = ApplicationId(1)
-        val response      = ApplicationSubmissionResponse(applicationId)
-
-        when(mockSubmissionService.submitApplication(any(), any())(any()))
-          .thenReturn(Future.successful(response))
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Left(BackendError(500, "Internal Server Error"))
-          )
-
-        val application = applicationBuilderAsOrg(Option(fullUserAnswers))
-          .overrides(
-            bind[SubmissionService].toInstance(mockSubmissionService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
-
-        running(application) {
-          val request =
-            FakeRequest(POST, routes.CheckYourAnswersForAgentsController.onSubmit(draftId).url)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual routes.JourneyRecoveryController
-            .onPageLoad()
-            .url
-        }
+        runApplication(application, redirectUrl, POST)
       }
   }
+
+  "must redirect to JourneyRecoveryController when backend call fails" in
+    new CheckYourAnswersForAgentsControllerSpecSetup {
+
+      private val applicationId = ApplicationId(1)
+      private val response      = ApplicationSubmissionResponse(applicationId)
+
+      when(mockSubmissionService.submitApplication(any(), any())(any()))
+        .thenReturn(Future.successful(response))
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Left(BackendError(500, "Internal Server Error"))
+        )
+
+      private val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        .overrides(
+          bind[SubmissionService].toInstance(mockSubmissionService),
+          bind[BackendConnector].toInstance(mockBackendConnector)
+        )
+        .build()
+
+      private val redirectPage = routes.JourneyRecoveryController.onPageLoad().url
+      runApplication(application, redirectPage)
+    }
+
+  private def runApplication(
+    application: Application,
+    redirectPage: String,
+    httpRequest: String = GET
+  ) =
+    running(application) {
+      val request =
+        FakeRequest(httpRequest, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual redirectPage
+    }
+
 }
 
 trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with TryValues {
   val userAnswersId: String = "id"
-  val DraftIdSequence       = 123456789L
-  val draftId               = DraftId(DraftIdSequence)
+  val DraftIdSequence: Long = 123456789L
+  val draftId: DraftId      = DraftId(DraftIdSequence)
 
   val orgAssistantUserAnswers: UserAnswers =
     UserAnswers(userAnswersId, draftId).set(AccountHomePage, OrganisationAssistant).success.get
+  val agentUserAnswers: UserAnswers        =
+    UserAnswers(userAnswersId, draftId).set(AccountHomePage, Agent).success.get
+  val traderUserAnswers: UserAnswers       =
+    UserAnswers(userAnswersId, draftId).set(AccountHomePage, IndividualTrader).success.get
   val orgAdminUserAnswers: UserAnswers     =
     UserAnswers(userAnswersId, draftId).set(AccountHomePage, OrganisationAdmin).success.get
 
-  val mockSubmissionService = mock[SubmissionService]
-  val mockBackendConnector  = mock[BackendConnector]
+  val mockSubmissionService: SubmissionService = mock[SubmissionService]
+  val mockBackendConnector: BackendConnector   = mock[BackendConnector]
 
-  val contactInformation = ContactInformation(
+  val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
     sepCorrAddrIndicator = Some(false),
     streetAndNumber = Some("Test Street 1"),
@@ -326,7 +321,7 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
     emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
   )
 
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+  val traderDetailsWithCountryCode: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
     EORINo = "GB123456789012345",
     consentToDisclosureOfPersonalData = true,
     CDSFullName = "Test Name",
@@ -339,7 +334,18 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
     contactInformation = Some(contactInformation)
   )
 
-  val fullUserAnswers = (for {
+  when(
+    mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+  ).thenReturn(
+    Future
+      .successful(
+        Right(
+          traderDetailsWithCountryCode
+        )
+      )
+  )
+
+  val fullUserAnswers: UserAnswers = (for {
     ua <- orgAssistantUserAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
     ua <- ua.set(HasCommodityCodePage, false)
     ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)

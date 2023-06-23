@@ -64,7 +64,7 @@ requiredInformation.caption = Rhestr wirio
 requiredInformation.title = Cyn i chi ddechrau’ch cais
 requiredInformation.heading = Cyn i chi ddechrau’ch cais
 requiredInformation.checkYourAnswersLabel = Cyn i chi ddechrau’ch cais
-requiredInformation.hint = Bydd angen i chi dicio pob eitem i barhau. Os na fyddwch yn gwneud hynny, gallai oedi eich cais am benderfyniad Dyfarniad Prisio Uwch.
+requiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
 requiredInformation.option1.individual = Rwy’n ymwybodol bydd yn rhaid i mi gynnig dull o brisio’r nwyddau.
 requiredInformation.option2.individual = Byddaf yn rhoi fy e-bost cyswllt a rhif ffôn i CThEF fel rhan o’r cais hwn.
 requiredInformation.option3.individual = Mae gen i rif EORI sy’n dechrau gyda GB.
@@ -77,8 +77,6 @@ requiredInformation.option3.organisation = Mae gen i rif EORI y sefydliad sy’n
 requiredInformation.option4.organisation = Mae’r enw a’r cyfeiriad a gofrestrwyd â rhif EORI y sefydliad yn gyfredol.
 requiredInformation.option5.organisation = Rwy’n ymwybodol y gall gymryd hyd at 120 diwrnod ar ôl i mi gyflwyno fy nghais i gael penderfyniad.
 requiredInformation.option6.organisation = Rwy’n ymwybodol na fydd angen i mi wneud cais am Ddyfarniad Prisio Uwch bob tro y byddaf yn mewnforio’r nwyddau hyn drwy’r un dull prisio, gan fod y dyfarniad yn gyfreithiol rwymol am hyd at dair blynedd o’r dyddiad cyhoeddi.
-requiredInformation.error.required = Dewiswch bob eitem yn y rhestr wirio i ddechrau’ch cais
-requiredInformation.error.selectAll = Dewiswch bob eitem yn y rhestr wirio i ddechrau’ch cais
 requiredInformation.change.hidden = required information
 
 importGoods.title = Ydych chi’n bwriadu mewnforio nwyddau i Brydain Fawr?
@@ -828,6 +826,10 @@ deleteDraft.title = Are you sure you want to delete your application?
 deleteDraft.heading = Are you sure you want to delete your application?
 deleteDraft.error.required = Select yes if you want to delete your application
 deleteDraft.guidance = If you delete your application now, any data will be lost and you will need to make a new application.
+
+removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu {0}?
+removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu {0}?
+removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu’r ffeil hon
 
 draftHasBeenSaved.title = Your application draft has been saved for 28 days
 draftHasBeenSaved.heading = Your application draft has been saved for 28 days

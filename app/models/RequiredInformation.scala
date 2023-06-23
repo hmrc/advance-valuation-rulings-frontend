@@ -17,7 +17,6 @@
 package models
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
@@ -43,14 +42,14 @@ object RequiredInformation extends Enumerable.Implicits {
     Option6
   )
 
-  def checkboxItems(affinityGroup: AffinityGroup)(implicit messages: Messages): Seq[CheckboxItem] =
+  def checkboxItems(authUserType: AuthUserType)(implicit messages: Messages): Seq[CheckboxItem] =
     values.zipWithIndex.map {
       case (value, index) =>
-        val suffix = affinityGroup match {
-          case AffinityGroup.Agent        => "organisation"
-          case AffinityGroup.Individual   => "individual"
-          case AffinityGroup.Organisation => "organisation"
-          case _                          => "unknown"
+        val suffix = authUserType match {
+          case AuthUserType.IndividualTrader      => "individual"
+          case AuthUserType.OrganisationAssistant => "organisation"
+          case AuthUserType.OrganisationAdmin     => "organisation"
+          case AuthUserType.Agent                 => "organisation"
         }
         CheckboxItemViewModel(
           content = Text(messages(s"requiredInformation.${value.toString}.$suffix")),
