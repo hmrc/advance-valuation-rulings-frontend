@@ -28,7 +28,7 @@ import forms.IsThereASaleInvolvedFormProvider
 import models.{Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.IsThereASaleInvolvedPage
 import services.UserAnswersService
@@ -113,13 +113,22 @@ class IsThereASaleInvolvedControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+        verify(mockUserAnswersService, times(2)).set(any())(any())
       }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
+      val mockUserAnswersService = mock[UserAnswersService]
+      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+        Some(userAnswersAsIndividualTrader)
+      )
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+          .build()
 
       running(application) {
         val request =
@@ -137,6 +146,8 @@ class IsThereASaleInvolvedControllerSpec extends SpecBase with MockitoSugar {
           request,
           messages(application)
         ).toString
+
+        verify(mockUserAnswersService, times(1)).set(any())(any())
       }
     }
 

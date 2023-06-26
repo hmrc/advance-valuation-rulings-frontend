@@ -36,9 +36,7 @@ class DescribeTheConditionsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: DescribeTheConditionsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DescribeTheConditionsView
@@ -49,7 +47,7 @@ class DescribeTheConditionsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = DescribeTheConditionsPage.fill(form)
 
@@ -57,7 +55,7 @@ class DescribeTheConditionsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, DescribeTheConditionsPage)).async {
       implicit request =>
         form
           .bindFromRequest()

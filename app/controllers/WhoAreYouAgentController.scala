@@ -36,9 +36,7 @@ class WhoAreYouAgentController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: WhoAreYouAgentFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: WhoAreYouAgentView
@@ -49,7 +47,7 @@ class WhoAreYouAgentController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val _ = request.userAnswers.get(WhoAreYouAgentPage) match {
           case None        => form
@@ -61,7 +59,7 @@ class WhoAreYouAgentController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, WhoAreYouAgentPage)).async {
       implicit request =>
         form
           .bindFromRequest()

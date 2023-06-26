@@ -36,9 +36,7 @@ class ApplicationContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ApplicationContactDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ApplicationContactDetailsView
@@ -49,7 +47,7 @@ class ApplicationContactDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ApplicationContactDetailsPage.fill(form)
 
@@ -57,7 +55,7 @@ class ApplicationContactDetailsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, ApplicationContactDetailsPage)).async {
       implicit request =>
         form
           .bindFromRequest()

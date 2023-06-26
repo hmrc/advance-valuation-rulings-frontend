@@ -35,7 +35,9 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{IsThisFileConfidentialPage, RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
+import pages.DoYouWantToUploadDocumentsPage
 import queries.AllDocuments
+import queries.LastQuestionAnswered
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
 
@@ -101,12 +103,14 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
-    verify(mockUserAnswersService, times(1)).set(userAnswersCaptor.capture())(any())
+    val expectedUserAnswers =
+      userAnswers.set(LastQuestionAnswered, DoYouWantToUploadDocumentsPage).success.value
+    verify(mockUserAnswersService, times(2)).set(userAnswersCaptor.capture())(any())
     verify(osClient, times(1)).deleteObject(eqTo(Path.File("downloadUrl")), any())(any())
     verify(mockNavigator, times(1)).nextPage(
       eqTo(RemoveSupportingDocumentPage(Index(0))),
       eqTo(NormalMode),
-      eqTo(userAnswers)
+      eqTo(expectedUserAnswers)
     )
 
     val updatedAnswers = userAnswersCaptor.getValue
@@ -116,6 +120,9 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
   }
 
   "does not call the object store if the user answers 'No'" in new SpecSetup {
+    when(mockUserAnswersService.set(any())(any()))
+      .thenReturn(Future.successful(Done))
+
     val answers = (for {
       ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
       ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
@@ -136,12 +143,13 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
-    verify(mockUserAnswersService, never()).set(userAnswersCaptor.capture())(any())
+    verify(mockUserAnswersService, times(1)).set(any())(any())
     verify(osClient, never()).deleteObject(eqTo(Path.File("downloadUrl")), any())(any())
   }
 
   "does not call object store if the file does not exist" in new SpecSetup {
-
+    when(mockUserAnswersService.set(any())(any()))
+      .thenReturn(Future.successful(Done))
     val application = applicationBuilder(userAnswers = Some(userAnswers))
       .overrides(
         bind[UserAnswersService].toInstance(mockUserAnswersService),
@@ -157,11 +165,13 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
+    verify(mockUserAnswersService, times(1)).set(any())(any())
     verify(osClient, never()).deleteObject(any(), any())(any())
   }
 
   "does not call object store if the file has no download url" in new SpecSetup {
-
+    when(mockUserAnswersService.set(any())(any()))
+      .thenReturn(Future.successful(Done))
     val answers = userAnswers
       .set(UploadSupportingDocumentPage(Index(0)), UploadedFile.Initiated("reference"))
       .success
@@ -182,6 +192,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
+    verify(mockUserAnswersService, times(1)).set(any())(any())
     verify(osClient, never()).deleteObject(any(), any())(any())
   }
 

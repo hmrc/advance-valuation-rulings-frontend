@@ -36,9 +36,7 @@ class IsSaleBetweenRelatedPartiesController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: IsSaleBetweenRelatedPartiesFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: IsSaleBetweenRelatedPartiesView
@@ -49,7 +47,7 @@ class IsSaleBetweenRelatedPartiesController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = IsSaleBetweenRelatedPartiesPage.fill(form)
 
@@ -57,7 +55,7 @@ class IsSaleBetweenRelatedPartiesController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, IsSaleBetweenRelatedPartiesPage)).async {
       implicit request =>
         form
           .bindFromRequest()

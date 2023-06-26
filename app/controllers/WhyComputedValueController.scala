@@ -36,9 +36,7 @@ class WhyComputedValueController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: WhyComputedValueFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: WhyComputedValueView
@@ -49,7 +47,7 @@ class WhyComputedValueController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = WhyComputedValuePage.fill(form)
 
@@ -57,7 +55,7 @@ class WhyComputedValueController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, WhyComputedValuePage)).async {
       implicit request =>
         form
           .bindFromRequest()

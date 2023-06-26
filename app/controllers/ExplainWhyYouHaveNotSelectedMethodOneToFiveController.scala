@@ -36,9 +36,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ExplainWhyYouHaveNotSelectedMethodOneToFiveView
@@ -49,7 +47,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ExplainWhyYouHaveNotSelectedMethodOneToFivePage.fill(form)
 
@@ -57,7 +55,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, ExplainWhyYouHaveNotSelectedMethodOneToFivePage)).async {
       implicit request =>
         form
           .bindFromRequest()

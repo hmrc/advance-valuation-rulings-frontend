@@ -28,7 +28,7 @@ import forms.WhoAreYouAgentFormProvider
 import models.{Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhoAreYouAgentPage
 import services.UserAnswersService
@@ -131,8 +131,16 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
 
       running(application) {
         val request =
@@ -150,6 +158,8 @@ class WhoAreYouAgentControllerSpec extends SpecBase with MockitoSugar {
           request,
           messages(application)
         ).toString
+
+        verify(mockUserAnswersService, times(1)).set(any())(any())
       }
     }
 

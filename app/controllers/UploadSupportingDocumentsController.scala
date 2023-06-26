@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import controllers.actions._
 import models._
 import navigation.Navigator
 import pages.UploadSupportingDocumentPage
@@ -37,9 +37,7 @@ import views.html.UploadSupportingDocumentsView
 class UploadSupportingDocumentsController @Inject() (
   override val messagesApi: MessagesApi,
   override val controllerComponents: MessagesControllerComponents,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   view: UploadSupportingDocumentsView,
   fileService: FileService,
   navigator: Navigator,
@@ -58,7 +56,7 @@ class UploadSupportingDocumentsController @Inject() (
     errorCode: Option[String],
     key: Option[String]
   ): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         val answers     = request.userAnswers
         val attachments = answers.get(AllDocuments).getOrElse(Seq.empty)

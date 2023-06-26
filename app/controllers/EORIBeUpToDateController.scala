@@ -29,16 +29,14 @@ import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   val controllerComponents: MessagesControllerComponents,
   view: EORIBeUpToDateView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         AccountHomePage.get() match {
           case None               =>

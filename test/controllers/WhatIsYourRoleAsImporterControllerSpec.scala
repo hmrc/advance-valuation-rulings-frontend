@@ -34,6 +34,7 @@ import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, w
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import pages.AccountHomePage
+import queries.LastQuestionAnswered
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
@@ -145,13 +146,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         redirectLocation(result).value mustEqual onwardRoute.url
       }
 
-      val expectedUserAnswers =
-        userAnswers
-          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
-          .success
-          .value
-
-      verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
+      verify(mockUserAnswersService, times(2)).set(any())(any())
       verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
     }
 
@@ -201,15 +196,24 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         .success
         .value
+        .set(LastQuestionAnswered, WhatIsYourRoleAsImporterPage)
+        .success
+        .value
 
       verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
       verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application = applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
-        .overrides(bind[AuditService].to(mockAuditService))
+        .overrides(
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].toInstance(mockUserAnswersService)
+        )
         .build()
 
       running(application) {
@@ -228,6 +232,8 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
           request,
           messages(application)
         ).toString
+
+        verify(mockUserAnswersService, times(1)).set(any())(any())
       }
 
       verifyZeroInteractions(mockAuditService)

@@ -26,7 +26,25 @@ import connectors.UserAnswersConnector
 import models.{Done, DraftId, UserAnswers}
 import models.requests.DraftSummaryResponse
 
-class UserAnswersService @Inject() (userAnswersConnector: UserAnswersConnector) {
+trait UserAnswersService {
+
+  def keepAlive(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done]
+
+  def get(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]]
+
+  def getInternal(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]]
+
+  def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done]
+
+  def setInternal(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done]
+
+  def clear(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done]
+
+  def summaries()(implicit hc: HeaderCarrier): Future[DraftSummaryResponse]
+}
+
+class BackendUserAnswersService @Inject() (userAnswersConnector: UserAnswersConnector)
+    extends UserAnswersService {
 
   def keepAlive(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
     userAnswersConnector.keepAlive(draftId)

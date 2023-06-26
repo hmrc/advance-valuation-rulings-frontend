@@ -30,7 +30,7 @@ import forms.IsThisFileConfidentialFormProvider
 import models.{Done, Index, NormalMode, UploadedFile}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
@@ -124,8 +124,16 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
       val request     =
         FakeRequest(POST, isThisFileConfidentialRoute)
           .withFormUrlEncodedBody(("value", ""))
@@ -138,6 +146,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
         request,
         messages(application)
       ).toString
+      verify(mockUserAnswersService, times(1)).set(any())(any())
     }
 
     "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
@@ -177,8 +186,14 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload for POST" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        .overrides(
+          bind[UserAnswersService].toInstance(mockUserAnswersService)
+        )
         .configure(
           "upscan.maxFiles" -> 1
         )
@@ -196,7 +211,14 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must return NOT_FOUND when the index is greater than the greatest existing index + 1 for POST" in {
 
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        .overrides(
+          bind[UserAnswersService].toInstance(mockUserAnswersService)
+        )
         .configure(
           "upscan.maxFiles" -> 5
         )

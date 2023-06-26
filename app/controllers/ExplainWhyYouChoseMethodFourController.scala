@@ -36,9 +36,7 @@ class ExplainWhyYouChoseMethodFourController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ExplainWhyYouChoseMethodFourFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ExplainWhyYouChoseMethodFourView
@@ -49,7 +47,7 @@ class ExplainWhyYouChoseMethodFourController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ExplainWhyYouChoseMethodFourPage.fill(form)
 
@@ -57,7 +55,7 @@ class ExplainWhyYouChoseMethodFourController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, ExplainWhyYouChoseMethodFourPage)).async {
       implicit request =>
         form
           .bindFromRequest()

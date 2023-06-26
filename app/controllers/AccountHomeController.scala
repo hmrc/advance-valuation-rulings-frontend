@@ -107,12 +107,12 @@ class AccountHomeController @Inject() (
           .flatMap {
             userAnswers =>
               // val lastVisited: Option[pages.QuestionPage[_]] =
-              //   userAnswers.get(queries.LastQuestionViewed)
+              //   userAnswers.get(queries.LastQuestionAnswered)
               userAnswersService
                 .get(userAnswers.draftId)
                 .map {
                   userAns =>
-                    val lastViewed = userAns.flatMap(_.get(queries.LastQuestionViewed))
+                    val lastViewed = userAns.flatMap(_.get(queries.LastQuestionAnswered))
                     lastViewed match {
                       case Some(page) =>
                         println("lastVisited: " + lastViewed)

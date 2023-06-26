@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import connectors.BackendConnector
-import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
+import controllers.actions._
 import controllers.routes.WhatIsYourRoleAsImporterController
 import models._
 import models.AuthUserType._
@@ -39,9 +39,7 @@ import views.html.CheckYourAnswersForAgentsView
 
 class CheckYourAnswersForAgentsController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   isAgent: IdentifyAgentAction,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersForAgentsView,
@@ -70,7 +68,7 @@ class CheckYourAnswersForAgentsController @Inject() (
       }
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         getTraderDetails {
           traderDetails =>
@@ -103,7 +101,7 @@ class CheckYourAnswersForAgentsController @Inject() (
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         getTraderDetails(
           traderDetails =>

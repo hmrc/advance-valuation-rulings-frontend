@@ -47,7 +47,7 @@ class IsThereASaleInvolvedController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (actions.identifyWithHistory(draftId, IsThereASaleInvolvedPage)) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = IsThereASaleInvolvedPage.fill(form)
 
@@ -55,7 +55,7 @@ class IsThereASaleInvolvedController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (actions.identifyDraft(draftId)).async {
+    (actions.identifyWithHistory(draftId, IsThereASaleInvolvedPage)).async {
       implicit request =>
         form
           .bindFromRequest()

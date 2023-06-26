@@ -36,9 +36,7 @@ class ExplainReasonComputedValueController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ExplainReasonComputedValueFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ExplainReasonComputedValueView
@@ -49,7 +47,7 @@ class ExplainReasonComputedValueController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ExplainReasonComputedValuePage.fill(form)
 
@@ -57,7 +55,7 @@ class ExplainReasonComputedValueController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, ExplainReasonComputedValuePage)).async {
       implicit request =>
         form
           .bindFromRequest()

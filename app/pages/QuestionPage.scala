@@ -40,13 +40,12 @@ object QuestionPage {
 
   implicit def reads: Reads[QuestionPage[_]] = {
     case JsString(value) =>
-
       keysAndPages.get(value) match {
         case Some(page) => JsSuccess(page)
         case None       => JsError(s"Unknown question page key: $value")
       }
 
-    case _               => JsError("Invalid QuestionPage")
+    case _ => JsError("Invalid QuestionPage")
   }
 
   val keysAndPages = Map[String, QuestionPage[_]](

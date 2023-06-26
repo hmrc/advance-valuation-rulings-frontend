@@ -47,14 +47,14 @@ class ImportGoodsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (actions.identifyWithHistory(draftId, ImportGoodsPage)) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ImportGoodsPage.fill(form)
         Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (actions.identifyDraft(draftId)).async {
+    (actions.identifyWithHistory(draftId, ImportGoodsPage)).async {
       implicit request =>
         form
           .bindFromRequest()

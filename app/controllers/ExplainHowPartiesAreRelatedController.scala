@@ -36,9 +36,7 @@ class ExplainHowPartiesAreRelatedController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ExplainHowPartiesAreRelatedFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ExplainHowPartiesAreRelatedView
@@ -49,7 +47,7 @@ class ExplainHowPartiesAreRelatedController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ExplainHowPartiesAreRelatedPage.fill(form)
 
@@ -57,7 +55,7 @@ class ExplainHowPartiesAreRelatedController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, ExplainHowPartiesAreRelatedPage)).async {
       implicit request =>
         form
           .bindFromRequest()

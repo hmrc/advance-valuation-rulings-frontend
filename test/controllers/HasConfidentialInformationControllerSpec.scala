@@ -28,7 +28,7 @@ import forms.HasConfidentialInformationFormProvider
 import models.{Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.HasConfidentialInformationPage
 import services.UserAnswersService
@@ -114,13 +114,23 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+        verify(mockUserAnswersService, times(2)).set(any())(any())
       }
     }
+    import org.mockito.Mockito.{when, verify, times}
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
 
       running(application) {
         val request =
@@ -130,6 +140,7 @@ class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSuga
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
+        verify(mockUserAnswersService, times(1)).set(any())(any())
       }
     }
 

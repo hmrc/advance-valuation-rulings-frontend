@@ -47,7 +47,7 @@ class ValuationMethodController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (actions.identifyWithHistory(draftId, ValuationMethodPage)) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ValuationMethodPage.fill(form)
 
@@ -55,7 +55,7 @@ class ValuationMethodController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    actions.identifyDraft(draftId).async {
+    actions.identifyWithHistory(draftId, ValuationMethodPage).async {
       implicit request =>
         form
           .bindFromRequest()

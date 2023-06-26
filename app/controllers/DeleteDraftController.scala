@@ -36,9 +36,7 @@ class DeleteDraftController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: DeleteDraftFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DeleteDraftView
@@ -49,12 +47,10 @@ class DeleteDraftController @Inject() (
   val form = formProvider()
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(form, draftId))
-    }
+    (actions.identifyDraft(draftId))(implicit request => Ok(view(form, draftId)))
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         form
           .bindFromRequest()

@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
 import connectors.BackendConnector
-import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import controllers.actions.Actions
 import models._
 import models.DraftId
 import models.requests._
@@ -37,9 +37,7 @@ import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView,
   submissionService: SubmissionService,
@@ -67,7 +65,7 @@ class CheckYourAnswersController @Inject() (
       }
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         getTraderDetails {
           traderDetails =>
@@ -77,7 +75,7 @@ class CheckYourAnswersController @Inject() (
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         getTraderDetails {
           traderDetails =>

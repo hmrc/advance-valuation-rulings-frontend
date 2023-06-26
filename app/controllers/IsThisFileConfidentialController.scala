@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import actions.Actions
 import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
@@ -38,9 +38,7 @@ class IsThisFileConfidentialController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: IsThisFileConfidentialFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: IsThisFileConfidentialView,
@@ -54,7 +52,7 @@ class IsThisFileConfidentialController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val attachments = AllDocuments.get().map(_.size).getOrElse(0)
 
@@ -76,7 +74,7 @@ class IsThisFileConfidentialController @Inject() (
     }
 
   def onSubmit(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, IsThisFileConfidentialPage(index))).async {
       implicit request =>
         val attachments = AllDocuments.get().map(_.size).getOrElse(0)
 

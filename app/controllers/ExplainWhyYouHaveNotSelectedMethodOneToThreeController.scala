@@ -36,9 +36,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ExplainWhyYouHaveNotSelectedMethodOneToThreeView
@@ -49,7 +47,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ExplainWhyYouHaveNotSelectedMethodOneToThreePage.fill(form)
 
@@ -57,7 +55,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, ExplainWhyYouHaveNotSelectedMethodOneToThreePage)).async {
       implicit request =>
         form
           .bindFromRequest()

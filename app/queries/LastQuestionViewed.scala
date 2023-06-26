@@ -20,6 +20,6 @@ import play.api.libs.json.{__, JsPath}
 
 import pages.QuestionPage
 
-case object LastQuestionViewed extends Modifiable[QuestionPage[_]] {
-  override def path: JsPath = __ \ "lastQuestionViewed"
+case object LastQuestionAnswered extends Modifiable[QuestionPage[_]] {
+  override def path: JsPath = __ \ "lastQuestionAnswered"
 }

@@ -18,6 +18,8 @@ package controllers
 
 import java.time.Instant
 
+import scala.concurrent.Future
+
 import play.api.Configuration
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -28,8 +30,11 @@ import base.SpecBase
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import services.UserAnswersService
 import views.html.UploadAnotherSupportingDocumentView
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
@@ -85,11 +90,15 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
     }
 
     "must redirect to the next page when valid data is submitted" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -100,18 +109,27 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual onwardRoute.url
+      verify(mockUserAnswersService, times(1)).set(any())(any())
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
-      val request     =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      val request   =
         FakeRequest(POST, uploadAnotherSupportingDocumentRoute)
           .withFormUrlEncodedBody(("value", ""))
-      val boundForm   = form.bind(Map("value" -> ""))
-      val view        = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
-      val result      = route(application, request).value
+      val boundForm = form.bind(Map("value" -> ""))
+      val view      = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
+      val result    = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(

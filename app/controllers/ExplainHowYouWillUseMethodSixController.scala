@@ -36,9 +36,7 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: ExplainHowYouWillUseMethodSixFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ExplainHowYouWillUseMethodSixView
@@ -49,7 +47,7 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = ExplainHowYouWillUseMethodSixPage.fill(form)
 
@@ -57,7 +55,7 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, ExplainHowYouWillUseMethodSixPage)).async {
       implicit request =>
         form
           .bindFromRequest()

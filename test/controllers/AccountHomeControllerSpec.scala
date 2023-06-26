@@ -62,12 +62,11 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(Nil)))
 
-      val application = applicationBuilder(
-        userAnswersService = mockUserAnswersService
-      )
+      val application = applicationBuilder()
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService)
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].to(mockUserAnswersService)
         )
         .build()
 
@@ -93,11 +92,11 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         )
 
       val application = applicationBuilder(
-        userAnswersService = mockUserAnswersService
       )
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService)
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].to(mockUserAnswersService)
         )
         .build()
 
@@ -134,11 +133,11 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       val draftSummaries = Seq(DraftSummary(draftId, None, Instant.now, None))
 
       val application = applicationBuilder(
-        userAnswersService = mockUserAnswersService
       )
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService)
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].to(mockUserAnswersService)
         )
         .build()
 
@@ -193,11 +192,11 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       val draftSummaries = Seq(DraftSummary(draftId, None, Instant.now, None))
 
       val application = applicationBuilder(
-        userAnswersService = mockUserAnswersService
       )
         .overrides(
           bind[BackendConnector].toInstance(mockBackEndConnector),
-          bind[AuditService].to(mockAuditService)
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].to(mockUserAnswersService)
         )
         .build()
 
@@ -249,10 +248,11 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
     "must REDIRECT and set ApplicantUserType on startApplication" in {
       val fixedTime   = Instant.parse("2018-08-22T10:00:00Z")
       val application =
-        applicationBuilder(userAnswers = None, userAnswersService = mockUserAnswersService)
+        applicationBuilder(userAnswers = None)
           .overrides(
             bind[Clock]
-              .toInstance(Clock.fixed(fixedTime, ZoneOffset.UTC))
+              .toInstance(Clock.fixed(fixedTime, ZoneOffset.UTC)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 

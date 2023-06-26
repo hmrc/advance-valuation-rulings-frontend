@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import models.requests.DataRequest
 import pages.QuestionPage
-import queries.LastQuestionViewed
+import queries.LastQuestionAnswered
 import services.UserAnswersService
 
 class UpdateHistoryAction(
@@ -39,7 +39,7 @@ class UpdateHistoryAction(
   ): Future[Either[Result, DataRequest[A]]] = {
     implicit val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     for {
-      userAnswers <- request.userAnswers.setFuture(LastQuestionViewed, page)
+      userAnswers <- request.userAnswers.setFuture(LastQuestionAnswered, page)
       _           <- userAnswersService.set(userAnswers)
       updated      = request.copy(userAnswers = userAnswers)
     } yield (Right(updated))

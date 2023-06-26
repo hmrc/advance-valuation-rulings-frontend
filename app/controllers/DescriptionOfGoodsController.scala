@@ -36,9 +36,7 @@ class DescriptionOfGoodsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: DescriptionOfGoodsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: DescriptionOfGoodsView
@@ -49,7 +47,7 @@ class DescriptionOfGoodsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = DescriptionOfGoodsPage.fill(form)
 
@@ -57,7 +55,7 @@ class DescriptionOfGoodsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, DescriptionOfGoodsPage)).async {
       implicit request =>
         form
           .bindFromRequest()

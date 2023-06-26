@@ -40,9 +40,7 @@ class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: CheckRegisteredDetailsView,
@@ -70,7 +68,7 @@ class CheckRegisteredDetailsController @Inject() (
       }
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         CheckRegisteredDetailsPage.get() match {
           case Some(value) =>
@@ -98,7 +96,7 @@ class CheckRegisteredDetailsController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, CheckRegisteredDetailsPage)).async {
       implicit request =>
         val form: Form[Boolean] = formProvider()
 

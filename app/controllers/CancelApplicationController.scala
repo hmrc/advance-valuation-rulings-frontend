@@ -23,16 +23,14 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
+import controllers.actions.Actions
 import models.DraftId
 import services.UserAnswersService
 import views.html.CancelAreYouSureView
 
 class CancelApplicationController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   userAnswersService: UserAnswersService,
   val controllerComponents: MessagesControllerComponents,
   view: CancelAreYouSureView
@@ -42,10 +40,10 @@ class CancelApplicationController @Inject() (
 
   // @nowarn("cat=unused")
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
+    (actions.identifyDraft(draftId))(implicit request => Ok(view(draftId)))
 
   def confirmCancel(draftId: DraftId): Action[AnyContent] =
-    identify.async {
+    (actions.identifyDraft(draftId)).async {
       implicit request =>
         for {
           _ <- userAnswersService.clear(draftId)

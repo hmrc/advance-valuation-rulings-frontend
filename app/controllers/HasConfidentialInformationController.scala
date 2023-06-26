@@ -47,7 +47,7 @@ class HasConfidentialInformationController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (actions.identifyWithHistory(draftId, HasConfidentialInformationPage)) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = HasConfidentialInformationPage.fill(form)
 
@@ -55,7 +55,7 @@ class HasConfidentialInformationController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (actions.identifyDraft(draftId)).async {
+    (actions.identifyWithHistory(draftId, HasConfidentialInformationPage)).async {
       implicit request =>
         form
           .bindFromRequest()

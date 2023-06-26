@@ -35,9 +35,7 @@ import views.html.UploadAnotherSupportingDocumentView
 class UploadAnotherSupportingDocumentController @Inject() (
   override val messagesApi: MessagesApi,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: UploadAnotherSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: UploadAnotherSupportingDocumentView
@@ -46,7 +44,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
     with I18nSupport {
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val attachments = AllDocuments.get().getOrElse(List.empty)
         val form        = formProvider(attachments)
@@ -54,7 +52,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, UploadAnotherSupportingDocumentPage)).async {
       implicit request =>
         val attachments = AllDocuments.get().getOrElse(List.empty)
         formProvider(attachments)

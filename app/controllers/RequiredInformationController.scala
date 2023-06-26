@@ -30,9 +30,7 @@ import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   val controllerComponents: MessagesControllerComponents,
   individualView: RequiredInformationView,
   agentView: TraderAgentRequiredInformationView
@@ -42,7 +40,7 @@ class RequiredInformationController @Inject() (
   private val logger = play.api.Logger(getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         logger.info("RequiredInformationController onPageLoad")
 

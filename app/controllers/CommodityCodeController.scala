@@ -36,9 +36,7 @@ class CommodityCodeController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: CommodityCodeFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: CommodityCodeView
@@ -49,7 +47,7 @@ class CommodityCodeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = CommodityCodePage.fill(form)
 
@@ -57,7 +55,7 @@ class CommodityCodeController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, CommodityCodePage)).async {
       implicit request =>
         form
           .bindFromRequest()

@@ -30,7 +30,7 @@ import controllers.actions._
 import forms.RemoveSupportingDocumentFormProvider
 import models.{DraftId, Index, Mode, UserAnswers}
 import navigation.Navigator
-import pages.{RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
+import pages._
 import queries.{AllDocuments, DraftAttachmentQuery}
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
@@ -39,9 +39,7 @@ class RemoveSupportingDocumentController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: RemoveSupportingDocumentFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: RemoveSupportingDocumentView,
@@ -53,7 +51,7 @@ class RemoveSupportingDocumentController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         UploadSupportingDocumentPage(index).get().flatMap(_.fileName) match {
           case Some(fileName) =>
@@ -64,7 +62,7 @@ class RemoveSupportingDocumentController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, DoYouWantToUploadDocumentsPage)).async {
       implicit request =>
         val urlAndFileName = for {
           file     <- UploadSupportingDocumentPage(index).get()

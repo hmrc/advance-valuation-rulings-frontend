@@ -29,7 +29,7 @@ import forms.CheckRegisteredDetailsFormProvider
 import models._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CheckRegisteredDetailsPage
@@ -190,6 +190,7 @@ class CheckRegisteredDetailsControllerSpec
         .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
       when(mockUserAnswersService.get(any())(any()))
         .thenReturn(Future.successful(Some(userAnswers)))
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -207,13 +208,13 @@ class CheckRegisteredDetailsControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
+        verify(mockUserAnswersService, times(1)).set(any())(any())
       }
     }
 
     "must redirect to Journey Recovery on submit when user has no answers" in {
-
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request =

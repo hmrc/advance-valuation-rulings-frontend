@@ -36,9 +36,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
-  identify: IdentifierAction,
-  getData: DataRetrievalActionProvider,
-  requireData: DataRequiredAction,
+  actions: Actions,
   formProvider: HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: HaveYouUsedMethodOneForSimilarGoodsInPastView
@@ -49,7 +47,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
+    (actions.identifyDraft(draftId)) {
       implicit request =>
         val preparedForm = HaveYouUsedMethodOneForSimilarGoodsInPastPage.fill(form)
 
@@ -57,7 +55,7 @@ class HaveYouUsedMethodOneForSimilarGoodsInPastController @Inject() (
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
+    (actions.identifyWithHistory(draftId, HaveYouUsedMethodOneForSimilarGoodsInPastPage)).async {
       implicit request =>
         form
           .bindFromRequest()
