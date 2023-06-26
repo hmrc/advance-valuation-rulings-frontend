@@ -106,23 +106,21 @@ class AccountHomeController @Inject() (
           .setFuture(AccountHomePage, authType)
           .flatMap {
             userAnswers =>
-              // val lastVisited: Option[pages.QuestionPage[_]] =
-              //   userAnswers.get(queries.LastQuestionAnswered)
               userAnswersService
                 .get(userAnswers.draftId)
                 .map {
                   userAns =>
-                    val lastViewed = userAns.flatMap(_.get(queries.LastQuestionAnswered))
-                    lastViewed match {
-                      case Some(page) =>
-                        println("lastVisited: " + lastViewed)
-
+                    val answers = for {
+                      answers      <- userAns
+                      lastQuestion <- answers.get(queries.LastQuestionAnswered)
+                    } yield (answers, lastQuestion)
+                    answers match {
+                      case Some(answers -> page) =>
                         ApplicationForAccountHome(
                           draft,
-                          navigator.nextPage(page, NormalMode, userAnswers)
+                          navigator.nextPage(page, NormalMode, answers)
                         )
-                      case None       =>
-                        println("No last visited")
+                      case None                  =>
                         ApplicationForAccountHome(
                           draft,
                           navigator.nextPage(AccountHomePage, NormalMode, userAnswers)

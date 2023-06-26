@@ -27,11 +27,3 @@ final case class IsThisFileConfidentialPage(index: Index) extends QuestionPage[B
   override def toString: String = "isThisFileConfidential"
 }
 object IsThisFileConfidentialPage extends WithIndexedKeys
-
-//   private def makeKey: Index => String = index => s"${IsThisFileConfidentialPage(index).toString}:${index.position}"
-//   val key0 = makeKey(Index(0))
-//   val key1 = makeKey(Index(1))
-//   val key2 = makeKey(Index(2))
-//   val key3 = makeKey(Index(3))
-//   val key4 = makeKey(Index(4))
-// }
