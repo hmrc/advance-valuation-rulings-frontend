@@ -830,3 +830,10 @@ deleteDraft.guidance = If you delete your application now, any data will be lost
 removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu {0}?
 removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu {0}?
 removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu’r ffeil hon
+
+draftHasBeenSaved.title = Your application draft has been saved for 28 days
+draftHasBeenSaved.heading = Your application draft has been saved for 28 days
+draftHasBeenSaved.para.1 = You have until {0} to submit your application.
+draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
+draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
+draftHasBeenSaved.para.link.text = your applications and rulings

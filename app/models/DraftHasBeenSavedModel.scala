@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(govukButton: GovukButton)
+package models
 
-@(draftId: DraftId, submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
+import java.time.{Instant, ZoneId}
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Locale
+case class DraftHasBeenSavedModel() {
 
-    <div class="govuk-button-group">
-        @govukButton(
-            ButtonViewModel(messages(submitButtonMessageKey))
-        )
+  def get28DaysLater(date: Instant): String = {
 
-        <a href="@routes.DraftHasBeenSavedController.onPageLoad(draftId).url" role="button" class="govuk-button govuk-button--secondary">
-            @messages("site.saveAsDraft")
-        </a>
-    </div>
+    val instant: Instant             = date.plus(28, ChronoUnit.DAYS)
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH)
+    val timeZone: ZoneId             = ZoneId.systemDefault()
 
-    
+    instant
+      .atZone(timeZone)
+      .format(formatter)
+
+  }
+
+}

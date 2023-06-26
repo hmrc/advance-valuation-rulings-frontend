@@ -246,3 +246,5 @@ GET        /:draftId/supporting-documents/:index/remove                        c
 POST       /:draftId/supporting-documents/:index/remove                        controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, index: Index)
 GET        /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, index: Index)
 POST       /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, index: Index)
+
+GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
