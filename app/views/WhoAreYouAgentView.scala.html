@@ -49,9 +49,8 @@
             ).withHint(Hint(content = HtmlContent(messages("whoAreYouAgent.hint"))))
         )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        @saveButtons(draftId)
+
     }
     @cancelApplicationLink(draftId)
 }
