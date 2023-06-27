@@ -68,5 +68,5 @@ object AttachmentRequest {
     }
 
   private def getFilePrivacy(answers: UserAnswers, index: Int): ValidatedNel[Page, Boolean] =
-    answers.validated(IsThisFileConfidentialPage(Index(index)))
+    answers.validated(WasThisFileConfidentialPage(Index(index)))
 }

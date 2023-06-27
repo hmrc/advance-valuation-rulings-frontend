@@ -127,7 +127,7 @@ trait PageGenerators {
     Arbitrary(UploadAnotherSupportingDocumentPage)
 
   implicit lazy val arbitraryIsThisFileConfidentialPage: Arbitrary[IsThisFileConfidentialPage] =
-    Arbitrary(IsThisFileConfidentialPage(Index(0)))
+    Arbitrary(WasThisFileConfidentialPage(Index(0)))
 
   implicit lazy val arbitraryDoYouWantToUploadDocumentsPage
     : Arbitrary[DoYouWantToUploadDocumentsPage.type] =

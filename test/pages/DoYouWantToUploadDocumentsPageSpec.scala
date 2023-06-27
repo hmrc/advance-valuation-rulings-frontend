@@ -49,13 +49,13 @@ class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
         .set(UploadedFilePage(Index(0)), successfulFile)
         .success
         .value
-        .set(IsThisFileConfidentialPage(Index(0)), true)
+        .set(WasThisFileConfidentialPage(Index(0)), true)
         .success
         .value
         .set(UploadedFilePage(Index(1)), successfulFile)
         .success
         .value
-        .set(IsThisFileConfidentialPage(Index(1)), false)
+        .set(WasThisFileConfidentialPage(Index(1)), false)
         .success
         .value
 
@@ -63,9 +63,9 @@ class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
         existingAnswers.set(DoYouWantToUploadDocumentsPage, false).success.value
 
       cleanedUpAnswers.get(UploadedFilePage(Index(0))) mustBe empty
-      cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
+      cleanedUpAnswers.get(WasThisFileConfidentialPage(Index(0))) mustBe empty
       cleanedUpAnswers.get(UploadedFilePage(Index(1))) mustBe empty
-      cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(1))) mustBe empty
+      cleanedUpAnswers.get(WasThisFileConfidentialPage(Index(1))) mustBe empty
     }
   }
 }

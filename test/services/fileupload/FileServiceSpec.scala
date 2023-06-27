@@ -271,7 +271,7 @@ class FileServiceSpec
           .set(UploadedFilePage(Index(0)), file1)
           .success
           .value
-          .set(IsThisFileConfidentialPage(Index(0)), true)
+          .set(WasThisFileConfidentialPage(Index(0)), true)
           .success
           .value
 

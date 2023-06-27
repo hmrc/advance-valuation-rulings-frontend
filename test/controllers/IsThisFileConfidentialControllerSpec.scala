@@ -81,7 +81,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the form on a GET when the question has previously been answered" in {
 
-      val answers     = userAnswers.set(IsThisFileConfidentialPage(Index(0)), true).success.value
+      val answers     = userAnswers.set(WasThisFileConfidentialPage(Index(0)), true).success.value
       val application = applicationBuilder(userAnswers = Some(answers)).build()
       val request     = FakeRequest(GET, isThisFileConfidentialRoute)
       val view        = application.injector.instanceOf[IsThisFileConfidentialView]

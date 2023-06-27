@@ -23,10 +23,10 @@ class IsThisFileConfidentialPageSpec extends PageBehaviours {
 
   "IsThisFileConfidentialPage" - {
 
-    beRetrievable[Boolean](IsThisFileConfidentialPage(Index(0)))
+    beRetrievable[Boolean](WasThisFileConfidentialPage(Index(0)))
 
-    beSettable[Boolean](IsThisFileConfidentialPage(Index(0)))
+    beSettable[Boolean](WasThisFileConfidentialPage(Index(0)))
 
-    beRemovable[Boolean](IsThisFileConfidentialPage(Index(0)))
+    beRemovable[Boolean](WasThisFileConfidentialPage(Index(0)))
   }
 }

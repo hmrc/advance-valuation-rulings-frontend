@@ -64,7 +64,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         .set(UploadedFilePage(Index(0)), successfulFile)
         .success
         .value
-        .set(IsThisFileConfidentialPage(Index(0)), false)
+        .set(WasThisFileConfidentialPage(Index(0)), false)
         .success
         .value
 

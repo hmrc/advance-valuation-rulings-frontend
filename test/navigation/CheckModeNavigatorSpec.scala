@@ -893,7 +893,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadAnotherSupportingDocument page" in {
             navigator.nextPage(
-              IsThisFileConfidentialPage(Index(0)),
+              WasThisFileConfidentialPage(Index(0)),
               CheckMode,
               userAnswersAsIndividualTrader
             ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
@@ -919,7 +919,7 @@ class CheckModeNavigatorSpec extends SpecBase {
                 .set(UploadedFilePage(Index(0)), successfulFile)
                 .success
                 .value
-                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .set(WasThisFileConfidentialPage(Index(0)), true)
                 .success
                 .value
                 .set(UploadAnotherSupportingDocumentPage, true)
@@ -983,7 +983,7 @@ class CheckModeNavigatorSpec extends SpecBase {
                 .set(UploadedFilePage(Index(0)), successfulFile)
                 .success
                 .value
-                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .set(WasThisFileConfidentialPage(Index(0)), true)
                 .success
                 .value
             navigator.nextPage(

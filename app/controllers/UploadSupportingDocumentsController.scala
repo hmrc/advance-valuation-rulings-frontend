@@ -29,7 +29,6 @@ import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, Ide
 import models._
 import navigation.Navigator
 import pages._
-import queries.AllDocuments
 import services.fileupload.FileService
 import views.html.UploadSupportingDocumentsView
 
@@ -49,10 +48,8 @@ class UploadSupportingDocumentsController @Inject() (
     with I18nSupport {
 
   private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
-  private val maxFiles: Int     = configuration.get[Int]("upscan.maxFiles")
 
   def onPageLoad(
-    index: Index,
     mode: Mode,
     draftId: DraftId,
     errorCode: Option[String],
@@ -60,52 +57,45 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val answers     = request.userAnswers
-        val attachments = answers.get(AllDocuments).getOrElse(Seq.empty)
+        val answers = request.userAnswers
 
-        if (index.position > attachments.size || index.position >= maxFiles) {
-          Future.successful(NotFound)
-        } else {
-
-          val file = answers.get(UploadedFilePage(index))
-
-          file
-            .map {
-              case file: UploadedFile.Initiated =>
-                errorCode
-                  .map(errorCode => showErrorPage(draftId, mode, index, errorForCode(errorCode)))
-                  .getOrElse {
-                    if (key.contains(file.reference)) {
-                      showInterstitialPage(draftId)
-                    } else {
-                      showPage(draftId, mode, index)
-                    }
+        answers
+          .get(UploadSupportingDocumentPage)
+          .map {
+            case file: UploadedFile.Initiated =>
+              errorCode
+                .map(errorCode => showErrorPage(draftId, mode, errorForCode(errorCode)))
+                .getOrElse {
+                  if (key.contains(file.reference)) {
+                    showInterstitialPage(draftId)
+                  } else {
+                    showPage(draftId, mode)
                   }
-              case file: UploadedFile.Success   =>
-                if (key.contains(file.reference)) {
-                  continue(index, mode, answers)
-                } else {
-                  showPage(draftId, mode, index)
                 }
-              case file: UploadedFile.Failure   =>
-                redirectWithError(
-                  draftId,
-                  mode,
-                  index,
-                  key,
-                  file.failureDetails.failureReason.toString
-                )
-            }
-            .getOrElse {
-              showPage(draftId, mode, index)
-            }
-        }
+            case file: UploadedFile.Success   =>
+              if (key.contains(file.reference)) {
+                continue(mode, answers)
+              } else {
+                showPage(draftId, mode)
+              }
+            case file: UploadedFile.Failure   =>
+              redirectWithError(
+                draftId,
+                mode,
+                key,
+                file.failureDetails.failureReason.toString
+              )
+          }
+          .getOrElse {
+            showPage(draftId, mode)
+          }
+
     }
 
-  private def showPage(draftId: DraftId, mode: Mode, index: Index)(implicit
+  private def showPage(draftId: DraftId, mode: Mode)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, mode, index).map {
+    fileService.initiate(draftId, mode).map {
       response =>
         Ok(
           view(
@@ -129,10 +119,10 @@ class UploadSupportingDocumentsController @Inject() (
       )
     )
 
-  private def showErrorPage(draftId: DraftId, mode: Mode, index: Index, errorMessage: String)(
-    implicit request: RequestHeader
+  private def showErrorPage(draftId: DraftId, mode: Mode, errorMessage: String)(implicit
+    request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, mode, index).map {
+    fileService.initiate(draftId, mode).map {
       response =>
         BadRequest(
           view(
@@ -146,22 +136,21 @@ class UploadSupportingDocumentsController @Inject() (
   private def redirectWithError(
     draftId: DraftId,
     mode: Mode,
-    index: Index,
     key: Option[String],
     errorCode: String
   )(implicit request: RequestHeader): Future[Result] =
-    fileService.initiate(draftId, mode, index).map {
+    fileService.initiate(draftId, mode).map {
       _ =>
         Redirect(
           routes.UploadSupportingDocumentsController
-            .onPageLoad(index, mode, draftId, Some(errorCode), key)
+            .onPageLoad(mode, draftId, Some(errorCode), key)
         )
     }
 
-  private def continue(index: Index, mode: Mode, answers: UserAnswers): Future[Result] =
+  private def continue(mode: Mode, answers: UserAnswers): Future[Result] =
     Future.successful(
       Redirect(
-        navigator.nextPage(UploadedFilePage(index), mode, answers)
+        navigator.nextPage(UploadSupportingDocumentPage, mode, answers)
       )
     )
 

@@ -63,7 +63,7 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
         .set(UploadedFilePage(Index(0)), successfulFile)
         .success
         .value
-        .set(IsThisFileConfidentialPage(Index(0)), false)
+        .set(WasThisFileConfidentialPage(Index(0)), false)
         .success
         .value
 
@@ -82,13 +82,13 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
           .set(UploadedFilePage(Index(0)), successfulFile)
           .success
           .value
-          .set(IsThisFileConfidentialPage(Index(0)), false)
+          .set(WasThisFileConfidentialPage(Index(0)), false)
           .success
           .value
           .set(UploadedFilePage(Index(1)), successfulFile)
           .success
           .value
-          .set(IsThisFileConfidentialPage(Index(1)), true)
+          .set(WasThisFileConfidentialPage(Index(1)), true)
           .success
           .value
 
@@ -132,7 +132,7 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
         .set(UploadedFilePage(Index(0)), failedFile)
         .success
         .value
-        .set(IsThisFileConfidentialPage(Index(0)), true)
+        .set(WasThisFileConfidentialPage(Index(0)), true)
         .success
         .value
       val result  = AttachmentRequest(answers)
@@ -149,7 +149,7 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
         .success
         .value
       val result  = AttachmentRequest(answers)
-      result mustBe Invalid(NonEmptyList.one(IsThisFileConfidentialPage(Index(0))))
+      result mustBe Invalid(NonEmptyList.one(WasThisFileConfidentialPage(Index(0))))
     }
   }
 }

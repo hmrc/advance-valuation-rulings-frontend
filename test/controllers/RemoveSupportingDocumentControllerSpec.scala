@@ -46,7 +46,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
   "must return OK and the correct view for a GET" in new SpecSetup {
     val answers = (for {
       ua <- userAnswers.set(UploadedFilePage(Index(0)), successfulFile)
-      ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
+      ua <- ua.set(WasThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
     val application = applicationBuilder(userAnswers = Some(answers))
@@ -83,7 +83,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
     val answers = (for {
       ua <- userAnswers.set(UploadedFilePage(Index(0)), successfulFile)
-      ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
+      ua <- ua.set(WasThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
     val application = applicationBuilder(userAnswers = Some(answers))
@@ -111,14 +111,14 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
     val updatedAnswers = userAnswersCaptor.getValue
     updatedAnswers.get(UploadedFilePage(Index(0))) mustBe empty
-    updatedAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
+    updatedAnswers.get(WasThisFileConfidentialPage(Index(0))) mustBe empty
     updatedAnswers.get(AllDocuments) mustBe empty
   }
 
   "does not call the object store if the user answers 'No'" in new SpecSetup {
     val answers = (for {
       ua <- userAnswers.set(UploadedFilePage(Index(0)), successfulFile)
-      ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
+      ua <- ua.set(WasThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
     val application = applicationBuilder(userAnswers = Some(answers))

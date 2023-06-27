@@ -20,7 +20,14 @@ import play.api.libs.json.JsPath
 
 import models.Index
 
-final case class IsThisFileConfidentialPage(index: Index) extends QuestionPage[Boolean] {
+final case object IsThisFileConfidentialPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ toString()
+
+  override def toString: String = "isThisFileConfidential"
+}
+
+final case class WasThisFileConfidentialPage(index: Index) extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ "supportingDocuments" \ index.position \ toString
 

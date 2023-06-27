@@ -374,7 +374,7 @@ class NavigatorSpec extends SpecBase {
                 .set(UploadedFilePage(Index(0)), successfulFile)
                 .success
                 .value
-                .set(IsThisFileConfidentialPage(Index(0)), true)
+                .set(WasThisFileConfidentialPage(Index(0)), true)
                 .success
                 .value
               navigator.nextPage(
@@ -408,7 +408,7 @@ class NavigatorSpec extends SpecBase {
               .set(UploadedFilePage(Index(0)), successfulFile)
               .success
               .value
-              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .set(WasThisFileConfidentialPage(Index(0)), true)
               .success
               .value
           navigator.nextPage(
@@ -656,7 +656,7 @@ class NavigatorSpec extends SpecBase {
 
         "UploadAnotherSupportingDocument page" in {
           navigator.nextPage(
-            IsThisFileConfidentialPage(Index(0)),
+            WasThisFileConfidentialPage(Index(0)),
             NormalMode,
             userAnswersAsIndividualTrader
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
@@ -682,7 +682,7 @@ class NavigatorSpec extends SpecBase {
               .set(UploadedFilePage(Index(0)), successfulFile)
               .success
               .value
-              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .set(WasThisFileConfidentialPage(Index(0)), true)
               .success
               .value
               .set(UploadAnotherSupportingDocumentPage, true)
@@ -746,7 +746,7 @@ class NavigatorSpec extends SpecBase {
               .set(UploadedFilePage(Index(0)), successfulFile)
               .success
               .value
-              .set(IsThisFileConfidentialPage(Index(0)), true)
+              .set(WasThisFileConfidentialPage(Index(0)), true)
               .success
               .value
           navigator.nextPage(
