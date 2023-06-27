@@ -29,7 +29,7 @@ sealed trait WhoAreYouAgent
 
 class WhoAreYouAgents @Inject() (configuration: FrontendAppConfig) {
 
-  val traderDetailsCacheEnabledValue = configuration.traderDetailsCacheEnabled
+  val agentOnBehalfOfTraderValue = configuration.agentOnBehalfOfTrader
 
 }
 
@@ -49,7 +49,7 @@ object WhoAreYouAgent extends Enumerable.Implicits {
     )
 
   def filteredValues(appConfig: FrontendAppConfig): Seq[WhoAreYouAgent] =
-    if (appConfig.traderDetailsCacheEnabled) values
+    if (appConfig.agentOnBehalfOfTrader) values
     else values.filterNot(_ == AgentOnBehalfOfTrader)
 
   def options(appConfig: FrontendAppConfig)(implicit messages: Messages): Seq[RadioItem] =
