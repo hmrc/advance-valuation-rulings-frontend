@@ -32,7 +32,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import pages._
 import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
@@ -60,7 +60,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
   private val userAnswers =
     userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      .set(UploadedFilePage(Index(0)), successfulFile)
       .success
       .value
 
@@ -223,7 +223,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       )
       val answers     =
         userAnswersAsIndividualTrader
-          .set(UploadSupportingDocumentPage(Index(0)), failedFile)
+          .set(UploadedFilePage(Index(0)), failedFile)
           .success
           .value
       val application = applicationBuilder(userAnswers = Some(answers)).build()

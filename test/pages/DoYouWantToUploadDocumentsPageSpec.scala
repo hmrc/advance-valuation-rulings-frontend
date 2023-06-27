@@ -46,13 +46,13 @@ class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
       )
 
       val existingAnswers = UserAnswers("userId", DraftId(0))
-        .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+        .set(UploadedFilePage(Index(0)), successfulFile)
         .success
         .value
         .set(IsThisFileConfidentialPage(Index(0)), true)
         .success
         .value
-        .set(UploadSupportingDocumentPage(Index(1)), successfulFile)
+        .set(UploadedFilePage(Index(1)), successfulFile)
         .success
         .value
         .set(IsThisFileConfidentialPage(Index(1)), false)
@@ -62,9 +62,9 @@ class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
       val cleanedUpAnswers =
         existingAnswers.set(DoYouWantToUploadDocumentsPage, false).success.value
 
-      cleanedUpAnswers.get(UploadSupportingDocumentPage(Index(0))) mustBe empty
+      cleanedUpAnswers.get(UploadedFilePage(Index(0))) mustBe empty
       cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
-      cleanedUpAnswers.get(UploadSupportingDocumentPage(Index(1))) mustBe empty
+      cleanedUpAnswers.get(UploadedFilePage(Index(1))) mustBe empty
       cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(1))) mustBe empty
     }
   }

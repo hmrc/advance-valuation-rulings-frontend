@@ -59,7 +59,7 @@ class Navigator @Inject() () {
     case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
-    case UploadSupportingDocumentPage(index)              => uploadSupportingDocumentPage(index)
+    case UploadedFilePage(index)              => uploadSupportingDocumentPage(index)
     case IsThisFileConfidentialPage(index)                => isThisFileConfidentialPage(index)
     case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
     case RemoveSupportingDocumentPage(_)                  => removeSupportingDocumentPage

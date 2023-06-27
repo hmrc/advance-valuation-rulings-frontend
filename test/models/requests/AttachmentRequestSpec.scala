@@ -25,7 +25,7 @@ import models.{DraftId, Index, UploadedFile, UserAnswers}
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import pages.{DoYouWantToUploadDocumentsPage, IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import pages._
 
 class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues with OptionValues {
 
@@ -60,7 +60,7 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
         .set(DoYouWantToUploadDocumentsPage, false)
         .success
         .value
-        .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+        .set(UploadedFilePage(Index(0)), successfulFile)
         .success
         .value
         .set(IsThisFileConfidentialPage(Index(0)), false)
@@ -79,13 +79,13 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
           .set(DoYouWantToUploadDocumentsPage, true)
           .success
           .value
-          .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+          .set(UploadedFilePage(Index(0)), successfulFile)
           .success
           .value
           .set(IsThisFileConfidentialPage(Index(0)), false)
           .success
           .value
-          .set(UploadSupportingDocumentPage(Index(1)), successfulFile)
+          .set(UploadedFilePage(Index(1)), successfulFile)
           .success
           .value
           .set(IsThisFileConfidentialPage(Index(1)), true)
@@ -120,7 +120,7 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
 
       val answers = emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true).success.value
       val result  = AttachmentRequest(answers)
-      result mustBe Invalid(NonEmptyList.one(UploadSupportingDocumentPage(Index(0))))
+      result mustBe Invalid(NonEmptyList.one(UploadedFilePage(Index(0))))
     }
 
     "fail when there are non-successful files" in {
@@ -129,14 +129,14 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
         .set(DoYouWantToUploadDocumentsPage, true)
         .success
         .value
-        .set(UploadSupportingDocumentPage(Index(0)), failedFile)
+        .set(UploadedFilePage(Index(0)), failedFile)
         .success
         .value
         .set(IsThisFileConfidentialPage(Index(0)), true)
         .success
         .value
       val result  = AttachmentRequest(answers)
-      result mustBe Invalid(NonEmptyList.one(UploadSupportingDocumentPage(Index(0))))
+      result mustBe Invalid(NonEmptyList.one(UploadedFilePage(Index(0))))
     }
 
     "fail when privacy setting is missing from files" in {
@@ -145,7 +145,7 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
         .set(DoYouWantToUploadDocumentsPage, true)
         .success
         .value
-        .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+        .set(UploadedFilePage(Index(0)), successfulFile)
         .success
         .value
       val result  = AttachmentRequest(answers)

@@ -323,7 +323,7 @@ object CheckModeNavigator {
         haveBeenSubjectToLegalChallenges(userAnswers)
       case HasCommodityCodePage                         => hasCommodityCode(userAnswers)
       case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments(userAnswers)
-      case UploadSupportingDocumentPage(index)          => uploadSupportingDocumentPage(index)(userAnswers)
+      case UploadedFilePage(index)          => uploadSupportingDocumentPage(index)(userAnswers)
       case IsThisFileConfidentialPage(index)            => isThisFileConfidential(index)(userAnswers)
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
       case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)

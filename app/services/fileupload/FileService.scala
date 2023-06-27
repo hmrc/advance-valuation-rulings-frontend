@@ -32,7 +32,7 @@ import config.Service
 import connectors.UpscanConnector
 import models.{Done, DraftId, Index, Mode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
-import pages.UploadSupportingDocumentPage
+import pages.{UploadedFilePage, UploadSupportingDocumentPage}
 import queries.AllDocuments
 import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
@@ -78,7 +78,7 @@ class FileService @Inject() (
       answers        <- getUserAnswers(draftId)
       updatedAnswers <- Future.fromTry(
                           answers.set(
-                            UploadSupportingDocumentPage(index),
+                            UploadedFilePage(index),
                             UploadedFile.Initiated(response.reference)
                           )
                         )
@@ -91,7 +91,7 @@ class FileService @Inject() (
       answers        <- getUserAnswersInternal(draftId)
       updatedFile    <- processFile(answers, index, file)
       updatedAnswers <-
-        Future.fromTry(answers.set(UploadSupportingDocumentPage(index), updatedFile))
+        Future.fromTry(answers.set(UploadedFilePage(index), updatedFile))
       _              <- userAnswersService.setInternal(updatedAnswers)
     } yield Done
 

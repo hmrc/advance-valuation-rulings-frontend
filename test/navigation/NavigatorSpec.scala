@@ -371,7 +371,7 @@ class NavigatorSpec extends SpecBase {
 
             "must navigate to UploadAnotherSupportingDocument" in {
               val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
-                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+                .set(UploadedFilePage(Index(0)), successfulFile)
                 .success
                 .value
                 .set(IsThisFileConfidentialPage(Index(0)), true)
@@ -405,7 +405,7 @@ class NavigatorSpec extends SpecBase {
         "navigate to UploadAnotherSupportingDocument page when there are existing documents" in {
           val userAnswers =
             userAnswersWith(ConfidentialInformationPage, "top secret")
-              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .set(UploadedFilePage(Index(0)), successfulFile)
               .success
               .value
               .set(IsThisFileConfidentialPage(Index(0)), true)
@@ -645,7 +645,7 @@ class NavigatorSpec extends SpecBase {
 
         "IsThisFileConfidential page" in {
           navigator.nextPage(
-            UploadSupportingDocumentPage(Index(0)),
+            UploadedFilePage(Index(0)),
             NormalMode,
             userAnswersAsIndividualTrader
           ) mustBe routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId)
@@ -679,7 +679,7 @@ class NavigatorSpec extends SpecBase {
         "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
           val userAnswers =
             userAnswersAsIndividualTrader
-              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .set(UploadedFilePage(Index(0)), successfulFile)
               .success
               .value
               .set(IsThisFileConfidentialPage(Index(0)), true)
@@ -743,7 +743,7 @@ class NavigatorSpec extends SpecBase {
         "UploadAnotherSupportingDocument page when there are more documents" in {
           val answers =
             userAnswersAsIndividualTrader
-              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .set(UploadedFilePage(Index(0)), successfulFile)
               .success
               .value
               .set(IsThisFileConfidentialPage(Index(0)), true)

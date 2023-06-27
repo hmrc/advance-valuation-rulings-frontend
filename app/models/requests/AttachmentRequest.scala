@@ -22,7 +22,7 @@ import cats.implicits._
 import play.api.libs.json.{Json, OFormat}
 
 import models.{Index, UploadedFile, UserAnswers}
-import pages.{DoYouWantToUploadDocumentsPage, IsThisFileConfidentialPage, Page, UploadSupportingDocumentPage}
+import pages._
 import queries.AllDocuments
 
 final case class AttachmentRequest(
@@ -41,7 +41,7 @@ object AttachmentRequest {
   def apply(answers: UserAnswers): ValidatedNel[Page, Seq[AttachmentRequest]] =
     answers.validated(DoYouWantToUploadDocumentsPage).andThen {
       case true  =>
-        answers.get(AllDocuments).toValidNel(UploadSupportingDocumentPage(Index(0))).andThen {
+        answers.get(AllDocuments).toValidNel(UploadedFilePage(Index(0))).andThen {
           _.indices.toList.traverse {
             i =>
               (getFile(answers, i), getFilePrivacy(answers, i)).mapN {
@@ -62,9 +62,9 @@ object AttachmentRequest {
     }
 
   private def getFile(answers: UserAnswers, index: Int): ValidatedNel[Page, UploadedFile.Success] =
-    answers.validated(UploadSupportingDocumentPage(Index(index))).andThen {
+    answers.validated(UploadedFilePage(Index(index))).andThen {
       case file: UploadedFile.Success => file.validNel
-      case _                          => UploadSupportingDocumentPage(Index(index)).invalidNel
+      case _                          => UploadedFilePage(Index(index)).invalidNel
     }
 
   private def getFilePrivacy(answers: UserAnswers, index: Int): ValidatedNel[Page, Boolean] =

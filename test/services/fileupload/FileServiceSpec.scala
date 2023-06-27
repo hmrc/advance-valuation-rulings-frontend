@@ -121,7 +121,7 @@ class FileServiceSpec
 
       val actualAnswers = userAnswersCaptor.getValue
 
-      actualAnswers.get(UploadSupportingDocumentPage(Index(0))).value mustEqual UploadedFile
+      actualAnswers.get(UploadedFilePage(Index(0))).value mustEqual UploadedFile
         .Initiated("reference")
     }
 
@@ -187,7 +187,7 @@ class FileServiceSpec
         val updatedFile = uploadedFile.copy(downloadUrl = "drafts/DRAFT000000000/foobar")
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(0)), updatedFile)
+          .set(UploadedFilePage(Index(0)), updatedFile)
           .success
           .value
 
@@ -218,7 +218,7 @@ class FileServiceSpec
       "must update the user answers with the status of the file" in {
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(0)), uploadedFile)
+          .set(UploadedFilePage(Index(0)), uploadedFile)
           .success
           .value
 
@@ -268,7 +268,7 @@ class FileServiceSpec
         )
 
         val userAnswers = UserAnswers("userId", DraftId(0))
-          .set(UploadSupportingDocumentPage(Index(0)), file1)
+          .set(UploadedFilePage(Index(0)), file1)
           .success
           .value
           .set(IsThisFileConfidentialPage(Index(0)), true)
@@ -276,7 +276,7 @@ class FileServiceSpec
           .value
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(1)), file3)
+          .set(UploadedFilePage(Index(1)), file3)
           .success
           .value
 
@@ -321,12 +321,12 @@ class FileServiceSpec
         )
 
         val userAnswers = UserAnswers("userId", DraftId(0))
-          .set(UploadSupportingDocumentPage(Index(0)), file1)
+          .set(UploadedFilePage(Index(0)), file1)
           .success
           .value
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(0)), file3)
+          .set(UploadedFilePage(Index(0)), file3)
           .success
           .value
 

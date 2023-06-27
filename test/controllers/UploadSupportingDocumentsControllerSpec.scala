@@ -35,7 +35,7 @@ import org.mockito.Mockito.{verify, when}
 import org.mockito.MockitoSugar.{reset, times}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadSupportingDocumentPage
+import pages._
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.UploadSupportingDocumentsView
@@ -125,7 +125,7 @@ class UploadSupportingDocumentsControllerSpec
   "when there is an initiated file" - {
 
     val userAnswers = userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage(Index(0)), initiatedFile)
+      .set(UploadedFilePage(Index(0)), initiatedFile)
       .success
       .value
 
@@ -273,7 +273,7 @@ class UploadSupportingDocumentsControllerSpec
   "when there is a successful file" - {
 
     val userAnswers = userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      .set(UploadedFilePage(Index(0)), successfulFile)
       .success
       .value
 
@@ -387,7 +387,7 @@ class UploadSupportingDocumentsControllerSpec
 
     val userAnswers =
       userAnswersAsIndividualTrader
-        .set(UploadSupportingDocumentPage(Index(0)), failedFile)
+        .set(UploadedFilePage(Index(0)), failedFile)
         .success
         .value
 

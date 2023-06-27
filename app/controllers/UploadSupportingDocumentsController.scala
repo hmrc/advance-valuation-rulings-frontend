@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models._
 import navigation.Navigator
-import pages.UploadSupportingDocumentPage
+import pages._
 import queries.AllDocuments
 import services.fileupload.FileService
 import views.html.UploadSupportingDocumentsView
@@ -67,7 +67,7 @@ class UploadSupportingDocumentsController @Inject() (
           Future.successful(NotFound)
         } else {
 
-          val file = answers.get(UploadSupportingDocumentPage(index))
+          val file = answers.get(UploadedFilePage(index))
 
           file
             .map {
@@ -161,7 +161,7 @@ class UploadSupportingDocumentsController @Inject() (
   private def continue(index: Index, mode: Mode, answers: UserAnswers): Future[Result] =
     Future.successful(
       Redirect(
-        navigator.nextPage(UploadSupportingDocumentPage(index), mode, answers)
+        navigator.nextPage(UploadedFilePage(index), mode, answers)
       )
     )
 

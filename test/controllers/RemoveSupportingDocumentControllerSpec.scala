@@ -34,7 +34,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{IsThisFileConfidentialPage, RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
+import pages._
 import queries.AllDocuments
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
@@ -45,7 +45,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
   "must return OK and the correct view for a GET" in new SpecSetup {
     val answers = (for {
-      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      ua <- userAnswers.set(UploadedFilePage(Index(0)), successfulFile)
       ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
@@ -82,7 +82,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
       .thenReturn(onwardRoute)
 
     val answers = (for {
-      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      ua <- userAnswers.set(UploadedFilePage(Index(0)), successfulFile)
       ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
@@ -110,14 +110,14 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     )
 
     val updatedAnswers = userAnswersCaptor.getValue
-    updatedAnswers.get(UploadSupportingDocumentPage(Index(0))) mustBe empty
+    updatedAnswers.get(UploadedFilePage(Index(0))) mustBe empty
     updatedAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
     updatedAnswers.get(AllDocuments) mustBe empty
   }
 
   "does not call the object store if the user answers 'No'" in new SpecSetup {
     val answers = (for {
-      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      ua <- userAnswers.set(UploadedFilePage(Index(0)), successfulFile)
       ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
     } yield ua).success.value
 
@@ -163,7 +163,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
   "does not call object store if the file has no download url" in new SpecSetup {
 
     val answers = userAnswers
-      .set(UploadSupportingDocumentPage(Index(0)), UploadedFile.Initiated("reference"))
+      .set(UploadedFilePage(Index(0)), UploadedFile.Initiated("reference"))
       .success
       .value
 

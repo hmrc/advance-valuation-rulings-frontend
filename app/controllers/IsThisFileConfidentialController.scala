@@ -29,7 +29,7 @@ import actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierActio
 import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
-import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import pages._
 import queries.AllDocuments
 import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
@@ -60,7 +60,7 @@ class IsThisFileConfidentialController @Inject() (
 
         val validIndex        = !(index.position > attachments || index.position >= maxFiles)
         lazy val isSuccessful =
-          UploadSupportingDocumentPage(index).get().map(_.isSuccessful).getOrElse(false)
+          UploadedFilePage(index).get().map(_.isSuccessful).getOrElse(false)
 
         (validIndex, isSuccessful) match {
           case (true, true)          =>
