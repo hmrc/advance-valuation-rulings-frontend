@@ -34,7 +34,7 @@ import controllers.routes.UnauthorisedController
 import models.{ApplicationForAccountHome, AuthUserType, CounterId, DraftId, NormalMode, UserAnswers}
 import models.requests.DraftSummary
 import navigation.Navigator
-import pages.{AccountHomePage, WhoAreYouAgentPage}
+import pages.AccountHomePage
 import repositories.CounterRepository
 import services.UserAnswersService
 import views.html.AccountHomeView

@@ -113,7 +113,6 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
-//        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
         ) mustBe routes.UnauthorisedController.onPageLoad
       }
 

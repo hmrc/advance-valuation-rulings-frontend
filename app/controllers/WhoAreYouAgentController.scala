@@ -54,10 +54,7 @@ class WhoAreYouAgentController @Inject() (
       implicit request =>
         logger.info("WhoAreYouAgentController onPageLoad")
 
-        val preparedForm = request.userAnswers.get(WhoAreYouAgentPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+        val preparedForm = WhoAreYouAgentPage.fill(form)
 
         Ok(view(preparedForm, mode, draftId))
     }
