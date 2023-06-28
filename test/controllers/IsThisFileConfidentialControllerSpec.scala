@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
-import models.{Done, Index, NormalMode, UploadedFile}
+import models.{Done, NormalMode, UploadedFile}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -56,11 +56,11 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
   )
 
   private lazy val isThisFileConfidentialRoute =
-    routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId).url
+    routes.IsThisFileConfidentialController.onPageLoad(NormalMode, draftId).url
 
   private val userAnswers =
     userAnswersAsIndividualTrader
-      .set(UploadedFilePage(Index(0)), successfulFile)
+      .set(UploadSupportingDocumentPage, successfulFile)
       .success
       .value
 
@@ -73,7 +73,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       val view        = application.injector.instanceOf[IsThisFileConfidentialView]
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, Index(0), NormalMode, draftId)(
+      contentAsString(result) mustEqual view(form, NormalMode, draftId)(
         request,
         messages(application)
       ).toString
@@ -81,7 +81,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the form on a GET when the question has previously been answered" in {
 
-      val answers     = userAnswers.set(WasThisFileConfidentialPage(Index(0)), true).success.value
+      val answers     = userAnswers.set(IsThisFileConfidentialPage, true).success.value
       val application = applicationBuilder(userAnswers = Some(answers)).build()
       val request     = FakeRequest(GET, isThisFileConfidentialRoute)
       val view        = application.injector.instanceOf[IsThisFileConfidentialView]
@@ -90,7 +90,6 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
         form.fill(true),
-        Index(0),
         NormalMode,
         draftId
       )(
@@ -105,7 +104,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -134,82 +133,10 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       val result      = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, Index(0), NormalMode, draftId)(
+      contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
         request,
         messages(application)
       ).toString
-    }
-
-    "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .configure(
-          "upscan.maxFiles" -> 1
-        )
-        .build()
-
-      val request = FakeRequest(
-        controllers.routes.IsThisFileConfidentialController
-          .onPageLoad(Index(1), models.NormalMode, draftId)
-      )
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-    }
-
-    "must return NOT_FOUND when the index is greater than the greatest existing index + 1" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .configure(
-          "upscan.maxFiles" -> 5
-        )
-        .build()
-
-      val request = FakeRequest(
-        controllers.routes.IsThisFileConfidentialController
-          .onPageLoad(Index(1), models.NormalMode, draftId)
-      )
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-    }
-
-    "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload for POST" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .configure(
-          "upscan.maxFiles" -> 1
-        )
-        .build()
-
-      val request = FakeRequest(
-        controllers.routes.IsThisFileConfidentialController
-          .onSubmit(Index(1), models.NormalMode, draftId)
-      )
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
-    }
-
-    "must return NOT_FOUND when the index is greater than the greatest existing index + 1 for POST" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .configure(
-          "upscan.maxFiles" -> 5
-        )
-        .build()
-
-      val request = FakeRequest(
-        controllers.routes.IsThisFileConfidentialController
-          .onSubmit(Index(1), models.NormalMode, draftId)
-      )
-
-      val result = route(application, request).value
-
-      status(result) mustEqual NOT_FOUND
     }
 
     "must redirect to UploadSupportingDocument page if the file is not successful" in {
@@ -223,7 +150,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       )
       val answers     =
         userAnswersAsIndividualTrader
-          .set(UploadedFilePage(Index(0)), failedFile)
+          .set(UploadSupportingDocumentPage, failedFile)
           .success
           .value
       val application = applicationBuilder(userAnswers = Some(answers)).build()
@@ -232,7 +159,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(0), NormalMode, draftId, None, None)
+        .onPageLoad(NormalMode, draftId, None, None)
         .url
     }
 

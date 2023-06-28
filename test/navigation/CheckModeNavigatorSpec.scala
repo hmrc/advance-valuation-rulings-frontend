@@ -24,7 +24,7 @@ import base.SpecBase
 import controllers.routes
 import models._
 import pages._
-import queries.Modifiable
+import queries._
 
 class CheckModeNavigatorSpec extends SpecBase {
 
@@ -856,7 +856,6 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckMode,
               userAnswers
             ) mustBe controllers.routes.UploadSupportingDocumentsController.onPageLoad(
-              Index(0),
               CheckMode,
               draftId,
               None,
@@ -878,11 +877,10 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "IsThisFileConfidential page" in {
             navigator.nextPage(
-              UploadedFilePage(Index(0)),
+              UploadSupportingDocumentPage,
               CheckMode,
               userAnswersAsIndividualTrader
             ) mustBe routes.IsThisFileConfidentialController.onPageLoad(
-              Index(0),
               CheckMode,
               draftId
             )
@@ -893,7 +891,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "UploadAnotherSupportingDocument page" in {
             navigator.nextPage(
-              WasThisFileConfidentialPage(Index(0)),
+              IsThisFileConfidentialPage,
               CheckMode,
               userAnswersAsIndividualTrader
             ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, draftId)
@@ -910,26 +908,21 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckMode,
               userAnswers
             ) mustBe controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(Index(0), CheckMode, draftId, None, None)
+              .onPageLoad(CheckMode, draftId, None, None)
           }
 
           "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
-            val userAnswers =
-              userAnswersAsIndividualTrader
-                .set(UploadedFilePage(Index(0)), successfulFile)
-                .success
-                .value
-                .set(WasThisFileConfidentialPage(Index(0)), true)
-                .success
-                .value
-                .set(UploadAnotherSupportingDocumentPage, true)
-                .get
+            val userAnswers = (for {
+              ua <- EmptyUserAnswers.set(UploadAnotherSupportingDocumentPage, true)
+              ua <- ua.set(AllDocuments, List(DraftAttachment(successfulFile, Some(true))))
+            } yield ua).success.value
+
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,
               userAnswers
             ) mustBe controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(Index(1), CheckMode, draftId, None, None)
+              .onPageLoad(CheckMode, draftId, None, None)
           }
 
           "CheckYourAnswers page when No is selected and the user is an IndividualTrader" in {
@@ -980,12 +973,10 @@ class CheckModeNavigatorSpec extends SpecBase {
           "UploadAnotherSupportingDocument page when there are more documents" in {
             val answers =
               userAnswersAsIndividualTrader
-                .set(UploadedFilePage(Index(0)), successfulFile)
+                .set(AllDocuments, List(DraftAttachment(successfulFile, Some(true))))
                 .success
                 .value
-                .set(WasThisFileConfidentialPage(Index(0)), true)
-                .success
-                .value
+
             navigator.nextPage(
               RemoveSupportingDocumentPage(Index(0)),
               CheckMode,

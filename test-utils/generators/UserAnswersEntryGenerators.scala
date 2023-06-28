@@ -278,10 +278,10 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
     }
 
   implicit lazy val arbitraryIsThisFileConfidentialUserAnswersEntry
-    : Arbitrary[(IsThisFileConfidentialPage, JsValue)] =
+    : Arbitrary[(IsThisFileConfidentialPage.type, JsValue)] =
     Arbitrary {
       for {
-        page  <- arbitrary[IsThisFileConfidentialPage]
+        page  <- arbitrary[IsThisFileConfidentialPage.type]
         value <- arbitrary[Boolean].map(Json.toJson(_))
       } yield (page, value)
     }

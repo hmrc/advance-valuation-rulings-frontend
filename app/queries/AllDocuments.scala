@@ -17,8 +17,13 @@
 package queries
 import play.api.libs.json.{__, JsPath}
 
-import models.DraftAttachment
+import models.{DraftAttachment, Index}
+import pages.QuestionPage
 
-case object AllDocuments extends Modifiable[List[DraftAttachment]] {
+case object AllDocuments extends QuestionPage[List[DraftAttachment]] {
   override def path: JsPath = __ \ "supportingDocuments"
+}
+
+final case class DraftAttachmentAt(index: Index) extends QuestionPage[DraftAttachment] {
+  override def path: JsPath = JsPath \ "supportingDocuments" \ index.position
 }

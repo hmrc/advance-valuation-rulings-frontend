@@ -98,7 +98,7 @@ class IsThisFileConfidentialController @Inject() (
                       routes.UploadSupportingDocumentsController
                         .onPageLoad(mode, request.userAnswers.draftId, None, None)
                     )
-                  ) // TODO: this could go to uploaded documents instead
+                  )
               }
           )
     }

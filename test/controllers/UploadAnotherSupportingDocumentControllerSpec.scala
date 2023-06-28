@@ -29,7 +29,7 @@ import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
-import pages._
+import queries.DraftAttachmentAt
 import views.html.UploadAnotherSupportingDocumentView
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
@@ -61,10 +61,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
     "must return OK and the correct view for a GET" in {
 
       val answers = userAnswersAsIndividualTrader
-        .set(UploadedFilePage(Index(0)), successfulFile)
-        .success
-        .value
-        .set(WasThisFileConfidentialPage(Index(0)), false)
+        .set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(false)))
         .success
         .value
 

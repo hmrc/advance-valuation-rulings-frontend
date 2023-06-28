@@ -22,10 +22,13 @@ import cats.data.NonEmptyList
 import cats.data.Validated.{Invalid, Valid}
 
 import models.{DraftId, Index, UploadedFile, UserAnswers}
+import models.DraftAttachment
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import pages._
+import queries.AllDocuments
+import queries.DraftAttachmentAt
 
 class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues with OptionValues {
 
@@ -56,16 +59,10 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
 
     "return an empty sequence when the user doesn't want to add any attachments" in {
 
-      val answers = emptyUserAnswers
-        .set(DoYouWantToUploadDocumentsPage, false)
-        .success
-        .value
-        .set(UploadedFilePage(Index(0)), successfulFile)
-        .success
-        .value
-        .set(WasThisFileConfidentialPage(Index(0)), false)
-        .success
-        .value
+      val answers = (for {
+        ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, false)
+        ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(false)))
+      } yield ua).success.value
 
       val result = AttachmentRequest(answers)
 
@@ -73,24 +70,11 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
     }
 
     "return attachment requests when the user wants to add attachments" in {
-
-      val answers =
-        emptyUserAnswers
-          .set(DoYouWantToUploadDocumentsPage, true)
-          .success
-          .value
-          .set(UploadedFilePage(Index(0)), successfulFile)
-          .success
-          .value
-          .set(WasThisFileConfidentialPage(Index(0)), false)
-          .success
-          .value
-          .set(UploadedFilePage(Index(1)), successfulFile)
-          .success
-          .value
-          .set(WasThisFileConfidentialPage(Index(1)), true)
-          .success
-          .value
+      val answers = (for {
+        ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true)
+        ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(false)))
+        ua <- ua.set(DraftAttachmentAt(Index(1)), DraftAttachment(successfulFile, Some(true)))
+      } yield ua).success.value
 
       val result = AttachmentRequest(answers)
 
@@ -120,36 +104,27 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
 
       val answers = emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true).success.value
       val result  = AttachmentRequest(answers)
-      result mustBe Invalid(NonEmptyList.one(UploadedFilePage(Index(0))))
+      result mustBe Invalid(NonEmptyList.one(AllDocuments))
     }
 
     "fail when there are non-successful files" in {
+      val answers = (for {
+        ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true)
+        ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(failedFile, Some(true)))
+      } yield ua).success.value
 
-      val answers = emptyUserAnswers
-        .set(DoYouWantToUploadDocumentsPage, true)
-        .success
-        .value
-        .set(UploadedFilePage(Index(0)), failedFile)
-        .success
-        .value
-        .set(WasThisFileConfidentialPage(Index(0)), true)
-        .success
-        .value
-      val result  = AttachmentRequest(answers)
-      result mustBe Invalid(NonEmptyList.one(UploadedFilePage(Index(0))))
+      val result = AttachmentRequest(answers)
+      result mustBe Invalid(NonEmptyList.one(DraftAttachmentAt(Index(0))))
     }
 
     "fail when privacy setting is missing from files" in {
+      val answers = (for {
+        ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true)
+        ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, None))
+      } yield ua).success.value
 
-      val answers = emptyUserAnswers
-        .set(DoYouWantToUploadDocumentsPage, true)
-        .success
-        .value
-        .set(UploadedFilePage(Index(0)), successfulFile)
-        .success
-        .value
-      val result  = AttachmentRequest(answers)
-      result mustBe Invalid(NonEmptyList.one(WasThisFileConfidentialPage(Index(0))))
+      val result = AttachmentRequest(answers)
+      result mustBe Invalid(NonEmptyList.one(DraftAttachmentAt(Index(0))))
     }
   }
 }
