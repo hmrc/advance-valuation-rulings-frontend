@@ -28,11 +28,13 @@ import play.api.test.Helpers._
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
 import models.{Done, NormalMode, UploadedFile}
+import models.DraftAttachment
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
+import queries.AllDocuments
 import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
@@ -98,8 +100,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       ).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in {
-
+    "when valid data is submitted" - {
       val mockUserAnswersService = mock[UserAnswersService]
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
@@ -117,8 +118,19 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
 
       val result = route(application, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual onwardRoute.url
+      "must redirect to the next page" in {
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+
+      "must promote the draft attachment to AllDocuments" in {
+        val expectedUserAnswers = userAnswersAsIndividualTrader
+          .set(AllDocuments, List(DraftAttachment(successfulFile, Some(true))))
+          .success
+          .value
+
+        verify(mockUserAnswersService).set(eqTo(expectedUserAnswers))(any())
+      }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
