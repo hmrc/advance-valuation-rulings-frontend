@@ -16,22 +16,22 @@
 
 package controllers.actions
 
+import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.{Admin, Assistant, InsufficientEnrolments, User}
-import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
+import uk.gov.hmrc.auth.core.{Admin, Assistant, User}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 
 import base.SpecBase
 import models.{DraftId, UserAnswers}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.requests.{DataRequest, IdentifierRequest, OptionalDataRequest}
+import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages.AccountHomePage
@@ -76,6 +76,7 @@ class DataRetrievalActionSpec
 
     "when there is data in the cache" - {
 
+      @nowarn("cat=deprecation")
       val scenarios = Table(
         ("affinityGroup", "credentialRole", "expectedAuthUserType"),
         (Individual, None, IndividualTrader),

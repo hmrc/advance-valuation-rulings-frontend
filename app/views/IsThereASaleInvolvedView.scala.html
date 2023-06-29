@@ -34,7 +34,7 @@
 
 @layout(pageTitle = title(form, messages("isThereASaleInvolved.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.IsThereASaleInvolvedController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.IsThereASaleInvolvedController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -50,7 +50,7 @@
             .withHint(Hint(content = HtmlContent(paraContent)))
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
     @cancelApplicationLink(draftId)
 }

@@ -27,7 +27,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models._
-import models.requests.DataRequest
 import navigation.Navigator
 import pages.UploadSupportingDocumentPage
 import queries.AllDocuments
@@ -159,9 +158,7 @@ class UploadSupportingDocumentsController @Inject() (
         )
     }
 
-  private def continue(index: Index, mode: Mode, answers: UserAnswers)(implicit
-    request: DataRequest[_]
-  ): Future[Result] =
+  private def continue(index: Index, mode: Mode, answers: UserAnswers): Future[Result] =
     Future.successful(
       Redirect(
         navigator.nextPage(UploadSupportingDocumentPage(index), mode, answers)

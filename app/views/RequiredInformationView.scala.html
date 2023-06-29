@@ -15,44 +15,45 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.auth.core.AffinityGroup
 
 @this(
     layout: templates.Layout,
-    formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukCheckboxes: GovukCheckboxes,
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    insetPara: InsetPara,
+    bulletList: BulletList
 )
 
-@(form: Form[_], affinityGroup: AffinityGroup, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@paraContent = {@paragraph(Html(messages("requiredInformation.hint")))}
+@layout(pageTitle = titleNoForm(messages("requiredInformation.title")), draftId = Some(draftId)) {
 
-@layout(pageTitle = title(form, messages("requiredInformation.title")), draftId = Some(draftId)) {
-
-    @formHelper(action = routes.RequiredInformationController.onSubmit(draftId), 'autoComplete -> "off") {
-
-        
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
-        }
-        
         @caption(messages("requiredInformation.caption"))
 
-        @govukCheckboxes(
-            CheckboxesViewModel(
-                form   = form,
-                name   = "value",
-                legend = LegendViewModel(messages("requiredInformation.heading")).asPageHeading(),
-                items  = RequiredInformation.checkboxItems(affinityGroup)
+        @heading(messages("requiredInformation.heading"))
+
+        @insetPara(Html(messages("requiredInformation.inset.para")))
+
+        @bulletList(
+            Seq(
+                Html(messages("requiredInformation.option1.individual")),
+                Html(messages("requiredInformation.option2.individual")),
+                Html(messages("requiredInformation.option3.individual")),
+                Html(messages("requiredInformation.option4.individual")),
+                Html(messages("requiredInformation.option5.individual")),
+                Html(messages("requiredInformation.option6.individual"))
             )
-            .withHint(Hint(content = HtmlContent(paraContent)))
         )
 
-        @saveButtons()
-    }
+        <span class="govuk-button-group">
+                <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button" id="continue-button">
+                    @messages("site.saveAndContinue")
+                </a>
+                <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+                    @messages("site.saveAsDraft")
+                </a>
+        </span>
 }

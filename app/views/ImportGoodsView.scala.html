@@ -28,25 +28,27 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, dId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(dId)) {
+@layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, dId, false), 'autoComplete -> "off") {
-
+    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId, false), Symbol("autoComplete") -> "off") {
+        
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-            @caption(messages("importGoods.caption"))
+        @caption(messages("importGoods.caption"))
 
-            @govukRadios(
-                RadiosViewModel.yesNo(
-                    field = form("value"),
-                    legend = LegendViewModel(messages("importGoods.heading")).asPageHeading()
-                )
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(messages("importGoods.heading")).asPageHeading()
             )
+        )
+
+        @saveButtons(draftId)
 
             <div class="govuk-button-group">
                 @govukButton(
@@ -61,5 +63,5 @@
             </div>
         }
 
-    @cancelApplicationLink(dId)
+    @cancelApplicationLink(draftId)
 }

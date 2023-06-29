@@ -16,6 +16,8 @@
 
 package models
 
+import scala.annotation.nowarn
+
 import play.api.libs.json._
 import uk.gov.hmrc.auth.core.{Admin, AffinityGroup, Assistant, User}
 
@@ -23,6 +25,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
 
+@nowarn("cat=deprecation")
 class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropertyChecks {
 
   "AuthUserType" - {
@@ -52,12 +55,12 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
     }
 
     val credentialRoles = Table("credentialRole", Admin, Assistant, User)
-    "returns None for unsupported `Agent` AffinityGroup" in {
+    "returns Agent for `Agent` Affinity Group" in {
       forAll(credentialRoles) {
         credentialRole =>
           val result = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
 
-          result mustBe None
+          result mustBe Some(AuthUserType.Agent)
       }
     }
 

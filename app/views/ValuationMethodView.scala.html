@@ -41,10 +41,12 @@
             call = Call("GET", config.overviewForMethodsUrl)
         )}
 
+@legendH2 = {@subheading(messages("valuationMethod.h2"))}
+
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
 
-    @formHelper(action = routes.ValuationMethodController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.ValuationMethodController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -55,19 +57,16 @@
         @paragraph(Html(messages("valuationMethod.paragraph.1", overviewLink)))
         @paragraph(Html(messages("valuationMethod.paragraph.2")))
         @paragraph(Html(messages("valuationMethod.paragraph.3")))
-        @subheading(messages("valuationMethod.h2"))
-
 
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = Legend(content = messages("valuationMethod.hint"), classes = "govuk-hint"),
+                legend = LegendViewModel(content = HtmlContent(legendH2)),
                 items  = ValuationMethod.options
-            )
+            ).withHint(Hint(content = HtmlContent(messages("valuationMethod.hint"))))
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
-
     @cancelApplicationLink(draftId)
 }

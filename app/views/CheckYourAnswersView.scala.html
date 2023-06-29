@@ -27,7 +27,8 @@
     paragraph: Paragraph,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
-    formHelper: FormWithCSRF,
+    saveButtons: SaveButtons,
+    formHelper: FormWithCSRF
 )
 
 @(applicationSummary: ApplicationSummary, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -67,9 +68,7 @@
     ))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
-        @govukButton(
-            ButtonViewModel(messages("checkYourAnswers.button.continue"))
-        )
+        @saveButtons(draftId, messages("checkYourAnswers.button.continue"))
     }
 
     @cancelApplicationLink(draftId)

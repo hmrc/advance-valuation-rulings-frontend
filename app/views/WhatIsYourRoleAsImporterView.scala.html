@@ -32,7 +32,7 @@
 
 @layout(pageTitle = title(form, messages("whatIsYourRoleAsImporter.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhatIsYourRoleAsImporterController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.WhatIsYourRoleAsImporterController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -53,6 +53,6 @@
             )
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
 }

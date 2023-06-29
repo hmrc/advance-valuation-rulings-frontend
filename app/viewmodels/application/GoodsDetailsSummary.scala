@@ -21,11 +21,11 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import models.requests.{Attachment, GoodsDetails}
+import models.requests.Privacy.Confidential
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object GoodsDetailsSummary {
-
   def rows(goodsDetails: GoodsDetails, attachments: Seq[Attachment])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
@@ -53,19 +53,29 @@ object GoodsDetailsSummary {
         )
     }
 
-    val confidentialInformationRow = goodsDetails.confidentialInformation.map {
-      info =>
-        SummaryListRowViewModel(
-          key = "confidentialInformation.checkYourAnswersLabel",
-          value = ValueViewModel(info)
-        )
-    }
+    val confidentialInformationRow: Option[SummaryListRow] =
+      goodsDetails.confidentialInformation.map {
+        info =>
+          SummaryListRowViewModel(
+            key = "confidentialInformation.checkYourAnswersLabel",
+            value = ValueViewModel(info)
+          )
+      }
+
+    val attachmentRowContent = attachments
+      .map(
+        file =>
+          s"${file.name} ${if (file.privacy == Confidential)
+              s"<strong>- ${messages("uploadAnotherSupportingDocument.keepConfidential")}</strong>"
+            else ""}"
+      )
+      .mkString("<br/>")
 
     val attachmentsRow = if (attachments.nonEmpty) {
       Some(
         SummaryListRowViewModel(
           key = "uploadSupportingDocuments.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(attachments.map(_.name).mkString("<br/>")))
+          value = ValueViewModel(HtmlContent(attachmentRowContent))
         )
       )
     } else {

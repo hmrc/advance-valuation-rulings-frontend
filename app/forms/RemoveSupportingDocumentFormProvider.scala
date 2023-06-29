@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import models.Index
+import javax.inject.Inject
 
-final case class DeleteSupportingDocumentPage(index: Index) extends Page
+import play.api.data.Form
+
+import forms.mappings.Mappings
+
+class RemoveSupportingDocumentFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("removeSupportingDocument.error.required")
+    )
+}

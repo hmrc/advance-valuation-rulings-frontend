@@ -51,10 +51,11 @@ class WhoAreYouAgentController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers.get(WhoAreYouAgentPage) match {
+        val _ = request.userAnswers.get(WhoAreYouAgentPage) match {
           case None        => form
           case Some(value) => form.fill(value)
-        } // TODO: implement agent details page after MVP
+        }
+        // TODO: implement agent details page after MVP
         Redirect(controllers.routes.AccountHomeController.onPageLoad())
       // Ok(view(preparedForm, mode))
     }

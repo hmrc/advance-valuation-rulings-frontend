@@ -143,7 +143,9 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
         "01632 960 001",
         "07700 900 982",
         "07700-900-982",
-        "+44 808 157 0192"
+        "+44 808 157 0192",
+        "070 0000 0000",
+        "+44131400834"
       )
     )
 

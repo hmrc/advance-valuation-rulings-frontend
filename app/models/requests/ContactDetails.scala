@@ -15,12 +15,13 @@
  */
 
 package models.requests
+
 import cats.data._
 
 import play.api.libs.json._
 
 import models._
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import pages._
 
 case class CompanyContactDetails(
@@ -48,18 +49,18 @@ object ContactDetails {
       .andThen(
         authUserType =>
           authUserType match {
-            case IndividualTrader      =>
+            case IndividualTrader              =>
               answers.validatedF[ApplicationContactDetails, ContactDetails](
                 ApplicationContactDetailsPage,
                 cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
               )
-            case OrganisationAdmin     =>
+            case OrganisationAdmin             =>
               answers
                 .validatedF[ApplicationContactDetails, ContactDetails](
                   ApplicationContactDetailsPage,
                   cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
                 )
-            case OrganisationAssistant =>
+            case OrganisationAssistant | Agent =>
               answers
                 .validatedF[BusinessContactDetails, ContactDetails](
                   BusinessContactDetailsPage,

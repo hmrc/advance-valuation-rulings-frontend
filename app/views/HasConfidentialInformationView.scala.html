@@ -33,7 +33,7 @@
 
 @layout(pageTitle = title(form, messages("hasConfidentialInformation.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.HasConfidentialInformationController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.HasConfidentialInformationController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -53,7 +53,7 @@
             )
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
 
     @cancelApplicationLink(draftId)

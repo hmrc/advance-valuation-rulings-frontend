@@ -32,7 +32,7 @@
 
 @layout(pageTitle = title(form, messages("haveTheGoodsBeenSubjectToLegalChallenges.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -50,7 +50,7 @@
             )
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
     @cancelApplicationLink(draftId)
 }

@@ -28,6 +28,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 import config.Service
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
+
 @Singleton
 class UpscanConnector @Inject() (
   httpClient: HttpClientV2,

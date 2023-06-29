@@ -53,7 +53,8 @@ object ApplicationForAccountHome {
       id = applicationSummary.id.toString,
       goodsName = applicationSummary.goodsName,
       date = applicationSummary.dateSubmitted,
-      statusTag = Tag(content = Text(messages("accountHome.status.submitted"))),
+      statusTag =
+        Tag(content = Text(messages("accountHome.status.submitted")), classes = "govuk-tag--blue"),
       actions = Seq(
         ActionItem(
           href = routes.ViewApplicationController.onPageLoad(applicationSummary.id.toString).url,
@@ -70,7 +71,7 @@ object ApplicationForAccountHome {
       goodsName = draftSummary.goodsName.getOrElse(""),
       date = draftSummary.lastUpdated,
       statusTag =
-        Tag(content = Text(messages("accountHome.status.draft")), classes = "govuk-tag--grey"),
+        Tag(content = Text(messages("accountHome.status.draft")), classes = "govuk-tag--yellow"),
       actions = Seq(
         ActionItem(
           href = continueCall.url,

@@ -34,9 +34,7 @@
 
 @codeSpan = {
     <span class="segmented-commodity-code">
-        <span>@messages("commodityCode.hint.pt.1")</span>
-        <span>@messages("commodityCode.hint.pt.2")</span>
-        <span>@messages("commodityCode.hint.pt.3")</span>
+        <span>@messages("commodityCode.hint.pt.1")</span><span>@messages("commodityCode.hint.pt.2")</span><span>@messages("commodityCode.hint.pt.3")</span>
     </span>
     }
 
@@ -68,7 +66,7 @@
                 )
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
 
     @cancelApplicationLink(draftId)

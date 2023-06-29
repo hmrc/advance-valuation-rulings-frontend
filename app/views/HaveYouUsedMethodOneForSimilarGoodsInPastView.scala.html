@@ -33,7 +33,7 @@
 
 @layout(pageTitle = title(form, messages("haveYouUsedMethodOneForSimilarGoodsInPast.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode, draftId), 'autoComplete -> "off") {
+    @formHelper(action = routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -51,7 +51,7 @@
             )
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
     @cancelLink(draftId)
 }

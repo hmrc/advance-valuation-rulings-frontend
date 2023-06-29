@@ -22,7 +22,7 @@ import play.api.mvc.Call
 
 import controllers.routes._
 import models._
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
@@ -51,7 +51,6 @@ class Navigator @Inject() () {
     case HasConfidentialInformationPage                   => hasConfidentialInformationPage
     case ConfidentialInformationPage                      => confidentialInformationPage
     case ImportGoodsPage                                  => importGoodsPage
-    case RequiredInformationPage                          => requiredInformationPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
     case ContactPagePage                                  =>
       ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
@@ -63,7 +62,7 @@ class Navigator @Inject() () {
     case UploadSupportingDocumentPage(index)              => uploadSupportingDocumentPage(index)
     case IsThisFileConfidentialPage(index)                => isThisFileConfidentialPage(index)
     case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
-    case DeleteSupportingDocumentPage(_)                  => deleteSupportingDocumentPage
+    case RemoveSupportingDocumentPage(_)                  => removeSupportingDocumentPage
     case WhyComputedValuePage                             => whyComputedValuePage
     case ExplainReasonComputedValuePage                   => explainReasonComputedValuePage
     case WhyTransactionValueOfSimilarGoodsPage            => whyTransactionValueOfSimilarGoodsPage
@@ -90,13 +89,13 @@ class Navigator @Inject() () {
 
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
-      case Some(IndividualTrader)      =>
+      case Some(IndividualTrader)                    =>
         RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAdmin)     =>
+      case Some(OrganisationAdmin)                   =>
         RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAssistant) =>
+      case Some(OrganisationAssistant) | Some(Agent) =>
         WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                           =>
+      case _                                         =>
         UnauthorisedController.onPageLoad
     }
 
@@ -359,7 +358,7 @@ class Navigator @Inject() () {
       case Some(false) =>
         val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
         if (numberOfDocuments > 0) {
-          controllers.routes.UploadAnotherSupportingDocumentController
+          UploadAnotherSupportingDocumentController
             .onPageLoad(NormalMode, userAnswers.draftId)
         } else {
           DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
@@ -372,7 +371,7 @@ class Navigator @Inject() () {
       case Some(_) =>
         val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
         if (numberOfDocuments > 0) {
-          controllers.routes.UploadAnotherSupportingDocumentController
+          UploadAnotherSupportingDocumentController
             .onPageLoad(NormalMode, userAnswers.draftId)
         } else {
           DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
@@ -400,7 +399,7 @@ class Navigator @Inject() () {
   private def uploadSupportingDocumentPage(index: Index)(
     userAnswers: UserAnswers
   ): Call =
-    controllers.routes.IsThisFileConfidentialController.onPageLoad(
+    IsThisFileConfidentialController.onPageLoad(
       index,
       NormalMode,
       userAnswers.draftId
@@ -409,7 +408,7 @@ class Navigator @Inject() () {
   private def isThisFileConfidentialPage(index: Index)(
     userAnswers: UserAnswers
   ): Call =
-    controllers.routes.UploadAnotherSupportingDocumentController
+    UploadAnotherSupportingDocumentController
       .onPageLoad(NormalMode, userAnswers.draftId)
 
   private def uploadAnotherSupportingDocumentPage(
@@ -420,7 +419,7 @@ class Navigator @Inject() () {
       .map {
         case true  =>
           val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
-          controllers.routes.UploadSupportingDocumentsController.onPageLoad(
+          UploadSupportingDocumentsController.onPageLoad(
             Index(nextIndex),
             NormalMode,
             userAnswers.draftId,
@@ -438,18 +437,16 @@ class Navigator @Inject() () {
               )
           }
       }
-      .getOrElse(controllers.routes.JourneyRecoveryController.onPageLoad())
+      .getOrElse(JourneyRecoveryController.onPageLoad())
 
-  private def deleteSupportingDocumentPage(
-    userAnswers: UserAnswers
-  ): Call = {
-    val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
-    if (numberOfDocuments > 0) {
-      controllers.routes.UploadAnotherSupportingDocumentController
-        .onPageLoad(NormalMode, userAnswers.draftId)
-    } else {
-      controllers.routes.DoYouWantToUploadDocumentsController
-        .onPageLoad(NormalMode, userAnswers.draftId)
+  private def removeSupportingDocumentPage(userAnswers: UserAnswers): Call = {
+    val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size)
+
+    numberOfDocuments match {
+      case Some(count) if count > 0 =>
+        UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) | None           =>
+        DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
     }
   }
 
@@ -460,11 +457,6 @@ class Navigator @Inject() () {
       case Some(false) => ImportingGoodsController.onPageLoad(userAnswers.draftId)
     }
 
-  private def requiredInformationPage(userAnswers: UserAnswers): Call      =
-    userAnswers.get(RequiredInformationPage) match {
-      case None    => RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(_) => ImportGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
-    }
   private def whatIsYourRoleAsImporterPage(userAnswers: UserAnswers): Call =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
       case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
@@ -506,9 +498,9 @@ class Navigator @Inject() () {
 
   private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
-      case Some(OrganisationAdmin)     =>
+      case Some(OrganisationAdmin)                   =>
         ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(OrganisationAssistant) =>
+      case Some(OrganisationAssistant) | Some(Agent) =>
         userAnswers.get(WhatIsYourRoleAsImporterPage) match {
           case Some(EmployeeOfOrg)      =>
             ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
@@ -517,7 +509,7 @@ class Navigator @Inject() () {
           case _                        =>
             WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
         }
-      case _                           =>
+      case _                                         =>
         UnauthorisedController.onPageLoad
     }
 

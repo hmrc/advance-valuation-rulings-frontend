@@ -51,10 +51,7 @@ class ExplainWhyYouChoseMethodFourController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers.get(ExplainWhyYouChoseMethodFourPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+        val preparedForm = ExplainWhyYouChoseMethodFourPage.fill(form)
 
         Ok(view(preparedForm, mode, draftId))
     }

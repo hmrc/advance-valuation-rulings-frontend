@@ -40,6 +40,7 @@ class CancelApplicationController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
+  // @nowarn("cat=unused")
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
 

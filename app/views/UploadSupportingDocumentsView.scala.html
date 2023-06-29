@@ -147,16 +147,6 @@
                 .withAttribute(("id" -> "submit"))
                 .disableIf(shouldRefresh)
       )
-
-      @if(shouldRefresh) {
-        <span href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary" disabled>
-        @messages("site.saveAsDraft")
-        </span>
-      } else {
-        <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
-          @messages("site.saveAsDraft")
-        </a>
-      }
     </div>
   }
 
