@@ -84,19 +84,28 @@ class Navigator @Inject() () {
     case ExplainHowYouWillUseMethodSixPage                => explainHowYouWillUseMethodSixPage
     case AdaptMethodPage                                  => adaptMethodPage
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
+    case WhoAreYouAgentPage                               => whoAreYouRouting
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
-      case Some(IndividualTrader)                    =>
-        RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAdmin)                   =>
-        RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAssistant) | Some(Agent) =>
-        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                                         =>
+      case Some(IndividualTrader)      =>
+        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(OrganisationAdmin)     =>
+        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(OrganisationAssistant) =>
+        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(Agent)                 =>
+        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                           =>
         UnauthorisedController.onPageLoad
+    }
+
+  private def whoAreYouRouting(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhoAreYouAgentPage) match {
+      case _ => RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case _ => UnauthorisedController.onPageLoad
     }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =

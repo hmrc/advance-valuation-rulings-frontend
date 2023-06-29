@@ -748,12 +748,17 @@ willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = Will you be comparin
 willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 willYouCompareGoodsToIdenticalGoods.change.hidden = your response to whether you will be comparing your goods to identical goods imported by another buyer or seller in the past 90-days
 
-whoAreYouAgent.title = whoAreYouAgent
-whoAreYouAgent.heading = whoAreYouAgent
-whoAreYouAgent.checkYourAnswersLabel = whoAreYouAgent
-whoAreYouAgent.error.required = Enter whoAreYouAgent
-whoAreYouAgent.error.length = WhoAreYouAgent must be 100 characters or less
-whoAreYouAgent.change.hidden = WhoAreYouAgent
+whoAreYouAgent.title = How would you describe your role as an importer?
+whoAreYouAgent.caption = About the applicant
+whoAreYouAgent.heading = How would you describe your role as an importer?
+whoAreYouAgent.error.required = Select an option on how would you describe your role as an importer
+whoAreYouAgent.hint = Choose the option that best describes your role:
+whoAreYouAgent.organisationEmployee = An employee of the organisation
+whoAreYouAgent.agentOnBehalfOfOrganisation = Agent acting on behalf of an organisation
+whoAreYouAgent.agentOnBehalfOfTrader = Agent acting on behalf of a trader
+whoAreYouAgent.organisationEmployee.hint = Imports goods into the UK on behalf of their organisation.
+whoAreYouAgent.agentOnBehalfOfOrganisation.hint = Imports goods into the UK on behalf of an organisation.
+whoAreYouAgent.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
 
 viewApplication.title = Your application
 viewApplication.heading = Your application
