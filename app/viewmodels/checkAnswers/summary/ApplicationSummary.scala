@@ -43,22 +43,22 @@ object ApplicationSummary {
     messages: Messages
   ): ApplicationSummary = {
     val (applicant, company) = userAnswers.get(AccountHomePage) match {
-      case Some(IndividualTrader)      =>
+      case Some(IndividualTrader)                    =>
         (
           IndividualApplicantSummary(userAnswers),
           IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
-      case Some(OrganisationAdmin)     =>
+      case Some(OrganisationAdmin)                   =>
         (
           IndividualApplicantSummary(userAnswers),
           BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
-      case Some(OrganisationAssistant) =>
+      case Some(OrganisationAssistant) | Some(Agent) =>
         (
           AgentSummary(userAnswers),
           BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
         )
-      case unexpected                  =>
+      case unexpected                                =>
         logger.error(s"Unsupported authUserType [$unexpected] encountered")
         throw InsufficientEnrolments("Unexpected authUserType")
     }

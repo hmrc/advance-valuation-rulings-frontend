@@ -52,8 +52,8 @@ POST       /:draftId/planning-import-goods-great-britain                        
 GET        /:draftId/change-planning-import-goods-great-britain                     controllers.ImportGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-planning-import-goods-great-britain                     controllers.ImportGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
+# Update this
 GET        /:draftId/start-application                                             controllers.RequiredInformationController.onPageLoad(draftId: DraftId)
-POST       /:draftId/start-application                                             controllers.RequiredInformationController.onSubmit(draftId: DraftId)
 
 GET        /:draftId/trader-agent-start-application                                controllers.TraderAgentRequiredInformationController.onPageLoad(draftId: DraftId)
 POST       /:draftId/trader-agent-start-application                                controllers.TraderAgentRequiredInformationController.onSubmit(draftId: DraftId)
@@ -62,11 +62,6 @@ GET        /:draftId/provide-confidential-information                           
 POST       /:draftId/provide-confidential-information                              controllers.ConfidentialInformationController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/change-provide-confidential-information                        controllers.ConfidentialInformationController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-provide-confidential-information                        controllers.ConfidentialInformationController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
-
-GET        /:draftId/add-confidential-information                                  controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/add-confidential-information                                  controllers.HasConfidentialInformationController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
-GET        /:draftId/change-add-confidential-information                            controllers.HasConfidentialInformationController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-add-confidential-information                            controllers.HasConfidentialInformationController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/importing-goods-great-britain                                 controllers.ImportingGoodsController.onPageLoad(draftId: DraftId)
 
@@ -99,9 +94,6 @@ GET        /:draftId/supporting-documents/:index/mark-confidential              
 POST       /:draftId/supporting-documents/:index/mark-confidential                 controllers.IsThisFileConfidentialController.onSubmit(index: Index, mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/supporting-documents/:index/change-mark-confidential          controllers.IsThisFileConfidentialController.onPageLoad(index: Index, mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/supporting-documents/:index/change-mark-confidential          controllers.IsThisFileConfidentialController.onSubmit(index: Index, mode: Mode = CheckMode, draftId: DraftId)
-
-GET        /:draftId/supporting-documents/:index/remove                            controllers.DeleteSupportingDocumentController.onDelete(index: Index, mode: Mode = NormalMode, draftId: DraftId)
-GET        /:draftId/supporting-documents/:index/change-remove                     controllers.DeleteSupportingDocumentController.onDelete(index: Index, mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/supporting-documents/uploaded                                 controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/supporting-documents/uploaded                                 controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -254,4 +246,9 @@ POST       /:draftId/change-agent-company-details                  controllers.A
 GET        /:draftId/delete-application                        controllers.DeleteDraftController.onPageLoad(draftId: DraftId)
 POST       /:draftId/delete-application                        controllers.DeleteDraftController.onSubmit(draftId: DraftId)
 
+GET        /:draftId/supporting-documents/:index/remove                        controllers.RemoveSupportingDocumentController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, index: Index)
+POST       /:draftId/supporting-documents/:index/remove                        controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, index: Index)
+GET        /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, index: Index)
+POST       /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, index: Index)
 
+GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)

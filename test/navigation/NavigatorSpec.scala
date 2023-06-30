@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import controllers.routes
 import models._
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.Modifiable
@@ -84,8 +84,8 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-        ) mustBe routes.RequiredInformationController
-          .onPageLoad(draftId)
+        ) mustBe routes.WhoAreYouAgentController
+          .onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
@@ -95,17 +95,33 @@ class NavigatorSpec extends SpecBase {
           userAnswersAsIndividualTrader
             .setFuture(AccountHomePage, OrganisationAssistant)
             .futureValue
-        ) mustBe routes.WhatIsYourRoleAsImporterController
+        ) mustBe routes.WhoAreYouAgentController
           .onPageLoad(NormalMode, draftId)
       }
 
-      "should navigate to WhatIsYourRole page for an OrganisationAdmin" in {
+      "should navigate to RequiredInformation page for an OrganisationAdmin" in {
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
-        ) mustBe routes.RequiredInformationController
-          .onPageLoad(draftId)
+        ) mustBe routes.WhoAreYouAgentController
+          .onPageLoad(NormalMode, draftId)
+      }
+
+      "should navigate to WhatIsYourRole page for an Agent" in {
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
+        ) mustBe routes.UnauthorisedController.onPageLoad
+      }
+
+      "should navigate to WhatIsYourRole page for an Agent" in {
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
+        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
@@ -214,26 +230,6 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
-        }
-      }
-
-      "RequiredInformationPage must" - {
-        "navigate to Import goods page when all values are set" in {
-          val userAnswers =
-            userAnswersWith(RequiredInformationPage, RequiredInformation.values.toSet)
-          navigator.nextPage(
-            RequiredInformationPage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.ImportGoodsController.onPageLoad(NormalMode, draftId)
-        }
-
-        "navigate to self when no values are set" in {
-          navigator.nextPage(
-            RequiredInformationPage,
-            NormalMode,
-            EmptyUserAnswers
-          ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
         }
       }
 
@@ -750,7 +746,7 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "DeleteSupportingDocumentPage must navigate to" - {
+      "RemoveSupportingDocumentPage must navigate to" - {
 
         "UploadAnotherSupportingDocument page when there are more documents" in {
           val answers =
@@ -762,7 +758,7 @@ class NavigatorSpec extends SpecBase {
               .success
               .value
           navigator.nextPage(
-            DeleteSupportingDocumentPage(Index(0)),
+            RemoveSupportingDocumentPage(Index(0)),
             NormalMode,
             answers
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
@@ -770,7 +766,7 @@ class NavigatorSpec extends SpecBase {
 
         "DoYouWantToUploadSupportingDocuments page when there are no more documents" in {
           navigator.nextPage(
-            DeleteSupportingDocumentPage(Index(0)),
+            RemoveSupportingDocumentPage(Index(0)),
             NormalMode,
             userAnswersAsIndividualTrader
           ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, draftId)

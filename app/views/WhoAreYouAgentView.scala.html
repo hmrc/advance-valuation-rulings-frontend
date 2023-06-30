@@ -15,34 +15,43 @@
  *@
 
 @import components._
-@import viewmodels.InputWidth._
+@import config.FrontendAppConfig
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    saveButtons: SaveButtons
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        heading: Heading,
+        caption: Caption,
+        cancelApplicationLink: CancelApplicationLink,
+        govukButton: GovukButton,
+        config: FrontendAppConfig
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("whoAreYouAgent.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhoAreYouAgentController.onSubmit(mode, draftId)) {
+    @formHelper(action = routes.WhoAreYouAgentController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("whoAreYouAgent.heading")).asPageHeading()
-            )
-            .withWidth(Full)
+        @caption(messages("whoAreYouAgent.caption"))
+
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(messages("whoAreYouAgent.heading")).asPageHeading(),
+                items  = WhoAreYouAgent.options(config)
+            ).withHint(Hint(content = HtmlContent(messages("whoAreYouAgent.hint"))))
         )
 
-        @saveButtons()
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
     }
+    @cancelApplicationLink(draftId)
 }

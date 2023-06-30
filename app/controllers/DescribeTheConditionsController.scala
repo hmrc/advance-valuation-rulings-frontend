@@ -51,10 +51,7 @@ class DescribeTheConditionsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers.get(DescribeTheConditionsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+        val preparedForm = DescribeTheConditionsPage.fill(form)
 
         Ok(view(preparedForm, mode, draftId))
     }
@@ -68,8 +65,7 @@ class DescribeTheConditionsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(DescribeTheConditionsPage, value))
+                updatedAnswers <- DescribeTheConditionsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(DescribeTheConditionsPage, mode, updatedAnswers)

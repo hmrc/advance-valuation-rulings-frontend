@@ -18,7 +18,8 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -51,10 +52,7 @@ class BusinessContactDetailsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers.get(BusinessContactDetailsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+        val preparedForm = BusinessContactDetailsPage.fill(form)
 
         Ok(view(preparedForm, mode, draftId))
     }
@@ -68,8 +66,7 @@ class BusinessContactDetailsController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(BusinessContactDetailsPage, value))
+                updatedAnswers <- BusinessContactDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
                 navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)

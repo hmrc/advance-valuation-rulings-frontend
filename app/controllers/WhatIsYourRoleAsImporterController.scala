@@ -55,11 +55,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen isAgent andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm = request.userAnswers
-          .get(WhatIsYourRoleAsImporterPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
+        val preparedForm = WhatIsYourRoleAsImporterPage.fill(form)
 
         Ok(view(preparedForm, mode, draftId))
     }
@@ -76,8 +72,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
               auditService.sendAgentIndicatorEvent(value)
               for {
                 ua <- value match {
-                        case EmployeeOfOrg      =>
-                          request.userAnswers.removeFuture(AgentCompanyDetailsPage)
+                        case EmployeeOfOrg      => AgentCompanyDetailsPage.remove()
                         case AgentOnBehalfOfOrg => Future.successful(request.userAnswers)
                       }
                 ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)

@@ -56,35 +56,31 @@ class IsThisFileConfidentialController @Inject() (
   def onPageLoad(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val attachments = request.userAnswers.get(AllDocuments).getOrElse(Seq.empty)
+        val attachments = AllDocuments.get().map(_.size).getOrElse(0)
 
-        if (index.position > attachments.size || index.position >= maxFiles) {
-          NotFound
-        } else {
+        val validIndex        = !(index.position > attachments || index.position >= maxFiles)
+        lazy val isSuccessful =
+          UploadSupportingDocumentPage(index).get().map(_.isSuccessful).getOrElse(false)
 
-          if (request.userAnswers.get(UploadSupportingDocumentPage(index)).exists(_.isSuccessful)) {
-
-            val preparedForm = request.userAnswers.get(IsThisFileConfidentialPage(index)) match {
-              case None        => form
-              case Some(value) => form.fill(value)
-            }
-
+        (validIndex, isSuccessful) match {
+          case (true, true)          =>
+            val preparedForm = IsThisFileConfidentialPage(index).fill(form)
             Ok(view(preparedForm, index, mode, draftId))
-          } else {
+          case (true, false)         =>
             Redirect(
               routes.UploadSupportingDocumentsController
                 .onPageLoad(index, mode, request.userAnswers.draftId, None, None)
             )
-          }
+          case (false, true | false) => NotFound
         }
     }
 
   def onSubmit(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val attachments = request.userAnswers.get(AllDocuments).getOrElse(Seq.empty)
+        val attachments = AllDocuments.get().map(_.size).getOrElse(0)
 
-        if (index.position > attachments.size || index.position >= maxFiles) {
+        if (index.position > attachments || index.position >= maxFiles) {
           Future.successful(NotFound)
         } else {
 

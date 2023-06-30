@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-package forms
+package pages
 
-import javax.inject.Inject
+import models.Index
 
-import play.api.data.Form
-import play.api.data.Forms.set
-
-import forms.mappings.Mappings
-import models.RequiredInformation
-
-class RequiredInformationFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[Set[RequiredInformation]] =
-    Form(
-      "value" -> set(enumerable[RequiredInformation]("requiredInformation.error.required"))
-        .verifying(
-          setEquals(RequiredInformation.values.toSet, "requiredInformation.error.selectAll")
-        )
-    )
+case class RemoveSupportingDocumentPage(index: Index) extends Page {
+  override def toString: String = "removeSupportingDocument"
 }

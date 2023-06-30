@@ -74,9 +74,9 @@
               TableRow(
                 HtmlContent(
                   govukLink(
-                    id = attachment.file.reference,
+                    id = "remove-file-" + i,
                     text = messages("site.remove"),
-                    call = controllers.routes.DeleteSupportingDocumentController.onDelete(Index(i), mode, draftId),
+                    call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
                     newTab = false
                   )
                 )
@@ -95,7 +95,7 @@
             )
         )
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
 
     @cancelApplicationLink(draftId)

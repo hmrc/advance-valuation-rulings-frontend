@@ -55,12 +55,12 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
     }
 
     val credentialRoles = Table("credentialRole", Admin, Assistant, User)
-    "returns None for unsupported `Agent` AffinityGroup" in {
+    "returns Agent for `Agent` Affinity Group" in {
       forAll(credentialRoles) {
         credentialRole =>
           val result = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
 
-          result mustBe None
+          result mustBe Some(AuthUserType.Agent)
       }
     }
 

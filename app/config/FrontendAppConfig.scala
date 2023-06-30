@@ -30,6 +30,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
+  private val logger = play.api.Logger(getClass)
+
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
 
@@ -82,6 +84,18 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
+
+  val agentOnBehalfOfTrader: Boolean = {
+    val path = "features.agent-on-behalf-of-trader"
+    configuration
+      .getOptional[Boolean](path)
+      .getOrElse {
+        // This feature will be disabled by default until the whole user journey is implemented.
+        // If there is no flag in the config file the application will silently ignore it
+        logger.debug(s"$path is disabled")
+        false
+      }
+  }
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),

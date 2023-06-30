@@ -26,17 +26,17 @@
     saveButtons: SaveButtons
 )
 
-@(form: Form[_], draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("trader.agent.requiredInformation.title")), draftId = Some(draftId)) {
+@layout(pageTitle = titleNoForm(messages("trader.agent.requiredInformation.title")), draftId = Some(draftId)) {
 
-      @caption(messages("trader.agent.requiredInformation.caption"))
+        @caption(messages("trader.agent.requiredInformation.caption"))
 
-      @heading(messages("trader.agent.requiredInformation.heading"))
+        @heading(messages("trader.agent.requiredInformation.heading"))
 
-      @para(Html(messages("trader.agent.requiredInformation.hint")))
+        @para(Html(messages("trader.agent.requiredInformation.hint")))
 
-      @bulletList(
+        @bulletList(
             Seq(
                Html(messages("trader.agent.requiredInformation.precondition1")),
                Html(messages("trader.agent.requiredInformation.precondition2")),
@@ -44,15 +44,15 @@
                Html(messages("trader.agent.requiredInformation.precondition4")),
                Html(messages("trader.agent.requiredInformation.precondition5")),
                Html(messages("trader.agent.requiredInformation.precondition6"))
-               )
             )
+        )
 
-      <span class="govuk-button-group">
-            <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button" id="continue-button">
-                @messages("site.saveAndContinue")
-            </a>
-            <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
-                @messages("site.saveAsDraft")
-            </a>
-      </span>
+        <span class="govuk-button-group">
+                <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button" id="continue-button">
+                    @messages("site.saveAndContinue")
+                </a>
+                <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+                    @messages("site.saveAsDraft")
+                </a>
+        </span>
 }

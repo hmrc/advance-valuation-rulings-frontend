@@ -200,7 +200,7 @@ hasCommodityCode.change.hidden = your response to whether you have a commodity c
 contactPage.title = If we need to contact you about your application
 contactPage.heading = If we need to contact you about your application
 contactPage.caption = About the applicant
-contactPage.paragraph.1 = We might contact you by phone or email if we need more information about your application.
+contactPage.paragraph.1 = If we need more information about your application we will contact you
 contactPage.paragraph.2 = Please note that email communication may not always be secure, as emails can be read or changed by someone else. If you choose to continue your application, you accept the risks involved.
 
 importGoods.title = Are you planning to import goods into Great Britain?
@@ -212,22 +212,21 @@ importGoods.change.hidden = are you importing goods
 
 requiredInformation.title = Before you start your application
 requiredInformation.heading = Before you start your application
+requiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
 requiredInformation.option1.individual = I am aware that I will need to propose a method to value my goods.
 requiredInformation.option2.individual = I will supply HMRC with my contact email and phone number as part of this application.
 requiredInformation.option3.individual = I have an EORI number starting with GB.
 requiredInformation.option4.individual = The name and address registered to my EORI number is up to date.
 requiredInformation.option5.individual = I am aware that it can take up to 120 days after I submit my application to get a decision.
 requiredInformation.option6.individual = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for up to three years from the date of issue.
+
 requiredInformation.option1.organisation = I am aware that I will need to propose a method to value the goods.
 requiredInformation.option2.organisation = I will supply HMRC with my contact email, phone number and registered EORI details as part of this application.
 requiredInformation.option3.organisation = I have the organisation’s EORI number starting with GB.
 requiredInformation.option4.organisation = The name and address registered to the organisation’s EORI number is up to date.
 requiredInformation.option5.organisation = I am aware that it can take up to 120 days after I submit my application to get a decision.
 requiredInformation.option6.organisation = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for up to three years from the date of issue.
-requiredInformation.hint = You need to tick each item to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Before you start your application
-requiredInformation.error.required = Select each item in the checklist to start your application
-requiredInformation.error.selectAll = Select each item in the checklist to start your application
 requiredInformation.change.hidden = required information
 requiredInformation.caption = Starter checklist
 
@@ -739,12 +738,17 @@ whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your rol
 whatIsYourRoleAsImporter.error.required = Choose the option that describes your role
 whatIsYourRoleAsImporter.change.hidden = your description of your role as an importer
 
-whoAreYouAgent.title = whoAreYouAgent
-whoAreYouAgent.heading = whoAreYouAgent
-whoAreYouAgent.checkYourAnswersLabel = whoAreYouAgent
-whoAreYouAgent.error.required = Enter whoAreYouAgent
-whoAreYouAgent.error.length = WhoAreYouAgent must be 100 characters or less
-whoAreYouAgent.change.hidden = WhoAreYouAgent
+whoAreYouAgent.title = How would you describe your role as an importer?
+whoAreYouAgent.caption = About the applicant
+whoAreYouAgent.heading = How would you describe your role as an importer?
+whoAreYouAgent.error.required = Select an option on how you would describe your role as an importer
+whoAreYouAgent.hint = Choose the option that best describes your role:
+whoAreYouAgent.organisationEmployee = An employee of the organisation
+whoAreYouAgent.agentOnBehalfOfOrganisation = Agent acting on behalf of an organisation
+whoAreYouAgent.agentOnBehalfOfTrader = Agent acting on behalf of a trader
+whoAreYouAgent.organisationEmployee.hint = Imports goods into the UK on behalf of their organisation.
+whoAreYouAgent.agentOnBehalfOfOrganisation.hint = Imports goods into the UK on behalf of an organisation.
+whoAreYouAgent.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
 
 viewApplication.title = Your application
 viewApplication.heading = Your application
@@ -841,3 +845,14 @@ deleteDraft.title = Are you sure you want to delete your application?
 deleteDraft.heading = Are you sure you want to delete your application?
 deleteDraft.error.required = Select yes if you want to delete your application
 deleteDraft.guidance = If you delete your application now, any data will be lost and you will need to make a new application.
+
+removeSupportingDocument.title = Are you sure you want to remove {0}
+removeSupportingDocument.heading = Are you sure you want to remove {0}
+removeSupportingDocument.error.required = Select yes if you wish to remove this file
+
+draftHasBeenSaved.title = Your application draft has been saved for 28 days
+draftHasBeenSaved.heading = Your application draft has been saved for 28 days
+draftHasBeenSaved.para.1 = You have until {0} to submit your application.
+draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
+draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
+draftHasBeenSaved.para.link.text = your applications and rulings

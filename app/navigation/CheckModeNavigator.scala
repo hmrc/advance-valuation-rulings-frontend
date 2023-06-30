@@ -98,7 +98,7 @@ object CheckModeNavigator {
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
-        controllers.routes.UploadSupportingDocumentsController
+        UploadSupportingDocumentsController
           .onPageLoad(Index(0), CheckMode, userAnswers.draftId, None, None)
       case Some(false) => navigateWithAuthUserType(userAnswers)
     }
@@ -106,15 +106,14 @@ object CheckModeNavigator {
   private def uploadSupportingDocumentPage(
     index: Index
   )(userAnswers: UserAnswers): Call =
-    controllers.routes.IsThisFileConfidentialController.onPageLoad(
+    IsThisFileConfidentialController.onPageLoad(
       index,
       CheckMode,
       userAnswers.draftId
     )
 
   private def isThisFileConfidential(index: Index)(userAnswers: UserAnswers): Call =
-    controllers.routes.UploadAnotherSupportingDocumentController
-      .onPageLoad(CheckMode, userAnswers.draftId)
+    UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
 
   private def uploadAnotherSupportingDocument(userAnswers: UserAnswers): Call =
     userAnswers
@@ -122,7 +121,7 @@ object CheckModeNavigator {
       .map {
         case true  =>
           val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
-          controllers.routes.UploadSupportingDocumentsController.onPageLoad(
+          UploadSupportingDocumentsController.onPageLoad(
             Index(nextIndex),
             CheckMode,
             userAnswers.draftId,
@@ -131,16 +130,16 @@ object CheckModeNavigator {
           )
         case false => navigateWithAuthUserType(userAnswers)
       }
-      .getOrElse(controllers.routes.JourneyRecoveryController.onPageLoad())
+      .getOrElse(JourneyRecoveryController.onPageLoad())
 
-  private def deleteSupportingDocumentPage(userAnswers: UserAnswers): Call = {
-    val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
-    if (numberOfDocuments > 0) {
-      controllers.routes.UploadAnotherSupportingDocumentController
-        .onPageLoad(CheckMode, userAnswers.draftId)
-    } else {
-      controllers.routes.DoYouWantToUploadDocumentsController
-        .onPageLoad(CheckMode, userAnswers.draftId)
+  private def removeSupportingDocumentPage(userAnswers: UserAnswers): Call = {
+    val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size)
+
+    numberOfDocuments match {
+      case Some(count) if count > 0 =>
+        UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(_) | None           =>
+        DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
     }
   }
 
@@ -327,8 +326,8 @@ object CheckModeNavigator {
       case UploadSupportingDocumentPage(index)          => uploadSupportingDocumentPage(index)(userAnswers)
       case IsThisFileConfidentialPage(index)            => isThisFileConfidential(index)(userAnswers)
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
-      case DeleteSupportingDocumentPage(_)              => deleteSupportingDocumentPage(userAnswers)
       case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)
+      case RemoveSupportingDocumentPage(_)              => removeSupportingDocumentPage(userAnswers)
 
       // method 1
       case IsThereASaleInvolvedPage           => isThereASaleInvolved(userAnswers)

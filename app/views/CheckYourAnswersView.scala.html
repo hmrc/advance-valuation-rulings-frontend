@@ -68,7 +68,7 @@
     ))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
-        @saveButtons(messages("checkYourAnswers.button.continue"))
+        @saveButtons(draftId, messages("checkYourAnswers.button.continue"))
     }
 
     @cancelApplicationLink(draftId)
