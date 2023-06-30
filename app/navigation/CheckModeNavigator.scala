@@ -99,20 +99,17 @@ object CheckModeNavigator {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
-          .onPageLoad(Index(0), CheckMode, userAnswers.draftId, None, None)
+          .onPageLoad(CheckMode, userAnswers.draftId, None, None)
       case Some(false) => navigateWithAuthUserType(userAnswers)
     }
 
-  private def uploadSupportingDocumentPage(
-    index: Index
-  )(userAnswers: UserAnswers): Call =
+  private def uploadSupportingDocumentPage(userAnswers: UserAnswers): Call =
     IsThisFileConfidentialController.onPageLoad(
-      index,
       CheckMode,
       userAnswers.draftId
     )
 
-  private def isThisFileConfidential(index: Index)(userAnswers: UserAnswers): Call =
+  private def isThisFileConfidential(userAnswers: UserAnswers): Call =
     UploadAnotherSupportingDocumentController.onPageLoad(CheckMode, userAnswers.draftId)
 
   private def uploadAnotherSupportingDocument(userAnswers: UserAnswers): Call =
@@ -120,9 +117,7 @@ object CheckModeNavigator {
       .get(UploadAnotherSupportingDocumentPage)
       .map {
         case true  =>
-          val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
           UploadSupportingDocumentsController.onPageLoad(
-            Index(nextIndex),
             CheckMode,
             userAnswers.draftId,
             None,
@@ -323,8 +318,8 @@ object CheckModeNavigator {
         haveBeenSubjectToLegalChallenges(userAnswers)
       case HasCommodityCodePage                         => hasCommodityCode(userAnswers)
       case DoYouWantToUploadDocumentsPage               => doYouWantToUploadDocuments(userAnswers)
-      case UploadSupportingDocumentPage(index)          => uploadSupportingDocumentPage(index)(userAnswers)
-      case IsThisFileConfidentialPage(index)            => isThisFileConfidential(index)(userAnswers)
+      case UploadSupportingDocumentPage                 => uploadSupportingDocumentPage(userAnswers)
+      case IsThisFileConfidentialPage                   => isThisFileConfidential(userAnswers)
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
       case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)
       case RemoveSupportingDocumentPage(_)              => removeSupportingDocumentPage(userAnswers)

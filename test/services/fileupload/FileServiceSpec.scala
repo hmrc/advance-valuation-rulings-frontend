@@ -27,7 +27,8 @@ import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import connectors.UpscanConnector
-import models.{Done, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
+import models.{Done, DraftId, NormalMode, UploadedFile, UserAnswers}
+import models.DraftAttachment
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
@@ -38,7 +39,8 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import pages.UploadSupportingDocumentPage
+import queries.AllDocuments
 import services.UserAnswersService
 
 class FileServiceSpec
@@ -96,13 +98,13 @@ class FileServiceSpec
       val userAnswers = UserAnswers("userId", DraftId(0))
 
       val expectedPath = controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(0), NormalMode, DraftId(0), None, None)
+        .onPageLoad(NormalMode, DraftId(0), None, None)
         .url
       val expectedUrl  = s"host$expectedPath"
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-            .callback(DraftId(0), Index(0))}",
+            .callback(DraftId(0))}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,
@@ -114,27 +116,29 @@ class FileServiceSpec
         .thenReturn(Future.successful(Some(userAnswers)))
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
-      service.initiate(DraftId(0), NormalMode, Index(0))(hc).futureValue mustEqual response
+      service.initiate(DraftId(0), NormalMode)(hc).futureValue mustEqual response
 
       verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
       verify(mockUserAnswersService).set(userAnswersCaptor.capture())(any())
 
       val actualAnswers = userAnswersCaptor.getValue
 
-      actualAnswers.get(UploadSupportingDocumentPage(Index(0))).value mustEqual UploadedFile
-        .Initiated("reference")
+      actualAnswers.get(UploadSupportingDocumentPage).value mustEqual UploadedFile.Initiated(
+        "reference"
+      )
+      actualAnswers.get(AllDocuments) mustEqual None
     }
 
     "fail when there are no user answers for that draft" in {
 
       val expectedPath = controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(0), NormalMode, DraftId(0), None, None)
+        .onPageLoad(NormalMode, DraftId(0), None, None)
         .url
       val expectedUrl  = s"host$expectedPath"
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-            .callback(DraftId(0), Index(0))}",
+            .callback(DraftId(0))}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,
@@ -144,7 +148,7 @@ class FileServiceSpec
       when(mockUpscanConnector.initiate(any())(any())).thenReturn(Future.successful(response))
       when(mockUserAnswersService.get(any())(any())).thenReturn(Future.successful(None))
 
-      val exception = service.initiate(DraftId(0), NormalMode, Index(0))(hc).failed.futureValue
+      val exception = service.initiate(DraftId(0), NormalMode)(hc).failed.futureValue
 
       verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
 
@@ -187,7 +191,7 @@ class FileServiceSpec
         val updatedFile = uploadedFile.copy(downloadUrl = "drafts/DRAFT000000000/foobar")
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(0)), updatedFile)
+          .set(UploadSupportingDocumentPage, updatedFile)
           .success
           .value
 
@@ -197,7 +201,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), Index(0), uploadedFile).futureValue
+        service.update(DraftId(0), uploadedFile).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
@@ -218,7 +222,7 @@ class FileServiceSpec
       "must update the user answers with the status of the file" in {
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(0)), uploadedFile)
+          .set(UploadSupportingDocumentPage, uploadedFile)
           .success
           .value
 
@@ -226,7 +230,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), Index(0), uploadedFile).futureValue
+        service.update(DraftId(0), uploadedFile).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
@@ -268,15 +272,12 @@ class FileServiceSpec
         )
 
         val userAnswers = UserAnswers("userId", DraftId(0))
-          .set(UploadSupportingDocumentPage(Index(0)), file1)
-          .success
-          .value
-          .set(IsThisFileConfidentialPage(Index(0)), true)
+          .set(AllDocuments, List(DraftAttachment(file1, Some(true))))
           .success
           .value
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(1)), file3)
+          .set(UploadSupportingDocumentPage, file3)
           .success
           .value
 
@@ -284,7 +285,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), Index(1), file2).futureValue
+        service.update(DraftId(0), file2).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
@@ -321,12 +322,12 @@ class FileServiceSpec
         )
 
         val userAnswers = UserAnswers("userId", DraftId(0))
-          .set(UploadSupportingDocumentPage(Index(0)), file1)
+          .set(UploadSupportingDocumentPage, file1)
           .success
           .value
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage(Index(0)), file3)
+          .set(UploadSupportingDocumentPage, file3)
           .success
           .value
 
@@ -336,7 +337,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), Index(0), file2).futureValue
+        service.update(DraftId(0), file2).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
@@ -362,7 +363,7 @@ class FileServiceSpec
       when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
         .thenReturn(Future.successful(objectSummary))
 
-      service.update(DraftId(0), Index(0), uploadedFile).failed.futureValue
+      service.update(DraftId(0), uploadedFile).failed.futureValue
 
       verify(mockObjectStoreClient, never).uploadFromUrl(
         any(),

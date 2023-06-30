@@ -19,7 +19,9 @@ package pages
 import java.time.Instant
 
 import models.{DraftId, Index, UploadedFile, UserAnswers}
+import models.DraftAttachment
 import pages.behaviours.PageBehaviours
+import queries.{AllDocuments, DraftAttachmentAt}
 
 class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
 
@@ -33,7 +35,7 @@ class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
 
     "must remove any uploaded documents when the user chooses no" in {
 
-      val successfulFile = UploadedFile.Success(
+      val successfulFile  = UploadedFile.Success(
         reference = "reference",
         downloadUrl = "downloadUrl",
         uploadDetails = UploadedFile.UploadDetails(
@@ -44,28 +46,17 @@ class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
           size = 1337
         )
       )
-
-      val existingAnswers = UserAnswers("userId", DraftId(0))
-        .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
-        .success
-        .value
-        .set(IsThisFileConfidentialPage(Index(0)), true)
-        .success
-        .value
-        .set(UploadSupportingDocumentPage(Index(1)), successfulFile)
-        .success
-        .value
-        .set(IsThisFileConfidentialPage(Index(1)), false)
-        .success
-        .value
+      val emptyAnswers    = UserAnswers("userId", DraftId(0))
+      val existingAnswers = (for {
+        ua <-
+          emptyAnswers.set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(true)))
+        ua <- ua.set(DraftAttachmentAt(Index(1)), DraftAttachment(successfulFile, Some(false)))
+      } yield ua).success.value
 
       val cleanedUpAnswers =
         existingAnswers.set(DoYouWantToUploadDocumentsPage, false).success.value
 
-      cleanedUpAnswers.get(UploadSupportingDocumentPage(Index(0))) mustBe empty
-      cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
-      cleanedUpAnswers.get(UploadSupportingDocumentPage(Index(1))) mustBe empty
-      cleanedUpAnswers.get(IsThisFileConfidentialPage(Index(1))) mustBe empty
+      cleanedUpAnswers.get(AllDocuments) mustBe empty
     }
   }
 }
