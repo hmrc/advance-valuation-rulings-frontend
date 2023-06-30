@@ -18,7 +18,6 @@
 
 @this(
     layout: templates.Layout,
-    formHelper: FormWithCSRF,
     caption: Caption,
     bulletList: BulletList,
     para: InsetPara,
@@ -30,8 +29,6 @@
 @(form: Form[_], draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("trader.agent.requiredInformation.title")), draftId = Some(draftId)) {
-
-    @formHelper(action = routes.TraderAgentRequiredInformationController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
       @caption(messages("trader.agent.requiredInformation.caption"))
 
@@ -47,10 +44,15 @@
                Html(messages("trader.agent.requiredInformation.precondition4")),
                Html(messages("trader.agent.requiredInformation.precondition5")),
                Html(messages("trader.agent.requiredInformation.precondition6"))
-               ),
-               "govuk-list govuk-list--bullet"
+               )
             )
-        @saveButtons("site.acceptContinue")
-    }
-    @cancelLink(draftId)
+
+      <span class="govuk-button-group">
+            <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button" id="continue-button">
+                @messages("site.saveAndContinue")
+            </a>
+            <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+                @messages("site.saveAsDraft")
+            </a>
+      </span>
 }
