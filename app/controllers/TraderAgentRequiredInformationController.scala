@@ -25,7 +25,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import forms.TraderAgentRequiredInformationFormProvider
 import models.{DraftId, NormalMode}
 import navigation.Navigator
 import pages.TraderAgentRequiredInformationPage
@@ -39,27 +38,20 @@ class TraderAgentRequiredInformationController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  formProvider: TraderAgentRequiredInformationFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: TraderAgentRequiredInformationView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form           = formProvider()
   private val logger = play.api.Logger(getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         logger.info("TraderAgentRequiredInformationController onPageLoad")
-        val preparedForm = request.userAnswers.get(TraderAgentRequiredInformationPage) match {
-          case None        => form
-          case Some(value) =>
-            form.fill(value)
-        }
 
-        Ok(view(preparedForm, draftId))
+        Ok(view(draftId))
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
