@@ -51,7 +51,6 @@ class Navigator @Inject() () {
     case HasConfidentialInformationPage                   => hasConfidentialInformationPage
     case ConfidentialInformationPage                      => confidentialInformationPage
     case ImportGoodsPage                                  => importGoodsPage
-    case RequiredInformationPage                          => requiredInformationPage
     case TraderAgentRequiredInformationPage               => traderAgentRequiredInformationPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
     case ContactPagePage                                  =>
