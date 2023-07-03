@@ -88,10 +88,11 @@ class Navigator @Inject() () {
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
+  // todo: check this routing
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
       case Some(IndividualTrader)      =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+        RequiredInformationController.onPageLoad(userAnswers.draftId)
       case Some(OrganisationAdmin)     =>
         WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(OrganisationAssistant) =>

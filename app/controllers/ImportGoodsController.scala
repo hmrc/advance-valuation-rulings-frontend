@@ -73,7 +73,7 @@ class ImportGoodsController @Inject() (
 
               } yield saveDraft match {
 
-                case true => Redirect(routes.AccountHomeController.onPageLoad())
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
                 case _    => Redirect(navigator.nextPage(ImportGoodsPage, mode, updatedAnswers))
               }
           )

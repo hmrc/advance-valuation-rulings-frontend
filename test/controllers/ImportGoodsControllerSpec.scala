@@ -53,7 +53,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
 
   "ImportGoods Controller" - {
 
-    "must redirect to Account Home" - {
+    "must redirect to Draft Saved page" - {
       "when save as draft is selected" in {
 
         val mockUserAnswersService = mock[UserAnswersService]
@@ -77,7 +77,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual Call(
             "POST",
-            "/advance-valuation-ruling/applications-and-rulings"
+            s"/advance-valuation-ruling/$draftId/save-as-draft"
           ).url
 
         }

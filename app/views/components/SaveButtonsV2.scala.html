@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,4 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
+
+@this(govukButton: GovukButton)
+
+@(draftId: DraftId, draftAction: Call , submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
+
+@route = @{routes.ImportGoodsController.onSubmit(NormalMode, draftId, true).toString()
+}
+
+    <div class="govuk-button-group">
+        @govukButton(
+            ButtonViewModel(messages(submitButtonMessageKey))
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.saveAsDraft"))
+        .withAttribute("formaction", route)
+        .asSecondaryButton()
+        )
+    </div>
+    

@@ -24,15 +24,17 @@
     heading: Heading,
     caption: Caption,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons,
+    saveButtons: SaveButtonsV2,
     govukButton: GovukButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.ImportGoodsController.onSubmit(mode, draftId, saveDraft)}
+
 @layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId, false), Symbol("autoComplete") -> "off") {
+    @formHelper(action = onSubmitAction(saveDraft = false), Symbol("autoComplete") -> "off") {
         
 
         @if(form.errors.nonEmpty) {
@@ -48,19 +50,8 @@
             )
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
 
-            <div class="govuk-button-group">
-                @govukButton(
-                    ButtonViewModel("continue button")
-                )
-
-                @govukButton(
-                    ButtonViewModel("draft button")
-                .withAttribute("formaction",routes.ImportGoodsController.onSubmit(mode, dId, true).toString())
-                .asSecondaryButton()
-                )
-            </div>
         }
 
     @cancelApplicationLink(draftId)
