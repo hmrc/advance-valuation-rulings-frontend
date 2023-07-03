@@ -21,9 +21,10 @@ import cats.implicits._
 
 import play.api.libs.json.{Json, OFormat}
 
-import models.{Index, UploadedFile, UserAnswers}
-import pages.{DoYouWantToUploadDocumentsPage, IsThisFileConfidentialPage, Page, UploadSupportingDocumentPage}
-import queries.AllDocuments
+import models.{DraftAttachment, Index, UploadedFile, UserAnswers}
+import models.UploadedFile._
+import pages._
+import queries.{AllDocuments, DraftAttachmentAt}
 
 final case class AttachmentRequest(
   name: String,
@@ -40,33 +41,43 @@ object AttachmentRequest {
 
   def apply(answers: UserAnswers): ValidatedNel[Page, Seq[AttachmentRequest]] =
     answers.validated(DoYouWantToUploadDocumentsPage).andThen {
-      case true  =>
-        answers.get(AllDocuments).toValidNel(UploadSupportingDocumentPage(Index(0))).andThen {
-          _.indices.toList.traverse {
-            i =>
-              (getFile(answers, i), getFilePrivacy(answers, i)).mapN {
-                (file, isConfidential) =>
-                  new AttachmentRequest(
-                    name = file.uploadDetails.fileName,
+      case true =>
+        answers
+          .validated(AllDocuments)
+          .andThen(_.zipWithIndex.traverse {
+            case (document, i) =>
+              val validatedPrivacy = checkFilePrivacy(document, i)
+              val validatedFile    = checkFile(document, i)
+
+              (validatedFile, validatedPrivacy).mapN {
+                case (Success(_, downloadUrl, uploadDetails), isConfidential) =>
+                  AttachmentRequest(
+                    name = uploadDetails.fileName,
                     description = None,
-                    url = file.downloadUrl,
-                    privacy = if (isConfidential) Privacy.Confidential else Privacy.Public,
-                    mimeType = file.uploadDetails.fileMimeType,
-                    size = file.uploadDetails.size
+                    url = downloadUrl,
+                    privacy =
+                      if (isConfidential) Privacy.Confidential
+                      else Privacy.Public,
+                    mimeType = uploadDetails.fileMimeType,
+                    size = uploadDetails.size
                   )
               }
-          }
-        }
+          })
+
       case false =>
         Validated.Valid(Nil)
     }
 
-  private def getFile(answers: UserAnswers, index: Int): ValidatedNel[Page, UploadedFile.Success] =
-    answers.validated(UploadSupportingDocumentPage(Index(index))).andThen {
-      case file: UploadedFile.Success => file.validNel
-      case _                          => UploadSupportingDocumentPage(Index(index)).invalidNel
+  private def checkFile(
+    document: DraftAttachment,
+    index: Int
+  ): ValidatedNel[Page, UploadedFile.Success] =
+    document.file match {
+      case Failure(_, _) => DraftAttachmentAt(Index(index)).invalidNel
+      case Initiated(_)  => DraftAttachmentAt(Index(index)).invalidNel
+      case s: Success    => s.validNel
     }
 
-  private def getFilePrivacy(answers: UserAnswers, index: Int): ValidatedNel[Page, Boolean] =
-    answers.validated(IsThisFileConfidentialPage(Index(index)))
+  private def checkFilePrivacy(document: DraftAttachment, index: Int): ValidatedNel[Page, Boolean] =
+    document.isThisFileConfidential.toValidNel(DraftAttachmentAt(Index(index)))
 }

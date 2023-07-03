@@ -30,7 +30,7 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import config.Service
 import connectors.UpscanConnector
-import models.{Done, DraftId, Index, Mode, UploadedFile, UserAnswers}
+import models.{Done, DraftId, Mode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import pages.UploadSupportingDocumentPage
 import queries.AllDocuments
@@ -54,19 +54,19 @@ class FileService @Inject() (
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  def initiate(draftId: DraftId, mode: Mode, index: Index)(implicit
+  def initiate(draftId: DraftId, mode: Mode)(implicit
     hc: HeaderCarrier
   ): Future[UpscanInitiateResponse] = {
 
     val redirectPath =
       controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(index, mode, draftId, None, None)
+        .onPageLoad(mode, draftId, None, None)
         .url
     val redirectUrl  = s"$host$redirectPath"
 
     val request = UpscanInitiateRequest(
       callbackUrl =
-        s"$callbackBaseUrl${controllers.callback.routes.UploadCallbackController.callback(draftId, index).url}",
+        s"$callbackBaseUrl${controllers.callback.routes.UploadCallbackController.callback(draftId).url}",
       successRedirect = redirectUrl,
       errorRedirect = redirectUrl,
       minimumFileSize = minimumFileSize,
@@ -76,35 +76,30 @@ class FileService @Inject() (
     for {
       response       <- upscanConnector.initiate(request)
       answers        <- getUserAnswers(draftId)
-      updatedAnswers <- Future.fromTry(
-                          answers.set(
-                            UploadSupportingDocumentPage(index),
-                            UploadedFile.Initiated(response.reference)
-                          )
-                        )
+      updatedAnswers <-
+        answers.setFuture(
+          UploadSupportingDocumentPage,
+          UploadedFile.Initiated(response.reference)
+        )
       _              <- userAnswersService.set(updatedAnswers)
     } yield response
   }
 
-  def update(draftId: DraftId, index: Index, file: UploadedFile): Future[Done] =
+  def update(draftId: DraftId, file: UploadedFile): Future[Done] =
     for {
       answers        <- getUserAnswersInternal(draftId)
-      updatedFile    <- processFile(answers, index, file)
-      updatedAnswers <-
-        Future.fromTry(answers.set(UploadSupportingDocumentPage(index), updatedFile))
+      updatedFile    <- processFile(answers, file)
+      updatedAnswers <- answers.setFuture(UploadSupportingDocumentPage, updatedFile)
       _              <- userAnswersService.setInternal(updatedAnswers)
     } yield Done
 
   private def processFile(
     answers: UserAnswers,
-    index: Index,
     file: UploadedFile
   ): Future[UploadedFile] =
     file match {
       case file: UploadedFile.Success =>
-        val documents      = answers.get(AllDocuments).getOrElse(Seq.empty)
-        val otherDocuments =
-          documents.patch(index.position, Seq.empty, 1)
+        val otherDocuments = answers.get(AllDocuments).getOrElse(Seq.empty)
 
         if (otherDocuments.flatMap(_.file.fileName).contains(file.uploadDetails.fileName)) {
 

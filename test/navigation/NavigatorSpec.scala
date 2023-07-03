@@ -28,7 +28,7 @@ import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
-import queries.Modifiable
+import queries._
 
 class NavigatorSpec extends SpecBase {
 
@@ -84,8 +84,8 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-        ) mustBe routes.RequiredInformationController
-          .onPageLoad(draftId)
+        ) mustBe routes.WhoAreYouAgentController
+          .onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
@@ -95,7 +95,7 @@ class NavigatorSpec extends SpecBase {
           userAnswersAsIndividualTrader
             .setFuture(AccountHomePage, OrganisationAssistant)
             .futureValue
-        ) mustBe routes.WhatIsYourRoleAsImporterController
+        ) mustBe routes.WhoAreYouAgentController
           .onPageLoad(NormalMode, draftId)
       }
 
@@ -104,8 +104,16 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
-        ) mustBe routes.RequiredInformationController
-          .onPageLoad(draftId)
+        ) mustBe routes.WhoAreYouAgentController
+          .onPageLoad(NormalMode, draftId)
+      }
+
+      "should navigate to WhatIsYourRole page for an Agent" in {
+        navigator.nextPage(
+          AccountHomePage,
+          NormalMode,
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
+        ) mustBe routes.UnauthorisedController.onPageLoad
       }
 
       "should navigate to WhatIsYourRole page for an Agent" in {
@@ -370,13 +378,11 @@ class NavigatorSpec extends SpecBase {
           "when there are existing documents" - {
 
             "must navigate to UploadAnotherSupportingDocument" in {
-              val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
-                .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
-                .success
-                .value
-                .set(IsThisFileConfidentialPage(Index(0)), true)
-                .success
-                .value
+              val userAnswers = (for {
+                ua <- EmptyUserAnswers.set(HasConfidentialInformationPage, false)
+                ua <- ua.set(AllDocuments, List(DraftAttachment(successfulFile, Some(true))))
+              } yield ua).success.value
+
               navigator.nextPage(
                 HasConfidentialInformationPage,
                 NormalMode,
@@ -403,14 +409,11 @@ class NavigatorSpec extends SpecBase {
         }
 
         "navigate to UploadAnotherSupportingDocument page when there are existing documents" in {
-          val userAnswers =
-            userAnswersWith(ConfidentialInformationPage, "top secret")
-              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
-              .success
-              .value
-              .set(IsThisFileConfidentialPage(Index(0)), true)
-              .success
-              .value
+          val userAnswers = (for {
+            ua <- EmptyUserAnswers.set(ConfidentialInformationPage, "top secret")
+            ua <- ua.set(AllDocuments, List(DraftAttachment(successfulFile, Some(true))))
+          } yield ua).success.value
+
           navigator.nextPage(
             ConfidentialInformationPage,
             NormalMode,
@@ -627,7 +630,7 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(0), NormalMode, draftId, None, None)
+            .onPageLoad(NormalMode, draftId, None, None)
         }
 
         "CheckYourAnswers page when No is selected" in {
@@ -645,10 +648,10 @@ class NavigatorSpec extends SpecBase {
 
         "IsThisFileConfidential page" in {
           navigator.nextPage(
-            UploadSupportingDocumentPage(Index(0)),
+            UploadSupportingDocumentPage,
             NormalMode,
             userAnswersAsIndividualTrader
-          ) mustBe routes.IsThisFileConfidentialController.onPageLoad(Index(0), NormalMode, draftId)
+          ) mustBe routes.IsThisFileConfidentialController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -656,7 +659,7 @@ class NavigatorSpec extends SpecBase {
 
         "UploadAnotherSupportingDocument page" in {
           navigator.nextPage(
-            IsThisFileConfidentialPage(Index(0)),
+            IsThisFileConfidentialPage,
             NormalMode,
             userAnswersAsIndividualTrader
           ) mustBe routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId)
@@ -673,26 +676,22 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(0), NormalMode, draftId, None, None)
+            .onPageLoad(NormalMode, draftId, None, None)
         }
 
         "UploadSupportingDocumentsPage when Yes is selected and there are other files" in {
-          val userAnswers =
-            userAnswersAsIndividualTrader
-              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
-              .success
-              .value
-              .set(IsThisFileConfidentialPage(Index(0)), true)
-              .success
-              .value
-              .set(UploadAnotherSupportingDocumentPage, true)
-              .get
+          val userAnswers = (for {
+            ua <- EmptyUserAnswers.set(UploadSupportingDocumentPage, successfulFile)
+            ua <- ua.set(IsThisFileConfidentialPage, true)
+            ua <- ua.set(UploadAnotherSupportingDocumentPage, true)
+          } yield ua).success.value
+
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
           ) mustBe controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(1), NormalMode, draftId, None, None)
+            .onPageLoad(NormalMode, draftId, None, None)
         }
 
         "CheckYourAnswers page when No is selected and the user is an IndividualTrader" in {
@@ -743,12 +742,10 @@ class NavigatorSpec extends SpecBase {
         "UploadAnotherSupportingDocument page when there are more documents" in {
           val answers =
             userAnswersAsIndividualTrader
-              .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+              .set(AllDocuments, List(DraftAttachment(successfulFile, Some(true))))
               .success
               .value
-              .set(IsThisFileConfidentialPage(Index(0)), true)
-              .success
-              .value
+
           navigator.nextPage(
             RemoveSupportingDocumentPage(Index(0)),
             NormalMode,

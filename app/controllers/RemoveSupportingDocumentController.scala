@@ -30,8 +30,8 @@ import controllers.actions._
 import forms.RemoveSupportingDocumentFormProvider
 import models.{DraftId, Index, Mode, UserAnswers}
 import navigation.Navigator
-import pages.{RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
-import queries.{AllDocuments, DraftAttachmentQuery}
+import pages._
+import queries._
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
 
@@ -55,7 +55,7 @@ class RemoveSupportingDocumentController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        UploadSupportingDocumentPage(index).get().flatMap(_.fileName) match {
+        DraftAttachmentAt(index).get().flatMap(_.file.fileName) match {
           case Some(fileName) =>
             Ok(view(form, mode, draftId, index, fileName))
           case None           =>
@@ -67,9 +67,9 @@ class RemoveSupportingDocumentController @Inject() (
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val urlAndFileName = for {
-          file     <- UploadSupportingDocumentPage(index).get()
-          url      <- file.fileUrl
-          fileName <- file.fileName
+          draft    <- DraftAttachmentAt(index).get()
+          url      <- draft.file.fileUrl
+          fileName <- draft.file.fileName
         } yield (url, fileName)
 
         urlAndFileName match {

@@ -52,6 +52,7 @@ POST       /:draftId/planning-import-goods-great-britain                        
 GET        /:draftId/change-planning-import-goods-great-britain                     controllers.ImportGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-planning-import-goods-great-britain                     controllers.ImportGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
+# Update this
 GET        /:draftId/start-application                                             controllers.RequiredInformationController.onPageLoad(draftId: DraftId)
 
 GET        /:draftId/provide-confidential-information                              controllers.ConfidentialInformationController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
@@ -83,13 +84,13 @@ POST       /:draftId/add-supporting-documents                                   
 GET        /:draftId/change-add-supporting-documents                                controllers.DoYouWantToUploadDocumentsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-add-supporting-documents                                controllers.DoYouWantToUploadDocumentsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /:draftId/supporting-documents/:index/upload                            controllers.UploadSupportingDocumentsController.onPageLoad(index: Index, mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
-GET        /:draftId/supporting-documents/:index/change-upload                     controllers.UploadSupportingDocumentsController.onPageLoad(index: Index, mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
+GET        /:draftId/supporting-documents/upload                                  controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
+GET        /:draftId/supporting-documents/change-upload                           controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
 
-GET        /:draftId/supporting-documents/:index/mark-confidential                 controllers.IsThisFileConfidentialController.onPageLoad(index: Index, mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/supporting-documents/:index/mark-confidential                 controllers.IsThisFileConfidentialController.onSubmit(index: Index, mode: Mode = NormalMode, draftId: DraftId)
-GET        /:draftId/supporting-documents/:index/change-mark-confidential          controllers.IsThisFileConfidentialController.onPageLoad(index: Index, mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/supporting-documents/:index/change-mark-confidential          controllers.IsThisFileConfidentialController.onSubmit(index: Index, mode: Mode = CheckMode, draftId: DraftId)
+GET        /:draftId/supporting-documents/mark-confidential                       controllers.IsThisFileConfidentialController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/supporting-documents/mark-confidential                       controllers.IsThisFileConfidentialController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/supporting-documents/change-mark-confidential                controllers.IsThisFileConfidentialController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/supporting-documents/change-mark-confidential                controllers.IsThisFileConfidentialController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/supporting-documents/uploaded                                 controllers.UploadAnotherSupportingDocumentController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/supporting-documents/uploaded                                 controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)

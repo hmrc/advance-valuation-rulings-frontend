@@ -16,7 +16,6 @@
 
 package generators
 
-import models.Index
 import org.scalacheck.Arbitrary
 import pages._
 
@@ -126,8 +125,9 @@ trait PageGenerators {
     : Arbitrary[UploadAnotherSupportingDocumentPage.type] =
     Arbitrary(UploadAnotherSupportingDocumentPage)
 
-  implicit lazy val arbitraryIsThisFileConfidentialPage: Arbitrary[IsThisFileConfidentialPage] =
-    Arbitrary(IsThisFileConfidentialPage(Index(0)))
+  implicit lazy val arbitraryIsThisFileConfidentialPage
+    : Arbitrary[IsThisFileConfidentialPage.type] =
+    Arbitrary(IsThisFileConfidentialPage)
 
   implicit lazy val arbitraryDoYouWantToUploadDocumentsPage
     : Arbitrary[DoYouWantToUploadDocumentsPage.type] =
