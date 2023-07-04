@@ -27,18 +27,19 @@
     caption: Caption,
     heading: Heading,
     cancelLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsV2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.ExplainHowPartiesAreRelatedController.onSubmit(NormalMode, draftId, saveDraft)
+}
 @paraContent = {    @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
                     @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
                 }
 
 @layout(pageTitle = title(form, messages("explainHowPartiesAreRelated.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.ExplainHowPartiesAreRelatedController.onSubmit(mode, draftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -58,7 +59,7 @@
 
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
     @cancelLink(draftId)
 }

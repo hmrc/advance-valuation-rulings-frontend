@@ -27,11 +27,12 @@
     heading: Heading,
     paragraph: Paragraph,
     insetPara: InsetPara,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsV2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.ConfidentialInformationController.onSubmit(NormalMode, draftId: DraftId, saveDraft)
+}
 @paraContent = {@paragraph(Html(messages("confidentialInformation.paragraph.1")))
                 @bulletList(Seq(
                     Html(messages("confidentialInformation.bulletPoint.1")),
@@ -44,8 +45,7 @@
 
 @layout(pageTitle = title(form, messages("confidentialInformation.title")), draftId = Some(draftId)) {
 
-
-    @formHelper(action = routes.ConfidentialInformationController.onSubmit(mode, draftId: DraftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -64,7 +64,7 @@
                 .withId("value")
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
 
     @cancelApplicationLink(draftId)

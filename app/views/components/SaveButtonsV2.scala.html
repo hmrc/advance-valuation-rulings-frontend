@@ -18,9 +18,6 @@
 
 @(draftId: DraftId, draftAction: Call , submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
 
-@route = @{routes.ImportGoodsController.onSubmit(NormalMode, draftId, true).toString()
-}
-
     <div class="govuk-button-group">
         @govukButton(
             ButtonViewModel(messages(submitButtonMessageKey))
@@ -28,7 +25,7 @@
 
         @govukButton(
             ButtonViewModel(messages("site.saveAsDraft"))
-        .withAttribute("formaction", route)
+        .withAttribute("formaction", draftAction.toString())
         .asSecondaryButton()
         )
     </div>

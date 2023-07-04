@@ -28,11 +28,12 @@
     caption: Caption,
     heading: Heading,
     cancelLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsV2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.DescribeTheIdenticalGoodsController.onSubmit(NormalMode, draftId, saveDraft)
+}
 @paraContent = {@paragraph(Html(messages("describeTheIdenticalGoods.paragraph")))
                 @list(
                     Seq(
@@ -45,7 +46,7 @@
 
 @layout(pageTitle = title(form, messages("describeTheIdenticalGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.DescribeTheIdenticalGoodsController.onSubmit(mode, draftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -65,7 +66,7 @@
             .withId("value")
     )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
 @cancelLink(draftId)
 }

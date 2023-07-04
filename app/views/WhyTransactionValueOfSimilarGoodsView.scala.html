@@ -27,14 +27,16 @@
     caption: Caption,
     heading: Heading,
     bulletList: BulletList,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsV2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.WhyTransactionValueOfSimilarGoodsController.onSubmit(NormalMode, draftId: DraftId, saveDraft)}
+
 @layout(pageTitle = title(form, messages("whyTransactionValueOfSimilarGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode, draftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -53,9 +55,6 @@
 
     @paragraph(Html(messages("whyTransactionValueOfSimilarGoods.paragraph.2")))
 
-
-
-
     @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
@@ -68,7 +67,7 @@
                 .withAttribute("maxlength","8167")
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
 @cancelLink(draftId)
 }

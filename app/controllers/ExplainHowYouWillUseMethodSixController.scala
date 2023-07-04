@@ -56,7 +56,7 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
         Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
@@ -68,9 +68,14 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(ExplainHowYouWillUseMethodSixPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(ExplainHowYouWillUseMethodSixPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(
+                    navigator.nextPage(ExplainHowYouWillUseMethodSixPage, mode, updatedAnswers)
+                  )
+              }
           )
     }
 }
