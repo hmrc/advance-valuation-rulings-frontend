@@ -44,8 +44,45 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
   lazy val explainWhyYouChoseMethodFourRoute =
     routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, draftId).url
 
+  lazy val saveDraftRoute: String =
+    routes.ExplainWhyYouChoseMethodFourController
+      .onSubmit(NormalMode, draftId, saveDraft = true)
+      .url
+
+  lazy val continueRoute: String =
+    routes.ExplainWhyYouChoseMethodFourController
+      .onSubmit(NormalMode, draftId, saveDraft = false)
+      .url
+
   "ExplainWhyYouChoseMethodFour Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -107,7 +144,7 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
 
       running(application) {
         val request =
-          FakeRequest(POST, explainWhyYouChoseMethodFourRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -124,7 +161,7 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
 
       running(application) {
         val request =
-          FakeRequest(POST, explainWhyYouChoseMethodFourRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -161,7 +198,7 @@ class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSu
 
       running(application) {
         val request =
-          FakeRequest(POST, explainWhyYouChoseMethodFourRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

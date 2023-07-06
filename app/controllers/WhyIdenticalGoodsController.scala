@@ -67,9 +67,11 @@ class WhyIdenticalGoodsController @Inject() (
               for {
                 updatedAnswers <- WhyIdenticalGoodsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(WhyIdenticalGoodsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(navigator.nextPage(WhyIdenticalGoodsPage, mode, updatedAnswers))
+              }
           )
     }
 }

@@ -68,9 +68,11 @@ class DescribeTheSimilarGoodsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheSimilarGoodsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(DescribeTheSimilarGoodsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(navigator.nextPage(DescribeTheSimilarGoodsPage, mode, updatedAnswers))
+              }
           )
     }
 }

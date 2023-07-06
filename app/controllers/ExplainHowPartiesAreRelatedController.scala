@@ -67,9 +67,13 @@ class ExplainHowPartiesAreRelatedController @Inject() (
               for {
                 updatedAnswers <- ExplainHowPartiesAreRelatedPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(ExplainHowPartiesAreRelatedPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(
+                    navigator.nextPage(ExplainHowPartiesAreRelatedPage, mode, updatedAnswers)
+                  )
+              }
           )
     }
 }

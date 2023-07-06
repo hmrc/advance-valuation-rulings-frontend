@@ -44,6 +44,12 @@ class WhyIdenticalGoodsControllerSpec extends SpecBase with MockitoSugar {
   lazy val whyIdenticalGoodsRoute =
     routes.WhyIdenticalGoodsController.onPageLoad(NormalMode, draftId).url
 
+  lazy val saveDraftRoute: String =
+    routes.WhyIdenticalGoodsController.onSubmit(NormalMode, draftId, saveDraft = true).url
+
+  lazy val continueRoute: String =
+    routes.WhyIdenticalGoodsController.onSubmit(NormalMode, draftId, saveDraft = false).url
+
   "WhyIdenticalGoods Controller" - {
 
     "must return OK and the correct view for a GET" in {
@@ -107,7 +113,7 @@ class WhyIdenticalGoodsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whyIdenticalGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -124,7 +130,7 @@ class WhyIdenticalGoodsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whyIdenticalGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -161,7 +167,7 @@ class WhyIdenticalGoodsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, whyIdenticalGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

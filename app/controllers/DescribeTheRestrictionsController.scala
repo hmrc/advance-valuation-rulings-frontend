@@ -67,9 +67,11 @@ class DescribeTheRestrictionsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheRestrictionsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(DescribeTheRestrictionsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(navigator.nextPage(DescribeTheRestrictionsPage, mode, updatedAnswers))
+              }
           )
     }
 }

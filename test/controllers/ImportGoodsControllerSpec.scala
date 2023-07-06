@@ -39,9 +39,8 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider        = new ImportGoodsFormProvider()
-  val form: Form[Boolean] = formProvider()
-
+  val formProvider                  = new ImportGoodsFormProvider()
+  val form: Form[Boolean]           = formProvider()
   lazy val importGoodsRoute: String =
     routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url
 
@@ -53,37 +52,32 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
 
   "ImportGoods Controller" - {
 
-    "must redirect to Draft Saved page" - {
-      "when save as draft is selected" in {
+    "redirects to Draft Saved page when save-draft is selected" in {
 
-        val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock[UserAnswersService]
 
-        when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-            .overrides(
-              bind[UserAnswersService].toInstance(mockUserAnswersService)
-            )
-            .build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
 
-        running(application) {
-          val request =
-            FakeRequest(POST, saveDraftRoute)
-              .withFormUrlEncodedBody(("value", "true"))
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual Call(
-            "POST",
-            s"/advance-valuation-ruling/$draftId/save-as-draft"
-          ).url
-
-        }
+        val result = route(application, request).value
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
       }
     }
-
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -146,7 +140,6 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
-
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
@@ -206,4 +199,5 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
   }
+
 }

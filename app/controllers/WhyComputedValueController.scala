@@ -67,9 +67,11 @@ class WhyComputedValueController @Inject() (
               for {
                 updatedAnswers <- WhyComputedValuePage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers))
+              }
           )
     }
 }

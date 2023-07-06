@@ -67,10 +67,17 @@ class ExplainWhyYouHaveNotSelectedMethodOneToThreeController @Inject() (
               for {
                 updatedAnswers <- ExplainWhyYouHaveNotSelectedMethodOneToThreePage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator
-                  .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(
+                    navigator.nextPage(
+                      ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
+                      mode,
+                      updatedAnswers
+                    )
+                  )
+              }
           )
     }
 }

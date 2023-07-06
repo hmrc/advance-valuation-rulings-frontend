@@ -67,9 +67,13 @@ class WhyTransactionValueOfSimilarGoodsController @Inject() (
               for {
                 updatedAnswers <- WhyTransactionValueOfSimilarGoodsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(WhyTransactionValueOfSimilarGoodsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(
+                    navigator.nextPage(WhyTransactionValueOfSimilarGoodsPage, mode, updatedAnswers)
+                  )
+              }
           )
     }
 }

@@ -44,8 +44,45 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
   lazy val explainWhyYouHaveNotSelectedMethodOneToFiveRoute =
     routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(NormalMode, draftId).url
 
+  lazy val saveDraftRoute: String =
+    routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController
+      .onSubmit(NormalMode, draftId, saveDraft = true)
+      .url
+
+  lazy val continueRoute: String =
+    routes.ExplainWhyYouHaveNotSelectedMethodOneToFiveController
+      .onSubmit(NormalMode, draftId, saveDraft = false)
+      .url
+
   "ExplainWhyYouHaveNotSelectedMethodOneToFive Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -106,7 +143,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
 
       running(application) {
         val request =
-          FakeRequest(POST, explainWhyYouHaveNotSelectedMethodOneToFiveRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -123,7 +160,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
 
       running(application) {
         val request =
-          FakeRequest(POST, explainWhyYouHaveNotSelectedMethodOneToFiveRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -160,7 +197,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
 
       running(application) {
         val request =
-          FakeRequest(POST, explainWhyYouHaveNotSelectedMethodOneToFiveRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

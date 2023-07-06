@@ -68,9 +68,11 @@ class DescribeTheLegalChallengesController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheLegalChallengesPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(DescribeTheLegalChallengesPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(navigator.nextPage(DescribeTheLegalChallengesPage, mode, updatedAnswers))
+              }
           )
     }
 }

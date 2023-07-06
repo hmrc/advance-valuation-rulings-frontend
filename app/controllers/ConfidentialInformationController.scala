@@ -66,9 +66,11 @@ class ConfidentialInformationController @Inject() (
               for {
                 updatedAnswers <- ConfidentialInformationPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers))
+              }
           )
     }
 }

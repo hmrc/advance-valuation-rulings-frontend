@@ -70,10 +70,17 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveController @Inject() (
                     request.userAnswers.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, value)
                   )
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator
-                  .nextPage(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(
+                    navigator.nextPage(
+                      ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
+                      mode,
+                      updatedAnswers
+                    )
+                  )
+              }
           )
     }
 }

@@ -44,8 +44,47 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
   lazy val confidentialInformationRoute =
     routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId).url
 
+  lazy val saveDraftRoute: String =
+    routes.ConfidentialInformationController.onSubmit(NormalMode, draftId, saveDraft = true).url
+
+  lazy val continueRoute: String =
+    routes.ConfidentialInformationController.onSubmit(NormalMode, draftId, saveDraft = false).url
+
   "ConfidentialInformation Controller" - {
 
+    val userAnswers = (for {
+      withInformation <-
+        userAnswersAsIndividualTrader.set(ConfidentialInformationPage, "top secret")
+    } yield withInformation).success.value
+
+    "redirects to Draft Saved page when save-draft is selected" - {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -91,10 +130,6 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must redirect to the next page when valid data is submitted" in {
-      val userAnswers = (for {
-        withInformation <-
-          userAnswersAsIndividualTrader.set(ConfidentialInformationPage, "top secret")
-      } yield withInformation).success.value
 
       val mockUserAnswersService = mock[UserAnswersService]
 
@@ -110,7 +145,7 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, confidentialInformationRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -127,7 +162,7 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, confidentialInformationRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -164,7 +199,7 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, confidentialInformationRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

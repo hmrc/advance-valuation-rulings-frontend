@@ -67,9 +67,11 @@ class DescribeTheConditionsController @Inject() (
               for {
                 updatedAnswers <- DescribeTheConditionsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(DescribeTheConditionsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(navigator.nextPage(DescribeTheConditionsPage, mode, updatedAnswers))
+              }
           )
     }
 }
