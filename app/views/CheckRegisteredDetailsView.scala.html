@@ -44,7 +44,8 @@
     paragraph: Paragraph,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    link: Link
 )
 
 @(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -124,13 +125,43 @@
         @caption(messages("checkRegisteredDetails.caption"))
         @headingContent
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden()
+        <br></br>
+
+        @if(authUserType != AuthUserType.Agent) {
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("value"),
+                    legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden()
+                ).withHint(Hint(content = HtmlContent(paraContent)))
             )
-            .withHint(Hint(content = HtmlContent(paraContent)))
-        )
+        } else {
+            @govukRadios(
+                RadiosViewModel(
+                    field = form("value"),
+                    legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden(),
+                    items = Seq(
+                        RadioItem(
+                            id = Some(form("value").id),
+                            value = Some("true"),
+                            content = messages("checkRegisteredDetails.radio.agent.yes")
+                        ),
+                        RadioItem(
+                            id = Some(s"${form("value").id}-no"),
+                            value = Some("false"),
+                            content = messages("checkRegisteredDetails.radio.agent.no")
+                        )
+                    )
+                ).withHint(Hint(content = HtmlContent(paraContent)))
+            )
+            <p class="govuk-body">
+                @link(
+                    id = "overview-of-methods-link",
+                    text = messages("checkRegisteredDetails.search.linktext"),
+                    call = Call("GET", "google.com")
+                )
+                @messages("checkRegisteredDetails.search.plaintext")
+            </p>
+        }
 
         @saveButtons(draftId)
     }
