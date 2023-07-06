@@ -32,7 +32,7 @@ import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.{AccountHomePage, CheckRegisteredDetailsPage}
+import pages.{AccountHomePage, CheckRegisteredDetailsPage, WhoAreYouAgentPage}
 import services.UserAnswersService
 import views.html.CheckRegisteredDetailsView
 
@@ -80,7 +80,16 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(view(formProvider().fill(value), details, mode, authUserType, draftId))
+                    Ok(
+                      view(
+                        formProvider().fill(value),
+                        details,
+                        request.userAnswers.get(WhoAreYouAgentPage).get,
+                        mode,
+                        authUserType,
+                        draftId
+                      )
+                    )
                 }
             )
 
@@ -91,7 +100,16 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(view(formProvider(), details, mode, authUserType, draftId))
+                    Ok(
+                      view(
+                        formProvider(),
+                        details,
+                        request.userAnswers.get(WhoAreYouAgentPage).get,
+                        mode,
+                        authUserType,
+                        draftId
+                      )
+                    )
                 }
             )
         }
@@ -113,7 +131,14 @@ class CheckRegisteredDetailsController @Inject() (
                       Redirect(routes.UnauthorisedController.onPageLoad)
                     case Some(authUserType) =>
                       BadRequest(
-                        view(formWithErrors, details, mode, authUserType, draftId)
+                        view(
+                          formWithErrors,
+                          details,
+                          request.userAnswers.get(WhoAreYouAgentPage).get,
+                          mode,
+                          authUserType,
+                          draftId
+                        )
                       )
                   }
               ),

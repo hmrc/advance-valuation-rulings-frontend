@@ -124,6 +124,14 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
       }
 
+      "should navigate to CheckRegisteredDetails page for and Agent" in {
+        navigator.nextPage(
+          ProvideTraderEORIPage,
+          NormalMode,
+          emptyUserAnswers.setFuture(ProvideTraderEORIPage, Agent).futureValue
+        ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+      }
+
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
         navigator.nextPage(
           AccountHomePage,
