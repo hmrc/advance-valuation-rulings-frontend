@@ -17,6 +17,7 @@
 package controllers
 
 import play.api.Application
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -34,8 +35,16 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val agentCompanyDetailsRoute =
     routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId).url
+  lazy val saveDraftRoute: String   =
+    routes.AgentCompanyDetailsController
+      .onSubmit(NormalMode, draftId, saveDraft = true)
+      .url
 
-  val agentCompanyDetails =
+  lazy val continueRoute: String =
+    routes.AgentCompanyDetailsController
+      .onSubmit(NormalMode, draftId, saveDraft = false)
+      .url
+  val agentCompanyDetails        =
     AgentCompanyDetails(
       "GB12341234123",
       "companyName",
@@ -50,6 +59,30 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   "AgentCompanyDetails Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(
+              ("agentEori", "GB12341234123"),
+              ("agentCompanyName", "value 2"),
+              ("agentStreetAndNumber", "streetandNumber"),
+              ("agentCity", "city"),
+              ("agentCountry", "GB")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -95,7 +128,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
-          FakeRequest(POST, agentCompanyDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(
               ("agentEori", "GB12341234123"),
               ("agentCompanyName", "value 2"),
@@ -118,7 +151,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, agentCompanyDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
@@ -155,7 +188,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, agentCompanyDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(
               ("agentEori", "GB12341234123"),
               ("agentCompanyName", "value 2"),

@@ -56,7 +56,7 @@ class BusinessContactDetailsController @Inject() (
         Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
@@ -67,9 +67,13 @@ class BusinessContactDetailsController @Inject() (
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case _    =>
+                  Redirect(
+                    navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
+                  )
+              }
           )
     }
 }

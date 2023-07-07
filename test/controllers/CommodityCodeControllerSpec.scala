@@ -17,6 +17,7 @@
 package controllers
 
 import play.api.Application
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -33,10 +34,36 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
   val form         = formProvider()
   val validAnswer  = "1234"
 
-  lazy val commodityCodeRoute = routes.CommodityCodeController.onPageLoad(NormalMode, draftId).url
+  lazy val commodityCodeRoute     = routes.CommodityCodeController.onPageLoad(NormalMode, draftId).url
+  lazy val saveDraftRoute: String =
+    routes.CommodityCodeController
+      .onSubmit(NormalMode, draftId, saveDraft = true)
+      .url
 
+  lazy val continueRoute: String =
+    routes.CommodityCodeController
+      .onSubmit(NormalMode, draftId, saveDraft = false)
+      .url
   "CommodityCode Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", validAnswer))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -88,7 +115,7 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
       val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
-          FakeRequest(POST, commodityCodeRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", validAnswer))
 
         val result = route(application, request).value
@@ -105,7 +132,7 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, commodityCodeRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -142,7 +169,7 @@ class CommodityCodeControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, commodityCodeRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", validAnswer))
 
         val result = route(application, request).value

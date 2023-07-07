@@ -33,9 +33,9 @@ GET        /:draftId/change-select-valuation-method               controllers.Va
 POST       /:draftId/change-select-valuation-method               controllers.ValuationMethodController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-enter-commodity-code                                    controllers.CommodityCodeController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-enter-commodity-code                                    controllers.CommodityCodeController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-enter-commodity-code                                    controllers.CommodityCodeController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/do-you-have-commodity-code                                    controllers.HasCommodityCodeController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/do-you-have-commodity-code                                    controllers.HasCommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -68,9 +68,9 @@ GET        /:draftId/change-check-EORI-details                                  
 POST       /:draftId/change-check-EORI-details                                      controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-provide-contact-details                                 controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-provide-contact-details                                 controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-provide-contact-details                                 controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/incorrect-EORI-details                                        controllers.EORIBeUpToDateController.onPageLoad(draftId: DraftId)
 
@@ -231,14 +231,14 @@ GET        /:draftId/cancel                                          controllers
 GET        /:draftId/confirm-cancel                                  controllers.CancelApplicationController.confirmCancel(draftId: DraftId)
 
 GET        /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-business-contact-details                  controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-business-contact-details                  controllers.BusinessContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-business-contact-details                  controllers.BusinessContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/agent-company-details                        controllers.AgentCompanyDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/agent-company-details                        controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/agent-company-details                        controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/delete-application                        controllers.DeleteDraftController.onPageLoad(draftId: DraftId)
 POST       /:draftId/delete-application                        controllers.DeleteDraftController.onSubmit(draftId: DraftId)
