@@ -18,8 +18,7 @@ package pages
 
 import java.time.Instant
 
-import models.{DraftId, Index, UploadedFile, UserAnswers}
-import models.DraftAttachment
+import models.{DraftAttachment, DraftId, Index, UploadedFile, UserAnswers}
 import pages.behaviours.PageBehaviours
 import queries.{AllDocuments, DraftAttachmentAt}
 

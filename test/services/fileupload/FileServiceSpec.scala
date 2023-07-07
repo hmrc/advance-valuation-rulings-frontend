@@ -27,8 +27,7 @@ import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import connectors.UpscanConnector
-import models.{Done, DraftId, NormalMode, UploadedFile, UserAnswers}
-import models.DraftAttachment
+import models.{Done, DraftAttachment, DraftId, NormalMode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any

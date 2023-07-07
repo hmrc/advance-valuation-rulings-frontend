@@ -92,7 +92,7 @@ class Navigator @Inject() () {
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
       case Some(IndividualTrader)      =>
-        RequiredInformationController.onPageLoad(userAnswers.draftId)
+        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(OrganisationAdmin)     =>
         WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(OrganisationAssistant) =>
@@ -105,8 +105,8 @@ class Navigator @Inject() () {
 
   private def whoAreYouRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(WhoAreYouAgentPage) match {
-      case _ => RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case _ => UnauthorisedController.onPageLoad
+      case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case None    => UnauthorisedController.onPageLoad
     }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =

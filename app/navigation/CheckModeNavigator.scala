@@ -19,8 +19,7 @@ package navigation
 import play.api.mvc.Call
 
 import controllers.routes._
-import models._
-import models.CheckMode
+import models.{CheckMode, _}
 import models.ValuationMethod._
 import pages._
 import queries.AllDocuments

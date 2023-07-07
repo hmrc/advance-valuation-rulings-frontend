@@ -16,8 +16,7 @@
 
 package models
 
-import java.time.Instant
-import java.time.ZoneId
+import java.time.{Instant, ZoneId}
 import java.time.format.DateTimeFormatter
 
 import play.api.i18n.Messages

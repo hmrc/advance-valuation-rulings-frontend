@@ -19,7 +19,7 @@ package models.requests
 import cats.data.{NonEmptyList, ValidatedNel}
 import cats.implicits._
 
-import play.api.libs.json.{Format, Json, JsonConfiguration, JsonNaming, OFormat}
+import play.api.libs.json._
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models.{AdaptMethod, UserAnswers, ValuationMethod}

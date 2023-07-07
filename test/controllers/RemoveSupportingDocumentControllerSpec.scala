@@ -27,8 +27,7 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import base.SpecBase
 import forms.RemoveSupportingDocumentFormProvider
-import models.{Done, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
-import models.DraftAttachment
+import models.{Done, DraftAttachment, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any

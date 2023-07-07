@@ -16,15 +16,16 @@
 
 package controllers
 
+import play.api.Application
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import forms.ConfidentialInformationFormProvider
 import models.NormalMode
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ConfidentialInformationPage
-import play.api.Application
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import views.html.ConfidentialInformationView
 
 class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {

@@ -16,7 +16,6 @@
 
 package controllers
 
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 

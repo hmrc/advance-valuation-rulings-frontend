@@ -29,8 +29,7 @@ import models.AuthUserType.IndividualTrader
 import models.requests._
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.TryValues
+import org.scalatest.{BeforeAndAfterEach, TryValues}
 import org.scalatest.concurrent.ScalaFutures
 import pages._
 import services.SubmissionService
