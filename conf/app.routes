@@ -48,9 +48,9 @@ GET        /:draftId/change-need-to-contact-you                                 
 POST       /:draftId/change-need-to-contact-you                                    controllers.ContactPageController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/planning-import-goods-great-britain                           controllers.ImportGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/planning-import-goods-great-britain                           controllers.ImportGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
+POST       /:draftId/planning-import-goods-great-britain                           controllers.ImportGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/change-planning-import-goods-great-britain                     controllers.ImportGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-planning-import-goods-great-britain                     controllers.ImportGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
+POST       /:draftId/change-planning-import-goods-great-britain                     controllers.ImportGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 # Update this
 GET        /:draftId/start-application                                             controllers.RequiredInformationController.onPageLoad(draftId: DraftId)

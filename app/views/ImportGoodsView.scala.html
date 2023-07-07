@@ -24,25 +24,21 @@
     heading: Heading,
     caption: Caption,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtonsV2,
+    saveButtons: SaveButtons,
     govukButton: GovukButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.ImportGoodsController.onSubmit(mode, draftId, saveDraft)}
-
 @layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false), Symbol("autoComplete") -> "off") {
-        
+    @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
+
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-
         @caption(messages("importGoods.caption"))
-
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
@@ -50,9 +46,10 @@
             )
         )
 
-        @saveButtons(draftId, onSubmitAction())
+        @saveButtons(draftId)
+    }
 
-        }
+
 
     @cancelApplicationLink(draftId)
 }
