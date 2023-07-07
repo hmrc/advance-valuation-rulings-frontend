@@ -149,14 +149,6 @@
                     )
                 ).withHint(Hint(content = HtmlContent(paraContent)))
             )
-            <p class="govuk-body">
-                @link(
-                    id = "overview-of-methods-link",
-                    text = messages("checkRegisteredDetails.search.linktext"),
-                    call = Call("GET", "provide-trader-EORI")
-                )
-                @messages("checkRegisteredDetails.search.plaintext")
-            </p>
         } else {
             @govukRadios(
                 RadiosViewModel.yesNo(

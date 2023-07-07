@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import models.DraftId
-import pages.AccountHomePage
+import pages.{AccountHomePage, WhoAreYouAgentPage}
 import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateController @Inject() (
@@ -44,7 +44,7 @@ class EORIBeUpToDateController @Inject() (
           case None               =>
             Redirect(routes.UnauthorisedController.onPageLoad)
           case Some(authUserType) =>
-            Ok(view(draftId, authUserType))
+            Ok(view(draftId, authUserType, request.userAnswers.get(WhoAreYouAgentPage).get))
         }
     }
 }
