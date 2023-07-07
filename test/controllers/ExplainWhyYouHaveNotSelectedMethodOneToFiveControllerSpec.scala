@@ -16,22 +16,16 @@
 
 package controllers
 
-import scala.concurrent.Future
-
 import play.api.Application
-import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider
-import models.{Done, NormalMode}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import models.NormalMode
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ExplainWhyYouHaveNotSelectedMethodOneToFivePage
-import services.UserAnswersService
 import views.html.ExplainWhyYouHaveNotSelectedMethodOneToFiveView
 
 class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase with MockitoSugar {
@@ -56,16 +50,7 @@ class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase
 
     "Redirects to Draft saved page when save-draft is selected" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
 
       running(application) {
         val request =
