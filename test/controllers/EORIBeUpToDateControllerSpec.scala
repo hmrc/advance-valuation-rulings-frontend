@@ -35,8 +35,6 @@ import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
   lazy val checkRegisteredDetailRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url
 

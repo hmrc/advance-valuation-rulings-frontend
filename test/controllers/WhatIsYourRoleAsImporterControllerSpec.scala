@@ -46,8 +46,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
     reset(mockAuditService)
   }
 
-  def onwardRoute = Call("GET", "/foo")
-
   lazy val whatIsYourRoleAsImporterRoute =
     routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
 

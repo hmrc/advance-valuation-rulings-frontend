@@ -26,8 +26,6 @@ import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
   lazy val requiredInformationRoute =
     routes.RequiredInformationController.onPageLoad(draftId).url
 

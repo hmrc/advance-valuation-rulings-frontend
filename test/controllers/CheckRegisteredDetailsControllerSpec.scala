@@ -40,8 +40,6 @@ class CheckRegisteredDetailsControllerSpec
     with MockitoSugar
     with TableDrivenPropertyChecks {
 
-  def onwardRoute = Call("GET", "/foo")
-
   lazy val checkRegisteredDetailsRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 

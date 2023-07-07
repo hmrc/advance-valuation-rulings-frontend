@@ -22,12 +22,15 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{CounterId, DraftId, UserAnswers}
+import models.{CounterId, Done, DraftId, UserAnswers}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
@@ -37,6 +40,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import pages.AccountHomePage
 import repositories.CounterRepository
+import services.UserAnswersService
 
 trait SpecBase
     extends AnyFreeSpec
@@ -130,4 +134,19 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+
+  def setupTestBuild(userAnswers: UserAnswers) = {
+    val mockUserAnswersService = mock[UserAnswersService]
+
+    when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+    applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(
+        bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+        bind[UserAnswersService].toInstance(mockUserAnswersService)
+      )
+      .build()
+
+  }
+  def onwardRoute = Call("GET", "/foo")
+
 }

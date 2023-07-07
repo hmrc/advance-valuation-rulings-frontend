@@ -18,6 +18,7 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -26,7 +27,6 @@ import play.api.test.Helpers._
 import base.SpecBase
 import forms.DescribeTheLegalChallengesFormProvider
 import models.{Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,8 +35,6 @@ import services.UserAnswersService
 import views.html.DescribeTheLegalChallengesView
 
 class DescribeTheLegalChallengesControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DescribeTheLegalChallengesFormProvider()
   val form         = formProvider()
@@ -127,18 +125,7 @@ class DescribeTheLegalChallengesControllerSpec extends SpecBase with MockitoSuga
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
           FakeRequest(POST, continueRoute)

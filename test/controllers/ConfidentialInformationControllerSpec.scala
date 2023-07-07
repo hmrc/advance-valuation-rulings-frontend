@@ -16,27 +16,18 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
+import base.SpecBase
+import forms.ConfidentialInformationFormProvider
+import models.NormalMode
+import org.scalatestplus.mockito.MockitoSugar
+import pages.ConfidentialInformationPage
+import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.ConfidentialInformationFormProvider
-import models.{Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.ConfidentialInformationPage
-import services.UserAnswersService
 import views.html.ConfidentialInformationView
 
 class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ConfidentialInformationFormProvider()
   val form         = formProvider()
@@ -52,24 +43,9 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
   "ConfidentialInformation Controller" - {
 
-    val userAnswers = (for {
-      withInformation <-
-        userAnswersAsIndividualTrader.set(ConfidentialInformationPage, "top secret")
-    } yield withInformation).success.value
-
     "redirects to Draft Saved page when save-draft is selected" - {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
           FakeRequest(POST, saveDraftRoute)
@@ -83,7 +59,6 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
           s"/advance-valuation-ruling/$draftId/save-as-draft"
         ).url
       }
-
     }
     "must return OK and the correct view for a GET" in {
 
@@ -131,18 +106,7 @@ class ConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
           FakeRequest(POST, continueRoute)

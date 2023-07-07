@@ -19,7 +19,6 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -35,8 +34,6 @@ import services.UserAnswersService
 import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new BusinessContactDetailsFormProvider()
   val form         = formProvider()

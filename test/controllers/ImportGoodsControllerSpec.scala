@@ -18,6 +18,7 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -27,7 +28,6 @@ import play.api.test.Helpers._
 import base.SpecBase
 import forms.ImportGoodsFormProvider
 import models.{Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -36,8 +36,6 @@ import services.UserAnswersService
 import views.html.ImportGoodsView
 
 class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute: Call = Call("GET", "/foo")
 
   val formProvider                  = new ImportGoodsFormProvider()
   val form: Form[Boolean]           = formProvider()
@@ -122,18 +120,7 @@ class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
           FakeRequest(POST, continueRoute)
