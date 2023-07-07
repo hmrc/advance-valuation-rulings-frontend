@@ -45,7 +45,6 @@
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
-    link: Link
 )
 
 @(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, whoAreYouAgentAnswer: String, mode: Mode, authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -79,7 +78,9 @@
                 @warning(content=Html(messages("checkRegisteredDetails.warning.organisation")))
             }
 
-        @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
+        @if(whoAreYouAgentAnswer != "agentOnBehalfOfTrader") {
+            @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
+        }
 
         @subheading(messages("checkRegisteredDetails.subheading.1"))
 
