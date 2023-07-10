@@ -16,27 +16,19 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
+import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ExplainReasonComputedValueFormProvider
-import models.{Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import models.NormalMode
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ExplainReasonComputedValuePage
-import services.UserAnswersService
 import views.html.ExplainReasonComputedValueView
 
 class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ExplainReasonComputedValueFormProvider()
   val form         = formProvider()
@@ -44,8 +36,32 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
   lazy val explainReasonComputedValueRoute =
     routes.ExplainReasonComputedValueController.onPageLoad(NormalMode, draftId).url
 
+  lazy val saveDraftRoute: String =
+    routes.ExplainReasonComputedValueController.onSubmit(NormalMode, draftId, saveDraft = true).url
+
+  lazy val continueRoute: String =
+    routes.ExplainReasonComputedValueController.onSubmit(NormalMode, draftId, saveDraft = false).url
+
   "ExplainReasonComputedValue Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -93,21 +109,10 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
-          FakeRequest(POST, explainReasonComputedValueRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -124,7 +129,7 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, explainReasonComputedValueRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -161,7 +166,7 @@ class ExplainReasonComputedValueControllerSpec extends SpecBase with MockitoSuga
 
       running(application) {
         val request =
-          FakeRequest(POST, explainReasonComputedValueRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

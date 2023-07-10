@@ -113,15 +113,7 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
-        ) mustBe routes.UnauthorisedController.onPageLoad
-      }
-
-      "should navigate to WhatIsYourRole page for an Agent" in {
-        navigator.nextPage(
-          AccountHomePage,
-          NormalMode,
-          userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
-        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.WhoAreYouAgentController.onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {

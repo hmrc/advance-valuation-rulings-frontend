@@ -19,15 +19,13 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.ImportGoodsFormProvider
 import models.{Done, NormalMode}
-import navigation.FakeNavigator
-import navigation.Navigator
+import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -36,8 +34,6 @@ import services.UserAnswersService
 import views.html.ImportGoodsView
 
 class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ImportGoodsFormProvider()
   val form         = formProvider()

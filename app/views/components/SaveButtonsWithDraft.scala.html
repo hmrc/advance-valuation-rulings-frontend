@@ -14,16 +14,19 @@
  * limitations under the License.
  *@
 
-@this(
-    layout: templates.Layout
-)
+@this(govukButton: GovukButton)
 
-@()(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId, draftAction: Call , submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
 
-@layout(
-    pageTitle = titleNoForm(messages("unauthorised.title"))
-) {
+    <div class="govuk-button-group">
+        @govukButton(
+            ButtonViewModel(messages(submitButtonMessageKey))
+        )
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
-    <p class="govuk-body">@messages("")</p>
-}
+        @govukButton(
+            ButtonViewModel(messages("site.saveAsDraft"))
+        .withAttribute("formaction", draftAction.toString())
+        .asSecondaryButton()
+        )
+    </div>
+    

@@ -20,9 +20,8 @@ import play.api.Logger
 import play.api.i18n.Messages
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
 
+import models.{TraderDetailsWithCountryCode, UserAnswers}
 import models.AuthUserType._
-import models.TraderDetailsWithCountryCode
-import models.UserAnswers
 import pages.AccountHomePage
 
 case class ApplicationSummary(

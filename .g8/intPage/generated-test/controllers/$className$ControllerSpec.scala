@@ -22,7 +22,6 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new $className$FormProvider()
   val form = formProvider()
 
-  def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = $minimum$
 

@@ -33,9 +33,9 @@ GET        /:draftId/change-select-valuation-method               controllers.Va
 POST       /:draftId/change-select-valuation-method               controllers.ValuationMethodController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-enter-commodity-code                                    controllers.CommodityCodeController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-enter-commodity-code                                    controllers.CommodityCodeController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-enter-commodity-code                                    controllers.CommodityCodeController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/do-you-have-commodity-code                                    controllers.HasCommodityCodeController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/do-you-have-commodity-code                                    controllers.HasCommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -56,9 +56,9 @@ POST       /:draftId/change-planning-import-goods-great-britain                 
 GET        /:draftId/start-application                                             controllers.RequiredInformationController.onPageLoad(draftId: DraftId)
 
 GET        /:draftId/provide-confidential-information                              controllers.ConfidentialInformationController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/provide-confidential-information                              controllers.ConfidentialInformationController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/provide-confidential-information                              controllers.ConfidentialInformationController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-provide-confidential-information                        controllers.ConfidentialInformationController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-provide-confidential-information                        controllers.ConfidentialInformationController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-provide-confidential-information                        controllers.ConfidentialInformationController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/importing-goods-great-britain                                 controllers.ImportingGoodsController.onPageLoad(draftId: DraftId)
 
@@ -68,9 +68,9 @@ GET        /:draftId/change-check-EORI-details                                  
 POST       /:draftId/change-check-EORI-details                                      controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-provide-contact-details                                 controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-provide-contact-details                                 controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-provide-contact-details                                 controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/incorrect-EORI-details                                        controllers.EORIBeUpToDateController.onPageLoad(draftId: DraftId)
 
@@ -98,14 +98,14 @@ GET        /:draftId/supporting-documents/change-uploaded                       
 POST       /:draftId/supporting-documents/change-uploaded                          controllers.UploadAnotherSupportingDocumentController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-why-method-5                                          controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-why-method-5                                    controllers.ExplainReasonComputedValueController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-why-method-5                                    controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-why-method-5                                    controllers.ExplainReasonComputedValueController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/explain-why-not-methods-1-4                                   controllers.WhyComputedValueController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-why-not-methods-1-4                                   controllers.WhyComputedValueController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-why-not-methods-1-4                                   controllers.WhyComputedValueController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-why-not-methods-1-4                             controllers.WhyComputedValueController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-why-not-methods-1-4                             controllers.WhyComputedValueController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-why-not-methods-1-4                             controllers.WhyComputedValueController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/method-1-import-identical-goods                               controllers.HaveYouUsedMethodOneInPastController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/method-1-import-identical-goods                               controllers.HaveYouUsedMethodOneInPastController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -113,19 +113,19 @@ GET        /:draftId/change-method-1-import-identical-goods                     
 POST       /:draftId/change-method-1-import-identical-goods                         controllers.HaveYouUsedMethodOneInPastController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/explain-why-not-methods-1-2                                   controllers.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-why-not-methods-1-2                                   controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-why-not-methods-1-2                                   controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-why-not-methods-1-2                             controllers.WhyTransactionValueOfSimilarGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-why-not-methods-1-2                             controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-why-not-methods-1-2                             controllers.WhyTransactionValueOfSimilarGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/explain-why-not-method-1                                      controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-why-not-method-1                                      controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-why-not-method-1                                      controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-why-not-method-1                                controllers.WhyIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-why-not-method-1                                controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-why-not-method-1                                controllers.WhyIdenticalGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/describe-related-parties                                      controllers.ExplainHowPartiesAreRelatedController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/describe-related-parties                                      controllers.ExplainHowPartiesAreRelatedController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/describe-related-parties                                      controllers.ExplainHowPartiesAreRelatedController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-describe-related-parties                                controllers.ExplainHowPartiesAreRelatedController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-describe-related-parties                                controllers.ExplainHowPartiesAreRelatedController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-describe-related-parties                                controllers.ExplainHowPartiesAreRelatedController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/sale-between-related-parties                                  controllers.IsSaleBetweenRelatedPartiesController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/sale-between-related-parties                                  controllers.IsSaleBetweenRelatedPartiesController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -143,14 +143,14 @@ GET        /:draftId/change-restrictions-use-resale-goods                       
 POST       /:draftId/change-restrictions-use-resale-goods                           controllers.AreThereRestrictionsOnTheGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/describe-conditions-circumstances                             controllers.DescribeTheConditionsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/describe-conditions-circumstances                             controllers.DescribeTheConditionsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/describe-conditions-circumstances                             controllers.DescribeTheConditionsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-describe-conditions-circumstances                       controllers.DescribeTheConditionsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-describe-conditions-circumstances                       controllers.DescribeTheConditionsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-describe-conditions-circumstances                       controllers.DescribeTheConditionsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/describe-restrictions-use-resale-goods                        controllers.DescribeTheRestrictionsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/describe-restrictions-use-resale-goods                        controllers.DescribeTheRestrictionsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/describe-restrictions-use-resale-goods                        controllers.DescribeTheRestrictionsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-describe-restrictions-use-resale-goods                  controllers.DescribeTheRestrictionsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-describe-restrictions-use-resale-goods                  controllers.DescribeTheRestrictionsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-describe-restrictions-use-resale-goods                  controllers.DescribeTheRestrictionsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/conditions-circumstances                                      controllers.IsTheSaleSubjectToConditionsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/conditions-circumstances                                      controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -158,14 +158,14 @@ GET        /:draftId/change-conditions-circumstances                            
 POST       /:draftId/change-conditions-circumstances                                controllers.IsTheSaleSubjectToConditionsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/describe-identical-goods                                      controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/describe-identical-goods                                      controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/describe-identical-goods                                      controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-describe-identical-goods                                controllers.DescribeTheIdenticalGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-describe-identical-goods                                controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-describe-identical-goods                                controllers.DescribeTheIdenticalGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/describe-legal-challenges                                     controllers.DescribeTheLegalChallengesController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/describe-legal-challenges                                     controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/describe-legal-challenges                                     controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-describe-legal-challenges                               controllers.DescribeTheLegalChallengesController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-describe-legal-challenges                               controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-describe-legal-challenges                               controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/give-short-description-goods                                  controllers.DescriptionOfGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/give-short-description-goods                                  controllers.DescriptionOfGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -180,14 +180,14 @@ POST       /:draftId/change-any-legal-challenges                                
 GET        /application-complete                                          controllers.ApplicationCompleteController.onPageLoad(draftId: String)
 
 GET        /:draftId/explain-why-method-4                                          controllers.ExplainWhyYouChoseMethodFourController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-why-method-4                                          controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-why-method-4                                          controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-why-method-4                                    controllers.ExplainWhyYouChoseMethodFourController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-why-method-4                                    controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-why-method-4                                    controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/explain-why-not-methods-1-3                                   controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-why-not-methods-1-3                                   controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-why-not-methods-1-3                                   controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-why-not-methods-1-3                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-why-not-methods-1-3                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-why-not-methods-1-3                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/select-method-adapt                                           controllers.AdaptMethodController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/select-method-adapt                                           controllers.AdaptMethodController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -195,19 +195,19 @@ GET        /:draftId/change-select-method-adapt                                 
 POST       /:draftId/change-select-method-adapt                                     controllers.AdaptMethodController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/explain-how-method-6                                          controllers.ExplainHowYouWillUseMethodSixController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-how-method-6                                          controllers.ExplainHowYouWillUseMethodSixController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-how-method-6                                          controllers.ExplainHowYouWillUseMethodSixController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-how-method-6                                    controllers.ExplainHowYouWillUseMethodSixController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-how-method-6                                    controllers.ExplainHowYouWillUseMethodSixController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-how-method-6                                    controllers.ExplainHowYouWillUseMethodSixController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/explain-why-not-methods-1-5                                   controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/explain-why-not-methods-1-5                                   controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/explain-why-not-methods-1-5                                   controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-explain-why-not-methods-1-5                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-explain-why-not-methods-1-5                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-explain-why-not-methods-1-5                             controllers.ExplainWhyYouHaveNotSelectedMethodOneToFiveController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/describe-similar-goods                        controllers.DescribeTheSimilarGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/describe-similar-goods                        controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/describe-similar-goods                        controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-describe-similar-goods                  controllers.DescribeTheSimilarGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-describe-similar-goods                  controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-describe-similar-goods                  controllers.DescribeTheSimilarGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/method-1-import-similar-goods                        controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/method-1-import-similar-goods                        controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
@@ -231,14 +231,14 @@ GET        /:draftId/cancel                                          controllers
 GET        /:draftId/confirm-cancel                                  controllers.CancelApplicationController.confirmCancel(draftId: DraftId)
 
 GET        /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-business-contact-details                  controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-business-contact-details                  controllers.BusinessContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-business-contact-details                  controllers.BusinessContactDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/agent-company-details                        controllers.AgentCompanyDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/agent-company-details                        controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/agent-company-details                        controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-agent-company-details                  controllers.AgentCompanyDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/delete-application                        controllers.DeleteDraftController.onPageLoad(draftId: DraftId)
 POST       /:draftId/delete-application                        controllers.DeleteDraftController.onSubmit(draftId: DraftId)

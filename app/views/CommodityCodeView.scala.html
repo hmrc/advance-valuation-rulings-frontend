@@ -26,11 +26,13 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsWithDraft
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.CommodityCodeController.onSubmit(NormalMode, draftId, saveDraft)
+}
 
 @codeSpan = {
     <span class="segmented-commodity-code">
@@ -47,7 +49,7 @@
 
 @layout(pageTitle = title(form, messages("commodityCode.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.CommodityCodeController.onSubmit(mode, draftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -66,7 +68,7 @@
                 )
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
 
     @cancelApplicationLink(draftId)

@@ -16,35 +16,35 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
+import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.AgentCompanyDetailsFormProvider
-import models.{AgentCompanyDetails, Country, Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import models.{AgentCompanyDetails, Country, NormalMode}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.AgentCompanyDetailsPage
-import services.UserAnswersService
 import views.html.AgentCompanyDetailsView
 
 class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new AgentCompanyDetailsFormProvider()
   val form         = formProvider()
 
   lazy val agentCompanyDetailsRoute =
     routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId).url
+  lazy val saveDraftRoute: String   =
+    routes.AgentCompanyDetailsController
+      .onSubmit(NormalMode, draftId, saveDraft = true)
+      .url
 
-  val agentCompanyDetails =
+  lazy val continueRoute: String =
+    routes.AgentCompanyDetailsController
+      .onSubmit(NormalMode, draftId, saveDraft = false)
+      .url
+  val agentCompanyDetails        =
     AgentCompanyDetails(
       "GB12341234123",
       "companyName",
@@ -59,6 +59,30 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   "AgentCompanyDetails Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(
+              ("agentEori", "GB12341234123"),
+              ("agentCompanyName", "value 2"),
+              ("agentStreetAndNumber", "streetandNumber"),
+              ("agentCity", "city"),
+              ("agentCountry", "GB")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -101,21 +125,10 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
-          FakeRequest(POST, agentCompanyDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(
               ("agentEori", "GB12341234123"),
               ("agentCompanyName", "value 2"),
@@ -138,7 +151,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, agentCompanyDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
@@ -175,7 +188,7 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, agentCompanyDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(
               ("agentEori", "GB12341234123"),
               ("agentCompanyName", "value 2"),

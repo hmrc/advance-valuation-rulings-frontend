@@ -21,14 +21,12 @@ import java.time.Instant
 import cats.data.NonEmptyList
 import cats.data.Validated.{Invalid, Valid}
 
-import models.{DraftId, Index, UploadedFile, UserAnswers}
-import models.DraftAttachment
+import models.{DraftAttachment, DraftId, Index, UploadedFile, UserAnswers}
 import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import pages._
-import queries.AllDocuments
-import queries.DraftAttachmentAt
+import queries.{AllDocuments, DraftAttachmentAt}
 
 class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues with OptionValues {
 

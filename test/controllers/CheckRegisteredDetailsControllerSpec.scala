@@ -19,7 +19,6 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -39,8 +38,6 @@ class CheckRegisteredDetailsControllerSpec
     extends SpecBase
     with MockitoSugar
     with TableDrivenPropertyChecks {
-
-  def onwardRoute = Call("GET", "/foo")
 
   lazy val checkRegisteredDetailsRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url

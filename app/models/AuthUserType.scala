@@ -18,8 +18,7 @@ package models
 
 import scala.annotation.nowarn
 
-import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, CredentialRole, User}
-import uk.gov.hmrc.auth.core.Admin
+import uk.gov.hmrc.auth.core._
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models.requests.IdentifierRequest

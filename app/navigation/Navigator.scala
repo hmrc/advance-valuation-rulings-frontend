@@ -88,6 +88,7 @@ class Navigator @Inject() () {
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
+  // todo: check this routing
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
       case Some(IndividualTrader)      =>
@@ -104,8 +105,8 @@ class Navigator @Inject() () {
 
   private def whoAreYouRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(WhoAreYouAgentPage) match {
-      case _ => RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case _ => UnauthorisedController.onPageLoad
+      case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case None    => UnauthorisedController.onPageLoad
     }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
