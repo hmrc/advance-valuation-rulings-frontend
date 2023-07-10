@@ -82,7 +82,7 @@
 
         <p class="govuk-body">@Html(messages("traderDetails.common.searchAgain", controllers.routes.ProvideTraderEoriController.onPageLoad(draftId)))</p>
 
-        @saveButtons()
+        @saveButtons(draftId)
     }
 
     @cancelApplicationLink(draftId)
