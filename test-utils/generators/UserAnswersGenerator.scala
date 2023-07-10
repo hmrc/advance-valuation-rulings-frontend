@@ -57,7 +57,7 @@ trait UserAnswersGenerator extends TryValues {
       arbitrary[(WhyComputedValuePage.type, JsValue)] ::
       arbitrary[(ExplainReasonComputedValuePage.type, JsValue)] ::
       arbitrary[(UploadAnotherSupportingDocumentPage.type, JsValue)] ::
-      arbitrary[(IsThisFileConfidentialPage, JsValue)] ::
+      arbitrary[(IsThisFileConfidentialPage.type, JsValue)] ::
       arbitrary[(DoYouWantToUploadDocumentsPage.type, JsValue)] ::
       arbitrary[(ApplicationContactDetailsPage.type, JsValue)] ::
       arbitrary[(CheckRegisteredDetailsPage.type, JsValue)] ::

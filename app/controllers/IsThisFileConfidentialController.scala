@@ -29,7 +29,7 @@ import actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierActio
 import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
-import pages.{IsThisFileConfidentialPage, UploadSupportingDocumentPage}
+import pages._
 import queries.AllDocuments
 import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
@@ -49,56 +49,57 @@ class IsThisFileConfidentialController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private val maxFiles = configuration.get[Int]("upscan.maxFiles")
-
   private val form = formProvider()
 
-  def onPageLoad(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val attachments = AllDocuments.get().map(_.size).getOrElse(0)
-
-        val validIndex        = !(index.position > attachments || index.position >= maxFiles)
         lazy val isSuccessful =
-          UploadSupportingDocumentPage(index).get().map(_.isSuccessful).getOrElse(false)
+          UploadSupportingDocumentPage.get().map(_.isSuccessful).getOrElse(false)
 
-        (validIndex, isSuccessful) match {
-          case (true, true)          =>
-            val preparedForm = IsThisFileConfidentialPage(index).fill(form)
-            Ok(view(preparedForm, index, mode, draftId))
-          case (true, false)         =>
+        isSuccessful match {
+          case true  =>
+            val preparedForm = IsThisFileConfidentialPage.fill(form)
+            Ok(view(preparedForm, mode, draftId))
+          case false =>
             Redirect(
               routes.UploadSupportingDocumentsController
-                .onPageLoad(index, mode, request.userAnswers.draftId, None, None)
+                .onPageLoad(mode, request.userAnswers.draftId, None, None)
             )
-          case (false, true | false) => NotFound
         }
     }
 
-  def onSubmit(index: Index, mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val attachments = AllDocuments.get().map(_.size).getOrElse(0)
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+            value =>
+              UploadSupportingDocumentPage.get() match {
+                case Some(file: UploadedFile.Success) =>
+                  val allDocuments = AllDocuments.get().getOrElse(List.empty[DraftAttachment])
+                  val draft        = DraftAttachment(file, Some(value))
+                  val documents    = allDocuments :+ draft
 
-        if (index.position > attachments || index.position >= maxFiles) {
-          Future.successful(NotFound)
-        } else {
+                  for {
+                    ua <- AllDocuments.set(documents)
+                    ua <- ua.removeFuture(UploadSupportingDocumentPage)
+                    ua <- ua.removeFuture(IsThisFileConfidentialPage)
+                    _  <- userAnswersService.set(ua)
+                  } yield Redirect(
+                    navigator.nextPage(IsThisFileConfidentialPage, mode, ua)
+                  )
 
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, index, mode, draftId))),
-              value =>
-                for {
-                  updatedAnswers <-
-                    Future
-                      .fromTry(request.userAnswers.set(IsThisFileConfidentialPage(index), value))
-                  _              <- userAnswersService.set(updatedAnswers)
-                } yield Redirect(
-                  navigator.nextPage(IsThisFileConfidentialPage(index), mode, updatedAnswers)
-                )
-            )
-        }
+                case _ =>
+                  Future.successful(
+                    Redirect(
+                      routes.UploadSupportingDocumentsController
+                        .onPageLoad(mode, request.userAnswers.draftId, None, None)
+                    )
+                  )
+              }
+          )
     }
 }

@@ -26,7 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.{Index, NormalMode, UploadedFile}
+import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -35,7 +35,7 @@ import org.mockito.Mockito.{verify, when}
 import org.mockito.MockitoSugar.{reset, times}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadSupportingDocumentPage
+import pages._
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.UploadSupportingDocumentsView
@@ -99,13 +99,13 @@ class UploadSupportingDocumentsControllerSpec
 
       val view = application.injector.instanceOf[UploadSupportingDocumentsView]
 
-      when(mockFileService.initiate(any(), any(), any())(any()))
+      when(mockFileService.initiate(any(), any())(any()))
         .thenReturn(Future.successful(upscanInitiateResponse))
 
       val request = FakeRequest(
         GET,
         controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+          .onPageLoad(models.NormalMode, draftId, None, None)
           .url
       )
 
@@ -118,14 +118,14 @@ class UploadSupportingDocumentsControllerSpec
         errorMessage = None
       )(messages(application), request).toString
 
-      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
     }
   }
 
   "when there is an initiated file" - {
 
     val userAnswers = userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage(Index(0)), initiatedFile)
+      .set(UploadSupportingDocumentPage, initiatedFile)
       .success
       .value
 
@@ -141,13 +141,13 @@ class UploadSupportingDocumentsControllerSpec
 
         val view = application.injector.instanceOf[UploadSupportingDocumentsView]
 
-        when(mockFileService.initiate(any(), any(), any())(any()))
+        when(mockFileService.initiate(any(), any())(any()))
           .thenReturn(Future.successful(upscanInitiateResponse))
 
         val request = FakeRequest(
           GET,
           controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(0), models.NormalMode, draftId, Some("errorCode"), None)
+            .onPageLoad(models.NormalMode, draftId, Some("errorCode"), None)
             .url
         )
 
@@ -160,7 +160,7 @@ class UploadSupportingDocumentsControllerSpec
           errorMessage = Some(messages(application)("uploadSupportingDocuments.error.unknown"))
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
       }
     }
 
@@ -181,7 +181,7 @@ class UploadSupportingDocumentsControllerSpec
           val request = FakeRequest(
             GET,
             controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("reference"))
+              .onPageLoad(models.NormalMode, draftId, None, Some("reference"))
               .url
           )
 
@@ -194,7 +194,7 @@ class UploadSupportingDocumentsControllerSpec
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService, times(0)).initiate(any(), any(), any())(any())
+          verify(mockFileService, times(0)).initiate(any(), any())(any())
         }
       }
 
@@ -210,13 +210,13 @@ class UploadSupportingDocumentsControllerSpec
 
           val view = application.injector.instanceOf[UploadSupportingDocumentsView]
 
-          when(mockFileService.initiate(any(), any(), any())(any()))
+          when(mockFileService.initiate(any(), any())(any()))
             .thenReturn(Future.successful(upscanInitiateResponse))
 
           val request = FakeRequest(
             GET,
             controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("otherReference"))
+              .onPageLoad(models.NormalMode, draftId, None, Some("otherReference"))
               .url
           )
 
@@ -229,7 +229,7 @@ class UploadSupportingDocumentsControllerSpec
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
         }
       }
 
@@ -245,13 +245,13 @@ class UploadSupportingDocumentsControllerSpec
 
           val view = application.injector.instanceOf[UploadSupportingDocumentsView]
 
-          when(mockFileService.initiate(any(), any(), any())(any()))
+          when(mockFileService.initiate(any(), any())(any()))
             .thenReturn(Future.successful(upscanInitiateResponse))
 
           val request = FakeRequest(
             GET,
             controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+              .onPageLoad(models.NormalMode, draftId, None, None)
               .url
           )
 
@@ -264,7 +264,7 @@ class UploadSupportingDocumentsControllerSpec
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
         }
       }
     }
@@ -273,7 +273,7 @@ class UploadSupportingDocumentsControllerSpec
   "when there is a successful file" - {
 
     val userAnswers = userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage(Index(0)), successfulFile)
+      .set(UploadSupportingDocumentPage, successfulFile)
       .success
       .value
 
@@ -294,7 +294,6 @@ class UploadSupportingDocumentsControllerSpec
           GET,
           controllers.routes.UploadSupportingDocumentsController
             .onPageLoad(
-              Index(0),
               models.NormalMode,
               draftId,
               None,
@@ -308,7 +307,7 @@ class UploadSupportingDocumentsControllerSpec
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
-        verify(mockFileService, times(0)).initiate(any(), any(), any())(any())
+        verify(mockFileService, times(0)).initiate(any(), any())(any())
       }
     }
 
@@ -324,13 +323,13 @@ class UploadSupportingDocumentsControllerSpec
 
         val view = application.injector.instanceOf[UploadSupportingDocumentsView]
 
-        when(mockFileService.initiate(any(), any(), any())(any()))
+        when(mockFileService.initiate(any(), any())(any()))
           .thenReturn(Future.successful(upscanInitiateResponse))
 
         val request = FakeRequest(
           GET,
           controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("otherReference"))
+            .onPageLoad(models.NormalMode, draftId, None, Some("otherReference"))
             .url
         )
 
@@ -343,7 +342,7 @@ class UploadSupportingDocumentsControllerSpec
           errorMessage = None
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
       }
     }
 
@@ -359,13 +358,13 @@ class UploadSupportingDocumentsControllerSpec
 
         val view = application.injector.instanceOf[UploadSupportingDocumentsView]
 
-        when(mockFileService.initiate(any(), any(), any())(any()))
+        when(mockFileService.initiate(any(), any())(any()))
           .thenReturn(Future.successful(upscanInitiateResponse))
 
         val request = FakeRequest(
           GET,
           controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+            .onPageLoad(models.NormalMode, draftId, None, None)
             .url
         )
 
@@ -378,7 +377,7 @@ class UploadSupportingDocumentsControllerSpec
           errorMessage = None
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
       }
     }
   }
@@ -387,7 +386,7 @@ class UploadSupportingDocumentsControllerSpec
 
     val userAnswers =
       userAnswersAsIndividualTrader
-        .set(UploadSupportingDocumentPage(Index(0)), failedFile)
+        .set(UploadSupportingDocumentPage, failedFile)
         .success
         .value
 
@@ -399,13 +398,13 @@ class UploadSupportingDocumentsControllerSpec
         )
         .build()
 
-      when(mockFileService.initiate(any(), any(), any())(any()))
+      when(mockFileService.initiate(any(), any())(any()))
         .thenReturn(Future.successful(upscanInitiateResponse))
 
       val request = FakeRequest(
         GET,
         controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(Index(0), models.NormalMode, draftId, None, Some("key"))
+          .onPageLoad(models.NormalMode, draftId, None, Some("key"))
           .url
       )
 
@@ -413,57 +412,11 @@ class UploadSupportingDocumentsControllerSpec
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(0), models.NormalMode, draftId, Some("Quarantine"), Some("key"))
+        .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some("key"))
         .url
 
-      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode), eqTo(Index(0)))(any())
+      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
     }
-  }
-
-  "must return NOT_FOUND when the index is greater than the maximum number of files a user is allowed to upload" in {
-
-    val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-      .configure(
-        "upscan.maxFiles" -> 1
-      )
-      .build()
-
-    when(mockFileService.initiate(any(), any(), any())(any()))
-      .thenReturn(Future.successful(upscanInitiateResponse))
-
-    val request = FakeRequest(
-      GET,
-      controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(1), models.NormalMode, draftId, None, Some("key"))
-        .url
-    )
-
-    val result = route(application, request).value
-
-    status(result) mustEqual NOT_FOUND
-  }
-
-  "must return NOT_FOUND when the index is greater than the greatest existing index + 1" in {
-
-    val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-      .configure(
-        "upscan.maxFiles" -> 5
-      )
-      .build()
-
-    when(mockFileService.initiate(any(), any(), any())(any()))
-      .thenReturn(Future.successful(upscanInitiateResponse))
-
-    val request = FakeRequest(
-      GET,
-      controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(1), models.NormalMode, draftId, None, Some("key"))
-        .url
-    )
-
-    val result = route(application, request).value
-
-    status(result) mustEqual NOT_FOUND
   }
 
   "must redirect to the JourneyRecovery page when there are no user answers" in {
@@ -477,7 +430,7 @@ class UploadSupportingDocumentsControllerSpec
     val request = FakeRequest(
       GET,
       controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(Index(0), models.NormalMode, draftId, None, None)
+        .onPageLoad(models.NormalMode, draftId, None, None)
         .url
     )
 
@@ -486,6 +439,6 @@ class UploadSupportingDocumentsControllerSpec
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
 
-    verify(mockFileService, times(0)).initiate(any(), any(), any())(any())
+    verify(mockFileService, times(0)).initiate(any(), any())(any())
   }
 }

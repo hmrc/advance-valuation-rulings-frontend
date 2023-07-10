@@ -60,8 +60,8 @@ class Navigator @Inject() () {
     case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
-    case UploadSupportingDocumentPage(index)              => uploadSupportingDocumentPage(index)
-    case IsThisFileConfidentialPage(index)                => isThisFileConfidentialPage(index)
+    case UploadSupportingDocumentPage                     => uploadSupportingDocumentPage
+    case IsThisFileConfidentialPage                       => isThisFileConfidentialPage
     case UploadAnotherSupportingDocumentPage              => uploadAnotherSupportingDocumentPage
     case RemoveSupportingDocumentPage(_)                  => removeSupportingDocumentPage
     case WhyComputedValuePage                             => whyComputedValuePage
@@ -366,12 +366,12 @@ class Navigator @Inject() () {
       case Some(true)  =>
         ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) =>
-        val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
-        if (numberOfDocuments > 0) {
+        val documents = userAnswers.getOrElse(AllDocuments, List.empty)
+        if (documents.isEmpty) {
+          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        } else {
           UploadAnotherSupportingDocumentController
             .onPageLoad(NormalMode, userAnswers.draftId)
-        } else {
-          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
         }
     }
 
@@ -379,12 +379,12 @@ class Navigator @Inject() () {
     userAnswers.get(ConfidentialInformationPage) match {
       case None    => ConfidentialInformationController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) =>
-        val numberOfDocuments = userAnswers.get(AllDocuments).getOrElse(Seq.empty).size
-        if (numberOfDocuments > 0) {
+        val documents = userAnswers.getOrElse(AllDocuments, List.empty)
+        if (documents.isEmpty) {
+          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
+        } else {
           UploadAnotherSupportingDocumentController
             .onPageLoad(NormalMode, userAnswers.draftId)
-        } else {
-          DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
         }
     }
 
@@ -393,7 +393,7 @@ class Navigator @Inject() () {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  =>
         UploadSupportingDocumentsController
-          .onPageLoad(Index(0), NormalMode, userAnswers.draftId, None, None)
+          .onPageLoad(NormalMode, userAnswers.draftId, None, None)
       case Some(false) =>
         userAnswers.get(AccountHomePage) match {
           case None               => UnauthorisedController.onPageLoad
@@ -406,16 +406,15 @@ class Navigator @Inject() () {
         }
     }
 
-  private def uploadSupportingDocumentPage(index: Index)(
+  private def uploadSupportingDocumentPage(
     userAnswers: UserAnswers
   ): Call =
     IsThisFileConfidentialController.onPageLoad(
-      index,
       NormalMode,
       userAnswers.draftId
     )
 
-  private def isThisFileConfidentialPage(index: Index)(
+  private def isThisFileConfidentialPage(
     userAnswers: UserAnswers
   ): Call =
     UploadAnotherSupportingDocumentController
@@ -428,9 +427,7 @@ class Navigator @Inject() () {
       .get(UploadAnotherSupportingDocumentPage)
       .map {
         case true  =>
-          val nextIndex = userAnswers.get(AllDocuments).map(_.size).getOrElse(0)
           UploadSupportingDocumentsController.onPageLoad(
-            Index(nextIndex),
             NormalMode,
             userAnswers.draftId,
             None,

@@ -28,13 +28,14 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import base.SpecBase
 import forms.RemoveSupportingDocumentFormProvider
 import models.{Done, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
+import models.DraftAttachment
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{never, times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{IsThisFileConfidentialPage, RemoveSupportingDocumentPage, UploadSupportingDocumentPage}
+import pages._
 import queries.AllDocuments
 import services.UserAnswersService
 import views.html.RemoveSupportingDocumentView
@@ -44,10 +45,11 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
   val userAnswers = userAnswersAsIndividualTrader
 
   "must return OK and the correct view for a GET" in new SpecSetup {
-    val answers = (for {
-      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
-      ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
-    } yield ua).success.value
+    val answers =
+      userAnswers
+        .set(AllDocuments, List(DraftAttachment(successfulFile, Some(true))))
+        .success
+        .value
 
     val application = applicationBuilder(userAnswers = Some(answers))
       .overrides(
@@ -81,10 +83,11 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     when(mockNavigator.nextPage(any(), any(), any()))
       .thenReturn(onwardRoute)
 
-    val answers = (for {
-      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
-      ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
-    } yield ua).success.value
+    val answers =
+      userAnswers
+        .set(AllDocuments, List(DraftAttachment(successfulFile, Some(false))))
+        .success
+        .value
 
     val application = applicationBuilder(userAnswers = Some(answers))
       .overrides(
@@ -110,16 +113,15 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     )
 
     val updatedAnswers = userAnswersCaptor.getValue
-    updatedAnswers.get(UploadSupportingDocumentPage(Index(0))) mustBe empty
-    updatedAnswers.get(IsThisFileConfidentialPage(Index(0))) mustBe empty
     updatedAnswers.get(AllDocuments) mustBe empty
   }
 
   "does not call the object store if the user answers 'No'" in new SpecSetup {
-    val answers = (for {
-      ua <- userAnswers.set(UploadSupportingDocumentPage(Index(0)), successfulFile)
-      ua <- ua.set(IsThisFileConfidentialPage(Index(0)), false)
-    } yield ua).success.value
+    val answers =
+      userAnswers
+        .set(AllDocuments, List(DraftAttachment(successfulFile, Some(false))))
+        .success
+        .value
 
     val application = applicationBuilder(userAnswers = Some(answers))
       .overrides(
@@ -163,7 +165,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
   "does not call object store if the file has no download url" in new SpecSetup {
 
     val answers = userAnswers
-      .set(UploadSupportingDocumentPage(Index(0)), UploadedFile.Initiated("reference"))
+      .set(UploadSupportingDocumentPage, UploadedFile.Initiated("reference"))
       .success
       .value
 
