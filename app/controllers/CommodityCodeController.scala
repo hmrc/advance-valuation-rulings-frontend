@@ -68,8 +68,8 @@ class CommodityCodeController @Inject() (
                 updatedAnswers <- Future.fromTry(request.userAnswers.set(CommodityCodePage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield saveDraft match {
-                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                case _    =>
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
                   Redirect(
                     navigator.nextPage(CommodityCodePage, mode, updatedAnswers)
                   )

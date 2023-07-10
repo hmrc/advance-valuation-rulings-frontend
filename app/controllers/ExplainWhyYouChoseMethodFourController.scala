@@ -69,8 +69,8 @@ class ExplainWhyYouChoseMethodFourController @Inject() (
                   Future.fromTry(request.userAnswers.set(ExplainWhyYouChoseMethodFourPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
               } yield saveDraft match {
-                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                case _    =>
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
                   Redirect(
                     navigator.nextPage(ExplainWhyYouChoseMethodFourPage, mode, updatedAnswers)
                   )

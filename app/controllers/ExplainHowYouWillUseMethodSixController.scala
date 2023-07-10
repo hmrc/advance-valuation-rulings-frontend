@@ -70,8 +70,8 @@ class ExplainHowYouWillUseMethodSixController @Inject() (
                 _              <- userAnswersService.set(updatedAnswers)
               } yield saveDraft match {
 
-                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                case _    =>
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
                   Redirect(
                     navigator.nextPage(ExplainHowYouWillUseMethodSixPage, mode, updatedAnswers)
                   )

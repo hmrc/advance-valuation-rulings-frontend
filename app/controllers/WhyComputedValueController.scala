@@ -68,8 +68,8 @@ class WhyComputedValueController @Inject() (
                 updatedAnswers <- WhyComputedValuePage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield saveDraft match {
-                case true => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                case _    =>
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
                   Redirect(navigator.nextPage(WhyComputedValuePage, mode, updatedAnswers))
               }
           )
