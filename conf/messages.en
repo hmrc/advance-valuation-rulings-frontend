@@ -199,7 +199,7 @@ hasCommodityCode.change.hidden = your response to whether you have a commodity c
 #PROVIDE TRADER EORI NUMBER
 provideTraderEori.heading=Provide the trader''s EORI number
 provideTraderEori.p1=You must provide the Economic Operator Registration and Identification (EORI) number for the trader you are acting on behalf of. This must be a valid number starting with GB.
-provideTraderEori.error.required=Provide the trader''s EORI number
+provideTraderEori.error.required=Enter the trader''s EORI number
 
 #TRADER DETAILS - COMMON
 traderDetails.common.searchAgain=<a href="{0}" class="govuk-link">Search again</a> if you think you entered the trader''s EORI number incorrectly.
