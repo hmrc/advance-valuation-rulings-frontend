@@ -168,9 +168,9 @@ GET        /:draftId/change-describe-legal-challenges                           
 POST       /:draftId/change-describe-legal-challenges                               controllers.DescribeTheLegalChallengesController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/give-short-description-goods                                  controllers.DescriptionOfGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/give-short-description-goods                                  controllers.DescriptionOfGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/give-short-description-goods                                  controllers.DescriptionOfGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-give-short-description-goods                            controllers.DescriptionOfGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-give-short-description-goods                            controllers.DescriptionOfGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-give-short-description-goods                            controllers.DescriptionOfGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/any-legal-challenges                                          controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/any-legal-challenges                                          controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
