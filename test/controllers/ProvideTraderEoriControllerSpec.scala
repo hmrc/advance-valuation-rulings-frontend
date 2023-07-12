@@ -36,7 +36,7 @@ import views.html.{InvalidTraderEoriView, ProvideTraderEoriView}
 
 class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", s"/advance-valuation-ruling/$draftId/verify-trader-eori")
+  override def onwardRoute = Call("GET", s"/advance-valuation-ruling/$draftId/verify-trader-eori")
 
   lazy val provideTraderEoriPageRoute     =
     routes.ProvideTraderEoriController.onPageLoad(draftId).url
