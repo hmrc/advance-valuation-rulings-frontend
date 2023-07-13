@@ -23,6 +23,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
+import config.FrontendAppConfig
+
 sealed trait WhatIsYourRoleAsImporter
 
 object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
@@ -34,22 +36,31 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
       extends WithName("agentOnBehalfOfOrg")
       with WhatIsYourRoleAsImporter
 
+  case object AgentOnBehalfOfTrader
+      extends WithName("agentOnBehalfOfTrader")
+      with WhatIsYourRoleAsImporter
+
   val values: Seq[WhatIsYourRoleAsImporter] = Seq(
     EmployeeOfOrg,
-    AgentOnBehalfOfOrg
+    AgentOnBehalfOfOrg,
+    AgentOnBehalfOfTrader
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = HtmlContent(
-          Html(s"<b>${messages(s"$MessagePrefix.${value.toString}")}</b>")
-        ),
-        value = Some(value.toString),
-        id = Some(s"value_$index"),
-        hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint"))))
-      )
-  }
+  def filteredValues(appConfig: FrontendAppConfig): Seq[WhatIsYourRoleAsImporter]        =
+    if (appConfig.agentOnBehalfOfTrader) values
+    else values.filterNot(_ == AgentOnBehalfOfTrader)
+  def options(appConfig: FrontendAppConfig)(implicit messages: Messages): Seq[RadioItem] =
+    filteredValues(appConfig).zipWithIndex.map {
+      case (value, index) =>
+        RadioItem(
+          content = HtmlContent(
+            Html(s"<b>${messages(s"$MessagePrefix.${value.toString}")}</b>")
+          ),
+          value = Some(value.toString),
+          id = Some(s"value_$index"),
+          hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint"))))
+        )
+    }
 
   implicit val enumerable: Enumerable[WhatIsYourRoleAsImporter] =
     Enumerable(values.map(v => v.toString -> v): _*)
