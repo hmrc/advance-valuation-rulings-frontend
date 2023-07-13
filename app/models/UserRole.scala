@@ -17,17 +17,26 @@
 package models
 
 import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
-
 import com.google.inject.Inject
 import controllers.routes.{AgentCompanyDetailsController, UnauthorisedController, ValuationMethodController, WhatIsYourRoleAsImporterController}
-import models.AuthUserType.{fromCredentialRole, Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant, fromCredentialRole}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models.requests.DataRequest
 import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
+import play.api.data.Form
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContent, Request}
+import play.twirl.api.{BaseScalaTemplate, HtmlFormat, Template6}
+import views.html.{AgentOrgCheckRegisteredDetailsView, EmployeeCheckRegisteredDetailsView, TraderCheckRegisteredDetailsView}
 
-sealed class UserRole @Inject() (name: String) {
+trait UserRole @Inject() (name: String) {
 
   // agent?
-  case object Employee extends UserRole("Employee")
+  case object Employee extends UserRole("Employee") {
+
+    val employeeViewForCheckRegisteredDetailsView: EmployeeCheckRegisteredDetailsView =
+
+  }
 
   // individual?
   case object AgentForOrg extends UserRole("OrganisationMember") // org + user/admin
@@ -36,6 +45,37 @@ sealed class UserRole @Inject() (name: String) {
   case object AgentForTrader extends UserRole("OrganisationAssistant") // org + assistant
 
   def apply(userAnswers: UserAnswers): UserRole = AgentForOrg
+
+  def selectView(
+    form: Form[Boolean],
+    userAnswers: UserAnswers,
+    details: TraderDetailsWithCountryCode,
+    mode: Mode,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent]): HtmlFormat.Appendable =
+    userRole(userAnswers) match {
+      case userRole.Employee =>
+        employeeView(
+          form,
+          details,
+          mode,
+          draftId
+        )
+      case userRole.AgentForOrg =>
+        agentOrgView(
+          form,
+          details,
+          mode,
+          draftId
+        )
+      case userRole.AgentForTrader =>
+        agentTraderView(
+          form,
+          details,
+          mode,
+          draftId
+        )
+    }
 
 //  def apply(userAnswers: UserAnswers): UserRole =
 //    userAnswers.get(AccountHomePage) match {

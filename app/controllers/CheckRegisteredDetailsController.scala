@@ -73,6 +73,37 @@ class CheckRegisteredDetailsController @Inject() (
           Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
 
+  private def selectView(
+    form: Form[Boolean],
+    userAnswers: UserAnswers,
+    details: TraderDetailsWithCountryCode,
+    mode: Mode,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent]): HtmlFormat.Appendable =
+    userRole(userAnswers) match {
+      case userRole.Employee       =>
+        employeeView(
+          form,
+          details,
+          mode,
+          draftId
+        )
+      case userRole.AgentForOrg    =>
+        agentOrgView(
+          form,
+          details,
+          mode,
+          draftId
+        )
+      case userRole.AgentForTrader =>
+        agentTraderView(
+          form,
+          details,
+          mode,
+          draftId
+        )
+    }
+
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
@@ -107,37 +138,6 @@ class CheckRegisteredDetailsController @Inject() (
                 }
             )
         }
-    }
-
-  private def selectView(
-    form: Form[Boolean],
-    userAnswers: UserAnswers,
-    details: TraderDetailsWithCountryCode,
-    mode: Mode,
-    draftId: DraftId
-  )(implicit request: DataRequest[AnyContent]): HtmlFormat.Appendable =
-    userRole(userAnswers) match {
-      case userRole.Employee =>
-        employeeView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-      case userRole.AgentForOrg =>
-        agentOrgView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-      case userRole.AgentForTrader =>
-        agentTraderView(
-          form,
-          details,
-          mode,
-          draftId
-        )
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
