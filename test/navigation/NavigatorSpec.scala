@@ -84,7 +84,7 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-        ) mustBe routes.WhoAreYouAgentController
+        ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
@@ -95,7 +95,7 @@ class NavigatorSpec extends SpecBase {
           userAnswersAsIndividualTrader
             .setFuture(AccountHomePage, OrganisationAssistant)
             .futureValue
-        ) mustBe routes.WhoAreYouAgentController
+        ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
@@ -104,7 +104,7 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
-        ) mustBe routes.WhoAreYouAgentController
+        ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
@@ -113,7 +113,7 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
-        ) mustBe routes.WhoAreYouAgentController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {

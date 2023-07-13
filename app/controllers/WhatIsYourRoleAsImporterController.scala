@@ -41,7 +41,6 @@ class WhatIsYourRoleAsImporterController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  isAgent: IdentifyAgentAction,
   auditService: AuditService,
   formProvider: WhatIsYourRoleAsImporterFormProvider,
   val controllerComponents: MessagesControllerComponents,
@@ -72,8 +71,11 @@ class WhatIsYourRoleAsImporterController @Inject() (
               auditService.sendAgentIndicatorEvent(value)
               for {
                 ua <- value match {
-                        case EmployeeOfOrg      => AgentCompanyDetailsPage.remove()
-                        case AgentOnBehalfOfOrg || AgentOnBehalfOfTrader => Future.successful(request.userAnswers)
+                        case EmployeeOfOrg         => AgentCompanyDetailsPage.remove()
+                        case AgentOnBehalfOfOrg    =>
+                          Future.successful(request.userAnswers)
+                        case AgentOnBehalfOfTrader =>
+                          Future.successful(request.userAnswers)
                       }
                 ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)
                 _  <- userAnswersService.set(ua)

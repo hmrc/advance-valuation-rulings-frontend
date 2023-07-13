@@ -24,7 +24,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 import config.FrontendAppConfig
-import models.WhoAreYouAgent.filteredValues
 
 sealed trait WhatIsYourRoleAsImporter
 
