@@ -53,7 +53,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen isAgent andThen getData(draftId) andThen requireData) {
+    (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val preparedForm = WhatIsYourRoleAsImporterPage.fill(form)
 
@@ -73,7 +73,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
               for {
                 ua <- value match {
                         case EmployeeOfOrg      => AgentCompanyDetailsPage.remove()
-                        case AgentOnBehalfOfOrg => Future.successful(request.userAnswers)
+                        case AgentOnBehalfOfOrg || AgentOnBehalfOfTrader => Future.successful(request.userAnswers)
                       }
                 ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)
                 _  <- userAnswersService.set(ua)

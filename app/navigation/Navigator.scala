@@ -92,13 +92,13 @@ class Navigator @Inject() () {
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
       case Some(IndividualTrader)      =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(OrganisationAdmin)     =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(OrganisationAssistant) =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(Agent)                 =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case _                           =>
         UnauthorisedController.onPageLoad
     }

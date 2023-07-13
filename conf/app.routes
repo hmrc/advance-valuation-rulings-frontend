@@ -219,11 +219,6 @@ POST       /:draftId/describe-role-importer                        controllers.W
 GET        /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /:draftId/whoAreYouAgent                        controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/whoAreYouAgent                        controllers.WhoAreYouAgentController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
-GET        /:draftId/changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/changeWhoAreYouAgent                  controllers.WhoAreYouAgentController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
-
 GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
 GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)
 
