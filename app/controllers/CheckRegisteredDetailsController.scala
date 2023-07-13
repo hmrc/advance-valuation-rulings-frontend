@@ -35,7 +35,7 @@ import models.requests.DataRequest
 import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
-import views.html.{CheckRegisteredDetailsView, TestView}
+import views.html.{AgentOrgCheckRegisteredDetailsView, CheckRegisteredDetailsView, EmployeeCheckRegisteredDetailsView, TraderCheckRegisteredDetailsView}
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -47,9 +47,9 @@ class CheckRegisteredDetailsController @Inject() (
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  employeeView: CheckRegisteredDetailsView,
-  agentOrgView: CheckRegisteredDetailsView,
-  agentTraderView: TestView,
+  employeeView: EmployeeCheckRegisteredDetailsView,
+  agentOrgView: AgentOrgCheckRegisteredDetailsView,
+  agentTraderView: TraderCheckRegisteredDetailsView,
   backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -117,22 +117,18 @@ class CheckRegisteredDetailsController @Inject() (
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent]): HtmlFormat.Appendable =
     userRole(userAnswers) match {
-      case userRole.Employee       =>
+      case userRole.Employee =>
         employeeView(
           form,
           details,
-          "yep",
           mode,
-          AuthUserType.Agent,
           draftId
         )
-      case userRole.AgentForOrg    =>
+      case userRole.AgentForOrg =>
         agentOrgView(
           form,
           details,
-          "hello",
           mode,
-          AuthUserType.Agent,
           draftId
         )
       case userRole.AgentForTrader =>

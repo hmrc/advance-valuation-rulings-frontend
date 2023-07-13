@@ -26,29 +26,34 @@ import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 
 sealed class UserRole @Inject() (name: String) {
 
+  // agent?
   case object Employee extends UserRole("Employee")
 
+  // individual?
   case object AgentForOrg extends UserRole("OrganisationMember") // org + user/admin
 
+  // agent Trader?
   case object AgentForTrader extends UserRole("OrganisationAssistant") // org + assistant
 
-  def apply(userAnswers: UserAnswers): UserRole =
-    userAnswers.get(AccountHomePage) match {
-      case Some(AuthUserType.IndividualTrader)                                 =>
-        Employee
-      case Some(AuthUserType.OrganisationAdmin)                                =>
-        AgentForOrg
-      case Some(AuthUserType.OrganisationAssistant) | Some(AuthUserType.Agent) =>
-        userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-          case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      =>
-            AgentForTrader
-          case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
-            AgentForTrader
-          case _                                                 =>
-            AgentForTrader
-        }
-      case _                                                                   =>
-        AgentForTrader
-    }
+  def apply(userAnswers: UserAnswers): UserRole = AgentForOrg
+
+//  def apply(userAnswers: UserAnswers): UserRole =
+//    userAnswers.get(AccountHomePage) match {
+//      case Some(AuthUserType.IndividualTrader)                                 =>
+//        Employee
+//      case Some(AuthUserType.OrganisationAdmin)                                =>
+//        AgentForOrg
+//      case Some(AuthUserType.OrganisationAssistant) | Some(AuthUserType.Agent) =>
+//        userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+//          case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      =>
+//            AgentForTrader
+//          case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
+//            AgentForTrader
+//          case _                                                 =>
+//            AgentForTrader
+//        }
+//      case _                                                                   =>
+//        AgentForTrader
+//    }
 
 }
