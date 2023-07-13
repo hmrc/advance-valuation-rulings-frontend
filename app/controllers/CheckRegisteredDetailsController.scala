@@ -24,6 +24,7 @@ import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
@@ -32,20 +33,23 @@ import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.{AccountHomePage, CheckRegisteredDetailsPage, WhoAreYouAgentPage}
+import pages.{AccountHomePage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
-import views.html.CheckRegisteredDetailsView
+import views.html.{CheckRegisteredDetailsView, TestView}
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
+  userRole: UserRole,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckRegisteredDetailsView,
+  employeeView: CheckRegisteredDetailsView,
+  agentOrgView: CheckRegisteredDetailsView,
+  agentTraderView: TestView,
   backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -81,12 +85,11 @@ class CheckRegisteredDetailsController @Inject() (
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
                     Ok(
-                      view(
+                      selectView(
                         formProvider().fill(value),
+                        request.userAnswers,
                         details,
-                        request.userAnswers.get(WhoAreYouAgentPage).get,
                         mode,
-                        authUserType,
                         draftId
                       )
                     )
@@ -100,19 +103,45 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(
-                      view(
-                        formProvider(),
-                        details,
-                        request.userAnswers.get(WhoAreYouAgentPage).get,
-                        mode,
-                        authUserType,
-                        draftId
-                      )
-                    )
+                    Ok(selectView(formProvider(), request.userAnswers, details, mode, draftId))
                 }
             )
         }
+    }
+
+  private def selectView(
+    form: Form[Boolean],
+    userAnswers: UserAnswers,
+    details: TraderDetailsWithCountryCode,
+    mode: Mode,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent]): HtmlFormat.Appendable =
+    userRole(userAnswers) match {
+      case userRole.Employee       =>
+        employeeView(
+          form,
+          details,
+          "yep",
+          mode,
+          AuthUserType.Agent,
+          draftId
+        )
+      case userRole.AgentForOrg    =>
+        agentOrgView(
+          form,
+          details,
+          "hello",
+          mode,
+          AuthUserType.Agent,
+          draftId
+        )
+      case userRole.AgentForTrader =>
+        agentTraderView(
+          form,
+          details,
+          mode,
+          draftId
+        )
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
@@ -131,14 +160,7 @@ class CheckRegisteredDetailsController @Inject() (
                       Redirect(routes.UnauthorisedController.onPageLoad)
                     case Some(authUserType) =>
                       BadRequest(
-                        view(
-                          formWithErrors,
-                          details,
-                          request.userAnswers.get(WhoAreYouAgentPage).get,
-                          mode,
-                          authUserType,
-                          draftId
-                        )
+                        selectView(formProvider(), request.userAnswers, details, mode, draftId)
                       )
                   }
               ),
