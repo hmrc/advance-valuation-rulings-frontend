@@ -29,7 +29,7 @@ import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 
-class Navigator @Inject() (config: FrontendAppConfig) {
+class Navigator @Inject() (appConfig: FrontendAppConfig) {
 
   private def checkYourAnswers(draftId: DraftId): Call =
     CheckYourAnswersController.onPageLoad(draftId)
@@ -90,8 +90,10 @@ class Navigator @Inject() (config: FrontendAppConfig) {
   }
 
   // todo: check this routing
-  private def startApplicationRouting(userAnswers: UserAnswers): Call =
-    config.agentOnBehalfOfTrader match {
+  private def startApplicationRouting(userAnswers: UserAnswers): Call = {
+    val agentsOn: Boolean = appConfig.agentOnBehalfOfTrader
+
+    agentsOn match {
       case true  =>
         userAnswers.get(AccountHomePage) match {
           case Some(_) =>
@@ -107,6 +109,7 @@ class Navigator @Inject() (config: FrontendAppConfig) {
           case _                                                => UnauthorisedController.onPageLoad
         }
     }
+  }
 
   private def whoAreYouRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(WhoAreYouAgentPage) match {
@@ -537,4 +540,5 @@ class Navigator @Inject() (config: FrontendAppConfig) {
     case CheckMode  =>
       CheckModeNavigator.nextPage(page, userAnswers)
   }
+
 }
