@@ -16,66 +16,68 @@
 
 package models
 
-import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 import com.google.inject.Inject
-import controllers.routes.{AgentCompanyDetailsController, UnauthorisedController, ValuationMethodController, WhatIsYourRoleAsImporterController}
-import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant, fromCredentialRole}
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.requests.DataRequest
-import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, Request}
-import play.twirl.api.{BaseScalaTemplate, HtmlFormat, Template6}
+import play.api.mvc.AnyContent
+import play.twirl.api.HtmlFormat
 import views.html.{AgentOrgCheckRegisteredDetailsView, EmployeeCheckRegisteredDetailsView, TraderCheckRegisteredDetailsView}
 
-trait UserRole @Inject() (name: String) {
-
-  // agent?
-  case object Employee extends UserRole("Employee") {
-
-    val employeeViewForCheckRegisteredDetailsView: EmployeeCheckRegisteredDetailsView =
-
-  }
-
-  // individual?
-  case object AgentForOrg extends UserRole("OrganisationMember") // org + user/admin
-
-  // agent Trader?
-  case object AgentForTrader extends UserRole("OrganisationAssistant") // org + assistant
-
-  def apply(userAnswers: UserAnswers): UserRole = AgentForOrg
-
-  def selectView(
+case class Employee @Inject() (view: EmployeeCheckRegisteredDetailsView) extends UserRole {
+  override def selectViewForCheckRegDetails(
     form: Form[Boolean],
-    userAnswers: UserAnswers,
     details: TraderDetailsWithCountryCode,
     mode: Mode,
     draftId: DraftId
-  )(implicit request: DataRequest[AnyContent]): HtmlFormat.Appendable =
-    userRole(userAnswers) match {
-      case userRole.Employee =>
-        employeeView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-      case userRole.AgentForOrg =>
-        agentOrgView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-      case userRole.AgentForTrader =>
-        agentTraderView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-    }
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+    view(
+      form,
+      details,
+      mode,
+      draftId
+    )
+
+}
+
+case class AgentForOrg @Inject() (view: AgentOrgCheckRegisteredDetailsView) extends UserRole {
+  override def selectViewForCheckRegDetails(
+    form: Form[Boolean],
+    details: TraderDetailsWithCountryCode,
+    mode: Mode,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+    view(
+      form,
+      details,
+      mode,
+      draftId
+    )
+
+}
+case class AgentForTrader @Inject() (view: TraderCheckRegisteredDetailsView) extends UserRole {
+ override def selectViewForCheckRegDetails(
+    form: Form[Boolean],
+    details: TraderDetailsWithCountryCode,
+    mode: Mode,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+    view(
+      form,
+      details,
+      mode,
+      draftId
+    )
+
+}
+trait UserRole {
+
+  def selectViewForCheckRegDetails(
+    form: Form[Boolean],
+    details: TraderDetailsWithCountryCode,
+    mode: Mode,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
 
 //  def apply(userAnswers: UserAnswers): UserRole =
 //    userAnswers.get(AccountHomePage) match {

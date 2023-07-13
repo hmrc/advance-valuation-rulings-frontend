@@ -52,7 +52,7 @@ class CheckRegisteredDetailsController @Inject() (
   agentTraderView: TraderCheckRegisteredDetailsView,
   backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+    extends FrontendBaseController with UserRole
     with I18nSupport {
 
   private val logger = Logger(this.getClass)
