@@ -22,10 +22,10 @@ import play.twirl.api.HtmlFormat
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import views.html.AgentOrgCheckRegisteredDetailsView
+import views.html.AgentForOrgCheckRegisteredDetailsView
 
 package userrole {
-  case class AgentForOrg @Inject() (view: AgentOrgCheckRegisteredDetailsView) extends UserRole {
+  case class AgentForOrg @Inject() (view: AgentForOrgCheckRegisteredDetailsView) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
       details: TraderDetailsWithCountryCode,

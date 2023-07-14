@@ -16,26 +16,24 @@
 
 package userrole
 
+import models.requests.DataRequest
+import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
+import views.html.AgentForOrgCheckRegisteredDetailsView
 
-import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
-import models.requests.DataRequest
-import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import views.html.EmployeeCheckRegisteredDetailsView
+class AgentForOrgTest extends AnyFreeSpec with Matchers {
 
-class EmployeeTest extends AnyFreeSpec with Matchers {
+  private val agentForOrgCheckRegisteredDetailsView = mock[AgentForOrgCheckRegisteredDetailsView]
 
-  private val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
+  private val agentForOrg = AgentForOrg(agentForOrgCheckRegisteredDetailsView)
 
-  private val employee = Employee(employeeCheckRegisteredDetailsView)
-
-  "Employee" - {
+  "AgentForOrg" - {
     "should return the correct view for CheckRegisteredDetails" in {
       val cDSEstablishmentAddress: CDSEstablishmentAddress = new CDSEstablishmentAddress(
         "",
@@ -52,14 +50,14 @@ class EmployeeTest extends AnyFreeSpec with Matchers {
 
       val traderDetailsWithCountryCode =
         TraderDetailsWithCountryCode("", consentToDisclosureOfPersonalData = true, "", cDSEstablishmentAddress, None)
-      when(employeeCheckRegisteredDetailsView.apply(
+      when(agentForOrgCheckRegisteredDetailsView.apply(
         form,
         traderDetailsWithCountryCode,
         NormalMode,
         draftId)(request, messages)
       ).thenReturn(expectedView)
 
-      val actualView: HtmlFormat.Appendable = employee.selectViewForCheckRegisteredDetails(
+      val actualView: HtmlFormat.Appendable = agentForOrg.selectViewForCheckRegisteredDetails(
         form,
         traderDetailsWithCountryCode,
         NormalMode,

@@ -21,7 +21,7 @@ import javax.inject.Inject
 class UserRoleProvider @Inject() (
   employeeRole: Employee,
   agentForRole: AgentForOrg,
-  agentFortTrader: AgentForTrader
+  agentForTrader: AgentForTrader
 ) {
 
   def getUserRole(): UserRole = employeeRole
