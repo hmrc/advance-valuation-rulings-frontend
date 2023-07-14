@@ -17,12 +17,15 @@
 package controllers
 
 import javax.inject.Inject
+
 import scala.concurrent.ExecutionContext
+
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
@@ -77,7 +80,11 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(userRoleProvider.getUserRole().selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
+                    Ok(
+                      userRoleProvider
+                        .getUserRole()
+                        .selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
+                    )
                 }
             )
 
@@ -88,7 +95,11 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(userRoleProvider.getUserRole().selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
+                    Ok(
+                      userRoleProvider
+                        .getUserRole()
+                        .selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
+                    )
                 }
             )
         }
@@ -110,7 +121,9 @@ class CheckRegisteredDetailsController @Inject() (
                       Redirect(routes.UnauthorisedController.onPageLoad)
                     case Some(authUserType) =>
                       BadRequest(
-                        userRoleProvider.getUserRole().selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
+                        userRoleProvider
+                          .getUserRole()
+                          .selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
                       )
                   }
               ),
