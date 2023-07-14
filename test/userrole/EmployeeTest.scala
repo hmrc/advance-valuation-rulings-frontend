@@ -29,7 +29,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import views.html.EmployeeCheckRegisteredDetailsView
 
-class UserRoleTest extends AnyFreeSpec with Matchers {
+class EmployeeTest extends AnyFreeSpec with Matchers {
 
   val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
 
