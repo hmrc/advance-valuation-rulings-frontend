@@ -47,12 +47,9 @@ class CheckRegisteredDetailsController @Inject() (
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  employeeView: EmployeeCheckRegisteredDetailsView,
-  agentOrgView: AgentOrgCheckRegisteredDetailsView,
-  agentTraderView: TraderCheckRegisteredDetailsView,
   backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with UserRole
+    extends FrontendBaseController
     with I18nSupport {
 
   private val logger = Logger(this.getClass)
@@ -73,37 +70,6 @@ class CheckRegisteredDetailsController @Inject() (
           Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
 
-  private def selectView(
-    form: Form[Boolean],
-    userAnswers: UserAnswers,
-    details: TraderDetailsWithCountryCode,
-    mode: Mode,
-    draftId: DraftId
-  )(implicit request: DataRequest[AnyContent]): HtmlFormat.Appendable =
-    userRole(userAnswers) match {
-      case userRole.Employee       =>
-        employeeView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-      case userRole.AgentForOrg    =>
-        agentOrgView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-      case userRole.AgentForTrader =>
-        agentTraderView(
-          form,
-          details,
-          mode,
-          draftId
-        )
-    }
-
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
@@ -115,15 +81,7 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(
-                      selectView(
-                        formProvider().fill(value),
-                        request.userAnswers,
-                        details,
-                        mode,
-                        draftId
-                      )
-                    )
+                    Ok(userRole.selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
                 }
             )
 
@@ -134,7 +92,7 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(selectView(formProvider(), request.userAnswers, details, mode, draftId))
+                    Ok(userRole.selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
                 }
             )
         }
@@ -156,7 +114,7 @@ class CheckRegisteredDetailsController @Inject() (
                       Redirect(routes.UnauthorisedController.onPageLoad)
                     case Some(authUserType) =>
                       BadRequest(
-                        selectView(formProvider(), request.userAnswers, details, mode, draftId)
+                        userRole.selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
                       )
                   }
               ),
