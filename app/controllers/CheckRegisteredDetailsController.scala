@@ -17,16 +17,12 @@
 package controllers
 
 import javax.inject.Inject
-
 import scala.concurrent.ExecutionContext
-
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
@@ -35,12 +31,12 @@ import models.requests.DataRequest
 import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
-import views.html.{AgentOrgCheckRegisteredDetailsView, CheckRegisteredDetailsView, EmployeeCheckRegisteredDetailsView, TraderCheckRegisteredDetailsView}
+import userrole.UserRoleProvider
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
-  userRole: UserRole,
+  userRoleProvider: UserRoleProvider,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -81,7 +77,7 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(userRole.selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
+                    Ok(userRoleProvider.getUserRole().selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
                 }
             )
 
@@ -92,7 +88,7 @@ class CheckRegisteredDetailsController @Inject() (
                   case None               =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
                   case Some(authUserType) =>
-                    Ok(userRole.selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
+                    Ok(userRoleProvider.getUserRole().selectViewForCheckRegDetails(formProvider(), details, mode, draftId))
                 }
             )
         }
@@ -114,7 +110,7 @@ class CheckRegisteredDetailsController @Inject() (
                       Redirect(routes.UnauthorisedController.onPageLoad)
                     case Some(authUserType) =>
                       BadRequest(
-                        userRole.selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
+                        userRoleProvider.getUserRole().selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
                       )
                   }
               ),
