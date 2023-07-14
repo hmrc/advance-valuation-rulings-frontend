@@ -29,18 +29,18 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import views.html.EmployeeCheckRegisteredDetailsView
 
-class EmployeeTest extends AnyFreeSpec with Matchers {
+class UserRoleTest extends AnyFreeSpec with Matchers {
 
   val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
 
-  val employee = new Employee(employeeCheckRegisteredDetailsView)
+  val employee = Employee(employeeCheckRegisteredDetailsView)
 
   "Employee" - {
-    "should return the correct view" in {
+    "should return the correct view for CheckRegisteredDetails" in {
       val cDSEstablishmentAddress: CDSEstablishmentAddress = new CDSEstablishmentAddress(
-        "something",
-        "xyz",
-        "xyz",
+        "",
+        "",
+        "",
         None
       )
 
@@ -51,7 +51,7 @@ class EmployeeTest extends AnyFreeSpec with Matchers {
       when(employeeCheckRegisteredDetailsView.apply(any(), any(), any(), any())(any(), any()))
         .thenReturn(mockReturnedView)
 
-      val returnedView: HtmlFormat.Appendable = employee.selectViewForCheckRegDetails(
+      val returnedView: HtmlFormat.Appendable = employee.selectViewForCheckRegisteredDetails(
         mock[Form[Boolean]],
         traderDetailsWithCountryCode,
         NormalMode,
@@ -61,4 +61,5 @@ class EmployeeTest extends AnyFreeSpec with Matchers {
       returnedView mustBe mockReturnedView
     }
   }
+
 }

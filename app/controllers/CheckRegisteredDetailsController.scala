@@ -83,7 +83,7 @@ class CheckRegisteredDetailsController @Inject() (
                     Ok(
                       userRoleProvider
                         .getUserRole()
-                        .selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
+                        .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
                     )
                 }
             )
@@ -98,7 +98,7 @@ class CheckRegisteredDetailsController @Inject() (
                     Ok(
                       userRoleProvider
                         .getUserRole()
-                        .selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
+                        .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
                     )
                 }
             )
@@ -123,7 +123,7 @@ class CheckRegisteredDetailsController @Inject() (
                       BadRequest(
                         userRoleProvider
                           .getUserRole()
-                          .selectViewForCheckRegDetails(formProvider(), details, mode, draftId)
+                          .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
                       )
                   }
               ),

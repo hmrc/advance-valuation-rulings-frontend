@@ -26,7 +26,7 @@ import views.html.AgentOrgCheckRegisteredDetailsView
 
 package userrole {
   case class AgentForOrg @Inject() (view: AgentOrgCheckRegisteredDetailsView) extends UserRole {
-    override def selectViewForCheckRegDetails(
+    override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
       details: TraderDetailsWithCountryCode,
       mode: Mode,

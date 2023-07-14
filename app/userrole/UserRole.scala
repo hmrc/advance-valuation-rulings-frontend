@@ -26,7 +26,7 @@ import models.requests.DataRequest
 
 trait UserRole {
 
-  def selectViewForCheckRegDetails(
+  def selectViewForCheckRegisteredDetails(
     form: Form[Boolean],
     details: TraderDetailsWithCountryCode,
     mode: Mode,

@@ -26,20 +26,23 @@ import views.html.EmployeeCheckRegisteredDetailsView
 
 package userrole {
 
-  case class Employee @Inject() (view: EmployeeCheckRegisteredDetailsView) extends UserRole {
-    override def selectViewForCheckRegDetails(
+  import views.html.EmployeeCheckRegisteredDetailsView
+
+  case class Employee @Inject() (
+    employeeCheckRegisteredDetailsView: EmployeeCheckRegisteredDetailsView
+  ) extends UserRole {
+    override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
       details: TraderDetailsWithCountryCode,
       mode: Mode,
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      view(
+      employeeCheckRegisteredDetailsView (
         form,
         details,
         mode,
         draftId
       )
-
   }
 
 }
