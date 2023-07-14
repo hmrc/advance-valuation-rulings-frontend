@@ -45,18 +45,26 @@ class EmployeeTest extends AnyFreeSpec with Matchers {
       )
 
       val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
-      val form = mock[Form[Boolean]]
-      val request = mock[DataRequest[AnyContent]]
-      val draftId = DraftId(1L)
-      val messages = mock[Messages]
+      val form                                = mock[Form[Boolean]]
+      val request                             = mock[DataRequest[AnyContent]]
+      val draftId                             = DraftId(1L)
+      val messages                            = mock[Messages]
 
       val traderDetailsWithCountryCode =
-        TraderDetailsWithCountryCode("", consentToDisclosureOfPersonalData = true, "", cDSEstablishmentAddress, None)
-      when(employeeCheckRegisteredDetailsView.apply(
-        form,
-        traderDetailsWithCountryCode,
-        NormalMode,
-        draftId)(request, messages)
+        TraderDetailsWithCountryCode(
+          "",
+          consentToDisclosureOfPersonalData = true,
+          "",
+          cDSEstablishmentAddress,
+          None
+        )
+      when(
+        employeeCheckRegisteredDetailsView.apply(
+          form,
+          traderDetailsWithCountryCode,
+          NormalMode,
+          draftId
+        )(request, messages)
       ).thenReturn(expectedView)
 
       val actualView: HtmlFormat.Appendable = employee.selectViewForCheckRegisteredDetails(

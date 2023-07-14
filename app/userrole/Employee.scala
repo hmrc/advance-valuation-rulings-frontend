@@ -37,7 +37,7 @@ package userrole {
       mode: Mode,
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      employeeCheckRegisteredDetailsView (
+      employeeCheckRegisteredDetailsView(
         form,
         details,
         mode,

@@ -25,7 +25,8 @@ import models.requests.DataRequest
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
-  case class AgentForTrader @Inject() (view: AgentForTraderCheckRegisteredDetailsView) extends UserRole {
+  case class AgentForTrader @Inject() (view: AgentForTraderCheckRegisteredDetailsView)
+      extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
       details: TraderDetailsWithCountryCode,

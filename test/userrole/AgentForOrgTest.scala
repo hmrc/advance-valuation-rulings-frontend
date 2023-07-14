@@ -16,15 +16,16 @@
 
 package userrole
 
-import models.requests.DataRequest
-import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
-import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
+
+import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import models.requests.DataRequest
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 import views.html.AgentForOrgCheckRegisteredDetailsView
 
 class AgentForOrgTest extends AnyFreeSpec with Matchers {
@@ -43,18 +44,26 @@ class AgentForOrgTest extends AnyFreeSpec with Matchers {
       )
 
       val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
-      val form = mock[Form[Boolean]]
-      val request = mock[DataRequest[AnyContent]]
-      val draftId = DraftId(1L)
-      val messages = mock[Messages]
+      val form                                = mock[Form[Boolean]]
+      val request                             = mock[DataRequest[AnyContent]]
+      val draftId                             = DraftId(1L)
+      val messages                            = mock[Messages]
 
       val traderDetailsWithCountryCode =
-        TraderDetailsWithCountryCode("", consentToDisclosureOfPersonalData = true, "", cDSEstablishmentAddress, None)
-      when(agentForOrgCheckRegisteredDetailsView.apply(
-        form,
-        traderDetailsWithCountryCode,
-        NormalMode,
-        draftId)(request, messages)
+        TraderDetailsWithCountryCode(
+          "",
+          consentToDisclosureOfPersonalData = true,
+          "",
+          cDSEstablishmentAddress,
+          None
+        )
+      when(
+        agentForOrgCheckRegisteredDetailsView.apply(
+          form,
+          traderDetailsWithCountryCode,
+          NormalMode,
+          draftId
+        )(request, messages)
       ).thenReturn(expectedView)
 
       val actualView: HtmlFormat.Appendable = agentForOrg.selectViewForCheckRegisteredDetails(

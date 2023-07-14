@@ -123,7 +123,12 @@ class CheckRegisteredDetailsController @Inject() (
                       BadRequest(
                         userRoleProvider
                           .getUserRole()
-                          .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
+                          .selectViewForCheckRegisteredDetails(
+                            formProvider(),
+                            details,
+                            mode,
+                            draftId
+                          )
                       )
                   }
               ),
