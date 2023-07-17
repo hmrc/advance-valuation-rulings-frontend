@@ -17,15 +17,12 @@
 package controllers
 
 import javax.inject.Inject
-
 import scala.concurrent.ExecutionContext
-
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
@@ -35,6 +32,7 @@ import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
 import userrole.UserRoleProvider
+import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
