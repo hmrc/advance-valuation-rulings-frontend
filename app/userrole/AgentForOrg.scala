@@ -25,6 +25,7 @@ import models.requests.DataRequest
 import views.html.AgentForOrgCheckRegisteredDetailsView
 
 package userrole {
+  import pages.Page
   case class AgentForOrg @Inject() (view: AgentForOrgCheckRegisteredDetailsView) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -38,5 +39,7 @@ package userrole {
         mode,
         draftId
       )
+
+    override def selectGetRegisteredDetailsPage(): Page = null
   }
 }

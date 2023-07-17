@@ -26,6 +26,7 @@ import views.html.EmployeeCheckRegisteredDetailsView
 
 package userrole {
 
+  import pages.Page
   import views.html.EmployeeCheckRegisteredDetailsView
 
   case class Employee @Inject() (
@@ -43,6 +44,8 @@ package userrole {
         mode,
         draftId
       )
+
+    override def selectGetRegisteredDetailsPage(): Page = null
   }
 
 }

@@ -24,6 +24,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions.IdentifierAction
+import models.DraftId
 import views.html.UploadLetterView
 
 class UploadLetterController @Inject() (
@@ -34,5 +35,5 @@ class UploadLetterController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = Action(implicit request => Ok(view()))
+  def onPageLoad(draftId: DraftId): Action[AnyContent] = Action(implicit request => Ok(view()))
 }
