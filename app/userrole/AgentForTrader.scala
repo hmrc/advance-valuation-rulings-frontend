@@ -39,6 +39,5 @@ package userrole {
         mode,
         draftId
       )
-
   }
 }
