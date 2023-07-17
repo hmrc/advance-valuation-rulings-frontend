@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package userrole
+package forms
+
+import javax.inject.Inject
 
 import play.api.data.Form
-import play.api.i18n.Messages
-import play.api.mvc.AnyContent
-import play.twirl.api.HtmlFormat
 
-import models.{DraftId, Mode, TraderDetailsWithCountryCode}
-import models.requests.DataRequest
-import pages.Page
+import forms.mappings.Mappings
 
-trait UserRole {
+class UploadLetterFormProvider @Inject() extends Mappings {
 
-  def selectViewForCheckRegisteredDetails(
-    form: Form[Boolean],
-    details: TraderDetailsWithCountryCode,
-    mode: Mode,
-    draftId: DraftId
-  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
-
-  def selectGetRegisteredDetailsPage(): Page
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean(
+        "uploadLetter.todo"
+      )
+    )
 }

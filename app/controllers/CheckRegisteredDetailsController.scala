@@ -34,6 +34,7 @@ import models.requests.DataRequest
 import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
+import userrole.UserRoleProvider
 import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
@@ -44,6 +45,7 @@ class CheckRegisteredDetailsController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
+  userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
   view: CheckRegisteredDetailsView,
   backendConnector: BackendConnector
@@ -122,7 +124,11 @@ class CheckRegisteredDetailsController @Inject() (
                 updatedAnswers <- CheckRegisteredDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
+                navigator.nextPage(
+                  userRoleProvider.getUserRole().selectGetRegisteredDetailsPage(),
+                  mode,
+                  updatedAnswers
+                )
               )
           )
     }

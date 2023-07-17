@@ -25,6 +25,7 @@ import models.requests.DataRequest
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
+  import pages.Page
   case class AgentForTrader @Inject() (view: AgentForTraderCheckRegisteredDetailsView)
       extends UserRole {
     override def selectViewForCheckRegisteredDetails(
@@ -39,5 +40,7 @@ package userrole {
         mode,
         draftId
       )
+
+    override def selectGetRegisteredDetailsPage(): Page = null
   }
 }

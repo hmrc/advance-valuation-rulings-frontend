@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 
-package userrole
+package pages
 
-import play.api.data.Form
-import play.api.i18n.Messages
-import play.api.mvc.AnyContent
-import play.twirl.api.HtmlFormat
-
-import models.{DraftId, Mode, TraderDetailsWithCountryCode}
-import models.requests.DataRequest
-import pages.Page
-
-trait UserRole {
-
-  def selectViewForCheckRegisteredDetails(
-    form: Form[Boolean],
-    details: TraderDetailsWithCountryCode,
-    mode: Mode,
-    draftId: DraftId
-  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
-
-  def selectGetRegisteredDetailsPage(): Page
-}
+case object UploadLetterPage extends Page
