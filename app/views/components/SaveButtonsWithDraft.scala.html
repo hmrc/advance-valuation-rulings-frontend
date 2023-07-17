@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package navigation
+@this(govukButton: GovukButton)
 
-import play.api.mvc.Call
+@(draftId: DraftId, draftAction: Call , submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
 
-import models.{Mode, UserAnswers}
-import pages._
+    <div class="govuk-button-group">
+        @govukButton(
+            ButtonViewModel(messages(submitButtonMessageKey))
+        )
 
-class FakeNavigator(desiredRoute: Call) extends Navigator(null) {
-
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
-}
+        @govukButton(
+            ButtonViewModel(messages("site.saveAsDraft"))
+        .withAttribute("formaction", draftAction.toString())
+        .asSecondaryButton()
+        )
+    </div>
+    

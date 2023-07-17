@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import play.api.mvc.Call
 
+import config.FrontendAppConfig
 import controllers.routes._
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
@@ -28,7 +29,7 @@ import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 
-class Navigator @Inject() () {
+class Navigator @Inject() (appConfig: FrontendAppConfig) {
 
   private def checkYourAnswers(draftId: DraftId): Call =
     CheckYourAnswersController.onPageLoad(draftId)
@@ -88,24 +89,32 @@ class Navigator @Inject() () {
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
-  private def startApplicationRouting(userAnswers: UserAnswers): Call =
-    userAnswers.get(AccountHomePage) match {
-      case Some(IndividualTrader)      =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(OrganisationAdmin)     =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(OrganisationAssistant) =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(Agent)                 =>
-        WhoAreYouAgentController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _                           =>
-        UnauthorisedController.onPageLoad
+  // todo: check this routing
+  private def startApplicationRouting(userAnswers: UserAnswers): Call = {
+    val agentsOn: Boolean = appConfig.agentOnBehalfOfTrader
+
+    agentsOn match {
+      case true  =>
+        userAnswers.get(AccountHomePage) match {
+          case Some(_) =>
+            WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+          case _       => UnauthorisedController.onPageLoad
+        }
+      case false =>
+        userAnswers.get(AccountHomePage) match {
+          case Some(IndividualTrader) | Some(OrganisationAdmin) =>
+            RequiredInformationController.onPageLoad(userAnswers.draftId)
+          case Some(_)                                          =>
+            WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+          case _                                                => UnauthorisedController.onPageLoad
+        }
     }
+  }
 
   private def whoAreYouRouting(userAnswers: UserAnswers): Call =
     userAnswers.get(WhoAreYouAgentPage) match {
-      case _ => RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case _ => UnauthorisedController.onPageLoad
+      case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case None    => UnauthorisedController.onPageLoad
     }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
@@ -531,4 +540,5 @@ class Navigator @Inject() () {
     case CheckMode  =>
       CheckModeNavigator.nextPage(page, userAnswers)
   }
+
 }

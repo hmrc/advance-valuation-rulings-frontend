@@ -16,27 +16,19 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
+import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.DescribeTheSimilarGoodsFormProvider
-import models.{Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import models.NormalMode
 import org.scalatestplus.mockito.MockitoSugar
 import pages.DescribeTheSimilarGoodsPage
-import services.UserAnswersService
 import views.html.DescribeTheSimilarGoodsView
 
 class DescribeTheSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new DescribeTheSimilarGoodsFormProvider()
   val form         = formProvider()
@@ -44,7 +36,32 @@ class DescribeTheSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
   lazy val describeTheSimilarGoodsRoute =
     routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode, draftId).url
 
+  lazy val saveDraftRoute: String =
+    routes.DescribeTheSimilarGoodsController.onSubmit(NormalMode, draftId, saveDraft = true).url
+
+  lazy val continueRoute: String =
+    routes.DescribeTheSimilarGoodsController.onSubmit(NormalMode, draftId, saveDraft = false).url
+
   "DescribeTheSimilarGoods Controller" - {
+
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
 
     "must return OK and the correct view for a GET" in {
 
@@ -93,21 +110,10 @@ class DescribeTheSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
-          FakeRequest(POST, describeTheSimilarGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -124,7 +130,7 @@ class DescribeTheSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, describeTheSimilarGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -161,7 +167,7 @@ class DescribeTheSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, describeTheSimilarGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

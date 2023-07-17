@@ -21,14 +21,12 @@ import java.time.Instant
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
-import models.{Done, NormalMode, UploadedFile}
-import models.DraftAttachment
+import models.{Done, DraftAttachment, NormalMode, UploadedFile}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
@@ -39,8 +37,6 @@ import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
 class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
-
-  private val onwardRoute = Call("GET", "/foo")
 
   private val formProvider = new IsThisFileConfidentialFormProvider()
   private val form         = formProvider()

@@ -26,14 +26,15 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsWithDraft
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.BusinessContactDetailsController.onSubmit(NormalMode, draftId, saveDraft)
+}
 @layout(pageTitle = title(form, messages("businessContactDetails.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.BusinessContactDetailsController.onSubmit(mode, draftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -71,7 +72,7 @@
             .withWidth(OneHalf)
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
 @cancelApplicationLink(draftId)
 }

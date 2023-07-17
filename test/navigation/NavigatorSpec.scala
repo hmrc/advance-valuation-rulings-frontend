@@ -23,17 +23,23 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import config.FrontendAppConfig
 import controllers.routes
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import org.mockito.MockitoSugar.when
+import org.scalatestplus.mockito.MockitoSugar.mock
 import pages._
 import queries._
 
 class NavigatorSpec extends SpecBase {
 
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
-  val navigator                     = new Navigator
+  val appConfig                     = mock[FrontendAppConfig]
+  val navigator                     = new Navigator(appConfig)
+
+  when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
@@ -78,13 +84,14 @@ class NavigatorSpec extends SpecBase {
     }
 
     "Account Home" - {
+      when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-        ) mustBe routes.WhoAreYouAgentController
+        ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
@@ -95,7 +102,7 @@ class NavigatorSpec extends SpecBase {
           userAnswersAsIndividualTrader
             .setFuture(AccountHomePage, OrganisationAssistant)
             .futureValue
-        ) mustBe routes.WhoAreYouAgentController
+        ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
 
@@ -104,16 +111,8 @@ class NavigatorSpec extends SpecBase {
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
-        ) mustBe routes.WhoAreYouAgentController
+        ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
-      }
-
-      "should navigate to WhatIsYourRole page for an Agent" in {
-        navigator.nextPage(
-          AccountHomePage,
-          NormalMode,
-          userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
-        ) mustBe routes.UnauthorisedController.onPageLoad
       }
 
       "should navigate to WhatIsYourRole page for an Agent" in {

@@ -27,14 +27,16 @@
     paragraph: Paragraph,
     heading: Heading,
     cancelLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsWithDraft
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.ExplainWhyYouChoseMethodFourController.onSubmit(NormalMode, draftId: DraftId, saveDraft)}
+
 @layout(pageTitle = title(form, messages("explainWhyYouChoseMethodFour.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.ExplainWhyYouChoseMethodFourController.onSubmit(mode, draftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -64,7 +66,8 @@
             ))
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
+
     @cancelLink(draftId)
 }

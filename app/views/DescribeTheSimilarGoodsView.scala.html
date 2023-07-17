@@ -28,11 +28,12 @@
     heading: Heading,
     paragraph: Paragraph,
     list: BulletList,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsWithDraft
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.DescribeTheSimilarGoodsController.onSubmit(NormalMode, draftId, saveDraft)
+}
 @paraContent = {@paragraph(Html(messages("describeTheSimilarGoods.paragraph.1")))
                     @list(
                         Seq(
@@ -46,7 +47,7 @@
 
 @layout(pageTitle = title(form, messages("describeTheSimilarGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.DescribeTheSimilarGoodsController.onSubmit(mode, draftId)) {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -66,7 +67,7 @@
 
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
     @cancelLink(draftId)
 }

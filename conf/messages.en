@@ -721,6 +721,8 @@ haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if you can
 haveYouUsedMethodOneForSimilarGoodsInPast.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued
 
+
+
 whatIsYourRoleAsImporter.title = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.employeeOfOrg = An employee of the organisation
@@ -734,6 +736,7 @@ whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your rol
 whatIsYourRoleAsImporter.error.required = Choose the option that describes your role
 whatIsYourRoleAsImporter.change.hidden = your description of your role as an importer
 
+
 whoAreYouAgent.title = How would you describe your role as an importer?
 whoAreYouAgent.caption = About the applicant
 whoAreYouAgent.heading = How would you describe your role as an importer?
@@ -745,6 +748,8 @@ whoAreYouAgent.agentOnBehalfOfTrader = Agent acting on behalf of a trader
 whoAreYouAgent.organisationEmployee.hint = Imports goods into the UK on behalf of their organisation.
 whoAreYouAgent.agentOnBehalfOfOrganisation.hint = Imports goods into the UK on behalf of an organisation.
 whoAreYouAgent.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
+
+
 
 viewApplication.title = Your application
 viewApplication.heading = Your application

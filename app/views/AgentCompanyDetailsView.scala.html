@@ -23,15 +23,18 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukSelect: GovukSelect,
-    saveButtons: SaveButtons,
-    heading: Heading
+    saveButtons: SaveButtonsWithDraft,
+    heading: Heading,
+    cancelApplicationLink: CancelApplicationLink
+
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.AgentCompanyDetailsController.onSubmit(NormalMode, draftId, saveDraft)
+}
 @layout(pageTitle = title(form, messages("agentCompanyDetails.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.AgentCompanyDetailsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -97,6 +100,7 @@
             .withCssClass("autocomplete")
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, onSubmitAction())
     }
+@cancelApplicationLink(draftId)
 }

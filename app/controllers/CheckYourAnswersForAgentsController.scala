@@ -70,7 +70,7 @@ class CheckYourAnswersForAgentsController @Inject() (
       }
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen isAgent andThen getData(draftId) andThen requireData).async {
+    (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         getTraderDetails {
           traderDetails =>
