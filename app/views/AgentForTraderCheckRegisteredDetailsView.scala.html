@@ -1,18 +1,18 @@
 @*
-* Copyright 2023 HM Revenue & Customs
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*@
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
 
 @*
 * Copyright 2023 HM Revenue & Customs
@@ -45,8 +45,115 @@ paragraph: Paragraph,
 subheading: Subheading,
 cancelApplicationLink: CancelApplicationLink,
 saveButtons: SaveButtons,
+link: Link
 )
 
 @(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-This is the view for UserRole.AgentForTrader
+@headingContent = {
+    @if(registeredDetails.consentToDisclosureOfPersonalData) {
+        @heading(messages("checkRegisteredDetails.heading.1", registeredDetails.EORINo))
+    } else {
+        @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.EORINo))
+    }
+}
+
+@radioHeading = {
+    @if(registeredDetails.CDSFullName.trim != ""){
+        @subheading(messages("checkRegisteredDetails.subheading.2"))
+    }else{
+        @subheading(messages("checkRegisteredDetails.private.subheading.2"))
+    }
+}
+
+@searchLink = {
+    <p class="govuk-body">
+        @link(
+            id = "search-eori-link",
+            text = messages("checkRegisteredDetails.search.link"),
+            call = Call("GET", "somelink")
+        )
+        @messages("checkRegisteredDetails.search.text")
+    </p>
+}
+
+@paraContent = {
+@if(registeredDetails.consentToDisclosureOfPersonalData) {
+
+    @warning(content=Html(messages("checkRegisteredDetails.warning.agentOnBehalfOfTrader")))
+
+    @subheading(messages("checkRegisteredDetails.subheading.1"))
+
+    @if(registeredDetails.CDSFullName.trim != "") {
+        @headingH3(messages("checkRegisteredDetails.heading.2"), "s")
+        @paragraph(content=Html(registeredDetails.CDSFullName))
+    }
+
+    @headingH3(messages("checkRegisteredDetails.heading.3"), "s")
+    @paragraph(content=Html(
+        registeredDetails.CDSEstablishmentAddress.streetAndNumber + "<br>" +
+        registeredDetails.CDSEstablishmentAddress.city + "<br>" +
+        registeredDetails.CDSEstablishmentAddress.postalCode.map(_ + "<br>").getOrElse("") +
+        Country.fromCountryCode(registeredDetails.CDSEstablishmentAddress.countryCode).name
+    ))
+    } else {
+        @paragraph(Html(messages("checkRegisteredDetails.private.paragraph.1")))
+    }
+    @radioHeading
+}
+
+@*Combined following content for a screen reader to present heading 1 and subheading clearly within legend*@
+@legendContent = {  @headingContent.
+    @radioHeading
+}
+
+
+@layout(
+    pageTitle = title(
+        form,
+        messages(
+            if (registeredDetails.consentToDisclosureOfPersonalData) "checkRegisteredDetails.title" else "checkRegisteredDetails.private.title",
+            registeredDetails.EORINo
+        )
+    ),
+    draftId = Some(draftId)
+) {
+
+
+@formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
+
+@if(form.errors.nonEmpty) {
+@govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value")))
+}
+
+@caption(messages("checkRegisteredDetails.caption"))
+@headingContent
+
+<br></br>
+
+@govukRadios(
+RadiosViewModel(
+field = form("value"),
+legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden(),
+items = Seq(
+RadioItem(
+id = Some(form("value").id),
+value = Some("true"),
+content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes")
+),
+RadioItem(
+id = Some(s"${form("value").id}-no"),
+value = Some("false"),
+content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
+)
+)
+).withHint(Hint(content = HtmlContent(paraContent)))
+)
+
+@searchLink
+
+@saveButtons(draftId)
+}
+
+@cancelApplicationLink(draftId)
+}

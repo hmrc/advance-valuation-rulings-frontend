@@ -24,7 +24,7 @@ class UserRoleProvider @Inject() (
   agentForTrader: AgentForTrader
 ) {
 
-  def getUserRole(): UserRole = null
+  def getUserRole(): UserRole = agentForTrader
 
   //    def apply(userAnswers: UserAnswers): UserRole =
   //      userAnswers.get(AccountHomePage) match {
