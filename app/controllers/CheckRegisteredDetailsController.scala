@@ -83,7 +83,7 @@ class CheckRegisteredDetailsController @Inject() (
                     Ok(
                       userRoleProvider
                         .getUserRole()
-                        .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
+                        .selectViewForCheckRegisteredDetails(formProvider().fill(value), details, mode, draftId)
                     )
                 }
             )

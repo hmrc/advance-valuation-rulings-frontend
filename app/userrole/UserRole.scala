@@ -33,23 +33,4 @@ trait UserRole {
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
 
-  //  def apply(userAnswers: UserAnswers): UserRole =
-  //    userAnswers.get(AccountHomePage) match {
-  //      case Some(AuthUserType.IndividualTrader)                                 =>
-  //        Employee
-  //      case Some(AuthUserType.OrganisationAdmin)                                =>
-  //        AgentForOrg
-  //      case Some(AuthUserType.OrganisationAssistant) | Some(AuthUserType.Agent) =>
-  //        userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-  //          case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      =>
-  //            AgentForTrader
-  //          case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
-  //            AgentForTrader
-  //          case _                                                 =>
-  //            AgentForTrader
-  //        }
-  //      case _                                                                   =>
-  //        AgentForTrader
-  //    }
-
 }
