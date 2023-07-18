@@ -42,8 +42,8 @@ class CheckRegisteredDetailsControllerSpec
   lazy val checkRegisteredDetailsRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
-  val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider()
+  val formProvider    = new CheckRegisteredDetailsFormProvider()
+  val form            = formProvider()
 
   "CheckRegisteredDetails Controller" - {
 
@@ -176,6 +176,37 @@ class CheckRegisteredDetailsControllerSpec
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
+    }
+
+    "must redirect to the next page when data is submitted with Yes radio button" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, checkRegisteredDetailsRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.UploadLetterController
+          .onPageLoad(draftId)
+          .url
+      }
+    }
+
+    "must redirect to the previous page when data is submitted with No radio button" in {
+      fail // TODO
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {

@@ -23,13 +23,11 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import controllers.actions.IdentifierAction
 import models.DraftId
 import views.html.UploadLetterView
 
 class UploadLetterController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  identify: IdentifierAction,
   view: UploadLetterView
 ) extends FrontendBaseController
     with I18nSupport
