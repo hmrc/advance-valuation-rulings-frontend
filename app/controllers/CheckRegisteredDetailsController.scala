@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logger
 import play.api.data.Form
@@ -28,6 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
+import controllers.common.TraderDetailsHelper
 import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
@@ -46,28 +47,13 @@ class CheckRegisteredDetailsController @Inject() (
   formProvider: CheckRegisteredDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: CheckRegisteredDetailsView,
-  backendConnector: BackendConnector
+  implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with TraderDetailsHelper {
 
-  private val logger = Logger(this.getClass)
-
-  private def getTraderDetails(
-    handleSuccess: TraderDetailsWithCountryCode => Result
-  )(implicit request: DataRequest[AnyContent]) =
-    backendConnector
-      .getTraderDetails(
-        AcknowledgementReference(request.userAnswers.draftId),
-        EoriNumber(request.eoriNumber)
-      )
-      .map {
-        case Right(traderDetails) =>
-          handleSuccess(traderDetails)
-        case Left(backendError)   =>
-          logger.error(s"Failed to get trader details from backend: $backendError")
-          Redirect(routes.JourneyRecoveryController.onPageLoad())
-      }
+  private implicit val logger = Logger(this.getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
@@ -78,9 +64,11 @@ class CheckRegisteredDetailsController @Inject() (
               (details: TraderDetailsWithCountryCode) =>
                 AccountHomePage.get() match {
                   case None               =>
-                    Redirect(routes.UnauthorisedController.onPageLoad)
+                    Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                   case Some(authUserType) =>
-                    Ok(view(formProvider().fill(value), details, mode, authUserType, draftId))
+                    Future.successful(
+                      Ok(view(formProvider().fill(value), details, mode, authUserType, draftId))
+                    )
                 }
             )
 
@@ -89,9 +77,11 @@ class CheckRegisteredDetailsController @Inject() (
               (details: TraderDetailsWithCountryCode) =>
                 AccountHomePage.get() match {
                   case None               =>
-                    Redirect(routes.UnauthorisedController.onPageLoad)
+                    Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                   case Some(authUserType) =>
-                    Ok(view(formProvider(), details, mode, authUserType, draftId))
+                    Future.successful(
+                      Ok(view(formProvider(), details, mode, authUserType, draftId))
+                    )
                 }
             )
         }
@@ -110,10 +100,12 @@ class CheckRegisteredDetailsController @Inject() (
                 (details: TraderDetailsWithCountryCode) =>
                   AccountHomePage.get() match {
                     case None               =>
-                      Redirect(routes.UnauthorisedController.onPageLoad)
+                      Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                     case Some(authUserType) =>
-                      BadRequest(
-                        view(formWithErrors, details, mode, authUserType, draftId)
+                      Future.successful(
+                        BadRequest(
+                          view(formWithErrors, details, mode, authUserType, draftId)
+                        )
                       )
                   }
               ),

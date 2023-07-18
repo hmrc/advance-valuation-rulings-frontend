@@ -19,17 +19,19 @@ package controllers
 import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
-import play.api.Logging
+import play.api.{Logger, Logging}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.NotFoundException
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
+import controllers.common.TraderDetailsHelper
 import forms.TraderEoriNumberFormProvider
 import models.{AcknowledgementReference, DraftId, EoriNumber, Mode, TraderDetailsWithCountryCode}
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
@@ -44,15 +46,17 @@ class ProvideTraderEoriController @Inject() (
   requireData: DataRequiredAction,
   formProvider: TraderEoriNumberFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  backendConnector: BackendConnector,
+  implicit val backendConnector: BackendConnector,
   provideTraderEoriView: ProvideTraderEoriView,
   invalidEoriView: InvalidTraderEoriView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with Logging {
+    with TraderDetailsHelper {
 
   val form = formProvider()
+
+  private implicit val logger = Logger(this.getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
@@ -74,42 +78,42 @@ class ProvideTraderEoriController @Inject() (
             formWithErrors =>
               Future.successful(BadRequest(provideTraderEoriView(formWithErrors, mode, draftId))),
             value =>
-              (for {
-                answersWithSearchedEori  <-
-                  Future.fromTry(request.userAnswers.set(ProvideTraderEoriPage, value))
-                _                        <- userAnswersService.set(answersWithSearchedEori)
-                traderDetails            <- backendConnector
-                                              .getTraderDetails(
-                                                AcknowledgementReference(request.userAnswers.draftId),
-                                                EoriNumber(value)
-                                              )
-                                              .map {
-                                                case Right(details)                         => details
-                                                case Left(error) if error.code == NOT_FOUND =>
-                                                  throw new NotFoundException(
-                                                    s"Provided EORI: $value is not found"
-                                                  )
-                                                case ex @ _                                 =>
-                                                  logger.warn(s"Backend error: $ex")
-                                                  throw new IllegalStateException(
-                                                    s"Backend connector error"
-                                                  )
-                                              }
-                answersWithTraderDetails <-
-                  Future.fromTry(
-                    request.userAnswers
-                      .set[TraderDetailsWithCountryCode](VerifyTraderDetailsPage, traderDetails)
-                  )
-                _                        <- userAnswersService.set(answersWithTraderDetails)
-              } yield Redirect(controllers.routes.VerifyTraderEoriController.onPageLoad(draftId)))
-                .recover {
-                  case ex: NotFoundException =>
-                    logger.warn(s"Trader details not found. Error: $ex")
-                    NotFound(invalidEoriView(mode, draftId, value))
-                  case ex @ _                =>
-                    logger.warn(s"Unable to retrieve trader details. Error: $ex")
-                    Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
-                }
+              request.userAnswers.set(ProvideTraderEoriPage, value) match {
+                case Success(eoriAnswers) =>
+                  userAnswersService.set(eoriAnswers).flatMap {
+                    _ =>
+                      getTraderDetails(
+                        details =>
+                          request.userAnswers.set[TraderDetailsWithCountryCode](
+                            VerifyTraderDetailsPage,
+                            details
+                          ) match {
+                            case Success(traderAnswers) =>
+                              userAnswersService.set(traderAnswers)
+                              Future.successful(
+                                Redirect(
+                                  controllers.routes.VerifyTraderEoriController
+                                    .onPageLoad(draftId)
+                                )
+                              )
+                            case Failure(error)         =>
+                              logger.warn(
+                                s"Unable to store VerifyTraderDetailsPage. Error: $error"
+                              )
+                              Future.successful(
+                                Redirect(
+                                  controllers.routes.JourneyRecoveryController.onPageLoad()
+                                )
+                              )
+                          },
+                        Some(Future.successful(NotFound(invalidEoriView(mode, draftId, value))))
+                      )
+                  }
+                case Failure(error)       =>
+                  logger.warn(s"Unable to store ProvideTraderEoriPage. Error: $error")
+                  Future
+                    .successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+              }
           )
     }
 }
