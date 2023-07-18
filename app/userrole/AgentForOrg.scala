@@ -25,7 +25,13 @@ import models.requests.DataRequest
 import views.html.AgentForOrgCheckRegisteredDetailsView
 
 package userrole {
-  case class AgentForOrg @Inject() (view: AgentForOrgCheckRegisteredDetailsView) extends UserRole {
+  import play.twirl.api.HtmlFormat
+
+  import views.html.AgentForOrgEORIBeUpToDateView
+  case class AgentForOrg @Inject() (
+    view: AgentForOrgCheckRegisteredDetailsView,
+    eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView
+  ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
       details: TraderDetailsWithCountryCode,
@@ -38,5 +44,10 @@ package userrole {
         mode,
         draftId
       )
+
+    override def selectViewForEoriBeUpToDate(
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      eoriBeUpToDateView(draftId)
   }
 }

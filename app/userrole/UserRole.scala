@@ -25,6 +25,9 @@ import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 
 trait UserRole {
+  def selectViewForEoriBeUpToDate(
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
 
   def selectViewForCheckRegisteredDetails(
     form: Form[Boolean],

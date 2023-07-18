@@ -18,18 +18,26 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.i18n.Messages
 import play.api.inject.bind
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 
 import base.SpecBase
+import connectors.BackendConnector
 import models.{AuthUserType, Done}
+import models.requests.ApplicationRequestSpec.traderDetailsWithCountryCode
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.{any, same}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CheckRegisteredDetailsPage
 import services.UserAnswersService
+import userrole.{UserRole, UserRoleProvider}
 import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
@@ -37,7 +45,10 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
   lazy val checkRegisteredDetailRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url
 
-//  "EORIBeUpToDate Controller" - {
+  lazy val eoriBeUpToDateRoute =
+    routes.EORIBeUpToDateController.onPageLoad(draftId).url
+
+  "EORIBeUpToDate Controller" - {
 //
 //    "must return OK and the correct view for a GET" in {
 //
@@ -125,5 +136,37 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 //        redirectLocation(result).value mustEqual onwardRoute.url
 //      }
 //    }
-//  }
+    "must show the view given by the UserRole" in {
+
+      val mockUserRoleProvider = mock[UserRoleProvider]
+      val mockUserRole         = mock[UserRole]
+
+      val expectedViewBody = "hello"
+      val expectedView     = HtmlFormat.raw(expectedViewBody)
+
+      when(
+        mockUserRole.selectViewForEoriBeUpToDate(
+          ArgumentMatchers.eq(this.draftId)
+        )(any[DataRequest[AnyContent]], any[Messages])
+      ).thenReturn(expectedView)
+
+      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        .overrides(
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+        )
+        .build()
+
+      running(application) {
+        val request        = FakeRequest(GET, eoriBeUpToDateRoute)
+        val result         = route(application, request).value
+        val actualViewBody = contentAsString(result)
+
+        actualViewBody mustBe expectedViewBody
+      }
+
+    }
+  }
+
 }

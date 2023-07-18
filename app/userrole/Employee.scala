@@ -26,10 +26,13 @@ import views.html.EmployeeCheckRegisteredDetailsView
 
 package userrole {
 
-  import views.html.EmployeeCheckRegisteredDetailsView
+  import play.twirl.api.HtmlFormat
+
+  import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView}
 
   case class Employee @Inject() (
-    employeeCheckRegisteredDetailsView: EmployeeCheckRegisteredDetailsView
+    view: EmployeeCheckRegisteredDetailsView,
+    eoriBeUpToDateView: EmployeeEORIBeUpToDateView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -37,12 +40,17 @@ package userrole {
       mode: Mode,
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      employeeCheckRegisteredDetailsView(
+      view(
         form,
         details,
         mode,
         draftId
       )
+
+    override def selectViewForEoriBeUpToDate(
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      eoriBeUpToDateView(draftId)
   }
 
 }

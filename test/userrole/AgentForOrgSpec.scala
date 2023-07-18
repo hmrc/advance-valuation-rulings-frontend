@@ -20,19 +20,22 @@ import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
-
 import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import views.html.AgentForOrgCheckRegisteredDetailsView
+import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView}
 
 class AgentForOrgSpec extends AnyFreeSpec with Matchers {
 
   private val agentForOrgCheckRegisteredDetailsView = mock[AgentForOrgCheckRegisteredDetailsView]
+  private val agentForOrgEORIBeUpToDateView         = mock[AgentForOrgEORIBeUpToDateView]
 
-  private val agentForOrg = AgentForOrg(agentForOrgCheckRegisteredDetailsView)
+  private val agentForOrg = AgentForOrg(
+    agentForOrgCheckRegisteredDetailsView,
+    agentForOrgEORIBeUpToDateView
+  )
 
   "AgentForOrg" - {
     "should return the correct view for CheckRegisteredDetails" in {
@@ -75,6 +78,27 @@ class AgentForOrgSpec extends AnyFreeSpec with Matchers {
 
       actualView mustBe expectedView
     }
+  }
+
+  "should return the correct view for EORIBeUpToDate" in {
+
+    val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+    val request  = mock[DataRequest[AnyContent]]
+    val draftId  = DraftId(1L)
+    val messages = mock[Messages]
+
+    when(
+      agentForOrgEORIBeUpToDateView.apply(
+        draftId
+      )(request, messages)
+    ).thenReturn(expectedView)
+
+    val actualView: HtmlFormat.Appendable = agentForOrg.selectViewForEoriBeUpToDate(
+      draftId
+    )(request, messages)
+
+    actualView mustBe expectedView
   }
 
 }

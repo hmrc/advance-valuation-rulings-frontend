@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import models.DraftId
 import pages.{AccountHomePage, WhoAreYouAgentPage}
+import userrole.UserRoleProvider
 import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateController @Inject() (
@@ -33,6 +34,7 @@ class EORIBeUpToDateController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
+  userRoleProvider: UserRoleProvider,
   view: EORIBeUpToDateView
 ) extends FrontendBaseController
     with I18nSupport {
@@ -44,7 +46,12 @@ class EORIBeUpToDateController @Inject() (
           case None               =>
             Redirect(routes.UnauthorisedController.onPageLoad)
           case Some(authUserType) =>
-            Ok(view(draftId, authUserType, request.userAnswers.get(WhoAreYouAgentPage).get))
+            Ok(
+              userRoleProvider
+                .getUserRole()
+                .selectViewForEoriBeUpToDate(draftId)
+            )
+//            Ok(view(draftId, authUserType, request.userAnswers.get(WhoAreYouAgentPage).get))
         }
     }
 }
