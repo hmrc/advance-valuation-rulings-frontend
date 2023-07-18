@@ -22,5 +22,5 @@ case object AgentForTraderCheckRegisteredDetailsPage extends QuestionPage[Boolea
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "checkRegisteredDetails"
+  override def toString: String = "AgentForTraderCheckRegisteredDetails"
 }

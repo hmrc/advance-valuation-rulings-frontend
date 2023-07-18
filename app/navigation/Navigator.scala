@@ -86,7 +86,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig) {
     case AdaptMethodPage                                  => adaptMethodPage
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
     case WhoAreYouAgentPage                               => whoAreYouRouting
-    case AgentForTraderCheckRegisteredDetailsPage         => ua => UploadLetterController.onPageLoad(ua.draftId)
+    case AgentForTraderCheckRegisteredDetailsPage         =>
+      ua => UploadLetterController.onPageLoad(ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
