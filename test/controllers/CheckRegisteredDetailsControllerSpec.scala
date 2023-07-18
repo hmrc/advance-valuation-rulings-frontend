@@ -16,23 +16,33 @@
 
 package controllers
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, ExecutionContext, Future}
 
+import play.api.data.Form
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 
+import akka.util.Timeout
 import base.SpecBase
+import com.typesafe.play.cachecontrol.Seconds.ZERO.seconds
 import connectors.BackendConnector
+import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import forms.CheckRegisteredDetailsFormProvider
 import models._
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.{any, eq, same}
 import org.mockito.Mockito.when
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CheckRegisteredDetailsPage
 import services.UserAnswersService
+import userrole.{UserRole, UserRoleProvider}
 
 class CheckRegisteredDetailsControllerSpec
     extends SpecBase
@@ -281,5 +291,61 @@ class CheckRegisteredDetailsControllerSpec
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
+
+    "show the view given by the UserRole" in {
+
+      val mockBackendConnector   = mock[BackendConnector]
+      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserRoleProvider   = mock[UserRoleProvider]
+      val mockUserRole           = mock[UserRole]
+
+      val expectedViewBody = "hello"
+      val expectedView     = HtmlFormat.raw(expectedViewBody)
+
+      val traderDetails =
+        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
+
+      when(
+        mockUserRole.selectViewForCheckRegisteredDetails(
+          ArgumentMatchers.eq(form),
+          same(traderDetails),
+          same(NormalMode),
+          ArgumentMatchers.eq(this.draftId)
+        )(any[DataRequest[AnyContent]], any[Messages])
+      ).thenReturn(expectedView)
+
+      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(
+            traderDetails
+          )
+        )
+
+      when(mockUserAnswersService.get(any())(any()))
+        .thenReturn(Future.successful(Some(userAnswers)))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackendConnector),
+          bind[UserAnswersService].toInstance(mockUserAnswersService),
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+        )
+        .build()
+
+      running(application) {
+        val request        = FakeRequest(GET, checkRegisteredDetailsRoute)
+        val result         = route(application, request).value
+        val actualViewBody = contentAsString(result)
+
+        actualViewBody mustBe expectedViewBody
+      }
+
+    }
+
   }
 }
