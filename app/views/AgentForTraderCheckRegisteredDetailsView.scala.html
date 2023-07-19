@@ -71,7 +71,7 @@ link: Link
         @link(
             id = "search-eori-link",
             text = messages("checkRegisteredDetails.search.link"),
-            call = Call("GET", "somelink")
+            call = Call("GET", "thisGoesToTicket162Page")
         )
         @messages("checkRegisteredDetails.search.text")
     </p>
@@ -132,22 +132,22 @@ link: Link
 <br></br>
 
 @govukRadios(
-RadiosViewModel(
-field = form("value"),
-legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden(),
-items = Seq(
-RadioItem(
-id = Some(form("value").id),
-value = Some("true"),
-content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes")
-),
-RadioItem(
-id = Some(s"${form("value").id}-no"),
-value = Some("false"),
-content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
-)
-)
-).withHint(Hint(content = HtmlContent(paraContent)))
+    RadiosViewModel(
+        field = form("value"),
+        legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden(),
+        items = Seq(
+            RadioItem(
+            id = Some(form("value").id),
+            value = Some("true"),
+            content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes")
+            ),
+            RadioItem(
+            id = Some(s"${form("value").id}-no"),
+            value = Some("false"),
+            content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
+            )
+        )
+    ).withHint(Hint(content = HtmlContent(paraContent)))
 )
 
 @searchLink

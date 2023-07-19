@@ -88,6 +88,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig) {
     case WhoAreYouAgentPage                               => whoAreYouRouting
     case AgentForTraderCheckRegisteredDetailsPage         =>
       ua => UploadLetterController.onPageLoad(ua.draftId)
+    case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 

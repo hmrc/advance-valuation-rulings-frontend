@@ -20,6 +20,7 @@ import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
+
 import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}

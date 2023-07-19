@@ -51,7 +51,6 @@ class EORIBeUpToDateController @Inject() (
                 .getUserRole()
                 .selectViewForEoriBeUpToDate(draftId)
             )
-//            Ok(view(draftId, authUserType, request.userAnswers.get(WhoAreYouAgentPage).get))
         }
     }
 }

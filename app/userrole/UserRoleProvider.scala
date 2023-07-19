@@ -19,8 +19,8 @@ package userrole
 import javax.inject.Inject
 
 class UserRoleProvider @Inject() (
-  employeeRole: Employee,
-  agentForRole: AgentForOrg,
+  employee: Employee,
+  agentForOrg: AgentForOrg,
   agentForTrader: AgentForTrader
 ) {
 

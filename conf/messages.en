@@ -738,6 +738,9 @@ whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your rol
 whatIsYourRoleAsImporter.error.required = Choose the option that describes your role
 whatIsYourRoleAsImporter.change.hidden = your description of your role as an importer
 
+whatIsYourRoleAsImporter.agentOnBehalfOfTrader = Agent acting on behalf of a trader
+whatIsYourRoleAsImporter.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
+
 
 whoAreYouAgent.title = How would you describe your role as an importer?
 whoAreYouAgent.caption = About the applicant

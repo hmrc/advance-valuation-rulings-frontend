@@ -17,10 +17,10 @@
 package controllers
 
 import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.Future
 
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
-import scala.concurrent.Future
 import play.api.inject.bind
 import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest

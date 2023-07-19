@@ -32,7 +32,7 @@ import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.{AccountHomePage, CheckRegisteredDetailsPage, Page}
+import pages.{AccountHomePage, CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
 import services.UserAnswersService
 import userrole.UserRoleProvider
 import views.html.CheckRegisteredDetailsView
@@ -150,6 +150,6 @@ class CheckRegisteredDetailsController @Inject() (
     if (value) {
       userRoleProvider.getUserRole().selectGetRegisteredDetailsPage()
     } else {
-      null // TODO: go back to previous page
+      EORIBeUpToDatePage
     }
 }
