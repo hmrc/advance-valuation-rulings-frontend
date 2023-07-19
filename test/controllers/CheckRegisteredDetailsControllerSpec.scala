@@ -198,7 +198,7 @@ class CheckRegisteredDetailsControllerSpec
         .thenReturn(Future.successful(Some(userAnswers)))
       when(mockUserAnswersService.set(any[UserAnswers])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Done))
-      when(mockUserRoleProvider.getUserRole())
+      when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
         .thenReturn(mockUserRole)
       when(mockUserRole.selectGetRegisteredDetailsPage())
         .thenReturn(AgentForTraderCheckRegisteredDetailsPage)

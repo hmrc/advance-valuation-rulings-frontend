@@ -123,13 +123,17 @@ class CheckRegisteredDetailsController @Inject() (
               for {
                 updatedAnswers <- CheckRegisteredDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(getNextPage(value), mode, updatedAnswers))
+              } yield Redirect(navigator.nextPage(
+                getNextPage(value, updatedAnswers),
+                mode,
+                updatedAnswers
+              ))
           )
     }
 
-  private def getNextPage(value: Boolean): Page =
+  private def getNextPage(value: Boolean, userAnswers: UserAnswers): Page =
     if (value) {
-      userRoleProvider.getUserRole().selectGetRegisteredDetailsPage()
+      userRoleProvider.getUserRole(userAnswers).selectGetRegisteredDetailsPage()
     } else {
       null // TODO: go back to previous page
     }
