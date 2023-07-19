@@ -58,7 +58,7 @@ class VerifyTraderEoriController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        request.userAnswers.get[TraderDetailsWithCountryCode](VerifyTraderDetailsPage) match {
+        VerifyTraderDetailsPage.get() match {
           case None          => traderDetailsNotFoundInSession(draftId)
           case Some(details) =>
             if (details.consentToDisclosureOfPersonalData)
@@ -84,20 +84,16 @@ class VerifyTraderEoriController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              request.userAnswers.get[TraderDetailsWithCountryCode](VerifyTraderDetailsPage) match {
-                case None          => Future.successful(traderDetailsNotFoundInSession(draftId))
-                case Some(details) =>
-                  if (details.consentToDisclosureOfPersonalData)
-                    Future
-                      .successful(BadRequest(publicView(formWithErrors, mode, draftId, details)))
-                  else
-                    Future
-                      .successful(BadRequest(privateView(formWithErrors, mode, draftId, details)))
+              VerifyTraderDetailsPage.get() match {
+                case None                                                       => Future.successful(traderDetailsNotFoundInSession(draftId))
+                case Some(details) if details.consentToDisclosureOfPersonalData =>
+                  Future.successful(BadRequest(publicView(formWithErrors, mode, draftId, details)))
+                case Some(details)                                              =>
+                  Future.successful(BadRequest(privateView(formWithErrors, mode, draftId, details)))
               },
             value =>
               for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(ProvideTraderEoriPage, value))
+                updatedAnswers <- ProvideTraderEoriPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(???)
           )
