@@ -236,8 +236,51 @@ class CheckRegisteredDetailsControllerSpec
       }
     }
 
-    "must redirect to the previous page when data is submitted with No radio button" in {
-      fail // TODO
+    "must redirect to the kickout page when data is submitted with No radio button" in {
+      val mockBackendConnector = mock[BackendConnector]
+      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserRoleProvider = mock[UserRoleProvider]
+      val mockUserRole = mock[UserRole]
+
+      val traderDetails =
+        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
+
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(
+            traderDetails
+          )
+        )
+      when(mockUserAnswersService.get(any())(any()))
+        .thenReturn(Future.successful(Some(userAnswers)))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+      when(mockUserRole.selectGetRegisteredDetailsPage())
+        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, checkRegisteredDetailsRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.EORIBeUpToDateController
+          .onPageLoad(draftId)
+          .url
+      }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
