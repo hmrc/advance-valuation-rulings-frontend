@@ -17,11 +17,9 @@
 package controllers
 
 import scala.concurrent.Future
-
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
 import base.SpecBase
 import connectors.BackendConnector
 import forms.CheckRegisteredDetailsFormProvider
@@ -31,8 +29,9 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
-import pages.CheckRegisteredDetailsPage
+import pages.{AgentForTraderCheckRegisteredDetailsPage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
+import userrole.{UserRole, UserRoleProvider}
 
 class CheckRegisteredDetailsControllerSpec
     extends SpecBase
@@ -42,8 +41,8 @@ class CheckRegisteredDetailsControllerSpec
   lazy val checkRegisteredDetailsRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
-  val formProvider    = new CheckRegisteredDetailsFormProvider()
-  val form            = formProvider()
+  val formProvider = new CheckRegisteredDetailsFormProvider()
+  val form         = formProvider()
 
   "CheckRegisteredDetails Controller" - {
 
@@ -179,15 +178,35 @@ class CheckRegisteredDetailsControllerSpec
     }
 
     "must redirect to the next page when data is submitted with Yes radio button" in {
+      val mockBackendConnector   = mock[BackendConnector]
       val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserRoleProvider   = mock[UserRoleProvider]
+      val mockUserRole           = mock[UserRole]
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      val traderDetails =
+        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
+
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(
+            traderDetails
+          )
+        )
+      when(mockUserAnswersService.get(any())(any()))
+        .thenReturn(Future.successful(Some(userAnswers)))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+      when(mockUserRole.selectGetRegisteredDetailsPage())
+        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
