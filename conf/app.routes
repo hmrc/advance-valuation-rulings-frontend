@@ -244,3 +244,5 @@ GET        /:draftId/supporting-documents/:index/change-remove                  
 POST       /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, index: Index)
 
 GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
+
+GET        /:draftId/upload-letter                      controllers.UploadLetterController.onPageLoad(draftId: DraftId)

@@ -28,6 +28,7 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import views.html.AgentForOrgEORIBeUpToDateView
+  import pages.Page
   case class AgentForOrg @Inject() (
     view: AgentForOrgCheckRegisteredDetailsView,
     eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView
@@ -49,5 +50,7 @@ package userrole {
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       eoriBeUpToDateView(draftId)
+
+    override def selectGetRegisteredDetailsPage(): Page = null
   }
 }

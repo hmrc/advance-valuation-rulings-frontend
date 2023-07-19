@@ -23,6 +23,7 @@ import play.twirl.api.HtmlFormat
 
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
+import pages.Page
 
 trait UserRole {
   def selectViewForEoriBeUpToDate(
@@ -36,4 +37,5 @@ trait UserRole {
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
 
+  def selectGetRegisteredDetailsPage(): Page
 }

@@ -21,6 +21,7 @@ import play.api.mvc.AnyContent
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
+import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
@@ -47,6 +48,8 @@ package userrole {
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       eoriBeUpToDateView(draftId)
+
+    override def selectGetRegisteredDetailsPage(): Page = AgentForTraderCheckRegisteredDetailsPage
   }
 
 }

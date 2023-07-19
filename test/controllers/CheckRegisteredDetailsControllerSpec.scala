@@ -20,6 +20,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
 import play.api.data.Form
 import play.api.i18n.{Messages, MessagesApi}
+import scala.concurrent.Future
 import play.api.inject.bind
 import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
@@ -40,7 +41,7 @@ import org.mockito.ArgumentMatchers.{any, eq, same}
 import org.mockito.Mockito.when
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
-import pages.CheckRegisteredDetailsPage
+import pages.{AgentForTraderCheckRegisteredDetailsPage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
 import userrole.{UserRole, UserRoleProvider}
 
@@ -186,6 +187,57 @@ class CheckRegisteredDetailsControllerSpec
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
+    }
+
+    "must redirect to the next page when data is submitted with Yes radio button" in {
+      val mockBackendConnector   = mock[BackendConnector]
+      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserRoleProvider   = mock[UserRoleProvider]
+      val mockUserRole           = mock[UserRole]
+
+      val traderDetails =
+        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
+
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(
+            traderDetails
+          )
+        )
+      when(mockUserAnswersService.get(any())(any()))
+        .thenReturn(Future.successful(Some(userAnswers)))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+      when(mockUserRole.selectGetRegisteredDetailsPage())
+        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, checkRegisteredDetailsRoute)
+            .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.UploadLetterController
+          .onPageLoad(draftId)
+          .url
+      }
+    }
+
+    "must redirect to the previous page when data is submitted with No radio button" in {
+      fail // TODO
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {

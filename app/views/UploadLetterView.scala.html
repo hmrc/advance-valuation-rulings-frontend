@@ -15,13 +15,14 @@
  *@
 
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    govukButton: GovukButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("unauthorised.title"))) {
+@layout(pageTitle = titleNoForm(messages("uploadLetter.todo"))) {
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
-    <p class="govuk-body">@messages("")</p>
+    <h1 class="govuk-heading-xl">@messages("uploadLetter.todo")</h1>
+    <p class="govuk-body">@messages("uploadLetter.todo")</p>
 }

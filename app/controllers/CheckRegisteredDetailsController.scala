@@ -32,19 +32,20 @@ import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.{AccountHomePage, CheckRegisteredDetailsPage}
+import pages.{AccountHomePage, CheckRegisteredDetailsPage, Page}
 import services.UserAnswersService
 import userrole.UserRoleProvider
+import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
-  userRoleProvider: UserRoleProvider,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
+  userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
   backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
@@ -141,9 +142,14 @@ class CheckRegisteredDetailsController @Inject() (
               for {
                 updatedAnswers <- CheckRegisteredDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
-              )
+              } yield Redirect(navigator.nextPage(getNextPage(value), mode, updatedAnswers))
           )
+    }
+
+  private def getNextPage(value: Boolean): Page =
+    if (value) {
+      userRoleProvider.getUserRole().selectGetRegisteredDetailsPage()
+    } else {
+      null // TODO: go back to previous page
     }
 }
