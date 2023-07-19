@@ -16,10 +16,13 @@
 
 package controllers
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
+
 import base.SpecBase
 import connectors.BackendConnector
 import forms.CheckRegisteredDetailsFormProvider
@@ -187,17 +190,16 @@ class CheckRegisteredDetailsControllerSpec
         traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
 
       when(
-        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future
-        .successful(
-          Right(
-            traderDetails
-          )
-        )
-      when(mockUserAnswersService.get(any())(any()))
+        mockBackendConnector.getTraderDetails
+        (any[AcknowledgementReference], any[EoriNumber])
+        (any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(Future.successful(Right(traderDetails)))
+      when(mockUserAnswersService.get(any[DraftId])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Some(userAnswers)))
-      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
-      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+      when(mockUserAnswersService.set(any[UserAnswers])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Done))
+      when(mockUserRoleProvider.getUserRole())
+        .thenReturn(mockUserRole)
       when(mockUserRole.selectGetRegisteredDetailsPage())
         .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
 
