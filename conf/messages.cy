@@ -842,3 +842,9 @@ draftHasBeenSaved.para.1 = You have until {0} to submit your application.
 draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
 draftHasBeenSaved.para.link.text = your applications and rulings
+
+yourApplicationHasBeenCancelled.title = You cannot view this application
+yourApplicationHasBeenCancelled.heading = You cannot view this application
+yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your application for an Advance Valuation Ruling. The data you submitted before has been deleted.
+yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
+yourApplicationHasBeenCancelled.button = Go to your applications and rulings

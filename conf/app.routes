@@ -12,6 +12,7 @@ GET        /:draftId/refresh-session                             controllers.Kee
 
 GET        /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
+
 GET        /:draftId/check-your-answers                          controllers.CheckYourAnswersController.onPageLoad(draftId: DraftId)
 POST       /:draftId/check-your-answers                          controllers.CheckYourAnswersController.onSubmit(draftId: DraftId)
 
@@ -244,3 +245,5 @@ GET        /:draftId/supporting-documents/:index/change-remove                  
 POST       /:draftId/supporting-documents/:index/change-remove                  controllers.RemoveSupportingDocumentController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, index: Index)
 
 GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
+
+GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()
