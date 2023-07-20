@@ -168,16 +168,23 @@ class CheckRegisteredDetailsControllerSpec
     "must redirect to the next page when valid data is submitted" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserRoleProvider   = mock[UserRoleProvider]
+      val mockUserRole = mock[UserRole]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+      when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
+        .thenReturn(mockUserRole)
+      when(mockUserRole.selectGetRegisteredDetailsPage())
+        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          ).build()
 
       running(application) {
         val request =
@@ -209,6 +216,7 @@ class CheckRegisteredDetailsControllerSpec
         .thenReturn(Future.successful(Some(userAnswers)))
       when(mockUserAnswersService.set(any[UserAnswers])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Done))
+
       when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
         .thenReturn(mockUserRole)
       when(mockUserRole.selectGetRegisteredDetailsPage())
@@ -257,7 +265,8 @@ class CheckRegisteredDetailsControllerSpec
       when(mockUserAnswersService.get(any())(any()))
         .thenReturn(Future.successful(Some(userAnswers)))
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
-      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+
+      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
       when(mockUserRole.selectGetRegisteredDetailsPage())
         .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
 
@@ -288,17 +297,41 @@ class CheckRegisteredDetailsControllerSpec
 
       val mockUserAnswersService = mock[UserAnswersService]
       val mockBackendConnector   = mock[BackendConnector]
+      val mockUserRoleProvider = mock[UserRoleProvider]
+      val mockUserRole = mock[UserRole]
+
+      val expectedViewBody = "hello"
+      val expectedView = HtmlFormat.raw(expectedViewBody)
+
+      val traderDetails =
+        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
+
+      when(
+        mockUserRole.selectViewForCheckRegisteredDetails(
+          any(),
+          any(),
+          any(),
+          ArgumentMatchers.eq(this.draftId)
+        )(any[DataRequest[AnyContent]], any[Messages])
+      ).thenReturn(expectedView)
 
       when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
         .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
       when(mockUserAnswersService.get(any())(any()))
         .thenReturn(Future.successful(Some(userAnswers)))
 
+      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
+
+
+      when(mockUserRole.selectGetRegisteredDetailsPage())
+        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
+
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
@@ -410,7 +443,7 @@ class CheckRegisteredDetailsControllerSpec
         )(any[DataRequest[AnyContent]], any[Messages])
       ).thenReturn(expectedView)
 
-      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
 
       when(
         mockBackendConnector.getTraderDetails(any(), any())(any(), any())

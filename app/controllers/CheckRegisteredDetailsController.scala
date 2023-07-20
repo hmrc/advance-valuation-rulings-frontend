@@ -83,7 +83,7 @@ class CheckRegisteredDetailsController @Inject() (
                   case Some(authUserType) =>
                     Ok(
                       userRoleProvider
-                        .getUserRole()
+                        .getUserRole(request.userAnswers)
                         .selectViewForCheckRegisteredDetails(
                           formProvider().fill(value),
                           details,
@@ -103,7 +103,7 @@ class CheckRegisteredDetailsController @Inject() (
                   case Some(authUserType) =>
                     Ok(
                       userRoleProvider
-                        .getUserRole()
+                        .getUserRole(request.userAnswers)
                         .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
                     )
                 }
@@ -128,7 +128,7 @@ class CheckRegisteredDetailsController @Inject() (
                     case Some(authUserType) =>
                       BadRequest(
                         userRoleProvider
-                          .getUserRole()
+                          .getUserRole(request.userAnswers)
                           .selectViewForCheckRegisteredDetails(
                             formProvider(),
                             details,

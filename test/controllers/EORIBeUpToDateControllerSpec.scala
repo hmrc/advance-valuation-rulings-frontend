@@ -17,17 +17,15 @@
 package controllers
 
 import scala.concurrent.Future
-
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-
 import base.SpecBase
 import connectors.BackendConnector
-import models.{AuthUserType, Done}
+import models.{AuthUserType, Done, UserAnswers}
 import models.requests.ApplicationRequestSpec.traderDetailsWithCountryCode
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
@@ -35,7 +33,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, same}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.CheckRegisteredDetailsPage
+import pages.{AgentForTraderCheckRegisteredDetailsPage, CheckRegisteredDetailsPage}
 import services.UserAnswersService
 import userrole.{UserRole, UserRoleProvider}
 import views.html.{AgentForTraderEORIBeUpToDateView, EORIBeUpToDateView}
@@ -51,9 +49,28 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
   "EORIBeUpToDate Controller" - {
 
     "must return OK for a GET" in {
-      // removed some parts because the test I wrote covers it.
+
+      val mockUserRoleProvider = mock[UserRoleProvider]
+      val mockUserRole = mock[UserRole]
+
+
+      when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
+        .thenReturn(mockUserRole)
+
+      val expectedViewBody = "hello"
+      val expectedView = HtmlFormat.raw(expectedViewBody)
+
+      when(
+        mockUserRole.selectViewForEoriBeUpToDate(
+          ArgumentMatchers.eq(this.draftId)
+        )(any[DataRequest[AnyContent]], any[Messages])
+      ).thenReturn(expectedView)
+
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          ).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.EORIBeUpToDateController.onPageLoad(draftId).url)
@@ -65,6 +82,13 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must redirect to the next page when yes is submitted" in {
+
+      val mockUserRoleProvider = mock[UserRoleProvider]
+      val mockUserRole = mock[UserRole]
+
+
+      when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
+        .thenReturn(mockUserRole)
 
       val mockUserAnswersService = mock[UserAnswersService]
 
@@ -82,7 +106,8 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
@@ -145,7 +170,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         )(any[DataRequest[AnyContent]], any[Messages])
       ).thenReturn(expectedView)
 
-      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
 
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(

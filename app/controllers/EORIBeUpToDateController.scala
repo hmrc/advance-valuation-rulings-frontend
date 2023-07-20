@@ -48,7 +48,7 @@ class EORIBeUpToDateController @Inject() (
           case Some(authUserType) =>
             Ok(
               userRoleProvider
-                .getUserRole()
+                .getUserRole(request.userAnswers)
                 .selectViewForEoriBeUpToDate(draftId)
             )
         }
