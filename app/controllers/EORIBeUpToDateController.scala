@@ -43,9 +43,9 @@ class EORIBeUpToDateController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         AccountHomePage.get() match {
-          case None               =>
+          case None =>
             Redirect(routes.UnauthorisedController.onPageLoad)
-          case Some(authUserType) =>
+          case _    =>
             Ok(
               userRoleProvider
                 .getUserRole(request.userAnswers)
