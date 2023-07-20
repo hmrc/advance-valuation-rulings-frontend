@@ -30,7 +30,6 @@ import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
 import handlers.ErrorHandler
 import models.{DraftId, Mode}
-import models.requests.DataRequest
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
