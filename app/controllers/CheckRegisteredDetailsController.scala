@@ -130,7 +130,7 @@ class CheckRegisteredDetailsController @Inject() (
                         userRoleProvider
                           .getUserRole(request.userAnswers)
                           .selectViewForCheckRegisteredDetails(
-                            formProvider(),
+                            formWithErrors,
                             details,
                             mode,
                             draftId
