@@ -23,7 +23,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
@@ -31,7 +31,6 @@ import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import forms.CheckRegisteredDetailsFormProvider
 import models._
-import models.requests.DataRequest
 import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage}
 import services.UserAnswersService

@@ -22,7 +22,6 @@ import play.twirl.api.HtmlFormat
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import views.html.EmployeeCheckRegisteredDetailsView
 
 package userrole {
 

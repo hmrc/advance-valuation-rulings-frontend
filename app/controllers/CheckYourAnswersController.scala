@@ -28,7 +28,7 @@ import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
-import models.{DraftId, _}
+import models.DraftId
 import models.requests._
 import pages.Page
 import services.SubmissionService
