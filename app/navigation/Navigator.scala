@@ -28,8 +28,9 @@ import models.ValuationMethod._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
+import userrole.{AgentForTrader, UserRoleProvider}
 
-class Navigator @Inject() (appConfig: FrontendAppConfig) {
+class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserRoleProvider) {
 
   private def checkYourAnswers(draftId: DraftId): Call =
     CheckYourAnswersController.onPageLoad(draftId)
@@ -476,12 +477,11 @@ class Navigator @Inject() (appConfig: FrontendAppConfig) {
       case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
     }
-  private def contactsNextPage(userAnswers: UserAnswers): Call             = {
-    val isAgent =
-      false // fixme fetch from userAnswers once Martin G has added the field (ARSSTB-160)
-    if (isAgent) ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
-    else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-  }
+  private def contactsNextPage(userAnswers: UserAnswers): Call             =
+    userRoleProvider.getUserRole(userAnswers) match {
+      case AgentForTrader(_) => ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
+      case _                 => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+    }
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   ): Call =
