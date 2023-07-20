@@ -28,6 +28,8 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 
 import akka.util.Timeout
+import uk.gov.hmrc.http.HeaderCarrier
+
 import base.SpecBase
 import com.typesafe.play.cachecontrol.Seconds.ZERO.seconds
 import connectors.BackendConnector
@@ -199,17 +201,16 @@ class CheckRegisteredDetailsControllerSpec
         traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
 
       when(
-        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future
-        .successful(
-          Right(
-            traderDetails
-          )
-        )
-      when(mockUserAnswersService.get(any())(any()))
+        mockBackendConnector.getTraderDetails
+        (any[AcknowledgementReference], any[EoriNumber])
+        (any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(Future.successful(Right(traderDetails)))
+      when(mockUserAnswersService.get(any[DraftId])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Some(userAnswers)))
-      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
-      when(mockUserRoleProvider.getUserRole()).thenReturn(mockUserRole)
+      when(mockUserAnswersService.set(any[UserAnswers])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Done))
+      when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
+        .thenReturn(mockUserRole)
       when(mockUserRole.selectGetRegisteredDetailsPage())
         .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
 

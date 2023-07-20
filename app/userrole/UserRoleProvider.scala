@@ -16,6 +16,8 @@
 
 package userrole
 
+import models.UserAnswers
+
 import javax.inject.Inject
 
 class UserRoleProvider @Inject() (
@@ -24,7 +26,7 @@ class UserRoleProvider @Inject() (
   agentForTrader: AgentForTrader
 ) {
 
-  def getUserRole(): UserRole = agentForTrader
+  def getUserRole(userAnswers: UserAnswers): UserRole = agentForTrader
 
   //    def apply(userAnswers: UserAnswers): UserRole =
   //      userAnswers.get(AccountHomePage) match {
