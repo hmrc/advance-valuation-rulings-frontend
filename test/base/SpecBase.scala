@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{CDSEstablishmentAddress, ContactInformation, CounterId, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -38,7 +38,7 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.AccountHomePage
+import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import repositories.CounterRepository
 import services.UserAnswersService
 

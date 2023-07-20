@@ -28,16 +28,20 @@ import controllers.routes
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import org.mockito.MockitoSugar.when
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.{mock, when}
 import pages._
 import queries._
+import userrole.{AgentForOrg, AgentForTrader, Employee, UserRoleProvider}
 
 class NavigatorSpec extends SpecBase {
 
+  val employeeRole                  = mock[Employee]
+  val agentForOrg                   = mock[AgentForOrg]
+  val agentForTrader                = mock[AgentForTrader]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
-  val navigator                     = new Navigator(appConfig)
+  val userRoleProvider              = new UserRoleProvider(employeeRole, agentForOrg, agentForTrader)
+  val navigator                     = new Navigator(appConfig, userRoleProvider)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
@@ -115,12 +119,12 @@ class NavigatorSpec extends SpecBase {
           .onPageLoad(NormalMode, draftId)
       }
 
-      "should navigate to WhoAreYouAgent page for an Agent" in {
+      "should navigate to WhatIsYourRole page for an Agent" in {
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
           userAnswersAsIndividualTrader.setFuture(AccountHomePage, Agent).futureValue
-        ) mustBe routes.WhoAreYouAgentController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
@@ -1106,13 +1110,21 @@ class NavigatorSpec extends SpecBase {
       ) mustBe routes.AccountHomeController.onPageLoad()
     }
 
-    "must go from ContactPage to CheckRegisteredDetails" in {
-
+    "must go from ContactPage to CheckRegisteredDetails when non-agent" in {
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
         userAnswersAsIndividualTrader
       ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
     }
+
+    "must go from ContactPage to ProviderTraderEoriController when agent" ignore {
+      navigator.nextPage(
+        ContactPagePage,
+        NormalMode,
+        userAnswersAsIndividualTrader
+      ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+    }
+
   }
 }
