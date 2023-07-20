@@ -44,8 +44,8 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
   private lazy val eoriBeUpToDateRoute =
     routes.EORIBeUpToDateController.onPageLoad(draftId).url
 
-  private val mockUserRoleProvider = mock[UserRoleProvider]
-  private val mockUserRole = mock[UserRole]
+  private val mockUserRoleProvider   = mock[UserRoleProvider]
+  private val mockUserRole           = mock[UserRole]
   private val mockUserAnswersService = mock[UserAnswersService]
 
   private def setUpUserAnswersServiceMock(answers: UserAnswers) = {
@@ -55,10 +55,9 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
     )
   }
 
-  private def setUpUserRoleProviderMock() = {
+  private def setUpUserRoleProviderMock() =
     when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
       .thenReturn(mockUserRole)
-  }
 
   private def setUpViewMockForUserRole(expectedViewBody: String = "") = {
     val expectedView = HtmlFormat.raw(expectedViewBody)

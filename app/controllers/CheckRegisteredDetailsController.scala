@@ -35,7 +35,6 @@ import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
 import services.UserAnswersService
 import userrole.UserRoleProvider
-import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -78,9 +77,9 @@ class CheckRegisteredDetailsController @Inject() (
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
                 AccountHomePage.get() match {
-                  case None               =>
+                  case None =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
-                  case Some(authUserType) =>
+                  case _    =>
                     Ok(
                       userRoleProvider
                         .getUserRole(request.userAnswers)
@@ -98,9 +97,9 @@ class CheckRegisteredDetailsController @Inject() (
             getTraderDetails(
               (details: TraderDetailsWithCountryCode) =>
                 AccountHomePage.get() match {
-                  case None               =>
+                  case None =>
                     Redirect(routes.UnauthorisedController.onPageLoad)
-                  case Some(authUserType) =>
+                  case _    =>
                     Ok(
                       userRoleProvider
                         .getUserRole(request.userAnswers)
@@ -123,9 +122,9 @@ class CheckRegisteredDetailsController @Inject() (
               getTraderDetails(
                 (details: TraderDetailsWithCountryCode) =>
                   AccountHomePage.get() match {
-                    case None               =>
+                    case None =>
                       Redirect(routes.UnauthorisedController.onPageLoad)
-                    case Some(authUserType) =>
+                    case _    =>
                       BadRequest(
                         userRoleProvider
                           .getUserRole(request.userAnswers)
@@ -142,11 +141,13 @@ class CheckRegisteredDetailsController @Inject() (
               for {
                 updatedAnswers <- CheckRegisteredDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(
-                getNextPage(value, updatedAnswers),
-                mode,
-                updatedAnswers
-              ))
+              } yield Redirect(
+                navigator.nextPage(
+                  getNextPage(value, updatedAnswers),
+                  mode,
+                  updatedAnswers
+                )
+              )
           )
     }
 

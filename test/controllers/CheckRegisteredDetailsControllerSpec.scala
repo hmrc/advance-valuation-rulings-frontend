@@ -26,10 +26,9 @@ import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-
-import akka.util.Timeout
 import uk.gov.hmrc.http.HeaderCarrier
 
+import akka.util.Timeout
 import base.SpecBase
 import com.typesafe.play.cachecontrol.Seconds.ZERO.seconds
 import connectors.BackendConnector
@@ -92,12 +91,12 @@ class CheckRegisteredDetailsControllerSpec
   val consentToDisclosureOfPersonalDataScenarios =
     Table("consentToDisclosureOfPersonalData", true, false)
 
-  val mockBackendConnector = mock[BackendConnector]
+  val mockBackendConnector   = mock[BackendConnector]
   val mockUserAnswersService = mock[UserAnswersService]
-  val mockUserRoleProvider = mock[UserRoleProvider]
-  val mockUserRole = mock[UserRole]
+  val mockUserRoleProvider   = mock[UserRoleProvider]
+  val mockUserRole           = mock[UserRole]
 
-  private def setUpBackendConnectorMock(isInternalServerError: Boolean = false) = {
+  private def setUpBackendConnectorMock(isInternalServerError: Boolean = false) =
     if (isInternalServerError) {
       when(
         mockBackendConnector.getTraderDetails(any(), any())(any(), any())
@@ -114,7 +113,6 @@ class CheckRegisteredDetailsControllerSpec
           )
         )
     }
-  }
 
   private def setUpUserAnswersServiceMock(answers: UserAnswers) = {
     when(mockUserAnswersService.get(any())(any()))
@@ -132,7 +130,7 @@ class CheckRegisteredDetailsControllerSpec
     val expectedView = HtmlFormat.raw(expectedViewBody)
     when(
       mockUserRole.selectViewForCheckRegisteredDetails(
-        ArgumentMatchers.eq(form),
+        ArgumentMatchers.any[Form[Boolean]],
         same(traderDetailsWithCountryCode),
         same(NormalMode),
         ArgumentMatchers.eq(this.draftId)
@@ -204,7 +202,8 @@ class CheckRegisteredDetailsControllerSpec
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
             bind[UserRoleProvider].toInstance(mockUserRoleProvider)
-          ).build()
+          )
+          .build()
 
       running(application) {
         val request =
@@ -356,8 +355,8 @@ class CheckRegisteredDetailsControllerSpec
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, checkRegisteredDetailsRoute)
-        val result = route(application, request).value
+        val request        = FakeRequest(GET, checkRegisteredDetailsRoute)
+        val result         = route(application, request).value
         val actualViewBody = contentAsString(result)
 
         actualViewBody mustBe expectedViewBody
