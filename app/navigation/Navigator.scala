@@ -477,11 +477,11 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
     }
-  private def contactsNextPage(userAnswers: UserAnswers): Call             =
-    userRoleProvider.getUserRole(userAnswers) match {
-      case AgentForTrader(_) => ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
-      case _                 => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-    }
+
+  // TODO: When UserRole supports individuals and agents, rework to include Agent route to ProvideTraderEoriController
+  private def contactsNextPage(userAnswers: UserAnswers): Call =
+    CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   ): Call =
