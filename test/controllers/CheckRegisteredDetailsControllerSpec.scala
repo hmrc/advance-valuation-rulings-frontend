@@ -58,48 +58,97 @@ class CheckRegisteredDetailsControllerSpec
   val formProvider = new CheckRegisteredDetailsFormProvider()
   val form         = formProvider()
 
+  val contactInformation = ContactInformation(
+    personOfContact = Some("Test Person"),
+    sepCorrAddrIndicator = Some(false),
+    streetAndNumber = Some("Test Street 1"),
+    city = Some("Test City"),
+    postalCode = Some("Test Postal Code"),
+    countryCode = Some("GB"),
+    telephoneNumber = Some("Test Telephone Number"),
+    faxNumber = Some("Test Fax Number"),
+    emailAddress = Some("Test Email Address"),
+    emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
+  )
+
+  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = "GB123456789012345",
+    consentToDisclosureOfPersonalData = true,
+    CDSFullName = "Test Name",
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = "Test Street 1",
+      city = "Test City",
+      countryCode = "GB",
+      postalCode = Some("Test Postal Code")
+    ),
+    contactInformation = Some(contactInformation)
+  )
+
+  val userAnswers = userAnswersAsIndividualTrader
+    .set(CheckRegisteredDetailsPage, true)
+    .success
+    .value
+
+  val consentToDisclosureOfPersonalDataScenarios =
+    Table("consentToDisclosureOfPersonalData", true, false)
+
+  val mockBackendConnector = mock[BackendConnector]
+  val mockUserAnswersService = mock[UserAnswersService]
+  val mockUserRoleProvider = mock[UserRoleProvider]
+  val mockUserRole = mock[UserRole]
+
+  private def setUpBackendConnectorMock(isInternalServerError: Boolean = false) = {
+    if (isInternalServerError) {
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future.successful(
+        Left(BackendError(code = 500, message = "some backed error"))
+      )
+    } else {
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(
+            traderDetailsWithCountryCode
+          )
+        )
+    }
+  }
+
+  private def setUpUserAnswersServiceMock(answers: UserAnswers) = {
+    when(mockUserAnswersService.get(any())(any()))
+      .thenReturn(Future.successful(Some(answers)))
+    when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+  }
+
+  private def setUpUserRoleProviderMock() = {
+    when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
+    when(mockUserRole.selectGetRegisteredDetailsPage())
+      .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
+  }
+
+  private def setUpViewMockForUserRole(expectedViewBody: String = "") = {
+    val expectedView = HtmlFormat.raw(expectedViewBody)
+    when(
+      mockUserRole.selectViewForCheckRegisteredDetails(
+        ArgumentMatchers.eq(form),
+        same(traderDetailsWithCountryCode),
+        same(NormalMode),
+        ArgumentMatchers.eq(this.draftId)
+      )(any[DataRequest[AnyContent]], any[Messages])
+    ).thenReturn(expectedView)
+  }
+
   "CheckRegisteredDetails Controller" - {
 
-    val contactInformation = ContactInformation(
-      personOfContact = Some("Test Person"),
-      sepCorrAddrIndicator = Some(false),
-      streetAndNumber = Some("Test Street 1"),
-      city = Some("Test City"),
-      postalCode = Some("Test Postal Code"),
-      countryCode = Some("GB"),
-      telephoneNumber = Some("Test Telephone Number"),
-      faxNumber = Some("Test Fax Number"),
-      emailAddress = Some("Test Email Address"),
-      emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
-    )
-
-    val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
-      EORINo = "GB123456789012345",
-      consentToDisclosureOfPersonalData = true,
-      CDSFullName = "Test Name",
-      CDSEstablishmentAddress = CDSEstablishmentAddress(
-        streetAndNumber = "Test Street 1",
-        city = "Test City",
-        countryCode = "GB",
-        postalCode = Some("Test Postal Code")
-      ),
-      contactInformation = Some(contactInformation)
-    )
-
-    val userAnswers = userAnswersAsIndividualTrader
-      .set(CheckRegisteredDetailsPage, true)
-      .success
-      .value
-
-    val consentToDisclosureOfPersonalDataScenarios =
-      Table("consentToDisclosureOfPersonalData", true, false)
+    setUpUserAnswersServiceMock(userAnswers)
+    setUpBackendConnectorMock()
+    setUpUserRoleProviderMock()
 
     forAll(consentToDisclosureOfPersonalDataScenarios) {
       consentValue =>
         s"must return OK and the correct view for a GET when consentToDisclosureOfPersonalData is $consentValue" in {
-
-          val mockBackendConnector   = mock[BackendConnector]
-          val mockUserAnswersService = mock[UserAnswersService]
 
           val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
             .overrides(
@@ -107,19 +156,6 @@ class CheckRegisteredDetailsControllerSpec
               bind[UserAnswersService].toInstance(mockUserAnswersService)
             )
             .build()
-
-          when(
-            mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-          ) thenReturn Future
-            .successful(
-              Right(
-                traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = consentValue)
-              )
-            )
-
-          when(mockUserAnswersService.get(any())(any()))
-            .thenReturn(Future.successful(Some(userAnswers)))
-          when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
           running(application) {
             val request = FakeRequest(GET, checkRegisteredDetailsRoute)
@@ -132,9 +168,7 @@ class CheckRegisteredDetailsControllerSpec
 
         s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
 
-          val mockUserAnswersService = mock[UserAnswersService]
-          val mockBackendConnector   = mock[BackendConnector]
-          val previousUserAnswers    = userAnswersAsIndividualTrader
+          val previousUserAnswers = userAnswersAsIndividualTrader
             .set(
               CheckRegisteredDetailsPage,
               consentValue
@@ -142,10 +176,7 @@ class CheckRegisteredDetailsControllerSpec
             .success
             .value
 
-          when(mockUserAnswersService.get(any())(any()))
-            .thenReturn(Future.successful(Some(previousUserAnswers)))
-          when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
-            .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
+          setUpUserAnswersServiceMock(previousUserAnswers)
 
           val application =
             applicationBuilder(userAnswers = Some(previousUserAnswers))
@@ -166,17 +197,6 @@ class CheckRegisteredDetailsControllerSpec
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
-      val mockUserAnswersService = mock[UserAnswersService]
-      val mockUserRoleProvider   = mock[UserRoleProvider]
-      val mockUserRole = mock[UserRole]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
-        .thenReturn(mockUserRole)
-      when(mockUserRole.selectGetRegisteredDetailsPage())
-        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -199,29 +219,6 @@ class CheckRegisteredDetailsControllerSpec
     }
 
     "must redirect to the next page when data is submitted with Yes radio button" in {
-      val mockBackendConnector   = mock[BackendConnector]
-      val mockUserAnswersService = mock[UserAnswersService]
-      val mockUserRoleProvider   = mock[UserRoleProvider]
-      val mockUserRole           = mock[UserRole]
-
-      val traderDetails =
-        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
-
-      when(
-        mockBackendConnector.getTraderDetails
-        (any[AcknowledgementReference], any[EoriNumber])
-        (any[HeaderCarrier], any[ExecutionContext])
-      ).thenReturn(Future.successful(Right(traderDetails)))
-      when(mockUserAnswersService.get(any[DraftId])(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Some(userAnswers)))
-      when(mockUserAnswersService.set(any[UserAnswers])(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Done))
-
-      when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
-        .thenReturn(mockUserRole)
-      when(mockUserRole.selectGetRegisteredDetailsPage())
-        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
-
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
@@ -246,29 +243,6 @@ class CheckRegisteredDetailsControllerSpec
     }
 
     "must redirect to the kickout page when data is submitted with No radio button" in {
-      val mockBackendConnector = mock[BackendConnector]
-      val mockUserAnswersService = mock[UserAnswersService]
-      val mockUserRoleProvider = mock[UserRoleProvider]
-      val mockUserRole = mock[UserRole]
-
-      val traderDetails =
-        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
-
-      when(
-        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future
-        .successful(
-          Right(
-            traderDetails
-          )
-        )
-      when(mockUserAnswersService.get(any())(any()))
-        .thenReturn(Future.successful(Some(userAnswers)))
-      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
-
-      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
-      when(mockUserRole.selectGetRegisteredDetailsPage())
-        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
@@ -295,36 +269,7 @@ class CheckRegisteredDetailsControllerSpec
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-      val mockBackendConnector   = mock[BackendConnector]
-      val mockUserRoleProvider = mock[UserRoleProvider]
-      val mockUserRole = mock[UserRole]
-
-      val expectedViewBody = "hello"
-      val expectedView = HtmlFormat.raw(expectedViewBody)
-
-      val traderDetails =
-        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
-
-      when(
-        mockUserRole.selectViewForCheckRegisteredDetails(
-          any(),
-          any(),
-          any(),
-          ArgumentMatchers.eq(this.draftId)
-        )(any[DataRequest[AnyContent]], any[Messages])
-      ).thenReturn(expectedView)
-
-      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
-        .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
-      when(mockUserAnswersService.get(any())(any()))
-        .thenReturn(Future.successful(Some(userAnswers)))
-
-      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
-
-
-      when(mockUserRole.selectGetRegisteredDetailsPage())
-        .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
+      setUpViewMockForUserRole()
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
@@ -394,69 +339,13 @@ class CheckRegisteredDetailsControllerSpec
       }
     }
 
-    "redirect to Journey Recovery if the registered details retrieval from backend fails" in {
-
-      val mockBackendConnector = mock[BackendConnector]
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .overrides(
-          bind[BackendConnector].toInstance(mockBackendConnector)
-        )
-        .build()
-
-      when(
-        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future.successful(
-        Left(BackendError(code = 500, message = "some backed error"))
-      )
-
-      running(application) {
-        val request = FakeRequest(GET, checkRegisteredDetailsRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
     "show the view given by the UserRole" in {
 
-      val mockBackendConnector   = mock[BackendConnector]
-      val mockUserAnswersService = mock[UserAnswersService]
-      val mockUserRoleProvider   = mock[UserRoleProvider]
-      val mockUserRole           = mock[UserRole]
-
       val expectedViewBody = "hello"
-      val expectedView     = HtmlFormat.raw(expectedViewBody)
+      setUpViewMockForUserRole(expectedViewBody)
 
       val traderDetails =
         traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
-
-      when(
-        mockUserRole.selectViewForCheckRegisteredDetails(
-          ArgumentMatchers.eq(form),
-          same(traderDetails),
-          same(NormalMode),
-          ArgumentMatchers.eq(this.draftId)
-        )(any[DataRequest[AnyContent]], any[Messages])
-      ).thenReturn(expectedView)
-
-      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
-
-      when(
-        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future
-        .successful(
-          Right(
-            traderDetails
-          )
-        )
-
-      when(mockUserAnswersService.get(any())(any()))
-        .thenReturn(Future.successful(Some(userAnswers)))
-      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(
@@ -467,13 +356,34 @@ class CheckRegisteredDetailsControllerSpec
         .build()
 
       running(application) {
-        val request        = FakeRequest(GET, checkRegisteredDetailsRoute)
-        val result         = route(application, request).value
+        val request = FakeRequest(GET, checkRegisteredDetailsRoute)
+        val result = route(application, request).value
         val actualViewBody = contentAsString(result)
 
         actualViewBody mustBe expectedViewBody
       }
 
+    }
+
+    "redirect to Journey Recovery if the registered details retrieval from backend fails" in {
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackendConnector)
+        )
+        .build()
+
+      setUpBackendConnectorMock(isInternalServerError = true)
+
+      running(application) {
+        val request = FakeRequest(GET, checkRegisteredDetailsRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
     }
 
   }
