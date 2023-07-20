@@ -143,6 +143,7 @@ class CheckRegisteredDetailsControllerSpec
     setUpUserAnswersServiceMock(userAnswers)
     setUpBackendConnectorMock()
     setUpUserRoleProviderMock()
+    setUpViewMockForUserRole()
 
     forAll(consentToDisclosureOfPersonalDataScenarios) {
       consentValue =>
@@ -151,7 +152,8 @@ class CheckRegisteredDetailsControllerSpec
           val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
             .overrides(
               bind[BackendConnector].toInstance(mockBackendConnector),
-              bind[UserAnswersService].toInstance(mockUserAnswersService)
+              bind[UserAnswersService].toInstance(mockUserAnswersService),
+              bind[UserRoleProvider].toInstance(mockUserRoleProvider)
             )
             .build()
 
@@ -180,7 +182,8 @@ class CheckRegisteredDetailsControllerSpec
             applicationBuilder(userAnswers = Some(previousUserAnswers))
               .overrides(
                 bind[UserAnswersService].toInstance(mockUserAnswersService),
-                bind[BackendConnector].toInstance(mockBackendConnector)
+                bind[BackendConnector].toInstance(mockBackendConnector),
+                bind[UserRoleProvider].toInstance(mockUserRoleProvider)
               )
               .build()
 
