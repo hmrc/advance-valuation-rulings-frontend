@@ -148,42 +148,71 @@ class CheckRegisteredDetailsController @Inject() (
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val form: Form[Boolean] = formProvider()
+        if (appConfig.agentOnBehalfOfTrader) {
+          val form: Form[Boolean] = formProvider()
 
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              getTraderDetails(
-                (details: TraderDetailsWithCountryCode) =>
-                  AccountHomePage.get() match {
-                    case None =>
-                      Redirect(routes.UnauthorisedController.onPageLoad)
-                    case _    =>
-                      BadRequest(
-                        userRoleProvider
-                          .getUserRole(request.userAnswers)
-                          .selectViewForCheckRegisteredDetails(
-                            formWithErrors,
-                            details,
-                            mode,
-                            draftId
-                          )
-                      )
-                  }
-              ),
-            value =>
-              for {
-                updatedAnswers <- CheckRegisteredDetailsPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(
-                  getNextPage(value, updatedAnswers),
-                  mode,
-                  updatedAnswers
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                getTraderDetails(
+                  (details: TraderDetailsWithCountryCode) =>
+                    AccountHomePage.get() match {
+                      case None =>
+                        Redirect(routes.UnauthorisedController.onPageLoad)
+                      case _    =>
+                        BadRequest(
+                          userRoleProvider
+                            .getUserRole(request.userAnswers)
+                            .selectViewForCheckRegisteredDetails(
+                              formWithErrors,
+                              details,
+                              mode,
+                              draftId
+                            )
+                        )
+                    }
+                ),
+              value =>
+                for {
+                  updatedAnswers <- CheckRegisteredDetailsPage.set(value)
+                  _              <- userAnswersService.set(updatedAnswers)
+                } yield Redirect(
+                  navigator.nextPage(
+                    getNextPage(value, updatedAnswers),
+                    mode,
+                    updatedAnswers
+                  )
                 )
-              )
-          )
+            )
+        } else {
+          val form: Form[Boolean] = formProvider()
+
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                getTraderDetails(
+                  (details: TraderDetailsWithCountryCode) =>
+                    AccountHomePage.get() match {
+                      case None               =>
+                        Redirect(routes.UnauthorisedController.onPageLoad)
+                      case Some(authUserType) =>
+                        BadRequest(
+                          view(formWithErrors, details, mode, authUserType, draftId)
+                        )
+                    }
+                ),
+              value =>
+                for {
+                  updatedAnswers <-
+                    request.userAnswers.setFuture(CheckRegisteredDetailsPage, value)
+                  _              <- userAnswersService.set(updatedAnswers)
+                } yield Redirect(
+                  navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
+                )
+            )
+        }
     }
 
   private def getNextPage(value: Boolean, userAnswers: UserAnswers): Page =
