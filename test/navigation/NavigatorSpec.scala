@@ -88,6 +88,7 @@ class NavigatorSpec extends SpecBase {
     }
 
     "Account Home" - {
+      when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
         when(appConfig.agentOnBehalfOfTrader) thenReturn true

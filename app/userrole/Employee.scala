@@ -30,6 +30,7 @@ package userrole {
 
   import pages.{CheckRegisteredDetailsPage, Page}
   import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView}
+  import views.html.EmployeeCheckRegisteredDetailsView
 
   case class Employee @Inject() (
     view: EmployeeCheckRegisteredDetailsView,
