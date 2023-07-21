@@ -26,6 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions._
 import forms.CheckRegisteredDetailsFormProvider
@@ -35,6 +36,7 @@ import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
 import services.UserAnswersService
 import userrole.UserRoleProvider
+import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -46,7 +48,9 @@ class CheckRegisteredDetailsController @Inject() (
   formProvider: CheckRegisteredDetailsFormProvider,
   userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
-  backendConnector: BackendConnector
+  backendConnector: BackendConnector,
+  appConfig: FrontendAppConfig,
+  view: CheckRegisteredDetailsView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -72,41 +76,72 @@ class CheckRegisteredDetailsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        CheckRegisteredDetailsPage.get() match {
-          case Some(value) =>
-            getTraderDetails(
-              (details: TraderDetailsWithCountryCode) =>
-                AccountHomePage.get() match {
-                  case None =>
-                    Redirect(routes.UnauthorisedController.onPageLoad)
-                  case _    =>
-                    Ok(
-                      userRoleProvider
-                        .getUserRole(request.userAnswers)
-                        .selectViewForCheckRegisteredDetails(
-                          formProvider().fill(value),
-                          details,
-                          mode,
-                          draftId
-                        )
-                    )
-                }
-            )
+        if (appConfig.agentOnBehalfOfTrader) {
+          CheckRegisteredDetailsPage.get() match {
+            case Some(value) =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case _    =>
+                      Ok(
+                        userRoleProvider
+                          .getUserRole(request.userAnswers)
+                          .selectViewForCheckRegisteredDetails(
+                            formProvider().fill(value),
+                            details,
+                            mode,
+                            draftId
+                          )
+                      )
+                  }
+              )
 
-          case None =>
-            getTraderDetails(
-              (details: TraderDetailsWithCountryCode) =>
-                AccountHomePage.get() match {
-                  case None =>
-                    Redirect(routes.UnauthorisedController.onPageLoad)
-                  case _    =>
-                    Ok(
-                      userRoleProvider
-                        .getUserRole(request.userAnswers)
-                        .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
-                    )
-                }
-            )
+            case None =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case _    =>
+                      Ok(
+                        userRoleProvider
+                          .getUserRole(request.userAnswers)
+                          .selectViewForCheckRegisteredDetails(
+                            formProvider(),
+                            details,
+                            mode,
+                            draftId
+                          )
+                      )
+                  }
+              )
+          }
+        } else {
+          request.userAnswers.get(CheckRegisteredDetailsPage) match {
+            case Some(value) =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None               =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case Some(authUserType) =>
+                      Ok(view(formProvider().fill(value), details, mode, authUserType, draftId))
+                  }
+              )
+
+            case None =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None               =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case Some(authUserType) =>
+                      Ok(view(formProvider(), details, mode, authUserType, draftId))
+                  }
+              )
+          }
         }
     }
 

@@ -47,7 +47,7 @@
     saveButtons: SaveButtons
 )
 
-@(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, whoAreYouAgentAnswer: String, mode: Mode, authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, authUserType: AuthUserType, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @headingContent = {
                 @if(registeredDetails.consentToDisclosureOfPersonalData) {
@@ -67,10 +67,7 @@
 
 @paraContent = {
         @if(registeredDetails.consentToDisclosureOfPersonalData) {
-
-            @if(whoAreYouAgentAnswer == "agentOnBehalfOfTrader") {
-                @warning(content=Html(messages("checkRegisteredDetails.warning.agentOnBehalfOfTrader")))
-            } else if(authUserType == AuthUserType.IndividualTrader) {
+            @if(authUserType == AuthUserType.IndividualTrader) {
                 @warning(content=Html(messages("checkRegisteredDetails.warning.individual")))
             } else if(authUserType == AuthUserType.Agent) {
                 @warning(content=Html(messages("checkRegisteredDetails.warning.agent")))
@@ -78,9 +75,7 @@
                 @warning(content=Html(messages("checkRegisteredDetails.warning.organisation")))
             }
 
-        @if(whoAreYouAgentAnswer != "agentOnBehalfOfTrader") {
-            @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
-        }
+        @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
 
         @subheading(messages("checkRegisteredDetails.subheading.1"))
 
@@ -129,35 +124,13 @@
         @caption(messages("checkRegisteredDetails.caption"))
         @headingContent
 
-        <br></br>
-
-        @if(whoAreYouAgentAnswer == "agentOnBehalfOfTrader") {
-            @govukRadios(
-                RadiosViewModel(
-                    field = form("value"),
-                    legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden(),
-                    items = Seq(
-                        RadioItem(
-                            id = Some(form("value").id),
-                            value = Some("true"),
-                            content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes")
-                        ),
-                        RadioItem(
-                            id = Some(s"${form("value").id}-no"),
-                            value = Some("false"),
-                            content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
-                        )
-                    )
-                ).withHint(Hint(content = HtmlContent(paraContent)))
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden()
             )
-        } else {
-            @govukRadios(
-                RadiosViewModel.yesNo(
-                    field = form("value"),
-                    legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden()
-                ).withHint(Hint(content = HtmlContent(paraContent)))
-            )
-        }
+            .withHint(Hint(content = HtmlContent(paraContent)))
+        )
 
         @saveButtons(draftId)
     }
