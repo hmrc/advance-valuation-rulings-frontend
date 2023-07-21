@@ -22,6 +22,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions._
 import models.DraftId
 import pages.{AccountHomePage, WhoAreYouAgentPage}
@@ -35,22 +36,32 @@ class EORIBeUpToDateController @Inject() (
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   userRoleProvider: UserRoleProvider,
-  view: EORIBeUpToDateView
+  view: EORIBeUpToDateView,
+  appConfig: FrontendAppConfig
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        AccountHomePage.get() match {
-          case None =>
-            Redirect(routes.UnauthorisedController.onPageLoad)
-          case _    =>
-            Ok(
-              userRoleProvider
-                .getUserRole(request.userAnswers)
-                .selectViewForEoriBeUpToDate(draftId)
-            )
+        if (appConfig.agentOnBehalfOfTrader) {
+          AccountHomePage.get() match {
+            case None =>
+              Redirect(routes.UnauthorisedController.onPageLoad)
+            case _    =>
+              Ok(
+                userRoleProvider
+                  .getUserRole(request.userAnswers)
+                  .selectViewForEoriBeUpToDate(draftId)
+              )
+          }
+        } else {
+          AccountHomePage.get() match {
+            case None               =>
+              Redirect(routes.UnauthorisedController.onPageLoad)
+            case Some(authUserType) =>
+              Ok(view(draftId, authUserType))
+          }
         }
     }
 }
