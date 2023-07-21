@@ -858,3 +858,8 @@ draftHasBeenSaved.para.3 = To continue working on your application, you can acce
 draftHasBeenSaved.para.link.text = your applications and rulings
 
 uploadLetter.todo = TODO
+yourApplicationHasBeenCancelled.title = You cannot view this application
+yourApplicationHasBeenCancelled.heading = You cannot view this application
+yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your application for an Advance Valuation Ruling. The data you submitted before has been deleted.
+yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
+yourApplicationHasBeenCancelled.button = Go to your applications and rulings

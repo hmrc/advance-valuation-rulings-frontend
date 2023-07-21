@@ -24,7 +24,6 @@ import play.api.mvc.{ActionRefiner, Result}
 import play.api.mvc.Results.Redirect
 
 import controllers.routes
-import controllers.routes.UnauthorisedController
 import models.requests.{DataRequest, OptionalDataRequest}
 import pages.AccountHomePage
 
@@ -35,7 +34,13 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
     request: OptionalDataRequest[A]
   ): Future[Either[Result, DataRequest[A]]] = {
     val result = request.userAnswers match {
-      case None       => Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+
+      case None       =>
+        if (request.toString.contains("/cancel")) {
+          Left(Redirect(routes.YourApplicationHasBeenCancelledController.onPageLoad()))
+        } else {
+          Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+        }
       case Some(data) =>
         Either.cond(
           data.get(AccountHomePage).nonEmpty,
@@ -47,7 +52,7 @@ class DataRequiredActionImpl @Inject() (implicit val executionContext: Execution
             request.affinityGroup,
             request.credentialRole
           ),
-          Redirect(UnauthorisedController.onPageLoad)
+          Redirect(routes.UnauthorisedController.onPageLoad)
         )
     }
 
