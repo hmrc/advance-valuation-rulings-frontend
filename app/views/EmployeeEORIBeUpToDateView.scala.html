@@ -30,7 +30,7 @@
   config: FrontendAppConfig
 )
 
-@(draftId: DraftId, authUserType: AuthUserType, whoAreYouAgentAnswer: String)(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @fillInAnEnquiryLink = {
   @link(
@@ -51,29 +51,10 @@
 @layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title")), draftId = Some(draftId)) {
 
     @caption(messages("eoriBeUpToDate.caption"))
-    @if(whoAreYouAgentAnswer == "agentOnBehalfOfTrader") {
-        @heading(messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader"))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader")))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader")))
-    } else if(Set(OrganisationAdmin, OrganisationAssistant, Agent).exists(_ == authUserType)) {
-        @heading(messages("eoriBeUpToDate.heading.org"))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))
-    } else {
-        @heading(messages("eoriBeUpToDate.heading"))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
-    }
 
-    @if(whoAreYouAgentAnswer != "agentOnBehalfOfTrader") {
-        @bulletList(
-          Seq(
-            Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
-            Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
-          ),
-          "govuk-list govuk-list--bullet govuk-list--spaced",
-        )
-    }
+    @heading(messages("eoriBeUpToDate.heading.employee"))
+    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.employee")))
+    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.employee")))
 
     @cancelApplicationLink(draftId)
 }

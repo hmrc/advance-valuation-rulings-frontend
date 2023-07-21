@@ -17,16 +17,21 @@
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
+import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
-  case class AgentForTrader @Inject() (view: AgentForTraderCheckRegisteredDetailsView)
-      extends UserRole {
+  import play.twirl.api.HtmlFormat
+
+  import views.html.AgentForTraderEORIBeUpToDateView
+  case class AgentForTrader @Inject() (
+    view: AgentForTraderCheckRegisteredDetailsView,
+    eoriBeUpToDateView: AgentForTraderEORIBeUpToDateView
+  ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
       details: TraderDetailsWithCountryCode,
@@ -39,5 +44,12 @@ package userrole {
         mode,
         draftId
       )
+    override def selectViewForEoriBeUpToDate(
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      eoriBeUpToDateView(draftId)
+
+    override def selectGetRegisteredDetailsPage(): Page = AgentForTraderCheckRegisteredDetailsPage
   }
+
 }

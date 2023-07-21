@@ -32,9 +32,9 @@ import controllers.common.TraderDetailsHelper
 import forms.CheckRegisteredDetailsFormProvider
 import models._
 import navigation.Navigator
-import pages.{AccountHomePage, CheckRegisteredDetailsPage}
+import pages.{AccountHomePage, CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
 import services.UserAnswersService
-import views.html.CheckRegisteredDetailsView
+import userrole.UserRoleProvider
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -44,8 +44,8 @@ class CheckRegisteredDetailsController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: CheckRegisteredDetailsFormProvider,
+  userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckRegisteredDetailsView,
   implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -64,9 +64,16 @@ class CheckRegisteredDetailsController @Inject() (
                 AccountHomePage.get() match {
                   case None               =>
                     Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                  case Some(authUserType) =>
-                    Future.successful(
-                      Ok(view(formProvider().fill(value), details, mode, authUserType, draftId))
+                  case _    =>
+                    Ok(
+                      userRoleProvider
+                        .getUserRole(request.userAnswers)
+                          formProvider().fill(value),
+                        .selectViewForCheckRegisteredDetails(
+                          details,
+                          mode,
+                          draftId
+                        )
                     )
                 }
             )
@@ -77,9 +84,11 @@ class CheckRegisteredDetailsController @Inject() (
                 AccountHomePage.get() match {
                   case None               =>
                     Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                  case Some(authUserType) =>
-                    Future.successful(
-                      Ok(view(formProvider(), details, mode, authUserType, draftId))
+                  case _    =>
+                      userRoleProvider
+                    Ok(
+                        .getUserRole(request.userAnswers)
+                        .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
                     )
                 }
             )
@@ -100,11 +109,16 @@ class CheckRegisteredDetailsController @Inject() (
                   AccountHomePage.get() match {
                     case None               =>
                       Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                    case Some(authUserType) =>
-                      Future.successful(
-                        BadRequest(
-                          view(formWithErrors, details, mode, authUserType, draftId)
-                        )
+                    case _    =>
+                      BadRequest(
+                          .getUserRole(request.userAnswers)
+                        userRoleProvider
+                          .selectViewForCheckRegisteredDetails(
+                            formWithErrors,
+                            details,
+                            mode,
+                            draftId
+                          )
                       )
                   }
               ),
@@ -113,8 +127,19 @@ class CheckRegisteredDetailsController @Inject() (
                 updatedAnswers <- CheckRegisteredDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
               } yield Redirect(
-                navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
+                navigator.nextPage(
+                  getNextPage(value, updatedAnswers),
+                  mode,
+                  updatedAnswers
+                )
               )
           )
+    }
+
+  private def getNextPage(value: Boolean, userAnswers: UserAnswers): Page =
+    if (value) {
+      userRoleProvider.getUserRole(userAnswers).selectGetRegisteredDetailsPage()
+    } else {
+      EORIBeUpToDatePage
     }
 }
