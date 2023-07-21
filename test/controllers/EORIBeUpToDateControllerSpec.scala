@@ -26,6 +26,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
+import config.FrontendAppConfig
 import models.{Done, UserAnswers}
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
@@ -47,6 +48,9 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
   private val mockUserRoleProvider   = mock[UserRoleProvider]
   private val mockUserRole           = mock[UserRole]
   private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockAppConfig          = mock[FrontendAppConfig]
+
+  when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
   private def setUpUserAnswersServiceMock(answers: UserAnswers) = {
     when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
@@ -148,7 +152,8 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(
-          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+          bind[FrontendAppConfig].toInstance(mockAppConfig)
         )
         .build()
 
