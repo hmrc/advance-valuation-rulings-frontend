@@ -31,6 +31,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import akka.util.Timeout
 import base.SpecBase
 import com.typesafe.play.cachecontrol.Seconds.ZERO.seconds
+import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import forms.CheckRegisteredDetailsFormProvider
@@ -95,6 +96,9 @@ class CheckRegisteredDetailsControllerSpec
   val mockUserAnswersService = mock[UserAnswersService]
   val mockUserRoleProvider   = mock[UserRoleProvider]
   val mockUserRole           = mock[UserRole]
+  val mockAppConfig          = mock[FrontendAppConfig]
+
+  when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
   private def setUpBackendConnectorMock(isInternalServerError: Boolean = false) =
     if (isInternalServerError) {
@@ -153,7 +157,8 @@ class CheckRegisteredDetailsControllerSpec
             .overrides(
               bind[BackendConnector].toInstance(mockBackendConnector),
               bind[UserAnswersService].toInstance(mockUserAnswersService),
-              bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+              bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+              bind[FrontendAppConfig].toInstance(mockAppConfig)
             )
             .build()
 
@@ -183,7 +188,8 @@ class CheckRegisteredDetailsControllerSpec
               .overrides(
                 bind[UserAnswersService].toInstance(mockUserAnswersService),
                 bind[BackendConnector].toInstance(mockBackendConnector),
-                bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+                bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+                bind[FrontendAppConfig].toInstance(mockAppConfig)
               )
               .build()
 
@@ -204,7 +210,8 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+            bind[FrontendAppConfig].toInstance(mockAppConfig)
           )
           .build()
 
@@ -226,7 +233,8 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+            bind[FrontendAppConfig].toInstance(mockAppConfig)
           )
           .build()
 
@@ -251,7 +259,8 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+            bind[FrontendAppConfig].toInstance(mockAppConfig)
           )
           .build()
 
@@ -278,7 +287,8 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[UserAnswersService].toInstance(mockUserAnswersService),
             bind[BackendConnector].toInstance(mockBackendConnector),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+            bind[FrontendAppConfig].toInstance(mockAppConfig)
           )
           .build()
 
@@ -353,7 +363,8 @@ class CheckRegisteredDetailsControllerSpec
         .overrides(
           bind[BackendConnector].toInstance(mockBackendConnector),
           bind[UserAnswersService].toInstance(mockUserAnswersService),
-          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+          bind[FrontendAppConfig].toInstance(mockAppConfig)
         )
         .build()
 
@@ -371,7 +382,8 @@ class CheckRegisteredDetailsControllerSpec
 
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(
-          bind[BackendConnector].toInstance(mockBackendConnector)
+          bind[BackendConnector].toInstance(mockBackendConnector),
+          bind[FrontendAppConfig].toInstance(mockAppConfig)
         )
         .build()
 
