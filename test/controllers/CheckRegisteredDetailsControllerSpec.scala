@@ -57,7 +57,7 @@ class CheckRegisteredDetailsControllerSpec
   val formProvider = new CheckRegisteredDetailsFormProvider()
   val form         = formProvider()
 
-  val contactInformation = ContactInformation(
+  override val contactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
     sepCorrAddrIndicator = Some(false),
     streetAndNumber = Some("Test Street 1"),
@@ -70,7 +70,7 @@ class CheckRegisteredDetailsControllerSpec
     emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
   )
 
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+  override val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
     EORINo = "GB123456789012345",
     consentToDisclosureOfPersonalData = true,
     CDSFullName = "Test Name",
