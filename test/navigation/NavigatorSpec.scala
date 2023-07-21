@@ -1114,16 +1114,16 @@ class NavigatorSpec extends SpecBase {
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
-        userAnswersAsIndividualTrader
+        userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
       ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
     }
 
-    "must go from ContactPage to ProviderTraderEoriController when agent" ignore {
+    "must go from ContactPage to ProviderTraderEoriController when agent" in {
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
-        userAnswersAsIndividualTrader
-      ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+        userAnswersWith(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
+      ) mustBe routes.ProvideTraderEoriController.onPageLoad(draftId)
     }
 
   }
