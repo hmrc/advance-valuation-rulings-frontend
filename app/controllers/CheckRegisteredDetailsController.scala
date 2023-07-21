@@ -64,17 +64,19 @@ class CheckRegisteredDetailsController @Inject() (
               (details: TraderDetailsWithCountryCode) =>
                 AccountHomePage.get() match {
                   case None =>
-                    Redirect(routes.UnauthorisedController.onPageLoad)
+                    Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                   case _    =>
-                    Ok(
-                      userRoleProvider
-                        .getUserRole(request.userAnswers)
-                        .selectViewForCheckRegisteredDetails(
-                          formProvider().fill(value),
-                          details,
-                          mode,
-                          draftId
-                        )
+                    Future.successful(
+                      Ok(
+                        userRoleProvider
+                          .getUserRole(request.userAnswers)
+                          .selectViewForCheckRegisteredDetails(
+                            formProvider().fill(value),
+                            details,
+                            mode,
+                            draftId
+                          )
+                      )
                     )
                 }
             )
@@ -84,12 +86,19 @@ class CheckRegisteredDetailsController @Inject() (
               (details: TraderDetailsWithCountryCode) =>
                 AccountHomePage.get() match {
                   case None =>
-                    Redirect(routes.UnauthorisedController.onPageLoad)
+                    Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                   case _    =>
-                    Ok(
-                      userRoleProvider
-                        .getUserRole(request.userAnswers)
-                        .selectViewForCheckRegisteredDetails(formProvider(), details, mode, draftId)
+                    Future.successful(
+                      Ok(
+                        userRoleProvider
+                          .getUserRole(request.userAnswers)
+                          .selectViewForCheckRegisteredDetails(
+                            formProvider(),
+                            details,
+                            mode,
+                            draftId
+                          )
+                      )
                     )
                 }
             )
@@ -109,17 +118,19 @@ class CheckRegisteredDetailsController @Inject() (
                 (details: TraderDetailsWithCountryCode) =>
                   AccountHomePage.get() match {
                     case None =>
-                      Redirect(routes.UnauthorisedController.onPageLoad)
+                      Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                     case _    =>
-                      BadRequest(
-                        userRoleProvider
-                          .getUserRole(request.userAnswers)
-                          .selectViewForCheckRegisteredDetails(
-                            formWithErrors,
-                            details,
-                            mode,
-                            draftId
-                          )
+                      Future.successful(
+                        BadRequest(
+                          userRoleProvider
+                            .getUserRole(request.userAnswers)
+                            .selectViewForCheckRegisteredDetails(
+                              formWithErrors,
+                              details,
+                              mode,
+                              draftId
+                            )
+                        )
                       )
                   }
               ),

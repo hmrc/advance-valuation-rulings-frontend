@@ -28,7 +28,7 @@ import models.ValuationMethod._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
-import userrole.{AgentForTrader, Employee, UserRoleProvider}
+import userrole.{Employee, UserRoleProvider}
 
 class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserRoleProvider) {
 
@@ -483,9 +483,9 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
 
   private def contactsNextPage(userAnswers: UserAnswers): Call =
     userRoleProvider.getUserRole(userAnswers) match {
-      case Employee(_) =>
+      case Employee(_, _) =>
         CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _           => ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
+      case _              => ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
     }
 
   private def checkRegisteredDetailsPage(
