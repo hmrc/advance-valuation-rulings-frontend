@@ -33,7 +33,7 @@
 
 @layout(pageTitle = title(form, messages("whoAreYouAgent.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhoAreYouAgentController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.WhatIsYourRoleAsImporterController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

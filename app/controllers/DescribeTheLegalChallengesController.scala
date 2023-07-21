@@ -56,7 +56,7 @@ class DescribeTheLegalChallengesController @Inject() (
         Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
@@ -68,9 +68,11 @@ class DescribeTheLegalChallengesController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheLegalChallengesPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(DescribeTheLegalChallengesPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
+                  Redirect(navigator.nextPage(DescribeTheLegalChallengesPage, mode, updatedAnswers))
+              }
           )
     }
 }

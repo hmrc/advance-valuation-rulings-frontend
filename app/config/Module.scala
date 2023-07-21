@@ -18,8 +18,7 @@ package config
 import java.time.{Clock, ZoneOffset}
 
 import play.api.{Configuration, Environment}
-import play.api.inject.{bind => binding}
-import play.api.inject.Binding
+import play.api.inject.{bind => binding, Binding}
 
 import controllers.actions._
 

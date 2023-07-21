@@ -24,7 +24,8 @@
     heading: Heading,
     caption: Caption,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    govukButton: GovukButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -32,14 +33,12 @@
 @layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
-        
+
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-
         @caption(messages("importGoods.caption"))
-
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
@@ -49,6 +48,8 @@
 
         @saveButtons(draftId)
     }
+
+
 
     @cancelApplicationLink(draftId)
 }

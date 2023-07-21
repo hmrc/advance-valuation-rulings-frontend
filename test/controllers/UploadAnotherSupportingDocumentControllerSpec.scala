@@ -20,7 +20,6 @@ import java.time.Instant
 
 import play.api.Configuration
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -33,8 +32,6 @@ import queries.DraftAttachmentAt
 import views.html.UploadAnotherSupportingDocumentView
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
-
-  private val onwardRoute = Call("GET", "/foo")
 
   private val formProvider = new UploadAnotherSupportingDocumentFormProvider(
     Configuration("upscan.maxFiles" -> 5)

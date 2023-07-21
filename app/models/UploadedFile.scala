@@ -18,7 +18,7 @@ package models
 
 import java.time.Instant
 
-import play.api.libs.json.{__, Json, OFormat, OWrites, Reads}
+import play.api.libs.json._
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import enumeratum.EnumEntry.Uppercase

@@ -56,7 +56,7 @@ class WhyIdenticalGoodsController @Inject() (
         Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
@@ -67,9 +67,11 @@ class WhyIdenticalGoodsController @Inject() (
               for {
                 updatedAnswers <- WhyIdenticalGoodsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(WhyIdenticalGoodsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
+                  Redirect(navigator.nextPage(WhyIdenticalGoodsPage, mode, updatedAnswers))
+              }
           )
     }
 }

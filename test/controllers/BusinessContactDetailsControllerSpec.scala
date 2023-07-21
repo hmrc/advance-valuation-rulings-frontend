@@ -18,6 +18,7 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -36,16 +37,44 @@ import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
   val formProvider = new BusinessContactDetailsFormProvider()
   val form         = formProvider()
 
   lazy val businessContactDetailsRoute =
     routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId).url
+  lazy val saveDraftRoute: String      =
+    routes.BusinessContactDetailsController
+      .onSubmit(NormalMode, draftId, saveDraft = true)
+      .url
 
+  lazy val continueRoute: String =
+    routes.BusinessContactDetailsController
+      .onSubmit(NormalMode, draftId, saveDraft = false)
+      .url
   "BusinessContactDetails Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(
+              ("name", "my name"),
+              ("email", "email@example.co.uk"),
+              ("phone", "07123456789")
+            )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -117,7 +146,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, businessContactDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(
               ("name", "my name"),
               ("email", "email@example.co.uk"),
@@ -138,7 +167,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, businessContactDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -175,7 +204,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, businessContactDetailsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

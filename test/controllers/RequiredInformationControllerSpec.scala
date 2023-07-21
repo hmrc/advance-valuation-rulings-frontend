@@ -16,7 +16,6 @@
 
 package controllers
 
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -25,8 +24,6 @@ import org.scalatestplus.mockito.MockitoSugar
 import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   lazy val requiredInformationRoute =
     routes.RequiredInformationController.onPageLoad(draftId).url

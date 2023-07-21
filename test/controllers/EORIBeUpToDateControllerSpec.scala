@@ -18,69 +18,91 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.i18n.Messages
 import play.api.inject.bind
-import play.api.mvc.Call
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import models.{AuthUserType, Done}
+import models.{Done, UserAnswers}
+import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.CheckRegisteredDetailsPage
 import services.UserAnswersService
-import views.html.EORIBeUpToDateView
+import userrole.{UserRole, UserRoleProvider}
 
 class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
-
-  lazy val checkRegisteredDetailRoute =
+  private lazy val checkRegisteredDetailRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url
+
+  private lazy val eoriBeUpToDateRoute =
+    routes.EORIBeUpToDateController.onPageLoad(draftId).url
+
+  private val mockUserRoleProvider   = mock[UserRoleProvider]
+  private val mockUserRole           = mock[UserRole]
+  private val mockUserAnswersService = mock[UserAnswersService]
+
+  private def setUpUserAnswersServiceMock(answers: UserAnswers) = {
+    when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+    when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
+      Some(userAnswersAsIndividualTrader)
+    )
+  }
+
+  private def setUpUserRoleProviderMock() =
+    when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
+      .thenReturn(mockUserRole)
+
+  private def setUpViewMockForUserRole(expectedViewBody: String = "") = {
+    val expectedView = HtmlFormat.raw(expectedViewBody)
+    when(
+      mockUserRole.selectViewForEoriBeUpToDate(
+        ArgumentMatchers.eq(this.draftId)
+      )(any[DataRequest[AnyContent]], any[Messages])
+    ).thenReturn(expectedView)
+
+    when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
+  }
 
   "EORIBeUpToDate Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    setUpUserRoleProviderMock()
+    setUpViewMockForUserRole()
+    setUpUserAnswersServiceMock(userAnswersAsIndividualTrader)
+    setUpViewMockForUserRole()
+
+    "must return OK for a GET" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          )
+          .build()
 
       running(application) {
         val request = FakeRequest(GET, routes.EORIBeUpToDateController.onPageLoad(draftId).url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[EORIBeUpToDateView]
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(draftId, AuthUserType.IndividualTrader)(
-          request,
-          messages(application)
-        ).toString
       }
     }
 
     "must redirect to the next page when yes is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      val userAnswers = userAnswersAsIndividualTrader
-        .set(CheckRegisteredDetailsPage, false)
-        .success
-        .value
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
-        Some(userAnswers)
-      )
-
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
@@ -94,23 +116,13 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
+
     }
 
     "must redirect to the next page when 'no' is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-      val userAnswers            = userAnswersAsIndividualTrader
-        .set(CheckRegisteredDetailsPage, false)
-        .success
-        .value
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
-        Some(userAnswers)
-      )
-
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)
@@ -128,5 +140,28 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
+
+    "must show the view given by the UserRole" in {
+
+      val expectedViewBody = "hello"
+      setUpViewMockForUserRole(expectedViewBody)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        .overrides(
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+        )
+        .build()
+
+      running(application) {
+        val request        = FakeRequest(GET, eoriBeUpToDateRoute)
+        val result         = route(application, request).value
+        val actualViewBody = contentAsString(result)
+
+        actualViewBody mustBe expectedViewBody
+      }
+
+    }
+
   }
+
 }

@@ -232,7 +232,7 @@ object Country {
       .getOrElse(Country(countryCode, "Unknown"))
 
   def selectItems(implicit messages: Messages): Seq[SelectItem] =
-    SelectItem(value = None, text = messages("country.selectCountry")) +:
+    SelectItem(value = None, text = messages("countrySelect.label")) +:
       allCountries.map {
         country =>
           SelectItemViewModel(

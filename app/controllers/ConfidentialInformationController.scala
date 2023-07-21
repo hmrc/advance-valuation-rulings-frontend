@@ -55,7 +55,7 @@ class ConfidentialInformationController @Inject() (
         Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
@@ -66,9 +66,11 @@ class ConfidentialInformationController @Inject() (
               for {
                 updatedAnswers <- ConfidentialInformationPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
+                  Redirect(navigator.nextPage(ConfidentialInformationPage, mode, updatedAnswers))
+              }
           )
     }
 }

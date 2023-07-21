@@ -16,27 +16,19 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
+import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
 import forms.WhyTransactionValueOfSimilarGoodsFormProvider
-import models.{Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import models.NormalMode
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhyTransactionValueOfSimilarGoodsPage
-import services.UserAnswersService
 import views.html.WhyTransactionValueOfSimilarGoodsView
 
 class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new WhyTransactionValueOfSimilarGoodsFormProvider()
   val form         = formProvider()
@@ -44,8 +36,36 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
   lazy val whyTransactionValueOfSimilarGoodsRoute =
     routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(NormalMode, draftId).url
 
+  lazy val saveDraftRoute: String =
+    routes.WhyTransactionValueOfSimilarGoodsController
+      .onSubmit(NormalMode, draftId, saveDraft = true)
+      .url
+
+  lazy val continueRoute: String =
+    routes.WhyTransactionValueOfSimilarGoodsController
+      .onSubmit(NormalMode, draftId, saveDraft = false)
+      .url
+
   "WhyTransactionValueOfSimilarGoods Controller" - {
 
+    "Redirects to Draft saved page when save-draft is selected" in {
+
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
+
+      running(application) {
+        val request =
+          FakeRequest(POST, saveDraftRoute)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual Call(
+          "POST",
+          s"/advance-valuation-ruling/$draftId/save-as-draft"
+        ).url
+      }
+    }
     "must return OK and the correct view for a GET" in {
 
       val application =
@@ -92,21 +112,10 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
+      val application: Application = setupTestBuild(userAnswersAsIndividualTrader)
       running(application) {
         val request =
-          FakeRequest(POST, whyTransactionValueOfSimilarGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
@@ -123,7 +132,7 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
 
       running(application) {
         val request =
-          FakeRequest(POST, whyTransactionValueOfSimilarGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -160,7 +169,7 @@ class WhyTransactionValueOfSimilarGoodsControllerSpec extends SpecBase with Mock
 
       running(application) {
         val request =
-          FakeRequest(POST, whyTransactionValueOfSimilarGoodsRoute)
+          FakeRequest(POST, continueRoute)
             .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value

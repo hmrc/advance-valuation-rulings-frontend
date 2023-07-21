@@ -16,8 +16,7 @@
 
 package generators
 
-import java.time.{Instant, LocalDate, LocalDateTime, ZoneOffset}
-import java.time.Clock
+import java.time._
 
 import org.scalacheck.{Gen, Shrink}
 import org.scalacheck.Arbitrary._

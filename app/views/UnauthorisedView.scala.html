@@ -20,11 +20,8 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(
-    pageTitle = titleNoForm(messages("unauthorised.title"))
-) {
+@layout(pageTitle = titleNoForm(messages("unauthorised.title"))) {
 
     <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
-<!--Todo: provide guidance ARS-892-->
     <p class="govuk-body">@messages("")</p>
 }

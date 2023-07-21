@@ -19,7 +19,6 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -32,8 +31,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
-import pages.AccountHomePage
+import pages.{AccountHomePage, AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
@@ -45,8 +43,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
     super.beforeEach()
     reset(mockAuditService)
   }
-
-  def onwardRoute = Call("GET", "/foo")
 
   lazy val whatIsYourRoleAsImporterRoute =
     routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
