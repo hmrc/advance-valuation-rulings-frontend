@@ -26,6 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
@@ -35,6 +36,7 @@ import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
 import services.UserAnswersService
 import userrole.UserRoleProvider
+import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -48,6 +50,7 @@ class CheckRegisteredDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckRegisteredDetailsView,
   implicit val backendConnector: BackendConnector
+  appConfig: FrontendAppConfig,
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -58,15 +61,15 @@ class CheckRegisteredDetailsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        CheckRegisteredDetailsPage.get() match {
-          case Some(value) =>
-            getTraderDetails(
-              (details: TraderDetailsWithCountryCode) =>
-                AccountHomePage.get() match {
-                  case None =>
-                    Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                  case _    =>
-                    Future.successful(
+        if (appConfig.agentOnBehalfOfTrader) {
+          CheckRegisteredDetailsPage.get() match {
+            case Some(value) =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case _    =>
                       Ok(
                         userRoleProvider
                           .getUserRole(request.userAnswers)
@@ -77,18 +80,16 @@ class CheckRegisteredDetailsController @Inject() (
                             draftId
                           )
                       )
-                    )
-                }
-            )
+                  }
+              )
 
-          case None =>
-            getTraderDetails(
-              (details: TraderDetailsWithCountryCode) =>
-                AccountHomePage.get() match {
-                  case None =>
-                    Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                  case _    =>
-                    Future.successful(
+            case None =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None =>
+                      Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
+                    case _    =>
                       Ok(
                         userRoleProvider
                           .getUserRole(request.userAnswers)
@@ -99,28 +100,52 @@ class CheckRegisteredDetailsController @Inject() (
                             draftId
                           )
                       )
-                    )
-                }
-            )
+                  }
+              )
+          }
+        } else {
+          request.userAnswers.get(CheckRegisteredDetailsPage) match {
+            case Some(value) =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None               =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case Some(authUserType) =>
+                      Ok(view(formProvider().fill(value), details, mode, authUserType, draftId))
+                  }
+              )
+
+            case None =>
+              getTraderDetails(
+                (details: TraderDetailsWithCountryCode) =>
+                  AccountHomePage.get() match {
+                    case None               =>
+                      Redirect(routes.UnauthorisedController.onPageLoad)
+                    case Some(authUserType) =>
+                      Ok(view(formProvider(), details, mode, authUserType, draftId))
+                  }
+              )
+          }
         }
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val form: Form[Boolean] = formProvider()
+        if (appConfig.agentOnBehalfOfTrader) {
+          val form: Form[Boolean] = formProvider()
 
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              getTraderDetails(
-                (details: TraderDetailsWithCountryCode) =>
-                  AccountHomePage.get() match {
-                    case None =>
-                      Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                    case _    =>
-                      Future.successful(
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                getTraderDetails(
+                  (details: TraderDetailsWithCountryCode) =>
+                    AccountHomePage.get() match {
+                      case None =>
+                        Redirect(routes.UnauthorisedController.onPageLoad)
+                      case _    =>
                         BadRequest(
                           userRoleProvider
                             .getUserRole(request.userAnswers)
@@ -131,21 +156,48 @@ class CheckRegisteredDetailsController @Inject() (
                               draftId
                             )
                         )
-                      )
-                  }
-              ),
-            value =>
-              for {
-                updatedAnswers <- CheckRegisteredDetailsPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(
-                  getNextPage(value, updatedAnswers),
-                  mode,
-                  updatedAnswers
+                    }
+                ),
+              value =>
+                for {
+                  updatedAnswers <- CheckRegisteredDetailsPage.set(value)
+                  _              <- userAnswersService.set(updatedAnswers)
+                } yield Redirect(
+                  navigator.nextPage(
+                    getNextPage(value, updatedAnswers),
+                    mode,
+                    updatedAnswers
+                  )
                 )
-              )
-          )
+            )
+        } else {
+          val form: Form[Boolean] = formProvider()
+
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                getTraderDetails(
+                  (details: TraderDetailsWithCountryCode) =>
+                    AccountHomePage.get() match {
+                      case None               =>
+                        Redirect(routes.UnauthorisedController.onPageLoad)
+                      case Some(authUserType) =>
+                        BadRequest(
+                          view(formWithErrors, details, mode, authUserType, draftId)
+                        )
+                    }
+                ),
+              value =>
+                for {
+                  updatedAnswers <-
+                    request.userAnswers.setFuture(CheckRegisteredDetailsPage, value)
+                  _              <- userAnswersService.set(updatedAnswers)
+                } yield Redirect(
+                  navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
+                )
+            )
+        }
     }
 
   private def getNextPage(value: Boolean, userAnswers: UserAnswers): Page =
