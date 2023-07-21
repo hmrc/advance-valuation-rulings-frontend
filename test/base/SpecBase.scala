@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.{CounterId, Done, DraftId, UserAnswers}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any

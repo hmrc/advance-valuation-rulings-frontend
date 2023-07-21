@@ -22,13 +22,19 @@ import play.twirl.api.HtmlFormat
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
+import views.html.EmployeeCheckRegisteredDetailsView
 
 package userrole {
 
+  import play.twirl.api.HtmlFormat
+
+  import pages.{CheckRegisteredDetailsPage, Page}
+  import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView}
   import views.html.EmployeeCheckRegisteredDetailsView
 
   case class Employee @Inject() (
-    employeeCheckRegisteredDetailsView: EmployeeCheckRegisteredDetailsView
+    view: EmployeeCheckRegisteredDetailsView,
+    eoriBeUpToDateView: EmployeeEORIBeUpToDateView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -36,12 +42,19 @@ package userrole {
       mode: Mode,
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      employeeCheckRegisteredDetailsView(
+      view(
         form,
         details,
         mode,
         draftId
       )
+
+    override def selectViewForEoriBeUpToDate(
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      eoriBeUpToDateView(draftId)
+
+    override def selectGetRegisteredDetailsPage(): Page = CheckRegisteredDetailsPage
   }
 
 }

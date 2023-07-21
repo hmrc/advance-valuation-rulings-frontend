@@ -110,6 +110,13 @@ checkRegisteredDetails.eori.change.hidden = your registered EORI number
 checkRegisteredDetails.private.title = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
 
+checkRegisteredDetails.warning.agentOnBehalfOfTrader = These are the EORI details we have on record for the trader you are representing. They should be the same details the trader used to register their EORI number.
+checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes = Yes, these details are for the trader I am applying on behalf of
+checkRegisteredDetails.radio.agentOnBehalfOfTrader.no = No, these details are incorrect
+
+checkRegisteredDetails.search.link = Search again
+checkRegisteredDetails.search.text = if you think you entered the trader’s EORI number incorrectly
+
 
 eoriBeUpToDate.caption = Ynglŷn â’r ymgeisydd
 eoriBeUpToDate.title = Mae’n rhaid bod manylion eich rhif EORI yn gywir i ddefnyddio’r gwasanaeth hwn
@@ -124,6 +131,10 @@ eoriBeUpToDate.bulletPoint.1.link = llenwi ffurflen ymholiadau
 eoriBeUpToDate.bulletPoint.1 = {0}
 eoriBeUpToDate.bulletPoint.2.link = â’r gwasanaeth ymholiadau cyffredinol ar gyfer mewnforion ac allforion
 eoriBeUpToDate.bulletPoint.2 = cysylltu {0}
+eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader = To use this service, it’s important that the trader’s EORI details are accurate. They will need to report a change of circumstances themselves to update their name or address on record. You cannot do this on their behalf.
+eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader = Before proceeding with your application, make sure you contact the trader directly. Cancel your current application and resubmit it once you have their updated information.
+eoriBeUpToDate.heading.agentOnBehalfOfTrader = The trader’s EORI details must be correct to use this service
+eoriBeUpToDate.title.agentOnBehalfOfTrader = The trader’s EORI details must be correct to use this service
 
 applicationContactDetails.caption = Ynglŷn â’r ymgeisydd
 applicationContactDetails.title = Eich manylion cyswllt
@@ -676,6 +687,9 @@ whatIsYourRoleAsImporter.checkYourAnswersLabel = Sut byddech chi’n disgrifio�
 whatIsYourRoleAsImporter.error.required = Dewiswch yr opsiwn sy’n disgrifio’ch rôl
 whatIsYourRoleAsImporter.change.hidden = your description of your role as an importer
 
+whatIsYourRoleAsImporter.agentOnBehalfOfTrader = Agent acting on behalf of a trader
+whatIsYourRoleAsImporter.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
+
 businessContactDetails.title = Eich manylion cyswllt chi
 businessContactDetails.heading = Eich manylion cyswllt chi
 businessContactDetails.caption = Ynglŷn â’r ymgeisydd
@@ -872,3 +886,5 @@ draftHasBeenSaved.para.1 = You have until {0} to submit your application.
 draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
 draftHasBeenSaved.para.link.text = your applications and rulings
+
+uploadLetter.todo = TODO

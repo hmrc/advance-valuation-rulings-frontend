@@ -40,8 +40,7 @@ class NavigatorSpec extends SpecBase {
   val agentForTrader                = mock[AgentForTrader]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
-  val userRoleProvider              = new UserRoleProvider(employeeRole, agentForOrg, agentForTrader)
-  val navigator                     = new Navigator(appConfig, userRoleProvider)
+  val navigator                     = new Navigator(appConfig)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false
 

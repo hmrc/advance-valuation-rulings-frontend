@@ -18,7 +18,7 @@ package userrole
 
 import javax.inject.Inject
 
-import models.{UserAnswers, WhatIsYourRoleAsImporter}
+import models.{NormalMode, UserAnswers, WhatIsYourRoleAsImporter}
 import pages.WhatIsYourRoleAsImporterPage
 
 /** A class to give a [[UserRole]] given the answer to @link(WhatIsYourRoleAsImporterPage)
@@ -39,7 +39,7 @@ class UserRoleProvider @Inject() (
         agentForTrader
       case _                                                    =>
         throw new UnsupportedOperationException(
-          "WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole()"
+          "WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole"
         )
 
     }
