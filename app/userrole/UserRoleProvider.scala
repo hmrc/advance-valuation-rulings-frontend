@@ -18,31 +18,30 @@ package userrole
 
 import javax.inject.Inject
 
+import models.{NormalMode, UserAnswers, WhatIsYourRoleAsImporter}
+import pages.WhatIsYourRoleAsImporterPage
+
+/** A class to give a [[UserRole]] given the answer to @link(WhatIsYourRoleAsImporterPage)
+  */
 class UserRoleProvider @Inject() (
   employeeRole: Employee,
-  agentForRole: AgentForOrg,
+  agentForOrg: AgentForOrg,
   agentForTrader: AgentForTrader
 ) {
 
-  def getUserRole(): UserRole = null
+  def getUserRole(userAnswers: UserAnswers): UserRole =
+    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+      case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)         =>
+        employeeRole
+      case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)    =>
+        agentForOrg
+      case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader) =>
+        agentForTrader
+      case _                                                    =>
+        throw new UnsupportedOperationException(
+          "WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole"
+        )
 
-  //    def apply(userAnswers: UserAnswers): UserRole =
-  //      userAnswers.get(AccountHomePage) match {
-  //        case Some(AuthUserType.IndividualTrader)                                 =>
-  //          Employee
-  //        case Some(AuthUserType.OrganisationAdmin)                                =>
-  //          AgentForOrg
-  //        case Some(AuthUserType.OrganisationAssistant) | Some(AuthUserType.Agent) =>
-  //          userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-  //            case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      =>
-  //              AgentForTrader
-  //            case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
-  //              AgentForTrader
-  //            case _                                                 =>
-  //              AgentForTrader
-  //          }
-  //        case _                                                                   =>
-  //          unauth
-  //      }
+    }
 
 }

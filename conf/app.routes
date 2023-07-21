@@ -246,4 +246,6 @@ POST       /:draftId/supporting-documents/:index/change-remove                  
 
 GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
 
+GET        /:draftId/upload-letter                      controllers.UploadLetterController.onPageLoad(draftId: DraftId)
+
 GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()
