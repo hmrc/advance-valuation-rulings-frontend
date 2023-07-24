@@ -482,11 +482,13 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     }
 
   private def contactsNextPage(userAnswers: UserAnswers): Call =
-    userRoleProvider.getUserRole(userAnswers) match {
-      case Employee(_, _) =>
-        CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case _              => ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
-    }
+    if (appConfig.agentOnBehalfOfTrader) {
+      userRoleProvider.getUserRole(userAnswers) match {
+        case Employee(_, _) =>
+          CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+        case _              => ProvideTraderEoriController.onPageLoad(userAnswers.draftId)
+      }
+    } else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
