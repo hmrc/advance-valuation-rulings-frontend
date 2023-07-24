@@ -140,24 +140,27 @@ class CheckRegisteredDetailsController @Inject() (
             .bindFromRequest()
             .fold(
               formWithErrors =>
-                getTraderDetails(
+                getTraderDetails {
                   (details: TraderDetailsWithCountryCode) =>
+                    println("insideblock")
                     AccountHomePage.get() match {
                       case None =>
-                        Redirect(routes.UnauthorisedController.onPageLoad)
+                        Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                       case _    =>
-                        BadRequest(
-                          userRoleProvider
-                            .getUserRole(request.userAnswers)
-                            .selectViewForCheckRegisteredDetails(
-                              formWithErrors,
-                              details,
-                              mode,
-                              draftId
-                            )
+                        Future.successful(
+                          BadRequest(
+                            userRoleProvider
+                              .getUserRole(request.userAnswers)
+                              .selectViewForCheckRegisteredDetails(
+                                formWithErrors,
+                                details,
+                                mode,
+                                draftId
+                              )
+                          )
                         )
                     }
-                ),
+                },
               value =>
                 for {
                   updatedAnswers <- CheckRegisteredDetailsPage.set(value)
