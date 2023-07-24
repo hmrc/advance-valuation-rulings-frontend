@@ -30,14 +30,14 @@ class TraderEoriNumberFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("provideTraderEori.error.required")
-        .verifying(validFullName)
+        .verifying(validEORINumber)
     )
 
-  private val formatRegex: Regex = new Regex("^GB\\d{12}")
+  private val formatRegex: Regex = new Regex("^GB[0-9]{12}")
 
-  private val validFullName: Constraint[String] =
+  private val validEORINumber: Constraint[String] =
     Constraint {
-      case formatRegex(_)           => Valid
+      case formatRegex()            => Valid
       case s if s.length > 14       =>
         Invalid(ValidationError("provideTraderEori.error.tooLong"))
       case s if s.length < 14       =>
