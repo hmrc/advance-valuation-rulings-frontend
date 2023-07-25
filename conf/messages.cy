@@ -846,6 +846,36 @@ deleteDraft.heading = Are you sure you want to delete your application?
 deleteDraft.error.required = Select yes if you want to delete your application
 deleteDraft.guidance = If you delete your application now, any data will be lost and you will need to make a new application.
 
+#PROVIDE TRADER EORI NUMBER
+provideTraderEori.heading=Provide the trader''s EORI number
+provideTraderEori.p1=You must provide the Economic Operator Registration and Identification (EORI) number for the trader you are acting on behalf of. This must be a valid number starting with GB.
+provideTraderEori.error.required=Enter the trader''s EORI number
+
+#TRADER DETAILS - COMMON
+traderDetails.common.searchAgain=<a href="{0}" class="govuk-link">Search again</a> if you think you entered the trader''s EORI number incorrectly.
+
+#TRADER DETAILS - PUBLIC
+traderDetails.public.heading=Check the name and address for EORI number
+traderDetails.public.p1=These are the EORI details we have on record for the trader you are representing. They should be the same details the trader used to register their EORI number.
+traderDetails.public.h2.correct=EORI registration details
+traderDetails.public.h3.businessName=Registered business name
+traderDetails.public.h3.businessAddress=Registered business address
+traderDetails.public.h2=Are the name and address details correct?
+traderDetails.public.h2.question.yes=Yes, these details are for the trader I am applying on behalf of
+traderDetails.public.h2.question.no=No, these details are incorrect
+
+#TRADER DETAILS - PRIVATE
+traderDetails.private.heading=The registration details for EORI number {0} are private
+traderDetails.private.p1=The business this number is registered to has not consented to their name and address being shared.
+traderDetails.private.p2=If you need more information, contact the business directly.
+traderDetails.private.h3.proceed=Do you want to proceed?
+
+verifyTraderDetails.error.required=Select yes to confirm the trader''s EORI details
+
+#INVALID EORI
+invalidTraderEori.heading=EORI number {0} is invalid
+invalidTraderEori.p1=The EORI number you have provided does not match any business on our records.
+invalidTraderEori.p2=You will need to contact the trader directly to clarify their EORI number.
 removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu {0}?
 removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu {0}?
 removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu’r ffeil hon

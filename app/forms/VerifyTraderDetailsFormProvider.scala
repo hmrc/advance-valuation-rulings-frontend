@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package navigation
+package forms
 
-import play.api.mvc.Call
+import javax.inject.Inject
 
-import models.{Mode, UserAnswers}
-import pages._
+import play.api.data.Form
 
-class FakeNavigator(desiredRoute: Call) extends Navigator(null, null) {
+import forms.mappings.Mappings
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+class VerifyTraderDetailsFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[String] =
+    Form(
+      "traderDetailsCorrect" -> text("verifyTraderDetails.error.required")
+    )
 }

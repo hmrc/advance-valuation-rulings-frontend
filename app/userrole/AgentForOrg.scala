@@ -17,7 +17,6 @@
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
@@ -25,8 +24,10 @@ import models.requests.DataRequest
 import views.html.AgentForOrgCheckRegisteredDetailsView
 
 package userrole {
+  import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
+  import controllers.routes.ProvideTraderEoriController
   import pages.{CheckRegisteredDetailsPage, Page}
   import views.html.AgentForOrgEORIBeUpToDateView
   case class AgentForOrg @Inject() (
@@ -52,5 +53,8 @@ package userrole {
       eoriBeUpToDateView(draftId)
 
     override def selectGetRegisteredDetailsPage(): Page = CheckRegisteredDetailsPage
+
+    override def getEORIDetailsJourney(draftId: DraftId): Call =
+      ProvideTraderEoriController.onPageLoad(draftId)
   }
 }

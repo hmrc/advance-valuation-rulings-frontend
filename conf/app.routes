@@ -33,6 +33,12 @@ POST       /:draftId/select-valuation-method                     controllers.Val
 GET        /:draftId/change-select-valuation-method               controllers.ValuationMethodController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-select-valuation-method               controllers.ValuationMethodController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
+GET        /:draftId/provide-trader-eori                                          controllers.ProvideTraderEoriController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/provide-trader-eori                                          controllers.ProvideTraderEoriController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+
+GET        /:draftId/verify-trader-eori                                          controllers.VerifyTraderEoriController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/verify-trader-eori                                          controllers.VerifyTraderEoriController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+
 GET        /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-enter-commodity-code                                    controllers.CommodityCodeController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)

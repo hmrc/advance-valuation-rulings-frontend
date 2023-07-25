@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{CounterId, Done, DraftId, UserAnswers}
+import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -38,7 +38,7 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.AccountHomePage
+import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import repositories.CounterRepository
 import services.UserAnswersService
 
@@ -81,6 +81,32 @@ trait SpecBase
   val userAnswersAsOrgAssistant: UserAnswers = emptyUserAnswers
     .setFuture(AccountHomePage, OrganisationAssistant)
     .futureValue
+
+  val contactInformation = ContactInformation(
+    personOfContact = Some("Test Person"),
+    sepCorrAddrIndicator = Some(false),
+    streetAndNumber = Some("Test Street 1"),
+    city = Some("Test City"),
+    postalCode = Some("Test Postal Code"),
+    countryCode = Some("GB"),
+    telephoneNumber = Some("Test Telephone Number"),
+    faxNumber = Some("Test Fax Number"),
+    emailAddress = Some("Test Email Address"),
+    emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
+  )
+
+  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = "GB123456789012345",
+    consentToDisclosureOfPersonalData = true,
+    CDSFullName = "Test Name",
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = "Test Street 1",
+      city = "Test City",
+      countryCode = "GB",
+      postalCode = Some("Test Postal Code")
+    ),
+    contactInformation = Some(contactInformation)
+  )
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
