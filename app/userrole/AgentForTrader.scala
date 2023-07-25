@@ -25,8 +25,10 @@ import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
+  import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
+  import controllers.routes.ProvideTraderEoriController
   import views.html.AgentForTraderEORIBeUpToDateView
   case class AgentForTrader @Inject() (
     view: AgentForTraderCheckRegisteredDetailsView,
@@ -50,6 +52,10 @@ package userrole {
       eoriBeUpToDateView(draftId)
 
     override def selectGetRegisteredDetailsPage(): Page = AgentForTraderCheckRegisteredDetailsPage
+
+    override def getEORIDetailsJourney(draftId: DraftId): Call =
+      ProvideTraderEoriController.onPageLoad(draftId)
+
   }
 
 }

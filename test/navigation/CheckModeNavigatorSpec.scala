@@ -32,10 +32,7 @@ import userrole.{AgentForOrg, AgentForTrader, Employee, UserRoleProvider}
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val employeeRole                  = mock[Employee]
-  val agentForOrg                   = mock[AgentForOrg]
-  val agentForTrader                = mock[AgentForTrader]
-  val userRoleProvider              = new UserRoleProvider(employeeRole, agentForOrg, agentForTrader)
+  val userRoleProvider              = mock[UserRoleProvider]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
   val navigator                     = new Navigator(appConfig, userRoleProvider)

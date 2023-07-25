@@ -28,16 +28,14 @@ import controllers.routes
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import pages._
 import queries._
-import userrole.{AgentForOrg, AgentForTrader, Employee, UserRoleProvider}
+import userrole.{AgentForOrg, AgentForTrader, Employee, UserRole, UserRoleProvider}
 
 class NavigatorSpec extends SpecBase {
 
-  val employeeRole                  = mock[Employee]
-  val agentForOrg                   = mock[AgentForOrg]
-  val agentForTrader                = mock[AgentForTrader]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
   val userRoleProvider              = mock[UserRoleProvider]
@@ -1120,7 +1118,7 @@ class NavigatorSpec extends SpecBase {
       ) mustBe routes.AccountHomeController.onPageLoad()
     }
 
-    "must go from ContactPage to CheckRegisteredDetails when non-agent" in {
+    "must go from ContactPage to CheckRegisteredDetails when agentOnBehalfOfTrader is false" in {
       when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
       navigator.nextPage(
@@ -1130,13 +1128,17 @@ class NavigatorSpec extends SpecBase {
       ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
     }
 
-    "must go from ContactPage to ProviderTraderEoriController when agent" ignore {
-      when(appConfig.agentOnBehalfOfTrader) thenReturn false
+    "must go route according to userroleprovider when non-agent" in {
+      val mockUserRole = mock[UserRole]
+      when(mockUserRole.getEORIDetailsJourney(any()))
+        .thenReturn(routes.ProvideTraderEoriController.onPageLoad(draftId))
+      when(userRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
+      when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
-        userAnswersWith(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
+        userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
       ) mustBe routes.ProvideTraderEoriController.onPageLoad(draftId)
     }
 
