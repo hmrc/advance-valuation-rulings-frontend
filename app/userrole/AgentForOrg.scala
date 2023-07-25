@@ -25,13 +25,15 @@ import models.requests.DataRequest
 import views.html.AgentForOrgCheckRegisteredDetailsView
 
 package userrole {
+  import play.api.mvc.Request
   import play.twirl.api.HtmlFormat
 
   import pages.{CheckRegisteredDetailsPage, Page}
-  import views.html.AgentForOrgEORIBeUpToDateView
-  case class AgentForOrg @Inject() (
+  import views.html.{AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
+  private case class AgentForOrg @Inject() (
     view: AgentForOrgCheckRegisteredDetailsView,
-    eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView
+    eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView,
+    requiredInformation: AgentForOrgRequiredInformationView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -52,5 +54,10 @@ package userrole {
       eoriBeUpToDateView(draftId)
 
     override def selectGetRegisteredDetailsPage(): Page = CheckRegisteredDetailsPage
+
+    override def selectViewForRequiredInformation(
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      requiredInformation(draftId)
   }
 }

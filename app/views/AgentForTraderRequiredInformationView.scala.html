@@ -18,13 +18,12 @@
 
 @this(
     layout: templates.Layout,
-    govukErrorSummary: GovukErrorSummary,
     caption: Caption,
+    bulletList: BulletList,
+    para: InsetPara,
     heading: Heading,
-    paragraph: Paragraph,
-    saveButtons: SaveButtons,
-    insetPara: InsetPara,
-    bulletList: BulletList
+    cancelLink: CancelApplicationLink,
+    saveButtons: SaveButtons
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -35,16 +34,17 @@
 
         @heading(messages("requiredInformation.heading"))
 
-        @insetPara(Html(messages("requiredInformation.inset.para")))
+        @para(Html(messages("requiredInformation.inset.para")))
 
         @bulletList(
             Seq(
-                Html(messages("requiredInformation.option1.individual")),
-                Html(messages("requiredInformation.option2.individual")),
-                Html(messages("requiredInformation.option3.individual")),
-                Html(messages("requiredInformation.option4.individual")),
-                Html(messages("requiredInformation.option5.individual")),
-                Html(messages("requiredInformation.option6.individual"))
+                Html(messages("requiredInformation.option1.agentForTrader")),
+                Html(messages("requiredInformation.option2.agentForTrader")),
+                Html(messages("requiredInformation.option3.agentForTrader")),
+                Html(messages("requiredInformation.option4.agentForTrader")),
+                Html(messages("requiredInformation.option5.agentForTrader")),
+                Html(messages("requiredInformation.option6.agentForTrader")),
+                Html(messages("requiredInformation.option7.agentForTrader"))
             )
         )
 

@@ -220,15 +220,24 @@ requiredInformation.option4.individual = The name and address registered to my E
 requiredInformation.option5.individual = I am aware that it can take up to 120 days after I submit my application to get a decision.
 requiredInformation.option6.individual = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for up to three years from the date of issue.
 
-requiredInformation.option1.organisation = I am aware that I will need to propose a method to value the goods.
-requiredInformation.option2.organisation = I will supply HMRC with my contact email, phone number and registered EORI details as part of this application.
-requiredInformation.option3.organisation = I have the organisation’s EORI number starting with GB.
-requiredInformation.option4.organisation = The name and address registered to the organisation’s EORI number is up to date.
-requiredInformation.option5.organisation = I am aware that it can take up to 120 days after I submit my application to get a decision.
-requiredInformation.option6.organisation = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for up to three years from the date of issue.
+requiredInformation.option1.agentForOrg = I am aware that I will need to propose a method to value the goods.
+requiredInformation.option2.agentForOrg = I will supply HMRC with my contact email, phone number and registered EORI details as part of this application.
+requiredInformation.option3.agentForOrg = I have the organisation’s EORI number starting with GB.
+requiredInformation.option4.agentForOrg = The name and address registered to the organisation’s EORI number is up to date.
+requiredInformation.option5.agentForOrg = I am aware that it can take up to 120 days after I submit my application to get a decision.
+requiredInformation.option6.agentForOrg = I am aware that I will not need to apply for an Advance Valuation Ruling every time I import these goods via the same valuation method, since the ruling is legally binding for up to three years from the date of issue.
 requiredInformation.checkYourAnswersLabel = Before you start your application
 requiredInformation.change.hidden = required information
 requiredInformation.caption = Starter checklist
+
+
+requiredInformation.option1.agentForTrader = I am aware that I will need a signed letter of authority confirming I can act on the trader's behalf
+requiredInformation.option2.agentForTrader = I am aware that I will need to propose a method to value the goods
+requiredInformation.option3.agentForTrader = I will supply HMRC with my contact email and phone number as part of this application
+requiredInformation.option4.agentForTrader = I have the trader's EORI number starting with GB
+requiredInformation.option5.agentForTrader = The name and address registered to the trader's EORI number is up to date
+requiredInformation.option6.agentForTrader = I am aware that it can take up to 120 days after I submit my application to get a decision
+requiredInformation.option7.agentForTrader = I am aware that the trader will not need to apply for an Advance Valuation Ruling every time they import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
 
 confidentialInformation.title = Describe any confidential information you would like to add about the goods
 confidentialInformation.heading = Describe any confidential information you would like to add about the goods

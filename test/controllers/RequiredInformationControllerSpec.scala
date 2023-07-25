@@ -16,12 +16,22 @@
 
 package controllers
 
+import play.api.i18n.Messages
+import play.api.inject.bind
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 
 import base.SpecBase
+import config.FrontendAppConfig
+import models.requests.DataRequest
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
+import userrole.{UserRole, UserRoleProvider}
+import views.html.{AgentForOrgRequiredInformationView, IndividualInformationRequiredView}
 
 class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
@@ -40,7 +50,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[RequiredInformationView]
+        val view = application.injector.instanceOf[IndividualInformationRequiredView]
 
         status(result) mustEqual OK
 
@@ -60,7 +70,7 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[TraderAgentRequiredInformationView]
+        val view = application.injector.instanceOf[AgentForOrgRequiredInformationView]
 
         status(result) mustEqual OK
 
@@ -71,5 +81,41 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must return OK and the correct view for userRole where agentcreds flag is set" in {
+
+      // GIVEN the flag is set
+      val config: FrontendAppConfig          = mock[FrontendAppConfig]
+      when(config.agentOnBehalfOfTrader).thenReturn(true)
+      val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
+
+      // WHEN the userrole returns some given view
+      val userRole: UserRole = mock[UserRole]
+      val expectedView       = HtmlFormat.raw("expected View")
+      when(
+        userRole.selectViewForRequiredInformation(ArgumentMatchers.eq(draftId))(
+          any[DataRequest[AnyContent]],
+          any[Messages]
+        )
+      ).thenReturn(expectedView)
+      when(userRoleProvider.getUserRole(userAnswersAsOrgAdmin)).thenReturn(userRole)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsOrgAdmin))
+          .overrides(
+            bind[FrontendAppConfig].toInstance(config),
+            bind[UserRoleProvider].toInstance(userRoleProvider)
+          )
+          .build()
+
+      // THEN the actual rendered view equals this expected one
+      running(application) {
+
+        val request = FakeRequest(GET, requiredInformationRoute)
+        val result  = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual expectedView.toString()
+      }
+    }
   }
 }
