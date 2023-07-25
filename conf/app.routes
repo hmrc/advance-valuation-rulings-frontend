@@ -12,6 +12,7 @@ GET        /:draftId/refresh-session                             controllers.Kee
 
 GET        /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
+
 GET        /:draftId/check-your-answers                          controllers.CheckYourAnswersController.onPageLoad(draftId: DraftId)
 POST       /:draftId/check-your-answers                          controllers.CheckYourAnswersController.onSubmit(draftId: DraftId)
 
@@ -252,3 +253,5 @@ POST       /:draftId/supporting-documents/:index/change-remove                  
 GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
 
 GET        /:draftId/upload-letter                      controllers.UploadLetterController.onPageLoad(draftId: DraftId)
+
+GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()
