@@ -40,7 +40,8 @@ class NavigatorSpec extends SpecBase {
   val agentForTrader                = mock[AgentForTrader]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
-  val navigator                     = new Navigator(appConfig)
+  val userRoleProvider              = mock[UserRoleProvider]
+  val navigator                     = new Navigator(appConfig, userRoleProvider)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
@@ -87,9 +88,10 @@ class NavigatorSpec extends SpecBase {
     }
 
     "Account Home" - {
-      when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -99,6 +101,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -110,6 +114,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to RequiredInformation page for an OrganisationAdmin" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -119,6 +125,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to WhatIsYourRole page for an Agent" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -127,6 +135,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -1110,6 +1120,8 @@ class NavigatorSpec extends SpecBase {
     }
 
     "must go from ContactPage to CheckRegisteredDetails when non-agent" in {
+      when(appConfig.agentOnBehalfOfTrader) thenReturn false
+
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
@@ -1118,6 +1130,8 @@ class NavigatorSpec extends SpecBase {
     }
 
     "must go from ContactPage to ProviderTraderEoriController when agent" ignore {
+      when(appConfig.agentOnBehalfOfTrader) thenReturn false
+
       navigator.nextPage(
         ContactPagePage,
         NormalMode,

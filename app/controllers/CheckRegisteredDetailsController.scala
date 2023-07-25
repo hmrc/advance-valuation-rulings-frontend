@@ -49,8 +49,8 @@ class CheckRegisteredDetailsController @Inject() (
   userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
   view: CheckRegisteredDetailsView,
-  implicit val backendConnector: BackendConnector
-  appConfig: FrontendAppConfig,
+  implicit val backendConnector: BackendConnector,
+  appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -120,10 +120,12 @@ class CheckRegisteredDetailsController @Inject() (
                   } else {
                     AccountHomePage.get() match {
                       case None               =>
-                        Redirect(routes.UnauthorisedController.onPageLoad)
+                        Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                       case Some(authUserType) =>
-                        BadRequest(
-                          view(formWithErrors, details, mode, authUserType, draftId)
+                        Future.successful(
+                          BadRequest(
+                            view(formWithErrors, details, mode, authUserType, draftId)
+                          )
                         )
                     }
                   }
