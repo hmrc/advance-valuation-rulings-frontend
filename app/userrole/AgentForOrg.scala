@@ -29,6 +29,9 @@ import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToD
 
 package userrole {
 
+  import controllers.routes
+  import models.NormalMode
+
   private case class AgentForOrg @Inject() (
     view: AgentForOrgCheckRegisteredDetailsView,
     eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView,
@@ -59,6 +62,6 @@ package userrole {
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformation(draftId)
     override def getEORIDetailsJourney(draftId: DraftId): Call =
-      ProvideTraderEoriController.onPageLoad(draftId)
+      routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
   }
 }
