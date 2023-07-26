@@ -122,7 +122,7 @@ class AgentForTraderSpec extends AnyFreeSpec with Matchers {
         )(request, messages)
       ).thenReturn(expectedView)
 
-      val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForEoriBeUpToDate(
+      val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForRequiredInformation(
         draftId
       )(request, messages)
 

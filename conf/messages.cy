@@ -64,20 +64,32 @@ requiredInformation.caption = Rhestr wirio
 requiredInformation.title = Cyn i chi ddechrau’ch cais
 requiredInformation.heading = Cyn i chi ddechrau’ch cais
 requiredInformation.checkYourAnswersLabel = Cyn i chi ddechrau’ch cais
+requiredInformation.change.hidden = required informationrequiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
 requiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
+
 requiredInformation.option1.individual = Rwy’n ymwybodol bydd yn rhaid i mi gynnig dull o brisio’r nwyddau.
 requiredInformation.option2.individual = Byddaf yn rhoi fy e-bost cyswllt a rhif ffôn i CThEF fel rhan o’r cais hwn.
 requiredInformation.option3.individual = Mae gen i rif EORI sy’n dechrau gyda GB.
 requiredInformation.option4.individual = Mae’r enw a’r cyfeiriad a gofrestrwyd â’m rhif EORI yn gyfredol.
 requiredInformation.option5.individual = Rwy’n ymwybodol y gall gymryd hyd at 120 diwrnod ar ôl i mi gyflwyno fy nghais i gael penderfyniad.
 requiredInformation.option6.individual = Rwy’n ymwybodol na fydd angen i mi wneud cais am Ddyfarniad Prisiad Uwch bob tro y byddaf yn mewnforio’r nwyddau hyn drwy’r un dull prisio, gan fod y dyfarniad yn gyfreithiol rhwymol am hyd at dair blynedd o’r dyddiad cyhoeddi.
-requiredInformation.option1.organisation = Rwy’n ymwybodol bydd yn rhaid i mi gynnig dull o brisio’r nwyddau.
-requiredInformation.option2.organisation = Byddaf yn rhoi fy e-bost cyswllt, fy rhif ffôn, a’r manylion EORI cofrestredig i CThEF fel rhan o’r cais hwn.
-requiredInformation.option3.organisation = Mae gen i rif EORI y sefydliad sy’n dechrau gyda GB.
-requiredInformation.option4.organisation = Mae’r enw a’r cyfeiriad a gofrestrwyd â rhif EORI y sefydliad yn gyfredol.
-requiredInformation.option5.organisation = Rwy’n ymwybodol y gall gymryd hyd at 120 diwrnod ar ôl i mi gyflwyno fy nghais i gael penderfyniad.
-requiredInformation.option6.organisation = Rwy’n ymwybodol na fydd angen i mi wneud cais am Ddyfarniad Prisio Uwch bob tro y byddaf yn mewnforio’r nwyddau hyn drwy’r un dull prisio, gan fod y dyfarniad yn gyfreithiol rwymol am hyd at dair blynedd o’r dyddiad cyhoeddi.
-requiredInformation.change.hidden = required information
+
+requiredInformation.option1.agentForOrg = Rwy’n ymwybodol bydd yn rhaid i mi gynnig dull o brisio’r nwyddau.
+requiredInformation.option2.agentForOrg = Byddaf yn rhoi fy e-bost cyswllt, fy rhif ffôn, a’r manylion EORI cofrestredig i CThEF fel rhan o’r cais hwn.
+requiredInformation.option3.agentForOrg = Mae gen i rif EORI y sefydliad sy’n dechrau gyda GB.
+requiredInformation.option4.agentForOrg = Mae’r enw a’r cyfeiriad a gofrestrwyd â rhif EORI y sefydliad yn gyfredol.
+requiredInformation.option5.agentForOrg = Rwy’n ymwybodol y gall gymryd hyd at 120 diwrnod ar ôl i mi gyflwyno fy nghais i gael penderfyniad.
+requiredInformation.option6.agentForOrg = Rwy’n ymwybodol na fydd angen i mi wneud cais am Ddyfarniad Prisio Uwch bob tro y byddaf yn mewnforio’r nwyddau hyn drwy’r un dull prisio, gan fod y dyfarniad yn gyfreithiol rwymol am hyd at dair blynedd o’r dyddiad cyhoeddi.
+
+requiredInformation.option1.agentForTrader = I am aware that I will need a signed letter of authority confirming I can act on the trader’s behalf
+requiredInformation.option2.agentForTrader = I am aware that I will need to propose a method to value the goods
+requiredInformation.option3.agentForTrader = I will supply HMRC with my contact email and phone number as part of this application
+requiredInformation.option4.agentForTrader = I have the trader’s EORI number starting with GB
+requiredInformation.option5.agentForTrader = The name and address registered to the trader’s EORI number is up to date
+requiredInformation.option6.agentForTrader = I am aware that it can take up to 120 days after I submit my application to get a decision
+requiredInformation.option7.agentForTrader = I am aware that the trader will not need to apply for an Advance Valuation Ruling every time they import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
+
+
 
 importGoods.title = Ydych chi’n bwriadu mewnforio nwyddau i Brydain Fawr?
 importGoods.heading = Ydych chi’n bwriadu mewnforio nwyddau i Brydain Fawr?

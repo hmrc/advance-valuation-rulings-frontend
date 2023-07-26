@@ -118,7 +118,7 @@ class AgentForOrgSpec extends AnyFreeSpec with Matchers {
       )(request, messages)
     ).thenReturn(expectedView)
 
-    val actualView: HtmlFormat.Appendable = agentForOrg.selectViewForEoriBeUpToDate(
+    val actualView: HtmlFormat.Appendable = agentForOrg.selectViewForRequiredInformation(
       draftId
     )(request, messages)
 

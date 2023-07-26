@@ -1,0 +1,59 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components._
+
+@this(
+    layout: templates.Layout,
+    govukErrorSummary: GovukErrorSummary,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    saveButtons: SaveButtons,
+    insetPara: InsetPara,
+    bulletList: BulletList
+)
+
+@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("requiredInformation.title")), draftId = Some(draftId)) {
+
+        @caption(messages("requiredInformation.caption"))
+
+        @heading(messages("requiredInformation.heading"))
+
+        @insetPara(Html(messages("requiredInformation.inset.para")))
+
+        @bulletList(
+            Seq(
+                Html(messages("requiredInformation.option1.individual")),
+                Html(messages("requiredInformation.option2.individual")),
+                Html(messages("requiredInformation.option3.individual")),
+                Html(messages("requiredInformation.option4.individual")),
+                Html(messages("requiredInformation.option5.individual")),
+                Html(messages("requiredInformation.option6.individual"))
+            )
+        )
+
+        <span class="govuk-button-group">
+                <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button" id="continue-button">
+                    @messages("site.saveAndContinue")
+                </a>
+                <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
+                    @messages("site.saveAsDraft")
+                </a>
+        </span>
+}

@@ -118,7 +118,7 @@ class EmployeeSpec extends AnyFreeSpec with Matchers {
       )(request, messages)
     ).thenReturn(expectedView)
 
-    val actualView: HtmlFormat.Appendable = employee.selectViewForEoriBeUpToDate(
+    val actualView: HtmlFormat.Appendable = employee.selectViewForRequiredInformation(
       draftId
     )(request, messages)
 
