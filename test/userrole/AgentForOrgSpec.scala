@@ -26,16 +26,18 @@ import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView}
+import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
 class AgentForOrgSpec extends AnyFreeSpec with Matchers {
 
   private val agentForOrgCheckRegisteredDetailsView = mock[AgentForOrgCheckRegisteredDetailsView]
   private val agentForOrgEORIBeUpToDateView         = mock[AgentForOrgEORIBeUpToDateView]
+  private val requiredInformationView               = mock[AgentForOrgRequiredInformationView]
 
   private val agentForOrg = AgentForOrg(
     agentForOrgCheckRegisteredDetailsView,
-    agentForOrgEORIBeUpToDateView
+    agentForOrgEORIBeUpToDateView,
+    requiredInformationView
   )
 
   "AgentForOrg" - {
@@ -96,6 +98,27 @@ class AgentForOrgSpec extends AnyFreeSpec with Matchers {
     ).thenReturn(expectedView)
 
     val actualView: HtmlFormat.Appendable = agentForOrg.selectViewForEoriBeUpToDate(
+      draftId
+    )(request, messages)
+
+    actualView mustBe expectedView
+  }
+
+  "should return the correct view for selectViewForRequiredInformation" in {
+
+    val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+    val request  = mock[DataRequest[AnyContent]]
+    val draftId  = DraftId(1L)
+    val messages = mock[Messages]
+
+    when(
+      requiredInformationView.apply(
+        draftId
+      )(request, messages)
+    ).thenReturn(expectedView)
+
+    val actualView: HtmlFormat.Appendable = agentForOrg.selectViewForRequiredInformation(
       draftId
     )(request, messages)
 

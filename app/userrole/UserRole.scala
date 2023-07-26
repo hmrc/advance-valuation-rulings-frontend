@@ -39,5 +39,8 @@ trait UserRole {
 
   def selectGetRegisteredDetailsPage(): Page
 
+  def selectViewForRequiredInformation(
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
   def getEORIDetailsJourney(draftId: DraftId): Call
 }

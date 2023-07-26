@@ -17,8 +17,7 @@
 package userrole
 
 import models.{DraftId, UserAnswers, WhatIsYourRoleAsImporter}
-import org.mockito.Mockito
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.MockitoSugar.mock
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import pages.WhatIsYourRoleAsImporterPage

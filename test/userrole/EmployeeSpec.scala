@@ -23,18 +23,22 @@ import play.twirl.api.HtmlFormat
 
 import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView}
+import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
 class EmployeeSpec extends AnyFreeSpec with Matchers {
 
   private val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
   private val employeeEORIBeUpToDateView         = mock[EmployeeEORIBeUpToDateView]
+  private val requiredInformationView            = mock[IndividualInformationRequiredView]
 
-  private val employee = Employee(employeeCheckRegisteredDetailsView, employeeEORIBeUpToDateView)
+  private val employee = Employee(
+    employeeCheckRegisteredDetailsView,
+    employeeEORIBeUpToDateView,
+    requiredInformationView
+  )
 
   "Employee" - {
     "should return the correct view for CheckRegisteredDetails" in {
@@ -94,6 +98,27 @@ class EmployeeSpec extends AnyFreeSpec with Matchers {
     ).thenReturn(expectedView)
 
     val actualView: HtmlFormat.Appendable = employee.selectViewForEoriBeUpToDate(
+      draftId
+    )(request, messages)
+
+    actualView mustBe expectedView
+  }
+
+  "should return the correct view for selectViewForRequiredInformation" in {
+
+    val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+    val request  = mock[DataRequest[AnyContent]]
+    val draftId  = DraftId(1L)
+    val messages = mock[Messages]
+
+    when(
+      requiredInformationView.apply(
+        draftId
+      )(request, messages)
+    ).thenReturn(expectedView)
+
+    val actualView: HtmlFormat.Appendable = employee.selectViewForRequiredInformation(
       draftId
     )(request, messages)
 

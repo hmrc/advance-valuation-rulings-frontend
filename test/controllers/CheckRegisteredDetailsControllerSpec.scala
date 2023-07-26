@@ -16,30 +16,25 @@
 
 package controllers
 
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.Future
 
 import play.api.data.Form
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 import play.api.inject.bind
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.http.HeaderCarrier
 
-import akka.util.Timeout
 import base.SpecBase
-import com.typesafe.play.cachecontrol.Seconds.ZERO.seconds
 import config.FrontendAppConfig
 import connectors.BackendConnector
-import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import forms.CheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.{any, eq, same}
+import org.mockito.ArgumentMatchers.{any, same}
 import org.mockito.Mockito.when
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar

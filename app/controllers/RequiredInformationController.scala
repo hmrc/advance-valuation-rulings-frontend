@@ -22,11 +22,13 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions._
 import models.AuthUserType.IndividualTrader
 import models.DraftId
 import pages.AccountHomePage
-import views.html.{RequiredInformationView, TraderAgentRequiredInformationView}
+import userrole.UserRoleProvider
+import views.html.{AgentForOrgRequiredInformationView, IndividualInformationRequiredView}
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
@@ -34,8 +36,10 @@ class RequiredInformationController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  individualView: RequiredInformationView,
-  agentView: TraderAgentRequiredInformationView
+  individualView: IndividualInformationRequiredView,
+  agentForOrgView: AgentForOrgRequiredInformationView,
+  config: FrontendAppConfig,
+  userRoleProvider: UserRoleProvider
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -46,14 +50,24 @@ class RequiredInformationController @Inject() (
       implicit request =>
         logger.info("RequiredInformationController onPageLoad")
 
-        AccountHomePage.get() match {
-          case None =>
-            Redirect(routes.UnauthorisedController.onPageLoad)
+        if (config.agentOnBehalfOfTrader) {
 
-          case Some(IndividualTrader) =>
-            Ok(individualView(draftId))
-          case Some(_)                =>
-            Ok(agentView(draftId))
+          val view = userRoleProvider
+            .getUserRole(request.userAnswers)
+            .selectViewForRequiredInformation(draftId)
+          Ok(view)
+
+        } else {
+          AccountHomePage.get() match {
+            case None =>
+              Redirect(routes.UnauthorisedController.onPageLoad)
+
+            case Some(IndividualTrader) =>
+              Ok(individualView(draftId))
+            case Some(_)                =>
+              Ok(agentForOrgView(draftId))
+          }
+
         }
     }
 
