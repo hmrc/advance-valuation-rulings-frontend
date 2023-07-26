@@ -27,7 +27,7 @@ class UploadLetterFormProvider @Inject() extends Mappings {
   def apply(): Form[Boolean] =
     Form(
       "value" -> boolean(
-        "uploadLetter.todo"
+        "uploadLetterOfAuthority.todo"
       )
     )
 }

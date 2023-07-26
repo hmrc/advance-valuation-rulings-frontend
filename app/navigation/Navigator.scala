@@ -87,7 +87,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
     case WhoAreYouAgentPage                               => whoAreYouRouting
     case AgentForTraderCheckRegisteredDetailsPage         =>
-      ua => UploadLetterController.onPageLoad(ua.draftId)
+      ua => UploadLetterOfAuthorityController.onPageLoad(NormalMode, ua.draftId, None, None)
+    case UploadLetterOfAuthorityPage                      => uploadLetterOfAuthorityPage
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
@@ -542,6 +543,14 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       case None    => AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
+
+  private def uploadLetterOfAuthorityPage(
+    userAnswers: UserAnswers
+  ): Call =
+    IsThisFileConfidentialController.onPageLoad( // TODO: Change the next page loaded.
+      NormalMode,
+      userAnswers.draftId
+    )
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
