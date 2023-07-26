@@ -30,7 +30,7 @@ import models._
 import navigation.Navigator
 import pages._
 import services.fileupload.FileService
-import views.html.UploadSupportingDocumentsView
+import views.html.UploadLetterOfAuthorityView
 
 @Singleton
 class UploadLetterOfAuthorityController @Inject() (
@@ -39,7 +39,7 @@ class UploadLetterOfAuthorityController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  view: UploadSupportingDocumentsView,
+  view: UploadLetterOfAuthorityView,
   fileService: FileService,
   navigator: Navigator,
   configuration: Configuration
@@ -48,26 +48,27 @@ class UploadLetterOfAuthorityController @Inject() (
     with I18nSupport {
 
   def onPageLoad(
-    mode: Mode,
     draftId: DraftId,
     errorCode: Option[String],
     key: Option[String]
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
-      implicit request => showPage(draftId, mode) // TODO
+      implicit request => showPage(draftId) // TODO
     }
 
-  private def showPage(draftId: DraftId, mode: Mode)(implicit
+  private def showPage(draftId: DraftId)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, mode).map {
-      response =>
-        Ok(
-          view(
-            draftId = draftId,
-            upscanInitiateResponse = Some(response),
-            errorMessage = None
+    fileService
+      .initiate(draftId, NormalMode)
+      .map { // TODO: allow other modes other than NormalMode.
+        response =>
+          Ok(
+            view(
+              draftId = draftId,
+              upscanInitiateResponse = Some(response),
+              errorMessage = None
+            )
           )
-        )
-    }
+      }
 }
