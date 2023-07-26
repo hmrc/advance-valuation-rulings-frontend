@@ -24,7 +24,6 @@ import models.requests.DataRequest
 package userrole {
 
   import play.api.mvc.Call
-  import play.api.mvc.Request
   import play.twirl.api.HtmlFormat
 
   import controllers.routes

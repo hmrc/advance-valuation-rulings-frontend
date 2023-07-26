@@ -17,19 +17,18 @@
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
+import play.api.mvc.Call
+import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
+import controllers.routes.ProvideTraderEoriController
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import views.html.AgentForOrgCheckRegisteredDetailsView
+import pages.{CheckRegisteredDetailsPage, Page}
+import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
 package userrole {
-  import play.api.mvc.Call
-  import play.twirl.api.HtmlFormat
 
-  import controllers.routes.ProvideTraderEoriController
-  import pages.{CheckRegisteredDetailsPage, Page}
-  import views.html.{AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
   private case class AgentForOrg @Inject() (
     view: AgentForOrgCheckRegisteredDetailsView,
     eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView,

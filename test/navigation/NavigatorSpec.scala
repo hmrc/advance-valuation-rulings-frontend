@@ -32,7 +32,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import pages._
 import queries._
-import userrole.{AgentForOrg, AgentForTrader, Employee, UserRole, UserRoleProvider}
+import userrole.{UserRole, UserRoleProvider}
 
 class NavigatorSpec extends SpecBase {
 

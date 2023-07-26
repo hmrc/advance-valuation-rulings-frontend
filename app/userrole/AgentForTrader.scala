@@ -30,7 +30,6 @@ package userrole {
 
   import controllers.routes.ProvideTraderEoriController
   import views.html
-  import views.html.{AgentForTraderEORIBeUpToDateView, AgentForTraderRequiredInformationView}
   import views.html.AgentForTraderEORIBeUpToDateView
 
   private case class AgentForTrader @Inject() (
