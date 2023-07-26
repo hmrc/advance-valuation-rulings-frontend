@@ -28,16 +28,18 @@ import controllers.routes
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import org.mockito.MockitoSugar.when
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar.{mock, when}
 import pages._
 import queries._
+import userrole.{AgentForOrg, AgentForTrader, Employee, UserRole, UserRoleProvider}
 
 class NavigatorSpec extends SpecBase {
 
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
-  val navigator                     = new Navigator(appConfig)
+  val userRoleProvider              = mock[UserRoleProvider]
+  val navigator                     = new Navigator(appConfig, userRoleProvider)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
@@ -87,6 +89,8 @@ class NavigatorSpec extends SpecBase {
       when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -96,6 +100,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -107,6 +113,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to RequiredInformation page for an OrganisationAdmin" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -116,6 +124,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to WhatIsYourRole page for an Agent" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -124,6 +134,8 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
+        when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
@@ -1106,13 +1118,29 @@ class NavigatorSpec extends SpecBase {
       ) mustBe routes.AccountHomeController.onPageLoad()
     }
 
-    "must go from ContactPage to CheckRegisteredDetails" in {
+    "must go from ContactPage to CheckRegisteredDetails when agentOnBehalfOfTrader is false" in {
+      when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
       navigator.nextPage(
         ContactPagePage,
         NormalMode,
-        userAnswersAsIndividualTrader
+        userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
       ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
     }
+
+    "must go route according to userroleprovider when non-agent" in {
+      val mockUserRole = mock[UserRole]
+      when(mockUserRole.getEORIDetailsJourney(any()))
+        .thenReturn(routes.ProvideTraderEoriController.onPageLoad(draftId))
+      when(userRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
+      when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
+      navigator.nextPage(
+        ContactPagePage,
+        NormalMode,
+        userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+      ) mustBe routes.ProvideTraderEoriController.onPageLoad(draftId)
+    }
+
   }
 }

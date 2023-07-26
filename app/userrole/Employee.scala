@@ -17,18 +17,18 @@
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import views.html.EmployeeCheckRegisteredDetailsView
-
 package userrole {
 
+  import play.api.mvc.Call
   import play.api.mvc.Request
   import play.twirl.api.HtmlFormat
 
+  import controllers.routes
+  import models.NormalMode
   import pages.{CheckRegisteredDetailsPage, Page}
   import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
@@ -61,6 +61,8 @@ package userrole {
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformationRequiredView(draftId)
+    override def getEORIDetailsJourney(draftId: DraftId): Call =
+      routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
   }
 
 }

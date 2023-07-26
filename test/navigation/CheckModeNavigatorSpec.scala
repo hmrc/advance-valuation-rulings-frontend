@@ -28,12 +28,14 @@ import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import pages._
 import queries._
+import userrole.{AgentForOrg, AgentForTrader, Employee, UserRoleProvider}
 
 class CheckModeNavigatorSpec extends SpecBase {
 
+  val userRoleProvider              = mock[UserRoleProvider]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
-  val navigator                     = new Navigator(appConfig)
+  val navigator                     = new Navigator(appConfig, userRoleProvider)
   val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false

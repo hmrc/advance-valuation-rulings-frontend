@@ -25,11 +25,14 @@ import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
-  import play.api.mvc.Request
+  import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
+  import controllers.routes.ProvideTraderEoriController
   import views.html
   import views.html.{AgentForTraderEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+  import views.html.AgentForTraderEORIBeUpToDateView
+
   private case class AgentForTrader @Inject() (
     view: AgentForTraderCheckRegisteredDetailsView,
     eoriBeUpToDateView: AgentForTraderEORIBeUpToDateView,
@@ -58,6 +61,10 @@ package userrole {
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformationView(draftId)
+
+    override def getEORIDetailsJourney(draftId: DraftId): Call =
+      ProvideTraderEoriController.onPageLoad(draftId)
+
   }
 
 }

@@ -53,32 +53,6 @@ class CheckRegisteredDetailsControllerSpec
   val formProvider = new CheckRegisteredDetailsFormProvider()
   val form         = formProvider()
 
-  val contactInformation = ContactInformation(
-    personOfContact = Some("Test Person"),
-    sepCorrAddrIndicator = Some(false),
-    streetAndNumber = Some("Test Street 1"),
-    city = Some("Test City"),
-    postalCode = Some("Test Postal Code"),
-    countryCode = Some("GB"),
-    telephoneNumber = Some("Test Telephone Number"),
-    faxNumber = Some("Test Fax Number"),
-    emailAddress = Some("Test Email Address"),
-    emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
-  )
-
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
-    EORINo = "GB123456789012345",
-    consentToDisclosureOfPersonalData = true,
-    CDSFullName = "Test Name",
-    CDSEstablishmentAddress = CDSEstablishmentAddress(
-      streetAndNumber = "Test Street 1",
-      city = "Test City",
-      countryCode = "GB",
-      postalCode = Some("Test Postal Code")
-    ),
-    contactInformation = Some(contactInformation)
-  )
-
   val userAnswers = userAnswersAsIndividualTrader
     .set(CheckRegisteredDetailsPage, true)
     .success

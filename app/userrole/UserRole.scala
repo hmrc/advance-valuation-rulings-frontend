@@ -18,7 +18,8 @@ package userrole
 
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, Call}
+import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
 
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
@@ -42,4 +43,5 @@ trait UserRole {
   def selectViewForRequiredInformation(
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
+  def getEORIDetailsJourney(draftId: DraftId): Call
 }

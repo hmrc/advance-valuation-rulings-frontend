@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package navigation
+package controllers
 
-import play.api.mvc.Call
+import javax.inject.Inject
 
-import models.{Mode, UserAnswers}
-import pages._
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-class FakeNavigator(desiredRoute: Call) extends Navigator(null, null) {
+import views.html.YourApplicationHasBeenCancelledView
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+class YourApplicationHasBeenCancelledController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  view: YourApplicationHasBeenCancelledView
+) extends FrontendBaseController
+    with I18nSupport {
+
+  def onPageLoad: Action[AnyContent] = Action(implicit request => Ok(view()))
 }

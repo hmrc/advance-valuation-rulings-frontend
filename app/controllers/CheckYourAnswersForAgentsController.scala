@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
+import controllers.common.TraderDetailsHelper
 import controllers.routes.WhatIsYourRoleAsImporterController
 import models._
 import models.AuthUserType._
@@ -46,28 +47,13 @@ class CheckYourAnswersForAgentsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersForAgentsView,
   submissionService: SubmissionService,
-  backendConnector: BackendConnector
+  implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with TraderDetailsHelper {
 
-  private val logger = Logger(this.getClass)
-
-  private def getTraderDetails(
-    handleSuccess: TraderDetailsWithCountryCode => Future[play.api.mvc.Result]
-  )(implicit request: DataRequest[AnyContent]) =
-    backendConnector
-      .getTraderDetails(
-        AcknowledgementReference(request.userAnswers.draftId),
-        EoriNumber(request.eoriNumber)
-      )
-      .flatMap {
-        case Right(traderDetails) =>
-          handleSuccess(traderDetails)
-        case Left(backendError)   =>
-          logger.error(s"Failed to get trader details from backend: $backendError")
-          Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-      }
+  private implicit val logger = Logger(this.getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
