@@ -862,6 +862,10 @@ deleteDraft.guidance = If you delete your application now, any data will be lost
 provideTraderEori.heading=Provide the trader''s EORI number
 provideTraderEori.p1=You must provide the Economic Operator Registration and Identification (EORI) number for the trader you are acting on behalf of. This must be a valid number starting with GB.
 provideTraderEori.error.required=Enter the trader''s EORI number
+provideTraderEori.error.tooLong=EORI number is too long
+provideTraderEori.error.tooShort=EORI number is not long enough
+provideTraderEori.error.notGB=Enter EORI number beginning with GB
+provideTraderEori.error.general=EORI country code can only be GB followed by 12 digits, like GB123456123456
 
 #TRADER DETAILS - COMMON
 traderDetails.common.searchAgain=<a href="{0}" class="govuk-link">Search again</a> if you think you entered the trader''s EORI number incorrectly.
