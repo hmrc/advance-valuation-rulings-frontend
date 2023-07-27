@@ -47,21 +47,22 @@ class UploadLetterOfAuthorityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
+  // TODO
   def onPageLoad(
     draftId: DraftId,
     errorCode: Option[String],
     key: Option[String]
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
-      implicit request => showPage(draftId) // TODO
+      implicit request => showPage(draftId)
     }
 
   private def showPage(draftId: DraftId)(implicit
     request: RequestHeader
   ): Future[Result] =
     fileService
-      .initiate(draftId, NormalMode)
-      .map { // TODO: allow other modes other than NormalMode.
+      .initiate(draftId, NormalMode) // TODO: allow other modes other than NormalMode.
+      .map {
         response =>
           Ok(
             view(

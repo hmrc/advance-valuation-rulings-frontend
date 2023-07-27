@@ -44,7 +44,12 @@ class VerifyLetterOfAuthorityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId): Action[AnyContent] = ???
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        val attachments = AllDocuments.get().getOrElse(List.empty)
+        Ok(view(attachments, draftId))
+    }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] = ???
 }

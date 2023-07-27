@@ -31,20 +31,16 @@
     saveButtons: SaveButtons
 )
 
-@(attachments: Seq[DraftAttachment], form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(attachments: Seq[DraftAttachment], draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{messages("verifyLetterOfAuthority.title")}
 
 @pageHeading = @{messages("verifyLetterOfAuthority.heading")}
 
-@layout(pageTitle = title(form, titleMessage), draftId = Some(draftId)) {
+@layout(pageTitle = titleNoForm(titleMessage), draftId = Some(draftId)) {
 
     @formHelper(action = routes.VerifyLetterOfAuthorityController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
-    
         @caption(messages("verifyLetterOfAuthority.caption"))
 
         @heading(pageHeading)
@@ -59,7 +55,7 @@
                   govukLink(
                     id = "remove-file-" + i,
                     text = messages("site.remove"),
-                    call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
+                    call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(NormalMode, draftId, Index(i)),
                     newTab = false
                   )
                 )
