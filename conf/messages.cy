@@ -866,6 +866,7 @@ provideTraderEori.error.tooLong=EORI number is too long
 provideTraderEori.error.tooShort=EORI number is not long enough
 provideTraderEori.error.notGB=Enter EORI number beginning with GB
 provideTraderEori.error.specialCharacters=Enter an EORI number in the correct format, like GB123456789010
+provideTraderEori.error.default=Enter an EORI number in the correct format, like GB123456789010
 
 #TRADER DETAILS - COMMON
 traderDetails.common.searchAgain=<a href="{0}" class="govuk-link">Search again</a> if you think you entered the trader''s EORI number incorrectly.

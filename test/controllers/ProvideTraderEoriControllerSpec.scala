@@ -248,6 +248,30 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           ).toString
         }
       }
+
+      "value does not otherwise match the format" in {
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, provideTraderEoriPagePostRoute)
+              .withFormUrlEncodedBody(("value", "GB123123ABCABC"))
+
+          val result = route(application, request).value
+
+          val view      = application.injector.instanceOf[ProvideTraderEoriView]
+          val boundForm =
+            form.bind(Map("value" -> "GB123123ABCABC"))
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+            request,
+            messages(application)
+          ).toString
+        }
+      }
     }
 
     "must return invalidEoriView for a POST if provided EORI is not found" in {
