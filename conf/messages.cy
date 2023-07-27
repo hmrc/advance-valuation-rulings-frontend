@@ -868,7 +868,8 @@ provideTraderEori.error.notGB=Enter EORI number beginning with GB
 provideTraderEori.error.general=EORI country code can only be GB followed by 12 digits, like GB123456123456
 
 #TRADER DETAILS - COMMON
-traderDetails.common.searchAgain=<a href="{0}" class="govuk-link">Search again</a> if you think you entered the trader''s EORI number incorrectly.
+traderDetails.common.searchAgain.link = Search again
+traderDetails.common.searchAgain = {0} if you think you entered the trader''s EORI number incorrectly.
 
 #TRADER DETAILS - PUBLIC
 traderDetails.public.heading=Check the name and address for EORI number

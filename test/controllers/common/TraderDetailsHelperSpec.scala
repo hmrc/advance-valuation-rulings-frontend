@@ -32,10 +32,10 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import base.SpecBase
 import connectors.BackendConnector
-import models.{BackendError, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.{BackendError, DraftId, UserAnswers}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 

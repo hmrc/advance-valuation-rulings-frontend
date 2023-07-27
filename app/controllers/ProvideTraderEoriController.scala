@@ -29,8 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
-import forms.TraderEoriNumberFormProvider
-import models.{DraftId, Mode, TraderDetailsWithCountryCode}
+import forms.TraderEoriNumberFormProviderimport models.{DraftId, Mode, NormalMode, TraderDetailsWithCountryCode}
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
@@ -91,8 +90,12 @@ class ProvideTraderEoriController @Inject() (
                               userAnswersService.set(traderAnswers)
                               Future.successful(
                                 Redirect(
-                                  controllers.routes.VerifyTraderEoriController
-                                    .onPageLoad(draftId)
+                                  navigator
+                                    .nextPage(
+                                      ProvideTraderEoriPage,
+                                      NormalMode,
+                                      request.userAnswers
+                                    )
                                 )
                               )
                             case Failure(error)         =>

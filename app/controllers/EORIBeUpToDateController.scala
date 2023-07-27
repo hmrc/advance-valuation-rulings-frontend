@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import config.FrontendAppConfig
 import controllers.actions._
 import models.DraftId
-import pages.{AccountHomePage, WhoAreYouAgentPage}
+import pages.AccountHomePage
 import userrole.UserRoleProvider
 import views.html.EORIBeUpToDateView
 
