@@ -19,7 +19,6 @@ package controllers
 import scala.concurrent.Future
 
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -27,6 +26,7 @@ import base.SpecBase
 import connectors.BackendConnector
 import forms.TraderEoriNumberFormProvider
 import models.{BackendError, Done, NormalMode}
+import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,8 +35,6 @@ import services.UserAnswersService
 import views.html.{InvalidTraderEoriView, ProvideTraderEoriView}
 
 class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
-
-  override def onwardRoute = Call("GET", s"/advance-valuation-ruling/$draftId/verify-trader-eori")
 
   lazy val provideTraderEoriPageRoute     =
     routes.ProvideTraderEoriController.onPageLoad(draftId).url
@@ -108,7 +106,8 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
           )
           .build()
 

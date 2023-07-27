@@ -90,6 +90,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       ua => UploadLetterOfAuthorityController.onPageLoad(ua.draftId, None, None)
     case UploadLetterOfAuthorityPage                      => uploadLetterOfAuthorityPage
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
+    case ProvideTraderEoriPage                            =>
+      ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 

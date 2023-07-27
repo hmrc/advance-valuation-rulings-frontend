@@ -38,7 +38,7 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
+import pages.AccountHomePage
 import repositories.CounterRepository
 import services.UserAnswersService
 
@@ -70,11 +70,17 @@ trait SpecBase
 
   val emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
 
-  val userAnswersAsIndividualTrader: UserAnswers = emptyUserAnswers
-    .setFuture(AccountHomePage, IndividualTrader)
-    .futureValue
+  val userAnswersAsIndividualTrader: UserAnswers =
+    emptyUserAnswers
+      .setFuture(AccountHomePage, IndividualTrader)
+      .futureValue
 
-  val userAnswersAsOrgAdmin: UserAnswers = emptyUserAnswers
+  val userAnswersAsOrgAdmin: UserAnswers =
+    emptyUserAnswers
+      .setFuture(AccountHomePage, OrganisationAdmin)
+      .futureValue
+
+  emptyUserAnswers
     .setFuture(AccountHomePage, OrganisationAdmin)
     .futureValue
 

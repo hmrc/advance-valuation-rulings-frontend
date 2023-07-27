@@ -25,11 +25,13 @@ import play.twirl.api.HtmlFormat
 
 import base.SpecBase
 import config.FrontendAppConfig
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import pages.WhatIsYourRoleAsImporterPage
 import userrole.{UserRole, UserRoleProvider}
 import views.html.{AgentForOrgRequiredInformationView, IndividualInformationRequiredView}
 
@@ -41,9 +43,9 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
   "RequiredInformation Controller" - {
 
     "must return OK and the correct view for individual user type" in {
-
+      val ua          = userAnswersAsIndividualTrader.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg).get
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(ua)).build()
 
       running(application) {
         val request = FakeRequest(GET, requiredInformationRoute)
@@ -61,9 +63,10 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
       }
     }
     "must return OK and the correct view for non individual user type" in {
+      val ua = userAnswersAsOrgAdmin.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg).get
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsOrgAdmin)).build()
+        applicationBuilder(userAnswers = Some(ua)).build()
 
       running(application) {
         val request = FakeRequest(GET, requiredInformationRoute)
@@ -83,12 +86,10 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for userRole where agentcreds flag is set" in {
 
-      // GIVEN the flag is set
       val config: FrontendAppConfig          = mock[FrontendAppConfig]
       when(config.agentOnBehalfOfTrader).thenReturn(true)
       val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
 
-      // WHEN the userrole returns some given view
       val userRole: UserRole = mock[UserRole]
       val expectedView       = HtmlFormat.raw("expected View")
       when(
