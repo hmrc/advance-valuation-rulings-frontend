@@ -116,7 +116,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         val request =
           FakeRequest(POST, provideTraderEoriPagePostRoute)
             .withFormUrlEncodedBody(
-              "value" -> "GB24567FD6GHF788"
+              "value" -> "GB123456123456"
             )
 
         val result = route(application, request).value
@@ -126,39 +126,130 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must display an error on the page when no EORI number is submitted" in {
+    "must display an error on the page when" - {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      "no EORI number is submitted" in {
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+            .build()
 
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
+        running(application) {
+          val request =
+            FakeRequest(POST, provideTraderEoriPagePostRoute)
+              .withFormUrlEncodedBody(("value", ""))
 
-      running(application) {
-        val request =
-          FakeRequest(POST, provideTraderEoriPagePostRoute)
-            .withFormUrlEncodedBody(("value", ""))
+          val result = route(application, request).value
 
-        val result = route(application, request).value
+          val view      = application.injector.instanceOf[ProvideTraderEoriView]
+          val boundForm =
+            form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[ProvideTraderEoriView]
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+            request,
+            messages(application)
+          ).toString
+        }
+      }
 
-        val boundForm =
-          form.bind(Map("value" -> ""))
+      "value submitted is too long" in {
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+            .build()
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
-          request,
-          messages(application)
-        ).toString
+        running(application) {
+          val request =
+            FakeRequest(POST, provideTraderEoriPagePostRoute)
+              .withFormUrlEncodedBody(("value", "GB123123123123123"))
+
+          val result = route(application, request).value
+
+          val view      = application.injector.instanceOf[ProvideTraderEoriView]
+          val boundForm =
+            form.bind(Map("value" -> "GB123123123123123"))
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+            request,
+            messages(application)
+          ).toString
+        }
+      }
+
+      "value submitted is too short" in {
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, provideTraderEoriPagePostRoute)
+              .withFormUrlEncodedBody(("value", "GB123123123"))
+
+          val result = route(application, request).value
+
+          val view      = application.injector.instanceOf[ProvideTraderEoriView]
+          val boundForm =
+            form.bind(Map("value" -> "GB123123123"))
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+            request,
+            messages(application)
+          ).toString
+        }
+      }
+
+      "value submitted does not start with GB" in {
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, provideTraderEoriPagePostRoute)
+              .withFormUrlEncodedBody(("value", "AB123123123123"))
+
+          val result = route(application, request).value
+
+          val view      = application.injector.instanceOf[ProvideTraderEoriView]
+          val boundForm =
+            form.bind(Map("value" -> "AB123123123123"))
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+            request,
+            messages(application)
+          ).toString
+        }
+      }
+
+      "value submitted otherwise fails the format constraints" in {
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, provideTraderEoriPagePostRoute)
+              .withFormUrlEncodedBody(("value", "GB123ABC123123"))
+
+          val result = route(application, request).value
+
+          val view      = application.injector.instanceOf[ProvideTraderEoriView]
+          val boundForm =
+            form.bind(Map("value" -> "GB123ABC123123"))
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+            request,
+            messages(application)
+          ).toString
+        }
       }
     }
+
     "must return invalidEoriView for a POST if provided EORI is not found" in {
 
       val mockUserAnswersService = mock[UserAnswersService]
@@ -176,7 +267,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           .build()
 
       running(application) {
-        val eoriNo  = "GBS0M330RI"
+        val eoriNo  = "GB123123123123"
         val request =
           FakeRequest(POST, provideTraderEoriPagePostRoute)
             .withFormUrlEncodedBody(
@@ -216,7 +307,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         val request =
           FakeRequest(POST, provideTraderEoriPagePostRoute)
             .withFormUrlEncodedBody(
-              "value" -> "GB345"
+              "value" -> "GB123123123123"
             )
 
         val result = route(application, request).value

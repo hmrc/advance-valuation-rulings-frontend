@@ -29,10 +29,13 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import controllers.routes.ProvideTraderEoriController
+  import views.html
   import views.html.AgentForTraderEORIBeUpToDateView
-  case class AgentForTrader @Inject() (
+
+  private case class AgentForTrader @Inject() (
     view: AgentForTraderCheckRegisteredDetailsView,
-    eoriBeUpToDateView: AgentForTraderEORIBeUpToDateView
+    eoriBeUpToDateView: AgentForTraderEORIBeUpToDateView,
+    requiredInformationView: html.AgentForTraderRequiredInformationView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -52,6 +55,11 @@ package userrole {
       eoriBeUpToDateView(draftId)
 
     override def selectGetRegisteredDetailsPage(): Page = AgentForTraderCheckRegisteredDetailsPage
+
+    override def selectViewForRequiredInformation(
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      requiredInformationView(draftId)
 
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       ProvideTraderEoriController.onPageLoad(draftId)

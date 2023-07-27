@@ -17,22 +17,22 @@
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
+import play.api.mvc.Call
+import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
+import controllers.routes.ProvideTraderEoriController
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import views.html.AgentForOrgCheckRegisteredDetailsView
+import pages.{CheckRegisteredDetailsPage, Page}
+import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
 package userrole {
-  import play.api.mvc.Call
-  import play.twirl.api.HtmlFormat
 
-  import controllers.routes.ProvideTraderEoriController
-  import pages.{CheckRegisteredDetailsPage, Page}
-  import views.html.AgentForOrgEORIBeUpToDateView
-  case class AgentForOrg @Inject() (
+  private case class AgentForOrg @Inject() (
     view: AgentForOrgCheckRegisteredDetailsView,
-    eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView
+    eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView,
+    requiredInformation: AgentForOrgRequiredInformationView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -54,6 +54,10 @@ package userrole {
 
     override def selectGetRegisteredDetailsPage(): Page = CheckRegisteredDetailsPage
 
+    override def selectViewForRequiredInformation(
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      requiredInformation(draftId)
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       ProvideTraderEoriController.onPageLoad(draftId)
   }

@@ -18,12 +18,13 @@
 
 @this(
     layout: templates.Layout,
+    govukErrorSummary: GovukErrorSummary,
     caption: Caption,
-    bulletList: BulletList,
-    para: InsetPara,
     heading: Heading,
-    cancelLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    paragraph: Paragraph,
+    saveButtons: SaveButtons,
+    insetPara: InsetPara,
+    bulletList: BulletList
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -34,16 +35,16 @@
 
         @heading(messages("requiredInformation.heading"))
 
-        @para(Html(messages("requiredInformation.inset.para")))
+        @insetPara(Html(messages("requiredInformation.inset.para")))
 
         @bulletList(
             Seq(
-               Html(messages("requiredInformation.option1.organisation")),
-               Html(messages("requiredInformation.option2.organisation")),
-               Html(messages("requiredInformation.option3.organisation")),
-               Html(messages("requiredInformation.option4.organisation")),
-               Html(messages("requiredInformation.option5.organisation")),
-               Html(messages("requiredInformation.option6.organisation"))
+                Html(messages("requiredInformation.option1.agentForOrg")),
+                Html(messages("requiredInformation.option2.agentForOrg")),
+                Html(messages("requiredInformation.option3.agentForOrg")),
+                Html(messages("requiredInformation.option4.agentForOrg")),
+                Html(messages("requiredInformation.option5.agentForOrg")),
+                Html(messages("requiredInformation.option6.agentForOrg"))
             )
         )
 

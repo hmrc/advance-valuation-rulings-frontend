@@ -26,7 +26,7 @@ import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderEORIBeUpToDateView}
+import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
 class AgentForTraderSpec extends AnyFreeSpec with Matchers {
 
@@ -36,9 +36,13 @@ class AgentForTraderSpec extends AnyFreeSpec with Matchers {
   private val agentForTraderEORIBeUpToDateView =
     mock[AgentForTraderEORIBeUpToDateView]
 
+  private val requiredInformationView =
+    mock[AgentForTraderRequiredInformationView]
+
   private val agentForTrader = AgentForTrader(
     agentForTraderCheckRegisteredDetailsView,
-    agentForTraderEORIBeUpToDateView
+    agentForTraderEORIBeUpToDateView,
+    requiredInformationView
   )
 
   "AgentForTrader" - {
@@ -98,6 +102,27 @@ class AgentForTraderSpec extends AnyFreeSpec with Matchers {
       ).thenReturn(expectedView)
 
       val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForEoriBeUpToDate(
+        draftId
+      )(request, messages)
+
+      actualView mustBe expectedView
+    }
+
+    "should return the correct view for selectViewForRequiredInformation" in {
+
+      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+      val request  = mock[DataRequest[AnyContent]]
+      val draftId  = DraftId(1L)
+      val messages = mock[Messages]
+
+      when(
+        requiredInformationView.apply(
+          draftId
+        )(request, messages)
+      ).thenReturn(expectedView)
+
+      val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForRequiredInformation(
         draftId
       )(request, messages)
 
