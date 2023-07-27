@@ -16,24 +16,23 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
-
-import play.api.Logger
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
-import forms.TraderEoriNumberFormProviderimport models.{DraftId, Mode, NormalMode, TraderDetailsWithCountryCode}
+import forms.TraderEoriNumberFormProvider
+import models.{DraftId, Mode, NormalMode, TraderDetailsWithCountryCode}
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
+import play.api.Logger
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{InvalidTraderEoriView, ProvideTraderEoriView}
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 class ProvideTraderEoriController @Inject() (
   override val messagesApi: MessagesApi,
