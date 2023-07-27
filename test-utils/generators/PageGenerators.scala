@@ -28,9 +28,6 @@ trait PageGenerators {
     : Arbitrary[BusinessContactDetailsPage.type] =
     Arbitrary(BusinessContactDetailsPage)
 
-  implicit lazy val arbitraryWhoAreYouAgentPage: Arbitrary[WhoAreYouAgentPage.type] =
-    Arbitrary(WhoAreYouAgentPage)
-
   implicit lazy val arbitraryWhatIsYourRoleAsImporterPage
     : Arbitrary[WhatIsYourRoleAsImporterPage.type] =
     Arbitrary(WhatIsYourRoleAsImporterPage)

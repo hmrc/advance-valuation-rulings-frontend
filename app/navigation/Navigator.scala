@@ -17,15 +17,13 @@
 package navigation
 
 import javax.inject.Inject
-
 import play.api.mvc.Call
-
 import config.FrontendAppConfig
 import controllers.routes._
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 import userrole.UserRoleProvider
@@ -85,12 +83,12 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ExplainHowYouWillUseMethodSixPage                => explainHowYouWillUseMethodSixPage
     case AdaptMethodPage                                  => adaptMethodPage
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
-    case WhoAreYouAgentPage                               => whoAreYouRouting
     case AgentForTraderCheckRegisteredDetailsPage         =>
       ua => UploadLetterController.onPageLoad(ua.draftId)
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case ProvideTraderEoriPage                            =>
-      ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
+      ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
+    case VerifyTraderDetailsPage => verifyTraderDetailsPage
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
@@ -114,12 +112,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
         }
     }
   }
-
-  private def whoAreYouRouting(userAnswers: UserAnswers): Call =
-    userAnswers.get(WhoAreYouAgentPage) match {
-      case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case None    => UnauthorisedController.onPageLoad
-    }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
@@ -487,6 +479,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(userAnswers.draftId)
     } else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
+  //Check EORI details pages-----
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   ): Call =
@@ -508,6 +501,21 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
           }
         } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
+  private def verifyTraderDetailsPage(//TODO NAVI TESTS FOR THIS PELASE
+    userAnswers: UserAnswers
+  ): Call =
+    userAnswers.get(VerifyTraderDetailsPage) match {
+      case None        => VerifyTraderEoriController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(value) =>
+        if (value) {
+          userAnswers.get(AccountHomePage) match {
+            case None               => UnauthorisedController.onPageLoad
+            case Some(AgentOnBehalfOfTrader) => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+          }
+        } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
+    }
+//-----
+
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ApplicationContactDetailsPage) match {

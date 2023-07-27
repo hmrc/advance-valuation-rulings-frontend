@@ -71,6 +71,11 @@ POST       /:draftId/check-EORI-details                                         
 GET        /:draftId/change-check-EORI-details                                      controllers.CheckRegisteredDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-check-EORI-details                                      controllers.CheckRegisteredDetailsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
+GET        /:draftId/check-trader-EORI-details                                            controllers.VerifyTraderEoriController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/check-trader-EORI-details                                            controllers.VerifyTraderEoriController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/change-check-trader-EORI-details                                      controllers.VerifyTraderEoriController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-check-trader-EORI-details                                      controllers.VerifyTraderEoriController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+
 GET        /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/provide-contact-details                                       controllers.ApplicationContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-provide-contact-details                                 controllers.ApplicationContactDetailsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
