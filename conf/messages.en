@@ -447,6 +447,11 @@ uploadLetterOfAuthority.label = Upload a file
 uploadLetterOfAuthority.button = Upload and continue
 uploadLetterOfAuthority.error.required = Select yes if you want to upload another document
 
+verifyLetterOfAuthority.title = todo
+verifyLetterOfAuthority.heading = todo
+verifyLetterOfAuthority.caption = todo
+verifyLetterOfAuthority.keepConfidential = todo
+
 uploadSupportingDocuments.title = Upload supporting documents
 uploadSupportingDocuments.heading = Upload supporting documents
 uploadSupportingDocuments.caption = About the goods

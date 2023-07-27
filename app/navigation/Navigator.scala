@@ -546,13 +546,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
-  private def uploadLetterOfAuthorityPage(
-    userAnswers: UserAnswers
-  ): Call =
-    IsThisFileConfidentialController.onPageLoad( // TODO: Change the next page loaded.
-      NormalMode,
-      userAnswers.draftId
-    )
+  private def uploadLetterOfAuthorityPage(userAnswers: UserAnswers): Call =
+    VerifyLetterOfAuthorityController.onPageLoad(userAnswers.draftId)
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
