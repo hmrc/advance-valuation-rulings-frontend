@@ -95,7 +95,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
-  // todo: check this routing
   private def startApplicationRouting(userAnswers: UserAnswers): Call = {
     val agentsOn: Boolean = appConfig.agentOnBehalfOfTrader
 

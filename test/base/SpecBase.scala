@@ -80,10 +80,6 @@ trait SpecBase
       .setFuture(AccountHomePage, OrganisationAdmin)
       .futureValue
 
-  emptyUserAnswers
-    .setFuture(AccountHomePage, OrganisationAdmin)
-    .futureValue
-
   val userAnswersAsOrgAssistant: UserAnswers = emptyUserAnswers
     .setFuture(AccountHomePage, OrganisationAssistant)
     .futureValue

@@ -21,14 +21,14 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
 
+import base.SpecBase
 import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
-class EmployeeSpec extends AnyFreeSpec with Matchers {
+class EmployeeSpec extends SpecBase with Matchers {
 
   private val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
   private val employeeEORIBeUpToDateView         = mock[EmployeeEORIBeUpToDateView]
@@ -125,4 +125,14 @@ class EmployeeSpec extends AnyFreeSpec with Matchers {
     actualView mustBe expectedView
   }
 
+  "getEORIDetailsJourney" - {
+    "should return CheckRegisteredDetails page" in {
+      employee
+        .getEORIDetailsJourney(draftId)
+        .url mustBe controllers.routes.CheckRegisteredDetailsController
+        .onPageLoad(NormalMode, draftId)
+        .url
+    }
+
+  }
 }
