@@ -37,14 +37,14 @@ class TraderEoriNumberFormProvider @Inject() extends Mappings {
 
   private val validEORINumber: Constraint[String] =
     Constraint {
-      case formatRegex()            => Valid
-      case s if s.length > 14       =>
+      case formatRegex()                     => Valid
+      case s if s.length > 14                =>
         Invalid(ValidationError("provideTraderEori.error.tooLong"))
-      case s if s.length < 14       =>
+      case s if s.length < 14                =>
         Invalid(ValidationError("provideTraderEori.error.tooShort"))
-      case s if !s.startsWith("GB") =>
+      case s if !s.startsWith("GB")          =>
         Invalid(ValidationError("provideTraderEori.error.notGB"))
-      case _                        =>
-        Invalid(ValidationError("provideTraderEori.error.general"))
+      case s if !s.forall(_.isLetterOrDigit) =>
+        Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
     }
 }

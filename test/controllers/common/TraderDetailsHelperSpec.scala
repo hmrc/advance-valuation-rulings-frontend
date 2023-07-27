@@ -32,10 +32,11 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import base.SpecBase
 import connectors.BackendConnector
-import models.{BackendError, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.{BackendError, DraftId, EoriNumber, UserAnswers}
 import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{eq => eqTo}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 
@@ -48,12 +49,11 @@ class TraderDetailsHelperSpec extends SpecBase with MockitoSugar {
 
   private def buildRequest(): DataRequest[AnyContent] = {
     val userId  = "userId"
-    val eori    = "eori"
     val draftId = DraftId(Arbitrary.arbitrary[Long].sample.get)
     DataRequest(
       FakeRequest(GET, ""),
       userId,
-      eori,
+      EoriNumber,
       UserAnswers(userId, draftId, JsObject.empty, Instant.now),
       AffinityGroup.Individual,
       None
@@ -62,6 +62,11 @@ class TraderDetailsHelperSpec extends SpecBase with MockitoSugar {
 
   implicit val request = buildRequest()
   implicit val hc      = HeaderCarrierConverter.fromRequest(request)
+
+  override def beforeEach(): Unit = {
+    reset(mockConnector)
+    super.beforeEach()
+  }
 
   "getTraderDetails" - {
     "returns success logic when connector returns details" in {
@@ -106,6 +111,38 @@ class TraderDetailsHelperSpec extends SpecBase with MockitoSugar {
       )
 
       status(result) mustEqual NOT_FOUND
+    }
+
+    "uses given eori when provided" in {
+      when(mockConnector.getTraderDetails(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
+
+      val givenEori = new EoriNumber("provided")
+
+      val sut    = new Harness()
+      val result = sut.getTraderDetails(
+        _ => Future.successful(Ok("test")),
+        Some(Future.successful(NotFound("not found"))),
+        Some(givenEori)
+      )
+
+      status(result) mustBe OK
+      verify(mockConnector).getTraderDetails(any(), eqTo(givenEori))(any(), any())
+    }
+
+    "uses request eori when none provided" in {
+      when(mockConnector.getTraderDetails(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
+
+      val sut    = new Harness()
+      val result = sut.getTraderDetails(
+        _ => Future.successful(Ok("test")),
+        Some(Future.successful(NotFound("not found")))
+      )
+
+      status(result) mustBe OK
+      verify(mockConnector).getTraderDetails(any(), eqTo(new EoriNumber(EoriNumber)))(any(), any())
+
     }
   }
 }

@@ -30,7 +30,7 @@ import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import forms.TraderEoriNumberFormProvider
-import models.{DraftId, Mode, TraderDetailsWithCountryCode}
+import models.{DraftId, EoriNumber, Mode, TraderDetailsWithCountryCode}
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
@@ -105,7 +105,8 @@ class ProvideTraderEoriController @Inject() (
                                 )
                               )
                           },
-                        Some(Future.successful(NotFound(invalidEoriView(mode, draftId, value))))
+                        Some(Future.successful(NotFound(invalidEoriView(mode, draftId, value)))),
+                        Some(EoriNumber(value))
                       )
                   }
                 case Failure(error)       =>
