@@ -21,14 +21,14 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
 
+import base.SpecBase
 import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
-class AgentForTraderSpec extends AnyFreeSpec with Matchers {
+class AgentForTraderSpec extends SpecBase with Matchers {
 
   private val agentForTraderCheckRegisteredDetailsView =
     mock[AgentForTraderCheckRegisteredDetailsView]
@@ -129,6 +129,16 @@ class AgentForTraderSpec extends AnyFreeSpec with Matchers {
       actualView mustBe expectedView
     }
 
-  }
+    "getEORIDetailsJourney" - {
+      "should return ProvideEoriNumber page" in {
+        agentForTrader
+          .getEORIDetailsJourney(draftId)
+          .url mustBe controllers.routes.ProvideTraderEoriController
+          .onPageLoad(draftId)
+          .url
+      }
 
+    }
+
+  }
 }
