@@ -32,7 +32,7 @@ import config.Service
 import connectors.UpscanConnector
 import models.{Done, DraftId, Mode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
-import pages.UploadSupportingDocumentPage
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import queries.AllDocuments
 import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
@@ -59,10 +59,14 @@ class FileService @Inject() (
   ): Future[UpscanInitiateResponse] = {
 
     val redirectPath =
-      controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(mode, draftId, None, None)
+      // TODO
+      controllers.routes.UploadLetterOfAuthorityController
+        .onPageLoad(draftId, None, None)
         .url
-    val redirectUrl  = s"$host$redirectPath"
+//      controllers.routes.UploadSupportingDocumentsController
+//        .onPageLoad(mode, draftId, None, None)
+//        .url
+    val redirectUrl = s"$host$redirectPath"
 
     val request = UpscanInitiateRequest(
       callbackUrl =
@@ -78,7 +82,8 @@ class FileService @Inject() (
       answers        <- getUserAnswers(draftId)
       updatedAnswers <-
         answers.setFuture(
-          UploadSupportingDocumentPage,
+//          UploadSupportingDocumentPage,
+          UploadLetterOfAuthorityPage, // TODO
           UploadedFile.Initiated(response.reference)
         )
       _              <- userAnswersService.set(updatedAnswers)
@@ -89,7 +94,8 @@ class FileService @Inject() (
     for {
       answers        <- getUserAnswersInternal(draftId)
       updatedFile    <- processFile(answers, file)
-      updatedAnswers <- answers.setFuture(UploadSupportingDocumentPage, updatedFile)
+//      updatedAnswers <- answers.setFuture(UploadSupportingDocumentPage, updatedFile)
+      updatedAnswers <- answers.setFuture(UploadLetterOfAuthorityPage, updatedFile) // TODO
       _              <- userAnswersService.setInternal(updatedAnswers)
     } yield Done
 
