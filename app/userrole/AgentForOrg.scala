@@ -16,12 +16,10 @@
 
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.mvc.AnyContent
-import play.api.mvc.Call
+import play.api.mvc.{AnyContent, Call}
 import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
-import controllers.routes.ProvideTraderEoriController
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import pages.{CheckRegisteredDetailsPage, Page}
@@ -29,7 +27,7 @@ import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToD
 
 package userrole {
 
-  import controllers.routes
+  import controllers.routes.CheckRegisteredDetailsController
   import models.NormalMode
 
   private case class AgentForOrg @Inject() (
@@ -62,6 +60,6 @@ package userrole {
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformation(draftId)
     override def getEORIDetailsJourney(draftId: DraftId): Call =
-      routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+      CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
   }
 }

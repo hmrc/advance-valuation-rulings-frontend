@@ -32,9 +32,9 @@ import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val verifyTraderEoriPageRoute     =
-    routes.VerifyTraderEoriController.onPageLoad(draftId).url
+    routes.VerifyTraderEoriController.onPageLoad(NormalMode, draftId).url
   lazy val verifyTraderEoriPagePostRoute =
-    routes.VerifyTraderEoriController.onSubmit(draftId).url
+    routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId).url
 
   val formProvider = new VerifyTraderDetailsFormProvider()
   val form         = formProvider()
@@ -118,7 +118,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustEqual Some(
+        redirectLocation(result) mustBe Some(
           controllers.routes.JourneyRecoveryController
             .onPageLoad(
               continueUrl = Some(

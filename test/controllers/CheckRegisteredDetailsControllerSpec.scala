@@ -325,9 +325,6 @@ class CheckRegisteredDetailsControllerSpec
       val expectedViewBody = "hello"
       setUpViewMockForUserRole(expectedViewBody)
 
-      val traderDetails =
-        traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = true)
-
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(
           bind[BackendConnector].toInstance(mockBackendConnector),

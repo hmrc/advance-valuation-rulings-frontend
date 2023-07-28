@@ -18,7 +18,7 @@ package userrole
 
 import javax.inject.Inject
 
-import models.{NormalMode, UserAnswers, WhatIsYourRoleAsImporter}
+import models.{UserAnswers, WhatIsYourRoleAsImporter}
 import pages.WhatIsYourRoleAsImporterPage
 
 /** A class to give a [[UserRole]] given the answer to @link(WhatIsYourRoleAsImporterPage)

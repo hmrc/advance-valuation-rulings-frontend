@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
-import handlers.ErrorHandler
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
@@ -44,7 +43,6 @@ class VerifyTraderEoriController @Inject() (
   requireData: DataRequiredAction,
   formProvider: VerifyTraderDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  error: ErrorHandler,
   publicView: VerifyPublicTraderDetailView,
   privateView: VerifyPrivateTraderDetailView
 )(implicit ec: ExecutionContext)

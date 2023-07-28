@@ -30,7 +30,7 @@ import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import forms.TraderEoriNumberFormProvider
-import models.{DraftId, EoriNumber, Mode, TraderDetailsWithCountryCode}
+import models.{DraftId, EoriNumber, Mode, NormalMode, TraderDetailsWithCountryCode}
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
@@ -91,8 +91,11 @@ class ProvideTraderEoriController @Inject() (
                               userAnswersService.set(traderAnswers)
                               Future.successful(
                                 Redirect(
-                                  controllers.routes.VerifyTraderEoriController
-                                    .onPageLoad(draftId)
+                                  navigator.nextPage(
+                                    ProvideTraderEoriPage,
+                                    NormalMode,
+                                    request.userAnswers
+                                  )
                                 )
                               )
                             case Failure(error)         =>

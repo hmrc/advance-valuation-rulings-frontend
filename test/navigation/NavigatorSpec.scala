@@ -86,7 +86,6 @@ class NavigatorSpec extends SpecBase {
     }
 
     "Account Home" - {
-      when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
         when(appConfig.agentOnBehalfOfTrader) thenReturn true
@@ -145,6 +144,28 @@ class NavigatorSpec extends SpecBase {
     }
 
     "in Normal mode" - {
+
+      "If we need to contact you page" - {
+
+        "must receive next page from userRoleProvider" in {
+          when(appConfig.agentOnBehalfOfTrader) thenReturn true
+
+          val userAnswers  = emptyUserAnswers // usage is mocked in this test
+          val mockUserRole = mock[UserRole]
+
+          when(userRoleProvider.getUserRole(userAnswers)) thenReturn mockUserRole
+          when(
+            mockUserRole.getEORIDetailsJourney(draftId)
+          ) thenReturn onwardRoute
+
+          navigator.nextPage(
+            ContactPagePage,
+            NormalMode,
+            userAnswers
+          ) mustBe onwardRoute
+
+        }
+      }
 
       "WhatIsYourRoleAsImporterPage" - {
 
@@ -1126,20 +1147,6 @@ class NavigatorSpec extends SpecBase {
         NormalMode,
         userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
       ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
-    }
-
-    "must go route according to userroleprovider when non-agent" in {
-      val mockUserRole = mock[UserRole]
-      when(mockUserRole.getEORIDetailsJourney(any()))
-        .thenReturn(routes.ProvideTraderEoriController.onPageLoad(draftId))
-      when(userRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
-      when(appConfig.agentOnBehalfOfTrader) thenReturn true
-
-      navigator.nextPage(
-        ContactPagePage,
-        NormalMode,
-        userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
-      ) mustBe routes.ProvideTraderEoriController.onPageLoad(draftId)
     }
 
   }

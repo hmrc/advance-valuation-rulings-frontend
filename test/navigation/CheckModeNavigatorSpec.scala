@@ -28,7 +28,7 @@ import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import pages._
 import queries._
-import userrole.{AgentForOrg, AgentForTrader, Employee, UserRoleProvider}
+import userrole.UserRoleProvider
 
 class CheckModeNavigatorSpec extends SpecBase {
 

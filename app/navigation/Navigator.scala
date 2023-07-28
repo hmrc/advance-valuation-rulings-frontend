@@ -85,14 +85,14 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ExplainHowYouWillUseMethodSixPage                => explainHowYouWillUseMethodSixPage
     case AdaptMethodPage                                  => adaptMethodPage
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
-    case WhoAreYouAgentPage                               => whoAreYouRouting
     case AgentForTraderCheckRegisteredDetailsPage         =>
       ua => UploadLetterController.onPageLoad(ua.draftId)
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
+    case ProvideTraderEoriPage                            =>
+      ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
-  // todo: check this routing
   private def startApplicationRouting(userAnswers: UserAnswers): Call = {
     val agentsOn: Boolean = appConfig.agentOnBehalfOfTrader
 
@@ -113,12 +113,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
         }
     }
   }
-
-  private def whoAreYouRouting(userAnswers: UserAnswers): Call =
-    userAnswers.get(WhoAreYouAgentPage) match {
-      case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case None    => UnauthorisedController.onPageLoad
-    }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
@@ -486,6 +480,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(userAnswers.draftId)
     } else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
+  // Check EORI details pages-----
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   ): Call =
@@ -507,6 +502,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
           }
         } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
+//-----
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ApplicationContactDetailsPage) match {

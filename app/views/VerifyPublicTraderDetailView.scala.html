@@ -49,7 +49,7 @@
 
 @layout(pageTitle = title(form, messages("traderDetails.public.heading")), draftId = Some(draftId)) {
 
-    @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(draftId = draftId)) {
+    @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

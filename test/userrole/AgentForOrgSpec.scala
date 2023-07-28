@@ -21,14 +21,15 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
 
+import base.SpecBase
+import controllers.routes.CheckRegisteredDetailsController
 import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
-class AgentForOrgSpec extends AnyFreeSpec with Matchers {
+class AgentForOrgSpec extends SpecBase with Matchers {
 
   private val agentForOrgCheckRegisteredDetailsView = mock[AgentForOrgCheckRegisteredDetailsView]
   private val agentForOrgEORIBeUpToDateView         = mock[AgentForOrgEORIBeUpToDateView]
@@ -125,4 +126,12 @@ class AgentForOrgSpec extends AnyFreeSpec with Matchers {
     actualView mustBe expectedView
   }
 
+  "getEORIDetailsJourney" - {
+    "should return CheckRegisteredDetails page" in {
+      agentForOrg.getEORIDetailsJourney(draftId).url mustBe CheckRegisteredDetailsController
+        .onPageLoad(NormalMode, draftId)
+        .url
+    }
+
+  }
 }

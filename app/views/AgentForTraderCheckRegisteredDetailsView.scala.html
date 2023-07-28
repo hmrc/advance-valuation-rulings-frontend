@@ -50,15 +50,13 @@ link: Link
     }
 }
 
-@searchLink = {
-    <p class="govuk-body">
-        @link(
-            id = "search-eori-link",
-            text = messages("checkRegisteredDetails.search.link"),
-            call = Call("GET", "thisGoesToTicket162Page")
-        )
-        @messages("checkRegisteredDetails.search.text")
-    </p>
+@searchAgainLink = {
+    @link(
+        id = "eori_be_up_to_date_link_two",
+        text = messages("traderDetails.common.searchAgain.link"),
+        call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId),
+        newTab = false
+    )
 }
 
 @paraContent = {
@@ -134,10 +132,10 @@ link: Link
     ).withHint(Hint(content = HtmlContent(paraContent)))
 )
 
-@searchLink
+    @paragraph(content = Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
-@saveButtons(draftId)
-}
+    @saveButtons(draftId)
+    }
 
 @cancelApplicationLink(draftId)
 }
