@@ -83,7 +83,7 @@ class ProvideTraderEoriController @Inject() (
                     _ =>
                       getTraderDetails(
                         details =>
-                          request.userAnswers.set[TraderDetailsWithCountryCode](
+                          eoriAnswers.set[TraderDetailsWithCountryCode](
                             VerifyTraderDetailsPage,
                             details
                           ) match {
