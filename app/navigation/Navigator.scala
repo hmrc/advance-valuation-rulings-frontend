@@ -16,17 +16,18 @@
 
 package navigation
 
-import javax.inject.Inject
-import play.api.mvc.Call
 import config.FrontendAppConfig
 import controllers.routes._
-import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader, EmployeeOfOrg}
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models._
 import pages._
+import play.api.mvc.Call
 import queries.AllDocuments
 import userrole.UserRoleProvider
+
+import javax.inject.Inject
 
 class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserRoleProvider) {
 
@@ -88,7 +89,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case ProvideTraderEoriPage                            =>
       ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
-    case VerifyTraderDetailsPage => verifyTraderDetailsPage
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
@@ -479,7 +479,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(userAnswers.draftId)
     } else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
-  //Check EORI details pages-----
+  // Check EORI details pages-----
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   ): Call =
@@ -501,21 +501,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
           }
         } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
-  private def verifyTraderDetailsPage(//TODO NAVI TESTS FOR THIS PELASE
-    userAnswers: UserAnswers
-  ): Call =
-    userAnswers.get(VerifyTraderDetailsPage) match {
-      case None        => VerifyTraderEoriController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(value) =>
-        if (value) {
-          userAnswers.get(AccountHomePage) match {
-            case None               => UnauthorisedController.onPageLoad
-            case Some(AgentOnBehalfOfTrader) => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-          }
-        } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
-    }
 //-----
-
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ApplicationContactDetailsPage) match {

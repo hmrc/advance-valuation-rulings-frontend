@@ -203,7 +203,8 @@ provideTraderEori.error.required=Enter the trader''s EORI number
 provideTraderEori.error.tooLong=EORI number is too long
 provideTraderEori.error.tooShort=EORI number is not long enough
 provideTraderEori.error.notGB=Enter EORI number beginning with GB
-provideTraderEori.error.general=EORI country code can only be GB followed by 12 digits, like GB123456123456
+provideTraderEori.error.specialCharacters=Enter an EORI number in the correct format, like GB123456789010
+provideTraderEori.error.default=Enter an EORI number in the correct format, like GB123456789010
 
 #TRADER DETAILS - COMMON
 traderDetails.common.searchAgain.link = Search again
@@ -786,21 +787,6 @@ whatIsYourRoleAsImporter.change.hidden = your description of your role as an imp
 
 whatIsYourRoleAsImporter.agentOnBehalfOfTrader = Agent acting on behalf of a trader
 whatIsYourRoleAsImporter.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
-
-
-whoAreYouAgent.title = How would you describe your role as an importer?
-whoAreYouAgent.caption = About the applicant
-whoAreYouAgent.heading = How would you describe your role as an importer?
-whoAreYouAgent.error.required = Select an option on how you would describe your role as an importer
-whoAreYouAgent.hint = Choose the option that best describes your role:
-whoAreYouAgent.organisationEmployee = An employee of the organisation
-whoAreYouAgent.agentOnBehalfOfOrganisation = Agent acting on behalf of an organisation
-whoAreYouAgent.agentOnBehalfOfTrader = Agent acting on behalf of a trader
-whoAreYouAgent.organisationEmployee.hint = Imports goods into the UK on behalf of their organisation.
-whoAreYouAgent.agentOnBehalfOfOrganisation.hint = Imports goods into the UK on behalf of an organisation.
-whoAreYouAgent.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
-
-
 
 viewApplication.title = Your application
 viewApplication.heading = Your application

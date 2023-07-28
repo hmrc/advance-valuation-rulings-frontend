@@ -28,8 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
-import handlers.ErrorHandler
-import models.{DraftId, Mode, NormalMode}
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
@@ -94,9 +93,7 @@ class VerifyTraderEoriController @Inject() (
               for {
                 updatedAnswers <- ProvideTraderEoriPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(VerifyTraderDetailsPage, NormalMode, updatedAnswers)
-              )
+              } yield Redirect(???)
           )
     }
 }

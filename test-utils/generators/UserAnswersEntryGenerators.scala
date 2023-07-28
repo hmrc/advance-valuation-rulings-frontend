@@ -43,7 +43,6 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-
   implicit lazy val arbitraryWhatIsYourRoleAsImporterUserAnswersEntry
     : Arbitrary[(WhatIsYourRoleAsImporterPage.type, JsValue)] =
     Arbitrary {
