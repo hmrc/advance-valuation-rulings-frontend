@@ -16,18 +16,19 @@
 
 package navigation
 
+import javax.inject.Inject
+
+import play.api.mvc.Call
+
 import config.FrontendAppConfig
 import controllers.routes._
+import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import models._
 import pages._
-import play.api.mvc.Call
 import queries.AllDocuments
 import userrole.UserRoleProvider
-
-import javax.inject.Inject
 
 class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserRoleProvider) {
 

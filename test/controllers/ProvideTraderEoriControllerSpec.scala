@@ -16,6 +16,12 @@
 
 package controllers
 
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
 import connectors.BackendConnector
 import forms.TraderEoriNumberFormProvider
@@ -25,13 +31,8 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ProvideTraderEoriPage
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.{InvalidTraderEoriView, ProvideTraderEoriView}
-
-import scala.concurrent.Future
 
 class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
