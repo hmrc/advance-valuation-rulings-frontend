@@ -16,21 +16,22 @@
 
 package navigation
 
-import base.SpecBase
-import config.FrontendAppConfig
-import controllers.routes
-import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import models._
-import org.mockito.MockitoSugar.{mock, when}
-import pages._
+import java.time.Instant
+
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
+import base.SpecBase
+import config.FrontendAppConfig
+import controllers.routes
+import models._
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import org.mockito.MockitoSugar.{mock, when}
+import pages._
 import queries._
 import userrole.{UserRole, UserRoleProvider}
-
-import java.time.Instant
 
 class NavigatorSpec extends SpecBase {
 

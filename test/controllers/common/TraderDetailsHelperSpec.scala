@@ -16,14 +16,11 @@
 
 package controllers.common
 
-import base.SpecBase
-import connectors.BackendConnector
-import models.requests.DataRequest
-import models.{BackendError, DraftId, EoriNumber, UserAnswers}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{reset, verify, when}
-import org.scalacheck.Arbitrary
-import org.scalatestplus.mockito.MockitoSugar
+import java.time.Instant
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 import play.api.Logger
 import play.api.libs.json.JsObject
 import play.api.mvc.AnyContent
@@ -33,9 +30,14 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import java.time.Instant
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import base.SpecBase
+import connectors.BackendConnector
+import models.{BackendError, DraftId, EoriNumber, UserAnswers}
+import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{reset, verify, when}
+import org.scalacheck.Arbitrary
+import org.scalatestplus.mockito.MockitoSugar
 
 class TraderDetailsHelperSpec extends SpecBase with MockitoSugar {
 
