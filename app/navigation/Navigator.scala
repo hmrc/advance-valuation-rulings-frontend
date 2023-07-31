@@ -85,13 +85,12 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ExplainHowYouWillUseMethodSixPage                => explainHowYouWillUseMethodSixPage
     case AdaptMethodPage                                  => adaptMethodPage
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
-    case WhoAreYouAgentPage                               => whoAreYouRouting
     case AgentForTraderCheckRegisteredDetailsPage         =>
       ua => UploadLetterOfAuthorityController.onPageLoad(ua.draftId, None, None)
     case UploadLetterOfAuthorityPage                      => uploadLetterOfAuthorityPage
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case ProvideTraderEoriPage                            =>
-      ua => CheckRegisteredDetailsController.onPageLoad(NormalMode, ua.draftId)
+      ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
   }
 
@@ -115,12 +114,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
         }
     }
   }
-
-  private def whoAreYouRouting(userAnswers: UserAnswers): Call =
-    userAnswers.get(WhoAreYouAgentPage) match {
-      case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
-      case None    => UnauthorisedController.onPageLoad
-    }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {

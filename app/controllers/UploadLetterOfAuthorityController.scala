@@ -97,7 +97,7 @@ class UploadLetterOfAuthorityController @Inject() (
   private def showPage(draftId: DraftId, mode: Mode)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, mode).map {
+    fileService.initiateForLetterOfAuthority(draftId, mode).map {
       response =>
         Ok(
           view(
@@ -124,7 +124,7 @@ class UploadLetterOfAuthorityController @Inject() (
   private def showErrorPage(draftId: DraftId, mode: Mode, errorMessage: String)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, mode).map {
+    fileService.initiateForLetterOfAuthority(draftId, mode).map {
       response =>
         BadRequest(
           view(
@@ -141,7 +141,7 @@ class UploadLetterOfAuthorityController @Inject() (
     key: Option[String],
     errorCode: String
   )(implicit request: RequestHeader): Future[Result] =
-    fileService.initiate(draftId, mode).map {
+    fileService.initiateForLetterOfAuthority(draftId, mode).map {
       _ =>
         Redirect(
           routes.UploadLetterOfAuthorityController

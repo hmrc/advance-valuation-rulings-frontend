@@ -520,6 +520,36 @@ doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych am uwchlwytho unrhyw 
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
 
+uploadLetterOfAuthority.title = Upload your letter of authority - Apply for an Advance Valuation Ruling - GOV.UK
+uploadLetterOfAuthority.heading = Upload your letter of authority
+uploadLetterOfAuthority.caption = About the applicant
+uploadLetterOfAuthority.paragraph.1 = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader.
+uploadLetterOfAuthority.paragraph.2 = The letter of authority should:
+uploadLetterOfAuthority.paragraph.3 = An individual file must be:
+uploadLetterOfAuthority.bulletPoint.1 = be written and signed by the trader on letterhead paper
+uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on the trader’s behalf
+uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
+uploadLetterOfAuthority.bulletPoint.4 = contain your contact details including email address, phone number and the address registered with HMRC
+uploadLetterOfAuthority.bulletPoint.5 = include your VAT number
+uploadLetterOfAuthority.bulletPoint.6 = smaller than 5MB
+uploadLetterOfAuthority.bulletPoint.7 = a PDF or JPG
+uploadLetterOfAuthority.label = Upload a file
+uploadLetterOfAuthority.button = Upload and continue
+uploadLetterOfAuthority.error.required = Select yes if you want to upload another document
+uploadLetterOfAuthority.error.invalidargument = Select a file.
+uploadLetterOfAuthority.error.entitytoolarge = The selected file must be smaller than {0}MB
+uploadLetterOfAuthority.error.entitytoosmall = The selected file is empty.
+uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
+uploadLetterOfAuthority.error.quarantine = The selected file contains a virus - upload a different one.
+uploadLetterOfAuthority.error.incomplete = "The selected file has not fully uploaded."
+uploadLetterOfAuthority.error.duplicate = You can only upload distinct files
+uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded
+
+verifyLetterOfAuthority.title = todo
+verifyLetterOfAuthority.heading = todo
+verifyLetterOfAuthority.caption = todo
+verifyLetterOfAuthority.keepConfidential = todo
+
 uploadSupportingDocuments.caption = Ynglŷn â’r nwyddau
 uploadSupportingDocuments.title = Uwchlwytho dogfennau ategol
 uploadSupportingDocuments.heading = Uwchlwytho dogfennau ategol
@@ -774,18 +804,6 @@ willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = Will you be comparin
 willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 willYouCompareGoodsToIdenticalGoods.change.hidden = your response to whether you will be comparing your goods to identical goods imported by another buyer or seller in the past 90-days
 
-whoAreYouAgent.title = How would you describe your role as an importer?
-whoAreYouAgent.caption = About the applicant
-whoAreYouAgent.heading = How would you describe your role as an importer?
-whoAreYouAgent.error.required = Select an option on how would you describe your role as an importer
-whoAreYouAgent.hint = Choose the option that best describes your role:
-whoAreYouAgent.organisationEmployee = An employee of the organisation
-whoAreYouAgent.agentOnBehalfOfOrganisation = Agent acting on behalf of an organisation
-whoAreYouAgent.agentOnBehalfOfTrader = Agent acting on behalf of a trader
-whoAreYouAgent.organisationEmployee.hint = Imports goods into the UK on behalf of their organisation.
-whoAreYouAgent.agentOnBehalfOfOrganisation.hint = Imports goods into the UK on behalf of an organisation.
-whoAreYouAgent.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
-
 viewApplication.title = Your application
 viewApplication.heading = Your application
 viewApplication.forYourRecords = Ynglŷn â’r ymgeisydd
@@ -865,7 +883,8 @@ provideTraderEori.error.required=Enter the trader''s EORI number
 provideTraderEori.error.tooLong=EORI number is too long
 provideTraderEori.error.tooShort=EORI number is not long enough
 provideTraderEori.error.notGB=Enter EORI number beginning with GB
-provideTraderEori.error.general=EORI country code can only be GB followed by 12 digits, like GB123456123456
+provideTraderEori.error.specialCharacters=Enter an EORI number in the correct format, like GB123456789010
+provideTraderEori.error.default=Enter an EORI number in the correct format, like GB123456789010
 
 #TRADER DETAILS - COMMON
 traderDetails.common.searchAgain.link = Search again

@@ -30,9 +30,11 @@ import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCod
 import models.requests.DataRequest
 
 trait TraderDetailsHelper {
+
   def getTraderDetails(
     handleSuccess: TraderDetailsWithCountryCode => Future[Result],
-    notFound: Option[Future[Result]] = None
+    notFound: Option[Future[Result]] = None,
+    eori: Option[EoriNumber] = None
   )(implicit
     request: DataRequest[AnyContent],
     backendConnector: BackendConnector,
@@ -43,7 +45,7 @@ trait TraderDetailsHelper {
     backendConnector
       .getTraderDetails(
         AcknowledgementReference(request.userAnswers.draftId),
-        EoriNumber(request.eoriNumber)
+        eori.getOrElse(EoriNumber(request.eoriNumber))
       )
       .flatMap {
         r =>

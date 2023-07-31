@@ -224,7 +224,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "value submitted otherwise fails the format constraints" in {
+      "value submitted contains special characters" in {
         val application =
           applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
             .build()
@@ -232,13 +232,37 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request =
             FakeRequest(POST, provideTraderEoriPagePostRoute)
-              .withFormUrlEncodedBody(("value", "GB123ABC123123"))
+              .withFormUrlEncodedBody(("value", "GB1231231!!!!3"))
 
           val result = route(application, request).value
 
           val view      = application.injector.instanceOf[ProvideTraderEoriView]
           val boundForm =
-            form.bind(Map("value" -> "GB123ABC123123"))
+            form.bind(Map("value" -> "GB1231231!!!!3"))
+
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(
+            request,
+            messages(application)
+          ).toString
+        }
+      }
+
+      "value does not otherwise match the format" in {
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, provideTraderEoriPagePostRoute)
+              .withFormUrlEncodedBody(("value", "GB123123ABCABC"))
+
+          val result = route(application, request).value
+
+          val view      = application.injector.instanceOf[ProvideTraderEoriView]
+          val boundForm =
+            form.bind(Map("value" -> "GB123123ABCABC"))
 
           status(result) mustEqual BAD_REQUEST
           contentAsString(result) mustEqual view(boundForm, NormalMode, draftId)(

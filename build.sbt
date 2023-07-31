@@ -101,4 +101,7 @@ lazy val itSettings = Defaults.itSettings ++ Seq(
   fork := true
 )
 
-addCommandAlias("precommit", ";coverage;scalafmt;test:scalafmt;it:scalafmt;test;it:test;coverageReport")
+addCommandAlias(
+  "precommit",
+  ";coverage;scalafmt;test:scalafmt;it:scalafmt;test;it:test;coverageReport"
+)

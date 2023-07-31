@@ -30,7 +30,7 @@ import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import forms.TraderEoriNumberFormProvider
-import models.{DraftId, Mode, NormalMode, TraderDetailsWithCountryCode}
+import models.{DraftId, EoriNumber, Mode, NormalMode, TraderDetailsWithCountryCode}
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
@@ -83,7 +83,7 @@ class ProvideTraderEoriController @Inject() (
                     _ =>
                       getTraderDetails(
                         details =>
-                          request.userAnswers.set[TraderDetailsWithCountryCode](
+                          eoriAnswers.set[TraderDetailsWithCountryCode](
                             VerifyTraderDetailsPage,
                             details
                           ) match {
@@ -91,12 +91,11 @@ class ProvideTraderEoriController @Inject() (
                               userAnswersService.set(traderAnswers)
                               Future.successful(
                                 Redirect(
-                                  navigator
-                                    .nextPage(
-                                      ProvideTraderEoriPage,
-                                      NormalMode,
-                                      request.userAnswers
-                                    )
+                                  navigator.nextPage(
+                                    ProvideTraderEoriPage,
+                                    NormalMode,
+                                    request.userAnswers
+                                  )
                                 )
                               )
                             case Failure(error)         =>
@@ -109,7 +108,8 @@ class ProvideTraderEoriController @Inject() (
                                 )
                               )
                           },
-                        Some(Future.successful(NotFound(invalidEoriView(mode, draftId, value))))
+                        Some(Future.successful(NotFound(invalidEoriView(mode, draftId, value)))),
+                        Some(EoriNumber(value))
                       )
                   }
                 case Failure(error)       =>

@@ -1,0 +1,78 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import viewmodels.InputWidth._
+@import components._
+@import models.TraderDetailsWithCountryCode
+@import models.Country
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    caption: Caption,
+    heading: Heading,
+    paragraph: Paragraph,
+    cancelApplicationLink: CancelApplicationLink,
+    saveButtons: SaveButtons
+)
+
+@(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithCountryCode)(implicit request: Request[_], messages: Messages)
+
+@radioItems = @{
+    Seq(
+        RadioItem(
+            value = Some("true"),
+            checked = form.value.fold(false)(_ == "true"),
+            content = Text(messages("site.yes"))),
+        RadioItem(
+            value = Some("false"),
+            checked = form.value.fold(false)(_ == "false"),
+            content = Text(messages("site.no")))
+    )
+}
+
+@layout(pageTitle = title(form, messages("traderDetails.private.heading", details.EORINo)), draftId = Some(draftId)) {
+
+    @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId = draftId)) {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @caption(messages("caption.applicant"))
+        <h1 class="govuk-heading-xl">@messages("traderDetails.private.heading", details.EORINo)</h1>
+        <p class="govuk-body">@messages("traderDetails.private.p1")</p>
+        <p class="govuk-body">@messages("traderDetails.private.p2")</p>
+
+
+        <h3 class="govuk-heading-s">@messages("traderDetails.private.h3.proceed")</h3>
+        @govukRadios(
+            Radios(
+                idPrefix = Some("traderDetailsCorrect"),
+                name = "traderDetailsCorrect",
+                items = radioItems
+        ))
+
+        <p class="govuk-body">@Html(messages("traderDetails.common.searchAgain", controllers.routes.ProvideTraderEoriController.onPageLoad(draftId)))</p>
+
+        @saveButtons(draftId)
+    }
+
+    @cancelApplicationLink(draftId)
+}
+

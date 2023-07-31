@@ -16,12 +16,10 @@
 
 import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.mvc.AnyContent
-import play.api.mvc.Call
+import play.api.mvc.{AnyContent, Call}
 import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
-import controllers.routes.ProvideTraderEoriController
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import pages.{CheckRegisteredDetailsPage, Page}
