@@ -17,14 +17,11 @@
 package controllers
 
 import java.time.Instant
-
 import scala.concurrent.Future
-
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
 import base.SpecBase
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
@@ -34,6 +31,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
 import org.mockito.MockitoSugar.{reset, times}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import services.UserAnswersService
@@ -43,14 +41,18 @@ import views.html.UploadSupportingDocumentsView
 class UploadLetterOfAuthorityControllerSpec
     extends SpecBase
     with MockitoSugar
-    with BeforeAndAfterEach {
+    with BeforeAndAfterEach
+    with TableDrivenPropertyChecks {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockFileService, mockUserAnswersService)
   }
 
-  private val mockFileService        = mock[FileService]
+  private val controller = controllers.routes.UploadLetterOfAuthorityController
+  private val page = UploadLetterOfAuthorityPage
+
+  private val mockFileService = mock[FileService]
   private val mockUserAnswersService = mock[UserAnswersService]
 
   private val upscanInitiateResponse = UpscanInitiateResponse(
@@ -76,14 +78,6 @@ class UploadLetterOfAuthorityControllerSpec
       uploadTimestamp = Instant.now(),
       checksum = "checksum",
       size = 1337
-    )
-  )
-
-  private val failedFile = UploadedFile.Failure(
-    reference = "reference",
-    failureDetails = UploadedFile.FailureDetails(
-      failureReason = UploadedFile.FailureReason.Quarantine,
-      failureMessage = Some("failureMessage")
     )
   )
 
@@ -382,42 +376,42 @@ class UploadLetterOfAuthorityControllerSpec
     }
   }
 
-  "when there is a failed file" - {
-
-    val userAnswers =
-      userAnswersAsIndividualTrader
-        .set(UploadSupportingDocumentPage, failedFile)
-        .success
-        .value
-
-    "must initiate a file upload and redirect back to the page with the relevant error code" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[FileService].toInstance(mockFileService)
-        )
-        .build()
-
-      when(mockFileService.initiate(any(), any())(any()))
-        .thenReturn(Future.successful(upscanInitiateResponse))
-
-      val request = FakeRequest(
-        GET,
-        controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(models.NormalMode, draftId, None, Some("key"))
-          .url
-      )
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
-        .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some("key"))
-        .url
-
-      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
-    }
-  }
+//  "when there is a failed file" - {
+//
+//    val userAnswers =
+//      userAnswersAsIndividualTrader
+//        .set(UploadSupportingDocumentPage, failedFile)
+//        .success
+//        .value
+//
+//    "must initiate a file upload and redirect back to the page with the relevant error code" in {
+//
+//      val application = applicationBuilder(userAnswers = Some(userAnswers))
+//        .overrides(
+//          bind[FileService].toInstance(mockFileService)
+//        )
+//        .build()
+//
+//      when(mockFileService.initiate(any(), any())(any()))
+//        .thenReturn(Future.successful(upscanInitiateResponse))
+//
+//      val request = FakeRequest(
+//        GET,
+//        controllers.routes.UploadSupportingDocumentsController
+//          .onPageLoad(models.NormalMode, draftId, None, Some("key"))
+//          .url
+//      )
+//
+//      val result = route(application, request).value
+//
+//      status(result) mustEqual SEE_OTHER
+//      redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
+//        .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some("key"))
+//        .url
+//
+//      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+//    }
+//  }
 
   "must redirect to the JourneyRecovery page when there are no user answers" in {
 
@@ -440,5 +434,51 @@ class UploadLetterOfAuthorityControllerSpec
     redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
 
     verify(mockFileService, times(0)).initiate(any(), any())(any())
+  }
+
+  // New tests
+
+  "when there is a failed file" - {
+
+    val parameterisedCases = Table(
+      ("Error code option string", "Failure Reason"),
+      ("Quarantine",  UploadedFile.FailureReason.Quarantine),
+      ("Rejected",    UploadedFile.FailureReason.Rejected),
+      ("Duplicate",   UploadedFile.FailureReason.Duplicate),
+      ("Unknown",     UploadedFile.FailureReason.Unknown),
+    )
+
+    "must initiate a file upload and redirect back to the page with the relevant error code" in {
+      forAll(parameterisedCases) { (errCode: String, failureReason: UploadedFile.FailureReason) =>
+
+        val failedFile = UploadedFile.Failure(
+          reference = "reference",
+          failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
+        )
+
+        val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[FileService].toInstance(mockFileService)
+          )
+          .build()
+
+        when(mockFileService.initiateForLetterOfAuthority(any(), any())(any()))
+          .thenReturn(Future.successful(upscanInitiateResponse))
+
+        val request = FakeRequest(
+          GET,
+          controller.onPageLoad(draftId, None, Some("key")).url
+        )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controller
+          .onPageLoad(draftId, Some(errCode), Some("key"))
+          .url
+      }
+    }
   }
 }
