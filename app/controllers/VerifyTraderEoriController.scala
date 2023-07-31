@@ -56,11 +56,11 @@ class VerifyTraderEoriController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         VerifyTraderDetailsPage.get() match {
-          case None                                                       =>
+          case None          =>
             traderDetailsNotFoundInSession(draftId)
-          case Some(details) if details.consentToDisclosureOfPersonalData =>
-            Ok(publicView(form, mode, draftId, details))
-          case Some(details)                                              =>
+//          case Some(details) if details.consentToDisclosureOfPersonalData =>
+//            Ok(publicView(form, mode, draftId, details))
+          case Some(details) =>
             Ok(privateView(form, mode, draftId, details))
         }
     }

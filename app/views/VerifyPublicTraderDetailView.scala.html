@@ -28,11 +28,19 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    link: Link
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
 
+@searchAgainLink = {
+@link(
+id = "search_again",
+text = messages("traderDetails.common.searchAgain.link"),
+newTab = false,
+call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
+}
 
 @radioItems = @{
     Seq(
@@ -80,7 +88,10 @@
                     items = radioItems
             ))
 
-        <p class="govuk-body">@Html(messages("traderDetails.common.searchAgain", controllers.routes.ProvideTraderEoriController.onPageLoad(draftId)))</p>
+
+
+            @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
+
 
         @saveButtons(draftId)
     }
