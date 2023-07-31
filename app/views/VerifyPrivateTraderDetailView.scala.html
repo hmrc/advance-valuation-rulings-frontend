@@ -26,12 +26,23 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    h3: headingH3,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    link: Link
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithCountryCode)(implicit request: Request[_], messages: Messages)
+
+@searchAgainLink = {
+    @link(
+        id = "eori_be_up_to_date_link_two",
+        text = messages("traderDetails.common.searchAgain.link"),
+        call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId),
+        newTab = false
+    )
+}
 
 @radioItems = @{
     Seq(
@@ -55,12 +66,12 @@
         }
 
         @caption(messages("caption.applicant"))
-        <h1 class="govuk-heading-xl">@messages("traderDetails.private.heading", details.EORINo)</h1>
-        <p class="govuk-body">@messages("traderDetails.private.p1")</p>
-        <p class="govuk-body">@messages("traderDetails.private.p2")</p>
+        @heading(messages("traderDetails.private.heading", details.EORINo))
+        @paragraph(Html(messages("traderDetails.private.p1")))
+        @paragraph(Html(messages("traderDetails.private.p2")))
 
 
-        <h3 class="govuk-heading-s">@messages("traderDetails.private.h3.proceed")</h3>
+        @h3(messages("traderDetails.private.h3.proceed"))
         @govukRadios(
             Radios(
                 idPrefix = Some("traderDetailsCorrect"),
@@ -68,7 +79,7 @@
                 items = radioItems
         ))
 
-        <p class="govuk-body">@Html(messages("traderDetails.common.searchAgain", controllers.routes.ProvideTraderEoriController.onPageLoad(draftId)))</p>
+        @paragraph(content = Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
         @saveButtons(draftId)
     }
