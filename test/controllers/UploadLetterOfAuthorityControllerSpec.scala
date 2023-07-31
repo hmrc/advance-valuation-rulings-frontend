@@ -17,11 +17,14 @@
 package controllers
 
 import java.time.Instant
+
 import scala.concurrent.Future
+
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
 import base.SpecBase
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
@@ -50,9 +53,9 @@ class UploadLetterOfAuthorityControllerSpec
   }
 
   private val controller = controllers.routes.UploadLetterOfAuthorityController
-  private val page = UploadLetterOfAuthorityPage
+  private val page       = UploadLetterOfAuthorityPage
 
-  private val mockFileService = mock[FileService]
+  private val mockFileService        = mock[FileService]
   private val mockUserAnswersService = mock[UserAnswersService]
 
   private val upscanInitiateResponse = UpscanInitiateResponse(
@@ -442,42 +445,42 @@ class UploadLetterOfAuthorityControllerSpec
 
     val parameterisedCases = Table(
       ("Error code option string", "Failure Reason"),
-      ("Quarantine",  UploadedFile.FailureReason.Quarantine),
-      ("Rejected",    UploadedFile.FailureReason.Rejected),
-      ("Duplicate",   UploadedFile.FailureReason.Duplicate),
-      ("Unknown",     UploadedFile.FailureReason.Unknown),
+      ("Quarantine", UploadedFile.FailureReason.Quarantine),
+      ("Rejected", UploadedFile.FailureReason.Rejected),
+      ("Duplicate", UploadedFile.FailureReason.Duplicate),
+      ("Unknown", UploadedFile.FailureReason.Unknown)
     )
 
     "must initiate a file upload and redirect back to the page with the relevant error code" in {
-      forAll(parameterisedCases) { (errCode: String, failureReason: UploadedFile.FailureReason) =>
-
-        val failedFile = UploadedFile.Failure(
-          reference = "reference",
-          failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
-        )
-
-        val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[FileService].toInstance(mockFileService)
+      forAll(parameterisedCases) {
+        (errCode: String, failureReason: UploadedFile.FailureReason) =>
+          val failedFile = UploadedFile.Failure(
+            reference = "reference",
+            failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
           )
-          .build()
 
-        when(mockFileService.initiateForLetterOfAuthority(any(), any())(any()))
-          .thenReturn(Future.successful(upscanInitiateResponse))
+          val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
 
-        val request = FakeRequest(
-          GET,
-          controller.onPageLoad(draftId, None, Some("key")).url
-        )
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(
+              bind[FileService].toInstance(mockFileService)
+            )
+            .build()
 
-        val result = route(application, request).value
+          when(mockFileService.initiateForLetterOfAuthority(any(), any())(any()))
+            .thenReturn(Future.successful(upscanInitiateResponse))
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controller
-          .onPageLoad(draftId, Some(errCode), Some("key"))
-          .url
+          val request = FakeRequest(
+            GET,
+            controller.onPageLoad(draftId, None, Some("key")).url
+          )
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controller
+            .onPageLoad(draftId, Some(errCode), Some("key"))
+            .url
       }
     }
   }
