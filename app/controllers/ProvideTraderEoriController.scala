@@ -31,7 +31,7 @@ import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import forms.TraderEoriNumberFormProvider
-import models.{DraftId, EoriNumber, Mode, NormalMode, TraderDetailsWithCountryCode, UserAnswers}
+import models.{DraftId, EoriNumber, Mode, NormalMode, TraderDetailsWithConfirmation, UserAnswers}
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
@@ -106,9 +106,9 @@ class ProvideTraderEoriController @Inject() (
       _ =>
         getTraderDetails(
           details =>
-            eoriAnswers.set[TraderDetailsWithCountryCode](
+            eoriAnswers.set[TraderDetailsWithConfirmation](
               VerifyTraderDetailsPage,
-              details
+              TraderDetailsWithConfirmation(details)
             ) match {
               case Success(traderAnswers) =>
                 userAnswersService.set(traderAnswers)

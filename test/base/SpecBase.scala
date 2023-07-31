@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UserAnswers}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -109,6 +109,8 @@ trait SpecBase
     ),
     contactInformation = Some(contactInformation)
   )
+
+  val traderDetailsWithConfirmation = TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
