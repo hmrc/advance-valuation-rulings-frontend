@@ -23,14 +23,16 @@ import scala.util.{Failure, Success}
 
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import forms.TraderEoriNumberFormProvider
-import models.{DraftId, EoriNumber, Mode, NormalMode, TraderDetailsWithCountryCode}
+import models.{DraftId, EoriNumber, Mode, NormalMode, TraderDetailsWithCountryCode, UserAnswers}
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
@@ -68,7 +70,7 @@ class ProvideTraderEoriController @Inject() (
         Ok(provideTraderEoriView(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
@@ -76,47 +78,61 @@ class ProvideTraderEoriController @Inject() (
           .fold(
             formWithErrors =>
               Future.successful(BadRequest(provideTraderEoriView(formWithErrors, mode, draftId))),
-            value =>
-              request.userAnswers.set(ProvideTraderEoriPage, value) match {
+            eoriInput =>
+              request.userAnswers.set(ProvideTraderEoriPage, eoriInput) match {
                 case Success(eoriAnswers) =>
-                  userAnswersService.set(eoriAnswers).flatMap {
-                    _ =>
-                      getTraderDetails(
-                        details =>
-                          eoriAnswers.set[TraderDetailsWithCountryCode](
-                            VerifyTraderDetailsPage,
-                            details
-                          ) match {
-                            case Success(traderAnswers) =>
-                              userAnswersService.set(traderAnswers)
-                              Future.successful(
-                                Redirect(
-                                  navigator.nextPage(
-                                    ProvideTraderEoriPage,
-                                    NormalMode,
-                                    request.userAnswers
-                                  )
-                                )
-                              )
-                            case Failure(error)         =>
-                              logger.warn(
-                                s"Unable to store VerifyTraderDetailsPage. Error: $error"
-                              )
-                              Future.successful(
-                                Redirect(
-                                  controllers.routes.JourneyRecoveryController.onPageLoad()
-                                )
-                              )
-                          },
-                        Some(Future.successful(NotFound(invalidEoriView(mode, draftId, value)))),
-                        Some(EoriNumber(value))
-                      )
+                  if (!saveDraft) {
+                    proceed(eoriAnswers, eoriInput, mode, draftId)
+                  } else {
+                    userAnswersService.set(eoriAnswers).map {
+                      _ => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                    }
                   }
-                case Failure(error)       =>
+
+                case Failure(error) =>
                   logger.warn(s"Unable to store ProvideTraderEoriPage. Error: $error")
                   Future
                     .successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
               }
           )
+    }
+
+  private def proceed(eoriAnswers: UserAnswers, eoriInput: String, mode: Mode, draftId: DraftId)(
+    implicit
+    hc: HeaderCarrier,
+    dataRequest: DataRequest[AnyContent]
+  ): Future[Result] =
+    userAnswersService.set(eoriAnswers).flatMap {
+      _ =>
+        getTraderDetails(
+          details =>
+            eoriAnswers.set[TraderDetailsWithCountryCode](
+              VerifyTraderDetailsPage,
+              details
+            ) match {
+              case Success(traderAnswers) =>
+                userAnswersService.set(traderAnswers)
+                Future.successful(
+                  Redirect(
+                    navigator.nextPage(
+                      ProvideTraderEoriPage,
+                      NormalMode,
+                      traderAnswers
+                    )
+                  )
+                )
+              case Failure(error)         =>
+                logger.warn(
+                  s"Unable to store VerifyTraderDetailsPage. Error: $error"
+                )
+                Future.successful(
+                  Redirect(
+                    controllers.routes.JourneyRecoveryController.onPageLoad()
+                  )
+                )
+            },
+          Some(Future.successful(NotFound(invalidEoriView(mode, draftId, eoriInput)))),
+          Some(EoriNumber(eoriInput))
+        )
     }
 }
