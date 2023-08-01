@@ -24,7 +24,8 @@
     paragraph: Paragraph,
     saveButtons: SaveButtons,
     insetPara: InsetPara,
-    bulletList: BulletList
+    bulletList: BulletList,
+    cancelApplicationLink: CancelApplicationLink
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -56,4 +57,6 @@
                     @messages("site.saveAsDraft")
                 </a>
         </span>
+
+        @cancelApplicationLink(draftId)
 }

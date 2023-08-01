@@ -35,11 +35,11 @@
 @(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
 
 @searchAgainLink = {
-@link(
-id = "search_again",
-text = messages("traderDetails.common.searchAgain.link"),
-newTab = false,
-call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
+  @link(
+    id = "search_again",
+    text = messages("traderDetails.common.searchAgain.link"),
+    newTab = false,
+    call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
 }
 
 @radioItems = @{
@@ -88,10 +88,7 @@ call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
                     items = radioItems
             ))
 
-
-
-            @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
-
+        @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
         @saveButtons(draftId)
     }

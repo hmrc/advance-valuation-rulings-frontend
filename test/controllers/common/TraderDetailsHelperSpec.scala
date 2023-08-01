@@ -34,9 +34,8 @@ import base.SpecBase
 import connectors.BackendConnector
 import models.{BackendError, DraftId, EoriNumber, UserAnswers}
 import models.requests.DataRequest
-import org.mockito.ArgumentMatchers.{eq => eqTo}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, times, verify, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 
