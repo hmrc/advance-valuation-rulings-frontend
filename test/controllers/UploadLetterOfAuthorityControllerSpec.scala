@@ -122,7 +122,7 @@ class UploadLetterOfAuthorityControllerSpec
         errorMessage = None
       )(messages(application), request).toString
 
-      verifyFileServiceInitiate
+      verifyFileServiceInitiate()
     }
   }
 
@@ -156,7 +156,7 @@ class UploadLetterOfAuthorityControllerSpec
           errorMessage = Some(messages(application)(unknownError))
         )(messages(application), request).toString
 
-        verifyFileServiceInitiate
+        verifyFileServiceInitiate()
       }
     }
 
@@ -216,7 +216,7 @@ class UploadLetterOfAuthorityControllerSpec
             errorMessage = None
           )(messages(application), request).toString
 
-          verifyFileServiceInitiate
+          verifyFileServiceInitiate()
         }
       }
 
@@ -248,7 +248,7 @@ class UploadLetterOfAuthorityControllerSpec
             errorMessage = None
           )(messages(application), request).toString
 
-          verifyFileServiceInitiate
+          verifyFileServiceInitiate()
         }
       }
     }
@@ -311,7 +311,7 @@ class UploadLetterOfAuthorityControllerSpec
           errorMessage = None
         )(messages(application), request).toString
 
-        verifyFileServiceInitiate
+        verifyFileServiceInitiate()
       }
     }
 
@@ -343,7 +343,7 @@ class UploadLetterOfAuthorityControllerSpec
           errorMessage = None
         )(messages(application), request).toString
 
-        verifyFileServiceInitiate
+        verifyFileServiceInitiate()
       }
     }
   }
