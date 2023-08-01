@@ -24,7 +24,7 @@ final case class TraderDetailsWithConfirmation(
   CDSFullName: String,
   CDSEstablishmentAddress: CDSEstablishmentAddress,
   contactInformation: Option[ContactInformation],
-  confirmation: Boolean
+  confirmation: Option[Boolean]
 )
 
 object TraderDetailsWithConfirmation {
@@ -35,7 +35,7 @@ object TraderDetailsWithConfirmation {
       details.CDSFullName,
       details.CDSEstablishmentAddress,
       details.contactInformation,
-      false
+      None
     )
 
   implicit val format: OFormat[TraderDetailsWithConfirmation] =
