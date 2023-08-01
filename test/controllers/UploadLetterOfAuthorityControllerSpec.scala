@@ -30,6 +30,7 @@ import base.SpecBase
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
+import org.apache.pdfbox.pdmodel.PDDocument
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
@@ -59,12 +60,12 @@ class UploadLetterOfAuthorityControllerSpec
   private def injectView(application: Application) =
     application.injector.instanceOf[UploadLetterOfAuthorityView]
 
-  private val mockFileService                                                      = mock[FileService]
-  private val mockUserAnswersService                                               = mock[UserAnswersService]
-  private def mockFileServiceInitiate(): Unit                                      =
+  private val mockFileService                            = mock[FileService]
+  private val mockUserAnswersService                     = mock[UserAnswersService]
+  private def mockFileServiceInitiate(): Unit            =
     when(mockFileService.initiateForLetterOfAuthority(any(), any())(any()))
       .thenReturn(Future.successful(upscanInitiateResponse))
-  private def verifyFileServiceInitiate(): Unit =
+  private def verifyFileServiceInitiate(): Unit          =
     verify(mockFileService).initiateForLetterOfAuthority(eqTo(draftId), eqTo(NormalMode))(any())
   private def verifyFileServiceInitiateZeroTimes(): Unit =
     verify(mockFileService, times(0))
@@ -101,9 +102,7 @@ class UploadLetterOfAuthorityControllerSpec
     "must initiate a file upload and display the page" in {
 
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .overrides(
-          bind[FileService].toInstance(mockFileService)
-        )
+        .overrides(bind[FileService].toInstance(mockFileService))
         .build()
 
       mockFileServiceInitiate()
@@ -131,13 +130,11 @@ class UploadLetterOfAuthorityControllerSpec
     val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
 
     "when there is an error code" - {
-
+      // TODO: Remove, since this should be included in the parameterised test below.
       "must initiate a file upload and display the page with errors" in {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[FileService].toInstance(mockFileService)
-          )
+          .overrides(bind[FileService].toInstance(mockFileService))
           .build()
 
         mockFileServiceInitiate()
@@ -158,6 +155,41 @@ class UploadLetterOfAuthorityControllerSpec
 
         verifyFileServiceInitiate()
       }
+
+      // New tests
+      "Parameterised: must initiate a file upload and display the page with errors" in {
+
+        val failedFile = UploadedFile.Failure(
+          reference = "reference",
+          failureDetails = UploadedFile
+            .FailureDetails(UploadedFile.FailureReason.Quarantine, Some("failureMessage"))
+        )
+
+        val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[FileService].toInstance(mockFileService))
+          .build()
+
+        mockFileServiceInitiate()
+
+        val request = FakeRequest(
+          GET,
+          controller.onPageLoad(draftId, Some("errorCode"), None).url
+        )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual injectView(application)(
+          draftId = draftId,
+          upscanInitiateResponse = Some(upscanInitiateResponse),
+          errorMessage = Some(messages(application)("uploadLetterOfAuthority.error.entitytoolarge"))
+        )(messages(application), request).toString
+
+        verifyFileServiceInitiate()
+      }
+      //
     }
 
     "when there is no error code" - {
@@ -167,9 +199,7 @@ class UploadLetterOfAuthorityControllerSpec
         "must show the interstitial page" in {
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[FileService].toInstance(mockFileService)
-            )
+            .overrides(bind[FileService].toInstance(mockFileService))
             .build()
 
           val request = FakeRequest(
@@ -195,9 +225,7 @@ class UploadLetterOfAuthorityControllerSpec
         "must initiate a file upload and display the page" in {
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[FileService].toInstance(mockFileService)
-            )
+            .overrides(bind[FileService].toInstance(mockFileService))
             .build()
 
           mockFileServiceInitiate()
@@ -225,9 +253,7 @@ class UploadLetterOfAuthorityControllerSpec
         "must initiate a file upload and display the page" in {
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[FileService].toInstance(mockFileService)
-            )
+            .overrides(bind[FileService].toInstance(mockFileService))
             .build()
 
           mockFileServiceInitiate()
@@ -290,9 +316,7 @@ class UploadLetterOfAuthorityControllerSpec
       "must initiate a file upload and display the page" in {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[FileService].toInstance(mockFileService)
-          )
+          .overrides(bind[FileService].toInstance(mockFileService))
           .build()
 
         mockFileServiceInitiate()
@@ -320,9 +344,7 @@ class UploadLetterOfAuthorityControllerSpec
       "must initiate a file upload and display the page" in {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[FileService].toInstance(mockFileService)
-          )
+          .overrides(bind[FileService].toInstance(mockFileService))
           .build()
 
         mockFileServiceInitiate()
@@ -387,9 +409,7 @@ class UploadLetterOfAuthorityControllerSpec
   "must redirect to the JourneyRecovery page when there are no user answers" in {
 
     val application = applicationBuilder(userAnswers = None)
-      .overrides(
-        bind[FileService].toInstance(mockFileService)
-      )
+      .overrides(bind[FileService].toInstance(mockFileService))
       .build()
 
     val request = FakeRequest(
@@ -419,7 +439,7 @@ class UploadLetterOfAuthorityControllerSpec
       ("Unknown", UploadedFile.FailureReason.Unknown)
     )
 
-    "must initiate a file upload and redirect back to the page with the relevant error code" in {
+    "Parameterised: must initiate a file upload and redirect back to the page with the relevant error code" in {
       forAll(parameterisedCases) {
         (errCode: String, failureReason: UploadedFile.FailureReason) =>
           val failedFile = UploadedFile.Failure(
@@ -430,9 +450,7 @@ class UploadLetterOfAuthorityControllerSpec
           val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(
-              bind[FileService].toInstance(mockFileService)
-            )
+            .overrides(bind[FileService].toInstance(mockFileService))
             .build()
 
           mockFileServiceInitiate()

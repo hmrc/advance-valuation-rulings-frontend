@@ -540,10 +540,8 @@ uploadLetterOfAuthority.error.invalidargument = Select a file.
 uploadLetterOfAuthority.error.entitytoolarge = The selected file must be smaller than {0}MB
 uploadLetterOfAuthority.error.entitytoosmall = The selected file is empty.
 uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
-uploadLetterOfAuthority.error.quarantine = The selected file contains a virus - upload a different one.
-uploadLetterOfAuthority.error.incomplete = "The selected file has not fully uploaded."
-uploadLetterOfAuthority.error.duplicate = You can only upload distinct files
-uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded
+uploadLetterOfAuthority.error.quarantine = The selected file contains a virus
+uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded – try again
 
 verifyLetterOfAuthority.title = todo
 verifyLetterOfAuthority.heading = todo
