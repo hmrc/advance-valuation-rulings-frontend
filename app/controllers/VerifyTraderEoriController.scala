@@ -30,7 +30,7 @@ import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
-import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
+import pages.{ProvideTraderEoriPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
@@ -93,7 +93,9 @@ class VerifyTraderEoriController @Inject() (
               for {
                 updatedAnswers <- ProvideTraderEoriPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(???)
+              } yield Redirect(
+                routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+              )
           )
     }
 }

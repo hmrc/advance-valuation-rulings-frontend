@@ -20,6 +20,7 @@ import java.time.Instant
 
 import scala.concurrent.Future
 
+import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -39,7 +40,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import services.UserAnswersService
 import services.fileupload.FileService
-import views.html.UploadSupportingDocumentsView
+import views.html.UploadLetterOfAuthorityView
 
 class UploadLetterOfAuthorityControllerSpec
     extends SpecBase
@@ -52,11 +53,22 @@ class UploadLetterOfAuthorityControllerSpec
     reset(mockFileService, mockUserAnswersService)
   }
 
-  private val controller = controllers.routes.UploadLetterOfAuthorityController
-  private val page       = UploadLetterOfAuthorityPage
+  private val controller                           = controllers.routes.UploadLetterOfAuthorityController
+  private val page                                 = UploadLetterOfAuthorityPage
+  private val unknownError                         = "uploadLetterOfAuthority.error.unknown"
+  private def injectView(application: Application) =
+    application.injector.instanceOf[UploadLetterOfAuthorityView]
 
-  private val mockFileService        = mock[FileService]
-  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockFileService                                                      = mock[FileService]
+  private val mockUserAnswersService                                               = mock[UserAnswersService]
+  private def mockFileServiceInitiate(): Unit                                      =
+    when(mockFileService.initiateForLetterOfAuthority(any(), any())(any()))
+      .thenReturn(Future.successful(upscanInitiateResponse))
+  private def verifyFileServiceInitiate(): Unit =
+    verify(mockFileService).initiateForLetterOfAuthority(eqTo(draftId), eqTo(NormalMode))(any())
+  private def verifyFileServiceInitiateZeroTimes(): Unit =
+    verify(mockFileService, times(0))
+      .initiateForLetterOfAuthority(any(), any())(any())
 
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
@@ -94,37 +106,29 @@ class UploadLetterOfAuthorityControllerSpec
         )
         .build()
 
-      val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
-      when(mockFileService.initiate(any(), any())(any()))
-        .thenReturn(Future.successful(upscanInitiateResponse))
+      mockFileServiceInitiate()
 
       val request = FakeRequest(
         GET,
-        controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(models.NormalMode, draftId, None, None)
-          .url
+        controller.onPageLoad(draftId, None, None).url
       )
 
       val result = route(application, request).value
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(
+      contentAsString(result) mustEqual injectView(application)(
         draftId = draftId,
         upscanInitiateResponse = Some(upscanInitiateResponse),
         errorMessage = None
       )(messages(application), request).toString
 
-      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+      verifyFileServiceInitiate
     }
   }
 
   "when there is an initiated file" - {
 
-    val userAnswers = userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage, initiatedFile)
-      .success
-      .value
+    val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
 
     "when there is an error code" - {
 
@@ -136,28 +140,23 @@ class UploadLetterOfAuthorityControllerSpec
           )
           .build()
 
-        val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
-        when(mockFileService.initiate(any(), any())(any()))
-          .thenReturn(Future.successful(upscanInitiateResponse))
+        mockFileServiceInitiate()
 
         val request = FakeRequest(
           GET,
-          controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(models.NormalMode, draftId, Some("errorCode"), None)
-            .url
+          controller.onPageLoad(draftId, Some("errorCode"), None).url
         )
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
+        contentAsString(result) mustEqual injectView(application)(
           draftId = draftId,
           upscanInitiateResponse = Some(upscanInitiateResponse),
-          errorMessage = Some(messages(application)("uploadSupportingDocuments.error.unknown"))
+          errorMessage = Some(messages(application)(unknownError))
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+        verifyFileServiceInitiate
       }
     }
 
@@ -173,25 +172,21 @@ class UploadLetterOfAuthorityControllerSpec
             )
             .build()
 
-          val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
           val request = FakeRequest(
             GET,
-            controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(models.NormalMode, draftId, None, Some("reference"))
-              .url
+            controller.onPageLoad(draftId, None, Some("reference")).url
           )
 
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
+          contentAsString(result) mustEqual injectView(application)(
             draftId = draftId,
             upscanInitiateResponse = None,
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService, times(0)).initiate(any(), any())(any())
+          verifyFileServiceInitiateZeroTimes()
         }
       }
 
@@ -205,28 +200,23 @@ class UploadLetterOfAuthorityControllerSpec
             )
             .build()
 
-          val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
-          when(mockFileService.initiate(any(), any())(any()))
-            .thenReturn(Future.successful(upscanInitiateResponse))
+          mockFileServiceInitiate()
 
           val request = FakeRequest(
             GET,
-            controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(models.NormalMode, draftId, None, Some("otherReference"))
-              .url
+            controller.onPageLoad(draftId, None, Some("otherReference")).url
           )
 
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
+          contentAsString(result) mustEqual injectView(application)(
             draftId = draftId,
             upscanInitiateResponse = Some(upscanInitiateResponse),
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+          verifyFileServiceInitiate
         }
       }
 
@@ -240,28 +230,25 @@ class UploadLetterOfAuthorityControllerSpec
             )
             .build()
 
-          val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
-          when(mockFileService.initiate(any(), any())(any()))
-            .thenReturn(Future.successful(upscanInitiateResponse))
+          mockFileServiceInitiate()
 
           val request = FakeRequest(
             GET,
-            controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(models.NormalMode, draftId, None, None)
+            controller
+              .onPageLoad(draftId, None, None)
               .url
           )
 
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
+          contentAsString(result) mustEqual injectView(application)(
             draftId = draftId,
             upscanInitiateResponse = Some(upscanInitiateResponse),
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+          verifyFileServiceInitiate
         }
       }
     }
@@ -269,10 +256,7 @@ class UploadLetterOfAuthorityControllerSpec
 
   "when there is a successful file" - {
 
-    val userAnswers = userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage, successfulFile)
-      .success
-      .value
+    val userAnswers = userAnswersAsIndividualTrader.set(page, successfulFile).success.value
 
     "when the key matches the file" - {
 
@@ -289,14 +273,7 @@ class UploadLetterOfAuthorityControllerSpec
 
         val request = FakeRequest(
           GET,
-          controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(
-              models.NormalMode,
-              draftId,
-              None,
-              Some(successfulFile.reference)
-            )
-            .url
+          controller.onPageLoad(draftId, None, Some(successfulFile.reference)).url
         )
 
         val result = route(application, request).value
@@ -304,7 +281,7 @@ class UploadLetterOfAuthorityControllerSpec
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
 
-        verify(mockFileService, times(0)).initiate(any(), any())(any())
+        verifyFileServiceInitiateZeroTimes()
       }
     }
 
@@ -318,28 +295,23 @@ class UploadLetterOfAuthorityControllerSpec
           )
           .build()
 
-        val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
-        when(mockFileService.initiate(any(), any())(any()))
-          .thenReturn(Future.successful(upscanInitiateResponse))
+        mockFileServiceInitiate()
 
         val request = FakeRequest(
           GET,
-          controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(models.NormalMode, draftId, None, Some("otherReference"))
-            .url
+          controller.onPageLoad(draftId, None, Some("otherReference")).url
         )
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
+        contentAsString(result) mustEqual injectView(application)(
           draftId = draftId,
           upscanInitiateResponse = Some(upscanInitiateResponse),
           errorMessage = None
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+        verifyFileServiceInitiate
       }
     }
 
@@ -353,28 +325,25 @@ class UploadLetterOfAuthorityControllerSpec
           )
           .build()
 
-        val view = application.injector.instanceOf[UploadSupportingDocumentsView]
-
-        when(mockFileService.initiate(any(), any())(any()))
-          .thenReturn(Future.successful(upscanInitiateResponse))
+        mockFileServiceInitiate()
 
         val request = FakeRequest(
           GET,
-          controllers.routes.UploadSupportingDocumentsController
-            .onPageLoad(models.NormalMode, draftId, None, None)
+          controller
+            .onPageLoad(draftId, None, None)
             .url
         )
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
+        contentAsString(result) mustEqual injectView(application)(
           draftId = draftId,
           upscanInitiateResponse = Some(upscanInitiateResponse),
           errorMessage = None
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+        verifyFileServiceInitiate
       }
     }
   }
@@ -395,12 +364,11 @@ class UploadLetterOfAuthorityControllerSpec
 //        )
 //        .build()
 //
-//      when(mockFileService.initiate(any(), any())(any()))
-//        .thenReturn(Future.successful(upscanInitiateResponse))
+//      mockFileServiceInitiate()
 //
 //      val request = FakeRequest(
 //        GET,
-//        controllers.routes.UploadSupportingDocumentsController
+//        controller
 //          .onPageLoad(models.NormalMode, draftId, None, Some("key"))
 //          .url
 //      )
@@ -412,7 +380,7 @@ class UploadLetterOfAuthorityControllerSpec
 //        .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some("key"))
 //        .url
 //
-//      verify(mockFileService).initiate(eqTo(draftId), eqTo(NormalMode))(any())
+//      verifyFileServiceInitiate
 //    }
 //  }
 
@@ -426,8 +394,8 @@ class UploadLetterOfAuthorityControllerSpec
 
     val request = FakeRequest(
       GET,
-      controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(models.NormalMode, draftId, None, None)
+      controller
+        .onPageLoad(draftId, None, None)
         .url
     )
 
@@ -436,7 +404,7 @@ class UploadLetterOfAuthorityControllerSpec
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
 
-    verify(mockFileService, times(0)).initiate(any(), any())(any())
+    verifyFileServiceInitiateZeroTimes()
   }
 
   // New tests
@@ -467,8 +435,7 @@ class UploadLetterOfAuthorityControllerSpec
             )
             .build()
 
-          when(mockFileService.initiateForLetterOfAuthority(any(), any())(any()))
-            .thenReturn(Future.successful(upscanInitiateResponse))
+          mockFileServiceInitiate()
 
           val request = FakeRequest(
             GET,
