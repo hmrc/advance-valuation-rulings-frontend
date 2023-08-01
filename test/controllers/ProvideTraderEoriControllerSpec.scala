@@ -39,7 +39,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
   lazy val provideTraderEoriPageRoute     =
     routes.ProvideTraderEoriController.onPageLoad(draftId).url
   lazy val provideTraderEoriPagePostRoute =
-    routes.ProvideTraderEoriController.onSubmit(draftId).url
+    routes.ProvideTraderEoriController.onSubmit(draftId, false).url
 
   val mockBackendConnector = mock[BackendConnector]
   val formProvider         = new TraderEoriNumberFormProvider()

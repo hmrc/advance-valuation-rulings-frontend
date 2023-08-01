@@ -23,7 +23,7 @@ import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import base.SpecBase
 import forms.VerifyTraderDetailsFormProvider
-import models.{NormalMode, TraderDetailsWithCountryCode}
+import models.{NormalMode, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.VerifyTraderDetailsPage
 import services.UserAnswersService
@@ -44,9 +44,9 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
     "must return OK and the public view when trader consents to disclose info" in {
 
       val userAnswers = userAnswersAsIndividualTrader
-        .setFuture[TraderDetailsWithCountryCode](
+        .setFuture[TraderDetailsWithConfirmation](
           VerifyTraderDetailsPage,
-          traderDetailsWithCountryCode
+          traderDetailsWithConfirmation
         )
         .futureValue
 
@@ -66,7 +66,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           form,
           NormalMode,
           draftId,
-          traderDetailsWithCountryCode
+          traderDetailsWithConfirmation
         )(
           request,
           messages(application)
@@ -77,9 +77,9 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
     "must return OK and the private view when trader does not consent to disclose info" in {
 
       val userAnswers = userAnswersAsIndividualTrader
-        .setFuture[TraderDetailsWithCountryCode](
+        .setFuture[TraderDetailsWithConfirmation](
           VerifyTraderDetailsPage,
-          traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = false)
+          traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = false)
         )
         .futureValue
 
@@ -99,7 +99,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           form,
           NormalMode,
           draftId,
-          traderDetailsWithCountryCode
+          traderDetailsWithConfirmation
         )(
           request,
           messages(application)
@@ -135,9 +135,9 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       val mockUserAnswersService = mock[UserAnswersService]
 
       val userAnswers = userAnswersAsIndividualTrader
-        .setFuture[TraderDetailsWithCountryCode](
+        .setFuture[TraderDetailsWithConfirmation](
           VerifyTraderDetailsPage,
-          traderDetailsWithCountryCode
+          traderDetailsWithConfirmation
         )
         .futureValue
 
@@ -165,7 +165,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           boundForm,
           NormalMode,
           draftId,
-          traderDetailsWithCountryCode
+          traderDetailsWithConfirmation
         )(
           request,
           messages(application)
@@ -177,9 +177,9 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      val details     = traderDetailsWithCountryCode.copy(consentToDisclosureOfPersonalData = false)
+      val details     = traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = false)
       val userAnswers = userAnswersAsIndividualTrader
-        .setFuture[TraderDetailsWithCountryCode](
+        .setFuture[TraderDetailsWithConfirmation](
           VerifyTraderDetailsPage,
           details
         )

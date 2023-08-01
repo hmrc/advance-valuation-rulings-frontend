@@ -30,7 +30,7 @@ import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
-import pages.{ProvideTraderEoriPage, VerifyTraderDetailsPage}
+import pages.VerifyTraderDetailsPage
 import services.UserAnswersService
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
@@ -90,10 +90,16 @@ class VerifyTraderEoriController @Inject() (
                   Future.successful(BadRequest(privateView(formWithErrors, mode, draftId, details)))
               },
             value =>
-              for {
-                updatedAnswers <- ProvideTraderEoriPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(???)
+              VerifyTraderDetailsPage.get() match {
+                case None          => Future.successful(traderDetailsNotFoundInSession(draftId))
+                case Some(details) =>
+                  for {
+                    updatedAnswers <-
+                      VerifyTraderDetailsPage.set(details.copy(confirmation = value.toBoolean))
+                    _              <- userAnswersService.set(updatedAnswers)
+                  } yield Redirect(???)
+
+              }
           )
     }
 }
