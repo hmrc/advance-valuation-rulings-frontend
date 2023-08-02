@@ -25,7 +25,8 @@
     saveButtons: SaveButtons,
     insetPara: InsetPara,
     bulletList: BulletList,
-    cancelApplicationLink: CancelApplicationLink
+    cancelApplicationLink: CancelApplicationLink,
+    formHelper: FormWithCSRF
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -49,14 +50,9 @@
             )
         )
 
-        <span class="govuk-button-group">
-                <a href="@routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url" role="button" class="govuk-button" id="continue-button">
-                    @messages("site.saveAndContinue")
-                </a>
-                <a href="@routes.AccountHomeController.onPageLoad().url" role="button" class="govuk-button govuk-button--secondary">
-                    @messages("site.saveAsDraft")
-                </a>
-        </span>
+        @formHelper(action = routes.ImportGoodsController.onPageLoad(NormalMode, draftId)) {
+            @saveButtons(draftId)
+        }
 
-    @cancelApplicationLink(draftId)
+        @cancelApplicationLink(draftId)
 }
