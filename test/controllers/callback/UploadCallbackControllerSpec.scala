@@ -35,6 +35,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
+import pages.UploadSupportingDocumentPage
 import services.fileupload.FileService
 
 class UploadCallbackControllerSpec
@@ -68,15 +69,19 @@ class UploadCallbackControllerSpec
 
     "must call the file service with the correct parameters" in {
 
-      when(mockFileService.update(any(), any())).thenReturn(Future.successful(Done))
+      when(mockFileService.update(any(), any(), eqTo(UploadSupportingDocumentPage)))
+        .thenReturn(Future.successful(Done))
 
-      val request = FakeRequest(routes.UploadCallbackController.callback(DraftId(0)))
+      val request = FakeRequest(
+        routes.UploadCallbackController
+          .callback(DraftId(0), UploadSupportingDocumentPage)
+      )
         .withJsonBody(Json.toJson(requestBody))
       val result  = route(app, request).value
 
       status(result) mustBe OK
 
-      verify(mockFileService).update(eqTo(DraftId(0)), any())
+      verify(mockFileService).update(eqTo(DraftId(0)), any(), eqTo(UploadSupportingDocumentPage))
     }
   }
 }

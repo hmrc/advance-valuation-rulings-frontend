@@ -47,7 +47,9 @@ class UploadSupportingDocumentsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val maxFileSize: Long                = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val controller                       = controllers.routes.UploadSupportingDocumentsController
+  private val page: QuestionPage[UploadedFile] = UploadSupportingDocumentPage
 
   def onPageLoad(
     mode: Mode,
@@ -57,6 +59,8 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
+        val redirectPath = controller.onPageLoad(mode, draftId, None, None).url
+
         val answers = request.userAnswers
 
         answers
@@ -64,38 +68,45 @@ class UploadSupportingDocumentsController @Inject() (
           .map {
             case file: UploadedFile.Initiated =>
               errorCode
-                .map(errorCode => showErrorPage(draftId, mode, errorForCode(errorCode)))
+                .map(
+                  errorCode =>
+                    showErrorPage(
+                      draftId,
+                      errorForCode(errorCode),
+                      redirectPath
+                    )
+                )
                 .getOrElse {
                   if (key.contains(file.reference)) {
                     showInterstitialPage(draftId)
                   } else {
-                    showPage(draftId, mode)
+                    showPage(draftId, redirectPath)
                   }
                 }
             case file: UploadedFile.Success   =>
               if (key.contains(file.reference)) {
                 continue(mode, answers)
               } else {
-                showPage(draftId, mode)
+                showPage(draftId, redirectPath)
               }
             case file: UploadedFile.Failure   =>
               redirectWithError(
-                draftId,
                 mode,
+                draftId,
                 key,
-                file.failureDetails.failureReason.toString
+                file.failureDetails.failureReason.toString,
+                redirectPath
               )
           }
           .getOrElse {
-            showPage(draftId, mode)
+            showPage(draftId, redirectPath)
           }
-
     }
 
-  private def showPage(draftId: DraftId, mode: Mode)(implicit
+  private def showPage(draftId: DraftId, redirectPath: String)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, mode).map {
+    fileService.initiate(draftId, redirectPath, page).map {
       response =>
         Ok(
           view(
@@ -119,10 +130,10 @@ class UploadSupportingDocumentsController @Inject() (
       )
     )
 
-  private def showErrorPage(draftId: DraftId, mode: Mode, errorMessage: String)(implicit
+  private def showErrorPage(draftId: DraftId, errorMessage: String, redirectPath: String)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, mode).map {
+    fileService.initiate(draftId, redirectPath, page).map {
       response =>
         BadRequest(
           view(
@@ -134,17 +145,14 @@ class UploadSupportingDocumentsController @Inject() (
     }
 
   private def redirectWithError(
-    draftId: DraftId,
     mode: Mode,
+    draftId: DraftId,
     key: Option[String],
-    errorCode: String
+    errorCode: String,
+    redirectPath: String
   )(implicit request: RequestHeader): Future[Result] =
-    fileService.initiate(draftId, mode).map {
-      _ =>
-        Redirect(
-          routes.UploadSupportingDocumentsController
-            .onPageLoad(mode, draftId, Some(errorCode), key)
-        )
+    fileService.initiate(draftId, redirectPath, page).map {
+      _ => Redirect(controller.onPageLoad(mode, draftId, Some(errorCode), key))
     }
 
   private def continue(mode: Mode, answers: UserAnswers): Future[Result] =

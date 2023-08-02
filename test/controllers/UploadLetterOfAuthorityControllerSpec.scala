@@ -54,22 +54,35 @@ class UploadLetterOfAuthorityControllerSpec
     reset(mockFileService, mockUserAnswersService)
   }
 
+  private val mode                                 = NormalMode
   private val controller                           = controllers.routes.UploadLetterOfAuthorityController
+  private val redirectPath                         = controller.onPageLoad(draftId, None, None).url
   private val page                                 = UploadLetterOfAuthorityPage
   private val unknownError                         = "uploadLetterOfAuthority.error.unknown"
   private def injectView(application: Application) =
     application.injector.instanceOf[UploadLetterOfAuthorityView]
 
-  private val mockFileService                            = mock[FileService]
-  private val mockUserAnswersService                     = mock[UserAnswersService]
-  private def mockFileServiceInitiate(): Unit            =
-    when(mockFileService.initiateForLetterOfAuthority(any(), any())(any()))
+  private val mockFileService        = mock[FileService]
+  private val mockUserAnswersService = mock[UserAnswersService]
+
+  private def mockFileServiceInitiate(): Unit =
+    when(
+      mockFileService.initiate(eqTo(draftId), redirectPath, eqTo(UploadLetterOfAuthorityPage))(
+        any()
+      )
+    )
       .thenReturn(Future.successful(upscanInitiateResponse))
-  private def verifyFileServiceInitiate(): Unit          =
-    verify(mockFileService).initiateForLetterOfAuthority(eqTo(draftId), eqTo(NormalMode))(any())
+
+  private def verifyFileServiceInitiate(): Unit =
+    verify(mockFileService).initiate(
+      eqTo(draftId),
+      redirectPath,
+      eqTo(UploadLetterOfAuthorityPage)
+    )(any())
+
   private def verifyFileServiceInitiateZeroTimes(): Unit =
     verify(mockFileService, times(0))
-      .initiateForLetterOfAuthority(any(), any())(any())
+      .initiate(eqTo(draftId), redirectPath, eqTo(UploadLetterOfAuthorityPage))(any())
 
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",

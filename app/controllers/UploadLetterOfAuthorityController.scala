@@ -49,8 +49,10 @@ class UploadLetterOfAuthorityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private val mode: Mode        = NormalMode // TODO: allow other modes other than NormalMode.
-  private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val mode: Mode                       = NormalMode // TODO: allow other modes other than NormalMode.
+  private val maxFileSize: Long                = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val controller                       = controllers.routes.UploadLetterOfAuthorityController
+  private val page: QuestionPage[UploadedFile] = UploadLetterOfAuthorityPage
 
   def onPageLoad(
     draftId: DraftId,
@@ -59,45 +61,56 @@ class UploadLetterOfAuthorityController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
+        val redirectPath = controller.onPageLoad(draftId, errorCode, key).url
+
         val answers = request.userAnswers
 
         answers
-          .get(UploadLetterOfAuthorityPage)
+          .get(page)
           .map {
             case file: UploadedFile.Initiated =>
               errorCode
-                .map(errorCode => showErrorPage(draftId, mode, errorForCode(errorCode)))
+                .map(
+                  errorCode =>
+                    showErrorPage(
+                      draftId,
+                      errorForCode(errorCode),
+                      redirectPath
+                    )
+                )
                 .getOrElse {
                   if (key.contains(file.reference)) {
                     showInterstitialPage(draftId)
                   } else {
-                    showPage(draftId, mode)
+                    showPage(draftId, redirectPath)
                   }
                 }
             case file: UploadedFile.Success   =>
               if (key.contains(file.reference)) {
                 continue(mode, answers)
               } else {
-                showPage(draftId, mode)
+                showPage(draftId, redirectPath)
               }
             case file: UploadedFile.Failure   =>
               redirectWithError(
                 draftId,
-                mode,
                 key,
-                file.failureDetails.failureReason.toString
+                file.failureDetails.failureReason.toString,
+                redirectPath
               )
           }
           .getOrElse {
-            showPage(draftId, mode)
+            showPage(draftId, redirectPath)
           }
-
     }
 
-  private def showPage(draftId: DraftId, mode: Mode)(implicit
+  private def showPage(
+    draftId: DraftId,
+    redirectPath: String
+  )(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiateForLetterOfAuthority(draftId, mode).map {
+    fileService.initiate(draftId, redirectPath, page).map {
       response =>
         Ok(
           view(
@@ -121,10 +134,10 @@ class UploadLetterOfAuthorityController @Inject() (
       )
     )
 
-  private def showErrorPage(draftId: DraftId, mode: Mode, errorMessage: String)(implicit
+  private def showErrorPage(draftId: DraftId, errorMessage: String, redirectPath: String)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiateForLetterOfAuthority(draftId, mode).map {
+    fileService.initiate(draftId, redirectPath, page).map {
       response =>
         BadRequest(
           view(
@@ -137,22 +150,18 @@ class UploadLetterOfAuthorityController @Inject() (
 
   private def redirectWithError(
     draftId: DraftId,
-    mode: Mode,
     key: Option[String],
-    errorCode: String
+    errorCode: String,
+    redirectPath: String
   )(implicit request: RequestHeader): Future[Result] =
-    fileService.initiateForLetterOfAuthority(draftId, mode).map {
-      _ =>
-        Redirect(
-          routes.UploadLetterOfAuthorityController
-            .onPageLoad(draftId, Some(errorCode), key)
-        )
+    fileService.initiate(draftId, redirectPath, page).map {
+      _ => Redirect(controller.onPageLoad(draftId, Some(errorCode), key))
     }
 
   private def continue(mode: Mode, answers: UserAnswers): Future[Result] =
     Future.successful(
       Redirect(
-        navigator.nextPage(UploadLetterOfAuthorityPage, mode, answers)
+        navigator.nextPage(page, mode, answers)
       )
     )
 
