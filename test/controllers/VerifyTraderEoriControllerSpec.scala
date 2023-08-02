@@ -107,6 +107,38 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "must prepopulate the dialog if confirmation has already been provided" in {
+      val userAnswers = userAnswersAsIndividualTrader
+        .setFuture[TraderDetailsWithConfirmation](
+          VerifyTraderDetailsPage,
+          traderDetailsWithConfirmation.copy(confirmation = Some(true))
+        )
+        .futureValue
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, verifyTraderEoriPageRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[VerifyPublicTraderDetailView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual view(
+          formProvider().fill("true"),
+          NormalMode,
+          draftId,
+          traderDetailsWithConfirmation
+        )(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
     "must redirect to recovery page when no trader details in session" in {
 
       val application =
