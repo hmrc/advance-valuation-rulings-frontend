@@ -123,7 +123,11 @@ class UploadSupportingDocumentsControllerSpec
         errorMessage = None
       )(messages(application), request).toString
 
-      verify(mockFileService).initiate(eqTo(draftId), eqTo(redirectPath), eqTo(page))(any())
+      verify(mockFileService).initiate(
+        eqTo(draftId),
+        eqTo(redirectPath),
+        isLetterOfAuthority = false
+      )(any())
     }
   }
 
@@ -165,7 +169,11 @@ class UploadSupportingDocumentsControllerSpec
           errorMessage = Some(messages(application)("uploadSupportingDocuments.error.unknown"))
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(redirectPath), eqTo(page))(any())
+        verify(mockFileService).initiate(
+          eqTo(draftId),
+          eqTo(redirectPath),
+          isLetterOfAuthority = false
+        )(any())
       }
     }
 
@@ -234,7 +242,11 @@ class UploadSupportingDocumentsControllerSpec
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService).initiate(eqTo(draftId), eqTo(redirectPath), eqTo(page))(any())
+          verify(mockFileService).initiate(
+            eqTo(draftId),
+            eqTo(redirectPath),
+            isLetterOfAuthority = false
+          )(any())
         }
       }
 
@@ -269,7 +281,11 @@ class UploadSupportingDocumentsControllerSpec
             errorMessage = None
           )(messages(application), request).toString
 
-          verify(mockFileService).initiate(eqTo(draftId), eqTo(redirectPath), eqTo(page))(any())
+          verify(mockFileService).initiate(
+            eqTo(draftId),
+            eqTo(redirectPath),
+            isLetterOfAuthority = false
+          )(any())
         }
       }
     }
@@ -347,7 +363,11 @@ class UploadSupportingDocumentsControllerSpec
           errorMessage = None
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(redirectPath), eqTo(page))(any())
+        verify(mockFileService).initiate(
+          eqTo(draftId),
+          eqTo(redirectPath),
+          isLetterOfAuthority = false
+        )(any())
       }
     }
 
@@ -382,7 +402,11 @@ class UploadSupportingDocumentsControllerSpec
           errorMessage = None
         )(messages(application), request).toString
 
-        verify(mockFileService).initiate(eqTo(draftId), eqTo(redirectPath), eqTo(page))(any())
+        verify(mockFileService).initiate(
+          eqTo(draftId),
+          eqTo(redirectPath),
+          isLetterOfAuthority = false
+        )(any())
       }
     }
   }
@@ -420,7 +444,11 @@ class UploadSupportingDocumentsControllerSpec
         .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some("key"))
         .url
 
-      verify(mockFileService).initiate(eqTo(draftId), eqTo(redirectPath), eqTo(page))(any())
+      verify(mockFileService).initiate(
+        eqTo(draftId),
+        eqTo(redirectPath),
+        isLetterOfAuthority = false
+      )(any())
     }
   }
 

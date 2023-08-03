@@ -54,9 +54,9 @@ class UploadLetterOfAuthorityControllerSpec
     reset(mockFileService, mockUserAnswersService)
   }
 
-  private val mode                                 = NormalMode
   private val controller                           = controllers.routes.UploadLetterOfAuthorityController
-  private val redirectPath                         = controller.onPageLoad(draftId, None, None).url
+  private val redirectPath                         =
+    "/advance-valuation-ruling" + controller.onPageLoad(draftId, None, None).url
   private val page                                 = UploadLetterOfAuthorityPage
   private val unknownError                         = "uploadLetterOfAuthority.error.unknown"
   private def injectView(application: Application) =
@@ -67,22 +67,21 @@ class UploadLetterOfAuthorityControllerSpec
 
   private def mockFileServiceInitiate(): Unit =
     when(
-      mockFileService.initiate(eqTo(draftId), redirectPath, eqTo(UploadLetterOfAuthorityPage))(
+      mockFileService.initiate(eqTo(draftId), eqTo(redirectPath), eqTo(true))(
         any()
       )
-    )
-      .thenReturn(Future.successful(upscanInitiateResponse))
+    ).thenReturn(Future.successful(upscanInitiateResponse))
 
   private def verifyFileServiceInitiate(): Unit =
     verify(mockFileService).initiate(
       eqTo(draftId),
-      redirectPath,
-      eqTo(UploadLetterOfAuthorityPage)
+      eqTo(redirectPath),
+      eqTo(true)
     )(any())
 
   private def verifyFileServiceInitiateZeroTimes(): Unit =
     verify(mockFileService, times(0))
-      .initiate(eqTo(draftId), redirectPath, eqTo(UploadLetterOfAuthorityPage))(any())
+      .initiate(eqTo(draftId), eqTo(redirectPath), eqTo(true))(any())
 
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
@@ -114,11 +113,11 @@ class UploadLetterOfAuthorityControllerSpec
 
     "must initiate a file upload and display the page" in {
 
+      mockFileServiceInitiate()
+
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(bind[FileService].toInstance(mockFileService))
         .build()
-
-      mockFileServiceInitiate()
 
       val request = FakeRequest(
         GET,
@@ -146,11 +145,11 @@ class UploadLetterOfAuthorityControllerSpec
       // TODO: Remove, since this should be included in the parameterised test below.
       "must initiate a file upload and display the page with errors" in {
 
+        mockFileServiceInitiate()
+
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(bind[FileService].toInstance(mockFileService))
           .build()
-
-        mockFileServiceInitiate()
 
         val request = FakeRequest(
           GET,
@@ -193,8 +192,10 @@ class UploadLetterOfAuthorityControllerSpec
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual injectView(application)(
+        val status_of_result = status(result)
+        status_of_result mustEqual SEE_OTHER
+        val content          = contentAsString(result)
+        content mustEqual injectView(application)(
           draftId = draftId,
           upscanInitiateResponse = Some(upscanInitiateResponse),
           errorMessage = Some(messages(application)("uploadLetterOfAuthority.error.entitytoolarge"))

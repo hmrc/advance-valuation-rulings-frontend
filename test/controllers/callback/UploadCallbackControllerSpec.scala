@@ -69,19 +69,19 @@ class UploadCallbackControllerSpec
 
     "must call the file service with the correct parameters" in {
 
-      when(mockFileService.update(any(), any(), eqTo(UploadSupportingDocumentPage)))
+      when(mockFileService.update(any(), any(), isLetterOfAuthority = true))
         .thenReturn(Future.successful(Done))
 
       val request = FakeRequest(
         routes.UploadCallbackController
-          .callback(DraftId(0), UploadSupportingDocumentPage)
+          .callback(DraftId(0), isLetterOfAuthority = true)
       )
         .withJsonBody(Json.toJson(requestBody))
       val result  = route(app, request).value
 
       status(result) mustBe OK
 
-      verify(mockFileService).update(eqTo(DraftId(0)), any(), eqTo(UploadSupportingDocumentPage))
+      verify(mockFileService).update(eqTo(DraftId(0)), any(), isLetterOfAuthority = true)
     }
   }
 }

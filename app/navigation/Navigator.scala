@@ -539,7 +539,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     }
 
   private def uploadLetterOfAuthorityPage(userAnswers: UserAnswers): Call =
-    VerifyLetterOfAuthorityController.onPageLoad(userAnswers.draftId)
+    BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>

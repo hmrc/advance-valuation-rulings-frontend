@@ -61,9 +61,11 @@ class UploadLetterOfAuthorityController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val redirectPath = controller.onPageLoad(draftId, errorCode, key).url
-
-        val answers = request.userAnswers
+        val redirectPath =
+          controller
+            .onPageLoad(draftId, None, None)
+            .url // redirect probably shouldn't have the errorCode in it
+        val answers      = request.userAnswers
 
         answers
           .get(page)
@@ -110,7 +112,7 @@ class UploadLetterOfAuthorityController @Inject() (
   )(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = true).map {
+    fileService.initiate(draftId, redirectPath, true).map {
       response =>
         Ok(
           view(

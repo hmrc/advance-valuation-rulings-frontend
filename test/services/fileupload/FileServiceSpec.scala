@@ -107,7 +107,7 @@ class FileServiceSpec
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-            .callback(DraftId(0), page)}",
+            .callback(DraftId(0), isLetterOfAuthority = false)}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,
@@ -119,7 +119,9 @@ class FileServiceSpec
         .thenReturn(Future.successful(Some(userAnswers)))
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
-      service.initiate(DraftId(0), redirectPath, page)(hc).futureValue mustEqual response
+      service
+        .initiate(DraftId(0), redirectPath, isLetterOfAuthority = false)(hc)
+        .futureValue mustEqual response
 
       verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
       verify(mockUserAnswersService).set(userAnswersCaptor.capture())(any())
@@ -141,7 +143,7 @@ class FileServiceSpec
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-            .callback(DraftId(0), page)}",
+            .callback(DraftId(0), isLetterOfAuthority = false)}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,
@@ -151,7 +153,10 @@ class FileServiceSpec
       when(mockUpscanConnector.initiate(any())(any())).thenReturn(Future.successful(response))
       when(mockUserAnswersService.get(any())(any())).thenReturn(Future.successful(None))
 
-      val exception = service.initiate(DraftId(0), redirectPath, page)(hc).failed.futureValue
+      val exception = service
+        .initiate(DraftId(0), redirectPath, isLetterOfAuthority = false)(hc)
+        .failed
+        .futureValue
 
       verify(mockUpscanConnector).initiate(eqTo(expectedRequest))(eqTo(hc))
 
@@ -204,7 +209,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), uploadedFile, UploadSupportingDocumentPage).futureValue
+        service.update(DraftId(0), uploadedFile, isLetterOfAuthority = false).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
@@ -233,7 +238,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), uploadedFile, UploadSupportingDocumentPage).futureValue
+        service.update(DraftId(0), uploadedFile, isLetterOfAuthority = false).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
@@ -288,7 +293,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), file2, UploadSupportingDocumentPage).futureValue
+        service.update(DraftId(0), file2, isLetterOfAuthority = false).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
@@ -340,7 +345,7 @@ class FileServiceSpec
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), file2, UploadSupportingDocumentPage).futureValue
+        service.update(DraftId(0), file2, isLetterOfAuthority = false).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
@@ -366,7 +371,7 @@ class FileServiceSpec
       when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
         .thenReturn(Future.successful(objectSummary))
 
-      service.update(DraftId(0), uploadedFile, UploadSupportingDocumentPage).failed.futureValue
+      service.update(DraftId(0), uploadedFile, isLetterOfAuthority = false).failed.futureValue
 
       verify(mockObjectStoreClient, never).uploadFromUrl(
         any(),

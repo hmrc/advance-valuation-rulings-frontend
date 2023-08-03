@@ -47,9 +47,8 @@ class UploadSupportingDocumentsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private val maxFileSize: Long                = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
-  private val controller                       = controllers.routes.UploadSupportingDocumentsController
-  private val page: QuestionPage[UploadedFile] = UploadSupportingDocumentPage
+  private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val controller        = controllers.routes.UploadSupportingDocumentsController
 
   def onPageLoad(
     mode: Mode,
