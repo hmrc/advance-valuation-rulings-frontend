@@ -55,7 +55,7 @@
     )
 }
 
-@layout(pageTitle = title(form, messages("traderDetails.public.heading")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("traderDetails.public.heading", details.EORINo)), draftId = Some(draftId)) {
 
     @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId)) {
 
@@ -64,7 +64,7 @@
         }
 
         @caption(messages("caption.applicant"))
-        <h1 class="govuk-heading-xl">@messages("traderDetails.public.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("traderDetails.public.heading", details.EORINo)</h1>
         <p class="govuk-body">@messages("traderDetails.public.p1")</p>
         <h3 class="govuk-heading-s">@messages("traderDetails.public.h3.businessName")</h3>
         <p class="govuk-body">@details.CDSFullName</p>
