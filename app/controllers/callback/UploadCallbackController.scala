@@ -37,9 +37,9 @@ class UploadCallbackController @Inject() (
 
   def callback(
     draftId: DraftId,
-    page: QuestionPage[UploadedFile]
+    isLetterOfAuthority: Boolean
   ): Action[UploadedFile] =
     Action.async(parse.json[UploadedFile]) {
-      implicit request => fileService.update(draftId, request.body, page).as(Ok)
+      implicit request => fileService.update(draftId, request.body, isLetterOfAuthority).as(Ok)
     }
 }

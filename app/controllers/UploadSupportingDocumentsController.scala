@@ -106,7 +106,7 @@ class UploadSupportingDocumentsController @Inject() (
   private def showPage(draftId: DraftId, redirectPath: String)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, redirectPath, page).map {
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
       response =>
         Ok(
           view(
@@ -133,7 +133,7 @@ class UploadSupportingDocumentsController @Inject() (
   private def showErrorPage(draftId: DraftId, errorMessage: String, redirectPath: String)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, redirectPath, page).map {
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
       response =>
         BadRequest(
           view(
@@ -151,7 +151,7 @@ class UploadSupportingDocumentsController @Inject() (
     errorCode: String,
     redirectPath: String
   )(implicit request: RequestHeader): Future[Result] =
-    fileService.initiate(draftId, redirectPath, page).map {
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
       _ => Redirect(controller.onPageLoad(mode, draftId, Some(errorCode), key))
     }
 

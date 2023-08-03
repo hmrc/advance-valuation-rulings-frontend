@@ -54,13 +54,13 @@ class FileService @Inject() (
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  def initiate(draftId: DraftId, redirectPath: String, page: QuestionPage[UploadedFile])(implicit
+  def initiate(draftId: DraftId, redirectPath: String, isLetterOfAuthority: Boolean)(implicit
     hc: HeaderCarrier
   ): Future[UpscanInitiateResponse] = {
     val redirectUrl = s"$host$redirectPath"
     val request     = UpscanInitiateRequest(
       callbackUrl =
-        s"$callbackBaseUrl${controllers.callback.routes.UploadCallbackController.callback(draftId, page).url}",
+        s"$callbackBaseUrl${controllers.callback.routes.UploadCallbackController.callback(draftId, isLetterOfAuthority).url}",
       successRedirect = redirectUrl,
       errorRedirect = redirectUrl,
       minimumFileSize = minimumFileSize,
@@ -72,20 +72,27 @@ class FileService @Inject() (
       answers        <- getUserAnswers(draftId)
       updatedAnswers <-
         answers.setFuture(
-          page,
+          pageForIsLetterOfAuthority(isLetterOfAuthority),
           UploadedFile.Initiated(response.reference)
         )
       _              <- userAnswersService.set(updatedAnswers)
     } yield response
   }
 
-  def update(draftId: DraftId, file: UploadedFile, page: QuestionPage[UploadedFile]): Future[Done] =
+  def update(draftId: DraftId, file: UploadedFile, isLetterOfAuthority: Boolean): Future[Done] =
     for {
       answers        <- getUserAnswersInternal(draftId)
       updatedFile    <- processFile(answers, file)
-      updatedAnswers <- answers.setFuture(page, updatedFile)
+      updatedAnswers <-
+        answers.setFuture(pageForIsLetterOfAuthority(isLetterOfAuthority), updatedFile)
       _              <- userAnswersService.setInternal(updatedAnswers)
     } yield Done
+
+  private def pageForIsLetterOfAuthority(isLetterOfAuthority: Boolean) =
+    isLetterOfAuthority match {
+      case true  => UploadLetterOfAuthorityPage
+      case false => UploadSupportingDocumentPage
+    }
 
   private def processFile(
     answers: UserAnswers,
