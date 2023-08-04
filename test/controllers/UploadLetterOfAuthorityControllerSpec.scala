@@ -57,10 +57,10 @@ class UploadLetterOfAuthorityControllerSpec
 
   private val maximumFileSizeMB: Long              = 5
   private val controller                           = controllers.routes.UploadLetterOfAuthorityController
-  private lazy val redirectPath: String             =
+  private lazy val redirectPath: String            =
     controllers.routes.UploadLetterOfAuthorityController
-    .onPageLoad(draftId, None, None)
-    .url
+      .onPageLoad(draftId, None, None)
+      .url
   private val page                                 = UploadLetterOfAuthorityPage
   private val unknownError                         = "uploadLetterOfAuthority.error.unknown"
   private def injectView(application: Application) =
@@ -69,13 +69,12 @@ class UploadLetterOfAuthorityControllerSpec
   private val mockFileService        = mock[FileService]
   private val mockUserAnswersService = mock[UserAnswersService]
 
-  private def mockFileServiceInitiate(): Unit = {
+  private def mockFileServiceInitiate(): Unit =
     when(
       mockFileService.initiate(eqTo(draftId), eqTo(redirectPath), eqTo(true))(
         any()
       )
     ).thenReturn(Future.successful(upscanInitiateResponse))
-  }
 
   private def verifyFileServiceInitiate(): Unit =
     verify(mockFileService).initiate(
@@ -479,7 +478,7 @@ class UploadLetterOfAuthorityControllerSpec
 
           mockFileServiceInitiate()
 
-          val request     = FakeRequest(
+          val request = FakeRequest(
             GET,
             controller
               .onPageLoad(draftId, Some(errCode), None)
