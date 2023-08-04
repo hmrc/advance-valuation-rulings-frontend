@@ -50,15 +50,13 @@ class UploadSupportingDocumentsControllerSpec
     reset(mockFileService, mockUserAnswersService)
   }
 
-  private val mockFileService        = mock[FileService]
-  private val mockUserAnswersService = mock[UserAnswersService]
-
-  private val redirectPath: String             = "/advance-valuation-ruling" +
+  private lazy val redirectPath: String             =
     controllers.routes.UploadSupportingDocumentsController
       .onPageLoad(NormalMode, draftId, None, None)
       .url
+  private val mockFileService        = mock[FileService]
+  private val mockUserAnswersService = mock[UserAnswersService]
   private val page: QuestionPage[UploadedFile] = UploadSupportingDocumentPage
-
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(

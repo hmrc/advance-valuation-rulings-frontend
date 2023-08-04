@@ -57,8 +57,10 @@ class UploadLetterOfAuthorityControllerSpec
 
   private val maximumFileSizeMB: Long              = 5
   private val controller                           = controllers.routes.UploadLetterOfAuthorityController
-  private val redirectPath                         =
-    "/advance-valuation-ruling" + controller.onPageLoad(draftId, None, None).url
+  private lazy val redirectPath: String             =
+    controllers.routes.UploadLetterOfAuthorityController
+    .onPageLoad(draftId, None, None)
+    .url
   private val page                                 = UploadLetterOfAuthorityPage
   private val unknownError                         = "uploadLetterOfAuthority.error.unknown"
   private def injectView(application: Application) =
@@ -67,12 +69,13 @@ class UploadLetterOfAuthorityControllerSpec
   private val mockFileService        = mock[FileService]
   private val mockUserAnswersService = mock[UserAnswersService]
 
-  private def mockFileServiceInitiate(): Unit =
+  private def mockFileServiceInitiate(): Unit = {
     when(
       mockFileService.initiate(eqTo(draftId), eqTo(redirectPath), eqTo(true))(
         any()
       )
     ).thenReturn(Future.successful(upscanInitiateResponse))
+  }
 
   private def verifyFileServiceInitiate(): Unit =
     verify(mockFileService).initiate(
@@ -115,11 +118,11 @@ class UploadLetterOfAuthorityControllerSpec
 
     "must initiate a file upload and display the page" in {
 
-      mockFileServiceInitiate()
-
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(bind[FileService].toInstance(mockFileService))
         .build()
+
+      mockFileServiceInitiate()
 
       val request = FakeRequest(
         GET,
@@ -147,11 +150,11 @@ class UploadLetterOfAuthorityControllerSpec
       // TODO: Remove, since this should be included in the parameterised test below.
       "must initiate a file upload and display the page with errors" in {
 
-        mockFileServiceInitiate()
-
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(bind[FileService].toInstance(mockFileService))
           .build()
+
+        mockFileServiceInitiate()
 
         val request = FakeRequest(
           GET,
@@ -464,7 +467,6 @@ class UploadLetterOfAuthorityControllerSpec
           _: UploadedFile.FailureReason,
           errMessage: MessagesProvider => String
         ) =>
-          mockFileServiceInitiate()
           val initiatedFile = UploadedFile.Initiated(
             reference = "reference"
           )
@@ -474,6 +476,9 @@ class UploadLetterOfAuthorityControllerSpec
           val application = applicationBuilder(Some(userAnswers))
             .overrides(bind[FileService].toInstance(mockFileService))
             .build()
+
+          mockFileServiceInitiate()
+
           val request     = FakeRequest(
             GET,
             controller
