@@ -22,7 +22,7 @@
     bulletList: BulletList,
     para: InsetPara,
     heading: Heading,
-    cancelLink: CancelApplicationLink,
+    cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons
 )
 
@@ -56,4 +56,6 @@
                     @messages("site.saveAsDraft")
                 </a>
         </span>
+
+        @cancelApplicationLink(draftId)
 }
