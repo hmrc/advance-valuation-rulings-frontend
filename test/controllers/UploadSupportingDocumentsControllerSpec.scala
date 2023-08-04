@@ -50,13 +50,13 @@ class UploadSupportingDocumentsControllerSpec
     reset(mockFileService, mockUserAnswersService)
   }
 
-  private lazy val redirectPath: String        =
+  private lazy val redirectPath: String =
     controllers.routes.UploadSupportingDocumentsController
       .onPageLoad(NormalMode, draftId, None, None)
       .url
-  private val mockFileService                  = mock[FileService]
-  private val mockUserAnswersService           = mock[UserAnswersService]
-  private val upscanInitiateResponse           = UpscanInitiateResponse(
+  private val mockFileService           = mock[FileService]
+  private val mockUserAnswersService    = mock[UserAnswersService]
+  private val upscanInitiateResponse    = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
       href = "href",
