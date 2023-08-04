@@ -169,7 +169,6 @@ class UploadLetterOfAuthorityController @Inject() (
 
   private def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
-      // TODO: Verify that these are the correct error messages.
       case "InvalidArgument" =>
         Messages("uploadLetterOfAuthority.error.invalidargument")
       case "EntityTooLarge"  =>
