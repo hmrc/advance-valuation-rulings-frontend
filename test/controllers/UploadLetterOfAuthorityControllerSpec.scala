@@ -392,7 +392,7 @@ class UploadLetterOfAuthorityControllerSpec
 
     "Parameterised: must initiate a file upload and redirect back to the page with the relevant error code" in {
       forAll(parameterisedCases) {
-        (errCode: String, failureReason: UploadedFile.FailureReason, errMessage: MessagesProvider => String) =>
+        (errCode: String, failureReason: UploadedFile.FailureReason, _: MessagesProvider => String) =>
           val failedFile = UploadedFile.Failure(
             reference = "reference",
             failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
@@ -422,7 +422,7 @@ class UploadLetterOfAuthorityControllerSpec
 
     "Parameterised: A redirect with an error code renders the error message" in {
       forAll(parameterisedCases) {
-        (errCode: String, failureReason: UploadedFile.FailureReason, errMessage: MessagesProvider => String) =>
+        (errCode: String, _: UploadedFile.FailureReason, errMessage: MessagesProvider => String) =>
           mockFileServiceInitiate()
           val initiatedFile = UploadedFile.Initiated(
             reference = "reference"
