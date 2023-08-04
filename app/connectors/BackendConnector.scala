@@ -21,8 +21,9 @@ import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.http.Status
+import play.api.http.Status.OK
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
@@ -53,8 +54,15 @@ class BackendConnector @Inject() (
     httpClient
       .get(url"$backendUrl/trader-details/${acknowledgementReference.value}/${eoriNumber.value}")
       .setHeader("X-Correlation-ID" -> UUID.randomUUID().toString)
-      .execute[TraderDetailsWithCountryCode]
-      .map(response => Right(response))
+      .execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case OK =>
+              Right(response.json.as[TraderDetailsWithCountryCode])
+            case _  => Left(BackendError(response.status, response.body))
+          }
+      }
       .recover {
         case e: Throwable =>
           onError(e)
