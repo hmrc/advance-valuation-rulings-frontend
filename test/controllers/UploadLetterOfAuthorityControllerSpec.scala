@@ -168,42 +168,6 @@ class UploadLetterOfAuthorityControllerSpec
         verifyFileServiceInitiate()
       }
 
-      // New tests
-      "Parameterised: must initiate a file upload and display the page with errors" in {
-
-        val failedFile = UploadedFile.Failure(
-          reference = "reference",
-          failureDetails = UploadedFile
-            .FailureDetails(UploadedFile.FailureReason.Quarantine, Some("failureMessage"))
-        )
-
-        val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[FileService].toInstance(mockFileService))
-          .build()
-
-        mockFileServiceInitiate()
-
-        val request = FakeRequest(
-          GET,
-          controller.onPageLoad(draftId, Some("errorCode"), None).url
-        )
-
-        val result = route(application, request).value
-
-        val status_of_result = status(result)
-        status_of_result mustEqual SEE_OTHER
-        val content          = contentAsString(result)
-        content mustEqual injectView(application)(
-          draftId = draftId,
-          upscanInitiateResponse = Some(upscanInitiateResponse),
-          errorMessage = Some(messages(application)("uploadLetterOfAuthority.error.entitytoolarge"))
-        )(messages(application), request).toString
-
-        verifyFileServiceInitiate()
-      }
-      //
     }
 
     "when there is no error code" - {
@@ -384,42 +348,6 @@ class UploadLetterOfAuthorityControllerSpec
     }
   }
 
-//  "when there is a failed file" - {
-//
-//    val userAnswers =
-//      userAnswersAsIndividualTrader
-//        .set(UploadSupportingDocumentPage, failedFile)
-//        .success
-//        .value
-//
-//    "must initiate a file upload and redirect back to the page with the relevant error code" in {
-//
-//      val application = applicationBuilder(userAnswers = Some(userAnswers))
-//        .overrides(
-//          bind[FileService].toInstance(mockFileService)
-//        )
-//        .build()
-//
-//      mockFileServiceInitiate()
-//
-//      val request = FakeRequest(
-//        GET,
-//        controller
-//          .onPageLoad(models.NormalMode, draftId, None, Some("key"))
-//          .url
-//      )
-//
-//      val result = route(application, request).value
-//
-//      status(result) mustEqual SEE_OTHER
-//      redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
-//        .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some("key"))
-//        .url
-//
-//      verifyFileServiceInitiate
-//    }
-//  }
-
   "must redirect to the JourneyRecovery page when there are no user answers" in {
 
     val application = applicationBuilder(userAnswers = None)
@@ -481,6 +409,35 @@ class UploadLetterOfAuthorityControllerSpec
             .onPageLoad(draftId, Some(errCode), Some("key"))
             .url
       }
+    }
+
+    "A redirect with an error code renders the error message" in {
+
+      mockFileServiceInitiate()
+      val initiatedFile = UploadedFile.Initiated(
+        reference = "reference"
+      )
+
+      val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
+
+      val application = applicationBuilder(Some(userAnswers))
+        .overrides(bind[FileService].toInstance(mockFileService))
+        .build()
+      val request     = FakeRequest(
+        GET,
+        controller
+          .onPageLoad(draftId, Some("error.code"), None)
+          .url
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual injectView(application)(
+        draftId = draftId,
+        upscanInitiateResponse = Some(upscanInitiateResponse),
+        errorMessage = Some("uploadLetterOfAuthority.error.unknown")
+      )(messages(application), request).toString
     }
   }
 }
