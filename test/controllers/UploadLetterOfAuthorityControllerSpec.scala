@@ -28,10 +28,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.{NormalMode, UploadedFile}
+import models.UploadedFile
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
-import org.apache.pdfbox.pdmodel.PDDocument
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
@@ -62,7 +61,6 @@ class UploadLetterOfAuthorityControllerSpec
       .onPageLoad(draftId, None, None)
       .url
   private val page                                 = UploadLetterOfAuthorityPage
-  private val unknownError                         = "uploadLetterOfAuthority.error.unknown"
   private def injectView(application: Application) =
     application.injector.instanceOf[UploadLetterOfAuthorityView]
 
@@ -144,35 +142,6 @@ class UploadLetterOfAuthorityControllerSpec
   "when there is an initiated file" - {
 
     val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
-
-    "when there is an error code" - {
-      // TODO: Remove, since this should be included in the parameterised test below.
-      "must initiate a file upload and display the page with errors" in {
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[FileService].toInstance(mockFileService))
-          .build()
-
-        mockFileServiceInitiate()
-
-        val request = FakeRequest(
-          GET,
-          controller.onPageLoad(draftId, Some("errorCode"), None).url
-        )
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual injectView(application)(
-          draftId = draftId,
-          upscanInitiateResponse = Some(upscanInitiateResponse),
-          errorMessage = Some(messages(application)(unknownError))
-        )(messages(application), request).toString
-
-        verifyFileServiceInitiate()
-      }
-
-    }
 
     "when there is no error code" - {
 
@@ -372,8 +341,6 @@ class UploadLetterOfAuthorityControllerSpec
 
     verifyFileServiceInitiateZeroTimes()
   }
-
-  // New tests
 
   "when there is a failed file" - {
 

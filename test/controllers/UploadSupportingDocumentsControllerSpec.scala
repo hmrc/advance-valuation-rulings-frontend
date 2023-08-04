@@ -56,7 +56,6 @@ class UploadSupportingDocumentsControllerSpec
       .url
   private val mockFileService                  = mock[FileService]
   private val mockUserAnswersService           = mock[UserAnswersService]
-  private val page: QuestionPage[UploadedFile] = UploadSupportingDocumentPage
   private val upscanInitiateResponse           = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
