@@ -55,8 +55,8 @@ class UploadSupportingDocumentsControllerSpec
 
   private val redirectPath: String             = "/advance-valuation-ruling" +
     controllers.routes.UploadSupportingDocumentsController
-    .onPageLoad(NormalMode, draftId, None, None)
-    .url
+      .onPageLoad(NormalMode, draftId, None, None)
+      .url
   private val page: QuestionPage[UploadedFile] = UploadSupportingDocumentPage
 
   private val upscanInitiateResponse = UpscanInitiateResponse(

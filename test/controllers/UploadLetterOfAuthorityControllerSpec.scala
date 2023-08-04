@@ -17,12 +17,16 @@
 package controllers
 
 import java.time.Instant
+
 import scala.concurrent.Future
+
 import play.api.Application
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
 import base.SpecBase
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
@@ -36,7 +40,6 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
-import play.api.i18n.{Messages, MessagesProvider}
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.UploadLetterOfAuthorityView
@@ -52,7 +55,7 @@ class UploadLetterOfAuthorityControllerSpec
     reset(mockFileService, mockUserAnswersService)
   }
 
-  private val maximumFileSizeMB: Long = 5
+  private val maximumFileSizeMB: Long              = 5
   private val controller                           = controllers.routes.UploadLetterOfAuthorityController
   private val redirectPath                         =
     "/advance-valuation-ruling" + controller.onPageLoad(draftId, None, None).url
@@ -374,25 +377,59 @@ class UploadLetterOfAuthorityControllerSpec
 
     val parameterisedCases = Table(
       ("Error code option string", "Failure Reason", "Failure message"),
-      ("Quarantine", UploadedFile.FailureReason.Quarantine, (messagesProvider: MessagesProvider) =>
-        Messages.apply("uploadLetterOfAuthority.error.quarantine")(messagesProvider)),
-      ("Rejected", UploadedFile.FailureReason.Rejected, (messagesProvider: MessagesProvider) =>
-        Messages.apply("uploadLetterOfAuthority.error.rejected")(messagesProvider)),
-      ("Duplicate", UploadedFile.FailureReason.Duplicate, (messagesProvider: MessagesProvider) =>
-        Messages.apply("uploadLetterOfAuthority.error.duplicate")(messagesProvider)),
-      ("Unknown", UploadedFile.FailureReason.Unknown, (messagesProvider: MessagesProvider) =>
-        Messages.apply("uploadLetterOfAuthority.error.unknown")(messagesProvider)),
-      ("InvalidArgument", UploadedFile.FailureReason.InvalidArgument, (messagesProvider: MessagesProvider) =>
-        Messages.apply("uploadLetterOfAuthority.error.invalidargument")(messagesProvider)),
-      ("EntityTooSmall", UploadedFile.FailureReason.EntityTooSmall, (messagesProvider: MessagesProvider) =>
-        Messages.apply("uploadLetterOfAuthority.error.entitytoosmall")(messagesProvider)),
-      ("EntityTooLarge", UploadedFile.FailureReason.EntityTooLarge, (messagesProvider: MessagesProvider) =>
-        Messages.apply(s"uploadLetterOfAuthority.error.entitytoolarge", maximumFileSizeMB)(messagesProvider)),
+      (
+        "Quarantine",
+        UploadedFile.FailureReason.Quarantine,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("uploadLetterOfAuthority.error.quarantine")(messagesProvider)
+      ),
+      (
+        "Rejected",
+        UploadedFile.FailureReason.Rejected,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("uploadLetterOfAuthority.error.rejected")(messagesProvider)
+      ),
+      (
+        "Duplicate",
+        UploadedFile.FailureReason.Duplicate,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("uploadLetterOfAuthority.error.duplicate")(messagesProvider)
+      ),
+      (
+        "Unknown",
+        UploadedFile.FailureReason.Unknown,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("uploadLetterOfAuthority.error.unknown")(messagesProvider)
+      ),
+      (
+        "InvalidArgument",
+        UploadedFile.FailureReason.InvalidArgument,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("uploadLetterOfAuthority.error.invalidargument")(messagesProvider)
+      ),
+      (
+        "EntityTooSmall",
+        UploadedFile.FailureReason.EntityTooSmall,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("uploadLetterOfAuthority.error.entitytoosmall")(messagesProvider)
+      ),
+      (
+        "EntityTooLarge",
+        UploadedFile.FailureReason.EntityTooLarge,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply(s"uploadLetterOfAuthority.error.entitytoolarge", maximumFileSizeMB)(
+            messagesProvider
+          )
+      )
     )
 
     "Parameterised: must initiate a file upload and redirect back to the page with the relevant error code" in {
       forAll(parameterisedCases) {
-        (errCode: String, failureReason: UploadedFile.FailureReason, errMessage: MessagesProvider => String) =>
+        (
+          errCode: String,
+          failureReason: UploadedFile.FailureReason,
+          errMessage: MessagesProvider => String
+        ) =>
           val failedFile = UploadedFile.Failure(
             reference = "reference",
             failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
@@ -422,7 +459,11 @@ class UploadLetterOfAuthorityControllerSpec
 
     "Parameterised: A redirect with an error code renders the error message" in {
       forAll(parameterisedCases) {
-        (errCode: String, failureReason: UploadedFile.FailureReason, errMessage: MessagesProvider => String) =>
+        (
+          errCode: String,
+          failureReason: UploadedFile.FailureReason,
+          errMessage: MessagesProvider => String
+        ) =>
           mockFileServiceInitiate()
           val initiatedFile = UploadedFile.Initiated(
             reference = "reference"
@@ -433,7 +474,7 @@ class UploadLetterOfAuthorityControllerSpec
           val application = applicationBuilder(Some(userAnswers))
             .overrides(bind[FileService].toInstance(mockFileService))
             .build()
-          val request = FakeRequest(
+          val request     = FakeRequest(
             GET,
             controller
               .onPageLoad(draftId, Some(errCode), None)
