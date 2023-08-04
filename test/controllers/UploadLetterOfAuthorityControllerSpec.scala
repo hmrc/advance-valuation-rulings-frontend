@@ -374,16 +374,16 @@ class UploadLetterOfAuthorityControllerSpec
   "when there is a failed file" - {
 
     val parameterisedCases = Table(
-      ("Error code option string", "Failure Reason"),
-      ("Quarantine", UploadedFile.FailureReason.Quarantine),
-      ("Rejected", UploadedFile.FailureReason.Rejected),
-      ("Duplicate", UploadedFile.FailureReason.Duplicate),
-      ("Unknown", UploadedFile.FailureReason.Unknown)
+      ("Error code option string", "Failure Reason", "Failure message"),
+      ("Quarantine", UploadedFile.FailureReason.Quarantine, "uploadLetterOfAuthority.error.quarantine"),
+      ("Rejected", UploadedFile.FailureReason.Rejected, "uploadLetterOfAuthority.error.rejected"),
+      ("Duplicate", UploadedFile.FailureReason.Duplicate, "uploadLetterOfAuthority.error.duplicate"),
+      ("Unknown", UploadedFile.FailureReason.Unknown, "uploadLetterOfAuthority.error.unknown")
     )
 
     "Parameterised: must initiate a file upload and redirect back to the page with the relevant error code" in {
       forAll(parameterisedCases) {
-        (errCode: String, failureReason: UploadedFile.FailureReason) =>
+        (errCode: String, failureReason: UploadedFile.FailureReason, errMessage: String) =>
           val failedFile = UploadedFile.Failure(
             reference = "reference",
             failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
@@ -411,33 +411,35 @@ class UploadLetterOfAuthorityControllerSpec
       }
     }
 
-    "A redirect with an error code renders the error message" in {
+    "Parameterised: A redirect with an error code renders the error message" in {
+      forAll(parameterisedCases) {
+        (errCode: String, failureReason: UploadedFile.FailureReason, errMessage: String) =>
+          mockFileServiceInitiate()
+          val initiatedFile = UploadedFile.Initiated(
+            reference = "reference"
+          )
 
-      mockFileServiceInitiate()
-      val initiatedFile = UploadedFile.Initiated(
-        reference = "reference"
-      )
+          val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
 
-      val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
+          val application = applicationBuilder(Some(userAnswers))
+            .overrides(bind[FileService].toInstance(mockFileService))
+            .build()
+          val request = FakeRequest(
+            GET,
+            controller
+              .onPageLoad(draftId, Some(errCode), None)
+              .url
+          )
 
-      val application = applicationBuilder(Some(userAnswers))
-        .overrides(bind[FileService].toInstance(mockFileService))
-        .build()
-      val request     = FakeRequest(
-        GET,
-        controller
-          .onPageLoad(draftId, Some("error.code"), None)
-          .url
-      )
+          val result = route(application, request).value
 
-      val result = route(application, request).value
-
-      status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual injectView(application)(
-        draftId = draftId,
-        upscanInitiateResponse = Some(upscanInitiateResponse),
-        errorMessage = Some("uploadLetterOfAuthority.error.unknown")
-      )(messages(application), request).toString
+          status(result) mustEqual BAD_REQUEST
+          contentAsString(result) mustEqual injectView(application)(
+            draftId = draftId,
+            upscanInitiateResponse = Some(upscanInitiateResponse),
+            errorMessage = Some(errMessage)
+          )(messages(application), request).toString
+      }
     }
   }
 }
