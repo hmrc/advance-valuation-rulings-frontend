@@ -40,6 +40,29 @@ class BackendConnectorSpec
   private val connector = new BackendConnector(appConfig, httpClient)
 
   ".getTraderDetails" - {
+
+    "OK with bad Json object should return a BackendError of 500" in {
+      forAll {
+        (
+          traderDetailsWithCountryCode: TraderDetailsWithCountryCode,
+          acknowledgementReference: AcknowledgementReference
+        ) =>
+          val eoriNumber       = EoriNumber(traderDetailsWithCountryCode.EORINo)
+          val expectedResponse = Json.stringify(Json.toJson("Banana"))
+
+          stub(
+            GET,
+            traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
+            Status.OK,
+            expectedResponse
+          )
+          val result = connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue
+
+          result.isLeft mustBe true
+          result.left.get.code mustBe 500
+      }
+    }
+
     "should get trader details from backend" in {
       forAll {
         (
@@ -64,7 +87,7 @@ class BackendConnectorSpec
       }
     }
 
-    "should return BAD_GATEWAY error for trader details backend error 5xx" in {
+    "should preserve error code for trader details backend error 5xx" in {
       forAll(
         arbitraryEoriNumberGen.arbitrary,
         arbitraryAcknowledgementReferenceGen.arbitrary,
@@ -80,15 +103,15 @@ class BackendConnectorSpec
             expectedResponse
           )
 
-          val traderDetails =
+          val result =
             connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue.left.value
 
-          traderDetails.code mustBe Status.BAD_GATEWAY
-          traderDetails.message must include(expectedResponse)
+          result.code mustBe backendError.code
+          result.message must include(expectedResponse)
       }
     }
 
-    "should return INTERNAL_SERVER_ERROR error for trader details backend error 4xx" in {
+    "should preserve error code for trader details backend error 4xx" in {
       forAll(
         arbitraryEoriNumberGen.arbitrary,
         arbitraryAcknowledgementReferenceGen.arbitrary,
@@ -104,11 +127,11 @@ class BackendConnectorSpec
             expectedResponse
           )
 
-          val traderDetails =
+          val result =
             connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue.left.value
 
-          traderDetails.code mustBe Status.INTERNAL_SERVER_ERROR
-          traderDetails.message must include(expectedResponse)
+          result.code mustBe backendError.code
+          result.message must include(expectedResponse)
       }
     }
   }

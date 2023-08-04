@@ -211,7 +211,7 @@ traderDetails.common.searchAgain.link = Search again
 traderDetails.common.searchAgain = {0} if you think you entered the trader''s EORI number incorrectly.
 
 #TRADER DETAILS - PUBLIC
-traderDetails.public.heading=Check the name and address for EORI number
+traderDetails.public.heading=Check the name and address for EORI number {0}
 traderDetails.public.p1=These are the EORI details we have on record for the trader you are representing. They should be the same details the trader used to register their EORI number.
 traderDetails.public.h2=EORI registration details
 traderDetails.public.h3.businessName=Registered business name

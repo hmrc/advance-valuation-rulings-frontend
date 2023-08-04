@@ -28,9 +28,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
-import models.{DraftId, Mode}
+import models.{DraftId, Mode, TraderDetailsWithConfirmation}
 import navigation.Navigator
-import pages.{ProvideTraderEoriPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
+import pages.VerifyTraderDetailsPage
 import services.UserAnswersService
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
@@ -50,7 +50,11 @@ class VerifyTraderEoriController @Inject() (
     with I18nSupport
     with Logging {
 
-  val form = formProvider()
+  private def getForm(details: TraderDetailsWithConfirmation) =
+    details.confirmation match {
+      case Some(value) => formProvider().fill(value.toString)
+      case None        => formProvider()
+    }
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
@@ -59,9 +63,9 @@ class VerifyTraderEoriController @Inject() (
           case None                                                       =>
             traderDetailsNotFoundInSession(draftId)
           case Some(details) if details.consentToDisclosureOfPersonalData =>
-            Ok(publicView(form, mode, draftId, details))
+            Ok(publicView(getForm(details), mode, draftId, details))
           case Some(details)                                              =>
-            Ok(privateView(form, mode, draftId, details))
+            Ok(privateView(getForm(details), mode, draftId, details))
         }
     }
 
@@ -78,7 +82,7 @@ class VerifyTraderEoriController @Inject() (
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        form
+        formProvider()
           .bindFromRequest()
           .fold(
             formWithErrors =>
@@ -90,12 +94,19 @@ class VerifyTraderEoriController @Inject() (
                   Future.successful(BadRequest(privateView(formWithErrors, mode, draftId, details)))
               },
             value =>
-              for {
-                updatedAnswers <- ProvideTraderEoriPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
-              )
+              VerifyTraderDetailsPage.get() match {
+                case None          => Future.successful(traderDetailsNotFoundInSession(draftId))
+                case Some(details) =>
+                  for {
+                    updatedAnswers <-
+                      VerifyTraderDetailsPage
+                        .set(details.copy(confirmation = Some(value.toBoolean)))
+                    _              <- userAnswersService.set(updatedAnswers)
+                  } yield Redirect(
+                    routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+                  )
+
+              }
           )
     }
 }

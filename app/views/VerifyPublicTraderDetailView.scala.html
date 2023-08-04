@@ -32,15 +32,14 @@
     link: Link
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithCountryCode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
 
 @searchAgainLink = {
-    @link(
-        id = "eori_be_up_to_date_link_two",
-        text = messages("traderDetails.common.searchAgain.link"),
-        call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId),
-        newTab = false
-    )
+  @link(
+    id = "search_again",
+    text = messages("traderDetails.common.searchAgain.link"),
+    newTab = false,
+    call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
 }
 
 @radioItems = @{
@@ -56,7 +55,7 @@
     )
 }
 
-@layout(pageTitle = title(form, messages("traderDetails.public.heading")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("traderDetails.public.heading", details.EORINo)), draftId = Some(draftId)) {
 
     @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId)) {
 
@@ -65,7 +64,7 @@
         }
 
         @caption(messages("caption.applicant"))
-        <h1 class="govuk-heading-xl">@messages("traderDetails.public.heading")</h1>
+        <h1 class="govuk-heading-xl">@messages("traderDetails.public.heading", details.EORINo)</h1>
         <p class="govuk-body">@messages("traderDetails.public.p1")</p>
         <h3 class="govuk-heading-s">@messages("traderDetails.public.h3.businessName")</h3>
         <p class="govuk-body">@details.CDSFullName</p>
@@ -89,7 +88,7 @@
                     items = radioItems
             ))
 
-        @paragraph(content = Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
+        @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
         @saveButtons(draftId)
     }

@@ -26,14 +26,14 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsWithDraft
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("provideTraderEori.heading")), draftId = Some(draftId)) {
 
-    @formHelper(action = controllers.routes.ProvideTraderEoriController.onSubmit(draftId = draftId)) {
+    @formHelper(action = controllers.routes.ProvideTraderEoriController.onSubmit(draftId = draftId, saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -51,7 +51,7 @@
                 .withWidth(Full)
         )
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, controllers.routes.ProvideTraderEoriController.onSubmit(draftId = draftId, saveDraft = true))
     }
 
     @cancelApplicationLink(draftId)
