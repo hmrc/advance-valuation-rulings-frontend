@@ -60,7 +60,8 @@ class BackendConnector @Inject() (
           response.status match {
             case OK =>
               Right(response.json.as[TraderDetailsWithCountryCode])
-            case _  => Left(BackendError(response.status, response.body))
+            case _  =>
+              Left(BackendError(response.status, response.body))
           }
       }
       .recover {
