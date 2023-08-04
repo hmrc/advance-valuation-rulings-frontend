@@ -615,8 +615,8 @@ checkYourAnswersForAgents.company.agent.heading = Ynglŷn â’r cwmni yr ydych 
 checkYourAnswersForAgents.applicant.org.heading = Ynglŷn â’r ymgeisydd
 checkYourAnswersForAgents.applicant.agent.heading = Ynglŷn â’r asiant
 
-checkYourAnswersForAgents.agent.eori.number.label = Your company’s registered EORI number
-checkYourAnswersForAgents.agent.name.label = Your company’s registered business name
+checkYourAnswersForAgents.agent.eori.number.label = Rhif EORI cofrestredig eich cwmni, yn dechrau gyda GB
+checkYourAnswersForAgents.agent.name.label = Enw busnes cofrestredig eich cwmni
 checkYourAnswersForAgents.agent.address.label = Your company’s registered business address
 checkYourAnswersForAgents.agent.eori.number.hidden = your company’s registered EORI number
 checkYourAnswersForAgents.agent.name.hidden = your company’s registered business name
@@ -800,8 +800,8 @@ cancelAreYouSure.inset.text = If you cancel now any data will be lost and you wi
 
 agentCompanyDetails.title = Manylion cyswllt eich cwmni
 agentCompanyDetails.heading = Manylion cyswllt eich cwmni
-agentCompanyDetails.agentEori = Agent’s company’s registered EORI number
-agentCompanyDetails.agentCompanyName = Agent’s company’s registered business name
+agentCompanyDetails.agentEori = Rhif EORI cofrestredig cwmni’r asiant
+agentCompanyDetails.agentCompanyName = Enw busnes cofrestredig cwmni’r asiant
 agentCompanyDetails.agentStreetAndNumber = Cyfeiriad – llinell 1
 agentCompanyDetails.agentCity = Tref neu ddinas
 agentCompanyDetails.agentCountry = Gwlad
@@ -829,9 +829,9 @@ agentCompanyDetails.agentCity.change.hidden = Tref neu ddinas
 agentCompanyDetails.agentCountry.change.hidden = Gwlad
 agentCompanyDetails.agentPostalCode.change.hidden = Cod post
 
-checkYourAnswersForAgents.agent.org.name.label = Agent’s full name
+checkYourAnswersForAgents.agent.org.name.label = Enw llawn yr asiant
 checkYourAnswersForAgents.agent.org.email.label = Agent’s email address
-checkYourAnswersForAgents.agent.org.phone.label = Agent’s telephone number
+checkYourAnswersForAgents.agent.org.phone.label = Rhif ffôn yr asiant
 checkYourAnswersForAgents.agent.org.name.change.hidden = your contact name
 checkYourAnswersForAgents.agent.org.email.change.hidden = your email address
 checkYourAnswersForAgents.agent.org.phone.change.hidden = your telephone number
@@ -886,10 +886,10 @@ removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu {0}?
 removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu {0}?
 removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu’r ffeil hon
 
-draftHasBeenSaved.title = Your application draft has been saved for 28 days
-draftHasBeenSaved.heading = Your application draft has been saved for 28 days
-draftHasBeenSaved.para.1 = You have until {0} to submit your application.
-draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
+draftHasBeenSaved.title = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrnod
+draftHasBeenSaved.heading = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrnod
+draftHasBeenSaved.para.1 = Mae gennych tan {0} i gyflwyno’ch cais
+draftHasBeenSaved.para.2 = Sylwer: bydd y cyfnod o 28-diwrnod yn ail-ddechrau bob tro yr ewch at eich drafft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
 draftHasBeenSaved.para.link.text = your applications and rulings
 
