@@ -428,7 +428,7 @@ class UploadLetterOfAuthorityControllerSpec
         (
           errCode: String,
           failureReason: UploadedFile.FailureReason,
-          errMessage: MessagesProvider => String
+          _: MessagesProvider => String
         ) =>
           val failedFile = UploadedFile.Failure(
             reference = "reference",
@@ -461,7 +461,7 @@ class UploadLetterOfAuthorityControllerSpec
       forAll(parameterisedCases) {
         (
           errCode: String,
-          failureReason: UploadedFile.FailureReason,
+          _: UploadedFile.FailureReason,
           errMessage: MessagesProvider => String
         ) =>
           mockFileServiceInitiate()
