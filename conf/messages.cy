@@ -888,7 +888,7 @@ removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu�
 
 draftHasBeenSaved.title = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrnod
 draftHasBeenSaved.heading = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrnod
-draftHasBeenSaved.para.1 = Mae gennych tan {0} i gyflwyno’ch cais
+draftHasBeenSaved.para.1 = Mae gennych tan {0} i gyflwyno’ch cais.
 draftHasBeenSaved.para.2 = Sylwer: bydd y cyfnod o 28-diwrnod yn ail-ddechrau bob tro yr ewch at eich drafft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
 draftHasBeenSaved.para.link.text = your applications and rulings
