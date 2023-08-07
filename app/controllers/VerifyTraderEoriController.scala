@@ -97,15 +97,20 @@ class VerifyTraderEoriController @Inject() (
               VerifyTraderDetailsPage.get() match {
                 case None          => Future.successful(traderDetailsNotFoundInSession(draftId))
                 case Some(details) =>
+                  val continue = value.toBoolean
                   for {
                     updatedAnswers <-
                       VerifyTraderDetailsPage
-                        .set(details.copy(confirmation = Some(value.toBoolean)))
+                        .set(details.copy(confirmation = Some(continue)))
                     _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
-                    routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+                    (continue, details.consentToDisclosureOfPersonalData) match {
+                      case (true, _)      =>
+                        routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+                      case (false, false) => ???
+                      case (false, true)  => ???
+                    }
                   )
-
               }
           )
     }

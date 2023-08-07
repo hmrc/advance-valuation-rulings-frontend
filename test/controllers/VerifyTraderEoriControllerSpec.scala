@@ -16,6 +16,8 @@
 
 package controllers
 
+import scala.concurrent.Future
+
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -23,7 +25,9 @@ import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import base.SpecBase
 import forms.VerifyTraderDetailsFormProvider
-import models.{NormalMode, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode}
+import models.{Done, NormalMode, TraderDetailsWithConfirmation}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.VerifyTraderDetailsPage
 import services.UserAnswersService
@@ -161,6 +165,73 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         )
       }
     }
+
+    "must redirect to upload letter of authority when private and approved" in {
+
+      val mockUserAnswersService = mock[UserAnswersService]
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+      val userAnswers = userAnswersAsIndividualTrader
+        .setFuture[TraderDetailsWithConfirmation](
+          VerifyTraderDetailsPage,
+          traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = false)
+        )
+        .futureValue
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
+          .withFormUrlEncodedBody(("traderDetailsCorrect", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None).url
+        )
+      }
+    }
+
+    "must redirect to upload letter of authority when public and approved" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+      val userAnswers = userAnswersAsIndividualTrader
+        .setFuture[TraderDetailsWithConfirmation](
+          VerifyTraderDetailsPage,
+          traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = true)
+        )
+        .futureValue
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
+          .withFormUrlEncodedBody(("traderDetailsCorrect", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None).url
+        )
+      }
+    }
+
+    "must redirect to ??? when public and unapproved" ignore {}
+
+    "must redirect to ??? when private and unapproved" ignore {}
 
     "must display an error on the page when no selection is made - public" in {
 
