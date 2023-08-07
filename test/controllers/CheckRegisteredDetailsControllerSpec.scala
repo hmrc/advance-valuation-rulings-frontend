@@ -215,8 +215,8 @@ class CheckRegisteredDetailsControllerSpec
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.UploadLetterController
-          .onPageLoad(draftId)
+        redirectLocation(result).value mustEqual routes.UploadLetterOfAuthorityController
+          .onPageLoad(draftId, None, None)
           .url
       }
     }

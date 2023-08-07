@@ -254,6 +254,9 @@ POST       /:draftId/supporting-documents/:index/change-remove                  
 
 GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
 
-GET        /:draftId/upload-letter                      controllers.UploadLetterController.onPageLoad(draftId: DraftId)
+GET        /:draftId/ars-upload-loa                     controllers.UploadLetterOfAuthorityController.onPageLoad(draftId: DraftId, errorCode: Option[String], key: Option[String])
+
+GET        /:draftId/verify-loa                         controllers.VerifyLetterOfAuthorityController.onPageLoad(draftId: DraftId)
+POST       /:draftId/verify-loa                         controllers.VerifyLetterOfAuthorityController.onSubmit(draftId: DraftId)
 
 GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()

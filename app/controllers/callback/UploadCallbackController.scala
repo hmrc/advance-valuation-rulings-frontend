@@ -21,10 +21,11 @@ import javax.inject.{Inject, Singleton}
 import cats.implicits._
 import scala.concurrent.ExecutionContext
 
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import models.{DraftId, UploadedFile}
+import pages.QuestionPage
 import services.fileupload.FileService
 
 @Singleton
@@ -34,7 +35,11 @@ class UploadCallbackController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
-  def callback(draftId: DraftId) = Action.async(parse.json[UploadedFile]) {
-    implicit request => fileService.update(draftId, request.body).as(Ok)
-  }
+  def callback(
+    draftId: DraftId,
+    isLetterOfAuthority: Boolean
+  ): Action[UploadedFile] =
+    Action.async(parse.json[UploadedFile]) {
+      implicit request => fileService.update(draftId, request.body, isLetterOfAuthority).as(Ok)
+    }
 }

@@ -102,7 +102,9 @@ class VerifyTraderEoriController @Inject() (
                       VerifyTraderDetailsPage
                         .set(details.copy(confirmation = Some(value.toBoolean)))
                     _              <- userAnswersService.set(updatedAnswers)
-                  } yield Redirect(???)
+                  } yield Redirect(
+                    routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+                  )
 
               }
           )

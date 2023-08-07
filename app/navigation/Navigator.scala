@@ -86,7 +86,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case AdaptMethodPage                                  => adaptMethodPage
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
     case AgentForTraderCheckRegisteredDetailsPage         =>
-      ua => UploadLetterController.onPageLoad(ua.draftId)
+      ua => UploadLetterOfAuthorityController.onPageLoad(ua.draftId, None, None)
+    case UploadLetterOfAuthorityPage                      => uploadLetterOfAuthorityPage
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case ProvideTraderEoriPage                            =>
       ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
@@ -480,7 +481,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(userAnswers.draftId)
     } else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
-  // Check EORI details pages-----
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
   ): Call =
@@ -502,7 +502,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
           }
         } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
-//-----
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ApplicationContactDetailsPage) match {
@@ -538,6 +537,9 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       case None    => AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
     }
+
+  private def uploadLetterOfAuthorityPage(userAnswers: UserAnswers): Call =
+    BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>

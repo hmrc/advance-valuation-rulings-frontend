@@ -431,6 +431,34 @@ uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Confidential
 
+uploadLetterOfAuthority.title = Upload your letter of authority - Apply for an Advance Valuation Ruling - GOV.UK
+uploadLetterOfAuthority.heading = Upload your letter of authority
+uploadLetterOfAuthority.caption = About the applicant
+uploadLetterOfAuthority.paragraph.1 = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader.
+uploadLetterOfAuthority.paragraph.2 = The letter of authority should:
+uploadLetterOfAuthority.paragraph.3 = An individual file must be:
+uploadLetterOfAuthority.bulletPoint.1 = be written and signed by the trader on letterhead paper
+uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on the trader’s behalf
+uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
+uploadLetterOfAuthority.bulletPoint.4 = contain your contact details including email address, phone number and the address registered with HMRC
+uploadLetterOfAuthority.bulletPoint.5 = include your VAT number
+uploadLetterOfAuthority.bulletPoint.6 = smaller than 5MB
+uploadLetterOfAuthority.bulletPoint.7 = a PDF or JPG
+uploadLetterOfAuthority.label = Upload a file
+uploadLetterOfAuthority.button = Upload and continue
+uploadLetterOfAuthority.error.required = Select yes if you want to upload another document
+uploadLetterOfAuthority.error.invalidargument = Select a file.
+uploadLetterOfAuthority.error.entitytoolarge = The selected file must be smaller than {0}MB
+uploadLetterOfAuthority.error.entitytoosmall = The selected file is empty.
+uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
+uploadLetterOfAuthority.error.quarantine = The selected file contains a virus
+uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded – try again
+
+verifyLetterOfAuthority.title = todo
+verifyLetterOfAuthority.heading = todo
+verifyLetterOfAuthority.caption = todo
+verifyLetterOfAuthority.keepConfidential = todo
+
 uploadSupportingDocuments.title = Upload supporting documents
 uploadSupportingDocuments.heading = Upload supporting documents
 uploadSupportingDocuments.caption = About the goods
@@ -445,7 +473,7 @@ uploadSupportingDocuments.bulletPoint.4 = a pdf or jpeg
 
 uploadSupportingDocuments.label = Upload a file
 uploadSupportingDocuments.button = Upload and continue
-uploadSupportingDocuments.button.inProgress=  Uploading file
+uploadSupportingDocuments.button.inProgress = Uploading file
 uploadSupportingDocuments.checkYourAnswersLabel = Supporting documents uploaded
 uploadSupportingDocuments.change.hidden = upload a document
 
@@ -894,8 +922,6 @@ draftHasBeenSaved.para.1 = You have until {0} to submit your application.
 draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
 draftHasBeenSaved.para.link.text = your applications and rulings
-
-uploadLetter.todo = TODO
 
 yourApplicationHasBeenCancelled.title = You cannot view this application
 yourApplicationHasBeenCancelled.heading = You cannot view this application

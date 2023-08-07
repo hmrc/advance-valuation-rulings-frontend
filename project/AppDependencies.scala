@@ -39,19 +39,19 @@ object AppDependencies {
   )
 
   val test = Seq(
-    "org.scalatest"              %% "scalatest"               % ScalaTestVersion,
-    "org.scalatestplus"          %% "scalacheck-1-15"         % ScalaTestPlusVersion,
-    "org.scalatestplus"          %% "mockito-3-4"             % ScalaTestPlusVersion,
-    "org.scalatestplus.play"     %% "scalatestplus-play"      % ScalaTestPlusPlayVersion,
-    "org.pegdown"                 % "pegdown"                 % PegdownVersion,
-    "org.jsoup"                   % "jsoup"                   % JsoupVersion,
-    "com.typesafe.play"          %% "play-test"               % PlayVersion.current,
-    "org.mockito"                %% "mockito-scala"           % MockitoScalaVersion,
-    "org.scalacheck"             %% "scalacheck"              % ScalaCheckVersion,
-    "wolfendale"                 %% "scalacheck-gen-regexp"   % ScalaCheckRegexGenVersion,
-    "uk.gov.hmrc.mongo"          %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
-    "uk.gov.hmrc"                %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
-    "com.vladsch.flexmark"        % "flexmark-all"            % FlexmarkVersion
+    "org.scalatest"          %% "scalatest"               % ScalaTestVersion,
+    "org.scalatestplus"      %% "scalacheck-1-15"         % ScalaTestPlusVersion,
+    "org.scalatestplus"      %% "mockito-3-4"             % ScalaTestPlusVersion,
+    "org.scalatestplus.play" %% "scalatestplus-play"      % ScalaTestPlusPlayVersion,
+    "org.pegdown"             % "pegdown"                 % PegdownVersion,
+    "org.jsoup"               % "jsoup"                   % JsoupVersion,
+    "com.typesafe.play"      %% "play-test"               % PlayVersion.current,
+    "org.mockito"            %% "mockito-scala"           % MockitoScalaVersion,
+    "org.scalacheck"         %% "scalacheck"              % ScalaCheckVersion,
+    "wolfendale"             %% "scalacheck-gen-regexp"   % ScalaCheckRegexGenVersion,
+    "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
+    "uk.gov.hmrc"            %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
+    "com.vladsch.flexmark"    % "flexmark-all"            % FlexmarkVersion
   ).map(_ % "test, it")
 
   def apply(): Seq[ModuleID] = compile ++ test

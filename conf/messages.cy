@@ -520,6 +520,34 @@ doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych am uwchlwytho unrhyw 
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
 
+uploadLetterOfAuthority.title = Upload your letter of authority - Apply for an Advance Valuation Ruling - GOV.UK
+uploadLetterOfAuthority.heading = Upload your letter of authority
+uploadLetterOfAuthority.caption = About the applicant
+uploadLetterOfAuthority.paragraph.1 = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader.
+uploadLetterOfAuthority.paragraph.2 = The letter of authority should:
+uploadLetterOfAuthority.paragraph.3 = An individual file must be:
+uploadLetterOfAuthority.bulletPoint.1 = be written and signed by the trader on letterhead paper
+uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on the trader’s behalf
+uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
+uploadLetterOfAuthority.bulletPoint.4 = contain your contact details including email address, phone number and the address registered with HMRC
+uploadLetterOfAuthority.bulletPoint.5 = include your VAT number
+uploadLetterOfAuthority.bulletPoint.6 = smaller than 5MB
+uploadLetterOfAuthority.bulletPoint.7 = a PDF or JPG
+uploadLetterOfAuthority.label = Upload a file
+uploadLetterOfAuthority.button = Upload and continue
+uploadLetterOfAuthority.error.required = Select yes if you want to upload another document
+uploadLetterOfAuthority.error.invalidargument = Select a file.
+uploadLetterOfAuthority.error.entitytoolarge = The selected file must be smaller than {0}MB
+uploadLetterOfAuthority.error.entitytoosmall = The selected file is empty.
+uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
+uploadLetterOfAuthority.error.quarantine = The selected file contains a virus
+uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded – try again
+
+verifyLetterOfAuthority.title = todo
+verifyLetterOfAuthority.heading = todo
+verifyLetterOfAuthority.caption = todo
+verifyLetterOfAuthority.keepConfidential = todo
+
 uploadSupportingDocuments.caption = Ynglŷn â’r nwyddau
 uploadSupportingDocuments.title = Uwchlwytho dogfennau ategol
 uploadSupportingDocuments.heading = Uwchlwytho dogfennau ategol
@@ -893,7 +921,6 @@ draftHasBeenSaved.para.2 = Sylwer: bydd y cyfnod o 28-diwrnod yn ail-ddechrau bo
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
 draftHasBeenSaved.para.link.text = your applications and rulings
 
-uploadLetter.todo = TODO
 yourApplicationHasBeenCancelled.title = You cannot view this application
 yourApplicationHasBeenCancelled.heading = You cannot view this application
 yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your application for an Advance Valuation Ruling. The data you submitted before has been deleted.

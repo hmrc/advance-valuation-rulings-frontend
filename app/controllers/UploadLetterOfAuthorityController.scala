@@ -25,45 +25,50 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models._
 import navigation.Navigator
 import pages._
 import services.fileupload.FileService
-import views.html.UploadSupportingDocumentsView
+import views.html.UploadLetterOfAuthorityView
 
 @Singleton
-class UploadSupportingDocumentsController @Inject() (
+class UploadLetterOfAuthorityController @Inject() (
   override val messagesApi: MessagesApi,
   override val controllerComponents: MessagesControllerComponents,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  view: UploadSupportingDocumentsView,
+  view: UploadLetterOfAuthorityView,
   fileService: FileService,
   navigator: Navigator,
-  configuration: Configuration
+  configuration: Configuration,
+  appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
-  private val controller        = controllers.routes.UploadSupportingDocumentsController
+  private val mode: Mode                       = NormalMode // TODO: allow other modes other than NormalMode.
+  private val maxFileSize: Long                = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val controller                       = controllers.routes.UploadLetterOfAuthorityController
+  private val page: QuestionPage[UploadedFile] = UploadLetterOfAuthorityPage
 
   def onPageLoad(
-    mode: Mode,
     draftId: DraftId,
     errorCode: Option[String],
     key: Option[String]
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val redirectPath = controller.onPageLoad(mode, draftId, None, None).url
-
-        val answers = request.userAnswers
+        val redirectPath =
+          controller
+            .onPageLoad(draftId, None, None)
+            .url // redirect probably shouldn't have the errorCode in it
+        val answers      = request.userAnswers
 
         answers
-          .get(UploadSupportingDocumentPage)
+          .get(page)
           .map {
             case file: UploadedFile.Initiated =>
               errorCode
@@ -90,7 +95,6 @@ class UploadSupportingDocumentsController @Inject() (
               }
             case file: UploadedFile.Failure   =>
               redirectWithError(
-                mode,
                 draftId,
                 key,
                 file.failureDetails.failureReason.toString,
@@ -102,10 +106,13 @@ class UploadSupportingDocumentsController @Inject() (
           }
     }
 
-  private def showPage(draftId: DraftId, redirectPath: String)(implicit
+  private def showPage(
+    draftId: DraftId,
+    redirectPath: String
+  )(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
+    fileService.initiate(draftId, redirectPath, true).map {
       response =>
         Ok(
           view(
@@ -132,7 +139,7 @@ class UploadSupportingDocumentsController @Inject() (
   private def showErrorPage(draftId: DraftId, errorMessage: String, redirectPath: String)(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = true).map {
       response =>
         BadRequest(
           view(
@@ -144,38 +151,37 @@ class UploadSupportingDocumentsController @Inject() (
     }
 
   private def redirectWithError(
-    mode: Mode,
     draftId: DraftId,
     key: Option[String],
     errorCode: String,
     redirectPath: String
   )(implicit request: RequestHeader): Future[Result] =
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
-      _ => Redirect(controller.onPageLoad(mode, draftId, Some(errorCode), key))
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = true).map {
+      _ => Redirect(controller.onPageLoad(draftId, Some(errorCode), key))
     }
 
   private def continue(mode: Mode, answers: UserAnswers): Future[Result] =
     Future.successful(
       Redirect(
-        navigator.nextPage(UploadSupportingDocumentPage, mode, answers)
+        navigator.nextPage(page, mode, answers)
       )
     )
 
   private def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
-        Messages("uploadSupportingDocuments.error.invalidargument")
+        Messages("uploadLetterOfAuthority.error.invalidargument")
       case "EntityTooLarge"  =>
-        Messages(s"uploadSupportingDocuments.error.entitytoolarge", maxFileSize)
+        Messages(s"uploadLetterOfAuthority.error.entitytoolarge", maxFileSize)
       case "EntityTooSmall"  =>
-        Messages("uploadSupportingDocuments.error.entitytoosmall")
+        Messages("uploadLetterOfAuthority.error.entitytoosmall")
       case "Rejected"        =>
-        Messages("uploadSupportingDocuments.error.rejected")
+        Messages("uploadLetterOfAuthority.error.rejected")
       case "Quarantine"      =>
-        Messages("uploadSupportingDocuments.error.quarantine")
+        Messages("uploadLetterOfAuthority.error.quarantine")
       case "Duplicate"       =>
-        Messages("uploadSupportingDocuments.error.duplicate")
+        Messages("uploadLetterOfAuthority.error.duplicate")
       case _                 =>
-        Messages(s"uploadSupportingDocuments.error.unknown")
+        Messages(s"uploadLetterOfAuthority.error.unknown")
     }
 }

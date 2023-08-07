@@ -16,4 +16,13 @@
 
 package pages
 
-case object UploadLetterPage extends Page
+import play.api.libs.json.JsPath
+
+import models.UploadedFile
+
+case object UploadLetterOfAuthorityPage extends QuestionPage[UploadedFile] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "uploadLetterOfAuthorityPage"
+}

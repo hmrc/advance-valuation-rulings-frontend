@@ -106,10 +106,13 @@ object UploadedFile {
 
     override lazy val values: IndexedSeq[FailureReason] = findValues
 
+    case object Duplicate extends FailureReason
     case object Quarantine extends FailureReason
     case object Rejected extends FailureReason
     case object Unknown extends FailureReason
-    case object Duplicate extends FailureReason
+    case object InvalidArgument extends FailureReason
+    case object EntityTooLarge extends FailureReason
+    case object EntityTooSmall extends FailureReason
   }
 
   implicit lazy val reads: Reads[UploadedFile] =

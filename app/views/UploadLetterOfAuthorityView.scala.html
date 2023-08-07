@@ -1,0 +1,155 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.FrontendAppConfig
+@import models.upscan.UpscanInitiateResponse
+@import components._
+
+@this(  mainLayout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukButton: GovukButton,
+        govukErrorSummary: GovukErrorSummary,
+        caption: Caption,
+        heading: Heading,
+        cancelApplicationLink: CancelApplicationLink,
+        paragraph: Paragraph,
+        list: BulletList,
+        appConfig: FrontendAppConfig,
+        detailsDrop: DetailsDrop,
+    )
+
+@(
+        draftId: DraftId,
+        upscanInitiateResponse: Option[UpscanInitiateResponse],
+        errorMessage: Option[String]
+)(implicit messages: Messages, requestHeader: RequestHeader)
+
+@shouldRefresh = @{
+  upscanInitiateResponse.isEmpty
+}
+
+@formInputClass = @{
+  if(errorMessage.isDefined) {
+    "govuk-file-upload govuk-file-upload--error"
+  } else {
+    "govuk-file-upload"
+  }
+}
+
+@formGroupClass = @{
+  if(errorMessage.isDefined) {
+    "govuk-form-group govuk-form-group--error"
+  } else {
+    "govuk-form-group"
+  }
+}
+
+@formWrapper(content: Html) = {
+
+  @upscanInitiateResponse.map { upscanInitiateResponse =>
+
+    <form action="@upscanInitiateResponse.uploadRequest.href" method="post" enctype="multipart/form-data">
+
+      @for(field <- upscanInitiateResponse.uploadRequest.fields) {
+        <input type="hidden" name="@field._1" value="@field._2"/>
+      }
+
+      @content
+
+    </form>
+  }.getOrElse {
+    <div>
+      @content
+    </div>
+  }
+}
+
+@refreshBlock = {
+  @if(shouldRefresh) {
+    <meta http-equiv="refresh" content="1"/>
+  }
+}
+
+@mainLayout(pageTitle = titleNoForm(messages("uploadLetterOfAuthority.title")), additionalHeadBlock = Some(refreshBlock)) {
+
+  @errorMessage.map { errorMessage =>
+    @govukErrorSummary(ErrorSummaryViewModel.withoutForm(Map("file-input" -> messages(errorMessage))))
+  }
+
+  @caption(messages("uploadLetterOfAuthority.caption"))
+  @heading(messages("uploadLetterOfAuthority.heading"))
+
+  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.1")))
+
+  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.2")))
+  @list(Seq(
+    Html(messages("uploadLetterOfAuthority.bulletPoint.1")),
+    Html(messages("uploadLetterOfAuthority.bulletPoint.2")),
+    Html(messages("uploadLetterOfAuthority.bulletPoint.3")),
+    Html(messages("uploadLetterOfAuthority.bulletPoint.4")),
+    Html(messages("uploadLetterOfAuthority.bulletPoint.5")),
+  ),
+    "govuk-list govuk-list--bullet",
+  )
+
+  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.3")))
+  @list(Seq(
+    Html(messages("uploadLetterOfAuthority.bulletPoint.6", appConfig.maximumFileSizeBytes / 1000000L)),
+    Html(messages("uploadLetterOfAuthority.bulletPoint.7"))
+  ),
+    "govuk-list govuk-list--bullet",
+  )
+
+  @formWrapper {
+
+    <div class="mt-3">
+      <div class="@formGroupClass">
+
+        @errorMessage.map { errorMessage =>
+          <p id="file-input-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> @{messages(errorMessage)}
+          </p>
+        }
+
+        <label class="govuk-label" for="file-input">
+        @messages("uploadLetterOfAuthority.label")
+        </label>
+        <div class="form-control-wrapper">
+          <input
+          class="@formInputClass"
+          type="file"
+          id="file-input"
+          name="file"
+          accept=".pdf,.jpeg,.jpg"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-button-group">
+      @govukButton(
+        ButtonViewModel(
+        messages("uploadLetterOfAuthority.button")
+        )
+                .preventingDoubleClick()
+                .withAttribute(("id" -> "submit"))
+                .disableIf(shouldRefresh)
+      )
+    </div>
+  }
+
+  @cancelApplicationLink(draftId)
+}
