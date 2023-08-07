@@ -19,10 +19,10 @@ package viewmodels.checkAnswers
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
 import controllers.routes
 import models.{CheckMode, UserAnswers}
 import pages.ExplainWhyYouChoseMethodFourPage
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -33,7 +33,7 @@ object ExplainWhyYouChoseMethodFourSummary {
       answer =>
         SummaryListRowViewModel(
           key = "explainWhyYouChoseMethodFour.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlFormat.escape(answer).toString),
+          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
           actions = Seq(
             ActionItemViewModel(
               "site.change",
