@@ -32,6 +32,7 @@ import models.{DraftId, Mode, TraderDetailsWithConfirmation}
 import navigation.Navigator
 import pages.VerifyTraderDetailsPage
 import services.UserAnswersService
+import userrole.UserRoleProvider
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
 class VerifyTraderEoriController @Inject() (
@@ -44,7 +45,8 @@ class VerifyTraderEoriController @Inject() (
   formProvider: VerifyTraderDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   publicView: VerifyPublicTraderDetailView,
-  privateView: VerifyPrivateTraderDetailView
+  privateView: VerifyPrivateTraderDetailView,
+  userRoleProvider: UserRoleProvider
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -97,15 +99,19 @@ class VerifyTraderEoriController @Inject() (
               VerifyTraderDetailsPage.get() match {
                 case None          => Future.successful(traderDetailsNotFoundInSession(draftId))
                 case Some(details) =>
+                  val continue = value.toBoolean
                   for {
                     updatedAnswers <-
                       VerifyTraderDetailsPage
-                        .set(details.copy(confirmation = Some(value.toBoolean)))
+                        .set(details.copy(confirmation = Some(continue)))
                     _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
-                    routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+                    if (continue) {
+                      routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+                    } else {
+                      routes.EORIBeUpToDateController.onPageLoad(draftId)
+                    }
                   )
-
               }
           )
     }
