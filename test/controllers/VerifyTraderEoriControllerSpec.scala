@@ -229,9 +229,67 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to ??? when public and unapproved" ignore {}
+    "must redirect to Kickout Page when public and unapproved" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
-    "must redirect to ??? when private and unapproved" ignore {}
+      val userAnswers = userAnswersAsIndividualTrader
+        .setFuture[TraderDetailsWithConfirmation](
+          VerifyTraderDetailsPage,
+          traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = true)
+        )
+        .futureValue
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
+          .withFormUrlEncodedBody(("traderDetailsCorrect", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          controllers.routes.EORIBeUpToDateController.onPageLoad(draftId).url
+        )
+      }
+    }
+
+    "must redirect to Kickout Page when private and unapproved" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+      val userAnswers = userAnswersAsIndividualTrader
+        .setFuture[TraderDetailsWithConfirmation](
+          VerifyTraderDetailsPage,
+          traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = true)
+        )
+        .futureValue
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
+          .withFormUrlEncodedBody(("traderDetailsCorrect", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          controllers.routes.EORIBeUpToDateController.onPageLoad(draftId).url
+        )
+      }
+    }
 
     "must display an error on the page when no selection is made - public" in {
 
