@@ -45,7 +45,3 @@ object DescriptionOfGoodsSummary {
         )
     }
 }
-
-//val rawAnswer = "This is a text\nwith line breaks.\nHello, Scala!"
-//val escapedHtml = HtmlFormat.escape(rawAnswer.replace("\n", "<br>")).toString
-//val value = ValueViewModel(escapedHtml)
