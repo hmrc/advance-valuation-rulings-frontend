@@ -32,9 +32,7 @@
     paragraph: Paragraph,
     insetPara: InsetPara,
     config: FrontendAppConfig,
-    govukPanel: GovukPanel,
-    h3: headingH3
-
+    govukPanel: GovukPanel
 )
 
 
@@ -105,7 +103,7 @@
     )
 
 <!--How to use the ruling-->
-    @h3(messages("applicationComplete.ruling.subheading"))
+    @subheading(messages("applicationComplete.ruling.subheading"))
     @paragraph(Html(messages("applicationComplete.ruling.paragraph")))
 
     @bulletList(Seq(
@@ -114,14 +112,14 @@
     ))
 
 <!--If you have any questions about your application-->
-    @h3(messages("applicationComplete.questions.subheading"))
+    @subheading(messages("applicationComplete.questions.subheading"))
     @paragraph( Html(messages("applicationComplete.questions.para.1",
 advanceValuationRulingServiceEmailLinkOne)
     ))
 
 
 <!--Appeal a ruling decision-->
-    @h3(messages("applicationComplete.appeal.subheading"))
+    @subheading(messages("applicationComplete.appeal.subheading"))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.1", advanceValuationRulingServiceEmailLinkTwo)))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.2")))
     @paragraph(Html(messages("applicationComplete.appeal.paragraph.3", appealLink)))
