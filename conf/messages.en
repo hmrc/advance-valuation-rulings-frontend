@@ -226,7 +226,7 @@ traderDetails.private.p1=The business this number is registered to has not conse
 traderDetails.private.p2=If you need more information, contact the business directly.
 traderDetails.private.h3.proceed=Do you want to proceed?
 
-verifyTraderDetails.error.required=Select yes to confirm the trader''s EORI details
+verifyTraderDetails.error.required=Select if you want to proceed with the application
 
 #INVALID EORI
 invalidTraderEori.heading = EORI number {0} is invalid
