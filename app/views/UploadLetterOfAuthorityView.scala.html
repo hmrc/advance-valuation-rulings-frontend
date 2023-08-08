@@ -148,6 +148,10 @@
                 .withAttribute(("id" -> "submit"))
                 .disableIf(shouldRefresh)
       )
+
+      <a href="@routes.DraftHasBeenSavedController.onPageLoad(draftId).url" role="button" class="govuk-button govuk-button--secondary">
+        @messages("site.saveAsDraft")
+      </a>
     </div>
   }
 
