@@ -520,7 +520,7 @@ doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych am uwchlwytho unrhyw 
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
 
-uploadLetterOfAuthority.title = Upload your letter of authority - Apply for an Advance Valuation Ruling - GOV.UK
+uploadLetterOfAuthority.title = Upload your letter of authority
 uploadLetterOfAuthority.heading = Upload your letter of authority
 uploadLetterOfAuthority.caption = About the applicant
 uploadLetterOfAuthority.paragraph.1 = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader.

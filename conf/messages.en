@@ -431,7 +431,7 @@ uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Confidential
 
-uploadLetterOfAuthority.title = Upload your letter of authority - Apply for an Advance Valuation Ruling - GOV.UK
+uploadLetterOfAuthority.title = Upload your letter of authority
 uploadLetterOfAuthority.heading = Upload your letter of authority
 uploadLetterOfAuthority.caption = About the applicant
 uploadLetterOfAuthority.paragraph.1 = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader.
