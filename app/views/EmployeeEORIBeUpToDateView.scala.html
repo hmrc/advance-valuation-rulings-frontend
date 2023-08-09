@@ -48,13 +48,22 @@
   )
 }
 
-@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.heading.employee")), draftId = Some(draftId)) {
+@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.heading")), draftId = Some(draftId)) {
 
     @caption(messages("eoriBeUpToDate.caption"))
 
-    @heading(messages("eoriBeUpToDate.heading.employee"))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.employee")))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.employee")))
+    @heading(messages("eoriBeUpToDate.heading"))
+    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
+    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
+
+
+    @bulletList(
+      Seq(
+        Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
+        Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
+      ),
+      "govuk-list govuk-list--bullet govuk-list--spaced",
+    )
 
     @cancelApplicationLink(draftId)
 }
