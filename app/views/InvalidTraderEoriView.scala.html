@@ -41,7 +41,7 @@
     )
 }
 
-@layout(pageTitle = messages("invalidTraderEori.heading", eoriNo), draftId = Some(draftId)) {
+@layout(pageTitle = titleNoForm(messages("invalidTraderEori.heading", eoriNo)), draftId = Some(draftId)) {
 
     @caption(messages("caption.applicant"))
     @heading(messages("invalidTraderEori.heading", eoriNo))
