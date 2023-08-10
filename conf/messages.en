@@ -483,7 +483,7 @@ uploadSupportingDocuments.error.invalidargument = Select a file to upload
 uploadSupportingDocuments.error.duplicate = You can only upload distinct files
 uploadSupportingDocuments.error.failed = The selected file failed to upload
 uploadSupportingDocuments.error.quarantine = The selected file contains a virus
-uploadSupportingDocuments.error.rejected = The selected file must be a pdf or jpeg
+uploadSupportingDocuments.error.rejected = The selected file must be a PDF or JPG
 uploadSupportingDocuments.error.unknown = There was a problem uploading your file
 
 explainReasonComputedValue.title = Explain why you have selected Method 5 to value your goods
