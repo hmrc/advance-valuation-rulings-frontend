@@ -26,7 +26,10 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    headingH3: headingH3,
+    subheading: Subheading,
     paragraph: Paragraph,
+    warning: Warning,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
     link: Link
@@ -64,29 +67,34 @@
         }
 
         @caption(messages("caption.applicant"))
-        <h1 class="govuk-heading-xl">@messages("traderDetails.public.heading", details.EORINo)</h1>
-        <p class="govuk-body">@messages("traderDetails.public.p1")</p>
-        <h3 class="govuk-heading-s">@messages("traderDetails.public.h3.businessName")</h3>
-        <p class="govuk-body">@details.CDSFullName</p>
+        @heading(messages("traderDetails.public.heading", details.EORINo))
 
-        <h3 class="govuk-heading-s">@messages("traderDetails.public.h3.businessAddress")</h3>
-        <p class="govuk-body">
-            @Html(
-                details.CDSEstablishmentAddress.streetAndNumber + "<br>" +
-                details.CDSEstablishmentAddress.city + "<br>" +
-                details.CDSEstablishmentAddress.postalCode.map(_ + "<br>").getOrElse("") +
-                Country.fromCountryCode(details.CDSEstablishmentAddress.countryCode).name
-            )
-        </p>
+        <br>
+        @warning(content=Html(messages("traderDetails.public.p1")))
 
-        <h2 class="govuk-heading-m">@messages("traderDetails.public.h2.correct")</h2>
+        @subheading(messages("traderDetails.public.h2"))
 
-            @govukRadios(
-                Radios(
-                    idPrefix = Some("traderDetailsCorrect"),
-                    name = "traderDetailsCorrect",
-                    items = radioItems
-            ))
+        @headingH3(messages("traderDetails.public.h3.businessName"), "s")
+        @paragraph(content=Html(details.CDSFullName))
+
+
+        @headingH3(messages("traderDetails.public.h3.businessAddress"), "s")
+
+        @paragraph(content=Html(
+            details.CDSEstablishmentAddress.streetAndNumber + "<br>" +
+            details.CDSEstablishmentAddress.city + "<br>" +
+            details.CDSEstablishmentAddress.postalCode.map(_ + "<br>").getOrElse("") +
+            Country.fromCountryCode(details.CDSEstablishmentAddress.countryCode).name
+        ))
+
+        @subheading(messages("traderDetails.public.h2.correct"))
+
+        @govukRadios(
+            Radios(
+                idPrefix = Some("traderDetailsCorrect"),
+                name = "traderDetailsCorrect",
+                items = radioItems
+        ))
 
         @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
