@@ -243,7 +243,7 @@ importGoods.title = Are you planning to import goods into Great Britain?
 importGoods.heading = Are you planning to import goods into Great Britain?
 importGoods.caption = About the applicant
 importGoods.checkYourAnswersLabel = importGoods
-importGoods.error.required = Select yes if there is a sale involved for the goods being imported to Great Britain
+importGoods.error.required = Select if there is a sale involved for the goods being imported to Great Britain
 importGoods.change.hidden = are you importing goods
 
 requiredInformation.title = Before you start your application
