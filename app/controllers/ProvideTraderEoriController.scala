@@ -111,16 +111,16 @@ class ProvideTraderEoriController @Inject() (
               TraderDetailsWithConfirmation(details)
             ) match {
               case Success(traderAnswers) =>
-                userAnswersService.set(traderAnswers)
-                Future.successful(
-                  Redirect(
-                    navigator.nextPage(
-                      ProvideTraderEoriPage,
-                      NormalMode,
-                      traderAnswers
+                userAnswersService.set(traderAnswers).map {
+                  _ =>
+                    Redirect(
+                      navigator.nextPage(
+                        ProvideTraderEoriPage,
+                        NormalMode,
+                        traderAnswers
+                      )
                     )
-                  )
-                )
+                }
               case Failure(error)         =>
                 logger.warn(
                   s"Unable to store VerifyTraderDetailsPage. Error: $error"
