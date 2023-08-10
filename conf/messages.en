@@ -810,7 +810,7 @@ whatIsYourRoleAsImporter.para.2 = We are currently developing this route through
 whatIsYourRoleAsImporter.employeeOfOrg.hint = Imports goods into the UK on behalf of their organisation.
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Imports goods into the UK on behalf of another organisation.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your role as an importer?
-whatIsYourRoleAsImporter.error.required = Choose the option that describes your role
+whatIsYourRoleAsImporter.error.required = Select your role
 whatIsYourRoleAsImporter.change.hidden = your description of your role as an importer
 
 whatIsYourRoleAsImporter.agentOnBehalfOfTrader = Agent acting on behalf of a trader
