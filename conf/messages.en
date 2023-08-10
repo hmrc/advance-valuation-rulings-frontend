@@ -794,7 +794,7 @@ haveYouUsedMethodOneForSimilarGoodsInPast.heading = Can you provide evidence of 
 haveYouUsedMethodOneForSimilarGoodsInPast.caption = About the goods
 haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Method 3 is based on the transaction value of similar goods exported to the UK at or about the same time (within 90-days) as the goods being valued.
 haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = Can you provide evidence of a Method 1 declaration you have made, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued?
-haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select yes if you can provide evidence of a Method 1 declaration
+haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select if you can provide evidence of a Method 1 declaration
 haveYouUsedMethodOneForSimilarGoodsInPast.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued
 
