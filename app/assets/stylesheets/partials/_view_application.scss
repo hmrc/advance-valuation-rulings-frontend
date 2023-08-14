@@ -97,7 +97,8 @@
   font-weight: 700;
 }
 .print-document .reference-number {
-  font-size: 36px;
+  font-size:1.8em;
+  word-wrap: break-word;
 }
 .print-document .footer-page-date {
   float: right;
