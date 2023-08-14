@@ -56,7 +56,7 @@
   line-height: 1;
 }
 .print-document .print-header h2 {
-  text-align: center;
+  text-align: left;
   margin-top: 2em;
   font-size: 1.2em;
   color: #00703C;
@@ -428,7 +428,7 @@
     width: 100%;
   }
   .print-document {
-    padding: 15px 15px;
+    padding: 15px 15px 15px;
   }
   .print-pages {
     display: inline;
