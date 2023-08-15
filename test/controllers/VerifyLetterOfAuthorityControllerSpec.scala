@@ -16,20 +16,8 @@
 
 package controllers
 
-import java.time.Instant
-
-import play.api.Configuration
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
-import forms.UploadAnotherSupportingDocumentFormProvider
-import models._
-import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
-import queries.DraftAttachmentAt
-import views.html.UploadAnotherSupportingDocumentView
 
 class VerifyLetterOfAuthorityControllerSpec extends SpecBase with MockitoSugar {
 
