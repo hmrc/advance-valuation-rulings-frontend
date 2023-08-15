@@ -85,6 +85,6 @@
     additionalScriptsBlock = Some(additionalScripts),
     additionalHeadBlock = Some(headBlock),
     mainContentLayout = mainContentLayout,
-    backLink = if (showBackLink) Option(BackLink.withDefaultText(href = "#", classes = "js-visible")) else None
+    backLink = if (showBackLink) Option(BackLink.withDefaultText(href = "#", classes = "js-visible; hidden-print")) else None
  )(content)
  
