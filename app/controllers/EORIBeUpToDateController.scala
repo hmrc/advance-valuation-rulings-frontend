@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import config.FrontendAppConfig
 import controllers.actions._
 import models.DraftId
-import pages.AccountHomePage
+import pages.{AccountHomePage, VerifyTraderDetailsPage}
 import userrole.UserRoleProvider
 import views.html.EORIBeUpToDateView
 
@@ -45,15 +45,15 @@ class EORIBeUpToDateController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         if (appConfig.agentOnBehalfOfTrader) {
-          AccountHomePage.get() match {
-            case None =>
-              Redirect(routes.UnauthorisedController.onPageLoad)
-            case _    =>
+          VerifyTraderDetailsPage.get() match {
+            case Some(details) =>
               Ok(
                 userRoleProvider
                   .getUserRole(request.userAnswers)
-                  .selectViewForEoriBeUpToDate(draftId)
+                  .selectViewForEoriBeUpToDate(draftId, !details.consentToDisclosureOfPersonalData)
               )
+            case None          =>
+              Redirect(routes.JourneyRecoveryController.onPageLoad())
           }
         } else {
           AccountHomePage.get() match {

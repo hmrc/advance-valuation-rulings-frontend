@@ -27,7 +27,8 @@ import pages.Page
 
 trait UserRole {
   def selectViewForEoriBeUpToDate(
-    draftId: DraftId
+    draftId: DraftId,
+    isPrivate: Boolean = false
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
 
   def selectViewForCheckRegisteredDetails(
