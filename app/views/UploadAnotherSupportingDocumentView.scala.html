@@ -23,7 +23,6 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukTable: GovukTable,
-    govukLink: Link,
     caption: Caption,
     heading: Heading,
     subheading: Subheading,
@@ -54,6 +53,13 @@
     attachments.length
 }
 
+@removeLink(i: Int) = {
+    <a id="@{"remove-file-" + i}" href="@controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)).url">
+        @messages("site.remove")
+        <span class="govuk-visually-hidden">remove this document from your list of supporting documents</span>
+    </a>
+}
+
 @layout(pageTitle = title(form, titleMessage), draftId = Some(draftId)) {
 
     @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
@@ -72,14 +78,7 @@
               TableRow(content = Text(attachment.file.fileName.getOrElse(""))),
               TableRow(content = Text(if(attachment.isThisFileConfidential.contains(true)) messages("uploadAnotherSupportingDocument.keepConfidential") else "")),
               TableRow(
-                HtmlContent(
-                  govukLink(
-                    id = "remove-file-" + i,
-                    text = messages("site.remove"),
-                    call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
-                    newTab = false
-                  )
-                )
+                HtmlContent(removeLink(i))
               )
             )
           },
