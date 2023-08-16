@@ -23,6 +23,67 @@ import org.scalacheck.Arbitrary.arbitrary
 
 trait ModelGenerators {
 
+  implicit lazy val arbitraryCDSEstablishmentAddress: Arbitrary[CDSEstablishmentAddress] =
+    Arbitrary {
+      for {
+        street      <- arbitrary[String]
+        city        <- arbitrary[String]
+        countryCode <- Gen.stringOfN(2, arbitrary[Char])
+        postalOpt   <- Gen.option(Gen.stringOfN(7, arbitrary[Char]))
+      } yield CDSEstablishmentAddress(
+        street,
+        city,
+        countryCode,
+        postalOpt
+      )
+    }
+
+  implicit lazy val arbitraryContactInformation: Arbitrary[ContactInformation] =
+    Arbitrary {
+      for {
+        personOfContact <- arbitrary[Option[String]]
+        sca             <- arbitrary[Option[Boolean]]
+        street          <- arbitrary[Option[String]]
+        city            <- arbitrary[Option[String]]
+        postalOpt       <- Gen.option(Gen.stringOfN(7, arbitrary[Char]))
+        countryCode     <- Gen.option(Gen.stringOfN(2, arbitrary[Char]))
+        tNo             <- Gen.option(Gen.stringOfN(11, Gen.numChar))
+        email           <- Gen.option(Gen.oneOf(Seq("test@test.com", "test2@test.com")))
+        eTime           <- arbitrary[Option[String]]
+      } yield ContactInformation(
+        personOfContact,
+        sca,
+        street,
+        city,
+        postalOpt,
+        countryCode,
+        tNo,
+        tNo,
+        email,
+        eTime
+      )
+    }
+
+  implicit lazy val arbitraryTraderDetailsWithConfirmation
+    : Arbitrary[TraderDetailsWithConfirmation] =
+    Arbitrary {
+      for {
+        eoriNo       <- arbitrary[String]
+        consent      <- arbitrary[Boolean]
+        name         <- arbitrary[String]
+        address      <- arbitrary[CDSEstablishmentAddress]
+        contact      <- arbitrary[Option[ContactInformation]]
+        confirmation <- arbitrary[Option[Boolean]]
+      } yield TraderDetailsWithConfirmation(
+        eoriNo,
+        consent,
+        name,
+        address,
+        contact,
+        confirmation
+      )
+    }
+
   implicit lazy val arbitraryAgentCompanyDetails: Arbitrary[AgentCompanyDetails] =
     Arbitrary {
       for {

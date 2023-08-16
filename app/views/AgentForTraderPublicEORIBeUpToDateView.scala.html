@@ -24,37 +24,19 @@
   caption: Caption,
   heading: Heading,
   paragraph: Paragraph,
-  link: Link,
-  bulletList: BulletList,
   cancelApplicationLink: CancelApplicationLink,
   config: FrontendAppConfig
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@fillInAnEnquiryLink = {
-  @link(
-    id = "eori_be_up_to_date_link_one",
-    text = messages("eoriBeUpToDate.bulletPoint.1.link"),
-    call = Call("GET", config.fillInAnEnquiryFormUrl)
-  )
-}
-
-@importAndExportEnquiriesLink = {
-@link(
-    id = "eori_be_up_to_date_link_two",
-    text = messages("eoriBeUpToDate.bulletPoint.2.link"),
-    call = Call("GET", config.importAndExportEnquiriesUrl)
-  )
-}
-
-@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader")), draftId = Some(draftId)) {
+@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader.public")), draftId = Some(draftId)) {
 
     @caption(messages("eoriBeUpToDate.caption"))
 
-    @heading(messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader"))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader")))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader")))
+    @heading(messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader.public"))
+    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader.public")))
+    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.public")))
 
     @cancelApplicationLink(draftId)
 }
