@@ -18,8 +18,11 @@ package controllers
 
 import java.time.Instant
 
+import scala.concurrent.Future
+
 import play.api.Configuration
 import play.api.inject.bind
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -57,7 +60,7 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
 
     "must return OK and the correct view for a GET" in {
 
-      val answers = userAnswersAsIndividualTrader
+      val answers: UserAnswers = userAnswersAsIndividualTrader
         .set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(false)))
         .success
         .value
@@ -66,10 +69,11 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
         DraftAttachment(successfulFile, isThisFileConfidential = Some(false))
       )
 
-      val application = applicationBuilder(userAnswers = Some(answers)).build()
-      val request     = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
-      val result      = route(application, request).value
-      val view        = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
+      val application            = applicationBuilder(userAnswers = Some(answers)).build()
+      val request                = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
+      val result: Future[Result] = route(application, request).value
+      val view                   = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
+      println(s"RESULT: ${result}")
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(attachments, form, NormalMode, draftId)(

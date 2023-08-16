@@ -18,18 +18,17 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import forms.UploadAnotherSupportingDocumentFormProvider
+import controllers.routes.JourneyRecoveryController
 import models._
 import navigation.Navigator
-import pages.UploadAnotherSupportingDocumentPage
-import queries.AllDocuments
+import pages.{UploadLetterOfAuthorityPage, VerifyLetterOfAuthorityPage}
 import views.html.VerifyLetterOfAuthorityView
 
 class VerifyLetterOfAuthorityController @Inject() (
@@ -47,9 +46,16 @@ class VerifyLetterOfAuthorityController @Inject() (
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val attachments = AllDocuments.get().getOrElse(List.empty)
-        Ok(view(attachments, draftId))
+        UploadLetterOfAuthorityPage.get() match {
+          case Some(attachment) => Ok(view(attachment, draftId))
+          case None             => Redirect(JourneyRecoveryController.onPageLoad())
+        }
+
     }
 
-  def onSubmit(draftId: DraftId): Action[AnyContent] = ???
+  def onSubmit(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData) {
+      implicit request =>
+        Redirect(navigator.nextPage(VerifyLetterOfAuthorityPage, NormalMode, request.userAnswers))
+    }
 }

@@ -31,7 +31,7 @@
     saveButtons: SaveButtons
 )
 
-@(attachments: Seq[DraftAttachment], draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(attachments: UploadedFile, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{messages("verifyLetterOfAuthority.title")}
 
@@ -46,16 +46,16 @@
         @heading(pageHeading)
     
         @govukTable(Table(
-          rows = attachments.zipWithIndex.map { case (attachment, i) =>
+          rows = Seq(attachments).zipWithIndex.map { case (attachment, i) =>
             Seq(
-              TableRow(content = Text(attachment.file.fileName.getOrElse(""))),
+              TableRow(content = Text(attachment.fileName.getOrElse(""))),
               TableRow(content = Text(messages("verifyLetterOfAuthority.keepConfidential"))),
               TableRow(
                 HtmlContent(
                   govukLink(
-                    id = "remove-file-" + i,
-                    text = messages("site.remove"),
-                    call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(NormalMode, draftId, Index(i)),
+                    id = "change",
+                    text = messages("site.change"),
+                    call = controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None),
                     newTab = false
                   )
                 )
