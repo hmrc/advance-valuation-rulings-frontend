@@ -56,7 +56,7 @@
 @removeLink(i: Int) = {
     <a id="@{"remove-file-" + i}" href="@controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)).url">
         @messages("site.remove")
-        <span class="govuk-visually-hidden">remove this document from your list of supporting documents</span>
+        <span class="govuk-visually-hidden">@messages("supportingDocuments.remove.hidden")</span>
     </a>
 }
 
