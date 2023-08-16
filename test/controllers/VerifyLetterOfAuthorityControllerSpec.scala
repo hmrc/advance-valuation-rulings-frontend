@@ -16,22 +16,20 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
+import base.SpecBase
+import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
+import models.{UploadedFile, UserAnswers}
+import org.scalatestplus.mockito.MockitoSugar
+import pages.{UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout, redirectLocation, route, status, writeableOf_AnyContentAsEmpty, GET}
-
-import base.SpecBase
-import models.{UploadedFile, UserAnswers}
-import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
-import org.scalatestplus.mockito.MockitoSugar
-import pages.{UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, redirectLocation, route, status, writeableOf_AnyContentAsEmpty}
 import views.html.VerifyLetterOfAuthorityView
+
+import java.time.Instant
+import scala.concurrent.Future
 
 class VerifyLetterOfAuthorityControllerSpec extends SpecBase with MockitoSugar {
 
@@ -54,7 +52,7 @@ class VerifyLetterOfAuthorityControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for page load" in {
 
-      val ua: UserAnswers = emptyUserAnswers
+      val ua: UserAnswers = userAnswersAsOrgAdmin
         .set(UploadLetterOfAuthorityPage, uploadedFile)
         .success
         .value
@@ -69,7 +67,6 @@ class VerifyLetterOfAuthorityControllerSpec extends SpecBase with MockitoSugar {
       val result: Future[Result] = route(application, request).value
       val view                   = application.injector.instanceOf[VerifyLetterOfAuthorityView]
 
-      println(s"RESULT: ${result}")
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(uploadedFile, draftId)(
         request,

@@ -16,23 +16,21 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
-import play.api.Configuration
-import play.api.inject.bind
-import play.api.mvc.Result
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.Configuration
+import play.api.inject.bind
+import play.api.mvc.Result
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import queries.DraftAttachmentAt
 import views.html.UploadAnotherSupportingDocumentView
+
+import java.time.Instant
+import scala.concurrent.Future
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
 
@@ -73,7 +71,6 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val request                = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
       val result: Future[Result] = route(application, request).value
       val view                   = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
-      println(s"RESULT: ${result}")
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(attachments, form, NormalMode, draftId)(
