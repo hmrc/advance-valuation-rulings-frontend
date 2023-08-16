@@ -16,21 +16,23 @@
 
 package controllers
 
-import base.SpecBase
-import forms.UploadAnotherSupportingDocumentFormProvider
-import models._
-import navigation.{FakeNavigator, Navigator}
-import org.scalatestplus.mockito.MockitoSugar
+import java.time.Instant
+
+import scala.concurrent.Future
+
 import play.api.Configuration
 import play.api.inject.bind
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
+import base.SpecBase
+import forms.UploadAnotherSupportingDocumentFormProvider
+import models._
+import navigation.{FakeNavigator, Navigator}
+import org.scalatestplus.mockito.MockitoSugar
 import queries.DraftAttachmentAt
 import views.html.UploadAnotherSupportingDocumentView
-
-import java.time.Instant
-import scala.concurrent.Future
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
 

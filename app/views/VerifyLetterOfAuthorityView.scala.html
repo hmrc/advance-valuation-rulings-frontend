@@ -31,7 +31,7 @@
     saveButtons: SaveButtons
 )
 
-@(attachments: UploadedFile, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(attachment: UploadedFile, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{messages("verifyLetterOfAuthority.title")}
 
@@ -44,26 +44,27 @@
         @caption(messages("verifyLetterOfAuthority.caption"))
 
         @heading(pageHeading)
-    
-        @govukTable(Table(
-          rows = Seq(attachments).zipWithIndex.map { case (attachment, i) =>
-            Seq(
-              TableRow(content = Text(attachment.fileName.getOrElse(""))),
-              TableRow(content = Text(messages("verifyLetterOfAuthority.keepConfidential"))),
-              TableRow(
-                HtmlContent(
-                  govukLink(
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__value">
+            @attachment.fileName.getOrElse("")
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @messages("verifyLetterOfAuthority.keepConfidential")
+        </dd>
+        <dd class="govuk-summary-list__actions">
+                @govukLink(
                     id = "change",
                     text = messages("site.change"),
                     call = controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None),
                     newTab = false
-                  )
-                )
-              )
             )
-          },
-          classes = "govuk-body-s"
-        ))
+        </dd>
+      </div>
+    </dl>
+
+
 
         @saveButtons(draftId)
     }
