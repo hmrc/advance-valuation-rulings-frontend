@@ -460,10 +460,11 @@ uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
 uploadLetterOfAuthority.error.quarantine = The selected file contains a virus
 uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded – try again
 
-verifyLetterOfAuthority.title = todo
-verifyLetterOfAuthority.heading = todo
-verifyLetterOfAuthority.caption = todo
-verifyLetterOfAuthority.keepConfidential = todo
+verifyLetterOfAuthority.title = Uploaded letter of authority
+verifyLetterOfAuthority.heading = Uploaded letter of authority
+verifyLetterOfAuthority.caption = About the applicant
+verifyLetterOfAuthority.keepConfidential = Confidential
+verifyLetterOfAuthority.hiddenText = remove {0} from your list of supporting documents
 
 uploadSupportingDocuments.title = Upload supporting documents
 uploadSupportingDocuments.heading = Upload supporting documents
