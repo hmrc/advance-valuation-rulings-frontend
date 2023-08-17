@@ -27,17 +27,20 @@ import play.twirl.api.HtmlFormat
 
 import base.SpecBase
 import config.FrontendAppConfig
-import models.{Done, UserAnswers}
+import generators.ModelGenerators
+import models.{Done, TraderDetailsWithConfirmation, UserAnswers}
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
+import pages.VerifyTraderDetailsPage
 import services.UserAnswersService
 import userrole.{UserRole, UserRoleProvider}
 
-class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
+class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
 
   private lazy val checkRegisteredDetailRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url
@@ -52,7 +55,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
 
   when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
-  private def setUpUserAnswersServiceMock(answers: UserAnswers) = {
+  private def setUpUserAnswersServiceMock(answers: UserAnswers): Unit = {
     when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
     when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
       Some(userAnswersAsIndividualTrader)
@@ -67,19 +70,21 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
     val expectedView = HtmlFormat.raw(expectedViewBody)
     when(
       mockUserRole.selectViewForEoriBeUpToDate(
-        ArgumentMatchers.eq(this.draftId)
+        ArgumentMatchers.eq(this.draftId),
+        ArgumentMatchers.any()
       )(any[DataRequest[AnyContent]], any[Messages])
     ).thenReturn(expectedView)
 
     when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
   }
 
-  "EORIBeUpToDate Controller" - {
-
+  override def beforeEach(): Unit = {
     setUpUserRoleProviderMock()
     setUpViewMockForUserRole()
     setUpUserAnswersServiceMock(userAnswersAsIndividualTrader)
-    setUpViewMockForUserRole()
+  }
+
+  "EORIBeUpToDate Controller" - {
 
     "must return OK for a GET" in {
 
@@ -150,7 +155,18 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar {
       val expectedViewBody = "hello"
       setUpViewMockForUserRole(expectedViewBody)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+      val userAnswers = userAnswersAsIndividualTrader
+        .setFuture(
+          VerifyTraderDetailsPage,
+          Arbitrary
+            .arbitrary[TraderDetailsWithConfirmation]
+            .sample
+            .get
+            .copy(confirmation = Some(false))
+        )
+        .futureValue
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[UserRoleProvider].toInstance(mockUserRoleProvider),
           bind[FrontendAppConfig].toInstance(mockAppConfig)

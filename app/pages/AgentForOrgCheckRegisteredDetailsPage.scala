@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import components._
+package pages
 
-@this(link: Link)
+import play.api.libs.json.JsPath
 
-@(draftId: DraftId)(implicit messages: Messages)
+case object AgentForOrgCheckRegisteredDetailsPage extends QuestionPage[Boolean] {
 
-    @link(
-        id = "cancel_application",
-        text = messages("site.cancel"),
-        newTab = false,
-        call = routes.CancelApplicationController.onPageLoad(draftId),
-        classes = "govuk-link govuk-!-font-size-19 govuk-link--no-visited-state wrappable"
-    )
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "AgentForOrgCheckRegisteredDetails"
+}

@@ -26,22 +26,26 @@ import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCo
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
 class AgentForTraderSpec extends SpecBase with Matchers {
 
   private val agentForTraderCheckRegisteredDetailsView =
     mock[AgentForTraderCheckRegisteredDetailsView]
 
-  private val agentForTraderEORIBeUpToDateView =
-    mock[AgentForTraderEORIBeUpToDateView]
+  private val agentForTraderPrivateEORIBeUpToDateView =
+    mock[AgentForTraderPrivateEORIBeUpToDateView]
+
+  private val agentForTraderPublicEORIBeUpToDateView =
+    mock[AgentForTraderPublicEORIBeUpToDateView]
 
   private val requiredInformationView =
     mock[AgentForTraderRequiredInformationView]
 
   private val agentForTrader = AgentForTrader(
     agentForTraderCheckRegisteredDetailsView,
-    agentForTraderEORIBeUpToDateView,
+    agentForTraderPublicEORIBeUpToDateView,
+    agentForTraderPrivateEORIBeUpToDateView,
     requiredInformationView
   )
 
@@ -87,7 +91,7 @@ class AgentForTraderSpec extends SpecBase with Matchers {
       actualView mustBe expectedView
     }
 
-    "should return the correct view for EORIBeUpToDate" in {
+    "should return the correct view for EORIBeUpToDate (Public)" in {
 
       val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
 
@@ -96,13 +100,36 @@ class AgentForTraderSpec extends SpecBase with Matchers {
       val messages = mock[Messages]
 
       when(
-        agentForTraderEORIBeUpToDateView.apply(
+        agentForTraderPublicEORIBeUpToDateView.apply(
           draftId
         )(request, messages)
       ).thenReturn(expectedView)
 
       val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForEoriBeUpToDate(
-        draftId
+        draftId,
+        false
+      )(request, messages)
+
+      actualView mustBe expectedView
+    }
+
+    "should return the correct view for EORIBeUpToDate (Private)" in {
+
+      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+      val request  = mock[DataRequest[AnyContent]]
+      val draftId  = DraftId(1L)
+      val messages = mock[Messages]
+
+      when(
+        agentForTraderPrivateEORIBeUpToDateView.apply(
+          draftId
+        )(request, messages)
+      ).thenReturn(expectedView)
+
+      val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForEoriBeUpToDate(
+        draftId,
+        true
       )(request, messages)
 
       actualView mustBe expectedView

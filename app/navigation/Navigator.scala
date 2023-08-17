@@ -87,6 +87,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
     case AgentForTraderCheckRegisteredDetailsPage         =>
       ua => UploadLetterOfAuthorityController.onPageLoad(ua.draftId, None, None)
+    case AgentForOrgCheckRegisteredDetailsPage            =>
+      ua => AgentCompanyDetailsController.onPageLoad(NormalMode, ua.draftId)
     case UploadLetterOfAuthorityPage                      => uploadLetterOfAuthorityPage
     case VerifyLetterOfAuthorityPage                      => verifyLetterOfAuthorityPage
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)

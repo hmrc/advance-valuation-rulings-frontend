@@ -26,10 +26,11 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
-    h3: headingH3,
+    subheading: Subheading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
+    warning: Warning,
     link: Link
 )
 
@@ -66,11 +67,14 @@
 
         @caption(messages("caption.applicant"))
         @heading(messages("traderDetails.private.heading", details.EORINo))
-        @paragraph(Html(messages("traderDetails.private.p1")))
+
+        <br>
+        @warning(content=Html(messages("traderDetails.private.p1")))
         @paragraph(Html(messages("traderDetails.private.p2")))
 
 
-        @h3(messages("traderDetails.private.h3.proceed"))
+        @subheading(messages("traderDetails.private.h3.proceed"))
+
         @govukRadios(
             Radios(
                 idPrefix = Some("traderDetailsCorrect"),

@@ -143,9 +143,16 @@ eoriBeUpToDate.bulletPoint.1.link = llenwi ffurflen ymholiadau (yn agor tab newy
 eoriBeUpToDate.bulletPoint.1 = {0}
 eoriBeUpToDate.bulletPoint.2.link = â’r gwasanaeth ymholiadau cyffredinol ar gyfer mewnforion ac allforion (yn agor tab newydd)
 eoriBeUpToDate.bulletPoint.2 = cysylltu {0}
-eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader = To use this service, it’s important that the trader’s EORI details are accurate. They will need to report a change of circumstances themselves to update their name or address on record. You cannot do this on their behalf.
-eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader = Before proceeding with your application, make sure you contact the trader directly. Cancel your current application and resubmit it once you have their updated information.
-eoriBeUpToDate.heading.agentOnBehalfOfTrader = The trader’s EORI details must be correct to use this service
+eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader.public = To use this service, it’s important that the trader’s EORI details are accurate. They will need to report a change of circumstances themselves to update their name or address on record. You cannot do this on their behalf.
+eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.public = Before proceeding with your application, make sure you contact the trader directly. Cancel your current application and resubmit it once you have their updated information.
+eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader.private = You cannot continue with this application. This is because you told us that you do not want to proceed due to the trader’s private EORI details.
+eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.private = If you need more information about the trader’s EORI details, you will need to contact them directly.
+eoriBeUpToDate.paragraph.3.agentOnBehalfOfTrader.private = It’s important that a trader’s EORI details are accurate and up to date. They will need to report a change of circumstances to update their name or address on record if these details are incorrect. You cannot do this on their behalf.
+eoriBeUpToDate.paragraph.4.agentOnBehalfOfTrader.private = Applications with incorrect details will be rejected.
+eoriBeUpToDate.paragraph.5.agentOnBehalfOfTrader.private = You can cancel this application and reapply later if you wish to do so.
+
+eoriBeUpToDate.heading.agentOnBehalfOfTrader.public = The trader’s EORI details must be correct to use this service
+eoriBeUpToDate.heading.agentOnBehalfOfTrader.private = You cannot continue with this application
 eoriBeUpToDate.title.agentOnBehalfOfTrader = The trader’s EORI details must be correct to use this service
 
 applicationContactDetails.caption = Ynglŷn â’r ymgeisydd
@@ -927,3 +934,5 @@ yourApplicationHasBeenCancelled.heading = You cannot view this application
 yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your application for an Advance Valuation Ruling. The data you submitted before has been deleted.
 yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
 yourApplicationHasBeenCancelled.button = Go to your applications and rulings
+
+supportingDocuments.remove.hidden = remove this document from your list of supporting documents
