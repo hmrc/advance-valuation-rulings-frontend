@@ -543,10 +543,11 @@ uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
 uploadLetterOfAuthority.error.quarantine = The selected file contains a virus
 uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded – try again
 
-verifyLetterOfAuthority.title = todo
-verifyLetterOfAuthority.heading = todo
-verifyLetterOfAuthority.caption = todo
-verifyLetterOfAuthority.keepConfidential = todo
+verifyLetterOfAuthority.title = Uploaded letter of authority
+verifyLetterOfAuthority.heading = Uploaded letter of authority
+verifyLetterOfAuthority.caption = Ynglŷn â’r ymgeisydd
+verifyLetterOfAuthority.keepConfidential = Cadw’n gyfrinachol
+verifyLetterOfAuthority.hiddenText = remove {0} from your list of supporting documents
 
 uploadSupportingDocuments.caption = Ynglŷn â’r nwyddau
 uploadSupportingDocuments.title = Uwchlwytho dogfennau ategol

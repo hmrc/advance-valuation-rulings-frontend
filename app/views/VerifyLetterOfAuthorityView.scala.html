@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukTable: GovukTable,
-    govukLink: Link,
+    link: Link,
     caption: Caption,
     heading: Heading,
     subheading: Subheading,
@@ -54,11 +54,13 @@
             @messages("verifyLetterOfAuthority.keepConfidential")
         </dd>
         <dd class="govuk-summary-list__actions">
-                @govukLink(
+                @link(
                     id = "change",
                     text = messages("site.change"),
                     call = controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None),
-                    newTab = false
+                    newTab = false,
+                    hiddenText = true,
+                    hiddenTextContent =  messages("verifyLetterOfAuthority.hiddenText", attachment.fileName.getOrElse(""))
             )
         </dd>
       </div>
