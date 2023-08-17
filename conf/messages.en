@@ -456,8 +456,8 @@ uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded 
 
 verifyLetterOfAuthority.title = Uploaded letter of authority
 verifyLetterOfAuthority.heading = Uploaded letter of authority
-verifyLetterOfAuthority.caption = About the applicant
-verifyLetterOfAuthority.keepConfidential = Confidential
+verifyLetterOfAuthority.caption = Ynglŷn â’r ymgeisydd
+verifyLetterOfAuthority.keepConfidential = Cadw’n gyfrinachol
 
 uploadSupportingDocuments.title = Upload supporting documents
 uploadSupportingDocuments.heading = Upload supporting documents
