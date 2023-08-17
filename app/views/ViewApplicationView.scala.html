@@ -23,40 +23,40 @@
 
 
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        link: Link,
-        heading: Heading,
-        subheading: Subheading,
-        paragraph: Paragraph,
-        bulletList: BulletList,
-        aboutTheGoods: AboutTheGoods,
-        forYourRecords: ForYourRecords,
-        appConfig: FrontendAppConfig,
-        fullMainContent: FullLayoutMainContent,
-        printApplicationLink: PrintApplicationLink
+layout: templates.Layout,
+govukButton: GovukButton,
+link: Link,
+heading: Heading,
+subheading: Subheading,
+paragraph: Paragraph,
+bulletList: BulletList,
+aboutTheGoods: AboutTheGoods,
+forYourRecords: ForYourRecords,
+appConfig: FrontendAppConfig,
+fullMainContent: FullLayoutMainContent,
+printApplicationLink: PrintApplicationLink
 )
 
 @(appModel: ApplicationViewModel, applicationId: String, lastUpdated: String)(implicit request: Request[_], messages:
 Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("viewApplication.title")),
-    mainContentLayout = Some(fullMainContent(_))
-    ) {
+pageTitle = titleNoForm(messages("viewApplication.title")),
+mainContentLayout = Some(fullMainContent(_))
+) {
 
 @printApplicationLink()
 
-    <div class="grid-row ">
-        <div class="column-two-thirds">
-            @heading(messages("viewApplication.heading"), size="l")
-        </div>
-    </div>
 
-    <div id="print-pages">
-        <div class="page-break">
-            <div class="break-after">
+<div id="print-pages">
+    <div class="page-break">
+        <div class="break-after">
             <div id="your-records" class="print-document">
+                <div class="grid-row ">
+                    <div class="column-two-thirds">
+                        @heading(messages("viewApplication.heading"), size="l")
+                    </div>
+                </div>
                 <div class="grid-row print-header">
 
                 </div>
