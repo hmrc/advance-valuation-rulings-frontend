@@ -24,17 +24,21 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.ApplicationContactDetailsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ApplicationContactDetailsPage
 import services.UserAnswersService
+import userrole.UserRoleProvider
 import views.html.ApplicationContactDetailsView
 
 class ApplicationContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
+  userRoleProvider: UserRoleProvider,
+  appConfig: FrontendAppConfig,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -71,9 +75,21 @@ class ApplicationContactDetailsController @Inject() (
               } yield saveDraft match {
                 case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
                 case false =>
-                  Redirect(
-                    navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)
-                  )
+                  if (appConfig.agentOnBehalfOfTrader) {
+                    Redirect(
+                      navigator.nextPage(
+                        userRoleProvider
+                          .getUserRole(updatedAnswers)
+                          .selectApplicationContactDetailsPage(),
+                        mode,
+                        updatedAnswers
+                      )
+                    )
+                  } else {
+                    Redirect(
+                      navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)
+                    )
+                  }
               }
           )
     }

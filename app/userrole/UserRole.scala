@@ -40,6 +40,8 @@ trait UserRole {
 
   def selectGetRegisteredDetailsPage(): Page
 
+  def selectApplicationContactDetailsPage(): Page
+
   def selectViewForRequiredInformation(
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
