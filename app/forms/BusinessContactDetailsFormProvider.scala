@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 import scala.util.Try
 
-import play.api.data.Form
+import play.api.data.{Form, Mapping}
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
@@ -31,35 +31,58 @@ import models.BusinessContactDetails
 
 class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
-  private val util                          = PhoneNumberUtil.getInstance
-  def apply(): Form[BusinessContactDetails] =
-    Form(
-      mapping(
-        "name"  -> text(nameRequiredError)
-          .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
-          .verifying(maxLength(Validation.nameMaxLength, nameLengthError)),
-        "email" -> text(emailRequiredError)
-          .verifying(maxLength(Validation.emailMaxLength, emailLengthError))
-          .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError)),
-        "phone" -> text(phoneRequiredError)
-          .verifying(
-            phoneFormatError,
-            phone =>
-              isValid(phone)
-                && phone.length <= Validation.phoneNumberMaxLength
-                && !phone.exists(_.isLetter)
-          )
-      )(BusinessContactDetails.apply)(
-        (businessContactDetails: BusinessContactDetails) =>
-          Some(
-            (
-              businessContactDetails.name,
-              businessContactDetails.email,
-              businessContactDetails.phone
-            )
-          )
-      )
+  private val util = PhoneNumberUtil.getInstance
+
+  val nameMapping: (String, Mapping[String]) = "name" -> text(nameRequiredError)
+    .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
+    .verifying(maxLength(Validation.nameMaxLength, nameLengthError))
+
+  val emailMapping: (String, Mapping[String]) = "email" -> text(emailRequiredError)
+    .verifying(maxLength(Validation.emailMaxLength, emailLengthError))
+    .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError))
+
+  val phoneMapping: (String, Mapping[String]) = "phone" -> text(phoneRequiredError)
+    .verifying(
+      phoneFormatError,
+      phone =>
+        isValid(phone)
+          && phone.length <= Validation.phoneNumberMaxLength
+          && !phone.exists(_.isLetter)
     )
+
+  val companyNameMapping: (String, Mapping[String]) =
+    "companyName" -> text(companyNameRequiredError)
+
+  val defaultMap = mapping(nameMapping, emailMapping, phoneMapping)(
+    (name, email, phone) => BusinessContactDetails.apply(name, email, phone, None)
+  )(
+    (businessContactDetails: BusinessContactDetails) =>
+      Some(
+        (
+          businessContactDetails.name,
+          businessContactDetails.email,
+          businessContactDetails.phone
+        )
+      )
+  )
+
+  val companyNameIncMap = mapping(nameMapping, emailMapping, phoneMapping, companyNameMapping)(
+    (name, email, phone, companyName) =>
+      BusinessContactDetails.apply(name, email, phone, Some(companyName))
+  )(
+    (businessContactDetails: BusinessContactDetails) =>
+      Some(
+        (
+          businessContactDetails.name,
+          businessContactDetails.email,
+          businessContactDetails.phone,
+          businessContactDetails.companyName.getOrElse("")
+        )
+      )
+  )
+
+  def apply(includeCompanyName: Boolean): Form[BusinessContactDetails] =
+    Form(if (includeCompanyName) companyNameIncMap else defaultMap)
 
   private def isValid(string: String): Boolean =
     Try(util.isPossibleNumber(util.parse(string, "GB")))
@@ -78,4 +101,6 @@ object BusinessContactDetailsFormProvider {
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
+
+  private val companyNameRequiredError = "businessContactDetails.companyName.error.required"
 }

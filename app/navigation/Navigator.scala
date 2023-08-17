@@ -513,7 +513,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
 
   private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(BusinessContactDetailsPage) match {
-      case None    => BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case None    =>
+        BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => agentContactDetailsNavigation(userAnswers)
     }
 

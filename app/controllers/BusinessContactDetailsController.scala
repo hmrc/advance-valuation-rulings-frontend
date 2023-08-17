@@ -24,12 +24,14 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.BusinessContactDetailsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.BusinessContactDetailsPage
 import services.UserAnswersService
+import userrole.UserRoleProvider
 import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsController @Inject() (
@@ -40,29 +42,41 @@ class BusinessContactDetailsController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: BusinessContactDetailsFormProvider,
+  userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: BusinessContactDetailsView
+  view: BusinessContactDetailsView,
+  appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
+        val incCompanyName =
+          userRoleProvider
+            .getUserRole(request.userAnswers)
+            .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
+        val form           = formProvider(incCompanyName)
+
         val preparedForm = BusinessContactDetailsPage.fill(form)
 
-        Ok(view(preparedForm, mode, draftId))
+        Ok(view(preparedForm, mode, draftId, incCompanyName))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
+        val incCompanyName =
+          userRoleProvider
+            .getUserRole(request.userAnswers)
+            .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
+        val form           = formProvider(incCompanyName)
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+            formWithErrors =>
+              Future.successful(BadRequest(view(formWithErrors, mode, draftId, incCompanyName))),
             value =>
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)

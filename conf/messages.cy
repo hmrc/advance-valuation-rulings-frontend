@@ -759,6 +759,8 @@ businessContactDetails.change.hidden = applicant’s own contact details
 businessContactDetails.name.change.hidden = your contact name
 businessContactDetails.email.change.hidden = your email address
 businessContactDetails.telephoneNumber.change.hidden = your telephone number
+businessContactDetails.companyName.label = Your company name
+businessContactDetails.companyName.error.required = Enter your company name
 
 importingGoods.caption = Ynglŷn â’r ymgeisydd
 importingGoods.title = Mae’r gwasanaeth hwn ar gyfer mewnforio nwyddau i Brydain Fawr

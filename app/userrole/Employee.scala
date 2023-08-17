@@ -63,6 +63,8 @@ package userrole {
       requiredInformationRequiredView(draftId)
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+
+    override def contactDetailsIncludeCompanyName: Boolean = false
   }
 
 }

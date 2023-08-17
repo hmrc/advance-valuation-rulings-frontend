@@ -16,33 +16,16 @@
 
 package models
 
-import play.api.libs.json.{__, OFormat, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
-case class BusinessContactDetails(name: String, email: String, phone: String)
+case class BusinessContactDetails(
+  name: String,
+  email: String,
+  phone: String,
+  companyName: Option[String]
+)
 
 object BusinessContactDetails {
 
-  val reads: Reads[BusinessContactDetails] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "name").read[String] and
-        (__ \ "email").read[String] and
-        (__ \ "phone").read[String]
-    )(BusinessContactDetails.apply _)
-  }
-
-  val writes: OWrites[BusinessContactDetails] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "name").write[String] and
-        (__ \ "email").write[String] and
-        (__ \ "phone").write[String]
-    )(unlift(BusinessContactDetails.unapply))
-  }
-
-  implicit val format: OFormat[BusinessContactDetails] = OFormat(reads, writes)
+  implicit val format: OFormat[BusinessContactDetails] = Json.format[BusinessContactDetails]
 }

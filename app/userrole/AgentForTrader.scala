@@ -65,6 +65,8 @@ package userrole {
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       ProvideTraderEoriController.onPageLoad(draftId)
 
+    override def contactDetailsIncludeCompanyName: Boolean = true
+
   }
 
 }

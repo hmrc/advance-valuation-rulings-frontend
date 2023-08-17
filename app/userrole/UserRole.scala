@@ -44,4 +44,6 @@ trait UserRole {
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
   def getEORIDetailsJourney(draftId: DraftId): Call
+
+  def contactDetailsIncludeCompanyName: Boolean
 }
