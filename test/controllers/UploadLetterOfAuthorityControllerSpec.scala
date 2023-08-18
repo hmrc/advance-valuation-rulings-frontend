@@ -350,43 +350,43 @@ class UploadLetterOfAuthorityControllerSpec
         "Quarantine",
         UploadedFile.FailureReason.Quarantine,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply("uploadLetterOfAuthority.error.quarantine")(messagesProvider)
+          Messages.apply("fileUpload.error.quarantine")(messagesProvider)
       ),
       (
         "Rejected",
         UploadedFile.FailureReason.Rejected,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply("uploadLetterOfAuthority.error.rejected")(messagesProvider)
+          Messages.apply("fileUpload.error.rejected")(messagesProvider)
       ),
       (
         "Duplicate",
         UploadedFile.FailureReason.Duplicate,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply("uploadLetterOfAuthority.error.duplicate")(messagesProvider)
+          Messages.apply("fileUpload.error.duplicate")(messagesProvider)
       ),
       (
         "Unknown",
         UploadedFile.FailureReason.Unknown,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply("uploadLetterOfAuthority.error.unknown")(messagesProvider)
+          Messages.apply("fileUpload.error.unknown")(messagesProvider)
       ),
       (
         "InvalidArgument",
         UploadedFile.FailureReason.InvalidArgument,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply("uploadLetterOfAuthority.error.invalidargument")(messagesProvider)
+          Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
       ),
       (
         "EntityTooSmall",
         UploadedFile.FailureReason.EntityTooSmall,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply("uploadLetterOfAuthority.error.entitytoosmall")(messagesProvider)
+          Messages.apply("fileUpload.error.entitytoosmall")(messagesProvider)
       ),
       (
         "EntityTooLarge",
         UploadedFile.FailureReason.EntityTooLarge,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply(s"uploadLetterOfAuthority.error.entitytoolarge", maximumFileSizeMB)(
+          Messages.apply(s"fileUpload.error.entitytoolarge", maximumFileSizeMB)(
             messagesProvider
           )
       )

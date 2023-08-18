@@ -164,18 +164,18 @@ class UploadSupportingDocumentsController @Inject() (
   private def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
-        Messages("uploadSupportingDocuments.error.invalidargument")
+        Messages("fileUpload.error.invalidargument")
       case "EntityTooLarge"  =>
-        Messages(s"uploadSupportingDocuments.error.entitytoolarge", maxFileSize)
+        Messages(s"fileUpload.error.entitytoolarge", maxFileSize)
       case "EntityTooSmall"  =>
-        Messages("uploadSupportingDocuments.error.entitytoosmall")
+        Messages("fileUpload.error.entitytoosmall")
       case "Rejected"        =>
-        Messages("uploadSupportingDocuments.error.rejected")
+        Messages("fileUpload.error.rejected")
       case "Quarantine"      =>
-        Messages("uploadSupportingDocuments.error.quarantine")
+        Messages("fileUpload.error.quarantine")
       case "Duplicate"       =>
-        Messages("uploadSupportingDocuments.error.duplicate")
+        Messages("fileUpload.error.duplicate")
       case _                 =>
-        Messages(s"uploadSupportingDocuments.error.unknown")
+        Messages(s"fileUpload.error.unknown")
     }
 }

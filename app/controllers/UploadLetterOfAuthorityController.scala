@@ -170,18 +170,18 @@ class UploadLetterOfAuthorityController @Inject() (
   private def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
-        Messages("uploadLetterOfAuthority.error.invalidargument")
+        Messages("fileUpload.error.invalidargument")
       case "EntityTooLarge"  =>
-        Messages(s"uploadLetterOfAuthority.error.entitytoolarge", maxFileSize)
+        Messages(s"fileUpload.error.entitytoolarge", maxFileSize)
       case "EntityTooSmall"  =>
-        Messages("uploadLetterOfAuthority.error.entitytoosmall")
+        Messages("fileUpload.error.entitytoosmall")
       case "Rejected"        =>
-        Messages("uploadLetterOfAuthority.error.rejected")
+        Messages("fileUpload.error.rejected")
       case "Quarantine"      =>
-        Messages("uploadLetterOfAuthority.error.quarantine")
+        Messages("fileUpload.error.quarantine")
       case "Duplicate"       =>
-        Messages("uploadLetterOfAuthority.error.duplicate")
+        Messages("fileUpload.error.duplicate")
       case _                 =>
-        Messages(s"uploadLetterOfAuthority.error.unknown")
+        Messages(s"fileUpload.error.unknown")
     }
 }
