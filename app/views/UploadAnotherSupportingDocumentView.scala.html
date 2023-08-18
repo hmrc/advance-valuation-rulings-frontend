@@ -28,6 +28,7 @@
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
+    link: Link,
     saveButtons: SaveButtons
 )
 
@@ -53,13 +54,6 @@
     attachments.length
 }
 
-@removeLink(i: Int) = {
-    <a id="@{"remove-file-" + i}" href="@controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)).url">
-        @messages("site.remove")
-        <span class="govuk-visually-hidden">@messages("supportingDocuments.remove.hidden")</span>
-    </a>
-}
-
 @layout(pageTitle = title(form, titleMessage), draftId = Some(draftId)) {
 
     @formHelper(action = routes.UploadAnotherSupportingDocumentController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
@@ -78,7 +72,16 @@
               TableRow(content = Text(attachment.file.fileName.getOrElse(""))),
               TableRow(content = Text(if(attachment.isThisFileConfidential.contains(true)) messages("uploadAnotherSupportingDocument.keepConfidential") else "")),
               TableRow(
-                HtmlContent(removeLink(i))
+                HtmlContent(
+                    @link(
+                        id = "change",
+                        text = messages("site.change"),
+                        call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
+                        newTab = false,
+                        hiddenText = true,
+                        hiddenTextContent =  messages("supportingDocuments.remove.hidden", attachment.fileName.getOrElse(""))
+                    )
+                )
               )
             )
           },
