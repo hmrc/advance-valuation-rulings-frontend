@@ -45,16 +45,15 @@ class EORIBeUpToDateController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         if (appConfig.agentOnBehalfOfTrader) {
-          VerifyTraderDetailsPage.get() match {
-            case Some(details) =>
-              Ok(
-                userRoleProvider
-                  .getUserRole(request.userAnswers)
-                  .selectViewForEoriBeUpToDate(draftId, !details.consentToDisclosureOfPersonalData)
-              )
-            case None          =>
-              Redirect(routes.JourneyRecoveryController.onPageLoad())
+          val isPrivate = VerifyTraderDetailsPage.get() match {
+            case Some(details) => !details.consentToDisclosureOfPersonalData
+            case _             => true
           }
+          Ok(
+            userRoleProvider
+              .getUserRole(request.userAnswers)
+              .selectViewForEoriBeUpToDate(draftId, isPrivate)
+          )
         } else {
           AccountHomePage.get() match {
             case None               =>
