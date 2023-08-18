@@ -595,6 +595,7 @@ uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} 
 uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Cadw’n gyfrinachol
+uploadAnotherSupportingDocument.remove.hidden = {0} from your list of supporting documents
 
 isThisFileConfidential.title = Do you want this file to be marked as confidential?
 isThisFileConfidential.heading = Do you want this file to be marked as confidential?
