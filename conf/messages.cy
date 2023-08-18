@@ -542,19 +542,12 @@ uploadLetterOfAuthority.bulletPoint.6 = smaller than 5MB
 uploadLetterOfAuthority.bulletPoint.7 = a PDF or JPG
 uploadLetterOfAuthority.label = Upload a file
 uploadLetterOfAuthority.button = Upload and continue
-uploadLetterOfAuthority.error.required = Select yes if you want to upload another document
-uploadLetterOfAuthority.error.invalidargument = Select a file.
-uploadLetterOfAuthority.error.entitytoolarge = The selected file must be smaller than {0}MB
-uploadLetterOfAuthority.error.entitytoosmall = The selected file is empty.
-uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
-uploadLetterOfAuthority.error.quarantine = The selected file contains a virus
-uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded – try again
 
 verifyLetterOfAuthority.title = Uploaded letter of authority
 verifyLetterOfAuthority.heading = Uploaded letter of authority
 verifyLetterOfAuthority.caption = Ynglŷn â’r ymgeisydd
 verifyLetterOfAuthority.keepConfidential = Cadw’n gyfrinachol
-verifyLetterOfAuthority.hiddenText = remove {0} from your list of supporting documents
+verifyLetterOfAuthority.hiddenText = {0} from your list of supporting documents
 
 uploadSupportingDocuments.caption = Ynglŷn â’r nwyddau
 uploadSupportingDocuments.title = Uwchlwytho dogfennau ategol
@@ -575,13 +568,14 @@ uploadSupportingDocuments.checkYourAnswersLabel = Dogfennau ategol wedi’u huwc
 uploadSupportingDocuments.change.hidden = upload a document
 
 uploadSupportingDocuments.error.entitytoolarge = The selected file must be smaller than {0}MB
-uploadSupportingDocuments.error.entitytoosmall = The selected file is empty
-uploadSupportingDocuments.error.invalidargument = Select a file to upload
-uploadSupportingDocuments.error.duplicate = You can only upload distinct files
-uploadSupportingDocuments.error.failed = The selected file failed to upload
-uploadSupportingDocuments.error.quarantine = The selected file contains a virus
-uploadSupportingDocuments.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf pdf neu jpeg
-uploadSupportingDocuments.error.unknown = There was a problem uploading your file
+fileUpload.error.entitytoolarge = The selected file must be smaller than {0}MB
+fileUpload.error.entitytoosmall = The selected file is empty
+fileUpload.error.invalidargument = Select a file to upload
+fileUpload.error.duplicate = You can only upload distinct files
+fileUpload.error.failed = The selected file failed to upload
+fileUpload.error.quarantine = The selected file contains a virus
+fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf pdf neu jpeg
+fileUpload.error.unknown = There was a problem uploading your file
 
 uploadAnotherSupportingDocument.title.one = Rydych wedi uwchlwytho un ddogfen ategol
 uploadAnotherSupportingDocument.heading.one = Rydych wedi uwchlwytho un ddogfen ategol
