@@ -436,6 +436,7 @@ uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} 
 uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Confidential
+uploadAnotherSupportingDocument.remove.hidden = {0} from your list of supporting documents
 
 uploadLetterOfAuthority.title = Upload your letter of authority
 uploadLetterOfAuthority.heading = Upload your letter of authority
@@ -485,6 +486,8 @@ fileUpload.error.failed = The selected file failed to upload
 fileUpload.error.quarantine = The selected file contains a virus
 fileUpload.error.rejected = The selected file must be a PDF or JPG
 fileUpload.error.unknown = There was a problem uploading your file
+
+
 
 explainReasonComputedValue.title = Explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods
@@ -928,4 +931,3 @@ yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your
 yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
 yourApplicationHasBeenCancelled.button = Go to your applications and rulings
 
-supportingDocuments.remove.hidden = remove this document from your list of supporting documents
