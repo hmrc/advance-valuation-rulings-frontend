@@ -470,7 +470,7 @@ uploadSupportingDocuments.paragraph.2 = An individual file must be:
 uploadSupportingDocuments.bulletPoint.1 = one file at a time
 uploadSupportingDocuments.bulletPoint.2 = up to {0} files
 uploadSupportingDocuments.bulletPoint.3 = smaller than {0}MB
-uploadSupportingDocuments.bulletPoint.4 = a pdf or jpeg
+uploadSupportingDocuments.bulletPoint.4 = a PDF or JPEG
 
 uploadSupportingDocuments.label = Upload a file
 uploadSupportingDocuments.button = Upload and continue
