@@ -87,9 +87,10 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case DeleteDraftPage                                  => _ => AccountHomeController.onPageLoad()
     case AgentForTraderCheckRegisteredDetailsPage         =>
       ua => UploadLetterOfAuthorityController.onPageLoad(ua.draftId, None, None)
-    case AgentForOrgCheckRegisteredDetailsPage            =>
+    case AgentForOrgApplicationContactDetailsPage         =>
       ua => AgentCompanyDetailsController.onPageLoad(NormalMode, ua.draftId)
     case UploadLetterOfAuthorityPage                      => uploadLetterOfAuthorityPage
+    case VerifyLetterOfAuthorityPage                      => verifyLetterOfAuthorityPage
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case ProvideTraderEoriPage                            =>
       ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
@@ -542,6 +543,9 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     }
 
   private def uploadLetterOfAuthorityPage(userAnswers: UserAnswers): Call =
+    VerifyLetterOfAuthorityController.onPageLoad(userAnswers.draftId)
+
+  private def verifyLetterOfAuthorityPage(userAnswers: UserAnswers): Call =
     BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

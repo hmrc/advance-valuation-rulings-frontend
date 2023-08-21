@@ -396,7 +396,7 @@ eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader.public = To use this service, i
 eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.public = Before proceeding with your application, make sure you contact the trader directly. Cancel your current application and resubmit it once you have their updated information.
 eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader.private = You cannot continue with this application. This is because you told us that you do not want to proceed due to the trader’s private EORI details.
 eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.private = If you need more information about the trader’s EORI details, you will need to contact them directly.
-eoriBeUpToDate.paragraph.3.agentOnBehalfOfTrader.private = It’s important that a trader's EORI details are accurate and up to date. They will need to report a change of circumstances to update their name or address on record if these details are incorrect. You cannot do this on their behalf.
+eoriBeUpToDate.paragraph.3.agentOnBehalfOfTrader.private = It’s important that a trader’s EORI details are accurate and up to date. They will need to report a change of circumstances to update their name or address on record if these details are incorrect. You cannot do this on their behalf.
 eoriBeUpToDate.paragraph.4.agentOnBehalfOfTrader.private = Applications with incorrect details will be rejected.
 eoriBeUpToDate.paragraph.5.agentOnBehalfOfTrader.private = You can cancel this application and reapply later if you wish to do so.
 eoriBeUpToDate.bulletPoint.1.link = fill in an enquiry form (opens in new tab)
@@ -436,6 +436,7 @@ uploadAnotherSupportingDocument.error.fileCount = You can only upload up to {0} 
 uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Confidential
+uploadAnotherSupportingDocument.remove.hidden = {0} from your list of supporting documents
 
 uploadLetterOfAuthority.title = Upload your letter of authority
 uploadLetterOfAuthority.heading = Upload your letter of authority
@@ -452,18 +453,12 @@ uploadLetterOfAuthority.bulletPoint.6 = smaller than 5MB
 uploadLetterOfAuthority.bulletPoint.7 = a PDF or JPG
 uploadLetterOfAuthority.label = Upload a file
 uploadLetterOfAuthority.button = Upload and continue
-uploadLetterOfAuthority.error.required = Select yes if you want to upload another document
-uploadLetterOfAuthority.error.invalidargument = Select a file.
-uploadLetterOfAuthority.error.entitytoolarge = The selected file must be smaller than {0}MB
-uploadLetterOfAuthority.error.entitytoosmall = The selected file is empty.
-uploadLetterOfAuthority.error.rejected = The selected file must be a PDF or JPG
-uploadLetterOfAuthority.error.quarantine = The selected file contains a virus
-uploadLetterOfAuthority.error.unknown = The selected file could not be uploaded – try again
 
-verifyLetterOfAuthority.title = todo
-verifyLetterOfAuthority.heading = todo
-verifyLetterOfAuthority.caption = todo
-verifyLetterOfAuthority.keepConfidential = todo
+verifyLetterOfAuthority.title = Uploaded letter of authority
+verifyLetterOfAuthority.heading = Uploaded letter of authority
+verifyLetterOfAuthority.caption = About the applicant
+verifyLetterOfAuthority.keepConfidential = Confidential
+verifyLetterOfAuthority.hiddenText = {0} from your list of supporting documents
 
 uploadSupportingDocuments.title = Upload supporting documents
 uploadSupportingDocuments.heading = Upload supporting documents
@@ -483,14 +478,16 @@ uploadSupportingDocuments.button.inProgress = Uploading file
 uploadSupportingDocuments.checkYourAnswersLabel = Supporting documents uploaded
 uploadSupportingDocuments.change.hidden = upload a document
 
-uploadSupportingDocuments.error.entitytoolarge = The selected file must be smaller than {0}MB
-uploadSupportingDocuments.error.entitytoosmall = The selected file is empty
-uploadSupportingDocuments.error.invalidargument = Select a file to upload
-uploadSupportingDocuments.error.duplicate = You can only upload distinct files
-uploadSupportingDocuments.error.failed = The selected file failed to upload
-uploadSupportingDocuments.error.quarantine = The selected file contains a virus
-uploadSupportingDocuments.error.rejected = The selected file must be a PDF or JPG
-uploadSupportingDocuments.error.unknown = There was a problem uploading your file
+fileUpload.error.entitytoolarge = The selected file must be smaller than {0}MB
+fileUpload.error.entitytoosmall = The selected file is empty
+fileUpload.error.invalidargument = Select a file to upload
+fileUpload.error.duplicate = You can only upload distinct files
+fileUpload.error.failed = The selected file failed to upload
+fileUpload.error.quarantine = The selected file contains a virus
+fileUpload.error.rejected = The selected file must be a PDF or JPG
+fileUpload.error.unknown = There was a problem uploading your file
+
+
 
 explainReasonComputedValue.title = Explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods
@@ -823,14 +820,13 @@ whatIsYourRoleAsImporter.agentOnBehalfOfTrader = Agent acting on behalf of a tra
 whatIsYourRoleAsImporter.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
 
 viewApplication.title = Your application
-viewApplication.heading = Your application
+viewApplication.heading = Your Advance Valuation Ruling application
 viewApplication.forYourRecords = About the applicant
 viewApplication.whatHappensNext.heading = What happens next
 viewApplication.whatHappensNext.paragraph = We’ll aim to review your application within 30 days, although it can take a further 90 days from the date your application was accepted to receive an Advance Valuation Ruling decision. You can sign in to Advance Valuation Rulings to check the status of your application.
 viewApplication.dateSubmitted = Date submitted
 
 viewApplication.aboutTheGoods.heading = About the goods
-viewApplication.yourRuling = Your Advance Valuation Ruling application
 viewApplication.reference = Your application reference number is
 viewApplication.hmrc = HM Revenue & Customs 
 
@@ -937,3 +933,4 @@ yourApplicationHasBeenCancelled.heading = You cannot view this application
 yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your application for an Advance Valuation Ruling. The data you submitted before has been deleted.
 yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
 yourApplicationHasBeenCancelled.button = Go to your applications and rulings
+

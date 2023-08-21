@@ -27,9 +27,9 @@ import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToD
 
 package userrole {
 
-  import controllers.routes.CheckRegisteredDetailsController
+  import controllers.routes.{ApplicationContactDetailsController, CheckRegisteredDetailsController}
   import models.NormalMode
-  import pages.AgentForOrgCheckRegisteredDetailsPage
+  import pages.AgentForOrgApplicationContactDetailsPage
 
   private case class AgentForOrg @Inject() (
     view: AgentForOrgCheckRegisteredDetailsView,
@@ -55,7 +55,7 @@ package userrole {
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       eoriBeUpToDateView(draftId)
 
-    override def selectGetRegisteredDetailsPage(): Page = AgentForOrgCheckRegisteredDetailsPage
+    override def selectGetRegisteredDetailsPage(): Page = CheckRegisteredDetailsPage
 
     override def selectViewForRequiredInformation(
       draftId: DraftId
@@ -66,5 +66,7 @@ package userrole {
 
     override def contactDetailsIncludeCompanyName: Boolean = false
 
+    override def selectApplicationContactDetailsPage(): Page =
+      AgentForOrgApplicationContactDetailsPage
   }
 }

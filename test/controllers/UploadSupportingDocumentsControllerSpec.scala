@@ -164,7 +164,7 @@ class UploadSupportingDocumentsControllerSpec
         contentAsString(result) mustEqual view(
           draftId = draftId,
           upscanInitiateResponse = Some(upscanInitiateResponse),
-          errorMessage = Some(messages(application)("uploadSupportingDocuments.error.unknown"))
+          errorMessage = Some(messages(application)("fileUpload.error.unknown"))
         )(messages(application), request).toString
 
         verify(mockFileService).initiate(

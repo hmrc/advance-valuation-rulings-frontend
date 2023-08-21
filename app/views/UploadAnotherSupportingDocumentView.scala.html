@@ -23,12 +23,12 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukTable: GovukTable,
-    govukLink: Link,
     caption: Caption,
     heading: Heading,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
+    link: Link,
     saveButtons: SaveButtons
 )
 
@@ -73,12 +73,14 @@
               TableRow(content = Text(if(attachment.isThisFileConfidential.contains(true)) messages("uploadAnotherSupportingDocument.keepConfidential") else "")),
               TableRow(
                 HtmlContent(
-                  govukLink(
-                    id = "remove-file-" + i,
-                    text = messages("site.remove"),
-                    call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
-                    newTab = false
-                  )
+                    link(
+                        id = "change",
+                        text = messages("site.remove"),
+                        call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
+                        newTab = false,
+                        hiddenText = true,
+                        hiddenTextContent =  messages("uploadAnotherSupportingDocument.remove.hidden", attachment.file.fileName.getOrElse(""))
+                    )
                 )
               )
             )

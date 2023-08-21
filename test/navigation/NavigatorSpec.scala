@@ -144,6 +144,18 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" - {
 
+      "verifyLetterOfAuthorityPage" - {
+        "must navigate to RequiredInformationPage page" in {
+          val userAnswers = emptyUserAnswers
+          navigator.nextPage(
+            VerifyLetterOfAuthorityPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
+
+        }
+      }
+
       "If we need to contact you page" - {
 
         "must receive next page from userRoleProvider" in {

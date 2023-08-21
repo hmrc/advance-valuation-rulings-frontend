@@ -256,7 +256,7 @@ GET        /:draftId/save-as-draft                       controllers.DraftHasBee
 
 GET        /:draftId/ars-upload-loa                     controllers.UploadLetterOfAuthorityController.onPageLoad(draftId: DraftId, errorCode: Option[String], key: Option[String])
 
-GET        /:draftId/verify-loa                         controllers.VerifyLetterOfAuthorityController.onPageLoad(draftId: DraftId)
-POST       /:draftId/verify-loa                         controllers.VerifyLetterOfAuthorityController.onSubmit(draftId: DraftId)
+GET        /:draftId/ars-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onPageLoad(draftId: DraftId)
+POST       /:draftId/ars-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onSubmit(draftId: DraftId)
 
 GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()
