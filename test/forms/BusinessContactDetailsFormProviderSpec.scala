@@ -23,11 +23,12 @@ import org.scalacheck.Gen
 
 class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val nameRequiredKey  = "businessContactDetails.fullName.error.required"
-  val emailRequiredKey = "businessContactDetails.email.error.required"
-  val phoneRequiredKey = "businessContactDetails.telephoneNumber.error.required"
+  val nameRequiredKey    = "businessContactDetails.fullName.error.required"
+  val emailRequiredKey   = "businessContactDetails.email.error.required"
+  val phoneRequiredKey   = "businessContactDetails.telephoneNumber.error.required"
+  val companyRequiredKey = "businessContactDetails.companyName.error.required"
 
-  val form = new BusinessContactDetailsFormProvider()()
+  val form = new BusinessContactDetailsFormProvider()(true)
 
   val validAddresses = Seq(
     "“email”@example.com",
@@ -97,10 +98,10 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       s"bind valid email: ${address}" in {
         val boundForm = form.bind(
           Map[String, String](
-            "name"    -> "Julius",
-            "email"   -> address,
-            "phone"   -> "07123456789",
-            "company" -> "company"
+            "name"        -> "Julius",
+            "email"       -> address,
+            "phone"       -> "07123456789",
+            "companyName" -> "company"
           )
         )
         boundForm.errors mustBe Seq.empty
@@ -110,10 +111,10 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       s"not bind invalid email: ${address}" in {
         val boundForm = form.bind(
           Map[String, String](
-            "name"    -> "Julius",
-            "email"   -> address,
-            "phone"   -> "07123456789",
-            "company" -> "company"
+            "name"        -> "Julius",
+            "email"       -> address,
+            "phone"       -> "07123456789",
+            "companyName" -> "company"
           )
         )
         boundForm.errors must not be Seq.empty
@@ -166,7 +167,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     "fail to bind an phone number with trailing letters" in {
       val result       = form.bind(Map(phoneField -> "070 0000 000z")).apply(phoneField)
       val errorMessage = result.error.value.message
-      errorMessage mustEqual invalidKey
+      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.letter"
     }
 
     "fail to bind a phone number that is too long" in {
@@ -177,6 +178,16 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       val errorMessage = result.error.value.message
       errorMessage mustEqual invalidKey
     }
+  }
+
+  ".companyName" - {
+    val companyField = "companyName"
+
+    behave like mandatoryField(
+      form,
+      companyField,
+      requiredError = FormError(companyField, companyRequiredKey)
+    )
   }
 
 }

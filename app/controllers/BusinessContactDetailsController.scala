@@ -60,7 +60,6 @@ class BusinessContactDetailsController @Inject() (
         val form           = formProvider(incCompanyName)
 
         val preparedForm = BusinessContactDetailsPage.fill(form)
-
         Ok(view(preparedForm, mode, draftId, incCompanyName))
     }
 

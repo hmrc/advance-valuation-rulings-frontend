@@ -44,10 +44,7 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
   val phoneMapping: (String, Mapping[String]) = "phone" -> text(phoneRequiredError)
     .verifying(phoneFormatError, phone => isValid(phone))
     .verifying(phoneLengthError, phone => phone.length <= Validation.phoneNumberMaxLength)
-    .verifying(phoneLetterError)
-          && phone.length <= Validation.phoneNumberMaxLength
-          && !phone.exists(_.isLetter)
-    )
+    .verifying(phoneLetterError, phone => !phone.exists(_.isLetter))
 
   val companyNameMapping: (String, Mapping[String]) =
     "companyName" -> text(companyNameRequiredError)

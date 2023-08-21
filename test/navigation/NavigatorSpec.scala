@@ -527,7 +527,7 @@ class NavigatorSpec extends SpecBase {
         val userAnswers =
           userAnswersWith(
             BusinessContactDetailsPage,
-            BusinessContactDetails("name", "email", "phone")
+            BusinessContactDetails("name", "email", "phone", None)
           )
 
         "when OrganisationAssistant claiming to be AgentOnBehalfOfOrg" - {

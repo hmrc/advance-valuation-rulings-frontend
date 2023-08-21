@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UserAnswers}
+import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UserAnswers, WhatIsYourRoleAsImporter}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfTrader, EmployeeOfOrg}
 import navigation.{FakeNavigator, Navigator}
@@ -83,6 +83,10 @@ trait SpecBase
 
   val userAnswersAsOrgAssistant: UserAnswers = emptyUserAnswers
     .setFuture(AccountHomePage, OrganisationAssistant)
+    .futureValue
+
+  def userAnswersForRole(role: WhatIsYourRoleAsImporter): UserAnswers = emptyUserAnswers
+    .setFuture(WhatIsYourRoleAsImporterPage, role)
     .futureValue
 
   val contactInformation = ContactInformation(

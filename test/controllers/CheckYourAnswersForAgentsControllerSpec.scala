@@ -360,7 +360,8 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
             BusinessContactDetails(
               name = "name",
               email = "email",
-              phone = "phone"
+              phone = "phone",
+              None
             )
           )
     ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)

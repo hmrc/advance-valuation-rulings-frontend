@@ -33,7 +33,7 @@ class AgentSummarySpec extends SpecBase {
       .value
       .set(
         BusinessContactDetailsPage,
-        BusinessContactDetails(ContactName, ContactEmail, ContactPhoneNumber)
+        BusinessContactDetails(ContactName, ContactEmail, ContactPhoneNumber, None)
       )
       .success
       .value

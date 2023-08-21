@@ -754,6 +754,7 @@ businessContactDetails.email.length = Email address must be 50 characters or les
 businessContactDetails.telephoneNumber.error.required = Nodwch eich rhif ffôn
 businessContactDetails.telephoneNumber.error.format = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
 businessContactDetails.telephoneNumber.length = Phone number must be 25 characters or less
+businessContactDetails.telephoneNumber.error.letter = Telephone number can only contain numbers
 businessContactDetails.checkYourAnswersLabel = businessContactDetails
 businessContactDetails.change.hidden = applicant’s own contact details
 businessContactDetails.name.change.hidden = your contact name
