@@ -66,7 +66,7 @@ package userrole {
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       ProvideTraderEoriController.onPageLoad(draftId)
 
-    override def selectApplicationContactDetailsPage(): Page = ApplicationContactDetailsPage
+    override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
   }
 
 }
