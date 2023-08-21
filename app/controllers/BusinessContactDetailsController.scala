@@ -24,12 +24,14 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.BusinessContactDetailsFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.BusinessContactDetailsPage
 import services.UserAnswersService
+import userrole.UserRoleProvider
 import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsController @Inject() (
@@ -41,7 +43,9 @@ class BusinessContactDetailsController @Inject() (
   requireData: DataRequiredAction,
   formProvider: BusinessContactDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: BusinessContactDetailsView
+  view: BusinessContactDetailsView,
+  appConfig: FrontendAppConfig,
+  userRoleProvider: UserRoleProvider
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -70,9 +74,21 @@ class BusinessContactDetailsController @Inject() (
               } yield saveDraft match {
                 case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
                 case false =>
-                  Redirect(
-                    navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
-                  )
+                  if (appConfig.agentOnBehalfOfTrader) {
+                    Redirect(
+                      navigator.nextPage(
+                        userRoleProvider
+                          .getUserRole(updatedAnswers)
+                          .selectBusinessContactDetailsPage(),
+                        mode,
+                        updatedAnswers
+                      )
+                    )
+                  } else {
+                    Redirect(
+                      navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
+                    )
+                  }
               }
           )
     }

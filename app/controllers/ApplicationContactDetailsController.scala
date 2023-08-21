@@ -75,21 +75,9 @@ class ApplicationContactDetailsController @Inject() (
               } yield saveDraft match {
                 case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
                 case false =>
-                  if (appConfig.agentOnBehalfOfTrader) {
-                    Redirect(
-                      navigator.nextPage(
-                        userRoleProvider
-                          .getUserRole(updatedAnswers)
-                          .selectApplicationContactDetailsPage(),
-                        mode,
-                        updatedAnswers
-                      )
-                    )
-                  } else {
-                    Redirect(
-                      navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)
-                    )
-                  }
+                  Redirect(
+                    navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)
+                  )
               }
           )
     }
