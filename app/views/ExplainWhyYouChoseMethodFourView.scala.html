@@ -50,6 +50,8 @@
 
     @paragraph(Html(messages("explainWhyYouChoseMethodFour.paragraph.2")))
 
+    @paragraph(Html(messages("explainWhyYouChoseMethodFour.paragraph.3")))
+
     @govukTextarea(
         TextareaViewModel(
             field = form("value"),
@@ -60,10 +62,6 @@
             )
             .withRows(15)
             .withAttribute("maxlength","8167")
-            .withHint(Hint(
-                id = Some("hint"),
-                content = messages("explainWhyYouChoseMethodFour.hint")
-            ))
         )
 
         @saveButtons(draftId, onSubmitAction())
