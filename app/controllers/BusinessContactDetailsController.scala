@@ -43,7 +43,6 @@ class BusinessContactDetailsController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: BusinessContactDetailsFormProvider,
-  userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
   view: BusinessContactDetailsView,
   appConfig: FrontendAppConfig,
@@ -52,7 +51,7 @@ class BusinessContactDetailsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private def includeCompanyName[A]()(implicit request: DataRequest[A]): Boolean =
+  private def includeCompanyName()(implicit request: DataRequest[AnyContent]): Boolean =
     userRoleProvider
       .getUserRole(request.userAnswers)
       .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader

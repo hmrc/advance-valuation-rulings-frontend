@@ -40,6 +40,8 @@ trait UserRole {
 
   def selectGetRegisteredDetailsPage(): Page
 
+  def selectApplicationContactDetailsPage(): Page
+
   def selectBusinessContactDetailsPage(): Page
 
   def selectViewForRequiredInformation(
