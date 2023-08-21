@@ -28,6 +28,7 @@ import config.FrontendAppConfig
 import controllers.actions._
 import forms.BusinessContactDetailsFormProvider
 import models.{DraftId, Mode}
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.BusinessContactDetailsPage
 import services.UserAnswersService
@@ -50,32 +51,29 @@ class BusinessContactDetailsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
+  private def includeCompanyName[A]()(implicit request: DataRequest[A]): Boolean =
+    userRoleProvider
+      .getUserRole(request.userAnswers)
+      .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
+
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val incCompanyName =
-          userRoleProvider
-            .getUserRole(request.userAnswers)
-            .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
-        val form           = formProvider(incCompanyName)
-
+        val form         = formProvider(includeCompanyName)
         val preparedForm = BusinessContactDetailsPage.fill(form)
-        Ok(view(preparedForm, mode, draftId, incCompanyName))
+        Ok(view(preparedForm, mode, draftId, includeCompanyName))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val incCompanyName =
-          userRoleProvider
-            .getUserRole(request.userAnswers)
-            .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
-        val form           = formProvider(incCompanyName)
+        val form = formProvider(includeCompanyName)
         form
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, mode, draftId, incCompanyName))),
+              Future
+                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName))),
             value =>
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)
