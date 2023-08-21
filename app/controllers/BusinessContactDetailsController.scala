@@ -46,7 +46,8 @@ class BusinessContactDetailsController @Inject() (
   userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
   view: BusinessContactDetailsView,
-  appConfig: FrontendAppConfig
+  appConfig: FrontendAppConfig,
+  userRoleProvider: UserRoleProvider
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -81,9 +82,21 @@ class BusinessContactDetailsController @Inject() (
               } yield saveDraft match {
                 case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
                 case false =>
-                  Redirect(
-                    navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
-                  )
+                  if (appConfig.agentOnBehalfOfTrader) {
+                    Redirect(
+                      navigator.nextPage(
+                        userRoleProvider
+                          .getUserRole(updatedAnswers)
+                          .selectBusinessContactDetailsPage(),
+                        mode,
+                        updatedAnswers
+                      )
+                    )
+                  } else {
+                    Redirect(
+                      navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
+                    )
+                  }
               }
           )
     }

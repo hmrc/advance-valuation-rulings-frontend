@@ -69,6 +69,9 @@ package userrole {
     override def contactDetailsIncludeCompanyName: Boolean = true
 
     override def selectApplicationContactDetailsPage(): Page = ApplicationContactDetailsPage
+
+    override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
+
   }
 
 }

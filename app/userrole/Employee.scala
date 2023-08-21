@@ -68,6 +68,7 @@ package userrole {
 
     override def selectApplicationContactDetailsPage(): Page = ApplicationContactDetailsPage
 
+    override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
   }
 
 }
