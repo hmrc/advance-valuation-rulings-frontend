@@ -142,11 +142,21 @@
     <div class="govuk-button-group">
       @govukButton(
         ButtonViewModel(
-        messages("uploadLetterOfAuthority.button")
+          messages("uploadLetterOfAuthority.button")
         )
-                .preventingDoubleClick()
-                .withAttribute(("id" -> "submit"))
-                .disableIf(shouldRefresh)
+        .preventingDoubleClick()
+        .withAttribute(("id" -> "submit"))
+        .disableIf(shouldRefresh)
+      )
+
+      @govukButton(
+        ButtonViewModel(
+          messages("site.saveAsDraft")
+        )
+        .asSecondaryButton()
+        .asLink(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
+        .preventingDoubleClick()
+        .disableIf(shouldRefresh)
       )
     </div>
   }
