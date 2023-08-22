@@ -30,9 +30,9 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import config.Service
 import connectors.UpscanConnector
-import models.{Done, DraftId, Mode, UploadedFile, UserAnswers}
+import models.{Done, DraftId, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
-import pages.{QuestionPage, UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import queries.AllDocuments
 import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException

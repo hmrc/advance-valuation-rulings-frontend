@@ -25,7 +25,6 @@ import play.api.mvc.{Action, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import models.{DraftId, UploadedFile}
-import pages.QuestionPage
 import services.fileupload.FileService
 
 @Singleton

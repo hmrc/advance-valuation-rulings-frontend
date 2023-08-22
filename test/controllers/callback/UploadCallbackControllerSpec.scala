@@ -35,7 +35,6 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadSupportingDocumentPage
 import services.fileupload.FileService
 
 class UploadCallbackControllerSpec

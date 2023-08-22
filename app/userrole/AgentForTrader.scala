@@ -28,7 +28,7 @@ package userrole {
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
-  import controllers.routes.{ApplicationContactDetailsController, ProvideTraderEoriController}
+  import controllers.routes.ProvideTraderEoriController
   import pages.ApplicationContactDetailsPage
   import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
