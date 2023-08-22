@@ -16,13 +16,17 @@
 
 package viewmodels.checkAnswers.summary
 
+import javax.inject.Inject
+
 import play.api.Logger
 import play.api.i18n.Messages
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
 
+import config.FrontendAppConfig
 import models.{TraderDetailsWithCountryCode, UserAnswers}
 import models.AuthUserType._
 import pages.AccountHomePage
+import userrole.UserRoleProvider
 
 case class ApplicationSummary(
   eoriDetails: EoriDetailsSummary,
@@ -37,36 +41,49 @@ object ApplicationSummary {
 
   def apply(
     userAnswers: UserAnswers,
-    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode,
+    appConfig: FrontendAppConfig,
+    userRoleProvider: UserRoleProvider
   )(implicit
     messages: Messages
-  ): ApplicationSummary = {
-    val (applicant, company) = userAnswers.get(AccountHomePage) match {
-      case Some(IndividualTrader)                    =>
-        (
-          IndividualApplicantSummary(userAnswers),
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
-        )
-      case Some(OrganisationAdmin)                   =>
-        (
-          IndividualApplicantSummary(userAnswers),
-          BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
-        )
-      case Some(OrganisationAssistant) | Some(Agent) =>
-        (
-          AgentSummary(userAnswers),
-          BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
-        )
-      case unexpected                                =>
-        logger.error(s"Unsupported authUserType [$unexpected] encountered")
-        throw InsufficientEnrolments("Unexpected authUserType")
-    }
+  ): ApplicationSummary =
+    if (appConfig.agentOnBehalfOfTrader) {
+      val (applicant, company) = userRoleProvider
+        .getUserRole(userAnswers)
+        .getApplicationSummary(userAnswers, traderDetailsWithCountryCode)
+      ApplicationSummary(
+        eoriDetails = company,
+        applicant = applicant,
+        details = DetailsSummary(userAnswers),
+        method = MethodSummary(userAnswers)
+      )
+    } else {
+      val (applicant, company) = userAnswers.get(AccountHomePage) match {
+        case Some(IndividualTrader)                    =>
+          (
+            IndividualApplicantSummary(userAnswers),
+            IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+          )
+        case Some(OrganisationAdmin)                   =>
+          (
+            IndividualApplicantSummary(userAnswers),
+            BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+          )
+        case Some(OrganisationAssistant) | Some(Agent) =>
+          (
+            AgentSummary(userAnswers),
+            BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+          )
+        case unexpected                                =>
+          logger.error(s"Unsupported authUserType [$unexpected] encountered")
+          throw InsufficientEnrolments("Unexpected authUserType")
+      }
 
-    ApplicationSummary(
-      eoriDetails = company,
-      applicant = applicant,
-      details = DetailsSummary(userAnswers),
-      method = MethodSummary(userAnswers)
-    )
-  }
+      ApplicationSummary(
+        eoriDetails = company,
+        applicant = applicant,
+        details = DetailsSummary(userAnswers),
+        method = MethodSummary(userAnswers)
+      )
+    }
 }

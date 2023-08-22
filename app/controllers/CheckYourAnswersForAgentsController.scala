@@ -25,6 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction, IdentifyAgentAction}
 import controllers.common.TraderDetailsHelper
@@ -35,6 +36,7 @@ import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.requests._
 import pages.{AccountHomePage, Page, WhatIsYourRoleAsImporterPage}
 import services.SubmissionService
+import userrole.UserRoleProvider
 import viewmodels.checkAnswers.summary.ApplicationSummary
 import views.html.CheckYourAnswersForAgentsView
 
@@ -47,6 +49,8 @@ class CheckYourAnswersForAgentsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersForAgentsView,
   submissionService: SubmissionService,
+  appConfig: FrontendAppConfig,
+  userRoleProvider: UserRoleProvider,
   implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -60,7 +64,8 @@ class CheckYourAnswersForAgentsController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
+            val applicationSummary =
+              ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
             AccountHomePage.get() match {
               case Some(OrganisationAdmin)                   =>
                 Future.successful(Ok(view(applicationSummary, EmployeeOfOrg, draftId)))

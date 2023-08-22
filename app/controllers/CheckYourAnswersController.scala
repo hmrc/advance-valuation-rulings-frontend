@@ -61,7 +61,8 @@ class CheckYourAnswersController @Inject() (
         getTraderDetails {
           traderDetails =>
             if (appConfig.agentOnBehalfOfTrader) {
-              val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
+              val applicationSummary =
+                ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
               Future.successful(
                 Ok(
                   userRoleProvider
@@ -73,7 +74,8 @@ class CheckYourAnswersController @Inject() (
                 )
               )
             } else {
-              val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
+              val applicationSummary =
+                ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
               Future.successful(Ok(view(applicationSummary, draftId)))
             }
         }

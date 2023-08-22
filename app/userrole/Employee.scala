@@ -27,9 +27,9 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import controllers.routes
-  import models.NormalMode
+  import models.{NormalMode, UserAnswers}
   import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page}
-  import viewmodels.checkAnswers.summary.ApplicationSummary
+  import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary}
   import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
   private case class Employee @Inject() (
@@ -73,6 +73,14 @@ package userrole {
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       checkYourAnswersView(applicationSummary, draftId)
+
+    override def getApplicationSummary(
+      userAnswers: UserAnswers,
+      traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+    )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) = (
+      IndividualApplicantSummary(userAnswers),
+      BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+    )
 
   }
 
