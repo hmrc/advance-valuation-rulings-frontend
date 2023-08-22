@@ -25,6 +25,7 @@
         caption: Caption,
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
+        insetPara: InsetPara,
         paragraph: Paragraph,
         list: BulletList,
         appConfig: FrontendAppConfig,
@@ -92,23 +93,22 @@
   @caption(messages("uploadLetterOfAuthority.caption"))
   @heading(messages("uploadLetterOfAuthority.heading"))
 
-  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.1")))
+  @insetPara(Html(messages("uploadLetterOfAuthority.insetPara")))
 
-  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.2")))
+  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.1")))
   @list(Seq(
     Html(messages("uploadLetterOfAuthority.bulletPoint.1")),
     Html(messages("uploadLetterOfAuthority.bulletPoint.2")),
     Html(messages("uploadLetterOfAuthority.bulletPoint.3")),
     Html(messages("uploadLetterOfAuthority.bulletPoint.4")),
-    Html(messages("uploadLetterOfAuthority.bulletPoint.5")),
   ),
     "govuk-list govuk-list--bullet",
   )
 
-  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.3")))
+  @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.2")))
   @list(Seq(
-    Html(messages("uploadLetterOfAuthority.bulletPoint.6", appConfig.maximumFileSizeBytes / 1000000L)),
-    Html(messages("uploadLetterOfAuthority.bulletPoint.7"))
+    Html(messages("uploadLetterOfAuthority.bulletPoint.5", appConfig.maximumFileSizeBytes / 1000000L)),
+    Html(messages("uploadLetterOfAuthority.bulletPoint.6"))
   ),
     "govuk-list govuk-list--bullet",
   )
