@@ -30,13 +30,15 @@ package userrole {
 
   import controllers.routes.{ApplicationContactDetailsController, ProvideTraderEoriController}
   import pages.ApplicationContactDetailsPage
-  import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+  import viewmodels.checkAnswers.summary.ApplicationSummary
+  import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, CheckYourAnswersView}
 
   private case class AgentForTrader @Inject() (
     view: AgentForTraderCheckRegisteredDetailsView,
     eoriBeUpToDateViewPublic: AgentForTraderPublicEORIBeUpToDateView,
     eoriBeUpToDateViewPrivate: AgentForTraderPrivateEORIBeUpToDateView,
-    requiredInformationView: AgentForTraderRequiredInformationView
+    requiredInformationView: AgentForTraderRequiredInformationView,
+    checkYourAnswersView: CheckYourAnswersView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -67,6 +69,12 @@ package userrole {
       ProvideTraderEoriController.onPageLoad(draftId)
 
     override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
-  }
 
+    override def selectViewForCheckYourAnswers(
+      applicationSummary: ApplicationSummary,
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      checkYourAnswersView(applicationSummary, draftId)
+
+  }
 }

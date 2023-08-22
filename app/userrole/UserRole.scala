@@ -24,6 +24,7 @@ import play.twirl.api.HtmlFormat
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import pages.Page
+import viewmodels.checkAnswers.summary.ApplicationSummary
 
 trait UserRole {
   def selectViewForEoriBeUpToDate(
@@ -35,6 +36,11 @@ trait UserRole {
     form: Form[Boolean],
     details: TraderDetailsWithCountryCode,
     mode: Mode,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
+
+  def selectViewForCheckYourAnswers(
+    applicationSummary: ApplicationSummary,
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
 

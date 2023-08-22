@@ -29,12 +29,14 @@ package userrole {
   import controllers.routes
   import models.NormalMode
   import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page}
-  import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
+  import viewmodels.checkAnswers.summary.ApplicationSummary
+  import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
   private case class Employee @Inject() (
     view: EmployeeCheckRegisteredDetailsView,
     eoriBeUpToDateView: EmployeeEORIBeUpToDateView,
-    requiredInformationRequiredView: IndividualInformationRequiredView
+    requiredInformationRequiredView: IndividualInformationRequiredView,
+    checkYourAnswersView: CheckYourAnswersView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -65,6 +67,13 @@ package userrole {
       routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
 
     override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
+
+    override def selectViewForCheckYourAnswers(
+      applicationSummary: ApplicationSummary,
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      checkYourAnswersView(applicationSummary, draftId)
+
   }
 
 }

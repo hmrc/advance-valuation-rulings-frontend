@@ -27,14 +27,19 @@ import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToD
 
 package userrole {
 
+  import play.twirl.api.HtmlFormat
+
   import controllers.routes.{ApplicationContactDetailsController, CheckRegisteredDetailsController}
   import models.NormalMode
   import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage}
+  import viewmodels.checkAnswers.summary.ApplicationSummary
+  import views.html.AgentForOrgCheckYourAnswersView
 
   private case class AgentForOrg @Inject() (
     view: AgentForOrgCheckRegisteredDetailsView,
     eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView,
-    requiredInformation: AgentForOrgRequiredInformationView
+    requiredInformation: AgentForOrgRequiredInformationView,
+    checkYourAnswersView: AgentForOrgCheckYourAnswersView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -66,5 +71,12 @@ package userrole {
 
     override def selectBusinessContactDetailsPage(): Page =
       AgentForOrgApplicationContactDetailsPage
+
+    override def selectViewForCheckYourAnswers(
+      applicationSummary: ApplicationSummary,
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      checkYourAnswersView(applicationSummary, draftId)
+
   }
 }
