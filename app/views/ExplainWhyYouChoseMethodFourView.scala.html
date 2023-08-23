@@ -26,6 +26,7 @@
     caption: Caption,
     paragraph: Paragraph,
     heading: Heading,
+    subheading: Subheading,
     cancelLink: CancelApplicationLink,
     saveButtons: SaveButtonsWithDraft
 )
@@ -52,14 +53,18 @@
 
     @paragraph(Html(messages("explainWhyYouChoseMethodFour.paragraph.3")))
 
+    @subheading(messages("explainWhyYouChoseMethodFour.label"))
     @govukTextarea(
         TextareaViewModel(
             field = form("value"),
-            label = LabelViewModel(messages("explainWhyYouChoseMethodFour.label"))
+            label = Label(
+                content = Text(messages("explainWhyYouChoseMethodFour.label")),
+                classes = "govuk-visually-hidden",
+                )
+            )
+            .withRows(15)
+            .withAttribute("maxlength","8167")
         )
-        .withRows(15)
-        .withAttribute("maxlength","8167")
-    )
 
         @saveButtons(draftId, onSubmitAction())
     }
