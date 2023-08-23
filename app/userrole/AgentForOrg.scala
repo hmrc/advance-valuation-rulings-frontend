@@ -64,6 +64,8 @@ package userrole {
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
 
+    override def contactDetailsIncludeCompanyName: Boolean = false
+
     override def selectBusinessContactDetailsPage(): Page =
       AgentForOrgApplicationContactDetailsPage
   }

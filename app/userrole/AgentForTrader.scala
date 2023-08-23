@@ -29,7 +29,7 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import controllers.routes.{ApplicationContactDetailsController, ProvideTraderEoriController}
-  import pages.ApplicationContactDetailsPage
+  import pages.{ApplicationContactDetailsPage, ValuationMethodPage}
   import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
   private case class AgentForTrader @Inject() (
@@ -66,7 +66,10 @@ package userrole {
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       ProvideTraderEoriController.onPageLoad(draftId)
 
-    override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
+    override def contactDetailsIncludeCompanyName: Boolean = true
+
+    override def selectBusinessContactDetailsPage(): Page = ValuationMethodPage
+
   }
 
 }

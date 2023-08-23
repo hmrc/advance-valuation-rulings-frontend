@@ -28,7 +28,7 @@ package userrole {
 
   import controllers.routes
   import models.NormalMode
-  import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page}
+  import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page, ValuationMethodPage}
   import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
   private case class Employee @Inject() (
@@ -61,10 +61,13 @@ package userrole {
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformationRequiredView(draftId)
+
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
 
-    override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
-  }
+    override def contactDetailsIncludeCompanyName: Boolean = false
 
+    override def selectBusinessContactDetailsPage(): Page = ValuationMethodPage
+
+  }
 }
