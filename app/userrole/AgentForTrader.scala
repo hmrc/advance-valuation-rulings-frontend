@@ -28,8 +28,8 @@ package userrole {
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
-  import controllers.routes.{ApplicationContactDetailsController, ProvideTraderEoriController}
-  import pages.{ApplicationContactDetailsPage, ValuationMethodPage}
+  import controllers.routes.ProvideTraderEoriController
+  import pages.ValuationMethodPage
   import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
   private case class AgentForTrader @Inject() (

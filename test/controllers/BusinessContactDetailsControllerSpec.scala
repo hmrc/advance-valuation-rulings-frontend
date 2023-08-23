@@ -25,7 +25,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import config.FrontendAppConfig
 import forms.BusinessContactDetailsFormProvider
 import models.{BusinessContactDetails, Done, NormalMode, WhatIsYourRoleAsImporter}
 import models.AuthUserType.IndividualTrader
@@ -35,7 +34,6 @@ import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{AccountHomePage, BusinessContactDetailsPage}
 import services.UserAnswersService
-import userrole.UserRoleProvider
 import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {

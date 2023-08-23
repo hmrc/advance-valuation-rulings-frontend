@@ -22,12 +22,12 @@ import play.twirl.api.HtmlFormat
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import pages.{CheckRegisteredDetailsPage, Page}
+import pages.Page
 import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
 package userrole {
 
-  import controllers.routes.{ApplicationContactDetailsController, CheckRegisteredDetailsController}
+  import controllers.routes.CheckRegisteredDetailsController
   import models.NormalMode
   import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage}
 

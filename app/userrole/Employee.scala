@@ -28,7 +28,7 @@ package userrole {
 
   import controllers.routes
   import models.NormalMode
-  import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page, ValuationMethodPage}
+  import pages.{CheckRegisteredDetailsPage, Page, ValuationMethodPage}
   import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
   private case class Employee @Inject() (

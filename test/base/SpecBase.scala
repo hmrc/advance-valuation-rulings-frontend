@@ -29,7 +29,6 @@ import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
 import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UserAnswers, WhatIsYourRoleAsImporter}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfTrader, EmployeeOfOrg}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -39,7 +38,7 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.{AccountHomePage, VerifyTraderDetailsPage, WhatIsYourRoleAsImporterPage}
+import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import repositories.CounterRepository
 import services.UserAnswersService
 

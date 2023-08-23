@@ -125,7 +125,6 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     val phoneField     = "phone"
     val lengthKey      = "applicationContactDetails.fullName.length"
     val phoneMaxLength = 25
-    val invalidKey     = "businessContactDetails.telephoneNumber.error.format"
 
     behave like numericStringWithMaxLength(
       form,
