@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-import com.google.inject.Inject
-import models.requests.DataRequest
-import models.{DraftId, Mode, TraderDetailsWithCountryCode}
-import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
+
+import com.google.inject.Inject
+import models.{DraftId, Mode, TraderDetailsWithCountryCode}
+import models.requests.DataRequest
+import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
-  import controllers.routes.ProvideTraderEoriController
-  import pages.ApplicationContactDetailsPage
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
+
+  import controllers.routes.ProvideTraderEoriController
+  import pages.ValuationMethodPage
   import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
   private case class AgentForTrader @Inject() (
@@ -64,7 +66,10 @@ package userrole {
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       ProvideTraderEoriController.onPageLoad(draftId)
 
-    override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
+    override def contactDetailsIncludeCompanyName: Boolean = true
+
+    override def selectBusinessContactDetailsPage(): Page = ValuationMethodPage
+
   }
 
 }

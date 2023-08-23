@@ -116,7 +116,8 @@ object ContactDetailsSpec extends Generators {
   val businessContactDetails    = BusinessContactDetails(
     name = randomString,
     email = randomString,
-    phone = randomString
+    phone = randomString,
+    companyName = None
   )
   val contactDetails            = ContactDetails(
     name = randomString,

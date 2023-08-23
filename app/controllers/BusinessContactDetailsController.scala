@@ -28,6 +28,7 @@ import config.FrontendAppConfig
 import controllers.actions._
 import forms.BusinessContactDetailsFormProvider
 import models.{DraftId, Mode}
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.BusinessContactDetailsPage
 import services.UserAnswersService
@@ -50,23 +51,29 @@ class BusinessContactDetailsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  private def includeCompanyName()(implicit request: DataRequest[AnyContent]): Boolean =
+    userRoleProvider
+      .getUserRole(request.userAnswers)
+      .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
+        val form         = formProvider(includeCompanyName)
         val preparedForm = BusinessContactDetailsPage.fill(form)
-
-        Ok(view(preparedForm, mode, draftId))
+        Ok(view(preparedForm, mode, draftId, includeCompanyName))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
+        val form = formProvider(includeCompanyName)
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+            formWithErrors =>
+              Future
+                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName))),
             value =>
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)
