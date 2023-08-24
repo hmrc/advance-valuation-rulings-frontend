@@ -35,14 +35,14 @@ package userrole {
   import models.requests.ContactDetails
   import pages.ApplicationContactDetailsPage
   import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary}
-  import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, CheckYourAnswersView}
+  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
   private case class AgentForTrader @Inject() (
     view: AgentForTraderCheckRegisteredDetailsView,
     eoriBeUpToDateViewPublic: AgentForTraderPublicEORIBeUpToDateView,
     eoriBeUpToDateViewPrivate: AgentForTraderPrivateEORIBeUpToDateView,
     requiredInformationView: AgentForTraderRequiredInformationView,
-    checkYourAnswersView: CheckYourAnswersView
+    checkYourAnswersView: AgentForTraderCheckYourAnswersView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
