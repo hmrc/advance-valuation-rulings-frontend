@@ -47,6 +47,7 @@ class CheckYourAnswersController @Inject() (
   submissionService: SubmissionService,
   appConfig: FrontendAppConfig,
   userRoleProvider: UserRoleProvider,
+  applicationRequestService: ApplicationRequestService,
   implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -88,11 +89,9 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            ApplicationRequest(
+            applicationRequestService(
               request.userAnswers,
-              traderDetails,
-              appConfig,
-              userRoleProvider
+              traderDetails
             ) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.warn(
@@ -110,7 +109,7 @@ class CheckYourAnswersController @Inject() (
                       )
                   }
             }
-
         }
     }
+
 }

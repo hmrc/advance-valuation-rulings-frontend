@@ -20,6 +20,7 @@ import cats.data._
 
 import play.api.libs.json._
 
+import com.google.inject.Inject
 import config.FrontendAppConfig
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
@@ -48,6 +49,46 @@ object ContactDetails {
     appConfig: FrontendAppConfig,
     userRoleProvider: UserRoleProvider
   ): ValidatedNel[Page, ContactDetails] =
+    if (appConfig.agentOnBehalfOfTrader) {
+      userRoleProvider
+        .getUserRole(answers)
+        .getContactDetailsForApplicationRequest(answers)
+    } else {
+      answers
+        .validated(AccountHomePage)
+        .andThen(
+          authUserType =>
+            authUserType match {
+              case IndividualTrader              =>
+                answers.validatedF[ApplicationContactDetails, ContactDetails](
+                  ApplicationContactDetailsPage,
+                  cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+                )
+              case OrganisationAdmin             =>
+                answers
+                  .validatedF[ApplicationContactDetails, ContactDetails](
+                    ApplicationContactDetailsPage,
+                    cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+                  )
+              case OrganisationAssistant | Agent =>
+                answers
+                  .validatedF[BusinessContactDetails, ContactDetails](
+                    BusinessContactDetailsPage,
+                    cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+                  )
+            }
+        )
+    }
+}
+
+class ContactDetailsService @Inject() (
+  appConfig: FrontendAppConfig,
+  userRoleProvider: UserRoleProvider
+) {
+
+  implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
+
+  def apply(answers: UserAnswers): ValidatedNel[Page, ContactDetails] =
     if (appConfig.agentOnBehalfOfTrader) {
       userRoleProvider
         .getUserRole(answers)
