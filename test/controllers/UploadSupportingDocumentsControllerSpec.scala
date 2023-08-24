@@ -54,6 +54,7 @@ class UploadSupportingDocumentsControllerSpec
     controllers.routes.UploadSupportingDocumentsController
       .onPageLoad(NormalMode, draftId, None, None)
       .url
+  private val isLetterOfAuthority       = false
   private val mockFileService           = mock[FileService]
   private val mockUserAnswersService    = mock[UserAnswersService]
   private val upscanInitiateResponse    = UpscanInitiateResponse(
@@ -124,7 +125,7 @@ class UploadSupportingDocumentsControllerSpec
       verify(mockFileService).initiate(
         eqTo(draftId),
         eqTo(redirectPath),
-        eqTo(false)
+        eqTo(isLetterOfAuthority)
       )(any())
     }
   }
@@ -170,7 +171,7 @@ class UploadSupportingDocumentsControllerSpec
         verify(mockFileService).initiate(
           eqTo(draftId),
           eqTo(redirectPath),
-          eqTo(false)
+          eqTo(isLetterOfAuthority)
         )(any())
       }
     }
@@ -243,7 +244,7 @@ class UploadSupportingDocumentsControllerSpec
           verify(mockFileService).initiate(
             eqTo(draftId),
             eqTo(redirectPath),
-            eqTo(false)
+            eqTo(isLetterOfAuthority)
           )(any())
         }
       }
@@ -282,7 +283,7 @@ class UploadSupportingDocumentsControllerSpec
           verify(mockFileService).initiate(
             eqTo(draftId),
             eqTo(redirectPath),
-            eqTo(false)
+            eqTo(isLetterOfAuthority)
           )(any())
         }
       }
@@ -364,7 +365,7 @@ class UploadSupportingDocumentsControllerSpec
         verify(mockFileService).initiate(
           eqTo(draftId),
           eqTo(redirectPath),
-          eqTo(false)
+          eqTo(isLetterOfAuthority)
         )(any())
       }
     }
@@ -403,7 +404,7 @@ class UploadSupportingDocumentsControllerSpec
         verify(mockFileService).initiate(
           eqTo(draftId),
           eqTo(redirectPath),
-          eqTo(false)
+          eqTo(isLetterOfAuthority)
         )(any())
       }
     }
@@ -445,7 +446,7 @@ class UploadSupportingDocumentsControllerSpec
       verify(mockFileService).initiate(
         eqTo(draftId),
         eqTo(redirectPath),
-        eqTo(false)
+        eqTo(isLetterOfAuthority)
       )(any())
     }
   }
