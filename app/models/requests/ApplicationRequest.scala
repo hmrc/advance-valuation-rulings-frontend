@@ -21,9 +21,11 @@ import cats.implicits._
 
 import play.api.libs.json._
 
+import config.FrontendAppConfig
 import models.{AgentCompanyDetails, AuthUserType, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
+import userrole.UserRoleProvider
 
 case class GoodsDetails(
   goodsName: String,
@@ -169,12 +171,14 @@ object ApplicationRequest {
 
   def apply(
     userAnswers: UserAnswers,
-    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode,
+    appConfig: FrontendAppConfig,
+    userRoleProvider: UserRoleProvider
   ): ValidatedNel[Page, ApplicationRequest] = {
     val agentDetails    = TraderDetail.agent(userAnswers)
     val traderDetail    = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
     val goodsDetails    = GoodsDetails(userAnswers)
-    val contact         = ContactDetails(userAnswers)
+    val contact         = ContactDetails(userAnswers, appConfig, userRoleProvider)
     val requestedMethod = RequestedMethod(userAnswers)
     val attachments     = AttachmentRequest(userAnswers)
 

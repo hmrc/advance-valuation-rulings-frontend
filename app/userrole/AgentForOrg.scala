@@ -27,11 +27,14 @@ import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToD
 
 package userrole {
 
+  import cats.data.ValidatedNel
+
   import play.twirl.api.HtmlFormat
 
   import controllers.routes.{ApplicationContactDetailsController, CheckRegisteredDetailsController}
-  import models.{NormalMode, UserAnswers}
-  import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage}
+  import models.{BusinessContactDetails, NormalMode, UserAnswers}
+  import models.requests.ContactDetails
+  import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage, BusinessContactDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary}
   import views.html.AgentForOrgCheckYourAnswersView
 
@@ -85,5 +88,15 @@ package userrole {
       AgentSummary(userAnswers),
       BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
     )
+
+    override def getContactDetailsForApplicationRequest(
+      userAnswers: UserAnswers
+    ): ValidatedNel[Page, ContactDetails] =
+      userAnswers
+        .validatedF[BusinessContactDetails, ContactDetails](
+          BusinessContactDetailsPage,
+          cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+        )
+
   }
 }

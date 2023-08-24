@@ -61,6 +61,7 @@ class CheckYourAnswersController @Inject() (
         getTraderDetails {
           traderDetails =>
             if (appConfig.agentOnBehalfOfTrader) {
+
               val applicationSummary =
                 ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
               Future.successful(
@@ -73,6 +74,7 @@ class CheckYourAnswersController @Inject() (
                     )
                 )
               )
+
             } else {
               val applicationSummary =
                 ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
@@ -86,7 +88,12 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            ApplicationRequest(request.userAnswers, traderDetails) match {
+            ApplicationRequest(
+              request.userAnswers,
+              traderDetails,
+              appConfig,
+              userRoleProvider
+            ) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.warn(
                   s"Failed to create application request: ${errors.toList.mkString(", ")}}"

@@ -23,11 +23,14 @@ import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 package userrole {
 
+  import cats.data.ValidatedNel
+
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
   import controllers.routes
-  import models.{NormalMode, UserAnswers}
+  import models.{ApplicationContactDetails, NormalMode, UserAnswers}
+  import models.requests.ContactDetails
   import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page}
   import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary}
   import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
@@ -81,6 +84,15 @@ package userrole {
       IndividualApplicantSummary(userAnswers),
       BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
     )
+
+    override def getContactDetailsForApplicationRequest(
+      userAnswers: UserAnswers
+    ): ValidatedNel[Page, ContactDetails] =
+      userAnswers
+        .validatedF[ApplicationContactDetails, ContactDetails](
+          ApplicationContactDetailsPage,
+          cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+        )
 
   }
 

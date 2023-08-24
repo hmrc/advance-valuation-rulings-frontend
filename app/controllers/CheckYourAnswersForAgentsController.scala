@@ -98,7 +98,12 @@ class CheckYourAnswersForAgentsController @Inject() (
       implicit request =>
         getTraderDetails(
           traderDetails =>
-            ApplicationRequest(request.userAnswers, traderDetails) match {
+            ApplicationRequest(
+              request.userAnswers,
+              traderDetails,
+              appConfig,
+              userRoleProvider
+            ) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.error(
                   s"Failed to create application request: ${errors.toList.mkString(", ")}}"

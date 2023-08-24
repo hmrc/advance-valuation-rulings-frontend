@@ -16,13 +16,15 @@
 
 package userrole
 
+import cats.data.ValidatedNel
+
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Call}
 import play.twirl.api.HtmlFormat
 
 import models.{DraftId, Mode, TraderDetailsWithCountryCode, UserAnswers}
-import models.requests.DataRequest
+import models.requests.{ContactDetails, DataRequest}
 import pages.Page
 import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, EoriDetailsSummary}
 
@@ -57,4 +59,9 @@ trait UserRole {
     userAnswers: UserAnswers,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode
   )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary)
+
+  def getContactDetailsForApplicationRequest(
+    userAnswers: UserAnswers
+  ): ValidatedNel[Page, ContactDetails]
+
 }
