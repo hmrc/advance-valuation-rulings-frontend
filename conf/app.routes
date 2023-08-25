@@ -93,9 +93,6 @@ POST       /:draftId/add-supporting-documents                                   
 GET        /:draftId/change-add-supporting-documents                                controllers.DoYouWantToUploadDocumentsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-add-supporting-documents                                controllers.DoYouWantToUploadDocumentsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /:draftId/supporting-documents/upload                                  controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
-GET        /:draftId/supporting-documents/change-upload                           controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
-
 GET        /:draftId/supporting-documents/mark-confidential                       controllers.IsThisFileConfidentialController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/supporting-documents/mark-confidential                       controllers.IsThisFileConfidentialController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/supporting-documents/change-mark-confidential                controllers.IsThisFileConfidentialController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
@@ -261,4 +258,8 @@ POST       /:draftId/ars-loa-uploaded                   controllers.VerifyLetter
 
 GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()
 
+GET        /:draftId/supporting-documents/upload                                  controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
+GET        /:draftId/supporting-documents/change-upload                           controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
+
 GET        /:draftId/upload-in-progress                       controllers.UploadInProgressController.onPageLoad(draftId: DraftId)
+POST       /:draftId/upload-in-progress                       controllers.UploadInProgressController.checkProgress(mode: Mode = NormalMode, draftId: DraftId, key: Option[String])

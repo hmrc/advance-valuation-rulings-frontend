@@ -18,16 +18,19 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.Configuration
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
-import controllers.common.FileUploadHelper
 import models._
+import navigation.Navigator
 import pages._
+import services.fileupload.FileService
 import views.html.UploadLetterOfAuthorityView
 
 @Singleton
@@ -38,11 +41,16 @@ class UploadLetterOfAuthorityController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   view: UploadLetterOfAuthorityView,
-  helper: FileUploadHelper
-) extends FrontendBaseController
+  fileService: FileService,
+  navigator: Navigator,
+  configuration: Configuration,
+  appConfig: FrontendAppConfig
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   private val mode: Mode                       = NormalMode // TODO: allow other modes other than NormalMode.
+  private val maxFileSize: Long                = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
   private val controller                       = controllers.routes.UploadLetterOfAuthorityController
   private val page: QuestionPage[UploadedFile] = UploadLetterOfAuthorityPage
 
@@ -54,8 +62,11 @@ class UploadLetterOfAuthorityController @Inject() (
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val redirectPath =
-          controller.onPageLoad(draftId, None, None).url
+          controller
+            .onPageLoad(draftId, None, None)
+            .url // redirect probably shouldn't have the errorCode in it
         val answers      = request.userAnswers
+
         answers
           .get(page)
           .map {
@@ -63,39 +74,53 @@ class UploadLetterOfAuthorityController @Inject() (
               errorCode
                 .map(
                   errorCode =>
-                    helper.showErrorPage(
+                    showErrorPage(
                       draftId,
-                      helper.errorForCode(errorCode),
-                      redirectPath,
-                      isLetterOfAuthority = true
+                      errorForCode(errorCode),
+                      redirectPath
                     )
                 )
                 .getOrElse {
                   if (key.contains(file.reference)) {
                     showInterstitialPage(draftId)
                   } else {
-                    helper.showPage(draftId, redirectPath, isLetterOfAuthority = true)
+                    showPage(draftId, redirectPath)
                   }
                 }
             case file: UploadedFile.Success   =>
               if (key.contains(file.reference)) {
-                helper.continue(mode, answers, UploadLetterOfAuthorityPage)
+                continue(mode, answers)
               } else {
-                helper.showPage(draftId, redirectPath, isLetterOfAuthority = true)
+                showPage(draftId, redirectPath)
               }
             case file: UploadedFile.Failure   =>
-              helper.redirectWithError(
+              redirectWithError(
                 draftId,
                 key,
                 file.failureDetails.failureReason.toString,
-                redirectPath,
-                isLetterOfAuthority = true,
-                NormalMode // TODO support modes?
+                redirectPath
               )
           }
           .getOrElse {
-            helper.showPage(draftId, redirectPath, isLetterOfAuthority = true)
+            showPage(draftId, redirectPath)
           }
+    }
+
+  private def showPage(
+    draftId: DraftId,
+    redirectPath: String
+  )(implicit
+    request: RequestHeader
+  ): Future[Result] =
+    fileService.initiate(draftId, redirectPath, true).map {
+      response =>
+        Ok(
+          view(
+            draftId = draftId,
+            upscanInitiateResponse = Some(response),
+            errorMessage = None
+          )
+        )
     }
 
   private def showInterstitialPage(
@@ -111,4 +136,52 @@ class UploadLetterOfAuthorityController @Inject() (
       )
     )
 
+  private def showErrorPage(draftId: DraftId, errorMessage: String, redirectPath: String)(implicit
+    request: RequestHeader
+  ): Future[Result] =
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = true).map {
+      response =>
+        BadRequest(
+          view(
+            draftId = draftId,
+            upscanInitiateResponse = Some(response),
+            errorMessage = Some(errorMessage)
+          )
+        )
+    }
+
+  private def redirectWithError(
+    draftId: DraftId,
+    key: Option[String],
+    errorCode: String,
+    redirectPath: String
+  )(implicit request: RequestHeader): Future[Result] =
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = true).map {
+      _ => Redirect(controller.onPageLoad(draftId, Some(errorCode), key))
+    }
+
+  private def continue(mode: Mode, answers: UserAnswers): Future[Result] =
+    Future.successful(
+      Redirect(
+        navigator.nextPage(page, mode, answers)
+      )
+    )
+
+  private def errorForCode(code: String)(implicit messages: Messages): String =
+    code match {
+      case "InvalidArgument" =>
+        Messages("fileUpload.error.invalidargument")
+      case "EntityTooLarge"  =>
+        Messages(s"fileUpload.error.entitytoolarge", maxFileSize)
+      case "EntityTooSmall"  =>
+        Messages("fileUpload.error.entitytoosmall")
+      case "Rejected"        =>
+        Messages("fileUpload.error.rejected")
+      case "Quarantine"      =>
+        Messages("fileUpload.error.quarantine")
+      case "Duplicate"       =>
+        Messages("fileUpload.error.duplicate")
+      case _                 =>
+        Messages(s"fileUpload.error.unknown")
+    }
 }

@@ -25,9 +25,9 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{MessagesControllerComponents, RequestHeader, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import models.{DraftId, Mode, UserAnswers}
+import models.{DraftId, Mode, UploadedFile, UserAnswers}
 import navigation.Navigator
-import pages.Page
+import pages.{Page, QuestionPage}
 import services.fileupload.FileService
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
@@ -44,35 +44,31 @@ case class FileUploadHelper @Inject() (
     with FrontendBaseController {
 
   private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
-  def showPage(draftId: DraftId, redirectPath: String, isLetterOfAuthority: Boolean)(implicit
+
+  def showPage(mode: Mode, draftId: DraftId, isLetterOfAuthority: Boolean)(implicit
     request: RequestHeader
-  ): Future[Result] =
+  ): Future[Result] = {
+    val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
       response =>
-        isLetterOfAuthority match {
-          case false =>
-            Ok(
-              supportingDocumentsView(
-                draftId = draftId,
-                upscanInitiateResponse = Some(response),
-                errorMessage = None
-              )
-            )
-          case true  =>
-            Ok(
-              letterOfAuthorityView(
-                draftId = draftId,
-                upscanInitiateResponse = Some(response),
-                errorMessage = None
-              )
-            )
-
-        }
+        Ok(
+          supportingDocumentsView(
+            draftId = draftId,
+            upscanInitiateResponse = Some(response),
+            errorMessage = None
+          )
+        )
     }
+  }
+
+  def checkForStatus(userAnswers: UserAnswers, page: QuestionPage[UploadedFile]) =
+    userAnswers.get(page)
+
   def showInterstitialPage(
     draftId: DraftId
   )(implicit request: RequestHeader): Future[Result] =
     Future.successful(
+      // Redirect(controllers.routes.UploadInProgressController.onPageLoad(draftId))
       Ok(
         supportingDocumentsView(
           draftId = draftId,
@@ -116,10 +112,11 @@ case class FileUploadHelper @Inject() (
     draftId: DraftId,
     key: Option[String],
     errorCode: String,
-    redirectPath: String,
     isLetterOfAuthority: Boolean,
     mode: Mode
-  )(implicit request: RequestHeader): Future[Result] =
+  )(implicit request: RequestHeader): Future[Result] = {
+    val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
+
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
       _ =>
         isLetterOfAuthority match {
@@ -134,6 +131,16 @@ case class FileUploadHelper @Inject() (
                 .onPageLoad(draftId, Some(errorCode), key)
             )
         }
+    }
+  }
+
+  private def getRedirectPath(draftId: DraftId, isLetterOfAuthority: Boolean, mode: Mode) =
+    if (isLetterOfAuthority) {
+      controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None).url
+    } else {
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(mode, draftId, None, None)
+        .url
     }
 
   def continue(mode: Mode, answers: UserAnswers, page: Page): Future[Result] =

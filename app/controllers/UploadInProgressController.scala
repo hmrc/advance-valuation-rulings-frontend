@@ -23,7 +23,9 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import models.DraftId
+import controllers.common.FileUploadHelper
+import models.{DraftId, Mode, UploadedFile}
+import pages.UploadSupportingDocumentPage
 import views.html.UploadInProgressView
 
 class UploadInProgressController @Inject() (
@@ -32,13 +34,61 @@ class UploadInProgressController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: UploadInProgressView
+  view: UploadInProgressView,
+  helper: FileUploadHelper
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request => Ok(view(draftId))
+    }
+
+  def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]) =
+    (identify andThen getData(draftId) andThen requireData).async {
+      implicit request =>
+        val answers = request.userAnswers
+        helper
+          .checkForStatus(answers, UploadSupportingDocumentPage)
+          .map {
+
+//            case file: UploadedFile.Initiated =>
+//              errorCode
+//                .map(
+//                  errorCode =>
+//                    helper.showErrorPage(
+//                      draftId,
+//                      helper.errorForCode(errorCode),
+//                      redirectPath,
+//                      isLetterOfAuthority = false
+//                    )
+//                )
+//                .getOrElse {
+//                  if (key.contains(file.reference)) {
+//                    helper.showInterstitialPage(draftId)
+//                  } else {
+//                    helper.showPage(mode, draftId, isLetterOfAuthority = false)
+//                  }
+//                }
+
+            case file: UploadedFile.Success =>
+              if (key.contains(file.reference)) {
+                helper.continue(mode, answers, UploadSupportingDocumentPage)
+              } else {
+                helper.showPage(mode, draftId, isLetterOfAuthority = false)
+              }
+
+            case file: UploadedFile.Failure =>
+              helper.redirectWithError(
+                draftId,
+                key,
+                file.failureDetails.failureReason.toString,
+                isLetterOfAuthority = false,
+                mode
+              )
+
+          }
+          .getOrElse(helper.showPage(mode, draftId, isLetterOfAuthority = true))
     }
 
 }

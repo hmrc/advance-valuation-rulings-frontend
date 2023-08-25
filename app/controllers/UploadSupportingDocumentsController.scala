@@ -50,8 +50,10 @@ class UploadSupportingDocumentsController @Inject() (
       implicit request =>
         val redirectPath = controller.onPageLoad(mode, draftId, None, None).url
         val answers      = request.userAnswers
-        answers
+        val fileStatus   = answers
           .get(UploadSupportingDocumentPage)
+
+        fileStatus
           .map {
             case file: UploadedFile.Initiated =>
               errorCode
@@ -68,27 +70,27 @@ class UploadSupportingDocumentsController @Inject() (
                   if (key.contains(file.reference)) {
                     helper.showInterstitialPage(draftId)
                   } else {
-                    helper.showPage(draftId, redirectPath, isLetterOfAuthority = false)
+                    helper.showPage(mode, draftId, isLetterOfAuthority = false)
                   }
                 }
-            case file: UploadedFile.Success   =>
+
+            case file: UploadedFile.Success =>
               if (key.contains(file.reference)) {
                 helper.continue(mode, answers, UploadSupportingDocumentPage)
               } else {
-                helper.showPage(draftId, redirectPath, isLetterOfAuthority = false)
+                helper.showPage(mode, draftId, isLetterOfAuthority = false)
               }
-            case file: UploadedFile.Failure   =>
+            case file: UploadedFile.Failure =>
               helper.redirectWithError(
                 draftId,
                 key,
                 file.failureDetails.failureReason.toString,
-                redirectPath,
                 isLetterOfAuthority = false,
                 mode
               )
           }
           .getOrElse {
-            helper.showPage(draftId, redirectPath, isLetterOfAuthority = false)
+            helper.showPage(mode, draftId, isLetterOfAuthority = false)
           }
     }
 
