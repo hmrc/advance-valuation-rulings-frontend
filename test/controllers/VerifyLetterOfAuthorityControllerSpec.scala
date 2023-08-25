@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout, redirectLocation, route, status, writeableOf_AnyContentAsEmpty, GET}
 
 import base.SpecBase
-import models.{UploadedFile, UserAnswers}
+import models.{NormalMode, UploadedFile, UserAnswers}
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
@@ -36,7 +36,7 @@ import views.html.VerifyLetterOfAuthorityView
 class VerifyLetterOfAuthorityControllerSpec extends SpecBase with MockitoSugar {
 
   private lazy val verifyLetterOfAuthorityRoute =
-    routes.VerifyLetterOfAuthorityController.onPageLoad(draftId).url
+    routes.VerifyLetterOfAuthorityController.onPageLoad(NormalMode, draftId).url
 
   private val uploadedFile = UploadedFile.Success(
     reference = "reference",
@@ -70,7 +70,7 @@ class VerifyLetterOfAuthorityControllerSpec extends SpecBase with MockitoSugar {
       val view                   = application.injector.instanceOf[VerifyLetterOfAuthorityView]
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(uploadedFile, draftId)(
+      contentAsString(result) mustEqual view(uploadedFile, draftId, NormalMode)(
         request,
         messages(application)
       ).toString

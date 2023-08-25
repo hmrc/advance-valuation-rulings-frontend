@@ -31,7 +31,7 @@
     saveButtons: SaveButtons
 )
 
-@(attachment: UploadedFile, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(attachment: UploadedFile, draftId: DraftId, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{messages("verifyLetterOfAuthority.title")}
 
@@ -39,7 +39,7 @@
 
 @layout(pageTitle = titleNoForm(titleMessage), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.VerifyLetterOfAuthorityController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.VerifyLetterOfAuthorityController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @caption(messages("verifyLetterOfAuthority.caption"))
 
@@ -57,7 +57,7 @@
                 @link(
                     id = "change",
                     text = messages("site.change"),
-                    call = controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None),
+                    call = controllers.routes.UploadLetterOfAuthorityController.onPageLoad(mode, draftId, None, None),
                     newTab = false,
                     hiddenText = true,
                     hiddenTextContent =  messages("verifyLetterOfAuthority.hiddenText", attachment.fileName.getOrElse(""))

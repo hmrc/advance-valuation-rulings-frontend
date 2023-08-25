@@ -216,7 +216,7 @@ class CheckRegisteredDetailsControllerSpec
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.UploadLetterOfAuthorityController
-          .onPageLoad(draftId, None, None)
+          .onPageLoad(NormalMode, draftId, None, None)
           .url
       }
     }

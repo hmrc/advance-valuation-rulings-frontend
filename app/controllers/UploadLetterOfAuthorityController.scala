@@ -49,12 +49,13 @@ class UploadLetterOfAuthorityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  private val mode: Mode                       = NormalMode // TODO: allow other modes other than NormalMode.
+//  private val mode: Mode                       = NormalMode // TODO: allow other modes other than NormalMode.
   private val maxFileSize: Long                = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
   private val controller                       = controllers.routes.UploadLetterOfAuthorityController
   private val page: QuestionPage[UploadedFile] = UploadLetterOfAuthorityPage
 
   def onPageLoad(
+    mode: Mode,
     draftId: DraftId,
     errorCode: Option[String],
     key: Option[String]
@@ -63,7 +64,7 @@ class UploadLetterOfAuthorityController @Inject() (
       implicit request =>
         val redirectPath =
           controller
-            .onPageLoad(draftId, None, None)
+            .onPageLoad(mode, draftId, None, None)
             .url // redirect probably shouldn't have the errorCode in it
         val answers      = request.userAnswers
 
@@ -95,6 +96,7 @@ class UploadLetterOfAuthorityController @Inject() (
               }
             case file: UploadedFile.Failure   =>
               redirectWithError(
+                mode,
                 draftId,
                 key,
                 file.failureDetails.failureReason.toString,
@@ -151,13 +153,14 @@ class UploadLetterOfAuthorityController @Inject() (
     }
 
   private def redirectWithError(
+    mode: Mode,
     draftId: DraftId,
     key: Option[String],
     errorCode: String,
     redirectPath: String
   )(implicit request: RequestHeader): Future[Result] =
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority = true).map {
-      _ => Redirect(controller.onPageLoad(draftId, Some(errorCode), key))
+      _ => Redirect(controller.onPageLoad(mode, draftId, Some(errorCode), key))
     }
 
   private def continue(mode: Mode, answers: UserAnswers): Future[Result] =

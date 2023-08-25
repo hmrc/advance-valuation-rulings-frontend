@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.UploadedFile
+import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -58,7 +58,7 @@ class UploadLetterOfAuthorityControllerSpec
   private val controller                           = controllers.routes.UploadLetterOfAuthorityController
   private lazy val redirectPath: String            =
     controllers.routes.UploadLetterOfAuthorityController
-      .onPageLoad(draftId, None, None)
+      .onPageLoad(NormalMode, draftId, None, None)
       .url
   private val page                                 = UploadLetterOfAuthorityPage
   private def injectView(application: Application) =
@@ -123,7 +123,7 @@ class UploadLetterOfAuthorityControllerSpec
 
       val request = FakeRequest(
         GET,
-        controller.onPageLoad(draftId, None, None).url
+        controller.onPageLoad(NormalMode, draftId, None, None).url
       )
 
       val result = route(application, request).value
@@ -155,7 +155,7 @@ class UploadLetterOfAuthorityControllerSpec
 
           val request = FakeRequest(
             GET,
-            controller.onPageLoad(draftId, None, Some("reference")).url
+            controller.onPageLoad(NormalMode, draftId, None, Some("reference")).url
           )
 
           val result = route(application, request).value
@@ -183,7 +183,7 @@ class UploadLetterOfAuthorityControllerSpec
 
           val request = FakeRequest(
             GET,
-            controller.onPageLoad(draftId, None, Some("otherReference")).url
+            controller.onPageLoad(NormalMode, draftId, None, Some("otherReference")).url
           )
 
           val result = route(application, request).value
@@ -212,7 +212,7 @@ class UploadLetterOfAuthorityControllerSpec
           val request = FakeRequest(
             GET,
             controller
-              .onPageLoad(draftId, None, None)
+              .onPageLoad(NormalMode, draftId, None, None)
               .url
           )
 
@@ -250,7 +250,7 @@ class UploadLetterOfAuthorityControllerSpec
 
         val request = FakeRequest(
           GET,
-          controller.onPageLoad(draftId, None, Some(successfulFile.reference)).url
+          controller.onPageLoad(NormalMode, draftId, None, Some(successfulFile.reference)).url
         )
 
         val result = route(application, request).value
@@ -274,7 +274,7 @@ class UploadLetterOfAuthorityControllerSpec
 
         val request = FakeRequest(
           GET,
-          controller.onPageLoad(draftId, None, Some("otherReference")).url
+          controller.onPageLoad(NormalMode, draftId, None, Some("otherReference")).url
         )
 
         val result = route(application, request).value
@@ -303,7 +303,7 @@ class UploadLetterOfAuthorityControllerSpec
         val request = FakeRequest(
           GET,
           controller
-            .onPageLoad(draftId, None, None)
+            .onPageLoad(NormalMode, draftId, None, None)
             .url
         )
 
@@ -330,7 +330,7 @@ class UploadLetterOfAuthorityControllerSpec
     val request = FakeRequest(
       GET,
       controller
-        .onPageLoad(draftId, None, None)
+        .onPageLoad(NormalMode, draftId, None, None)
         .url
     )
 
@@ -414,14 +414,14 @@ class UploadLetterOfAuthorityControllerSpec
 
           val request = FakeRequest(
             GET,
-            controller.onPageLoad(draftId, None, Some("key")).url
+            controller.onPageLoad(NormalMode, draftId, None, Some("key")).url
           )
 
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual controller
-            .onPageLoad(draftId, Some(errCode), Some("key"))
+            .onPageLoad(NormalMode, draftId, Some(errCode), Some("key"))
             .url
       }
     }
@@ -448,7 +448,7 @@ class UploadLetterOfAuthorityControllerSpec
           val request = FakeRequest(
             GET,
             controller
-              .onPageLoad(draftId, Some(errCode), None)
+              .onPageLoad(NormalMode, draftId, Some(errCode), None)
               .url
           )
 
