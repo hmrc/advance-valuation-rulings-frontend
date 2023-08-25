@@ -58,6 +58,7 @@ error.summary.title = There is a problem
 
 caption.prefix = This section is
 caption.applicant = About the applicant
+caption.goods = About the goods
 
 countrySelect.label = select a country
 
@@ -934,3 +935,5 @@ yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your
 yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
 yourApplicationHasBeenCancelled.button = Go to your applications and rulings
 
+uploadInProgress.title = Upload In Progress
+uploadInProgress.heading = Uploading your document...

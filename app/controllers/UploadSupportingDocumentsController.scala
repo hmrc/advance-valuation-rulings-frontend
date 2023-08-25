@@ -18,8 +18,6 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import scala.concurrent.ExecutionContext
-
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController

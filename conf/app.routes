@@ -260,3 +260,5 @@ GET        /:draftId/ars-loa-uploaded                   controllers.VerifyLetter
 POST       /:draftId/ars-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onSubmit(draftId: DraftId)
 
 GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()
+
+GET        /:draftId/upload-in-progress                       controllers.UploadInProgressController.onPageLoad(draftId: DraftId)
