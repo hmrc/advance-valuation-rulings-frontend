@@ -26,7 +26,7 @@ import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCo
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+import views.html.{AgentForOrgCheckYourAnswersView, AgentForTraderCheckRegisteredDetailsView, AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
 class AgentForTraderSpec extends SpecBase with Matchers {
 
@@ -42,8 +42,11 @@ class AgentForTraderSpec extends SpecBase with Matchers {
   private val requiredInformationView =
     mock[AgentForTraderRequiredInformationView]
 
+  private val checkYourAnswersView = mock[AgentForTraderCheckYourAnswersView]
+
   private val agentForTrader = AgentForTrader(
     agentForTraderCheckRegisteredDetailsView,
+    checkYourAnswersView,
     agentForTraderPublicEORIBeUpToDateView,
     agentForTraderPrivateEORIBeUpToDateView,
     requiredInformationView

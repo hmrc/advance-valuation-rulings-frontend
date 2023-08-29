@@ -33,10 +33,11 @@ import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.requests.{ApplicationId, ApplicationSubmissionResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar
+import org.mockito.internal.matchers.Any
 import org.scalatest.{EitherValues, TryValues}
 import pages._
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersForAgentsView
 
@@ -52,7 +53,8 @@ class CheckYourAnswersForAgentsControllerSpec
 
         private val application = applicationBuilderAsOrg(userAnswers = Option(orgAdminUserAnswers))
           .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector)
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService)
           )
           .build()
 
@@ -65,7 +67,10 @@ class CheckYourAnswersForAgentsControllerSpec
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-          val list = ApplicationSummary(orgAdminUserAnswers, traderDetailsWithCountryCode)
+          val list = mockApplicationSummaryService.getApplicationSummary(
+            orgAdminUserAnswers,
+            traderDetailsWithCountryCode
+          )
 
           status(result) mustEqual OK
 
@@ -97,7 +102,10 @@ class CheckYourAnswersForAgentsControllerSpec
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-          val list = ApplicationSummary(userAnswers, traderDetailsWithCountryCode)
+          val list = mockApplicationSummaryService.getApplicationSummary(
+            userAnswers,
+            traderDetailsWithCountryCode
+          )
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
@@ -130,7 +138,10 @@ class CheckYourAnswersForAgentsControllerSpec
 
           val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
 
-          val list = ApplicationSummary(userAnswers, traderDetailsWithCountryCode)
+          val list = mockApplicationSummaryService.getApplicationSummary(
+            userAnswers,
+            traderDetailsWithCountryCode
+          )
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(
@@ -307,6 +318,10 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
 
   val mockSubmissionService: SubmissionService = mock[SubmissionService]
   val mockBackendConnector: BackendConnector   = mock[BackendConnector]
+  val mockApplicationSummaryService            = mock[ApplicationSummaryService]
+
+//  when(mockApplicationSummaryService.getApplicationSummary(any(), any())(any()))
+//    .thenReturn(ApplicationSummary(any(), any(), any(), any()))
 
   val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),

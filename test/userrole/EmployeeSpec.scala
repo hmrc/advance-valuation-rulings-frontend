@@ -26,16 +26,18 @@ import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCo
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
+import views.html.{AgentForTraderCheckYourAnswersView, CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
 class EmployeeSpec extends SpecBase with Matchers {
 
   private val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
   private val employeeEORIBeUpToDateView         = mock[EmployeeEORIBeUpToDateView]
   private val requiredInformationView            = mock[IndividualInformationRequiredView]
+  private val checkYourAnswersView               = mock[CheckYourAnswersView]
 
   private val employee = Employee(
     employeeCheckRegisteredDetailsView,
+    checkYourAnswersView,
     employeeEORIBeUpToDateView,
     requiredInformationView
   )

@@ -40,7 +40,7 @@ case class ContactDetails(
   name: String,
   email: String,
   phone: Option[String],
-  companyName: Option[String]
+  companyName: Option[String] = None
 )
 
 object ContactDetails {

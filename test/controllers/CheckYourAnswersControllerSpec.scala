@@ -18,6 +18,7 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,7 +34,7 @@ import org.scalatest.{BeforeAndAfterEach, TryValues}
 import org.scalatest.concurrent.ScalaFutures
 import pages._
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
 
@@ -57,7 +58,8 @@ class CheckYourAnswersControllerSpec
 
         val application = applicationBuilder(userAnswers = Option(userAnswers))
           .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector)
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService)
           )
           .build()
 
@@ -79,7 +81,10 @@ class CheckYourAnswersControllerSpec
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[CheckYourAnswersView]
-          val list = ApplicationSummary(userAnswers, traderDetailsWithCountryCode)
+          val list = mockApplicationSummaryService.getApplicationSummary(
+            userAnswers,
+            traderDetailsWithCountryCode
+          )
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(list, draftId).toString
@@ -114,7 +119,8 @@ class CheckYourAnswersControllerSpec
         val application = applicationBuilder(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService)
           )
           .build()
 
@@ -174,6 +180,52 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
   val mockSubmissionService = mock[SubmissionService]
   val mockBackendConnector  = mock[BackendConnector]
 
+  ////// FINDME
+
+  val mockApplicationSummaryService = mock[ApplicationSummaryService]
+
+  val contactInformation = ContactInformation(
+    personOfContact = Some("Test Person"),
+    sepCorrAddrIndicator = Some(false),
+    streetAndNumber = Some("Test Street 1"),
+    city = Some("Test City"),
+    postalCode = Some("Test Postal Code"),
+    countryCode = Some("GB"),
+    telephoneNumber = Some("Test Telephone Number"),
+    faxNumber = Some("Test Fax Number"),
+    emailAddress = Some("Test Email Address"),
+    emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
+  )
+
+  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+    EORINo = "GB123456789012345",
+    consentToDisclosureOfPersonalData = true,
+    CDSFullName = "Test Name",
+    CDSEstablishmentAddress = CDSEstablishmentAddress(
+      streetAndNumber = "Test Street 1",
+      city = "Test City",
+      countryCode = "GB",
+      postalCode = Some("Test Postal Code")
+    ),
+    contactInformation = Some(contactInformation)
+  )
+
+  val appSummary = ApplicationSummary(
+    IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+    IndividualApplicantSummary(userAnswers)(stubMessages()),
+    DetailsSummary(userAnswers)(stubMessages()),
+    MethodSummary(userAnswers)(stubMessages())
+  )
+
+  when(
+    mockApplicationSummaryService.getApplicationSummary(
+      any[UserAnswers],
+      any[TraderDetailsWithCountryCode]
+    )(any[Messages])
+  ).thenReturn(appSummary)
+
+  ////// FINDME
+
   val fullUserAnswers = (for {
     ua <- userAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
     ua <- ua.set(HasCommodityCodePage, false)
@@ -202,29 +254,4 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
     ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
   } yield ua).success.get
 
-  val contactInformation = ContactInformation(
-    personOfContact = Some("Test Person"),
-    sepCorrAddrIndicator = Some(false),
-    streetAndNumber = Some("Test Street 1"),
-    city = Some("Test City"),
-    postalCode = Some("Test Postal Code"),
-    countryCode = Some("GB"),
-    telephoneNumber = Some("Test Telephone Number"),
-    faxNumber = Some("Test Fax Number"),
-    emailAddress = Some("Test Email Address"),
-    emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
-  )
-
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
-    EORINo = "GB123456789012345",
-    consentToDisclosureOfPersonalData = true,
-    CDSFullName = "Test Name",
-    CDSEstablishmentAddress = CDSEstablishmentAddress(
-      streetAndNumber = "Test Street 1",
-      city = "Test City",
-      countryCode = "GB",
-      postalCode = Some("Test Postal Code")
-    ),
-    contactInformation = Some(contactInformation)
-  )
 }

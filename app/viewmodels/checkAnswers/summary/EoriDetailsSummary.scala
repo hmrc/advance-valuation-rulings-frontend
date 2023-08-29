@@ -40,7 +40,6 @@ object IndividualEoriDetailsSummary {
   def apply(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
   ): EoriDetailsSummary = {
-
     val rows = CheckRegisteredDetailsSummary.rows(details, draftId).orEmpty
     IndividualEoriDetailsSummary(SummaryListViewModel(rows))
   }

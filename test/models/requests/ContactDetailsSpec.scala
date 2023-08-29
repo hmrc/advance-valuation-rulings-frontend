@@ -21,6 +21,7 @@ import cats.data.Validated._
 
 import generators._
 import models._
+import org.mockito.MockitoSugar.mock
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -46,7 +47,9 @@ class ContactDetailsSpec
 
       } yield ua).success.get
 
-      val result = ContactDetails(userAnswers)
+      val mockContactDetailsService = mock[ContactDetailsService]
+
+      val result = mockContactDetailsService(userAnswers)
 
       result shouldBe Valid(contactDetails)
     }
@@ -61,7 +64,9 @@ class ContactDetailsSpec
 
       } yield ua).success.get
 
-      val result = ContactDetails(userAnswers)
+      val mockContactDetailsService = mock[ContactDetailsService]
+
+      val result = mockContactDetailsService(userAnswers)
 
       result shouldBe Valid(contactDetails)
     }
@@ -76,7 +81,9 @@ class ContactDetailsSpec
 
       } yield ua).success.get
 
-      val result = ContactDetails(userAnswers)
+      val mockContactDetailsService = mock[ContactDetailsService]
+
+      val result = mockContactDetailsService(userAnswers)
 
       result shouldBe Valid(contactDetails)
     }
@@ -84,7 +91,9 @@ class ContactDetailsSpec
     "fail when individual contact details are missing" in {
       val userAnswers = emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader).get
 
-      val result = ContactDetails(userAnswers)
+      val mockContactDetailsService = mock[ContactDetailsService]
+
+      val result = mockContactDetailsService(userAnswers)
 
       result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
     }
@@ -93,7 +102,9 @@ class ContactDetailsSpec
       val userAnswers =
         emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant).get
 
-      val result = ContactDetails(userAnswers)
+      val mockContactDetailsService = mock[ContactDetailsService]
+
+      val result = mockContactDetailsService(userAnswers)
 
       result shouldBe Invalid(NonEmptyList.one(BusinessContactDetailsPage))
     }
