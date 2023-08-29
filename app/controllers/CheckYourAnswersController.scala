@@ -34,7 +34,7 @@ import models.requests._
 import pages.Page
 import services.SubmissionService
 import userrole.UserRoleProvider
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
@@ -48,6 +48,7 @@ class CheckYourAnswersController @Inject() (
   appConfig: FrontendAppConfig,
   userRoleProvider: UserRoleProvider,
   applicationRequestService: ApplicationRequestService,
+  applicationSummaryService: ApplicationSummaryService,
   implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -61,10 +62,9 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
+            val applicationSummary =
+              applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
             if (appConfig.agentOnBehalfOfTrader) {
-
-              val applicationSummary =
-                ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
               Future.successful(
                 Ok(
                   userRoleProvider
@@ -75,10 +75,7 @@ class CheckYourAnswersController @Inject() (
                     )
                 )
               )
-
             } else {
-              val applicationSummary =
-                ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
               Future.successful(Ok(view(applicationSummary, draftId)))
             }
         }

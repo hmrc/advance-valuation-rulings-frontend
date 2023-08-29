@@ -22,11 +22,9 @@ import cats.implicits._
 import play.api.libs.json._
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import models.{AgentCompanyDetails, AuthUserType, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
-import userrole.UserRoleProvider
 
 case class GoodsDetails(
   goodsName: String,
@@ -171,7 +169,9 @@ object ApplicationRequest {
     Json.configured(jsonConfig).format[ApplicationRequest]
 }
 
-class ApplicationRequestService @Inject() (contactDetailsService: ContactDetailsService) {
+class ApplicationRequestService @Inject() (
+  contactDetailsService: ContactDetailsService
+) {
   def apply(
     userAnswers: UserAnswers,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode

@@ -37,7 +37,7 @@ import models.requests._
 import pages.{AccountHomePage, Page, WhatIsYourRoleAsImporterPage}
 import services.SubmissionService
 import userrole.UserRoleProvider
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
 import views.html.CheckYourAnswersForAgentsView
 
 class CheckYourAnswersForAgentsController @Inject() (
@@ -52,6 +52,7 @@ class CheckYourAnswersForAgentsController @Inject() (
   appConfig: FrontendAppConfig,
   userRoleProvider: UserRoleProvider,
   applicationRequestService: ApplicationRequestService,
+  applicationSummaryService: ApplicationSummaryService,
   implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -66,7 +67,7 @@ class CheckYourAnswersForAgentsController @Inject() (
         getTraderDetails {
           traderDetails =>
             val applicationSummary =
-              ApplicationSummary(request.userAnswers, traderDetails, appConfig, userRoleProvider)
+              applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
             AccountHomePage.get() match {
               case Some(OrganisationAdmin)                   =>
                 Future.successful(Ok(view(applicationSummary, EmployeeOfOrg, draftId)))
