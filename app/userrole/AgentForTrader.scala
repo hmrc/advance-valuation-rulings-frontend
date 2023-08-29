@@ -25,24 +25,18 @@ import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
-  import cats.data.ValidatedNel
-
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
-  import controllers.routes.{ApplicationContactDetailsController, ProvideTraderEoriController}
-  import models.{ApplicationContactDetails, UserAnswers}
-  import models.requests.ContactDetails
-  import pages.ApplicationContactDetailsPage
-  import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary}
-  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+  import controllers.routes.ProvideTraderEoriController
+  import pages.ValuationMethodPage
+  import views.html.{AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
   private case class AgentForTrader @Inject() (
     view: AgentForTraderCheckRegisteredDetailsView,
     eoriBeUpToDateViewPublic: AgentForTraderPublicEORIBeUpToDateView,
     eoriBeUpToDateViewPrivate: AgentForTraderPrivateEORIBeUpToDateView,
-    requiredInformationView: AgentForTraderRequiredInformationView,
-    checkYourAnswersView: AgentForTraderCheckYourAnswersView
+    requiredInformationView: AgentForTraderRequiredInformationView
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -72,30 +66,10 @@ package userrole {
     override def getEORIDetailsJourney(draftId: DraftId): Call =
       ProvideTraderEoriController.onPageLoad(draftId)
 
-    override def selectBusinessContactDetailsPage(): Page = ApplicationContactDetailsPage
+    override def contactDetailsIncludeCompanyName: Boolean = true
 
-    override def selectViewForCheckYourAnswers(
-      applicationSummary: ApplicationSummary,
-      draftId: DraftId
-    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      checkYourAnswersView(applicationSummary, draftId)
-
-    override def getApplicationSummary(
-      userAnswers: UserAnswers,
-      traderDetailsWithCountryCode: TraderDetailsWithCountryCode
-    )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) = (
-      IndividualApplicantSummary(userAnswers),
-      IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
-    )
-
-    override def getContactDetailsForApplicationRequest(
-      userAnswers: UserAnswers
-    ): ValidatedNel[Page, ContactDetails] =
-      userAnswers
-        .validatedF[ApplicationContactDetails, ContactDetails](
-          ApplicationContactDetailsPage,
-          cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
-        )
+    override def selectBusinessContactDetailsPage(): Page = ValuationMethodPage
 
   }
+
 }

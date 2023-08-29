@@ -330,7 +330,8 @@ class ApplicationRequestSpec
                   BusinessContactDetails(
                     name = randomString,
                     email = randomString,
-                    phone = randomString
+                    phone = randomString,
+                    companyName = None
                   )
                 )
           ua <- ua.set(
@@ -392,7 +393,8 @@ class ApplicationRequestSpec
                   BusinessContactDetails(
                     name = randomString,
                     email = randomString,
-                    phone = randomString
+                    phone = randomString,
+                    companyName = None
                   )
                 )
           ua <- ua.set(
