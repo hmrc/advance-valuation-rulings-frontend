@@ -25,11 +25,11 @@
         cancelLink: CancelApplicationLink
 )
 
-@(draftId:DraftId)(implicit request: Request[_], messages: Messages)
+@(draftId:DraftId, key: Option[String])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("uploadInProgress.title"))) {
 
-    @formHelper(action = routes.UploadInProgressController.onPageLoad(draftId)) {
+    @formHelper(action = routes.UploadInProgressController.checkProgress(draftId, key)) {
 
         @caption(messages("caption.goods"))
         @heading(messages("uploadInProgress.heading"))

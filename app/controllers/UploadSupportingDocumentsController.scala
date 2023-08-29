@@ -48,9 +48,8 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val redirectPath = controller.onPageLoad(mode, draftId, None, None).url
-        val answers      = request.userAnswers
-        val fileStatus   = answers
+        val answers    = request.userAnswers
+        val fileStatus = answers
           .get(UploadSupportingDocumentPage)
 
         fileStatus
@@ -62,32 +61,17 @@ class UploadSupportingDocumentsController @Inject() (
                     helper.showErrorPage(
                       draftId,
                       helper.errorForCode(errorCode),
-                      redirectPath,
                       isLetterOfAuthority = false
                     )
                 )
                 .getOrElse {
                   if (key.contains(file.reference)) {
-                    helper.showInterstitialPage(draftId)
+                    helper.showInProgressPage(draftId, key)
                   } else {
                     helper.showPage(mode, draftId, isLetterOfAuthority = false)
                   }
                 }
 
-            case file: UploadedFile.Success =>
-              if (key.contains(file.reference)) {
-                helper.continue(mode, answers, UploadSupportingDocumentPage)
-              } else {
-                helper.showPage(mode, draftId, isLetterOfAuthority = false)
-              }
-            case file: UploadedFile.Failure =>
-              helper.redirectWithError(
-                draftId,
-                key,
-                file.failureDetails.failureReason.toString,
-                isLetterOfAuthority = false,
-                mode
-              )
           }
           .getOrElse {
             helper.showPage(mode, draftId, isLetterOfAuthority = false)

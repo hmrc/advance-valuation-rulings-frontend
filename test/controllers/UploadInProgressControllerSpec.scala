@@ -32,14 +32,18 @@ class UploadInProgressControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.UploadInProgressController.onPageLoad(draftId).url)
+        val request =
+          FakeRequest(GET, routes.UploadInProgressController.onPageLoad(draftId, None).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[UploadInProgressView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(draftId)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(draftId, None)(
+          request,
+          messages(application)
+        ).toString
       }
     }
   }

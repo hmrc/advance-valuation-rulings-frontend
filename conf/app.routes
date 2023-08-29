@@ -261,5 +261,5 @@ GET        /application-cancelled                       controllers.YourApplicat
 GET        /:draftId/supporting-documents/upload                                  controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
 GET        /:draftId/supporting-documents/change-upload                           controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
 
-GET        /:draftId/upload-in-progress                       controllers.UploadInProgressController.onPageLoad(draftId: DraftId)
+GET        /:draftId/upload-in-progress                       controllers.UploadInProgressController.onPageLoad(draftId: DraftId, key: Option[String])
 POST       /:draftId/upload-in-progress                       controllers.UploadInProgressController.checkProgress(mode: Mode = NormalMode, draftId: DraftId, key: Option[String])

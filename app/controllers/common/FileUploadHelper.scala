@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{MessagesControllerComponents, RequestHeader, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import models.{DraftId, Mode, UploadedFile, UserAnswers}
+import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import navigation.Navigator
 import pages.{Page, QuestionPage}
 import services.fileupload.FileService
@@ -64,28 +64,23 @@ case class FileUploadHelper @Inject() (
   def checkForStatus(userAnswers: UserAnswers, page: QuestionPage[UploadedFile]) =
     userAnswers.get(page)
 
-  def showInterstitialPage(
-    draftId: DraftId
+  def showInProgressPage(
+    draftId: DraftId,
+    key: Option[String]
   )(implicit request: RequestHeader): Future[Result] =
     Future.successful(
-      // Redirect(controllers.routes.UploadInProgressController.onPageLoad(draftId))
-      Ok(
-        supportingDocumentsView(
-          draftId = draftId,
-          upscanInitiateResponse = None,
-          errorMessage = None
-        )
-      )
+      Redirect(controllers.routes.UploadInProgressController.onPageLoad(draftId, key))
     )
 
   def showErrorPage(
     draftId: DraftId,
     errorMessage: String,
-    redirectPath: String,
     isLetterOfAuthority: Boolean
   )(implicit
     request: RequestHeader
-  ): Future[Result] =
+  ): Future[Result] = {
+    val redirectPath = getRedirectPath(draftId, isLetterOfAuthority)
+
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
       response =>
         isLetterOfAuthority match {
@@ -107,6 +102,7 @@ case class FileUploadHelper @Inject() (
             )
         }
     }
+  }
 
   def redirectWithError(
     draftId: DraftId,
@@ -134,7 +130,11 @@ case class FileUploadHelper @Inject() (
     }
   }
 
-  private def getRedirectPath(draftId: DraftId, isLetterOfAuthority: Boolean, mode: Mode) =
+  private def getRedirectPath(
+    draftId: DraftId,
+    isLetterOfAuthority: Boolean,
+    mode: Mode = NormalMode
+  ) =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None).url
     } else {

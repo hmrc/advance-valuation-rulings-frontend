@@ -39,9 +39,9 @@ class UploadInProgressController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(draftId))
+      implicit request => Ok(view(draftId, key))
     }
 
   def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]) =
@@ -52,24 +52,12 @@ class UploadInProgressController @Inject() (
           .checkForStatus(answers, UploadSupportingDocumentPage)
           .map {
 
-//            case file: UploadedFile.Initiated =>
-//              errorCode
-//                .map(
-//                  errorCode =>
-//                    helper.showErrorPage(
-//                      draftId,
-//                      helper.errorForCode(errorCode),
-//                      redirectPath,
-//                      isLetterOfAuthority = false
-//                    )
-//                )
-//                .getOrElse {
-//                  if (key.contains(file.reference)) {
-//                    helper.showInterstitialPage(draftId)
-//                  } else {
-//                    helper.showPage(mode, draftId, isLetterOfAuthority = false)
-//                  }
-//                }
+            case file: UploadedFile.Initiated =>
+              if (key.contains(file.reference)) {
+                helper.showInProgressPage(draftId, key)
+              } else {
+                helper.showPage(mode, draftId, isLetterOfAuthority = false)
+              }
 
             case file: UploadedFile.Success =>
               if (key.contains(file.reference)) {

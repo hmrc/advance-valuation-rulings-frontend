@@ -38,7 +38,7 @@
 )(implicit messages: Messages, requestHeader: RequestHeader)
 
 @shouldRefresh = @{
-  upscanInitiateResponse.isEmpty
+  false
 }
 
 @formInputClass = @{
