@@ -95,7 +95,7 @@ package userrole {
       userAnswers
         .validatedF[ApplicationContactDetails, ContactDetails](
           ApplicationContactDetailsPage,
-          cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+          cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
         )
   }
 }

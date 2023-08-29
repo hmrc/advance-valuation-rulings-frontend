@@ -97,7 +97,7 @@ package userrole {
     ): ValidatedNel[Page, ContactDetails] =
       userAnswers.validatedF[BusinessContactDetails, ContactDetails](
         BusinessContactDetailsPage,
-        cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
       )
 
   }

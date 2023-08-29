@@ -87,7 +87,7 @@ package userrole {
       traderDetailsWithCountryCode: TraderDetailsWithCountryCode
     )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
       (
-        IndividualApplicantSummary(userAnswers),
+        AgentSummary(userAnswers),
         BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
       )
 
@@ -96,7 +96,7 @@ package userrole {
     ): ValidatedNel[Page, ContactDetails] =
       userAnswers.validatedF[BusinessContactDetails, ContactDetails](
         BusinessContactDetailsPage,
-        cd => ContactDetails(cd.name, cd.email, Some(cd.phone))
+        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), cd.companyName)
       )
 
   }
