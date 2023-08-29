@@ -131,10 +131,8 @@ object TraderDetail {
       .validated(CheckRegisteredDetailsPage)
       .ensure(NonEmptyList.one(CheckRegisteredDetailsPage))(_ == true)
 
-    registeredDetails.map {
+    registeredDetails.map(
       _ =>
-//        println(crd.contactInformation.get.telephoneNumber.get)
-        println(crd.contactInformation)
         TraderDetail(
           eori = crd.EORINo,
           businessName = crd.CDSFullName,
@@ -145,7 +143,7 @@ object TraderDetail {
           countryCode = crd.CDSEstablishmentAddress.countryCode,
           phoneNumber = crd.contactInformation.flatMap(_.telephoneNumber)
         )
-    }
+    )
   }
 }
 
