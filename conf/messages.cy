@@ -696,6 +696,7 @@ agentForTraderCheckYourAnswers.applicant.name.label = Applicant’s full name
 agentForTraderCheckYourAnswers.applicant.email.label = Applicant’s email address
 agentForTraderCheckYourAnswers.applicant.phone.label = Applicant’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = Agent’s company name
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
 agentForTraderCheckYourAnswers.goods.heading = About the goods
 agentForTraderCheckYourAnswers.declaration.heading = Your declaration
