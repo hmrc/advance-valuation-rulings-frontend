@@ -34,7 +34,7 @@ package userrole {
   import models.{BusinessContactDetails, UserAnswers}
   import models.requests.ContactDetails
   import pages.{BusinessContactDetailsPage, ValuationMethodPage}
-  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary}
+  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, TraderEoriDetailsSummary}
   import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
   private case class AgentForTrader @Inject() (
@@ -88,7 +88,7 @@ package userrole {
     )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
       (
         AgentSummary(userAnswers),
-        BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+        TraderEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
       )
 
     override def getContactDetailsForApplicationRequest(

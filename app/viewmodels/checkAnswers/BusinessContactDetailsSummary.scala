@@ -94,14 +94,14 @@ object BusinessContactDetailsSummary {
     messages: Messages
   ): SummaryListRow =
     SummaryListRowViewModel(
-      key = "CHANGE_ME",
-      value = ValueViewModel(HtmlFormat.escape("CHANGE_ME_COMPANY_NAME").toString),
+      key = "agentForTraderCheckYourAnswers.applicant.companyName.label",
+      value = ValueViewModel(HtmlFormat.escape(answer.companyName.getOrElse("")).toString),
       actions = Seq(
         ActionItemViewModel(
           "site.change",
           routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText("CHANGE_ME")
+          .withVisuallyHiddenText("agentForTraderCheckYourAnswers.applicant.companyName.hidden")
       )
     )
 
@@ -127,7 +127,7 @@ object BusinessContactDetailsSummary {
       case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    =>
         s"checkYourAnswersForAgents.agent.org.$fieldName.label"
       case WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader =>
-        s"CHANGE_ME"
+        s"agentForTraderCheckYourAnswers.applicant.$fieldName.label"
     }
 
   private def getAriaMessageKey(role: WhatIsYourRoleAsImporter, fieldName: String): String =
@@ -137,6 +137,6 @@ object BusinessContactDetailsSummary {
       case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    =>
         s"checkYourAnswersForAgents.agent.org.$fieldName.change.hidden"
       case WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader =>
-        s"CHANGE_ME"
+        s"agentForTraderCheckYourAnswers.applicant.$fieldName.hidden"
     }
 }

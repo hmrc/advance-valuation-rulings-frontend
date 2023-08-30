@@ -152,10 +152,11 @@ agentForTraderCheckYourAnswers.agent.eori.number.hidden = your company’s regis
 agentForTraderCheckYourAnswers.agent.name.hidden = your company’s registered business name
 agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registered business address
 
-agentForTraderCheckYourAnswers.applicant.name.label = Applicant’s full name
+agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
 agentForTraderCheckYourAnswers.applicant.email.label = Applicant’s email address
 agentForTraderCheckYourAnswers.applicant.phone.label = Applicant’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = Agent’s company name
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
 agentForTraderCheckYourAnswers.goods.heading = About the goods
 agentForTraderCheckYourAnswers.declaration.heading = Your declaration
@@ -170,6 +171,8 @@ agentForTraderCheckYourAnswers.agreement.bulletPoint.1 = dispute the valuation m
 agentForTraderCheckYourAnswers.agreement.bulletPoint.2 = store the information you provided (or may provide) after you send your application
 agentForTraderCheckYourAnswers.agreement.bulletPoint.3 = contact you by email
 agentForTraderCheckYourAnswers.button.continue = Accept and apply for a ruling
+
+
 
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
