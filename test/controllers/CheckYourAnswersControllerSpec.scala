@@ -20,20 +20,25 @@ import scala.concurrent.Future
 
 import play.api.i18n.Messages
 import play.api.inject.bind
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 
 import base.SpecBase
+import config.FrontendAppConfig
 import connectors.BackendConnector
 import models._
 import models.AuthUserType.IndividualTrader
 import models.requests._
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.{BeforeAndAfterEach, TryValues}
 import org.scalatest.concurrent.ScalaFutures
 import pages._
 import services.SubmissionService
+import userrole.{UserRole, UserRoleProvider}
 import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
@@ -52,6 +57,56 @@ class CheckYourAnswersControllerSpec
   }
 
   "Check Your Answers Controller" - {
+
+    "must return OK and the correct view for a GET for a UserRole with the agent creds flag on" in
+      new CheckYourAnswersControllerSpecSetup {
+
+        val mockAppConfig = mock[FrontendAppConfig]
+        when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
+
+        val mockUserRoleProvider = mock[UserRoleProvider]
+        val mockUserRole         = mock[UserRole]
+
+        val expectedText = "Expected"
+        val expectedView = HtmlFormat.raw(expectedText)
+
+        when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
+        when(
+          mockUserRole.selectViewForCheckYourAnswers(any[ApplicationSummary], any[DraftId])(
+            any[DataRequest[AnyContent]],
+            any[Messages]
+          )
+        )
+          .thenReturn(expectedView)
+
+        val application = applicationBuilder(userAnswers = Option(userAnswers))
+          .overrides(
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+            bind[FrontendAppConfig].toInstance(mockAppConfig)
+          )
+          .build()
+
+        when(
+          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+        ) thenReturn Future
+          .successful(
+            Right(
+              traderDetailsWithCountryCode
+            )
+          )
+
+        running(application) {
+          implicit val request =
+            FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(draftId).url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual expectedText
+        }
+      }
 
     "must return OK and the correct view for a GET with affinityGroup Individual" in
       new CheckYourAnswersControllerSpecSetup {
