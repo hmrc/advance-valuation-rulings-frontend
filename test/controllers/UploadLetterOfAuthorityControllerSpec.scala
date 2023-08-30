@@ -17,13 +17,16 @@
 package controllers
 
 import java.time.Instant
+
 import scala.concurrent.Future
+
 import play.api.Application
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
 import base.SpecBase
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
@@ -59,12 +62,13 @@ class UploadLetterOfAuthorityControllerSpec
   private val mockFileService        = mock[FileService]
   private val mockUserAnswersService = mock[UserAnswersService]
 
-  private def getRedirectPath(errorCode: Option[String] = None,
-                              key: Option[String] = None): String = {
+  private def getRedirectPath(
+    errorCode: Option[String] = None,
+    key: Option[String] = None
+  ): String =
     controllers.routes.UploadLetterOfAuthorityController
       .onPageLoad(NormalMode, draftId, errorCode, key)
       .url
-  }
 
   private def mockFileServiceInitiate(): Unit =
     when(
@@ -121,7 +125,7 @@ class UploadLetterOfAuthorityControllerSpec
       mockFileServiceInitiate()
 
       val request = FakeRequest(GET, getRedirectPath())
-      val result = route(application, request).value
+      val result  = route(application, request).value
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual injectView(application)(
@@ -149,7 +153,7 @@ class UploadLetterOfAuthorityControllerSpec
             .build()
 
           val request = FakeRequest(GET, getRedirectPath(key = Some("reference")))
-          val result = route(application, request).value
+          val result  = route(application, request).value
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual injectView(application)(
@@ -173,7 +177,7 @@ class UploadLetterOfAuthorityControllerSpec
           mockFileServiceInitiate()
 
           val request = FakeRequest(GET, getRedirectPath(key = Some("otherReference")))
-          val result = route(application, request).value
+          val result  = route(application, request).value
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual injectView(application)(
@@ -197,7 +201,7 @@ class UploadLetterOfAuthorityControllerSpec
           mockFileServiceInitiate()
 
           val request = FakeRequest(GET, getRedirectPath())
-          val result = route(application, request).value
+          val result  = route(application, request).value
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual injectView(application)(
@@ -230,7 +234,7 @@ class UploadLetterOfAuthorityControllerSpec
           .build()
 
         val request = FakeRequest(GET, getRedirectPath(key = Some(successfulFile.reference)))
-        val result = route(application, request).value
+        val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
@@ -250,7 +254,7 @@ class UploadLetterOfAuthorityControllerSpec
         mockFileServiceInitiate()
 
         val request = FakeRequest(GET, getRedirectPath(key = Some("otherReference")))
-        val result = route(application, request).value
+        val result  = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual injectView(application)(
@@ -274,7 +278,7 @@ class UploadLetterOfAuthorityControllerSpec
         mockFileServiceInitiate()
 
         val request = FakeRequest(GET, getRedirectPath())
-        val result = route(application, request).value
+        val result  = route(application, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual injectView(application)(
@@ -295,7 +299,7 @@ class UploadLetterOfAuthorityControllerSpec
       .build()
 
     val request = FakeRequest(GET, getRedirectPath())
-    val result = route(application, request).value
+    val result  = route(application, request).value
 
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -374,7 +378,7 @@ class UploadLetterOfAuthorityControllerSpec
           mockFileServiceInitiate()
 
           val request = FakeRequest(GET, getRedirectPath(key = Some("key")))
-          val result = route(application, request).value
+          val result  = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual getRedirectPath(
@@ -404,7 +408,7 @@ class UploadLetterOfAuthorityControllerSpec
           mockFileServiceInitiate()
 
           val request = FakeRequest(GET, getRedirectPath(errorCode = Some(errCode)))
-          val result = route(application, request).value
+          val result  = route(application, request).value
 
           status(result) mustEqual BAD_REQUEST
           contentAsString(result) mustEqual injectView(application)(
