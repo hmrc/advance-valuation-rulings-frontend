@@ -25,7 +25,6 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models._
 import navigation.Navigator
@@ -43,8 +42,7 @@ class UploadLetterOfAuthorityController @Inject() (
   view: UploadLetterOfAuthorityView,
   fileService: FileService,
   navigator: Navigator,
-  configuration: Configuration,
-  appConfig: FrontendAppConfig
+  configuration: Configuration
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -113,7 +111,7 @@ class UploadLetterOfAuthorityController @Inject() (
   )(implicit
     request: RequestHeader
   ): Future[Result] =
-    fileService.initiate(draftId, redirectPath, true).map {
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = true).map {
       response =>
         Ok(
           view(
