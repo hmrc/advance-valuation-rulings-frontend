@@ -19,13 +19,16 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
+import config.FrontendAppConfig
 import generators._
 import models._
+import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
+import userrole.UserRoleProvider
 
 class ContactDetailsSpec
     extends AnyWordSpec
@@ -37,6 +40,12 @@ class ContactDetailsSpec
 
   "ContactDetails" should {
 
+    val mockAppConfig        = mock[FrontendAppConfig]
+    when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(false)
+    val mockUserRoleProvider = mock[UserRoleProvider]
+
+    val contactDetailsService = new ContactDetailsService(mockAppConfig, mockUserRoleProvider)
+
     "succeed for an individual" in {
 
       val ua = emptyUserAnswers
@@ -47,10 +56,7 @@ class ContactDetailsSpec
 
       } yield ua).success.get
 
-      val mockContactDetailsService = mock[ContactDetailsService]
-
-      val result = mockContactDetailsService(userAnswers)
-
+      val result = contactDetailsService(userAnswers)
       result shouldBe Valid(contactDetails)
     }
 
@@ -64,10 +70,7 @@ class ContactDetailsSpec
 
       } yield ua).success.get
 
-      val mockContactDetailsService = mock[ContactDetailsService]
-
-      val result = mockContactDetailsService(userAnswers)
-
+      val result = contactDetailsService(userAnswers)
       result shouldBe Valid(contactDetails)
     }
 
@@ -81,20 +84,14 @@ class ContactDetailsSpec
 
       } yield ua).success.get
 
-      val mockContactDetailsService = mock[ContactDetailsService]
-
-      val result = mockContactDetailsService(userAnswers)
-
+      val result = contactDetailsService(userAnswers)
       result shouldBe Valid(contactDetails)
     }
 
     "fail when individual contact details are missing" in {
       val userAnswers = emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader).get
 
-      val mockContactDetailsService = mock[ContactDetailsService]
-
-      val result = mockContactDetailsService(userAnswers)
-
+      val result = contactDetailsService(userAnswers)
       result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
     }
 
@@ -102,10 +99,7 @@ class ContactDetailsSpec
       val userAnswers =
         emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant).get
 
-      val mockContactDetailsService = mock[ContactDetailsService]
-
-      val result = mockContactDetailsService(userAnswers)
-
+      val result = contactDetailsService(userAnswers)
       result shouldBe Invalid(NonEmptyList.one(BusinessContactDetailsPage))
     }
   }

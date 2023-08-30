@@ -21,15 +21,18 @@ import cats.data.Validated._
 
 import play.api.libs.json.{Json, JsSuccess}
 
+import config.FrontendAppConfig
 import generators._
 import models._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.mock
 import org.scalacheck.Arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
+import userrole.UserRoleProvider
 import viewmodels.checkAnswers.summary.ApplicationSummaryService
 
 class ApplicationRequestSpec
@@ -41,6 +44,14 @@ class ApplicationRequestSpec
   import ApplicationRequestSpec._
 
   "ApplicationRequest" should {
+
+    val mockAppConfig         = mock[FrontendAppConfig]
+    when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(false)
+    val mockUserRoleProvider  = mock[UserRoleProvider]
+    val contactDetailsService = new ContactDetailsService(mockAppConfig, mockUserRoleProvider)
+
+    val applicationRequestService = new ApplicationRequestService(contactDetailsService)
+
     "be able to deserialize successful body" when {
       "when the user is an individual" in {
         val result = ApplicationRequest.format.reads(Json.parse(individualTraderJson))
@@ -133,12 +144,10 @@ class ApplicationRequestSpec
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
         } yield ua).success.get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Valid(
           ApplicationRequest(
@@ -185,12 +194,10 @@ class ApplicationRequestSpec
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
         } yield ua).success.get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -200,12 +207,11 @@ class ApplicationRequestSpec
       }
 
       "return invalid for an Individual when built from empty userAnswers" in {
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
 
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader).success.get,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -252,12 +258,10 @@ class ApplicationRequestSpec
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
         } yield ua).success.get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Valid(
           ApplicationRequest(
@@ -282,12 +286,10 @@ class ApplicationRequestSpec
           ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         } yield ua).get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -307,12 +309,10 @@ class ApplicationRequestSpec
           ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
         } yield ua).success.get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -371,12 +371,10 @@ class ApplicationRequestSpec
                 )
         } yield ua).success.get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Valid(
           ApplicationRequest(
@@ -438,12 +436,10 @@ class ApplicationRequestSpec
                 )
         } yield ua).success.get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Invalid(
           NonEmptyList.one(WhatIsYourRoleAsImporterPage)
@@ -456,12 +452,10 @@ class ApplicationRequestSpec
           ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
         } yield ua).get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Invalid(
           NonEmptyList.of(
@@ -481,12 +475,10 @@ class ApplicationRequestSpec
           ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
         } yield ua).get
 
-        val mockApplicationSummaryService = mock[ApplicationSummaryService]
-
-        val result = mockApplicationSummaryService.getApplicationSummary(
+        val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
-        )(null)
+        )
 
         result shouldBe Invalid(
           NonEmptyList.of(

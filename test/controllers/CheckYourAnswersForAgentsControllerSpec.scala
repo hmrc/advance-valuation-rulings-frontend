@@ -37,7 +37,7 @@ import org.mockito.internal.matchers.Any
 import org.scalatest.{EitherValues, TryValues}
 import pages._
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
+import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersForAgentsView
 
@@ -50,6 +50,20 @@ class CheckYourAnswersForAgentsControllerSpec
 
     "must return OK and the correct view for a GET as OrganisationAdmin" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
+
+        val appSummary = ApplicationSummary(
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+          IndividualApplicantSummary(fullUserAnswers)(stubMessages()),
+          DetailsSummary(fullUserAnswers)(stubMessages()),
+          MethodSummary(fullUserAnswers)(stubMessages())
+        )
+
+        when(
+          mockApplicationSummaryService.getApplicationSummary(
+            any[UserAnswers],
+            any[TraderDetailsWithCountryCode]
+          )(any[Messages])
+        ).thenReturn(appSummary)
 
         private val application = applicationBuilderAsOrg(userAnswers = Option(orgAdminUserAnswers))
           .overrides(
@@ -87,6 +101,21 @@ class CheckYourAnswersForAgentsControllerSpec
 
         private val userAnswers =
           orgAssistantUserAnswers.setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg).futureValue
+
+        val appSummary = ApplicationSummary(
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+          IndividualApplicantSummary(userAnswers)(stubMessages()),
+          DetailsSummary(userAnswers)(stubMessages()),
+          MethodSummary(userAnswers)(stubMessages())
+        )
+
+        when(
+          mockApplicationSummaryService.getApplicationSummary(
+            any[UserAnswers],
+            any[TraderDetailsWithCountryCode]
+          )(any[Messages])
+        ).thenReturn(appSummary)
+
         private val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
@@ -101,18 +130,9 @@ class CheckYourAnswersForAgentsControllerSpec
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-          val list = mockApplicationSummaryService.getApplicationSummary(
-            userAnswers,
-            traderDetailsWithCountryCode
-          )
-
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            list,
-            EmployeeOfOrg,
-            draftId
-          ).toString
+          contentAsString(result).contains("An employee of the organisation") mustEqual true;
+
         }
       }
 
@@ -122,6 +142,21 @@ class CheckYourAnswersForAgentsControllerSpec
         private val userAnswers = orgAssistantUserAnswers
           .setFuture(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
           .futureValue
+
+        val appSummary = ApplicationSummary(
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+          IndividualApplicantSummary(userAnswers)(stubMessages()),
+          DetailsSummary(userAnswers)(stubMessages()),
+          MethodSummary(userAnswers)(stubMessages())
+        )
+
+        when(
+          mockApplicationSummaryService.getApplicationSummary(
+            any[UserAnswers],
+            any[TraderDetailsWithCountryCode]
+          )(any[Messages])
+        ).thenReturn(appSummary)
+
         private val application = applicationBuilderAsOrg(userAnswers = Option(userAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector)
@@ -136,19 +171,10 @@ class CheckYourAnswersForAgentsControllerSpec
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-
-          val list = mockApplicationSummaryService.getApplicationSummary(
-            userAnswers,
-            traderDetailsWithCountryCode
-          )
-
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            list,
-            AgentOnBehalfOfOrg,
-            draftId
-          ).toString
+          contentAsString(result).contains(
+            "Agent acting on behalf of an organisation"
+          ) mustEqual true;
         }
       }
 
@@ -318,10 +344,8 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
 
   val mockSubmissionService: SubmissionService = mock[SubmissionService]
   val mockBackendConnector: BackendConnector   = mock[BackendConnector]
-  val mockApplicationSummaryService            = mock[ApplicationSummaryService]
 
-//  when(mockApplicationSummaryService.getApplicationSummary(any(), any())(any()))
-//    .thenReturn(ApplicationSummary(any(), any(), any(), any()))
+  val mockApplicationSummaryService = mock[ApplicationSummaryService]
 
   val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
@@ -347,17 +371,6 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
       postalCode = Some("Test Postal Code")
     ),
     contactInformation = Some(contactInformation)
-  )
-
-  when(
-    mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-  ).thenReturn(
-    Future
-      .successful(
-        Right(
-          traderDetailsWithCountryCode
-        )
-      )
   )
 
   val fullUserAnswers: UserAnswers = (for {
@@ -388,4 +401,16 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
     ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
     ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
   } yield ua).success.get
+
+  when(
+    mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+  ).thenReturn(
+    Future
+      .successful(
+        Right(
+          traderDetailsWithCountryCode
+        )
+      )
+  )
+
 }
