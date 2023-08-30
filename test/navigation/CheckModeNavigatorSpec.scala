@@ -788,6 +788,7 @@ class CheckModeNavigatorSpec extends SpecBase {
         }
 
         "UploadLetterOfAuthorityPage must navigate to" - {
+          // TODO: Fix the onward route when ARSSTB-317 is done.
           "VerifyLetterOfAuthority page" in {
             navigator.nextPage(
               UploadLetterOfAuthorityPage,

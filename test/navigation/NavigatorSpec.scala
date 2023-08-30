@@ -535,6 +535,18 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "UploadLetterOfAuthorityPage must navigate to" - {
+
+        // TODO: Fix the onward route when ARSSTB-317 is done.
+        "VerifyLetterOfAuthority page" in {
+          navigator.nextPage(
+            UploadLetterOfAuthorityPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+          ) mustBe routes.VerifyLetterOfAuthorityController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
       "BusinessContactDetailsPage must" - {
         val userAnswers =
           userAnswersWith(
