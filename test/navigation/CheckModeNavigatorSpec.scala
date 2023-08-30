@@ -786,6 +786,19 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
           }
         }
+
+        "UploadLetterOfAuthorityPage must navigate to" - {
+          "VerifyLetterOfAuthority page" in {
+            navigator.nextPage(
+              UploadLetterOfAuthorityPage,
+              CheckMode,
+              userAnswersAsIndividualTrader
+            ) mustBe routes.VerifyLetterOfAuthorityController.onPageLoad(
+              CheckMode,
+              draftId
+            )
+          }
+        }
       }
 
       // Post method pages
