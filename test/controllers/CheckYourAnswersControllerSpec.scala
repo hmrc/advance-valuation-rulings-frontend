@@ -232,11 +232,8 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
     .setFuture(AccountHomePage, IndividualTrader)
     .futureValue
 
-  val mockSubmissionService = mock[SubmissionService]
-  val mockBackendConnector  = mock[BackendConnector]
-
-  ////// FINDME
-
+  val mockSubmissionService         = mock[SubmissionService]
+  val mockBackendConnector          = mock[BackendConnector]
   val mockApplicationSummaryService = mock[ApplicationSummaryService]
 
   val contactInformation = ContactInformation(
@@ -278,8 +275,6 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
       any[TraderDetailsWithCountryCode]
     )(any[Messages])
   ).thenReturn(appSummary)
-
-  ////// FINDME
 
   val fullUserAnswers = (for {
     ua <- userAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
