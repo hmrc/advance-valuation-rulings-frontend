@@ -49,7 +49,6 @@ class UploadLetterOfAuthorityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-//  private val mode: Mode                       = NormalMode // TODO: allow other modes other than NormalMode.
   private val maxFileSize: Long                = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
   private val controller                       = controllers.routes.UploadLetterOfAuthorityController
   private val page: QuestionPage[UploadedFile] = UploadLetterOfAuthorityPage
