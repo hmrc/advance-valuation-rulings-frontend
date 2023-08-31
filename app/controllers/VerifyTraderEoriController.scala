@@ -105,7 +105,7 @@ class VerifyTraderEoriController @Inject() (
                       VerifyTraderDetailsPage
                         .set(details.copy(confirmation = Some(continue)))
                       CheckRegisteredDetailsPage
-                        .set(true)
+                        .set(continue)
                     }
                     _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
