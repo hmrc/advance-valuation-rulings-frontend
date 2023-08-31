@@ -43,19 +43,19 @@ class VerifyLetterOfAuthorityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         UploadLetterOfAuthorityPage.get() match {
-          case Some(attachment) => Ok(view(attachment, draftId))
+          case Some(attachment) => Ok(view(attachment, draftId, mode))
           case None             => Redirect(JourneyRecoveryController.onPageLoad())
         }
 
     }
 
-  def onSubmit(draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        Redirect(navigator.nextPage(VerifyLetterOfAuthorityPage, NormalMode, request.userAnswers))
+        Redirect(navigator.nextPage(VerifyLetterOfAuthorityPage, mode, request.userAnswers))
     }
 }

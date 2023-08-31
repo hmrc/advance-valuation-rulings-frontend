@@ -786,6 +786,20 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
           }
         }
+
+        "UploadLetterOfAuthorityPage must navigate to" - {
+          // TODO: Fix the onward route when ARSSTB-357 is done.
+          "VerifyLetterOfAuthority page" in {
+            navigator.nextPage(
+              UploadLetterOfAuthorityPage,
+              CheckMode,
+              userAnswersAsIndividualTrader
+            ) mustBe routes.VerifyLetterOfAuthorityController.onPageLoad(
+              CheckMode,
+              draftId
+            )
+          }
+        }
       }
 
       // Post method pages

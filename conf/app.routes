@@ -254,9 +254,13 @@ POST       /:draftId/supporting-documents/:index/change-remove                  
 
 GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
 
-GET        /:draftId/ars-upload-loa                     controllers.UploadLetterOfAuthorityController.onPageLoad(draftId: DraftId, errorCode: Option[String], key: Option[String])
+GET        /:draftId/ars-upload-loa                     controllers.UploadLetterOfAuthorityController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
+GET        /:draftId/ars-change-loa                    controllers.UploadLetterOfAuthorityController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
 
-GET        /:draftId/ars-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onPageLoad(draftId: DraftId)
-POST       /:draftId/ars-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onSubmit(draftId: DraftId)
+GET        /:draftId/ars-upload-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/ars-change-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+
+POST       /:draftId/ars-upload-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/ars-change-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /application-cancelled                       controllers.YourApplicationHasBeenCancelledController.onPageLoad()

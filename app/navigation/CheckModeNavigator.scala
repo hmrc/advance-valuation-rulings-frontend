@@ -126,6 +126,9 @@ object CheckModeNavigator {
       }
       .getOrElse(JourneyRecoveryController.onPageLoad())
 
+  private def uploadLetterOfAuthority(userAnswers: UserAnswers): Call =
+    VerifyLetterOfAuthorityController.onPageLoad(CheckMode, userAnswers.draftId)
+
   private def removeSupportingDocumentPage(userAnswers: UserAnswers): Call = {
     val numberOfDocuments = userAnswers.get(AllDocuments).map(_.size)
 
@@ -322,6 +325,9 @@ object CheckModeNavigator {
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
       case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)
       case RemoveSupportingDocumentPage(_)              => removeSupportingDocumentPage(userAnswers)
+
+      // agent
+      case UploadLetterOfAuthorityPage => uploadLetterOfAuthority(userAnswers)
 
       // method 1
       case IsThereASaleInvolvedPage           => isThereASaleInvolved(userAnswers)
