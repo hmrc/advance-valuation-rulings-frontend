@@ -88,14 +88,36 @@ object AgentForTraderCheckRegisteredDetailsSummary {
       )
     )
 
-  def rows(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
+  private def letterOfAuthorityRow(draftId: DraftId, letterOfAuthorityFileName: String)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "agentForTraderCheckYourAnswers.trader.loa.label",
+      value = ValueViewModel(HtmlFormat.escape(letterOfAuthorityFileName).body),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None).url
+        )
+          .withVisuallyHiddenText(
+            messages("agentForTraderCheckYourAnswers.trader.loa.hidden")
+          )
+      )
+    )
+
+  def rows(
+    details: TraderDetailsWithCountryCode,
+    draftId: DraftId,
+    letterOfAuthorityFileName: String
+  )(implicit
     messages: Messages
   ): Option[Seq[SummaryListRow]] = {
     val number          = registeredNumberRow(EoriNumber(details.EORINo), draftId)
     val personalDetails = if (details.consentToDisclosureOfPersonalData) {
-      val name    = registeredNameRow(details, draftId)
-      val address = registeredAddressRow(details, draftId)
-      Seq(name, address)
+      val name              = registeredNameRow(details, draftId)
+      val address           = registeredAddressRow(details, draftId)
+      val letterOfAuthority = letterOfAuthorityRow(draftId, letterOfAuthorityFileName)
+      Seq(name, address, letterOfAuthority)
     } else {
       Nil
     }

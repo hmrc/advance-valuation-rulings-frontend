@@ -33,7 +33,7 @@ package userrole {
   import controllers.routes.ProvideTraderEoriController
   import models.{BusinessContactDetails, UserAnswers}
   import models.requests.ContactDetails
-  import pages.{BusinessContactDetailsPage, ValuationMethodPage}
+  import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, ValuationMethodPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, TraderEoriDetailsSummary}
   import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
@@ -88,7 +88,11 @@ package userrole {
     )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
       (
         AgentSummary(userAnswers),
-        TraderEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+        TraderEoriDetailsSummary(
+          traderDetailsWithCountryCode,
+          userAnswers.draftId,
+          userAnswers.get(UploadLetterOfAuthorityPage).get.fileName.get
+        )
       )
 
     override def getContactDetailsForApplicationRequest(
