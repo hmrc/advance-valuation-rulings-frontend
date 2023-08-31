@@ -30,7 +30,7 @@ import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
 import models.{DraftId, Mode, TraderDetailsWithConfirmation}
 import navigation.Navigator
-import pages.VerifyTraderDetailsPage
+import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
 import userrole.UserRoleProvider
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
@@ -101,9 +101,12 @@ class VerifyTraderEoriController @Inject() (
                 case Some(details) =>
                   val continue = value.toBoolean
                   for {
-                    updatedAnswers <-
+                    updatedAnswers <- {
                       VerifyTraderDetailsPage
                         .set(details.copy(confirmation = Some(continue)))
+                      CheckRegisteredDetailsPage
+                        .set(true)
+                    }
                     _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
                     if (continue) {
