@@ -16,8 +16,17 @@
 
 package controllers
 
+import java.time.Instant
+
+import scala.concurrent.Future
+
+import play.api.inject.bind
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
 import base.SpecBase
-import models.UploadedFile
+import models.{UploadedFile, UserAnswers}
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -25,19 +34,12 @@ import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage
-import play.api.inject.bind
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import services.fileupload.FileService
-import views.html.UploadInProgressView
-
-import java.time.Instant
-import scala.concurrent.Future
+import views.html.{UploadInProgressView, UploadSupportingDocumentsView}
 
 class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  private val mockFileService           = mock[FileService]
+  private val mockFileService = mock[FileService]
 
   private val reference: String = "reference"
 
@@ -62,8 +64,8 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
     )
   )
 
-  private val upscanInitiateResponse    = UpscanInitiateResponse(
-    reference = "reference",
+  private val upscanInitiateResponse = UpscanInitiateResponse(
+    reference = reference,
     uploadRequest = UpscanInitiateResponse.UploadRequest(
       href = "href",
       fields = Map(
@@ -73,13 +75,41 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
     )
   )
 
-  private def getPostRequest: FakeRequest[AnyContentAsEmpty.type] = {
+  private def getPostRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(
       POST,
       controllers.routes.UploadInProgressController
         .checkProgress(draftId, Some(reference))
         .url
     )
+
+  private def testFallbackPageIsShown(userAnswers: UserAnswers): Unit = {
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(
+        bind[FileService].toInstance(mockFileService)
+      )
+      .build()
+
+    val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+    when(mockFileService.initiate(any(), any(), any())(any()))
+      .thenReturn(Future.successful(upscanInitiateResponse))
+
+    val request = FakeRequest(
+      POST,
+      controllers.routes.UploadInProgressController
+        .checkProgress(draftId, Some("otherReference"))
+        .url
+    )
+
+    val result = route(application, request).value
+
+    status(result) mustEqual OK
+    contentAsString(result) mustEqual view(
+      draftId = draftId,
+      upscanInitiateResponse = Some(upscanInitiateResponse),
+      errorMessage = None
+    )(messages(application), request).toString
   }
 
   "UploadInProgress Controller" - {
@@ -130,6 +160,13 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
               .url
           }
         }
+
+        "when the key does not match the file" - {
+
+          "must show fallback page" in {
+            testFallbackPageIsShown(userAnswers)
+          }
+        }
       }
 
       "when there is a successful file" - {
@@ -154,6 +191,13 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual onwardRoute.url
+          }
+        }
+
+        "when the key does not match the file" - {
+
+          "must show fallback page" in {
+            testFallbackPageIsShown(userAnswers)
           }
         }
       }
@@ -181,7 +225,7 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
-            .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some("reference"))
+            .onPageLoad(models.NormalMode, draftId, Some("Quarantine"), Some(reference))
             .url
         }
       }

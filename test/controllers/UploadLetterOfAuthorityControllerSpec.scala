@@ -392,40 +392,39 @@ class UploadLetterOfAuthorityControllerSpec
       )
     )
 
-    // todo: fix, Getting a NullPointer
-//    "Parameterised: must initiate a file upload and redirect back to the page with the relevant error code" in {
-//      forAll(parameterisedCases) {
-//        (
-//          errCode: String,
-//          failureReason: UploadedFile.FailureReason,
-//          _: MessagesProvider => String
-//        ) =>
-//          val failedFile = UploadedFile.Failure(
-//            reference = "reference",
-//            failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
-//          )
-//
-//          val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
-//
-//          val application = applicationBuilder(userAnswers = Some(userAnswers))
-//            .overrides(bind[FileService].toInstance(mockFileService))
-//            .build()
-//
-//          mockFileServiceInitiate()
-//
-//          val request = FakeRequest(
-//            GET,
-//            controller.onPageLoad(draftId, None, Some("key")).url
-//          )
-//
-//          val result = route(application, request).value
-//
-//          status(result) mustEqual SEE_OTHER
-//          redirectLocation(result).value mustEqual controller
-//            .onPageLoad(draftId, Some(errCode), Some("key"))
-//            .url
-//      }
-//    }
+    "Parameterised: must initiate a file upload and redirect back to the page with the relevant error code" in {
+      forAll(parameterisedCases) {
+        (
+          errCode: String,
+          failureReason: UploadedFile.FailureReason,
+          _: MessagesProvider => String
+        ) =>
+          val failedFile = UploadedFile.Failure(
+            reference = "reference",
+            failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
+          )
+
+          val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[FileService].toInstance(mockFileService))
+            .build()
+
+          mockFileServiceInitiate()
+
+          val request = FakeRequest(
+            GET,
+            controller.onPageLoad(draftId, None, Some("key")).url
+          )
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controller
+            .onPageLoad(draftId, Some(errCode), Some("key"))
+            .url
+      }
+    }
 
     "Parameterised: A redirect with an error code renders the error message" in {
       forAll(parameterisedCases) {
