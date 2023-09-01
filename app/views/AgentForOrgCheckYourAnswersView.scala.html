@@ -1,0 +1,83 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components._
+@import models._
+@import viewmodels.checkAnswers.summary._
+
+
+@this(
+layout: templates.Layout,
+govukSummaryList: GovukSummaryList,
+govukButton: GovukButton,
+heading: Heading,
+subheading: Subheading,
+paragraph: Paragraph,
+bulletList: BulletList,
+cancelApplicationLink: CancelApplicationLink,
+formHelper: FormWithCSRF,
+)
+
+@(applicationSummary: ApplicationSummary, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("checkYourAnswersForAgents.title")), draftId = Some(draftId)) {
+
+<h1 class="govuk-heading-l">@(messages("checkYourAnswersForAgents.heading"))</h1>
+
+@subheading(
+    messages("checkYourAnswersForAgents.company.agent.heading")
+)
+
+@govukSummaryList(applicationSummary.eoriDetails.rows.withCssClass("govuk-!-margin-bottom-9"))
+
+@subheading(
+    messages("checkYourAnswersForAgents.applicant.agent.heading")
+)
+
+@govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
+
+@subheading(messages("checkYourAnswersForAgents.goods.heading"))
+@govukSummaryList(applicationSummary.method.rows)
+@govukSummaryList(applicationSummary.details.rows.withCssClass("govuk-!-margin-bottom-9"))
+
+@subheading(messages("checkYourAnswersForAgents.declaration.heading"))
+
+@paragraph(Html(messages("checkYourAnswersForAgents.declaration.paragraph1")))
+
+@bulletList(Seq(
+Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.1")),
+Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.2")),
+Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.3")),
+Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.4")),
+Html(messages("checkYourAnswersForAgents.declaration.bulletPoint.5"))
+))
+
+@paragraph(Html(messages("checkYourAnswersForAgents.agreement.subheading")))
+
+@bulletList(Seq(
+Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.1")),
+Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.2")),
+Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.3"))
+))
+
+@formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
+@govukButton(
+ButtonViewModel(messages("checkYourAnswersForAgents.button.continue"))
+)
+}
+
+@cancelApplicationLink(draftId)
+}

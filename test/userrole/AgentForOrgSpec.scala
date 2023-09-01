@@ -19,29 +19,86 @@ package userrole
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
+import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
 import controllers.routes.CheckRegisteredDetailsController
-import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import models.{ApplicationContactDetails, BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
+import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
+import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
+import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgCheckYourAnswersView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
 class AgentForOrgSpec extends SpecBase with Matchers {
 
   private val agentForOrgCheckRegisteredDetailsView = mock[AgentForOrgCheckRegisteredDetailsView]
   private val agentForOrgEORIBeUpToDateView         = mock[AgentForOrgEORIBeUpToDateView]
   private val requiredInformationView               = mock[AgentForOrgRequiredInformationView]
+  private val checkYourAnswersView                  = mock[AgentForOrgCheckYourAnswersView]
 
   private val agentForOrg = AgentForOrg(
     agentForOrgCheckRegisteredDetailsView,
+    checkYourAnswersView,
     agentForOrgEORIBeUpToDateView,
     requiredInformationView
   )
 
+  private val mockMessages    = mock[Messages]
+  private val mockDataRequest = mock[DataRequest[AnyContent]]
+
   "AgentForOrg" - {
+
+    "should return the correct ApplicationSummary" in {
+      val summary: (ApplicantSummary, EoriDetailsSummary) =
+        agentForOrg.getApplicationSummary(emptyUserAnswers, traderDetailsWithCountryCode)(
+          mockMessages
+        )
+      summary.isInstanceOf[(AgentSummary, BusinessEoriDetailsSummary)] mustBe true
+    }
+
+    "should return the correct ContactDetails for Application Request" in {
+      val expected = BusinessContactDetails.apply(
+        "test name",
+        "name@domain.com",
+        "01702123123",
+        None
+      )
+      val ua       = emptyUserAnswers.setFuture(BusinessContactDetailsPage, expected).futureValue
+      val details  =
+        agentForOrg.getContactDetailsForApplicationRequest(ua)
+
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None))"
+    }
+
+    "should return the correct view for CheckYourAnswers" in {
+      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+      val appSummary = ApplicationSummary(
+        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+        IndividualApplicantSummary(emptyUserAnswers)(stubMessages()),
+        DetailsSummary(emptyUserAnswers)(stubMessages()),
+        MethodSummary(emptyUserAnswers)(stubMessages())
+      )
+
+      when(
+        checkYourAnswersView.apply(
+          appSummary,
+          draftId
+        )(mockDataRequest, mockMessages)
+      ).thenReturn(expectedView)
+
+      val actualView =
+        agentForOrg.selectViewForCheckYourAnswers(appSummary, draftId)(
+          mockDataRequest,
+          mockMessages
+        )
+
+      actualView mustBe expectedView
+    }
+
     "should return the correct view for CheckRegisteredDetails" in {
       val cDSEstablishmentAddress: CDSEstablishmentAddress = new CDSEstablishmentAddress(
         "",

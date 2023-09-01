@@ -35,7 +35,7 @@ import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.requests._
 import pages.{AccountHomePage, Page, WhatIsYourRoleAsImporterPage}
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
 import views.html.CheckYourAnswersForAgentsView
 
 class CheckYourAnswersForAgentsController @Inject() (
@@ -47,6 +47,8 @@ class CheckYourAnswersForAgentsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersForAgentsView,
   submissionService: SubmissionService,
+  applicationRequestService: ApplicationRequestService,
+  applicationSummaryService: ApplicationSummaryService,
   implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -60,7 +62,8 @@ class CheckYourAnswersForAgentsController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
+            val applicationSummary =
+              applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
             AccountHomePage.get() match {
               case Some(OrganisationAdmin)                   =>
                 Future.successful(Ok(view(applicationSummary, EmployeeOfOrg, draftId)))
@@ -93,7 +96,7 @@ class CheckYourAnswersForAgentsController @Inject() (
       implicit request =>
         getTraderDetails(
           traderDetails =>
-            ApplicationRequest(request.userAnswers, traderDetails) match {
+            applicationRequestService(request.userAnswers, traderDetails) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.error(
                   s"Failed to create application request: ${errors.toList.mkString(", ")}}"

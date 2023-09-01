@@ -25,6 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
@@ -32,7 +33,8 @@ import models.DraftId
 import models.requests._
 import pages.Page
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.ApplicationSummary
+import userrole.UserRoleProvider
+import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
@@ -43,6 +45,10 @@ class CheckYourAnswersController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView,
   submissionService: SubmissionService,
+  appConfig: FrontendAppConfig,
+  userRoleProvider: UserRoleProvider,
+  applicationRequestService: ApplicationRequestService,
+  applicationSummaryService: ApplicationSummaryService,
   implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -56,8 +62,22 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            val applicationSummary = ApplicationSummary(request.userAnswers, traderDetails)
-            Future.successful(Ok(view(applicationSummary, draftId)))
+            val applicationSummary =
+              applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
+            if (appConfig.agentOnBehalfOfTrader) {
+              Future.successful(
+                Ok(
+                  userRoleProvider
+                    .getUserRole(request.userAnswers)
+                    .selectViewForCheckYourAnswers(
+                      applicationSummary,
+                      draftId
+                    )
+                )
+              )
+            } else {
+              Future.successful(Ok(view(applicationSummary, draftId)))
+            }
         }
     }
 
@@ -66,7 +86,10 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         getTraderDetails {
           traderDetails =>
-            ApplicationRequest(request.userAnswers, traderDetails) match {
+            applicationRequestService(
+              request.userAnswers,
+              traderDetails
+            ) match {
               case Invalid(errors: cats.data.NonEmptyList[Page]) =>
                 logger.warn(
                   s"Failed to create application request: ${errors.toList.mkString(", ")}}"
@@ -83,7 +106,7 @@ class CheckYourAnswersController @Inject() (
                       )
                   }
             }
-
         }
     }
+
 }

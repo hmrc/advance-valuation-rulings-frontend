@@ -40,7 +40,6 @@ object IndividualEoriDetailsSummary {
   def apply(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
   ): EoriDetailsSummary = {
-
     val rows = CheckRegisteredDetailsSummary.rows(details, draftId).orEmpty
     IndividualEoriDetailsSummary(SummaryListViewModel(rows))
   }
@@ -59,5 +58,26 @@ object BusinessEoriDetailsSummary {
 
     val rows = CheckRegisteredDetailsForAgentsSummary.rows(details, draftId).orEmpty
     BusinessEoriDetailsSummary(SummaryListViewModel(rows))
+  }
+}
+
+case class TraderEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary {
+  def removeActions(): EoriDetailsSummary = TraderEoriDetailsSummary(
+    SummaryListViewModel(rows.rows.map(_.copy(actions = None)))
+  )
+}
+object TraderEoriDetailsSummary {
+  def apply(
+    details: TraderDetailsWithCountryCode,
+    draftId: DraftId,
+    letterOfAuthorityFileName: String
+  )(implicit
+    messages: Messages
+  ): EoriDetailsSummary = {
+
+    val rows = AgentForTraderCheckRegisteredDetailsSummary
+      .rows(details, draftId, letterOfAuthorityFileName)
+      .orEmpty
+    TraderEoriDetailsSummary(SummaryListViewModel(rows))
   }
 }

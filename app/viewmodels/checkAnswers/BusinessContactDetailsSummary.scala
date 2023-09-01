@@ -23,6 +23,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import controllers.routes
 import models.{BusinessContactDetails, CheckMode, DraftId, UserAnswers, WhatIsYourRoleAsImporter}
 import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
+import viewmodels.checkAnswers.BusinessContactDetailsSummary.contactNumberRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -85,6 +86,25 @@ object BusinessContactDetailsSummary {
       )
     )
 
+  private def companyNameRow(
+    answer: BusinessContactDetails,
+    role: WhatIsYourRoleAsImporter,
+    draftId: DraftId
+  )(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "agentForTraderCheckYourAnswers.applicant.companyName.label",
+      value = ValueViewModel(HtmlFormat.escape(answer.companyName.getOrElse("")).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
+        )
+          .withVisuallyHiddenText("agentForTraderCheckYourAnswers.applicant.companyName.hidden")
+      )
+    )
+
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(BusinessContactDetailsPage)
@@ -92,23 +112,31 @@ object BusinessContactDetailsSummary {
       name            = nameRow(contactDetails, role, userAnswer.draftId)
       email           = emailRow(contactDetails, role, userAnswer.draftId)
       contactNumber   = contactNumberRow(contactDetails, role, userAnswer.draftId)
-      result          = Seq(name, email, contactNumber)
+      companyName     = companyNameRow(contactDetails, role, userAnswer.draftId)
+      result          = if (role == WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader) {
+                          Seq(name, email, contactNumber, companyName)
+                        } else {
+                          Seq(name, email, contactNumber)
+                        }
     } yield result
 
   private def getMessageKey(role: WhatIsYourRoleAsImporter, fieldName: String): String =
     role match {
-      case WhatIsYourRoleAsImporter.EmployeeOfOrg      =>
+      case WhatIsYourRoleAsImporter.EmployeeOfOrg         =>
         s"checkYourAnswersForAgents.applicant.$fieldName.label"
-      case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg =>
+      case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    =>
         s"checkYourAnswersForAgents.agent.org.$fieldName.label"
+      case WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader =>
+        s"agentForTraderCheckYourAnswers.applicant.$fieldName.label"
     }
 
   private def getAriaMessageKey(role: WhatIsYourRoleAsImporter, fieldName: String): String =
     role match {
-      case WhatIsYourRoleAsImporter.EmployeeOfOrg      =>
+      case WhatIsYourRoleAsImporter.EmployeeOfOrg         =>
         s"checkYourAnswersForAgents.applicant.$fieldName.change.hidden"
-      case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg =>
+      case WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg    =>
         s"checkYourAnswersForAgents.agent.org.$fieldName.change.hidden"
+      case WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader =>
+        s"agentForTraderCheckYourAnswers.applicant.$fieldName.hidden"
     }
-
 }

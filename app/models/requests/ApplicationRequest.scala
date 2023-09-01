@@ -21,6 +21,7 @@ import cats.implicits._
 
 import play.api.libs.json._
 
+import com.google.inject.Inject
 import models.{AgentCompanyDetails, AuthUserType, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
@@ -166,7 +167,11 @@ object ApplicationRequest {
   // TODO: Make this an OWrites as we don't need to read this model from JSON
   implicit val format: OFormat[ApplicationRequest] =
     Json.configured(jsonConfig).format[ApplicationRequest]
+}
 
+class ApplicationRequestService @Inject() (
+  contactDetailsService: ContactDetailsService
+) {
   def apply(
     userAnswers: UserAnswers,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode
@@ -174,7 +179,7 @@ object ApplicationRequest {
     val agentDetails    = TraderDetail.agent(userAnswers)
     val traderDetail    = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
     val goodsDetails    = GoodsDetails(userAnswers)
-    val contact         = ContactDetails(userAnswers)
+    val contact         = contactDetailsService(userAnswers)
     val requestedMethod = RequestedMethod(userAnswers)
     val attachments     = AttachmentRequest(userAnswers)
 

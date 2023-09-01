@@ -20,9 +20,12 @@ import play.api.Logger
 import play.api.i18n.Messages
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
 
+import com.google.inject.Inject
+import config.FrontendAppConfig
 import models.{TraderDetailsWithCountryCode, UserAnswers}
 import models.AuthUserType._
 import pages.AccountHomePage
+import userrole.UserRoleProvider
 
 case class ApplicationSummary(
   eoriDetails: EoriDetailsSummary,
@@ -31,11 +34,43 @@ case class ApplicationSummary(
   method: MethodSummary
 )
 
-object ApplicationSummary {
+class ApplicationSummaryService @Inject() (
+  frontendAppConfig: FrontendAppConfig,
+  userRoleProvider: UserRoleProvider
+) {
 
   private val logger = Logger(this.getClass)
 
-  def apply(
+  def getApplicationSummary(
+    userAnswers: UserAnswers,
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+  )(implicit
+    messages: Messages
+  ): ApplicationSummary =
+    if (frontendAppConfig.agentOnBehalfOfTrader) {
+      getApplicationSummaryForUserRole(userAnswers, traderDetailsWithCountryCode)
+    } else {
+      getApplicationSummaryForLegacyRole(userAnswers, traderDetailsWithCountryCode)
+    }
+
+  private def getApplicationSummaryForUserRole(
+    userAnswers: UserAnswers,
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+  )(implicit
+    messages: Messages
+  ): ApplicationSummary = {
+    val (applicant, company) = userRoleProvider
+      .getUserRole(userAnswers)
+      .getApplicationSummary(userAnswers, traderDetailsWithCountryCode)
+    ApplicationSummary(
+      eoriDetails = company,
+      applicant = applicant,
+      details = DetailsSummary(userAnswers),
+      method = MethodSummary(userAnswers)
+    )
+  }
+
+  private def getApplicationSummaryForLegacyRole(
     userAnswers: UserAnswers,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode
   )(implicit
@@ -69,4 +104,5 @@ object ApplicationSummary {
       method = MethodSummary(userAnswers)
     )
   }
+
 }

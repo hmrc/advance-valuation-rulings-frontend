@@ -23,16 +23,21 @@ import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 package userrole {
 
+  import cats.data.ValidatedNel
+
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
   import controllers.routes
-  import models.NormalMode
-  import pages.{CheckRegisteredDetailsPage, Page, ValuationMethodPage}
-  import views.html.{EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
+  import models.{ApplicationContactDetails, BusinessContactDetails, NormalMode, UserAnswers}
+  import models.requests.ContactDetails
+  import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage, CheckRegisteredDetailsPage, Page, ValuationMethodPage}
+  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary}
+  import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
   private case class Employee @Inject() (
-    view: EmployeeCheckRegisteredDetailsView,
+    checkRegisteredDetailsView: EmployeeCheckRegisteredDetailsView,
+    checkYourAnswersView: CheckYourAnswersView,
     eoriBeUpToDateView: EmployeeEORIBeUpToDateView,
     requiredInformationRequiredView: IndividualInformationRequiredView
   ) extends UserRole {
@@ -42,7 +47,7 @@ package userrole {
       mode: Mode,
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      view(
+      checkRegisteredDetailsView(
         form,
         details,
         mode,
@@ -69,5 +74,28 @@ package userrole {
 
     override def selectBusinessContactDetailsPage(): Page = ValuationMethodPage
 
+    override def selectViewForCheckYourAnswers(
+      applicationSummary: ApplicationSummary,
+      draftId: DraftId
+    )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
+      checkYourAnswersView(applicationSummary, draftId)
+
+    override def getApplicationSummary(
+      userAnswers: UserAnswers,
+      traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+    )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
+      (
+        IndividualApplicantSummary(userAnswers),
+        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+      )
+
+    override def getContactDetailsForApplicationRequest(
+      userAnswers: UserAnswers
+    ): ValidatedNel[Page, ContactDetails] =
+      userAnswers
+        .validatedF[ApplicationContactDetails, ContactDetails](
+          ApplicationContactDetailsPage,
+          cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
+        )
   }
 }

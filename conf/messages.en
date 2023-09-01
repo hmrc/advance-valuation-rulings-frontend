@@ -132,6 +132,50 @@ checkYourAnswersForAgents.agreement.bulletPoint.2 = store the information you pr
 checkYourAnswersForAgents.agreement.bulletPoint.3 = contact you by email
 checkYourAnswersForAgents.button.continue = Accept and apply for a ruling
 
+
+agentForTraderCheckYourAnswers.title = Check your answers before sending your application
+agentForTraderCheckYourAnswers.heading = Check your answers before sending your application
+agentForTraderCheckYourAnswers.trader.eori.number.label = Trader’s registered EORI number
+agentForTraderCheckYourAnswers.trader.name.label = Trader’s registered business name
+agentForTraderCheckYourAnswers.trader.address.label = Trader’s registered business address
+agentForTraderCheckYourAnswers.trader.eori.number.hidden = the trader’s registered EORI number
+agentForTraderCheckYourAnswers.trader.name.hidden = the trader’s registered business name
+agentForTraderCheckYourAnswers.trader.address.hidden = the trader’s registered business address
+
+agentForTraderCheckYourAnswers.trader.heading = About the trader
+
+agentForTraderCheckYourAnswers.applicant.agent.heading = About the agent
+
+agentForTraderCheckYourAnswers.agent.eori.number.label = Your company’s registered EORI number
+agentForTraderCheckYourAnswers.agent.name.label = Your company’s registered business name
+agentForTraderCheckYourAnswers.agent.address.label = Your company’s registered business address
+agentForTraderCheckYourAnswers.agent.eori.number.hidden = your company’s registered EORI number
+agentForTraderCheckYourAnswers.agent.name.hidden = your company’s registered business name
+agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registered business address
+
+agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
+agentForTraderCheckYourAnswers.applicant.email.label = Applicant’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Applicant’s telephone number
+agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = Agent’s company name
+agentForTraderCheckYourAnswers.applicant.role.label = Description of role
+agentForTraderCheckYourAnswers.goods.heading = About the goods
+agentForTraderCheckYourAnswers.declaration.heading = Your declaration
+agentForTraderCheckYourAnswers.declaration.paragraph1 = By applying for an Advance Valuation Ruling you confirm that:
+agentForTraderCheckYourAnswers.declaration.bulletPoint.1 = you have selected the most relevant method to value the company’s goods
+agentForTraderCheckYourAnswers.declaration.bulletPoint.2 = the information you have provided is correct and complete to the best of your knowledge
+agentForTraderCheckYourAnswers.declaration.bulletPoint.3 = your application is based on an intention to import goods into Great Britain
+agentForTraderCheckYourAnswers.declaration.bulletPoint.4 = you are aware that it can take up to 90 days from the date your application is accepted to receive an Advance Valuation Ruling decision
+agentForTraderCheckYourAnswers.declaration.bulletPoint.5 = you will not need to apply for an Advance Valuation Ruling every time you import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
+agentForTraderCheckYourAnswers.agreement.subheading = You agree that HMRC can:
+agentForTraderCheckYourAnswers.agreement.bulletPoint.1 = dispute the valuation method you have selected
+agentForTraderCheckYourAnswers.agreement.bulletPoint.2 = store the information you provided (or may provide) after you send your application
+agentForTraderCheckYourAnswers.agreement.bulletPoint.3 = contact you by email
+agentForTraderCheckYourAnswers.button.continue = Accept and apply for a ruling
+agentForTraderCheckYourAnswers.trader.loa.label = Letter of authority
+agentForTraderCheckYourAnswers.trader.loa.hidden = Letter of authority
+
+
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
 journeyRecovery.continue.guidance = Try again later.

@@ -16,14 +16,17 @@
 
 package userrole
 
+import cats.data.ValidatedNel
+
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Call}
 import play.twirl.api.HtmlFormat
 
-import models.{DraftId, Mode, TraderDetailsWithCountryCode}
-import models.requests.DataRequest
+import models.{DraftId, Mode, TraderDetailsWithCountryCode, UserAnswers}
+import models.requests.{ContactDetails, DataRequest}
 import pages.Page
+import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, EoriDetailsSummary}
 
 trait UserRole {
   def selectViewForEoriBeUpToDate(
@@ -48,4 +51,19 @@ trait UserRole {
   def getEORIDetailsJourney(draftId: DraftId): Call
 
   def contactDetailsIncludeCompanyName: Boolean
+
+  def selectViewForCheckYourAnswers(
+    applicationSummary: ApplicationSummary,
+    draftId: DraftId
+  )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
+
+  def getApplicationSummary(
+    userAnswers: UserAnswers,
+    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
+  )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary)
+
+  def getContactDetailsForApplicationRequest(
+    userAnswers: UserAnswers
+  ): ValidatedNel[Page, ContactDetails]
+
 }
