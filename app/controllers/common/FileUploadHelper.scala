@@ -45,7 +45,10 @@ case class FileUploadHelper @Inject() (
 
   private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
 
-  def showPage(mode: Mode, draftId: DraftId, isLetterOfAuthority: Boolean)(implicit
+  /** If an un unexpected error occurs, the user will be redirected back to the corresponding upload
+    * file page.
+    */
+  def showFallbackPage(mode: Mode, draftId: DraftId, isLetterOfAuthority: Boolean)(implicit
     request: RequestHeader
   ): Future[Result] = {
     val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
@@ -61,13 +64,16 @@ case class FileUploadHelper @Inject() (
     }
   }
 
-  def checkForStatus(userAnswers: UserAnswers, page: QuestionPage[UploadedFile]) =
+  def checkForStatus(
+    userAnswers: UserAnswers,
+    page: QuestionPage[UploadedFile]
+  ): Option[UploadedFile] =
     userAnswers.get(page)
 
   def showInProgressPage(
     draftId: DraftId,
     key: Option[String]
-  )(implicit request: RequestHeader): Future[Result] =
+  ): Future[Result] =
     Future.successful(
       Redirect(controllers.routes.UploadInProgressController.onPageLoad(draftId, key))
     )
@@ -83,23 +89,22 @@ case class FileUploadHelper @Inject() (
 
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
       response =>
-        isLetterOfAuthority match {
-          case false =>
-            BadRequest(
-              supportingDocumentsView(
-                draftId = draftId,
-                upscanInitiateResponse = Some(response),
-                errorMessage = Some(errorMessage)
-              )
+        if (isLetterOfAuthority) {
+          BadRequest(
+            letterOfAuthorityView(
+              draftId = draftId,
+              upscanInitiateResponse = Some(response),
+              errorMessage = Some(errorMessage)
             )
-          case true  =>
-            BadRequest(
-              letterOfAuthorityView(
-                draftId = draftId,
-                upscanInitiateResponse = Some(response),
-                errorMessage = Some(errorMessage)
-              )
+          )
+        } else {
+          BadRequest(
+            supportingDocumentsView(
+              draftId = draftId,
+              upscanInitiateResponse = Some(response),
+              errorMessage = Some(errorMessage)
             )
+          )
         }
     }
   }
@@ -115,17 +120,16 @@ case class FileUploadHelper @Inject() (
 
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
       _ =>
-        isLetterOfAuthority match {
-          case false =>
-            Redirect(
-              controllers.routes.UploadSupportingDocumentsController
-                .onPageLoad(mode, draftId, Some(errorCode), key)
-            )
-          case true  =>
-            Redirect(
-              controllers.routes.UploadLetterOfAuthorityController
-                .onPageLoad(draftId, Some(errorCode), key)
-            )
+        if (isLetterOfAuthority) {
+          Redirect(
+            controllers.routes.UploadLetterOfAuthorityController
+              .onPageLoad(draftId, Some(errorCode), key)
+          )
+        } else {
+          Redirect(
+            controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(mode, draftId, Some(errorCode), key)
+          )
         }
     }
   }

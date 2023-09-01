@@ -44,7 +44,7 @@ class UploadInProgressController @Inject() (
       implicit request => Ok(view(draftId, key))
     }
 
-  def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]) =
+  def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val answers = request.userAnswers
@@ -56,14 +56,14 @@ class UploadInProgressController @Inject() (
               if (key.contains(file.reference)) {
                 helper.showInProgressPage(draftId, key)
               } else {
-                helper.showPage(mode, draftId, isLetterOfAuthority = false)
+                helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
               }
 
             case file: UploadedFile.Success =>
               if (key.contains(file.reference)) {
                 helper.continue(mode, answers, UploadSupportingDocumentPage)
               } else {
-                helper.showPage(mode, draftId, isLetterOfAuthority = false)
+                helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
               }
 
             case file: UploadedFile.Failure =>
@@ -76,7 +76,7 @@ class UploadInProgressController @Inject() (
               )
 
           }
-          .getOrElse(helper.showPage(mode, draftId, isLetterOfAuthority = true))
+          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority = true))
     }
 
 }

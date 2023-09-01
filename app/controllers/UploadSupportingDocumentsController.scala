@@ -38,8 +38,6 @@ class UploadSupportingDocumentsController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  private val controller = controllers.routes.UploadSupportingDocumentsController
-
   def onPageLoad(
     mode: Mode,
     draftId: DraftId,
@@ -68,13 +66,13 @@ class UploadSupportingDocumentsController @Inject() (
                   if (key.contains(file.reference)) {
                     helper.showInProgressPage(draftId, key)
                   } else {
-                    helper.showPage(mode, draftId, isLetterOfAuthority = false)
+                    helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
                   }
                 }
 
           }
           .getOrElse {
-            helper.showPage(mode, draftId, isLetterOfAuthority = false)
+            helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
           }
     }
 

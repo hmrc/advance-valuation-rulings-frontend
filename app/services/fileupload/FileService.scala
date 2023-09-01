@@ -89,9 +89,10 @@ class FileService @Inject() (
     } yield Done
 
   private def pageForIsLetterOfAuthority(isLetterOfAuthority: Boolean) =
-    isLetterOfAuthority match {
-      case true  => UploadLetterOfAuthorityPage
-      case false => UploadSupportingDocumentPage
+    if (isLetterOfAuthority) {
+      UploadLetterOfAuthorityPage
+    } else {
+      UploadSupportingDocumentPage
     }
 
   private def processFile(
