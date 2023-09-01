@@ -37,9 +37,6 @@
         errorMessage: Option[String]
 )(implicit messages: Messages, requestHeader: RequestHeader)
 
-@shouldRefresh = @{
-  upscanInitiateResponse.isEmpty
-}
 
 @formInputClass = @{
   if(errorMessage.isDefined) {
@@ -77,13 +74,9 @@
   }
 }
 
-@refreshBlock = {
-  @if(shouldRefresh) {
-    <meta http-equiv="refresh" content="1"/>
-  }
-}
 
-@mainLayout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title")), additionalHeadBlock = Some(refreshBlock)) {
+
+@mainLayout(pageTitle = titleNoForm(messages("uploadSupportingDocuments.title"))) {
 
   @errorMessage.map { errorMessage =>
     @govukErrorSummary(ErrorSummaryViewModel.withoutForm(Map("file-input" -> messages(errorMessage))))
@@ -145,7 +138,6 @@
         )
                 .preventingDoubleClick()
                 .withAttribute(("id" -> "submit"))
-                .disableIf(shouldRefresh)
       )
     </div>
   }
