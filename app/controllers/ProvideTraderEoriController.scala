@@ -79,7 +79,7 @@ class ProvideTraderEoriController @Inject() (
             formWithErrors =>
               Future.successful(BadRequest(provideTraderEoriView(formWithErrors, mode, draftId))),
             eoriInput =>
-              request.userAnswers.set(ProvideTraderEoriPage, eoriInput) match {
+              request.userAnswers.set(ProvideTraderEoriPage, eoriInput.toUpperCase()) match {
                 case Success(eoriAnswers) =>
                   if (!saveDraft) {
                     proceed(eoriAnswers, eoriInput, mode, draftId)
