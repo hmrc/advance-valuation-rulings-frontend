@@ -123,7 +123,7 @@ case class FileUploadHelper @Inject() (
         if (isLetterOfAuthority) {
           Redirect(
             controllers.routes.UploadLetterOfAuthorityController
-              .onPageLoad(draftId, Some(errorCode), key)
+              .onPageLoad(mode, draftId, Some(errorCode), key)
           )
         } else {
           Redirect(
@@ -140,7 +140,9 @@ case class FileUploadHelper @Inject() (
     mode: Mode = NormalMode
   ) =
     if (isLetterOfAuthority) {
-      controllers.routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None).url
+      controllers.routes.UploadLetterOfAuthorityController
+        .onPageLoad(mode, draftId, None, None)
+        .url
     } else {
       controllers.routes.UploadSupportingDocumentsController
         .onPageLoad(mode, draftId, None, None)
