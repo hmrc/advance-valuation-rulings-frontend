@@ -16,16 +16,21 @@
 
 package userrole
 
+import java.time.Instant
+
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
+import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, UploadedFile}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
+import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage}
+import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, MethodSummary, TraderEoriDetailsSummary}
 import views.html.{AgentForOrgCheckYourAnswersView, AgentForTraderCheckRegisteredDetailsView, AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
 class AgentForTraderSpec extends SpecBase with Matchers {
@@ -52,7 +57,69 @@ class AgentForTraderSpec extends SpecBase with Matchers {
     requiredInformationView
   )
 
+  private val mockMessages    = mock[Messages]
+  private val mockDataRequest = mock[DataRequest[AnyContent]]
+
   "AgentForTrader" - {
+
+    "should return the correct ApplicationSummary" in {
+      val ua                                              = emptyUserAnswers
+        .setFuture(
+          UploadLetterOfAuthorityPage,
+          UploadedFile.Success.apply(
+            "",
+            "",
+            UploadedFile.UploadDetails.apply("", "", Instant.now(), "", 1L)
+          )
+        )
+        .futureValue
+      val summary: (ApplicantSummary, EoriDetailsSummary) =
+        agentForTrader.getApplicationSummary(ua, traderDetailsWithCountryCode)(
+          mockMessages
+        )
+      summary.isInstanceOf[(AgentSummary, TraderEoriDetailsSummary)] mustBe true
+    }
+
+    "should return the correct ContactDetails for Application Request" in {
+      val expected = BusinessContactDetails.apply(
+        "test name",
+        "name@domain.com",
+        "01702123123",
+        Some("company name")
+      )
+      val ua       = emptyUserAnswers.setFuture(BusinessContactDetailsPage, expected).futureValue
+      val details  =
+        agentForTrader.getContactDetailsForApplicationRequest(ua)
+
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),Some(company name)))"
+    }
+
+    "should return the correct view for CheckYourAnswers" in {
+      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+      val appSummary = ApplicationSummary(
+        TraderEoriDetailsSummary(traderDetailsWithCountryCode, draftId, "nofile.jpg")(mockMessages),
+        IndividualApplicantSummary(emptyUserAnswers)(stubMessages()),
+        DetailsSummary(emptyUserAnswers)(stubMessages()),
+        MethodSummary(emptyUserAnswers)(stubMessages())
+      )
+
+      when(
+        checkYourAnswersView.apply(
+          appSummary,
+          draftId
+        )(mockDataRequest, mockMessages)
+      ).thenReturn(expectedView)
+
+      val actualView =
+        agentForTrader.selectViewForCheckYourAnswers(appSummary, draftId)(
+          mockDataRequest,
+          mockMessages
+        )
+
+      actualView mustBe expectedView
+    }
+
     "should return the correct view for CheckRegisteredDetails" in {
       val cDSEstablishmentAddress: CDSEstablishmentAddress = new CDSEstablishmentAddress(
         "",

@@ -17,15 +17,21 @@
 package userrole
 
 import play.api.data.Form
+import play.api.data.validation.Valid
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
+import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import models.{CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import models.{ApplicationContactDetails, BusinessContactDetails, CDSEstablishmentAddress, ContactInformation, DraftId, NormalMode, TraderDetailsWithCountryCode, UserAnswers}
+import models.requests.ApplicationRequestSpec.emptyUserAnswers
 import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
+import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage, ImportGoodsPage}
+import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, ApplicationSummaryService, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
 import views.html.{AgentForTraderCheckYourAnswersView, CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
 class EmployeeSpec extends SpecBase with Matchers {
@@ -42,7 +48,55 @@ class EmployeeSpec extends SpecBase with Matchers {
     requiredInformationView
   )
 
+  private val mockMessages    = mock[Messages]
+  private val mockDataRequest = mock[DataRequest[AnyContent]]
+
   "Employee" - {
+
+    "should return the correct ApplicationSummary" in {
+      val summary: (ApplicantSummary, EoriDetailsSummary) =
+        employee.getApplicationSummary(emptyUserAnswers, traderDetailsWithCountryCode)(
+          mockMessages
+        )
+      summary.isInstanceOf[(IndividualApplicantSummary, IndividualEoriDetailsSummary)] mustBe true
+    }
+
+    "should return the correct ContactDetails for Application Request" in {
+      val expected = ApplicationContactDetails.apply(
+        "test name",
+        "name@domain.com",
+        "01702123123"
+      )
+      val ua       = emptyUserAnswers.setFuture(ApplicationContactDetailsPage, expected).futureValue
+      val details  =
+        employee.getContactDetailsForApplicationRequest(ua)
+
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None))"
+    }
+
+    "should return the correct view for CheckYourAnswers" in {
+      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+
+      val appSummary = ApplicationSummary(
+        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+        IndividualApplicantSummary(emptyUserAnswers)(stubMessages()),
+        DetailsSummary(emptyUserAnswers)(stubMessages()),
+        MethodSummary(emptyUserAnswers)(stubMessages())
+      )
+
+      when(
+        checkYourAnswersView.apply(
+          appSummary,
+          draftId
+        )(mockDataRequest, mockMessages)
+      ).thenReturn(expectedView)
+
+      val actualView =
+        employee.selectViewForCheckYourAnswers(appSummary, draftId)(mockDataRequest, mockMessages)
+
+      actualView mustBe expectedView
+    }
+
     "should return the correct view for CheckRegisteredDetails" in {
       val cDSEstablishmentAddress: CDSEstablishmentAddress = new CDSEstablishmentAddress(
         "",
