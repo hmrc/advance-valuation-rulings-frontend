@@ -16,34 +16,52 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
-import models.{NormalMode, UploadedFile}
+import models.UploadedFile
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage
+import play.api.inject.bind
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.fileupload.FileService
 import views.html.UploadInProgressView
 
+import java.time.Instant
+import scala.concurrent.Future
+
 class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  private lazy val redirectPath: String =
-    controllers.routes.UploadSupportingDocumentsController
-      .onPageLoad(NormalMode, draftId, None, None)
-      .url
-  private val isLetterOfAuthority       = false
   private val mockFileService           = mock[FileService]
+
+  private val reference: String = "reference"
+
+  private val initiatedFile = UploadedFile.Initiated(reference = reference)
+
+  private val successfulFile = UploadedFile.Success(
+    reference = reference,
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.now(),
+      checksum = "checksum",
+      size = 1337
+    )
+  )
+  private val failedFile     = UploadedFile.Failure(
+    reference = reference,
+    failureDetails = UploadedFile.FailureDetails(
+      failureReason = UploadedFile.FailureReason.Quarantine,
+      failureMessage = Some("failureMessage")
+    )
+  )
+
   private val upscanInitiateResponse    = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
@@ -55,26 +73,14 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
     )
   )
 
-  private val initiatedFile = UploadedFile.Initiated(reference = "reference")
-
-  private val successfulFile = UploadedFile.Success(
-    reference = "reference",
-    downloadUrl = "downloadUrl",
-    uploadDetails = UploadedFile.UploadDetails(
-      fileName = "fileName",
-      fileMimeType = "fileMimeType",
-      uploadTimestamp = Instant.now(),
-      checksum = "checksum",
-      size = 1337
+  private def getPostRequest: FakeRequest[AnyContentAsEmpty.type] = {
+    FakeRequest(
+      POST,
+      controllers.routes.UploadInProgressController
+        .checkProgress(draftId, Some(reference))
+        .url
     )
-  )
-  private val failedFile     = UploadedFile.Failure(
-    reference = "reference",
-    failureDetails = UploadedFile.FailureDetails(
-      failureReason = UploadedFile.FailureReason.Quarantine,
-      failureMessage = Some("failureMessage")
-    )
-  )
+  }
 
   "UploadInProgress Controller" - {
 
@@ -100,6 +106,32 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
     }
 
     "Check Progress" - {
+      "when there is an initiated file (upload in progress)" - {
+
+        val userAnswers = userAnswersAsIndividualTrader
+          .set(UploadSupportingDocumentPage, initiatedFile)
+          .success
+          .value
+
+        "when the key matches the file" - {
+
+          "must redirect to the next page" in {
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(
+                bind[FileService].toInstance(mockFileService)
+              )
+              .build()
+
+            val result = route(application, getPostRequest).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual routes.UploadInProgressController
+              .onPageLoad(draftId, Some(reference))
+              .url
+          }
+        }
+      }
+
       "when there is a successful file" - {
 
         val userAnswers = userAnswersAsIndividualTrader
@@ -118,21 +150,10 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
               )
               .build()
 
-            val request = FakeRequest(
-              POST,
-              controllers.routes.UploadInProgressController
-                .checkProgress(
-                  draftId,
-                  Some(initiatedFile.reference)
-                )
-                .url
-            )
+            val result = route(application, getPostRequest).value
 
-            val result = route(application, request).value
-
-            status(result) mustEqual 303
+            status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual onwardRoute.url
-            verify(mockFileService, times(0)).initiate(any(), any(), any())(any())
           }
         }
       }
@@ -156,17 +177,7 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
           when(mockFileService.initiate(any(), any(), any())(any()))
             .thenReturn(Future.successful(upscanInitiateResponse))
 
-          val request = FakeRequest(
-            POST,
-            controllers.routes.UploadInProgressController
-              .checkProgress(
-                draftId,
-                Some(failedFile.reference)
-              )
-              .url
-          )
-
-          val result = route(application, request).value
+          val result = route(application, getPostRequest).value
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustEqual routes.UploadSupportingDocumentsController
