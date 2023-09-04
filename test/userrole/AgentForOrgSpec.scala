@@ -57,6 +57,7 @@ class AgentForOrgSpec extends SpecBase with Matchers {
           mockMessages
         )
       summary.isInstanceOf[(AgentSummary, BusinessEoriDetailsSummary)] mustBe true
+      // TODO check that we're getting the right stuff back
     }
 
     "should return the correct ContactDetails for Application Request" in {
