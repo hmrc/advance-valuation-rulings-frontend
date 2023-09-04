@@ -110,7 +110,7 @@ class VerifyTraderEoriController @Inject() (
                     _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
                     if (continue) {
-                      routes.UploadLetterOfAuthorityController.onPageLoad(draftId, None, None)
+                      routes.UploadLetterOfAuthorityController.onPageLoad(mode, draftId, None, None)
                     } else {
                       routes.EORIBeUpToDateController.onPageLoad(draftId)
                     }
