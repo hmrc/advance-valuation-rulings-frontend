@@ -82,7 +82,7 @@ class ProvideTraderEoriController @Inject() (
               request.userAnswers.set(ProvideTraderEoriPage, eoriInput.toUpperCase()) match {
                 case Success(eoriAnswers) =>
                   if (!saveDraft) {
-                    proceed(eoriAnswers, eoriInput, mode, draftId)
+                    proceed(eoriAnswers, eoriInput.toUpperCase(), mode, draftId)
                   } else {
                     userAnswersService.set(eoriAnswers).map {
                       _ => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
