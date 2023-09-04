@@ -59,6 +59,7 @@ countrySelect.label = select a country
 
 caption.prefix = This section is
 caption.applicant = Ynglŷn â’r ymgeisydd
+caption.goods = Ynglŷn â’r nwyddau
 
 requiredInformation.caption = Rhestr wirio
 requiredInformation.title = Cyn i chi ddechrau’ch cais
@@ -613,7 +614,7 @@ checkYourAnswer.applicant.dateSubmitted.label = Date submitted
 checkYourAnswers.goods.uploaddocuments.label = Documents uploaded
 
 checkYourAnswers.agent.heading = Ynglŷn â’r asiant
-checkYourAnswers.goods.heading = Ynglŷn â’r ymgeisydd
+checkYourAnswers.goods.heading = Ynglŷn â’r nwyddau
 
 checkYourAnswers.declaration.heading = Eich datganiad
 checkYourAnswers.declaration.paragraph1 = Drwy wneud cais am Ddyfarniad Prisio Uwch rydych yn cadarnhau’r canlynol:
@@ -977,4 +978,5 @@ yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your
 yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
 yourApplicationHasBeenCancelled.button = Go to your applications and rulings
 
-supportingDocuments.remove.hidden = remove this document from your list of supporting documents
+uploadInProgress.title = Upload In Progress
+uploadInProgress.heading = Uploading your document...

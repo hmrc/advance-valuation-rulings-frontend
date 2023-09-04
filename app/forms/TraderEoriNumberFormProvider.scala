@@ -33,7 +33,7 @@ class TraderEoriNumberFormProvider @Inject() extends Mappings {
         .verifying(validEORINumber)
     )
 
-  private val formatRegex: Regex = new Regex("^GB[0-9]{12}")
+  private val formatRegex: Regex = new Regex("^(?i)GB[0-9]{12}")
 
   private val validEORINumber: Constraint[String] =
     Constraint {
