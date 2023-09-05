@@ -48,8 +48,8 @@ class UploadInProgressController @Inject() (
         val answers = request.userAnswers
         val status  = helper.checkForStatus(answers, UploadSupportingDocumentPage).get
         status match {
-          case file: UploadedFile.Success =>
-            Await.result(helper.removeFile(NormalMode, draftId, file.fileUrl.get), 1.seconds)
+          case file: UploadedFile.Success =>  // TODO: WIP
+            Await.result(helper.removeFile(NormalMode, draftId, file.fileUrl.get), 100.seconds)
           case _                          =>
             Ok(view(draftId, key))
         }

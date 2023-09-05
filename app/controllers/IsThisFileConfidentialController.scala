@@ -55,17 +55,16 @@ class IsThisFileConfidentialController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         lazy val isSuccessful =
-          UploadSupportingDocumentPage.get().map(_.isSuccessful).getOrElse(false)
+          UploadSupportingDocumentPage.get().exists(_.isSuccessful)
 
-        isSuccessful match {
-          case true  =>
-            val preparedForm = IsThisFileConfidentialPage.fill(form)
-            Ok(view(preparedForm, mode, draftId))
-          case false =>
-            Redirect(
-              routes.UploadSupportingDocumentsController
-                .onPageLoad(mode, request.userAnswers.draftId, None, None)
-            )
+        if (isSuccessful) {
+          val preparedForm = IsThisFileConfidentialPage.fill(form)
+          Ok(view(preparedForm, mode, draftId))
+        } else {
+          Redirect(
+            routes.UploadSupportingDocumentsController
+              .onPageLoad(mode, request.userAnswers.draftId, None, None)
+          )
         }
     }
 

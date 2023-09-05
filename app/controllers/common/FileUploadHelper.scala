@@ -27,12 +27,10 @@ import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import controllers.ModifiableOps
-import models.{DraftId, Index, Mode, NormalMode, UploadedFile, UserAnswers}
+import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{Page, QuestionPage}
-import queries.{AllDocuments, DraftAttachmentAt, DraftAttachmentQuery}
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
@@ -82,7 +80,7 @@ case class FileUploadHelper @Inject() (
     request: DataRequest[AnyContent]
   ): Future[Result] = {
     osClient.deleteObject(Path.File(fileUrl))
-    showFallbackPage(mode, draftId, false)
+    showFallbackPage(mode, draftId, isLetterOfAuthority = false)
   }
 
   def showInProgressPage(
