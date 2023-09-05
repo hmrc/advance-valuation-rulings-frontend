@@ -18,6 +18,9 @@ package controllers
 
 import javax.inject.Inject
 
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -46,7 +49,7 @@ class UploadInProgressController @Inject() (
         val status  = helper.checkForStatus(answers, UploadSupportingDocumentPage).get
         status match {
           case file: UploadedFile.Success =>
-            helper.removeFile(NormalMode, draftId, file.fileUrl.get)
+            Await.result(helper.removeFile(NormalMode, draftId, file.fileUrl.get), 1.seconds)
           case _                          =>
             Ok(view(draftId, key))
         }
