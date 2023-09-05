@@ -80,8 +80,9 @@ class IsThisFileConfidentialController @Inject() (
               UploadSupportingDocumentPage.get() match {
                 case Some(file: UploadedFile.Success) =>
                   val allDocuments = AllDocuments.get().getOrElse(List.empty[DraftAttachment])
-                  val draft        = DraftAttachment(file, Some(value))
-                  val documents    = allDocuments :+ draft
+
+                  val draft     = DraftAttachment(file, Some(value))
+                  val documents = allDocuments :+ draft
 
                   for {
                     ua <- AllDocuments.set(documents)

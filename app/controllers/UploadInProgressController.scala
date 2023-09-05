@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import controllers.common.FileUploadHelper
-import models.{DraftId, Mode, UploadedFile}
+import models.{DraftId, Mode, NormalMode, UploadedFile}
 import pages.UploadSupportingDocumentPage
 import views.html.UploadInProgressView
 
@@ -39,11 +39,18 @@ class UploadInProgressController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent] =
+  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent]                =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(draftId, key))
+      implicit request =>
+        val answers = request.userAnswers
+        val status  = helper.checkForStatus(answers, UploadSupportingDocumentPage).get
+        status match {
+          case file: UploadedFile.Success =>
+            helper.removeFile(NormalMode, draftId, file.fileUrl.get)
+          case _                          =>
+            Ok(view(draftId, key))
+        }
     }
-
   def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
