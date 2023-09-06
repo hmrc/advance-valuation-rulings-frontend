@@ -46,10 +46,7 @@ class UploadInProgressController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val answers = request.userAnswers
-        val status  = helper.checkForStatus(
-          answers,
-          UploadSupportingDocumentPage
-        ) // .getOrElse(UploadedFile.Initiated)
+        val status  = helper.checkForStatus(answers, UploadSupportingDocumentPage)
         status match {
           case Some(file) =>
             file match {

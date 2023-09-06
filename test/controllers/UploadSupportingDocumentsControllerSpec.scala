@@ -267,6 +267,8 @@ class UploadSupportingDocumentsControllerSpec
 
       when(mockFileService.initiate(any(), any(), any())(any()))
         .thenReturn(Future.successful(upscanInitiateResponse))
+      when(mockFileUploadHelper.removeFile(any(),any(),any())(any()))
+        .thenReturn(Future.successful(play.api.mvc.Results.Ok("test")))
 
       val request = FakeRequest(
         GET,
@@ -277,18 +279,18 @@ class UploadSupportingDocumentsControllerSpec
 
       val result = route(application, request).value
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(
-        draftId = draftId,
-        upscanInitiateResponse = Some(upscanInitiateResponse),
-        errorMessage = None
-      )(messages(application), request).toString
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          draftId = draftId,
+          upscanInitiateResponse = Some(upscanInitiateResponse),
+          errorMessage = None
+        )(messages(application), request).toString
 
-      verify(mockFileUploadHelper).removeFile(
-        eqTo(NormalMode),
-        eqTo(draftId),
-        any()
-      )(any())
+        verify(mockFileUploadHelper).removeFile(
+          eqTo(NormalMode),
+          eqTo(draftId),
+          any()
+        )(any())
     }
   }
 

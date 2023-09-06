@@ -114,24 +114,31 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
 
   "UploadInProgress Controller" - {
 
-    "must return OK and the correct view for a GET" in {
+    "On page load" - {
 
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+      "must return OK and the correct view by default" in {
 
-      running(application) {
-        val request =
-          FakeRequest(GET, routes.UploadInProgressController.onPageLoad(draftId, None).url)
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
-        val result = route(application, request).value
+        running(application) {
+          val request =
+            FakeRequest(GET, routes.UploadInProgressController.onPageLoad(draftId, None).url)
 
-        val view = application.injector.instanceOf[UploadInProgressView]
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(draftId, None)(
-          messages(application),
-          request
-        ).toString
+          val view = application.injector.instanceOf[UploadInProgressView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(draftId, None)(
+            messages(application),
+            request
+          ).toString
+        }
+      }
+
+      "must remove file and redirect back when file status is Success" in {
+        fail  //TODO.
       }
     }
 
