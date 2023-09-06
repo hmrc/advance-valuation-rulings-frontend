@@ -42,7 +42,7 @@ class UploadInProgressController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val answers = request.userAnswers
@@ -51,12 +51,12 @@ class UploadInProgressController @Inject() (
           case Some(file) =>
             file match {
               case file: UploadedFile.Success =>
-                Await.result(helper.removeFile(NormalMode, draftId, file.fileUrl.get), 100.seconds)
+                Await.result(helper.removeFile(mode, draftId, file.fileUrl.get), 3.seconds)
               case _                          =>
-                Ok(view(draftId, key))
+                Ok(view(mode, draftId, key))
             }
           case _          =>
-            Ok(view(draftId, key))
+            Ok(view(mode, draftId, key))
         }
     }
 

@@ -17,14 +17,11 @@
 package controllers
 
 import java.time.Instant
-
 import scala.concurrent.Future
-
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
 import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile, UserAnswers}
@@ -35,7 +32,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{QuestionPage, UploadSupportingDocumentPage}
+import pages.UploadSupportingDocumentPage
 import services.fileupload.FileService
 import views.html.{UploadInProgressView, UploadSupportingDocumentsView}
 
@@ -49,9 +46,10 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
 
   private val initiatedFile = UploadedFile.Initiated(reference = reference)
 
+  private val fileUrl        = "some/path/for/the/download/url"
   private val successfulFile = UploadedFile.Success(
     reference = reference,
-    downloadUrl = "downloadUrl",
+    downloadUrl = fileUrl,
     uploadDetails = UploadedFile.UploadDetails(
       fileName = "fileName",
       fileMimeType = "fileMimeType",
@@ -134,7 +132,7 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
           val view = application.injector.instanceOf[UploadInProgressView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(draftId, None)(
+          contentAsString(result) mustEqual view(NormalMode, draftId, None)(
             messages(application),
             request
           ).toString
@@ -156,13 +154,15 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
             )
             .build()
 
-          when(mockFileService.initiate(any(), any(), any())(any()))
-            .thenReturn(Future.successful(upscanInitiateResponse))
-          when(mockFileUploadHelper.removeFile(any(), any(), any())(any()))
+          when(mockFileUploadHelper.removeFile(eqTo(NormalMode), eqTo(draftId), eqTo(fileUrl))(any()))
             .thenReturn(Future.successful(play.api.mvc.Results.Ok("")))
           when(
-            mockFileUploadHelper.checkForStatus(any[UserAnswers], any[QuestionPage[UploadedFile]])
-          ).thenReturn(Some(successfulFile))
+            mockFileUploadHelper.checkForStatus(
+              eqTo(userAnswers),
+              eqTo(UploadSupportingDocumentPage)
+            )
+          )
+            .thenReturn(Some(successfulFile))
 
           val request = FakeRequest(
             GET,
@@ -177,7 +177,7 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
           verify(mockFileUploadHelper).removeFile(
             eqTo(NormalMode),
             eqTo(draftId),
-            any()
+            eqTo(fileUrl)
           )(any())
         }
       }

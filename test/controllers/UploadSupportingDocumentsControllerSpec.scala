@@ -71,9 +71,10 @@ class UploadSupportingDocumentsControllerSpec
   private val initiatedFile =
     UploadedFile.Initiated("reference")
 
+  private val fileUrl        = "some/path/for/the/download/url"
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
-    downloadUrl = "downloadUrl",
+    downloadUrl = fileUrl,
     uploadDetails = UploadedFile.UploadDetails(
       fileName = "fileName",
       fileMimeType = "fileMimeType",
@@ -290,15 +291,13 @@ class UploadSupportingDocumentsControllerSpec
         )
         .build()
 
-      when(mockFileService.initiate(any(), any(), any())(any()))
-        .thenReturn(Future.successful(upscanInitiateResponse))
-      when(mockFileUploadHelper.removeFile(any(), any(), any())(any()))
+      when(mockFileUploadHelper.removeFile(eqTo(NormalMode), eqTo(draftId), eqTo(fileUrl))(any()))
         .thenReturn(Future.successful(play.api.mvc.Results.Ok("")))
 
       val request = FakeRequest(
         GET,
         controllers.routes.UploadSupportingDocumentsController
-          .onPageLoad(models.NormalMode, draftId, None, None)
+          .onPageLoad(NormalMode, draftId, None, None)
           .url
       )
 
@@ -308,7 +307,7 @@ class UploadSupportingDocumentsControllerSpec
       verify(mockFileUploadHelper).removeFile(
         eqTo(NormalMode),
         eqTo(draftId),
-        any()
+        eqTo(fileUrl)
       )(any())
     }
   }
