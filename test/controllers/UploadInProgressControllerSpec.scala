@@ -26,20 +26,24 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import models.{UploadedFile, UserAnswers}
+import controllers.common.FileUploadHelper
+import models.{NormalMode, UploadedFile, UserAnswers}
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.Mockito.{verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadSupportingDocumentPage
+import pages.{QuestionPage, UploadSupportingDocumentPage}
 import services.fileupload.FileService
 import views.html.{UploadInProgressView, UploadSupportingDocumentsView}
 
 class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
   private val mockFileService = mock[FileService]
+
+  private val mockFileUploadHelper = mock[FileUploadHelper]
 
   private val reference: String = "reference"
 
@@ -137,8 +141,45 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
         }
       }
 
-      "must remove file and redirect back when file status is Success" in {
-        fail  //TODO.
+      "when there is a successful file and the user has unexpectedly navigated back to this page" - {
+
+        val userAnswers = userAnswersAsIndividualTrader
+          .set(UploadSupportingDocumentPage, successfulFile)
+          .success
+          .value
+
+        "must delete file using FileUploadHelper" in {
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(
+              bind[FileService].toInstance(mockFileService),
+              bind[FileUploadHelper].toInstance(mockFileUploadHelper)
+            )
+            .build()
+
+          when(mockFileService.initiate(any(), any(), any())(any()))
+            .thenReturn(Future.successful(upscanInitiateResponse))
+          when(mockFileUploadHelper.removeFile(any(), any(), any())(any()))
+            .thenReturn(Future.successful(play.api.mvc.Results.Ok("")))
+          when(
+            mockFileUploadHelper.checkForStatus(any[UserAnswers], any[QuestionPage[UploadedFile]])
+          ).thenReturn(Some(successfulFile))
+
+          val request = FakeRequest(
+            GET,
+            controllers.routes.UploadInProgressController
+              .onPageLoad(draftId, None)
+              .url
+          )
+
+          val result = route(application, request).value
+          status(result) mustEqual OK
+
+          verify(mockFileUploadHelper).removeFile(
+            eqTo(NormalMode),
+            eqTo(draftId),
+            any()
+          )(any())
+        }
       }
     }
 
