@@ -17,12 +17,11 @@
 package controllers
 
 import scala.concurrent.Future
-
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
 import base.SpecBase
+import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
 import org.mockito.ArgumentMatchers.any
@@ -35,6 +34,8 @@ import pages._
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.UploadSupportingDocumentsView
+
+import java.time.Instant
 
 class UploadSupportingDocumentsControllerSpec
     extends SpecBase
@@ -52,6 +53,7 @@ class UploadSupportingDocumentsControllerSpec
       .url
   private val isLetterOfAuthority       = false
   private val mockFileService           = mock[FileService]
+  private val mockFileUploadHelper      = mock[FileUploadHelper]
   private val mockUserAnswersService    = mock[UserAnswersService]
   private val upscanInitiateResponse    = UpscanInitiateResponse(
     reference = "reference",
@@ -66,6 +68,18 @@ class UploadSupportingDocumentsControllerSpec
 
   private val initiatedFile =
     UploadedFile.Initiated("reference")
+
+  private val successfulFile  = UploadedFile.Success(
+    reference = "reference",
+    downloadUrl = "downloadUrl",
+    uploadDetails = UploadedFile.UploadDetails(
+      fileName = "fileName",
+      fileMimeType = "fileMimeType",
+      uploadTimestamp = Instant.EPOCH,
+      checksum = "checksum",
+      size = 1337
+    )
+  )
 
   "when there is no existing file" - {
 
@@ -231,6 +245,50 @@ class UploadSupportingDocumentsControllerSpec
           )(any())
         }
       }
+    }
+  }
+
+  "when there is a successful file" - {
+
+    val userAnswers = userAnswersAsIndividualTrader
+      .set(UploadSupportingDocumentPage, successfulFile)
+      .success
+      .value
+
+    "when the user has unexpectedly navigated back to this page" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[FileService].toInstance(mockFileService),
+          bind[FileUploadHelper].toInstance(mockFileUploadHelper)
+        )
+        .build()
+
+      val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+      when(mockFileService.initiate(any(), any(), any())(any()))
+        .thenReturn(Future.successful(upscanInitiateResponse))
+
+      val request = FakeRequest(
+        GET,
+        controllers.routes.UploadSupportingDocumentsController
+          .onPageLoad(models.NormalMode, draftId, None, None)
+          .url
+      )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        draftId = draftId,
+        upscanInitiateResponse = Some(upscanInitiateResponse),
+        errorMessage = None
+      )(messages(application), request).toString
+
+      verify(mockFileUploadHelper).removeFile(
+        eqTo(NormalMode),
+        eqTo(draftId),
+        any()
+      )(any())
     }
   }
 

@@ -42,18 +42,27 @@ class UploadInProgressController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent]                =
+  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val answers = request.userAnswers
-        val status  = helper.checkForStatus(answers, UploadSupportingDocumentPage).get
+        val status  = helper.checkForStatus(
+          answers,
+          UploadSupportingDocumentPage
+        ) // .getOrElse(UploadedFile.Initiated)
         status match {
-          case file: UploadedFile.Success =>  // TODO: WIP
-            Await.result(helper.removeFile(NormalMode, draftId, file.fileUrl.get), 100.seconds)
-          case _                          =>
+          case Some(file) =>
+            file match {
+              case file: UploadedFile.Success =>
+                Await.result(helper.removeFile(NormalMode, draftId, file.fileUrl.get), 100.seconds)
+              case _                          =>
+                Ok(view(draftId, key))
+            }
+          case _          =>
             Ok(view(draftId, key))
         }
     }
+
   def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
@@ -86,7 +95,7 @@ class UploadInProgressController @Inject() (
               )
 
           }
-          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority = true))
+          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false))
     }
 
 }
