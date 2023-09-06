@@ -494,7 +494,7 @@ uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on 
 uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
 uploadLetterOfAuthority.bulletPoint.4 = contain your contact details including your EORI number, email address, phone number and the address registered with HMRC
 uploadLetterOfAuthority.bulletPoint.5 = smaller than 5MB
-uploadLetterOfAuthority.bulletPoint.6 = a PDF or JPG
+uploadLetterOfAuthority.bulletPoint.6 = a PDF or JPEG
 uploadLetterOfAuthority.label = Upload a file
 uploadLetterOfAuthority.button = Upload and continue
 
@@ -528,7 +528,7 @@ fileUpload.error.invalidargument = Select a file to upload
 fileUpload.error.duplicate = You can only upload distinct files
 fileUpload.error.failed = The selected file failed to upload
 fileUpload.error.quarantine = The selected file contains a virus
-fileUpload.error.rejected = The selected file must be a PDF or JPG
+fileUpload.error.rejected = The selected file must be a PDF or JPEG
 fileUpload.error.unknown = There was a problem uploading your file
 
 

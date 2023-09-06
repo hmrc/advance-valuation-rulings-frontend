@@ -539,7 +539,7 @@ uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on 
 uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
 uploadLetterOfAuthority.bulletPoint.4 = contain your contact details including your EORI number, email address, phone number and the address registered with HMRC
 uploadLetterOfAuthority.bulletPoint.5 = smaller than 5MB
-uploadLetterOfAuthority.bulletPoint.6 = a PDF or JPG
+uploadLetterOfAuthority.bulletPoint.6 = a PDF or JPEG
 uploadLetterOfAuthority.label = Upload a file
 uploadLetterOfAuthority.button = Upload and continue
 
@@ -559,7 +559,7 @@ uploadSupportingDocuments.paragraph.2 = Mae’n rhaid i ffeil fod yn:
 uploadSupportingDocuments.bulletPoint.1 = un ffeil ar y tro
 uploadSupportingDocuments.bulletPoint.2 = hyd at {0} ffeil
 uploadSupportingDocuments.bulletPoint.3 = llai na {0}MB
-uploadSupportingDocuments.bulletPoint.4 = ar ffurf pdf neu jpeg
+uploadSupportingDocuments.bulletPoint.4 = ar ffurf PDF neu JPEG
 
 uploadSupportingDocuments.label = Uwchlwytho ffeil
 uploadSupportingDocuments.button = Uwchlwytho a pharhau
@@ -574,7 +574,7 @@ fileUpload.error.invalidargument = Select a file to upload
 fileUpload.error.duplicate = You can only upload distinct files
 fileUpload.error.failed = The selected file failed to upload
 fileUpload.error.quarantine = The selected file contains a virus
-fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf pdf neu jpeg
+fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf PDF neu JPEG
 fileUpload.error.unknown = There was a problem uploading your file
 
 uploadAnotherSupportingDocument.title.one = Rydych wedi uwchlwytho un ddogfen ategol
