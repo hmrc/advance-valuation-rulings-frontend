@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import controllers.common.FileUploadHelper
-import models.{DraftId, Mode, NormalMode, UploadedFile}
+import models.{DraftId, Mode, UploadedFile}
 import pages.UploadSupportingDocumentPage
 import views.html.UploadInProgressView
 
