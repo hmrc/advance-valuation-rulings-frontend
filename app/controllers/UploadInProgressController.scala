@@ -18,6 +18,9 @@ package controllers
 
 import javax.inject.Inject
 
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -39,9 +42,22 @@ class UploadInProgressController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent] =
+  def onPageLoad(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(draftId, key))
+      implicit request =>
+        val answers = request.userAnswers
+        val status  = helper.checkForStatus(answers, UploadSupportingDocumentPage)
+        status match {
+          case Some(file) =>
+            file match {
+              case file: UploadedFile.Success =>
+                Await.result(helper.removeFile(mode, draftId, file.fileUrl.get), 3.seconds)
+              case _                          =>
+                Ok(view(mode, draftId, key))
+            }
+          case _          =>
+            Ok(view(mode, draftId, key))
+        }
     }
 
   def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
@@ -76,7 +92,7 @@ class UploadInProgressController @Inject() (
               )
 
           }
-          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority = true))
+          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false))
     }
 
 }

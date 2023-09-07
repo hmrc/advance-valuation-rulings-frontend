@@ -69,7 +69,8 @@ class UploadSupportingDocumentsController @Inject() (
                     helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
                   }
                 }
-
+            case file: UploadedFile.Success   =>
+              helper.removeFile(mode, draftId, file.fileUrl.get)
           }
           .getOrElse {
             helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)

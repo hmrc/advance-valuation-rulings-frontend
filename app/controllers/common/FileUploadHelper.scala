@@ -22,12 +22,16 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{MessagesControllerComponents, RequestHeader, Result}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, RequestHeader, Result}
+import uk.gov.hmrc.objectstore.client.Path
+import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.{Page, QuestionPage}
+import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
@@ -38,7 +42,9 @@ case class FileUploadHelper @Inject() (
   letterOfAuthorityView: UploadLetterOfAuthorityView,
   fileService: FileService,
   navigator: Navigator,
-  configuration: Configuration
+  configuration: Configuration,
+  userAnswersService: UserAnswersService,
+  osClient: PlayObjectStoreClient
 )(implicit ec: ExecutionContext)
     extends I18nSupport
     with FrontendBaseController {
@@ -69,6 +75,13 @@ case class FileUploadHelper @Inject() (
     page: QuestionPage[UploadedFile]
   ): Option[UploadedFile] =
     userAnswers.get(page)
+
+  def removeFile(mode: Mode, draftId: DraftId, fileUrl: String)(implicit
+    request: DataRequest[AnyContent]
+  ): Future[Result] = {
+    osClient.deleteObject(Path.File(fileUrl))
+    showFallbackPage(mode, draftId, isLetterOfAuthority = false)
+  }
 
   def showInProgressPage(
     draftId: DraftId,
@@ -155,7 +168,8 @@ case class FileUploadHelper @Inject() (
         navigator.nextPage(page, mode, answers)
       )
     )
-  def errorForCode(code: String)(implicit messages: Messages): String        =
+
+  def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
         Messages("fileUpload.error.invalidargument")
