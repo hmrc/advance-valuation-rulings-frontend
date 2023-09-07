@@ -17,19 +17,24 @@
 package controllers
 
 import java.time.Instant
+
 import scala.concurrent.Future
+
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
 import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile, UserAnswers}
+import models.requests.DataRequest
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
+import org.mockito.MockitoSugar.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UploadSupportingDocumentPage
@@ -37,6 +42,11 @@ import services.fileupload.FileService
 import views.html.{UploadInProgressView, UploadSupportingDocumentsView}
 
 class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockFileService, mockFileUploadHelper)
+  }
 
   private val mockFileService = mock[FileService]
 
@@ -154,7 +164,9 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
             )
             .build()
 
-          when(mockFileUploadHelper.removeFile(eqTo(NormalMode), eqTo(draftId), eqTo(fileUrl))(any()))
+          when(
+            mockFileUploadHelper.removeFile(eqTo(NormalMode), eqTo(draftId), eqTo(fileUrl))(any())
+          )
             .thenReturn(Future.successful(play.api.mvc.Results.Ok("")))
           when(
             mockFileUploadHelper.checkForStatus(
@@ -179,6 +191,42 @@ class UploadInProgressControllerSpec extends SpecBase with MockitoSugar with Bef
             eqTo(draftId),
             eqTo(fileUrl)
           )(any())
+        }
+
+        "must redirect to fallback page" in {
+          val mockDataRequest = mock[DataRequest[Any]]
+          val application     = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(
+              bind[DataRequest[Any]].toInstance(mockDataRequest),
+              bind[FileService].toInstance(mockFileService)
+            )
+            .build()
+
+          lazy val redirectPath: String = controllers.routes.UploadSupportingDocumentsController
+            .onPageLoad(NormalMode, draftId, None, None)
+            .url
+
+          when(mockDataRequest.userAnswers).thenReturn(userAnswers)
+          when(mockFileService.initiate(eqTo(draftId), eqTo(redirectPath), eqTo(false))(any()))
+            .thenReturn(Future.successful(upscanInitiateResponse))
+
+          val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+          running(application) {
+            val request = FakeRequest(
+              GET,
+              routes.UploadInProgressController.onPageLoad(draftId, None).url
+            )
+
+            val result = route(application, request).value
+
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(
+              draftId = draftId,
+              upscanInitiateResponse = Some(upscanInitiateResponse),
+              errorMessage = None
+            )(messages(application), request).toString
+          }
         }
       }
     }

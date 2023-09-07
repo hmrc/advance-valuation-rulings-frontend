@@ -168,7 +168,8 @@ case class FileUploadHelper @Inject() (
         navigator.nextPage(page, mode, answers)
       )
     )
-  def errorForCode(code: String)(implicit messages: Messages): String        =
+
+  def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
         Messages("fileUpload.error.invalidargument")

@@ -310,5 +310,33 @@ class UploadSupportingDocumentsControllerSpec
         eqTo(fileUrl)
       )(any())
     }
+
+    "must redirect to fallback page" in {
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[FileService].toInstance(mockFileService)
+        )
+        .build()
+
+      val view = application.injector.instanceOf[UploadSupportingDocumentsView]
+
+      when(mockFileService.initiate(eqTo(draftId), eqTo(redirectPath), eqTo(false))(any()))
+        .thenReturn(Future.successful(upscanInitiateResponse))
+
+      val request = FakeRequest(
+        GET,
+        controllers.routes.UploadSupportingDocumentsController
+          .onPageLoad(NormalMode, draftId, None, None)
+          .url
+      )
+
+      val result = route(application, request).value
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        draftId = draftId,
+        upscanInitiateResponse = Some(upscanInitiateResponse),
+        errorMessage = None
+      )(messages(application), request).toString
+    }
   }
 }
