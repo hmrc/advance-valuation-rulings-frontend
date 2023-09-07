@@ -90,19 +90,6 @@ class AgentSummarySpec extends SpecBase {
         )
       }
 
-      "create row for agent applicant role" in {
-        rows must contain(
-          (
-            Key(Text("checkYourAnswersForAgents.applicant.role.label")),
-            Value(
-              Text(
-                s"${WhatIsYourRoleAsImporter.MessagePrefix}.${WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg}"
-              )
-            )
-          )
-        )
-      }
-
       "create row for agent EORI number" in {
         rows must contain(
           (
