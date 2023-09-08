@@ -31,6 +31,7 @@ import models.{DraftId, Mode, UploadedFile}
 import pages.UploadSupportingDocumentPage
 import views.html.UploadInProgressView
 
+// TODO: Allow true as well as false for isLetterOfAuthority Boolean.
 class UploadInProgressController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
@@ -51,7 +52,15 @@ class UploadInProgressController @Inject() (
           case Some(file) =>
             file match {
               case file: UploadedFile.Success =>
-                Await.result(helper.removeFile(mode, draftId, file.fileUrl.get), 3.seconds)
+                Await.result(
+                  helper.removeFile(
+                    mode,
+                    draftId,
+                    file.fileUrl.get,
+                    isLetterOfAuthority = false
+                  ),
+                  3.seconds
+                )
               case _                          =>
                 Ok(view(mode, draftId, key))
             }

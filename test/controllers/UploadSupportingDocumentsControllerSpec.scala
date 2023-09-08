@@ -291,7 +291,14 @@ class UploadSupportingDocumentsControllerSpec
         )
         .build()
 
-      when(mockFileUploadHelper.removeFile(eqTo(NormalMode), eqTo(draftId), eqTo(fileUrl))(any()))
+      when(
+        mockFileUploadHelper.removeFile(
+          eqTo(NormalMode),
+          eqTo(draftId),
+          eqTo(fileUrl),
+          eqTo(isLetterOfAuthority)
+        )(any())
+      )
         .thenReturn(Future.successful(play.api.mvc.Results.Ok("")))
 
       val request = FakeRequest(
@@ -307,7 +314,8 @@ class UploadSupportingDocumentsControllerSpec
       verify(mockFileUploadHelper).removeFile(
         eqTo(NormalMode),
         eqTo(draftId),
-        eqTo(fileUrl)
+        eqTo(fileUrl),
+        eqTo(isLetterOfAuthority)
       )(any())
     }
 

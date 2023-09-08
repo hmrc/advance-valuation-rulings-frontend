@@ -60,13 +60,23 @@ case class FileUploadHelper @Inject() (
     val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
       response =>
-        Ok(
-          supportingDocumentsView(
-            draftId = draftId,
-            upscanInitiateResponse = Some(response),
-            errorMessage = None
+        if (isLetterOfAuthority) {
+          Ok(
+            letterOfAuthorityView(
+              draftId = draftId,
+              upscanInitiateResponse = Some(response),
+              errorMessage = None
+            )
           )
-        )
+        } else {
+          Ok(
+            supportingDocumentsView(
+              draftId = draftId,
+              upscanInitiateResponse = Some(response),
+              errorMessage = None
+            )
+          )
+        }
     }
   }
 
@@ -76,11 +86,11 @@ case class FileUploadHelper @Inject() (
   ): Option[UploadedFile] =
     userAnswers.get(page)
 
-  def removeFile(mode: Mode, draftId: DraftId, fileUrl: String)(implicit
-    request: DataRequest[AnyContent]
+  def removeFile(mode: Mode, draftId: DraftId, fileUrl: String, isLetterOfAuthority: Boolean)(
+    implicit request: DataRequest[AnyContent]
   ): Future[Result] = {
     osClient.deleteObject(Path.File(fileUrl))
-    showFallbackPage(mode, draftId, isLetterOfAuthority = false)
+    showFallbackPage(mode, draftId, isLetterOfAuthority)
   }
 
   def showInProgressPage(
