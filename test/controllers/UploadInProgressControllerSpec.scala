@@ -54,7 +54,7 @@ class UploadInProgressControllerSpec
     reset(mockFileService, mockFileUploadHelper)
   }
 
-  val parameterisedCases = Table("Is Letter of Authority", false) //TODO: Add true case.
+  val parameterisedCases = Table("Is Letter of Authority", false) // TODO: Add true case.
 
   private val mockFileService = mock[FileService]
 
@@ -114,9 +114,11 @@ class UploadInProgressControllerSpec
         .url
     }
 
-  private def expectedContentForView(isLetterOfAuthority: Boolean,
-                                     application: Application,
-                                     request: FakeRequest[AnyContentAsEmpty.type]) = {
+  private def expectedContentForView(
+    isLetterOfAuthority: Boolean,
+    application: Application,
+    request: FakeRequest[AnyContentAsEmpty.type]
+  ) =
     if (isLetterOfAuthority) {
       val view = application.injector.instanceOf[UploadLetterOfAuthorityView]
       view(
@@ -132,13 +134,12 @@ class UploadInProgressControllerSpec
         errorMessage = None
       )(messages(application), request).toString
     }
-  }
 
   private def expectedUrlForView(isLetterOfAuthority: Boolean) = {
-    val mode = models.NormalMode
-    val id = draftId
+    val mode      = models.NormalMode
+    val id        = draftId
     val errorCode = Some("Quarantine")
-    val key = Some(reference)
+    val key       = Some(reference)
 
     if (isLetterOfAuthority) {
       routes.UploadLetterOfAuthorityController.onPageLoad(mode, id, errorCode, key).url
@@ -147,10 +148,9 @@ class UploadInProgressControllerSpec
     }
   }
 
-  private def testFallbackPageIsShown(userAnswers: UserAnswers): Unit = {
+  private def testFallbackPageIsShown(userAnswers: UserAnswers): Unit =
     forAll(parameterisedCases) {
       (isLetterOfAuthority: Boolean) =>
-
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[FileService].toInstance(mockFileService)
@@ -174,7 +174,6 @@ class UploadInProgressControllerSpec
         status(result) mustEqual OK
         contentAsString(result) mustEqual expectedContent
     }
-  }
 
   "UploadInProgress Controller" - {
 
@@ -255,9 +254,8 @@ class UploadInProgressControllerSpec
         "Parameterised: must redirect to fallback page" in {
           forAll(parameterisedCases) {
             (isLetterOfAuthority: Boolean) =>
-
               val mockDataRequest = mock[DataRequest[Any]]
-              val application = applicationBuilder(userAnswers = Some(userAnswers))
+              val application     = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[DataRequest[Any]].toInstance(mockDataRequest),
                   bind[FileService].toInstance(mockFileService)
@@ -267,11 +265,13 @@ class UploadInProgressControllerSpec
               lazy val redirectPath: String = getRedirectPath(isLetterOfAuthority)
 
               when(mockDataRequest.userAnswers).thenReturn(userAnswers)
-              when(mockFileService.initiate(
-                eqTo(draftId),
-                eqTo(redirectPath),
-                eqTo(isLetterOfAuthority)
-              )(any()))
+              when(
+                mockFileService.initiate(
+                  eqTo(draftId),
+                  eqTo(redirectPath),
+                  eqTo(isLetterOfAuthority)
+                )(any())
+              )
                 .thenReturn(Future.successful(upscanInitiateResponse))
 
               running(application) {
@@ -280,7 +280,8 @@ class UploadInProgressControllerSpec
                   routes.UploadInProgressController.onPageLoad(draftId, None).url
                 )
 
-                val expectedContent = expectedContentForView(isLetterOfAuthority, application, request)
+                val expectedContent =
+                  expectedContentForView(isLetterOfAuthority, application, request)
 
                 val result = route(application, request).value
 
@@ -370,7 +371,6 @@ class UploadInProgressControllerSpec
         "Parameterised: must redirect back to the page with the relevant error code" in {
           forAll(parameterisedCases) {
             (isLetterOfAuthority: Boolean) =>
-
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[FileService].toInstance(mockFileService)
