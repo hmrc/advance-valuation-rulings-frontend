@@ -456,7 +456,6 @@ hasCommodityCode.change.hidden = your response to whether you have a commodity c
 contactPage.caption = Ynglŷn â’r ymgeisydd
 contactPage.title = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
 contactPage.heading = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
-contactPage.paragraph.1 = Os bydd angen rhagor o wybodaeth arnom ynghylch eich cais, byddwn yn cysylltu â chi
 contactPage.paragraph.2 = Sylwer – efallai na fydd cyfathrebu drwy e-bost bob amser yn ddiogel, gan ei bod hi’n bosib y gall e-byst gael eu darllen neu eu newid gan rywun arall. Os ydych yn dewis i barhau â’ch cais, rydych yn derbyn y risgiau cysylltiedig.
 
 commodityCode.caption = Ynglŷn â’r nwyddau

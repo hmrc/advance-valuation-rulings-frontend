@@ -279,10 +279,9 @@ invalidTraderEori.heading = EORI number {0} is invalid
 invalidTraderEori.p1 = The EORI number you have provided does not match any business on our records.
 invalidTraderEori.p2 = You will need to contact the trader directly to clarify their EORI number.
 
-contactPage.title = If we need to contact you about your application
-contactPage.heading = If we need to contact you about your application
+contactPage.title = If we need more information about your application we will contact you
+contactPage.heading = If we need more information about your application we will contact you
 contactPage.caption = About the applicant
-contactPage.paragraph.1 = If we need more information about your application we will contact you
 contactPage.paragraph.2 = Please note that email communication may not always be secure, as emails can be read or changed by someone else. If you choose to continue your application, you accept the risks involved.
 
 importGoods.title = Are you planning to import goods into Great Britain?
