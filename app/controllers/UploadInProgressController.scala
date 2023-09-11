@@ -31,7 +31,6 @@ import models.{DraftId, Mode, UploadedFile}
 import pages.UploadSupportingDocumentPage
 import views.html.UploadInProgressView
 
-// TODO: Allow true as well as false for isLetterOfAuthority Boolean.
 class UploadInProgressController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
@@ -43,7 +42,12 @@ class UploadInProgressController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
+  def onPageLoad(
+    mode: Mode,
+    draftId: DraftId,
+    key: Option[String],
+    isLetterOfAuthority: Boolean
+  ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val answers = request.userAnswers
@@ -57,19 +61,24 @@ class UploadInProgressController @Inject() (
                     mode,
                     draftId,
                     file.fileUrl.get,
-                    isLetterOfAuthority = false
+                    isLetterOfAuthority
                   ),
                   3.seconds
                 )
               case _                          =>
-                Ok(view(mode, draftId, key))
+                Ok(view(mode, draftId, key, isLetterOfAuthority))
             }
           case _          =>
-            Ok(view(mode, draftId, key))
+            Ok(view(mode, draftId, key, isLetterOfAuthority))
         }
     }
 
-  def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
+  def checkProgress(
+    mode: Mode,
+    draftId: DraftId,
+    key: Option[String],
+    isLetterOfAuthority: Boolean
+  ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val answers = request.userAnswers
@@ -79,16 +88,16 @@ class UploadInProgressController @Inject() (
 
             case file: UploadedFile.Initiated =>
               if (key.contains(file.reference)) {
-                helper.showInProgressPage(draftId, key)
+                helper.showInProgressPage(draftId, key, isLetterOfAuthority)
               } else {
-                helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
+                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
               }
 
             case file: UploadedFile.Success =>
               if (key.contains(file.reference)) {
                 helper.continue(mode, answers, UploadSupportingDocumentPage)
               } else {
-                helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
+                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
               }
 
             case file: UploadedFile.Failure =>
@@ -96,12 +105,12 @@ class UploadInProgressController @Inject() (
                 draftId,
                 key,
                 file.failureDetails.failureReason.toString,
-                isLetterOfAuthority = false,
+                isLetterOfAuthority,
                 mode
               )
 
           }
-          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false))
+          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority))
     }
 
 }

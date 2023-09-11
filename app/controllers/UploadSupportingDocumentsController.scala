@@ -49,8 +49,7 @@ class UploadSupportingDocumentsController @Inject() (
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val answers    = request.userAnswers
-        val fileStatus = answers
-          .get(UploadSupportingDocumentPage)
+        val fileStatus = answers.get(UploadSupportingDocumentPage)
 
         fileStatus
           .map {
@@ -66,7 +65,7 @@ class UploadSupportingDocumentsController @Inject() (
                 )
                 .getOrElse {
                   if (key.contains(file.reference)) {
-                    helper.showInProgressPage(draftId, key)
+                    helper.showInProgressPage(draftId, key, isLetterOfAuthority)
                   } else {
                     helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
                   }

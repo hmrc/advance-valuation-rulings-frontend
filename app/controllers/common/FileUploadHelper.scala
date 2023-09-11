@@ -95,10 +95,13 @@ case class FileUploadHelper @Inject() (
 
   def showInProgressPage(
     draftId: DraftId,
-    key: Option[String]
+    key: Option[String],
+    isLetterOfAuthority: Boolean
   ): Future[Result] =
     Future.successful(
-      Redirect(controllers.routes.UploadInProgressController.onPageLoad(draftId, key))
+      Redirect(
+        controllers.routes.UploadInProgressController.onPageLoad(draftId, key, isLetterOfAuthority)
+      )
     )
 
   def showErrorPage(

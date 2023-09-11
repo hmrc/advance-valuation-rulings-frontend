@@ -95,11 +95,11 @@ class UploadInProgressControllerSpec
     )
   )
 
-  private def getPostRequest: FakeRequest[AnyContentAsEmpty.type] =
+  private def getPostRequest(isLetterOfAuthority: Boolean): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(
       POST,
       controllers.routes.UploadInProgressController
-        .checkProgress(draftId, Some(reference))
+        .checkProgress(draftId, Some(reference), isLetterOfAuthority)
         .url
     )
 
@@ -163,7 +163,7 @@ class UploadInProgressControllerSpec
         val request = FakeRequest(
           POST,
           controllers.routes.UploadInProgressController
-            .checkProgress(draftId, Some("otherReference"))
+            .checkProgress(draftId, Some("otherReference"), isLetterOfAuthority)
             .url
         )
 
@@ -181,19 +181,23 @@ class UploadInProgressControllerSpec
 
       "must return OK and the correct view by default" in {
 
-        val application =
+        val isLetterOfAuthority = false // Page redirection is not tested in this test.
+        val application         =
           applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
         running(application) {
           val request =
-            FakeRequest(GET, routes.UploadInProgressController.onPageLoad(draftId, None).url)
+            FakeRequest(
+              GET,
+              routes.UploadInProgressController.onPageLoad(draftId, None, isLetterOfAuthority).url
+            )
 
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[UploadInProgressView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(NormalMode, draftId, None)(
+          contentAsString(result) mustEqual view(NormalMode, draftId, None, isLetterOfAuthority)(
             messages(application),
             request
           ).toString
@@ -236,7 +240,7 @@ class UploadInProgressControllerSpec
           val request = FakeRequest(
             GET,
             controllers.routes.UploadInProgressController
-              .onPageLoad(draftId, None)
+              .onPageLoad(draftId, None, isLetterOfAuthority)
               .url
           )
 
@@ -277,7 +281,9 @@ class UploadInProgressControllerSpec
               running(application) {
                 val request = FakeRequest(
                   GET,
-                  routes.UploadInProgressController.onPageLoad(draftId, None).url
+                  routes.UploadInProgressController
+                    .onPageLoad(draftId, None, isLetterOfAuthority)
+                    .url
                 )
 
                 val expectedContent =
@@ -303,18 +309,19 @@ class UploadInProgressControllerSpec
 
         "when the key matches the file" - {
 
-          "must redirect to the next page" in {
-            val application = applicationBuilder(userAnswers = Some(userAnswers))
+          "must remain on the loading page" in {
+            val isLetterOfAuthority = false // Page redirection is not tested in this test.
+            val application         = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(
                 bind[FileService].toInstance(mockFileService)
               )
               .build()
 
-            val result = route(application, getPostRequest).value
+            val result = route(application, getPostRequest(isLetterOfAuthority)).value
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual routes.UploadInProgressController
-              .onPageLoad(draftId, Some(reference))
+              .onPageLoad(draftId, Some(reference), isLetterOfAuthority)
               .url
           }
         }
@@ -345,7 +352,9 @@ class UploadInProgressControllerSpec
               )
               .build()
 
-            val result = route(application, getPostRequest).value
+            // Since the onward route is a fake URL,
+            // this test is not concerned with the value of isLetterOfAuthority.
+            val result = route(application, getPostRequest(false)).value
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual onwardRoute.url
@@ -382,7 +391,7 @@ class UploadInProgressControllerSpec
 
               val expectedUrl = expectedUrlForView(isLetterOfAuthority)
 
-              val result = route(application, getPostRequest).value
+              val result = route(application, getPostRequest(isLetterOfAuthority)).value
 
               status(result) mustEqual SEE_OTHER
               redirectLocation(result).value mustEqual expectedUrl
