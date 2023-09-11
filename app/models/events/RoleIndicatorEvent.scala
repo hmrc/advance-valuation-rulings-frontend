@@ -21,7 +21,7 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 
 import models.WhatIsYourRoleAsImporter
 
-final case class AgentIndicatorEvent(
+final case class RoleIndicatorEvent(
   internalId: String,
   eori: String,
   affinityGroup: AffinityGroup,
@@ -30,6 +30,6 @@ final case class AgentIndicatorEvent(
   role: Option[WhatIsYourRoleAsImporter]
 )
 
-object AgentIndicatorEvent {
-  implicit val format: OFormat[AgentIndicatorEvent] = Json.format[AgentIndicatorEvent]
+object RoleIndicatorEvent {
+  implicit val format: OFormat[RoleIndicatorEvent] = Json.format[RoleIndicatorEvent]
 }
