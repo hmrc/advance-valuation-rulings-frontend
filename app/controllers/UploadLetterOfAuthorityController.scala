@@ -55,7 +55,6 @@ class UploadLetterOfAuthorityController @Inject() (
           errorCode,
           key,
           fileStatus,
-          helper,
           isLetterOfAuthority = true
         )
     }

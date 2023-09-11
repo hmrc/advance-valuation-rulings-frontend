@@ -57,7 +57,6 @@ case class FileUploadHelper @Inject() (
     errorCode: Option[String],
     key: Option[String],
     fileStatus: Option[UploadedFile],
-    helper: FileUploadHelper,
     isLetterOfAuthority: Boolean
   )(implicit
     request: DataRequest[AnyContent]
@@ -68,24 +67,24 @@ case class FileUploadHelper @Inject() (
           errorCode
             .map(
               errorCode =>
-                helper.showErrorPage(
+                showErrorPage(
                   draftId,
-                  helper.errorForCode(errorCode),
+                  errorForCode(errorCode),
                   isLetterOfAuthority
                 )
             )
             .getOrElse {
               if (key.contains(file.reference)) {
-                helper.showInProgressPage(draftId, key, isLetterOfAuthority)
+                showInProgressPage(draftId, key, isLetterOfAuthority)
               } else {
-                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
+                showFallbackPage(mode, draftId, isLetterOfAuthority)
               }
             }
         case file: UploadedFile.Success   =>
-          helper.removeFile(mode, draftId, file.fileUrl.get, isLetterOfAuthority)
+          removeFile(mode, draftId, file.fileUrl.get, isLetterOfAuthority)
       }
       .getOrElse {
-        helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
+        showFallbackPage(mode, draftId, isLetterOfAuthority)
       }
 
   def checkForStatus(

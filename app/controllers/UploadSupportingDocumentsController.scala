@@ -55,7 +55,6 @@ class UploadSupportingDocumentsController @Inject() (
           errorCode,
           key,
           fileStatus,
-          helper,
           isLetterOfAuthority = false
         )
     }
