@@ -91,12 +91,13 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
     "must send AgentIndicatorEvent to auditConnector" in {
       forAll(importerRoles) {
         case (importerRole, isAgent) =>
-          val event = AgentIndicatorEvent(
+          val event = RoleIndicatorEvent(
             dataRequest.userId,
             dataRequest.eoriNumber,
             dataRequest.affinityGroup,
             dataRequest.credentialRole,
-            Option(isAgent)
+            Option(isAgent),
+            Option(AgentOnBehalfOfOrg)
           )
 
           new AuditService(mockAuditConnector).sendRoleIndicatorEvent(importerRole)
