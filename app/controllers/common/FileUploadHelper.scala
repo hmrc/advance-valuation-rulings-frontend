@@ -51,6 +51,99 @@ case class FileUploadHelper @Inject() (
 
   private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
 
+  def onPageLoadWithFileStatus(
+    mode: Mode,
+    draftId: DraftId,
+    errorCode: Option[String],
+    key: Option[String],
+    fileStatus: Option[UploadedFile],
+    helper: FileUploadHelper,
+    isLetterOfAuthority: Boolean
+  )(implicit
+    request: DataRequest[AnyContent]
+  ): Future[Result] =
+    fileStatus
+      .map {
+        case file: UploadedFile.Initiated =>
+          errorCode
+            .map(
+              errorCode =>
+                helper.showErrorPage(
+                  draftId,
+                  helper.errorForCode(errorCode),
+                  isLetterOfAuthority
+                )
+            )
+            .getOrElse {
+              if (key.contains(file.reference)) {
+                helper.showInProgressPage(draftId, key, isLetterOfAuthority)
+              } else {
+                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
+              }
+            }
+        case file: UploadedFile.Success   =>
+          helper.removeFile(mode, draftId, file.fileUrl.get, isLetterOfAuthority)
+      }
+      .getOrElse {
+        helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
+      }
+
+  def checkForStatus(
+    userAnswers: UserAnswers,
+    page: QuestionPage[UploadedFile]
+  ): Option[UploadedFile] =
+    userAnswers.get(page)
+
+  def removeFile(mode: Mode, draftId: DraftId, fileUrl: String, isLetterOfAuthority: Boolean)(
+    implicit request: DataRequest[AnyContent]
+  ): Future[Result] = {
+    osClient.deleteObject(Path.File(fileUrl))
+    showFallbackPage(mode, draftId, isLetterOfAuthority)
+  }
+
+  def showInProgressPage(
+    draftId: DraftId,
+    key: Option[String],
+    isLetterOfAuthority: Boolean
+  ): Future[Result] =
+    Future.successful(
+      Redirect(
+        controllers.routes.UploadInProgressController.onPageLoad(draftId, key, isLetterOfAuthority)
+      )
+    )
+
+  def continue(mode: Mode, answers: UserAnswers, page: Page): Future[Result] =
+    Future.successful(
+      Redirect(
+        navigator.nextPage(page, mode, answers)
+      )
+    )
+
+  def redirectWithError(
+    draftId: DraftId,
+    key: Option[String],
+    errorCode: String,
+    isLetterOfAuthority: Boolean,
+    mode: Mode
+  )(implicit request: RequestHeader): Future[Result] = {
+    val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
+
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
+      _ =>
+        if (isLetterOfAuthority) {
+          Redirect(
+            controllers.routes.UploadLetterOfAuthorityController
+              .onPageLoad(mode, draftId, Some(errorCode), key)
+          )
+        } else {
+          Redirect(
+            controllers.routes.UploadSupportingDocumentsController
+              .onPageLoad(mode, draftId, Some(errorCode), key)
+          )
+        }
+    }
+  }
+
   /** If an un unexpected error occurs, the user will be redirected back to the corresponding upload
     * file page.
     */
@@ -80,31 +173,7 @@ case class FileUploadHelper @Inject() (
     }
   }
 
-  def checkForStatus(
-    userAnswers: UserAnswers,
-    page: QuestionPage[UploadedFile]
-  ): Option[UploadedFile] =
-    userAnswers.get(page)
-
-  def removeFile(mode: Mode, draftId: DraftId, fileUrl: String, isLetterOfAuthority: Boolean)(
-    implicit request: DataRequest[AnyContent]
-  ): Future[Result] = {
-    osClient.deleteObject(Path.File(fileUrl))
-    showFallbackPage(mode, draftId, isLetterOfAuthority)
-  }
-
-  def showInProgressPage(
-    draftId: DraftId,
-    key: Option[String],
-    isLetterOfAuthority: Boolean
-  ): Future[Result] =
-    Future.successful(
-      Redirect(
-        controllers.routes.UploadInProgressController.onPageLoad(draftId, key, isLetterOfAuthority)
-      )
-    )
-
-  def showErrorPage(
+  private def showErrorPage(
     draftId: DraftId,
     errorMessage: String,
     isLetterOfAuthority: Boolean
@@ -135,31 +204,6 @@ case class FileUploadHelper @Inject() (
     }
   }
 
-  def redirectWithError(
-    draftId: DraftId,
-    key: Option[String],
-    errorCode: String,
-    isLetterOfAuthority: Boolean,
-    mode: Mode
-  )(implicit request: RequestHeader): Future[Result] = {
-    val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
-
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
-      _ =>
-        if (isLetterOfAuthority) {
-          Redirect(
-            controllers.routes.UploadLetterOfAuthorityController
-              .onPageLoad(mode, draftId, Some(errorCode), key)
-          )
-        } else {
-          Redirect(
-            controllers.routes.UploadSupportingDocumentsController
-              .onPageLoad(mode, draftId, Some(errorCode), key)
-          )
-        }
-    }
-  }
-
   private def getRedirectPath(
     draftId: DraftId,
     isLetterOfAuthority: Boolean,
@@ -175,14 +219,7 @@ case class FileUploadHelper @Inject() (
         .url
     }
 
-  def continue(mode: Mode, answers: UserAnswers, page: Page): Future[Result] =
-    Future.successful(
-      Redirect(
-        navigator.nextPage(page, mode, answers)
-      )
-    )
-
-  def errorForCode(code: String)(implicit messages: Messages): String =
+  private def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
         Messages("fileUpload.error.invalidargument")

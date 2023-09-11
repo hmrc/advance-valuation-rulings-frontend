@@ -38,8 +38,6 @@ class UploadSupportingDocumentsController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  private val isLetterOfAuthority = false
-
   def onPageLoad(
     mode: Mode,
     draftId: DraftId,
@@ -51,31 +49,15 @@ class UploadSupportingDocumentsController @Inject() (
         val answers    = request.userAnswers
         val fileStatus = answers.get(UploadSupportingDocumentPage)
 
-        fileStatus
-          .map {
-            case file: UploadedFile.Initiated =>
-              errorCode
-                .map(
-                  errorCode =>
-                    helper.showErrorPage(
-                      draftId,
-                      helper.errorForCode(errorCode),
-                      isLetterOfAuthority
-                    )
-                )
-                .getOrElse {
-                  if (key.contains(file.reference)) {
-                    helper.showInProgressPage(draftId, key, isLetterOfAuthority)
-                  } else {
-                    helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
-                  }
-                }
-            case file: UploadedFile.Success   =>
-              helper.removeFile(mode, draftId, file.fileUrl.get, isLetterOfAuthority)
-          }
-          .getOrElse {
-            helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
-          }
+        helper.onPageLoadWithFileStatus(
+          mode,
+          draftId,
+          errorCode,
+          key,
+          fileStatus,
+          helper,
+          isLetterOfAuthority = false
+        )
     }
 
 }
