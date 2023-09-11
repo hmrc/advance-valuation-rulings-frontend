@@ -232,7 +232,7 @@ class UploadInProgressControllerSpec
           when(
             mockFileUploadHelper.checkForStatus(
               eqTo(userAnswers),
-              eqTo(UploadSupportingDocumentPage)
+              eqTo(isLetterOfAuthority)
             )
           )
             .thenReturn(Some(successfulFile))
