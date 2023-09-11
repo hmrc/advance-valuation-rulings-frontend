@@ -1,4 +1,5 @@
 service.name = Dyfarniad Prisio Uwch
+service.name.prefix = Apply for an
 
 site.back = Yn ôl
 site.remove = Remove
