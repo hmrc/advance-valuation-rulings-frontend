@@ -54,7 +54,7 @@ class UploadInProgressControllerSpec
     reset(mockFileService, mockFileUploadHelper)
   }
 
-  val parameterisedCases = Table("Is Letter of Authority", false) // TODO: Add true case.
+  private val parameterisedCases = Table("Is Letter of Authority", true, false)
 
   private val mockFileService = mock[FileService]
 
