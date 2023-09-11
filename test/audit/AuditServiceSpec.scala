@@ -97,13 +97,13 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
             dataRequest.affinityGroup,
             dataRequest.credentialRole,
             Option(isAgent),
-            Option(AgentOnBehalfOfOrg)
+            Option(importerRole)
           )
 
           new AuditService(mockAuditConnector).sendRoleIndicatorEvent(importerRole)
 
           verify(mockAuditConnector, times(1))
-            .sendExplicitAudit(eqTo("IndicatesIsAgent"), eqTo(event))(any(), any(), any())
+            .sendExplicitAudit(eqTo("IndicatesRole"), eqTo(event))(any(), any(), any())
       }
     }
   }
