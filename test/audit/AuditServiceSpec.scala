@@ -24,8 +24,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import base.SpecBase
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import models.events.{AgentIndicatorEvent, UserTypeEvent}
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader, EmployeeOfOrg}
+import models.events.{RoleIndicatorEvent, UserTypeEvent}
 import models.requests.{DataRequest, IdentifierRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -82,27 +82,26 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
       userAnswers = userAnswersAsIndividualTrader
     )
 
-    val importerRoles = Table(
-      ("importerRole", "isAgent"),
-      (EmployeeOfOrg, false),
-      (AgentOnBehalfOfOrg, true)
+    val importerRoles = Seq(
+      EmployeeOfOrg,
+      AgentOnBehalfOfOrg,
+      AgentOnBehalfOfTrader
     )
 
     "must send AgentIndicatorEvent to auditConnector" in {
-      forAll(importerRoles) {
-        case (importerRole, isAgent) =>
-          val event = AgentIndicatorEvent(
+      importerRoles.foreach {
+        importerRole =>
+          val event = RoleIndicatorEvent(
             dataRequest.userId,
             dataRequest.eoriNumber,
             dataRequest.affinityGroup,
             dataRequest.credentialRole,
-            Option(isAgent)
+            importerRole
           )
-
-          new AuditService(mockAuditConnector).sendAgentIndicatorEvent(importerRole)
+          new AuditService(mockAuditConnector).sendRoleIndicatorEvent(importerRole)
 
           verify(mockAuditConnector, times(1))
-            .sendExplicitAudit(eqTo("IndicatesIsAgent"), eqTo(event))(any(), any(), any())
+            .sendExplicitAudit(eqTo("IndicatesRole"), eqTo(event))(any(), any(), any())
       }
     }
   }

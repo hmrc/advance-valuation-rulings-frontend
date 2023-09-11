@@ -19,14 +19,16 @@ package models.events
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 
-final case class AgentIndicatorEvent(
+import models.WhatIsYourRoleAsImporter
+
+final case class RoleIndicatorEvent(
   internalId: String,
   eori: String,
   affinityGroup: AffinityGroup,
   credentialRole: Option[CredentialRole],
-  isAgent: Option[Boolean]
+  role: WhatIsYourRoleAsImporter
 )
 
-object AgentIndicatorEvent {
-  implicit val format: OFormat[AgentIndicatorEvent] = Json.format[AgentIndicatorEvent]
+object RoleIndicatorEvent {
+  implicit val format: OFormat[RoleIndicatorEvent] = Json.format[RoleIndicatorEvent]
 }
