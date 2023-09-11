@@ -59,5 +59,4 @@ class UploadSupportingDocumentsController @Inject() (
           isLetterOfAuthority = false
         )
     }
-
 }

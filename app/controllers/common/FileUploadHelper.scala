@@ -30,7 +30,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.{Page, QuestionPage}
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
@@ -90,9 +90,13 @@ case class FileUploadHelper @Inject() (
 
   def checkForStatus(
     userAnswers: UserAnswers,
-    page: QuestionPage[UploadedFile]
+    isLetterOfAuthority: Boolean
   ): Option[UploadedFile] =
-    userAnswers.get(page)
+    if (isLetterOfAuthority) {
+      userAnswers.get(UploadLetterOfAuthorityPage)
+    } else {
+      userAnswers.get(UploadSupportingDocumentPage)
+    }
 
   def removeFile(mode: Mode, draftId: DraftId, fileUrl: String, isLetterOfAuthority: Boolean)(
     implicit request: DataRequest[AnyContent]
@@ -112,12 +116,19 @@ case class FileUploadHelper @Inject() (
       )
     )
 
-  def continue(mode: Mode, answers: UserAnswers, page: Page): Future[Result] =
+  def continue(mode: Mode, answers: UserAnswers, isLetterOfAuthority: Boolean): Future[Result] = {
+    val page = if (isLetterOfAuthority) {
+      UploadLetterOfAuthorityPage
+    } else {
+      UploadSupportingDocumentPage
+    }
+
     Future.successful(
       Redirect(
         navigator.nextPage(page, mode, answers)
       )
     )
+  }
 
   def redirectWithError(
     draftId: DraftId,

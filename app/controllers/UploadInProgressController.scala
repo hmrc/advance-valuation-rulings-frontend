@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import controllers.common.FileUploadHelper
 import models.{DraftId, Mode, UploadedFile}
-import pages.UploadSupportingDocumentPage
 import views.html.UploadInProgressView
 
 class UploadInProgressController @Inject() (
@@ -51,7 +50,7 @@ class UploadInProgressController @Inject() (
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         val answers = request.userAnswers
-        val status  = helper.checkForStatus(answers, UploadSupportingDocumentPage)
+        val status  = helper.checkForStatus(answers, isLetterOfAuthority)
         status match {
           case Some(file) =>
             file match {
@@ -83,7 +82,7 @@ class UploadInProgressController @Inject() (
       implicit request =>
         val answers = request.userAnswers
         helper
-          .checkForStatus(answers, UploadSupportingDocumentPage)
+          .checkForStatus(answers, isLetterOfAuthority)
           .map {
 
             case file: UploadedFile.Initiated =>
@@ -95,7 +94,7 @@ class UploadInProgressController @Inject() (
 
             case file: UploadedFile.Success =>
               if (key.contains(file.reference)) {
-                helper.continue(mode, answers, UploadSupportingDocumentPage)
+                helper.continue(mode, answers, isLetterOfAuthority)
               } else {
                 helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
               }
