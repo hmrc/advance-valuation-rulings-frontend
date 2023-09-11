@@ -40,16 +40,17 @@
         }
 
 
-    @caption(messages("caption.applicant"))
-    @heading(messages("provideTraderEori.heading"))
+        @caption(messages("caption.applicant"))
+        @heading(messages("provideTraderEori.heading"))
 
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(messages("provideTraderEori.p1"))
-                )
-                .withWidth(Full)
-        )
+        @paragraph(Html(messages("provideTraderEori.p1")))
+
+        <label class="govuk-label govuk-visually-hidden" for="value">
+            @messages("provideTraderEori.heading")
+        </label>
+
+        <input class="govuk-input  govuk-!-width-full" id="value" name="value" type="text">
+        <br><br/>
 
         @saveButtons(draftId, controllers.routes.ProvideTraderEoriController.onSubmit(draftId = draftId, saveDraft = true))
     }
