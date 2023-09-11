@@ -48,19 +48,8 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
   )(implicit dataRequest: DataRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Unit = {
     import dataRequest._
 
-    val isAgent = Option(role match {
-      case AgentOnBehalfOfOrg    =>
-        true
-      case AgentOnBehalfOfTrader =>
-        true
-      case EmployeeOfOrg         =>
-        false
-      case _                     =>
-        false
-    })
-
     val detail =
-      RoleIndicatorEvent(userId, eoriNumber, affinityGroup, credentialRole, isAgent, Option(role))
+      RoleIndicatorEvent(userId, eoriNumber, affinityGroup, credentialRole, role)
     auditConnector.sendExplicitAudit("IndicatesRole", detail)
   }
 

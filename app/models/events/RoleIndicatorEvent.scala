@@ -26,8 +26,7 @@ final case class RoleIndicatorEvent(
   eori: String,
   affinityGroup: AffinityGroup,
   credentialRole: Option[CredentialRole],
-  isAgent: Option[Boolean],
-  role: Option[WhatIsYourRoleAsImporter]
+  role: WhatIsYourRoleAsImporter
 )
 
 object RoleIndicatorEvent {
