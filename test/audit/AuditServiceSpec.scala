@@ -99,7 +99,7 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
             Option(isAgent)
           )
 
-          new AuditService(mockAuditConnector).sendAgentIndicatorEvent(importerRole)
+          new AuditService(mockAuditConnector).sendRoleIndicatorEvent(importerRole)
 
           verify(mockAuditConnector, times(1))
             .sendExplicitAudit(eqTo("IndicatesIsAgent"), eqTo(event))(any(), any(), any())

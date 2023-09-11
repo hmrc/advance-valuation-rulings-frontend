@@ -68,7 +68,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
             value => {
-              auditService.sendAgentIndicatorEvent(value)
+              auditService.sendRoleIndicatorEvent(value)
               for {
                 ua <- value match {
                         case EmployeeOfOrg         => AgentCompanyDetailsPage.remove()

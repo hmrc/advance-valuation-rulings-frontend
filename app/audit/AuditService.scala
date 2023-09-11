@@ -17,16 +17,14 @@
 package audit
 
 import javax.inject.{Inject, Singleton}
-
 import scala.concurrent.ExecutionContext
-
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
 import models.WhatIsYourRoleAsImporter
-import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
-import models.events.{AgentIndicatorEvent, UserTypeEvent}
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader, EmployeeOfOrg}
+import models.events.{AgentIndicatorEvent, UserRoleIndicatorEvent, UserTypeEvent}
 import models.requests.{DataRequest, IdentifierRequest}
+import userrole.UserRole
 
 @Singleton
 class AuditService @Inject() (auditConnector: AuditConnector) {
@@ -43,13 +41,24 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
     auditConnector.sendExplicitAudit("UserEntersService", detail)
   }
 
-  def sendAgentIndicatorEvent(
+  def sendRoleIndicatorEvent(
     role: WhatIsYourRoleAsImporter
   )(implicit dataRequest: DataRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Unit = {
     import dataRequest._
 
-    val isAgent = Option(role == AgentOnBehalfOfOrg)
-    val detail  = AgentIndicatorEvent(userId, eoriNumber, affinityGroup, credentialRole, isAgent)
-    auditConnector.sendExplicitAudit("IndicatesIsAgent", detail)
+    val isAgent = Option(role match {
+      case AgentOnBehalfOfOrg =>
+        true
+      case AgentOnBehalfOfTrader =>
+        true
+      case EmployeeOfOrg =>
+        false
+      case _ =>
+        false
+    })
+
+    val detail  = AgentIndicatorEvent(userId, eoriNumber, affinityGroup, credentialRole, isAgent, Option(role))
+    auditConnector.sendExplicitAudit("IndicatesRole", detail)
   }
+
 }

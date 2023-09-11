@@ -16,6 +16,7 @@
 
 package models.events
 
+import models.WhatIsYourRoleAsImporter
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
 
@@ -24,7 +25,8 @@ final case class AgentIndicatorEvent(
   eori: String,
   affinityGroup: AffinityGroup,
   credentialRole: Option[CredentialRole],
-  isAgent: Option[Boolean]
+  isAgent: Option[Boolean],
+  role: Option[WhatIsYourRoleAsImporter]
 )
 
 object AgentIndicatorEvent {
