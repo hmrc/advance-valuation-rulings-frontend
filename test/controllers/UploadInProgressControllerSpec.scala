@@ -159,11 +159,13 @@ class UploadInProgressControllerSpec
 
         lazy val redirectPath: String = getRedirectPath(isLetterOfAuthority)
 
-        when(mockFileService.initiate(
-          eqTo(draftId),
-          eqTo(redirectPath),
-          eqTo(isLetterOfAuthority)
-        )(any()))
+        when(
+          mockFileService.initiate(
+            eqTo(draftId),
+            eqTo(redirectPath),
+            eqTo(isLetterOfAuthority)
+          )(any())
+        )
           .thenReturn(Future.successful(upscanInitiateResponse))
 
         val request = FakeRequest(
@@ -394,11 +396,13 @@ class UploadInProgressControllerSpec
 
               lazy val redirectPath: String = getRedirectPath(isLetterOfAuthority)
 
-              when(mockFileService.initiate(
-                eqTo(draftId),
-                eqTo(redirectPath),
-                eqTo(isLetterOfAuthority)
-              )(any()))
+              when(
+                mockFileService.initiate(
+                  eqTo(draftId),
+                  eqTo(redirectPath),
+                  eqTo(isLetterOfAuthority)
+                )(any())
+              )
                 .thenReturn(Future.successful(upscanInitiateResponse))
 
               val expectedUrl = expectedUrlForView(isLetterOfAuthority)
