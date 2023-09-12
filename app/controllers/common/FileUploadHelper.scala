@@ -138,7 +138,7 @@ case class FileUploadHelper @Inject() (
   )(implicit request: RequestHeader): Future[Result] = {
     val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
 
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority = false).map {
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
       _ =>
         if (isLetterOfAuthority) {
           Redirect(
