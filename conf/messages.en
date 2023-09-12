@@ -489,6 +489,7 @@ uploadLetterOfAuthority.caption = About the applicant
 uploadLetterOfAuthority.insetPara = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader. HMRC may contact the trader to confirm that you have the right to make this application.
 uploadLetterOfAuthority.paragraph.1 = The letter of authority should:
 uploadLetterOfAuthority.paragraph.2 = An individual file must be:
+uploadLetterOfAuthority.paragraph.3 = Do not upload password-protected files, as this will prevent the processing of your application.
 uploadLetterOfAuthority.bulletPoint.1 = be written and signed by the trader on letterhead paper
 uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on the trader’s behalf
 uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
