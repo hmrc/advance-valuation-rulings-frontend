@@ -17,15 +17,12 @@
 package controllers
 
 import java.time.Instant
-
 import scala.concurrent.Future
-
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
 import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile, UserAnswers}
@@ -39,7 +36,7 @@ import org.mockito.MockitoSugar.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadSupportingDocumentPage
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import services.fileupload.FileService
 import views.html.{UploadInProgressView, UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
@@ -95,6 +92,20 @@ class UploadInProgressControllerSpec
     )
   )
 
+  private def getUserAnswers(file: UploadedFile, isLetterOfAuthority: Boolean): UserAnswers = {
+    if (isLetterOfAuthority) {
+      userAnswersAsIndividualTrader
+      .set(UploadLetterOfAuthorityPage, file)
+      .success
+      .value
+    } else {
+      userAnswersAsIndividualTrader
+      .set(UploadSupportingDocumentPage, file)
+      .success
+      .value
+    }
+  }
+
   private def getPostRequest(isLetterOfAuthority: Boolean): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(
       POST,
@@ -148,9 +159,11 @@ class UploadInProgressControllerSpec
     }
   }
 
-  private def testFallbackPageIsShown(userAnswers: UserAnswers): Unit =
+  private def testFallbackPageIsShown(file: UploadedFile): Unit =
     forAll(parameterisedCases) {
       (isLetterOfAuthority: Boolean) =>
+        val userAnswers = getUserAnswers(file, isLetterOfAuthority)
+
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[FileService].toInstance(mockFileService)
@@ -214,13 +227,9 @@ class UploadInProgressControllerSpec
 
       "when there is a successful file and the user has unexpectedly navigated back to this page" - {
 
-        val userAnswers = userAnswersAsIndividualTrader
-          .set(UploadSupportingDocumentPage, successfulFile)
-          .success
-          .value
-
         "must delete file using FileUploadHelper" in {
           val isLetterOfAuthority = false // Page redirection is not tested in this test.
+          val userAnswers = getUserAnswers(successfulFile, isLetterOfAuthority)
           val application         = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(
               bind[FileService].toInstance(mockFileService),
@@ -267,6 +276,7 @@ class UploadInProgressControllerSpec
           forAll(parameterisedCases) {
             (isLetterOfAuthority: Boolean) =>
               val mockDataRequest = mock[DataRequest[Any]]
+              val userAnswers = getUserAnswers(successfulFile, isLetterOfAuthority)
               val application     = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[DataRequest[Any]].toInstance(mockDataRequest),
@@ -310,15 +320,12 @@ class UploadInProgressControllerSpec
     "Check Progress" - {
       "when there is an initiated file (upload in progress)" - {
 
-        val userAnswers = userAnswersAsIndividualTrader
-          .set(UploadSupportingDocumentPage, initiatedFile)
-          .success
-          .value
-
         "when the key matches the file" - {
 
           "must remain on the loading page" in {
             val isLetterOfAuthority = false // Page redirection is not tested in this test.
+            val userAnswers = getUserAnswers(initiatedFile, isLetterOfAuthority)
+
             val application         = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(
                 bind[FileService].toInstance(mockFileService)
@@ -337,21 +344,22 @@ class UploadInProgressControllerSpec
         "when the key does not match the file" - {
 
           "Parameterised: must show fallback page" in {
-            testFallbackPageIsShown(userAnswers)
+            testFallbackPageIsShown(initiatedFile)
           }
         }
       }
 
       "when there is a successful file" - {
 
-        val userAnswers = userAnswersAsIndividualTrader
-          .set(UploadSupportingDocumentPage, successfulFile)
-          .success
-          .value
-
         "when the key matches the file" - {
 
           "must redirect to the next page" in {
+
+            // Since the onward route is a fake URL,
+            // this test is not concerned with the value of isLetterOfAuthority.
+            val isLetterOfAuthority = false
+
+            val userAnswers = getUserAnswers(successfulFile, isLetterOfAuthority)
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(
@@ -360,9 +368,7 @@ class UploadInProgressControllerSpec
               )
               .build()
 
-            // Since the onward route is a fake URL,
-            // this test is not concerned with the value of isLetterOfAuthority.
-            val result = route(application, getPostRequest(false)).value
+            val result = route(application, getPostRequest(isLetterOfAuthority)).value
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result).value mustEqual onwardRoute.url
@@ -372,22 +378,18 @@ class UploadInProgressControllerSpec
         "when the key does not match the file" - {
 
           "Parameterised: must show fallback page" in {
-            testFallbackPageIsShown(userAnswers)
+            testFallbackPageIsShown(successfulFile)
           }
         }
       }
 
       "when there is a failed file" - {
 
-        val userAnswers =
-          userAnswersAsIndividualTrader
-            .set(UploadSupportingDocumentPage, failedFile)
-            .success
-            .value
-
         "Parameterised: must redirect back to the page with the relevant error code" in {
           forAll(parameterisedCases) {
             (isLetterOfAuthority: Boolean) =>
+              val userAnswers = getUserAnswers(failedFile, isLetterOfAuthority)
+
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[FileService].toInstance(mockFileService)

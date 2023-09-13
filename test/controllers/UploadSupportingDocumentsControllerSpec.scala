@@ -291,15 +291,18 @@ class UploadSupportingDocumentsControllerSpec
         )
         .build()
 
+      val successTextForHelper = "test upload supporting document"
       when(
-        mockFileUploadHelper.removeFile(
+        mockFileUploadHelper.onPageLoadWithFileStatus(
           eqTo(NormalMode),
           eqTo(draftId),
-          eqTo(fileUrl),
+          eqTo(None),
+          eqTo(None),
+          eqTo(Some(successfulFile)),
           eqTo(isLetterOfAuthority)
         )(any())
       )
-        .thenReturn(Future.successful(play.api.mvc.Results.Ok("")))
+        .thenReturn(Future.successful(play.api.mvc.Results.Ok(successTextForHelper)))
 
       val request = FakeRequest(
         GET,
@@ -309,14 +312,7 @@ class UploadSupportingDocumentsControllerSpec
       )
 
       val result = route(application, request).value
-      status(result) mustEqual OK
-
-      verify(mockFileUploadHelper).removeFile(
-        eqTo(NormalMode),
-        eqTo(draftId),
-        eqTo(fileUrl),
-        eqTo(isLetterOfAuthority)
-      )(any())
+      contentAsString(result) mustEqual successTextForHelper
     }
 
     "must redirect to fallback page" in {
