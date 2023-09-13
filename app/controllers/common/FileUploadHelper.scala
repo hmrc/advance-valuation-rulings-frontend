@@ -17,13 +17,19 @@
 package controllers.common
 
 import javax.inject.Inject
+
 import scala.concurrent.{ExecutionContext, Future}
+
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{AnyContent, MessagesControllerComponents, RequestHeader, Result}
+import play.api.mvc.Results.{BadRequest, Ok}
+import play.api.mvc.Results.Redirect
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import navigation.Navigator
@@ -34,7 +40,6 @@ import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
 case class FileUploadHelper @Inject() (
   override val messagesApi: MessagesApi,
-  override val controllerComponents: MessagesControllerComponents,
   supportingDocumentsView: UploadSupportingDocumentsView,
   letterOfAuthorityView: UploadLetterOfAuthorityView,
   fileService: FileService,
@@ -43,8 +48,7 @@ case class FileUploadHelper @Inject() (
   userAnswersService: UserAnswersService,
   osClient: PlayObjectStoreClient
 )(implicit ec: ExecutionContext)
-    extends I18nSupport
-    with FrontendBaseController {
+    extends I18nSupport {
 
   private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
 
@@ -56,7 +60,8 @@ case class FileUploadHelper @Inject() (
     fileStatus: Option[UploadedFile],
     isLetterOfAuthority: Boolean
   )(implicit
-    request: DataRequest[AnyContent]
+    request: DataRequest[AnyContent],
+    hc: HeaderCarrier
   ): Future[Result] =
     fileStatus
       .map {
@@ -95,7 +100,9 @@ case class FileUploadHelper @Inject() (
     }
 
   def removeFile(mode: Mode, draftId: DraftId, fileUrl: String, isLetterOfAuthority: Boolean)(
-    implicit request: DataRequest[AnyContent]
+    implicit
+    request: DataRequest[AnyContent],
+    hc: HeaderCarrier
   ): Future[Result] = {
     osClient.deleteObject(Path.File(fileUrl))
     showFallbackPage(mode, draftId, isLetterOfAuthority)
@@ -132,7 +139,7 @@ case class FileUploadHelper @Inject() (
     errorCode: String,
     isLetterOfAuthority: Boolean,
     mode: Mode
-  )(implicit request: RequestHeader): Future[Result] = {
+  )(implicit hc: HeaderCarrier): Future[Result] = {
     val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
 
     fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
@@ -155,10 +162,12 @@ case class FileUploadHelper @Inject() (
     * file page.
     */
   def showFallbackPage(mode: Mode, draftId: DraftId, isLetterOfAuthority: Boolean)(implicit
-    request: RequestHeader
+    request: RequestHeader,
+    hc: HeaderCarrier
   ): Future[Result] = {
-    val redirectPath = getRedirectPath(draftId, isLetterOfAuthority, mode)
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
+    val redirectPath     = getRedirectPath(draftId, isLetterOfAuthority, mode)
+    val eventualResponse = fileService.initiate(draftId, redirectPath, isLetterOfAuthority)
+    eventualResponse.map {
       response =>
         if (isLetterOfAuthority) {
           Ok(
@@ -185,7 +194,8 @@ case class FileUploadHelper @Inject() (
     errorMessage: String,
     isLetterOfAuthority: Boolean
   )(implicit
-    request: RequestHeader
+    request: RequestHeader,
+    hc: HeaderCarrier
   ): Future[Result] = {
     val redirectPath = getRedirectPath(draftId, isLetterOfAuthority)
 

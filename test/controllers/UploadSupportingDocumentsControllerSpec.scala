@@ -300,7 +300,7 @@ class UploadSupportingDocumentsControllerSpec
           eqTo(None),
           eqTo(Some(successfulFile)),
           eqTo(isLetterOfAuthority)
-        )(any())
+        )(any(), any())
       )
         .thenReturn(Future.successful(play.api.mvc.Results.Ok(successTextForHelper)))
 

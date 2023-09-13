@@ -52,8 +52,6 @@ class FileService @Inject() (
   private val minimumFileSize: Long   = configuration.underlying.getBytes("upscan.minFileSize")
   private val maximumFileSize: Long   = configuration.underlying.getBytes("upscan.maxFileSize")
 
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
-
   def initiate(draftId: DraftId, redirectPath: String, isLetterOfAuthority: Boolean)(implicit
     hc: HeaderCarrier
   ): Future[UpscanInitiateResponse] = {
@@ -79,7 +77,9 @@ class FileService @Inject() (
     } yield response
   }
 
-  def update(draftId: DraftId, file: UploadedFile, isLetterOfAuthority: Boolean): Future[Done] =
+  def update(draftId: DraftId, file: UploadedFile, isLetterOfAuthority: Boolean)(implicit
+    hc: HeaderCarrier
+  ): Future[Done] =
     for {
       answers        <- getUserAnswersInternal(draftId)
       updatedFile    <- processFile(answers, file)
@@ -98,7 +98,7 @@ class FileService @Inject() (
   private def processFile(
     answers: UserAnswers,
     file: UploadedFile
-  ): Future[UploadedFile] =
+  )(implicit hc: HeaderCarrier): Future[UploadedFile] =
     file match {
       case file: UploadedFile.Success =>
         val otherDocuments = answers.get(AllDocuments).getOrElse(Seq.empty)
@@ -138,7 +138,9 @@ class FileService @Inject() (
         .getOrElse(Future.failed(NoUserAnswersFoundException(draftId)))
     }
 
-  private def getUserAnswersInternal(draftId: DraftId): Future[UserAnswers] =
+  private def getUserAnswersInternal(
+    draftId: DraftId
+  )(implicit hc: HeaderCarrier): Future[UserAnswers] =
     userAnswersService.getInternal(draftId).flatMap {
       _.map(Future.successful)
         .getOrElse(Future.failed(NoUserAnswersFoundException(draftId)))

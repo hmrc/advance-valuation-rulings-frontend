@@ -25,6 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 
 import models.{Done, DraftId, UploadedFile}
 import org.mockito.ArgumentMatchers.any
@@ -63,6 +64,8 @@ class UploadCallbackControllerSpec
       size = 1337
     )
   )
+
+  private implicit val hc: HeaderCarrier = mock[HeaderCarrier]
 
   "callback" - {
 

@@ -17,12 +17,15 @@
 package controllers
 
 import java.time.Instant
+
 import scala.concurrent.Future
+
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
 import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile, UserAnswers}
@@ -92,19 +95,18 @@ class UploadInProgressControllerSpec
     )
   )
 
-  private def getUserAnswers(file: UploadedFile, isLetterOfAuthority: Boolean): UserAnswers = {
+  private def getUserAnswers(file: UploadedFile, isLetterOfAuthority: Boolean): UserAnswers =
     if (isLetterOfAuthority) {
       userAnswersAsIndividualTrader
-      .set(UploadLetterOfAuthorityPage, file)
-      .success
-      .value
+        .set(UploadLetterOfAuthorityPage, file)
+        .success
+        .value
     } else {
       userAnswersAsIndividualTrader
-      .set(UploadSupportingDocumentPage, file)
-      .success
-      .value
+        .set(UploadSupportingDocumentPage, file)
+        .success
+        .value
     }
-  }
 
   private def getPostRequest(isLetterOfAuthority: Boolean): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(
@@ -229,7 +231,7 @@ class UploadInProgressControllerSpec
 
         "must delete file using FileUploadHelper" in {
           val isLetterOfAuthority = false // Page redirection is not tested in this test.
-          val userAnswers = getUserAnswers(successfulFile, isLetterOfAuthority)
+          val userAnswers         = getUserAnswers(successfulFile, isLetterOfAuthority)
           val application         = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(
               bind[FileService].toInstance(mockFileService),
@@ -243,7 +245,7 @@ class UploadInProgressControllerSpec
               eqTo(draftId),
               eqTo(fileUrl),
               eqTo(isLetterOfAuthority)
-            )(any())
+            )(any(), any())
           )
             .thenReturn(Future.successful(play.api.mvc.Results.Ok("")))
           when(
@@ -269,14 +271,14 @@ class UploadInProgressControllerSpec
             eqTo(draftId),
             eqTo(fileUrl),
             eqTo(isLetterOfAuthority)
-          )(any())
+          )(any(), any())
         }
 
         "Parameterised: must redirect to fallback page" in {
           forAll(parameterisedCases) {
             (isLetterOfAuthority: Boolean) =>
               val mockDataRequest = mock[DataRequest[Any]]
-              val userAnswers = getUserAnswers(successfulFile, isLetterOfAuthority)
+              val userAnswers     = getUserAnswers(successfulFile, isLetterOfAuthority)
               val application     = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[DataRequest[Any]].toInstance(mockDataRequest),
@@ -324,9 +326,9 @@ class UploadInProgressControllerSpec
 
           "must remain on the loading page" in {
             val isLetterOfAuthority = false // Page redirection is not tested in this test.
-            val userAnswers = getUserAnswers(initiatedFile, isLetterOfAuthority)
+            val userAnswers         = getUserAnswers(initiatedFile, isLetterOfAuthority)
 
-            val application         = applicationBuilder(userAnswers = Some(userAnswers))
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(
                 bind[FileService].toInstance(mockFileService)
               )
