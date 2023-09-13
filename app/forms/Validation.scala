@@ -28,9 +28,10 @@ object Validation {
   val emailPattern: Regex     = """^\S+@\S+$""".r
 
   def phoneFormat(phoneNumber: String): Boolean = {
-    val containsOnlyDigits = phoneNumber.forall(_.isDigit)
-    val isShortEnough      = phoneNumber.length <= phoneNumberMaxLength
-    val isNotEmpty         = phoneNumber.nonEmpty
+    val number             = phoneNumber.replace("+", "")
+    val containsOnlyDigits = number.forall(_.isDigit)
+    val isShortEnough      = number.length <= phoneNumberMaxLength
+    val isNotEmpty         = number.nonEmpty
     containsOnlyDigits && isShortEnough && isNotEmpty
   }
 
