@@ -17,16 +17,14 @@
 package controllers
 
 import javax.inject.Inject
-
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
-
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import controllers.common.FileUploadHelper
+import models.requests.DataRequest
 import models.{DraftId, Mode, UploadedFile}
 import views.html.UploadInProgressView
 
@@ -55,15 +53,7 @@ class UploadInProgressController @Inject() (
           case Some(file) =>
             file match {
               case file: UploadedFile.Success =>
-                Await.result(
-                  helper.removeFile(
-                    mode,
-                    draftId,
-                    file.fileUrl.get,
-                    isLetterOfAuthority
-                  ),
-                  3.seconds
-                )
+                removeFileOnBackNavigation(mode, draftId, isLetterOfAuthority, file)(request)
               case _                          =>
                 Ok(view(mode, draftId, key, isLetterOfAuthority))
             }
@@ -71,6 +61,23 @@ class UploadInProgressController @Inject() (
             Ok(view(mode, draftId, key, isLetterOfAuthority))
         }
     }
+
+  private def removeFileOnBackNavigation(
+    mode: Mode,
+    draftId: DraftId,
+    isLetterOfAuthority: Boolean,
+    file: UploadedFile.Success
+  )(request: DataRequest[AnyContent]) = {
+    Await.result(
+      helper.removeFile(
+        mode,
+        draftId,
+        file.fileUrl.get,
+        isLetterOfAuthority
+      )(request),
+      10.seconds
+    )
+  }
 
   def checkProgress(
     mode: Mode,
