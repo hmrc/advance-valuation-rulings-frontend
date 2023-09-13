@@ -25,6 +25,13 @@ object Validation {
   val emailMaxLength       = 50
 
   val nameInputPattern: Regex = "[A-Za-zÀ-ÖØ-öø-ÿĀ-ňŊ-ſ'’ -]+".r.anchored
-  val emailPattern            = """^\S+@\S+$""".r
+  val emailPattern: Regex     = """^\S+@\S+$""".r
+
+  def phoneFormat(phoneNumber: String): Boolean = {
+    val containsOnlyDigits = phoneNumber.forall(_.isDigit)
+    val isShortEnough      = phoneNumber.length <= phoneNumberMaxLength
+    val isNotEmpty         = phoneNumber.nonEmpty
+    containsOnlyDigits && isShortEnough && isNotEmpty
+  }
 
 }
