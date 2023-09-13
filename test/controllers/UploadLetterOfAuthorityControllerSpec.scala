@@ -146,7 +146,7 @@ class UploadLetterOfAuthorityControllerSpec
 
       "when the key matches the file" - {
 
-        "must show the interstitial page" in {
+        "must show the loading in progress page" in {
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(bind[FileService].toInstance(mockFileService))
