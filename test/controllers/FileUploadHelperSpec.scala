@@ -16,37 +16,35 @@
 
 package controllers
 
-import java.time.Instant
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import play.api.Configuration
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.libs.json.JsObject
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.{Application, Configuration}
+import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
+import play.api.inject.bind
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import base.SpecBase
 import com.typesafe.config.Config
 import controllers.common.FileUploadHelper
-import models.{DraftId, Mode, NormalMode, UserAnswers}
-import models.NormalMode
+import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import models.upscan.UpscanInitiateResponse
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar.when
-import org.scalacheck.Arbitrary
+import org.mockito.IdiomaticMockito.{returned, DoSomethingOps}
+import org.mockito.MockitoSugar.{spy, when}
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+import org.scalatest.prop.Tables.Table
 import org.scalatestplus.mockito.MockitoSugar
+import pages.UploadLetterOfAuthorityPage
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
@@ -65,7 +63,13 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val mockRequestHeader           = FakeRequest()
   private val mockHeaderCarrier           = HeaderCarrier()
 
-  private val expectedViewText       = "html text"
+  private val expectedViewText        = "html text"
+  private val expectedErrorViewText   = " this is an error"
+  private val errorMessage            = "Error from messages file"
+  private val errorCode               = "InvalidArgument"
+  private val maximumFileSizeMB: Long = 5
+  private val page                    = UploadLetterOfAuthorityPage
+
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
@@ -92,7 +96,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         .url
     }
 
-  private def getFileUploadHelper: FileUploadHelper = {
+  private def getFileUploadHelper: FileUploadHelper =
     FileUploadHelper(
       mockMessagesApi,
       mockSupportingDocumentsView,
@@ -103,9 +107,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       mockUserAnswersService,
       mockOsClient
     )
-  }
 
-  private def setMockLetterOfAuthorityView(): Unit = {
+  private def setMockLetterOfAuthorityView(): Unit =
     when(
       mockLetterOfAuthorityView
         .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None))(
@@ -114,9 +117,18 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         )
     )
       .thenReturn(HtmlFormat.raw(expectedViewText))
-  }
 
-  private def setMockSupportingDocumentsView(): Unit = {
+  private def setErrorMockLetterOfAuthorityView(): Unit =
+    when(
+      mockLetterOfAuthorityView
+        .apply(eqTo(draftId), any(), eqTo(Some(errorMessage)))(
+          any(),
+          any()
+        )
+    )
+      .thenReturn(HtmlFormat.raw(expectedErrorViewText))
+
+  private def setMockSupportingDocumentsView(): Unit =
     when(
       mockSupportingDocumentsView
         .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None))(
@@ -125,13 +137,11 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         )
     )
       .thenReturn(HtmlFormat.raw(expectedViewText))
-  }
 
-  private def setMockConfiguration(): Unit = {
+  private def setMockConfiguration(): Unit =
     when(mockConfiguration.underlying).thenReturn(mockConfig)
-  }
 
-  private def setMockFileService(isLetterOfAuthority: Boolean): Unit = {
+  private def setMockFileService(isLetterOfAuthority: Boolean): Unit =
     when(
       mockFileService.initiate(
         draftId,
@@ -140,7 +150,6 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       )(mockHeaderCarrier)
     )
       .thenReturn(Future.successful(upscanInitiateResponse))
-  }
 
   "Show fallback page for letter of authority" in {
     val isLetterOfAuthority = true
@@ -202,6 +211,162 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
     )(mockRequestHeader, mockHeaderCarrier)
 
     contentAsString(result) mustEqual expectedViewText
+  }
+
+  "when there is a failed file" - {
+
+    "Show error page when there is an error code passed to onPageLoad" in {
+
+      val isLetterOfAuthority = true
+      val redirectPath        = getRedirectPath()
+
+      setErrorMockLetterOfAuthorityView()
+
+      when(mockConfiguration.underlying).thenReturn(mockConfig)
+
+      when(
+        mockFileService.initiate(
+          draftId,
+          redirectPath,
+          isLetterOfAuthority
+        )(mockHeaderCarrier)
+      )
+        .thenReturn(Future.successful(upscanInitiateResponse))
+
+      val fileUploadHelper = spy(
+        FileUploadHelper(
+          mockMessagesApi,
+          mockSupportingDocumentsView,
+          mockLetterOfAuthorityView,
+          mockFileService,
+          mockNavigator,
+          mockConfiguration,
+          mockUserAnswersService,
+          mockOsClient
+        )
+      )
+
+      errorMessage willBe returned by fileUploadHelper.errorForCode(eqTo(errorCode))(any[Messages])
+
+      val result = fileUploadHelper.onPageLoadWithFileStatus(
+        NormalMode,
+        draftId,
+        Some(errorCode),
+        None,
+        Some(UploadedFile.Initiated("reference")),
+        isLetterOfAuthority
+      )(mock[DataRequest[AnyContent]], mockHeaderCarrier)
+
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual expectedErrorViewText
+    }
+
+    def injectView(application: Application) =
+      application.injector.instanceOf[UploadLetterOfAuthorityView]
+
+    def mockFileServiceInitiate(): Unit =
+      when(
+        mockFileService.initiate(eqTo(draftId), eqTo(getRedirectPath()), eqTo(true))(
+          any()
+        )
+      ).thenReturn(Future.successful(upscanInitiateResponse))
+
+    def getRedirectPath(
+      errorCode: Option[String] = None,
+      key: Option[String] = None
+    ): String =
+      controllers.routes.UploadLetterOfAuthorityController
+        .onPageLoad(NormalMode, draftId, errorCode, key)
+        .url
+
+    def checkBadRequest(
+      errCode: String,
+      errMessage: MessagesProvider => String,
+      application: Application
+    ) = {
+      val request =
+        FakeRequest(GET, getRedirectPath(errorCode = Some(errCode)))
+      val result  = route(application, request).value
+
+      status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual injectView(application)(
+        draftId = draftId,
+        upscanInitiateResponse = Some(upscanInitiateResponse),
+        errorMessage = Some(errMessage(messages(application)))
+      )(messages(application), request).toString
+    }
+
+    val parameterisedCases = Table(
+      ("Error code option string", "Failure Reason", "Failure message"),
+      (
+        "Quarantine",
+        UploadedFile.FailureReason.Quarantine,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("fileUpload.error.quarantine")(messagesProvider)
+      ),
+      (
+        "Rejected",
+        UploadedFile.FailureReason.Rejected,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("fileUpload.error.rejected")(messagesProvider)
+      ),
+      (
+        "Duplicate",
+        UploadedFile.FailureReason.Duplicate,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("fileUpload.error.duplicate")(messagesProvider)
+      ),
+      (
+        "Unknown",
+        UploadedFile.FailureReason.Unknown,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("fileUpload.error.unknown")(messagesProvider)
+      ),
+      (
+        "InvalidArgument",
+        UploadedFile.FailureReason.InvalidArgument,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
+      ),
+      (
+        "EntityTooSmall",
+        UploadedFile.FailureReason.EntityTooSmall,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply("fileUpload.error.entitytoosmall")(messagesProvider)
+      ),
+      (
+        "EntityTooLarge",
+        UploadedFile.FailureReason.EntityTooLarge,
+        (messagesProvider: MessagesProvider) =>
+          Messages.apply(s"fileUpload.error.entitytoolarge", maximumFileSizeMB)(
+            messagesProvider
+          )
+      )
+    )
+
+    "Parameterised: A redirect with an error code renders the error message" in {
+      forAll(parameterisedCases) {
+        (
+          errCode: String,
+          _: UploadedFile.FailureReason,
+          errMessage: MessagesProvider => String
+        ) =>
+          val initiatedFile = UploadedFile.Initiated(
+            reference = "reference"
+          )
+
+          val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
+
+          val application = applicationBuilder(Some(userAnswers))
+            .overrides(bind[FileService].toInstance(mockFileService))
+            .build()
+
+          mockFileServiceInitiate()
+
+          checkBadRequest(errCode, errMessage, application)
+
+      }
+    }
   }
 
 }

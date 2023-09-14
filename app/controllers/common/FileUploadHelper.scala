@@ -236,7 +236,7 @@ case class FileUploadHelper @Inject() (
         .url
     }
 
-  private def errorForCode(code: String)(implicit messages: Messages): String =
+  def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
         Messages("fileUpload.error.invalidargument")
