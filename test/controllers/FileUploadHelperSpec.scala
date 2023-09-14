@@ -88,7 +88,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   ) =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(mode, draftId, None, None)
+        .onPageLoad(mode, draftId, None, None, false)
         .url
     } else {
       controllers.routes.UploadSupportingDocumentsController
@@ -276,7 +276,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       key: Option[String] = None
     ): String =
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(NormalMode, draftId, errorCode, key)
+        .onPageLoad(NormalMode, draftId, errorCode, key, false)
         .url
 
     def checkBadRequest(

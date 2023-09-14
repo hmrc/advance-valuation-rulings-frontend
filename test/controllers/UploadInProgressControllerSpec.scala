@@ -119,7 +119,7 @@ class UploadInProgressControllerSpec
   private def getRedirectPath(isLetterOfAuthority: Boolean): String =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(NormalMode, draftId, None, None)
+        .onPageLoad(NormalMode, draftId, None, None, false)
         .url
     } else {
       controllers.routes.UploadSupportingDocumentsController
@@ -155,7 +155,7 @@ class UploadInProgressControllerSpec
     val key       = Some(reference)
 
     if (isLetterOfAuthority) {
-      routes.UploadLetterOfAuthorityController.onPageLoad(mode, id, errorCode, key).url
+      routes.UploadLetterOfAuthorityController.onPageLoad(mode, id, errorCode, key, false).url
     } else {
       routes.UploadSupportingDocumentsController.onPageLoad(mode, id, errorCode, key).url
     }

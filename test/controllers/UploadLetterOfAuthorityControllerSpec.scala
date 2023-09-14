@@ -67,7 +67,7 @@ class UploadLetterOfAuthorityControllerSpec
     key: Option[String] = None
   ): String =
     controllers.routes.UploadLetterOfAuthorityController
-      .onPageLoad(NormalMode, draftId, errorCode, key)
+      .onPageLoad(NormalMode, draftId, errorCode, key, false)
       .url
 
   private def mockFileServiceInitiate(): Unit =
