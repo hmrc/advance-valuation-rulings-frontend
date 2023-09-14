@@ -41,6 +41,7 @@ import navigation.Navigator
 import org.eclipse.jetty.http2.ErrorCode
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.MockitoSugar.reset
 import org.mockito.MockitoSugar.when
 import org.scalacheck.Arbitrary
 import org.scalatest.BeforeAndAfterEach
@@ -52,6 +53,21 @@ import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
 class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(
+      mockSupportingDocumentsView,
+      mockLetterOfAuthorityView,
+      mockMessagesApi,
+      mockFileService,
+      mockNavigator,
+      mockConfiguration,
+      mockUserAnswersService,
+      mockOsClient,
+      mockConfig,
+    )
+  }
+
   private val mockSupportingDocumentsView = mock[UploadSupportingDocumentsView]
   private val mockLetterOfAuthorityView   = mock[UploadLetterOfAuthorityView]
   private val mockMessagesApi             = mock[MessagesApi]
@@ -61,8 +77,9 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val mockUserAnswersService      = mock[UserAnswersService]
   private val mockOsClient                = mock[PlayObjectStoreClient]
   private val mockConfig                  = mock[Config]
-  private val mockRequestHeader           = FakeRequest()
-  private val mockHeaderCarrier           = HeaderCarrier()
+
+  private val fakeRequestHeader      = FakeRequest()
+  private val headerCarrier          = HeaderCarrier()
 
   private val mode                   = NormalMode
   private val userAnswers            = userAnswersAsIndividualTrader
@@ -155,7 +172,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         draftId,
         getUploadControllerPathUrl(isLetterOfAuthority, draftId, mode, None, None),
         isLetterOfAuthority
-      )(mockHeaderCarrier)
+      )(headerCarrier)
     )
       .thenReturn(Future.successful(upscanInitiateResponse))
   }
@@ -282,7 +299,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           errorCode,
           isLetterOfAuthority,
           mode
-        )(mockHeaderCarrier)
+        )(headerCarrier)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual getUploadControllerPathUrl(
@@ -321,7 +338,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           mode,
           draftId,
           isLetterOfAuthority
-        )(mockRequestHeader, mockHeaderCarrier)
+        )(fakeRequestHeader, headerCarrier)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual expectedViewText
