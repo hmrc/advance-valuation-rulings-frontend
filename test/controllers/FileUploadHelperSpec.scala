@@ -53,18 +53,19 @@ import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
 class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  private val mockMessagesApi             = mock[MessagesApi]
   private val mockSupportingDocumentsView = mock[UploadSupportingDocumentsView]
   private val mockLetterOfAuthorityView   = mock[UploadLetterOfAuthorityView]
+  private val mockMessagesApi             = mock[MessagesApi]
   private val mockFileService             = mock[FileService]
   private val mockNavigator               = mock[Navigator]
   private val mockConfiguration           = mock[Configuration]
   private val mockUserAnswersService      = mock[UserAnswersService]
   private val mockOsClient                = mock[PlayObjectStoreClient]
+  private val mockConfig                  = mock[Config]
   private val mockRequestHeader           = FakeRequest()
   private val mockHeaderCarrier           = HeaderCarrier()
-  private val mockConfig                  = mock[Config]
 
+  private val expectedViewText       = "html text"
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
@@ -91,12 +92,77 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         .url
     }
 
+  private def getFileUploadHelper: FileUploadHelper = {
+    FileUploadHelper(
+      mockMessagesApi,
+      mockSupportingDocumentsView,
+      mockLetterOfAuthorityView,
+      mockFileService,
+      mockNavigator,
+      mockConfiguration,
+      mockUserAnswersService,
+      mockOsClient
+    )
+  }
+
+  private def setMockLetterOfAuthorityView(): Unit = {
+    when(
+      mockLetterOfAuthorityView
+        .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None))(
+          any(),
+          any()
+        )
+    )
+      .thenReturn(HtmlFormat.raw(expectedViewText))
+  }
+
+  private def setMockSupportingDocumentsView(): Unit = {
+    when(
+      mockSupportingDocumentsView
+        .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None))(
+          any(),
+          any()
+        )
+    )
+      .thenReturn(HtmlFormat.raw(expectedViewText))
+  }
+
+  private def setMockConfiguration(): Unit = {
+    when(mockConfiguration.underlying).thenReturn(mockConfig)
+  }
+
+  private def setMockFileService(isLetterOfAuthority: Boolean): Unit = {
+    when(
+      mockFileService.initiate(
+        draftId,
+        getRedirectPath(draftId, isLetterOfAuthority, NormalMode),
+        isLetterOfAuthority
+      )(mockHeaderCarrier)
+    )
+      .thenReturn(Future.successful(upscanInitiateResponse))
+  }
+
+  "Show fallback page for letter of authority" in {
+    val isLetterOfAuthority = true
+
+    setMockLetterOfAuthorityView()
+    setMockConfiguration()
+    setMockFileService(isLetterOfAuthority)
+
+    val result = getFileUploadHelper
+      .showFallbackPage(
+        NormalMode,
+        draftId,
+        isLetterOfAuthority
+      )(mockRequestHeader, mockHeaderCarrier)
+
+    contentAsString(result) mustEqual expectedViewText
+  }
 
   "Show fallback page for supporting documents" in {
     val isLetterOfAuthority = false
     val redirectPath        = getRedirectPath(draftId, isLetterOfAuthority, NormalMode)
-
-    val expectedView                    = "html text"
+    val expectedViewText    = "html text"
 
     when(
       mockSupportingDocumentsView
@@ -105,7 +171,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           any()
         )
     )
-      .thenReturn(HtmlFormat.raw(expectedView))
+      .thenReturn(HtmlFormat.raw(expectedViewText))
 
     when(mockConfiguration.underlying).thenReturn(mockConfig)
 
@@ -116,7 +182,6 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         isLetterOfAuthority
       )(mockHeaderCarrier)
     )
-//      .thenAnswer(response)
       .thenReturn(Future.successful(upscanInitiateResponse))
 
     val fileUploadHelper = FileUploadHelper(
@@ -136,7 +201,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       isLetterOfAuthority
     )(mockRequestHeader, mockHeaderCarrier)
 
-    contentAsString(result) mustEqual expectedView
+    contentAsString(result) mustEqual expectedViewText
   }
 
 }
