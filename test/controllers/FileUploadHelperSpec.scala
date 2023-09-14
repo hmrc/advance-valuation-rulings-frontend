@@ -84,6 +84,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val mode                   = NormalMode
   private val userAnswers            = userAnswersAsIndividualTrader
   private val expectedViewText       = "html text"
+  private val initiatedUploadedFile  = UploadedFile.Initiated(reference = "a reference")
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
@@ -140,6 +141,14 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
     )
   }
 
+  private def setUploadedFileInUserAnswers(isLetterOfAuthority: Boolean) = {
+    if (isLetterOfAuthority) {
+      userAnswers.set(UploadLetterOfAuthorityPage, initiatedUploadedFile).success.value
+    } else {
+      userAnswers.set(UploadSupportingDocumentPage, initiatedUploadedFile).success.value
+    }
+  }
+
   private def setMockLetterOfAuthorityView(): Unit = {
     when(
       mockLetterOfAuthorityView
@@ -179,34 +188,21 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
 
   "Check for status" - {
 
-    val initiatedUploadedFile = UploadedFile.Initiated(reference = "a reference")
-
-    "Check for status for letter of authority" in {
-      val isLetterOfAuthority = true
-
+    def testCheckForStatus(isLetterOfAuthority: Boolean): Unit = {
       setMockConfiguration()
 
-      val updatedUserAnswers = userAnswers
-        .set(UploadLetterOfAuthorityPage, initiatedUploadedFile)
-        .success
-        .value
+      val updatedUserAnswers = setUploadedFileInUserAnswers(isLetterOfAuthority)
 
       val result = getFileUploadHelper.checkForStatus(updatedUserAnswers, isLetterOfAuthority)
       result.get mustEqual initiatedUploadedFile
     }
 
+    "Check for status for letter of authority" in {
+      testCheckForStatus(isLetterOfAuthority = true)
+    }
+
     "Check for status for supporting documents" in {
-      val isLetterOfAuthority = false
-
-      setMockConfiguration()
-
-      val updatedUserAnswers = userAnswers
-        .set(UploadSupportingDocumentPage, initiatedUploadedFile)
-        .success
-        .value
-
-      val result = getFileUploadHelper.checkForStatus(updatedUserAnswers, isLetterOfAuthority)
-      result.get mustEqual initiatedUploadedFile
+      testCheckForStatus(isLetterOfAuthority = false)
     }
   }
 
