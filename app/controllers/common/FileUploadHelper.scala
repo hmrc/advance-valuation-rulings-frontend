@@ -147,7 +147,7 @@ case class FileUploadHelper @Inject() (
         if (isLetterOfAuthority) {
           Redirect(
             controllers.routes.UploadLetterOfAuthorityController
-              .onPageLoad(mode, draftId, Some(errorCode), key)
+              .onPageLoad(mode, draftId, Some(errorCode), key, redirectedFromChangeButton = false)
           )
         } else {
           Redirect(
@@ -228,7 +228,7 @@ case class FileUploadHelper @Inject() (
   ) =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(mode, draftId, None, None)
+        .onPageLoad(mode, draftId, None, None, redirectedFromChangeButton = false)
         .url
     } else {
       controllers.routes.UploadSupportingDocumentsController

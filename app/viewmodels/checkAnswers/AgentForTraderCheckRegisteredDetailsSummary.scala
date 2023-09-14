@@ -97,7 +97,9 @@ object AgentForTraderCheckRegisteredDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.UploadLetterOfAuthorityController.onPageLoad(CheckMode, draftId, None, None).url
+          routes.UploadLetterOfAuthorityController
+            .onPageLoad(CheckMode, draftId, None, None, redirectedFromChangeButton = false)
+            .url
         )
           .withVisuallyHiddenText(
             messages("agentForTraderCheckYourAnswers.trader.loa.hidden")
