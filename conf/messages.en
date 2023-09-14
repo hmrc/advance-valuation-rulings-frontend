@@ -189,8 +189,11 @@ signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
 signedOut.guidance = We did not save your answers.
 
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+unauthorised.title = You cannot access this service - Apply for an Advance Valuation Ruling - GOV.UK
+unauthorised.heading = You cannot access this service
+unauthorised.para.reason = You cannot access this service because you do you not have a valid enrolment.
+unauthorised.para.bta = You can {0}
+unauthorised.para.bta.link = add this service to your business tax account.
 
 valuationMethod.title = Select the most appropriate method to value your goods
 valuationMethod.heading = Select the most appropriate method to value your goods

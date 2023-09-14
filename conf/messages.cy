@@ -730,6 +730,9 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
+unauthorised.para.reason = You cannot access this service because you do you not have a valid enrolment.
+unauthorised.para.bta = You can {0}
+unauthorised.para.bta.link = add this service to your business tax account.
 
 applicationComplete.title = Cais wedi’i gwblhau
 applicationComplete.heading = Cais wedi’i gwblhau

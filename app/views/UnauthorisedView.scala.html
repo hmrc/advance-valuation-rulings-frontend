@@ -14,14 +14,31 @@
  * limitations under the License.
  *@
 
+@import components._
+@import config.FrontendAppConfig
+
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    config: FrontendAppConfig,
+    heading: Heading,
+    paragraph: Paragraph,
+    link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
+@btaLink = {
+    @link(
+            id = "business_tax_account_link",
+            text = messages("unauthorised.para.bta.link"),
+            call = Call("GET", config.generalInformationUrl)
+        )
+    }
+
 @layout(pageTitle = titleNoForm(messages("unauthorised.title"))) {
 
     <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
-    <p class="govuk-body">@messages("")</p>
+@paragraph(Html(messages("unauthorised.para.reason")))
+@paragraph(Html(messages("unauthorised.para.bta", btaLink)))
+
 }
