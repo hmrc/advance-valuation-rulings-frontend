@@ -17,12 +17,11 @@
 package controllers
 
 import java.time.Instant
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import play.api.Configuration
 import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.bind
 import play.api.libs.json.JsObject
 import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
@@ -32,21 +31,21 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-
 import base.SpecBase
 import com.typesafe.config.Config
 import controllers.common.FileUploadHelper
-import models.{DraftId, Mode, NormalMode, UserAnswers}
-import models.NormalMode
+import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import models.upscan.UpscanInitiateResponse
 import navigation.Navigator
+import org.eclipse.jetty.http2.ErrorCode
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.when
 import org.scalacheck.Arbitrary
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
@@ -65,6 +64,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val mockRequestHeader           = FakeRequest()
   private val mockHeaderCarrier           = HeaderCarrier()
 
+  private val mode                   = NormalMode
+  private val userAnswers            = userAnswersAsIndividualTrader
   private val expectedViewText       = "html text"
   private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
@@ -77,18 +78,35 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
     )
   )
 
-  private def getRedirectPath(
-    draftId: DraftId,
+  private def getUploadControllerPathUrl(
     isLetterOfAuthority: Boolean,
-    mode: Mode = NormalMode
-  ) =
+    draftId: DraftId,
+    mode: Mode,
+    errorCode: Option[String],
+    key: Option[String]
+  ): String =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(mode, draftId, None, None)
+        .onPageLoad(mode, draftId, errorCode, key)
         .url
     } else {
       controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(mode, draftId, None, None)
+        .onPageLoad(mode, draftId, errorCode, key)
+        .url
+    }
+
+  private def getOnwardPathUrl(
+    isLetterOfAuthority: Boolean,
+    draftId: DraftId,
+    mode: Mode
+  ): String =
+    if (isLetterOfAuthority) {
+      controllers.routes.VerifyLetterOfAuthorityController
+        .onPageLoad(mode, draftId)
+        .url
+    } else {
+      controllers.routes.IsThisFileConfidentialController
+        .onPageLoad(mode, draftId)
         .url
     }
 
@@ -135,73 +153,199 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
     when(
       mockFileService.initiate(
         draftId,
-        getRedirectPath(draftId, isLetterOfAuthority, NormalMode),
+        getUploadControllerPathUrl(isLetterOfAuthority, draftId, mode, None, None),
         isLetterOfAuthority
       )(mockHeaderCarrier)
     )
       .thenReturn(Future.successful(upscanInitiateResponse))
   }
 
-  "Show fallback page for letter of authority" in {
+  "Check for status" - {
+
+    val initiatedUploadedFile = UploadedFile.Initiated(reference = "a reference")
+
+    "Check for status for letter of authority" in {
+      val isLetterOfAuthority = true
+
+      setMockConfiguration()
+
+      val updatedUserAnswers = userAnswers
+        .set(UploadLetterOfAuthorityPage, initiatedUploadedFile)
+        .success
+        .value
+
+      val result = getFileUploadHelper.checkForStatus(updatedUserAnswers, isLetterOfAuthority)
+      result.get mustEqual initiatedUploadedFile
+    }
+
+    "Check for status for supporting documents" in {
+      val isLetterOfAuthority = false
+
+      setMockConfiguration()
+
+      val updatedUserAnswers = userAnswers
+        .set(UploadSupportingDocumentPage, initiatedUploadedFile)
+        .success
+        .value
+
+      val result = getFileUploadHelper.checkForStatus(updatedUserAnswers, isLetterOfAuthority)
+      result.get mustEqual initiatedUploadedFile
+    }
+  }
+
+  "Remove file" in {
+    // This boolean value is only required to pass to the method which shows the fallback page.
     val isLetterOfAuthority = true
 
-    setMockLetterOfAuthorityView()
+    //TODO.
+    fail
+  }
+
+  "Show in progress page" in {
+    // This boolean value is only required to pass to UploadInProgressController.
+    val isLetterOfAuthority = true
+
+    val key = Some("a key")
+    val expectedUrl = controllers.routes.UploadInProgressController
+      .onPageLoad(draftId, key, isLetterOfAuthority)
+      .url
+
     setMockConfiguration()
     setMockFileService(isLetterOfAuthority)
 
     val result = getFileUploadHelper
-      .showFallbackPage(
-        NormalMode,
+      .showInProgressPage(
         draftId,
+        key,
         isLetterOfAuthority
-      )(mockRequestHeader, mockHeaderCarrier)
+      )
 
-    contentAsString(result) mustEqual expectedViewText
+    status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustEqual expectedUrl
   }
 
-  "Show fallback page for supporting documents" in {
-    val isLetterOfAuthority = false
-    val redirectPath        = getRedirectPath(draftId, isLetterOfAuthority, NormalMode)
-    val expectedViewText    = "html text"
+  "Continue" - {
 
-    when(
-      mockSupportingDocumentsView
-        .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None))(
-          any(),
-          any()
+    def testContinue(isLetterOfAuthority: Boolean): Unit = {
+      val application = applicationBuilder().build()
+
+      running(application) {
+        val navigator = application.injector.instanceOf[Navigator]
+        val result = FileUploadHelper(
+          mockMessagesApi,
+          mockSupportingDocumentsView,
+          mockLetterOfAuthorityView,
+          mockFileService,
+          navigator,
+          mockConfiguration,
+          mockUserAnswersService,
+          mockOsClient
         )
-    )
-      .thenReturn(HtmlFormat.raw(expectedViewText))
+          .continue(mode, userAnswers, isLetterOfAuthority)
 
-    when(mockConfiguration.underlying).thenReturn(mockConfig)
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual getOnwardPathUrl(
+          isLetterOfAuthority,
+          draftId,
+          mode
+        )
+      }
+    }
 
-    when(
-      mockFileService.initiate(
+    "Continue for letter of authority" in {
+      val isLetterOfAuthority = true
+
+      setMockConfiguration()
+
+      testContinue(isLetterOfAuthority)
+    }
+
+    "Continue for supporting documents" in {
+      val isLetterOfAuthority = false
+
+      setMockConfiguration()
+
+      testContinue(isLetterOfAuthority)
+    }
+  }
+
+  "Redirect with error" - {
+
+    def testRedirectWithError(isLetterOfAuthority: Boolean): Unit = {
+      val key = "a key"
+      val errorCode = "an error code"
+
+      val result = getFileUploadHelper
+        .redirectWithError(
+          draftId,
+          Some(key),
+          errorCode,
+          isLetterOfAuthority,
+          mode
+        )(mockHeaderCarrier)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual getUploadControllerPathUrl(
+        isLetterOfAuthority,
         draftId,
-        redirectPath,
-        isLetterOfAuthority
-      )(mockHeaderCarrier)
-    )
-      .thenReturn(Future.successful(upscanInitiateResponse))
+        mode,
+        Some(errorCode),
+        Some(key)
+      )
+    }
 
-    val fileUploadHelper = FileUploadHelper(
-      mockMessagesApi,
-      mockSupportingDocumentsView,
-      mockLetterOfAuthorityView,
-      mockFileService,
-      mockNavigator,
-      mockConfiguration,
-      mockUserAnswersService,
-      mockOsClient
-    )
+    "Redirect with error for letter of authority" in {
+      val isLetterOfAuthority = true
 
-    val result = fileUploadHelper.showFallbackPage(
-      NormalMode,
-      draftId,
-      isLetterOfAuthority
-    )(mockRequestHeader, mockHeaderCarrier)
+      setMockConfiguration()
+      setMockFileService(isLetterOfAuthority)
 
-    contentAsString(result) mustEqual expectedViewText
+      testRedirectWithError(isLetterOfAuthority)
+    }
+
+    "Redirect with error for supporting documents" in {
+      val isLetterOfAuthority = false
+
+      setMockConfiguration()
+      setMockFileService(isLetterOfAuthority)
+
+      testRedirectWithError(isLetterOfAuthority)
+    }
+  }
+
+  "Show fallback page" - {
+
+    def testShowFallbackPage(isLetterOfAuthority: Boolean): Unit = {
+      val result = getFileUploadHelper
+        .showFallbackPage(
+          mode,
+          draftId,
+          isLetterOfAuthority
+        )(mockRequestHeader, mockHeaderCarrier)
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual expectedViewText
+    }
+
+    "Show fallback page for letter of authority" in {
+      val isLetterOfAuthority = true
+
+      setMockLetterOfAuthorityView()
+      setMockConfiguration()
+      setMockFileService(isLetterOfAuthority)
+
+      testShowFallbackPage(isLetterOfAuthority)
+    }
+
+    "Show fallback page for supporting documents" in {
+      val isLetterOfAuthority = false
+
+      setMockSupportingDocumentsView()
+      setMockConfiguration()
+      setMockFileService(isLetterOfAuthority)
+
+      testShowFallbackPage(isLetterOfAuthority)
+    }
   }
 
 }
