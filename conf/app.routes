@@ -23,7 +23,7 @@ GET        /account/sign-out-survey                     controllers.auth.AuthCon
 GET        /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
 GET        /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
 
-GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+GET        /cannot-access-valuation-service             controllers.UnauthorisedController.onPageLoad
 
 GET        /applications-and-rulings                    controllers.AccountHomeController.onPageLoad()
 POST       /applications-and-rulings                    controllers.AccountHomeController.startApplication()

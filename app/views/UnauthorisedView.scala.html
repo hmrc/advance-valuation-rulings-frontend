@@ -22,23 +22,18 @@
     config: FrontendAppConfig,
     heading: Heading,
     paragraph: Paragraph,
-    link: Link
+    bulletList: BulletList
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@btaLink = {
-    @link(
-            id = "business_tax_account_link",
-            text = messages("unauthorised.para.bta.link"),
-            call = Call("GET", config.generalInformationUrl)
-        )
-    }
-
 @layout(pageTitle = titleNoForm(messages("unauthorised.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
-@paragraph(Html(messages("unauthorised.para.reason")))
-@paragraph(Html(messages("unauthorised.para.bta", btaLink)))
-
+    @heading(messages("unauthorised.heading"))
+    @paragraph(Html(messages("unauthorised.para.reason")))
+    @paragraph(Html(messages("unauthorised.para.bta")))
+    @bulletList(Seq(
+        Html(messages("unauthorised.list.1")),
+        Html(messages("unauthorised.list.2"))
+    ))
 }
