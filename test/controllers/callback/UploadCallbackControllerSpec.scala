@@ -71,7 +71,7 @@ class UploadCallbackControllerSpec
 
     "must call the file service with the correct parameters" in {
 
-      when(mockFileService.update(any(), any(), eqTo(true)))
+      when(mockFileService.update(any(), any(), eqTo(true))(any()))
         .thenReturn(Future.successful(Done))
 
       val request = FakeRequest(
@@ -83,7 +83,7 @@ class UploadCallbackControllerSpec
 
       status(result) mustBe OK
 
-      verify(mockFileService).update(eqTo(DraftId(0)), any(), eqTo(true))
+      verify(mockFileService).update(eqTo(DraftId(0)), any(), eqTo(true))(any())
     }
   }
 }
