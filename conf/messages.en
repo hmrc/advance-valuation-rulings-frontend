@@ -189,8 +189,12 @@ signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
 signedOut.guidance = We did not save your answers.
 
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+unauthorised.title = You cannot access this service - Apply for an Advance Valuation Ruling - GOV.UK
+unauthorised.heading = You cannot access this service
+unauthorised.para.reason = You cannot access this service because you do you not have a valid enrolment.
+unauthorised.para.bta = To sign up for this service, you will need:
+unauthorised.list.1 = a Government Gateway user ID and password - if you do not have one, you can create one when you apply
+unauthorised.list.2 = an EORI number starting with GB
 
 valuationMethod.title = Select the most appropriate method to value your goods
 valuationMethod.heading = Select the most appropriate method to value your goods
