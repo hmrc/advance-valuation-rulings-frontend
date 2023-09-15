@@ -46,7 +46,7 @@ class UploadSupportingDocumentsControllerSpec
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFileService, mockUserAnswersService)
+    reset(mockFileService, mockFileUploadHelper)
   }
 
   private lazy val redirectPath: String =
@@ -54,10 +54,10 @@ class UploadSupportingDocumentsControllerSpec
       .onPageLoad(NormalMode, draftId, None, None)
       .url
   private val isLetterOfAuthority       = false
-  private val mockFileService           = mock[FileService]
-  private val mockFileUploadHelper      = mock[FileUploadHelper]
-  private val mockUserAnswersService    = mock[UserAnswersService]
-  private val upscanInitiateResponse    = UpscanInitiateResponse(
+
+  private val mockFileService        = mock[FileService]
+  private val mockFileUploadHelper   = mock[FileUploadHelper]
+  private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
       href = "href",
@@ -71,10 +71,9 @@ class UploadSupportingDocumentsControllerSpec
   private val initiatedFile =
     UploadedFile.Initiated("reference")
 
-  private val fileUrl        = "some/path/for/the/download/url"
-  private val successfulFile = UploadedFile.Success(
+  private val successfulFile: UploadedFile.Success = UploadedFile.Success(
     reference = "reference",
-    downloadUrl = fileUrl,
+    downloadUrl = "downloadUrl",
     uploadDetails = UploadedFile.UploadDetails(
       fileName = "fileName",
       fileMimeType = "fileMimeType",
@@ -83,6 +82,43 @@ class UploadSupportingDocumentsControllerSpec
       size = 1337
     )
   )
+
+  "When the page is loaded it must display the expected content" in {
+    val userAnswers = userAnswersAsIndividualTrader
+      .set(UploadSupportingDocumentPage, successfulFile)
+      .success
+      .value
+
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(
+        bind[FileService].toInstance(mockFileService),
+        bind[FileUploadHelper].toInstance(mockFileUploadHelper)
+      )
+      .build()
+
+    val successTextForHelper = "test upload supporting document"
+    when(
+      mockFileUploadHelper.onPageLoadWithFileStatus(
+        eqTo(NormalMode),
+        eqTo(draftId),
+        eqTo(None),
+        eqTo(None),
+        eqTo(Some(successfulFile)),
+        eqTo(isLetterOfAuthority)
+      )(any(), any())
+    )
+      .thenReturn(Future.successful(play.api.mvc.Results.Ok(successTextForHelper)))
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(NormalMode, draftId, None, None)
+        .url
+    )
+
+    val result = route(application, request).value
+    contentAsString(result) mustEqual successTextForHelper
+  }
 
   "when there is no existing file" - {
 
