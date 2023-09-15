@@ -146,7 +146,7 @@ class UploadLetterOfAuthorityControllerSpec
     val request = FakeRequest(
       GET,
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(NormalMode, draftId, None, None)
+        .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = false)
         .url
     )
 
