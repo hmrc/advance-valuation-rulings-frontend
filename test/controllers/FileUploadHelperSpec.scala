@@ -243,59 +243,43 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
     }
   }
 
-//  "Remove file" in {
-//    // This boolean value is only required to pass to the method which shows the fallback page.
-//    val isLetterOfAuthority = true
-//
-//    setMockConfiguration()
-//
-//    when(mockUserAnswersService.set(any())(any()))
-//      .thenReturn(Future.successful(Done))
-//    when(mockOsClient.deleteObject(any(), anyString())(any()))
-//      .thenReturn(Future.successful("thing"))
-////    doReturn(Future.successful("thing"))
-////      .when(mockOsClient)
-////      .deleteObject(any(), anyString())(any())
-//
-////    val fileUploadHelper = getFileUploadHelper
-////
-////    when(fileUploadHelper.showFallbackPage(any(), any(), any())(any(), any()))
-////      .thenReturn(Future.successful(upscanInitiateResponse))
-//
-////    implicit val m = Materializer
-////    val osClient: PlayObjectStoreClient = new PlayObjectStoreClient(m, executioncon)
-////    val fileUploadHelper = FileUploadHelper(
-////      mockMessagesApi,
-////      mockSupportingDocumentsView,
-////      mockLetterOfAuthorityView,
-////      mockFileService,
-////      mockNavigator,
-////      mockConfiguration,
-////      mockUserAnswersService,
-////      osClient
-////    )
-//
-//    val ua =
-//      userAnswers
-//        .set(AllDocuments, List(DraftAttachment(successfulFile, Some(false))))
-//        .success
-//        .value
-//
-//    val mockDataRequest = mock[DataRequest[AnyContent]]
-//    val result          = getFileUploadHelper
-//      .removeFile(
-//        mode,
-//        draftId,
-//        "file url",
-//        isLetterOfAuthority
-//      )(mockDataRequest, headerCarrier)
-//
-//    verify(mockOsClient, times(1))
-//      .deleteObject(eqTo(Path.File("downloadUrl")), any())(any())
-//
-//    status(result) mustEqual OK
-//    contentAsString(result) mustEqual expectedViewText
-//  }
+  "Remove file" in {
+    val userAnswers = userAnswersAsIndividualTrader
+      .set(UploadSupportingDocumentPage, successfulFile)
+      .success
+      .value
+
+    setMockSupportingDocumentsView()
+    when(mockOsClient.deleteObject(any[Path.File], any[String])(any[HeaderCarrier]))
+      .thenReturn(Future.successful(()))
+    when(mockUserAnswersService.set(any())(any()))
+      .thenReturn(Future.successful(Done))
+    when(
+      mockFileService.initiate(
+        eqTo(draftId),
+        eqTo("/advance-valuation-ruling/DRAFT123456789/supporting-documents/upload"),
+        eqTo(false)
+      )(any())
+    )
+      .thenReturn(Future.successful(upscanInitiateResponse))
+
+    val application = applicationBuilder(Some(userAnswers))
+      .overrides(bind[PlayObjectStoreClient].toInstance(mockOsClient))
+      .overrides(bind[FileService].toInstance(mockFileService))
+      .overrides(bind[UserAnswersService].toInstance(mockUserAnswersService))
+      .overrides(bind[UploadSupportingDocumentsView].toInstance(mockSupportingDocumentsView))
+      .build()
+
+    val request = FakeRequest(
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(mode, draftId, Some(errorCode), Some("key"))
+    )
+      .withFormUrlEncodedBody("value" -> "true")
+    val result  = route(application, request).value
+
+    status(result) mustEqual OK
+    contentAsString(result) mustEqual expectedViewText
+  }
 
   "Show in progress page" in {
     // This boolean value is only required to pass to UploadInProgressController.

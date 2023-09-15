@@ -132,9 +132,10 @@ class UploadLetterOfAuthorityControllerSpec
       .build()
 
     val successTextForHelper = "test upload letter of authority different message lalalala"
-    val okFuture = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
-    when(mockFileUploadHelper
-      .showFallbackPage(eqTo(NormalMode), eqTo(draftId), eqTo(isLetterOfAuthority))(any(), any())
+    val okFuture             = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
+    when(
+      mockFileUploadHelper
+        .showFallbackPage(eqTo(NormalMode), eqTo(draftId), eqTo(isLetterOfAuthority))(any(), any())
     )
       .thenReturn(okFuture)
 
@@ -164,7 +165,7 @@ class UploadLetterOfAuthorityControllerSpec
       .build()
 
     val successTextForHelper = "test upload letter of authority different message"
-    val okFuture = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
+    val okFuture             = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
     when(mockFileUploadHelper.continue(NormalMode, userAnswers, isLetterOfAuthority))
       .thenReturn(okFuture)
 
@@ -194,7 +195,7 @@ class UploadLetterOfAuthorityControllerSpec
       .build()
 
     val successTextForHelper = "test upload letter of authority"
-    val okFuture = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
+    val okFuture             = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
     when(
       mockFileUploadHelper.onPageLoadWithFileStatus(
         eqTo(NormalMode),

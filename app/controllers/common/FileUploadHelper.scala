@@ -104,7 +104,10 @@ case class FileUploadHelper @Inject() (
     request: DataRequest[AnyContent],
     hc: HeaderCarrier
   ): Future[Result] = {
-    osClient.deleteObject(Path.File(fileUrl))
+    osClient.deleteObject(
+      Path.File(fileUrl),
+      owner = "advance-valuation-rulings-frontend" // TODO: Remove asap.
+    )
     showFallbackPage(mode, draftId, isLetterOfAuthority)
   }
 
