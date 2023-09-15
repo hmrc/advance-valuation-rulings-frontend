@@ -18,14 +18,11 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.ExecutionContext
-
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import controllers.common.FileUploadHelper
 import controllers.routes.{JourneyRecoveryController, UploadLetterOfAuthorityController}
 import models._
 import navigation.Navigator
@@ -39,10 +36,8 @@ class VerifyLetterOfAuthorityController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: VerifyLetterOfAuthorityView,
-  helper: FileUploadHelper
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+  view: VerifyLetterOfAuthorityView
+) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
@@ -51,9 +46,9 @@ class VerifyLetterOfAuthorityController @Inject() (
         UploadLetterOfAuthorityPage.get() match {
           case Some(attachment) =>
             attachment.fileName match {
-              case Some(fileName) =>
+              case Some(_) =>
                 Ok(view(attachment, draftId, mode))
-              case None           =>
+              case None    =>
                 Redirect(
                   UploadLetterOfAuthorityController.onPageLoad(
                     mode,

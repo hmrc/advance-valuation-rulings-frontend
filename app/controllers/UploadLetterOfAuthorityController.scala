@@ -24,7 +24,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.FileUploadHelper
-import controllers.routes.VerifyLetterOfAuthorityController
 import models._
 import pages._
 
@@ -39,6 +38,8 @@ class UploadLetterOfAuthorityController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
+  private val isLetterOfAuthority = true
+
   def onPageLoad(
     mode: Mode,
     draftId: DraftId,
@@ -51,19 +52,19 @@ class UploadLetterOfAuthorityController @Inject() (
         val answers    = request.userAnswers
         val fileStatus = answers.get(UploadLetterOfAuthorityPage)
         if (redirectedFromChangeButton) {
-          helper.showFallbackPage(mode, draftId, isLetterOfAuthority = true)
+          helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
         } else {
           fileStatus match {
-            case Some(file: UploadedFile.Success) =>
-              helper.continue(mode, answers, isLetterOfAuthority = true)
-            case _                                =>
+            case Some(_: UploadedFile.Success) =>
+              helper.continue(mode, answers, isLetterOfAuthority)
+            case _                             =>
               helper.onPageLoadWithFileStatus(
                 mode,
                 draftId,
                 errorCode,
                 key,
                 fileStatus,
-                isLetterOfAuthority = true
+                isLetterOfAuthority
               )
           }
         }
