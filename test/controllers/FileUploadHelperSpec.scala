@@ -23,12 +23,12 @@ import scala.concurrent.Future
 
 import play.api.{Application, Configuration}
 import play.api.Configuration
+import play.api.http.HttpEntity
 import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.libs.json.JsObject
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
-import play.api.mvc.AnyContent
+import play.api.mvc.{AnyContent, Cookie, MessagesControllerComponents, ResponseHeader, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
@@ -55,6 +55,7 @@ import org.mockito.Mockito.{doReturn, times, verify}
 import org.mockito.MockitoSugar.{spy, when}
 import org.mockito.MockitoSugar.reset
 import org.mockito.MockitoSugar.when
+import org.mockito.stubbing.ScalaOngoingStubbing
 import org.scalacheck.Arbitrary
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
@@ -443,39 +444,96 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       testShowFallbackPage(isLetterOfAuthority)
     }
   }
+  def spyMockFileUploadHelper(): FileUploadHelper =
+    spy(
+      FileUploadHelper(
+        mockMessagesApi,
+        mockSupportingDocumentsView,
+        mockLetterOfAuthorityView,
+        mockFileService,
+        mockNavigator,
+        mockConfiguration,
+        mockUserAnswersService,
+        mockOsClient
+      )
+    )
 
-  "when there is a failed file" - {
+  def setUpMockFileService(
+    redirectPath: String,
+    isLetterOfAuthority: Boolean
+  ): ScalaOngoingStubbing[Future[UpscanInitiateResponse]] =
+    when(
+      mockFileService.initiate(
+        draftId,
+        redirectPath,
+        isLetterOfAuthority
+      )(headerCarrier)
+    )
+      .thenReturn(Future.successful(upscanInitiateResponse))
 
-    "Show error page when there is an error code passed to onPageLoad" in {
+  def getRedirectPath(
+    errorCode: Option[String] = None,
+    key: Option[String] = None
+  ): String =
+    controllers.routes.UploadLetterOfAuthorityController
+      .onPageLoad(NormalMode, draftId, errorCode, key, redirectedFromChangeButton = false)
+      .url
 
+  "when there is an initiated file" - {
+
+    "Show fallback page when there is no key" in {
+      val isLetterOfAuthority = true
+      val redirectPath        = getRedirectPath()
+
+      setMockLetterOfAuthorityView()
+      when(mockConfiguration.underlying).thenReturn(mockConfig)
+      setUpMockFileService(redirectPath, isLetterOfAuthority)
+      val fileUploadHelper = spyMockFileUploadHelper()
+
+      val result = fileUploadHelper.onPageLoadWithFileStatus(
+        NormalMode,
+        draftId,
+        None,
+        None,
+        Some(UploadedFile.Initiated("reference")),
+        isLetterOfAuthority
+      )(mock[DataRequest[AnyContent]], headerCarrier)
+
+      verify(fileUploadHelper, times(1)).showFallbackPage(any(), any(), any())(any(), any())
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual expectedViewText
+    }
+
+    "Show in progress page when there is a key" in {
+      val isLetterOfAuthority = true
+      val redirectPath        = getRedirectPath()
+
+      setMockLetterOfAuthorityView()
+      when(mockConfiguration.underlying).thenReturn(mockConfig)
+      setUpMockFileService(redirectPath, isLetterOfAuthority)
+      val fileUploadHelper = spyMockFileUploadHelper()
+
+      val result = fileUploadHelper.onPageLoadWithFileStatus(
+        NormalMode,
+        draftId,
+        None,
+        Some("reference"),
+        Some(UploadedFile.Initiated("reference")),
+        isLetterOfAuthority
+      )(mock[DataRequest[AnyContent]], headerCarrier)
+
+      verify(fileUploadHelper, times(1)).showInProgressPage(any(), any(), any())
+      status(result) mustEqual SEE_OTHER
+    }
+
+    "Show error page when there is an error code passed in" in {
       val isLetterOfAuthority = true
       val redirectPath        = getRedirectPath()
 
       setErrorMockLetterOfAuthorityView()
-
       when(mockConfiguration.underlying).thenReturn(mockConfig)
-
-      when(
-        mockFileService.initiate(
-          draftId,
-          redirectPath,
-          isLetterOfAuthority
-        )(headerCarrier)
-      )
-        .thenReturn(Future.successful(upscanInitiateResponse))
-
-      val fileUploadHelper = spy(
-        FileUploadHelper(
-          mockMessagesApi,
-          mockSupportingDocumentsView,
-          mockLetterOfAuthorityView,
-          mockFileService,
-          mockNavigator,
-          mockConfiguration,
-          mockUserAnswersService,
-          mockOsClient
-        )
-      )
+      setUpMockFileService(redirectPath, isLetterOfAuthority)
+      val fileUploadHelper = spyMockFileUploadHelper()
 
       errorMessage willBe returned by fileUploadHelper.errorForCode(eqTo(errorCode))(any[Messages])
 
@@ -491,7 +549,50 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual expectedErrorViewText
     }
+  }
 
+  "when there is a successful file" - {
+
+    "must remove the file" in {
+      val isLetterOfAuthority = true
+      val redirectPath        = getRedirectPath()
+
+      setMockLetterOfAuthorityView()
+      when(mockConfiguration.underlying).thenReturn(mockConfig)
+      setUpMockFileService(redirectPath, isLetterOfAuthority)
+      val fileUploadHelper = spyMockFileUploadHelper()
+
+      Future.successful(
+        Result.apply(
+          ResponseHeader.apply(OK, Map(), None),
+          HttpEntity.NoEntity,
+          None,
+          None,
+          Seq[Cookie]()
+        )
+      ) willBe returned by fileUploadHelper.removeFile(
+        any(),
+        any(),
+        any(),
+        any()
+      )(any(), any())
+
+      val result = fileUploadHelper.onPageLoadWithFileStatus(
+        NormalMode,
+        draftId,
+        None,
+        None,
+        Some(successfulFile),
+        isLetterOfAuthority
+      )(mock[DataRequest[AnyContent]], headerCarrier)
+
+      verify(fileUploadHelper, times(1)).removeFile(any(), any(), any(), any())(any(), any())
+      status(result) mustEqual OK
+    }
+
+  }
+
+  "when there is a failed file" - {
     def injectView(application: Application) =
       application.injector.instanceOf[UploadLetterOfAuthorityView]
 
@@ -501,14 +602,6 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           any()
         )
       ).thenReturn(Future.successful(upscanInitiateResponse))
-
-    def getRedirectPath(
-      errorCode: Option[String] = None,
-      key: Option[String] = None
-    ): String =
-      controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(NormalMode, draftId, errorCode, key, redirectedFromChangeButton = false)
-        .url
 
     def checkBadRequest(
       errCode: String,
@@ -595,9 +688,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           mockFileServiceInitiate()
 
           checkBadRequest(errCode, errMessage, application)
-
       }
     }
-  }
 
+  }
 }
