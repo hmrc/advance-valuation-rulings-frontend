@@ -55,9 +55,9 @@ class UploadSupportingDocumentsControllerSpec
       .url
   private val isLetterOfAuthority       = false
 
-  private val mockFileService           = mock[FileService]
-  private val mockFileUploadHelper      = mock[FileUploadHelper]
-  private val upscanInitiateResponse    = UpscanInitiateResponse(
+  private val mockFileService        = mock[FileService]
+  private val mockFileUploadHelper   = mock[FileUploadHelper]
+  private val upscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
       href = "href",

@@ -17,13 +17,16 @@
 package controllers
 
 import java.time.Instant
+
 import scala.concurrent.Future
+
 import play.api.Application
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
 import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile}
@@ -57,10 +60,10 @@ class UploadLetterOfAuthorityControllerSpec
   private def injectView(application: Application) =
     application.injector.instanceOf[UploadLetterOfAuthorityView]
 
-  private val isLetterOfAuthority    = true
+  private val isLetterOfAuthority = true
 
-  private val mockFileService        = mock[FileService]
-  private val mockFileUploadHelper   = mock[FileUploadHelper]
+  private val mockFileService      = mock[FileService]
+  private val mockFileUploadHelper = mock[FileUploadHelper]
 
   private def getRedirectPath(
     errorCode: Option[String] = None,
