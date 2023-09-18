@@ -693,10 +693,13 @@ agentForTraderCheckYourAnswers.agent.name.hidden = your company’s registered b
 agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registered business address
 
 agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
-agentForTraderCheckYourAnswers.applicant.email.label = Agent’s email address
-agentForTraderCheckYourAnswers.applicant.phone.label = Agent’s telephone number
+agentForTraderCheckYourAnswers.applicant.name.hidden = the Agent’s full name
+agentForTraderCheckYourAnswers.applicant.email.label = Agents’s email address
+agentForTraderCheckYourAnswers.applicant.email.hidden = the Agents’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Agents’s telephone number
+agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agents’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
-agentForTraderCheckYourAnswers.applicant.companyName.hidden = Agent’s company name
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = the Agent’s company name
 agentForTraderCheckYourAnswers.goods.heading = About the goods
 agentForTraderCheckYourAnswers.declaration.heading = Your declaration
 agentForTraderCheckYourAnswers.declaration.paragraph1 = By applying for an Advance Valuation Ruling you confirm that:
