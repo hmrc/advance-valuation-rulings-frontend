@@ -1,4 +1,5 @@
 service.name = Advance Valuation Ruling
+service.name.prefix = Apply for an
 
 site.back = Back
 site.remove = Remove
@@ -186,8 +187,12 @@ signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
 signedOut.guidance = We did not save your answers.
 
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+unauthorised.title = You cannot access this service - Apply for an Advance Valuation Ruling - GOV.UK
+unauthorised.heading = You cannot access this service
+unauthorised.para.reason = You cannot access this service because you do you not have a valid enrolment.
+unauthorised.para.bta = To sign up for this service, you will need:
+unauthorised.list.1 = a Government Gateway user ID and password - if you do not have one, you can create one when you apply
+unauthorised.list.2 = an EORI number starting with GB
 
 valuationMethod.title = Select the most appropriate method to value your goods
 valuationMethod.heading = Select the most appropriate method to value your goods
@@ -276,10 +281,9 @@ invalidTraderEori.heading = EORI number {0} is invalid
 invalidTraderEori.p1 = The EORI number you have provided does not match any business on our records.
 invalidTraderEori.p2 = You will need to contact the trader directly to clarify their EORI number.
 
-contactPage.title = If we need to contact you about your application
-contactPage.heading = If we need to contact you about your application
+contactPage.title = If we need more information about your application we will contact you
+contactPage.heading = If we need more information about your application we will contact you
 contactPage.caption = About the applicant
-contactPage.paragraph.1 = If we need more information about your application we will contact you
 contactPage.paragraph.2 = Please note that email communication may not always be secure, as emails can be read or changed by someone else. If you choose to continue your application, you accept the risks involved.
 
 importGoods.title = Are you planning to import goods into Great Britain?
@@ -487,12 +491,13 @@ uploadLetterOfAuthority.caption = About the applicant
 uploadLetterOfAuthority.insetPara = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader. HMRC may contact the trader to confirm that you have the right to make this application.
 uploadLetterOfAuthority.paragraph.1 = The letter of authority should:
 uploadLetterOfAuthority.paragraph.2 = An individual file must be:
+uploadLetterOfAuthority.paragraph.3 = Do not upload password-protected files, as this will prevent the processing of your application.
 uploadLetterOfAuthority.bulletPoint.1 = be written and signed by the trader on letterhead paper
 uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on the trader’s behalf
 uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
 uploadLetterOfAuthority.bulletPoint.4 = contain your contact details including your EORI number, email address, phone number and the address registered with HMRC
 uploadLetterOfAuthority.bulletPoint.5 = smaller than 5MB
-uploadLetterOfAuthority.bulletPoint.6 = a PDF or JPG
+uploadLetterOfAuthority.bulletPoint.6 = a PDF or JPEG
 uploadLetterOfAuthority.label = Upload a file
 uploadLetterOfAuthority.button = Upload and continue
 
@@ -526,7 +531,7 @@ fileUpload.error.invalidargument = Select a file to upload
 fileUpload.error.duplicate = You can only upload distinct files
 fileUpload.error.failed = The selected file failed to upload
 fileUpload.error.quarantine = The selected file contains a virus
-fileUpload.error.rejected = The selected file must be a PDF or JPG
+fileUpload.error.rejected = The selected file must be a PDF or JPEG
 fileUpload.error.unknown = There was a problem uploading your file
 
 
@@ -849,9 +854,7 @@ whatIsYourRoleAsImporter.title = How would you describe your role as an importer
 whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.employeeOfOrg = An employee of the organisation
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Agent acting on behalf of an organisation
-whatIsYourRoleAsImporter.details.label = Agents acting on behalf of traders
 whatIsYourRoleAsImporter.para.1 = Choose the option that best describes your role:
-whatIsYourRoleAsImporter.para.2 = We are currently developing this route through the Advance Valuation Ruling process and it will be made available soon.
 whatIsYourRoleAsImporter.employeeOfOrg.hint = Imports goods into the UK on behalf of their organisation.
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Imports goods into the UK on behalf of another organisation.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = How would you describe your role as an importer?
@@ -894,9 +897,7 @@ businessContactDetails.email.error.required = Enter an email address in the corr
 businessContactDetails.email.error.format = Enter an email address in the correct format, like name@example.com
 businessContactDetails.email.length = Email address must be 50 characters or less
 businessContactDetails.telephoneNumber.error.required = Enter a telephone number
-businessContactDetails.telephoneNumber.error.format = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192	
-businessContactDetails.telephoneNumber.error.length = Telephone number is too long
-businessContactDetails.telephoneNumber.error.letter = Telephone number can only contain numbers
+businessContactDetails.telephoneNumber.error.format = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
 businessContactDetails.checkYourAnswersLabel = businessContactDetails
 businessContactDetails.change.hidden = applicant’s own contact details
 businessContactDetails.name.change.hidden = your contact name

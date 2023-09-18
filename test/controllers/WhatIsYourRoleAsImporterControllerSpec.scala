@@ -148,7 +148,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
           .value
 
       verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
-      verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
+      verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
     }
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {
@@ -199,7 +199,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         .value
 
       verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
-      verify(mockAuditService, times(1)).sendAgentIndicatorEvent(any())(any(), any(), any())
+      verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {

@@ -42,9 +42,7 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
     .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError))
 
   val phoneMapping: (String, Mapping[String]) = "phone" -> text(phoneRequiredError)
-    .verifying(phoneLengthError, phone => phone.length <= Validation.phoneNumberMaxLength)
-    .verifying(phoneLetterError, phone => !phone.exists(_.isLetter))
-    .verifying(phoneFormatError, phone => phone.length > 0)
+    .verifying(phoneInvalidError, phone => Validation.phoneFormat(phone))
 
   val companyNameMapping: (String, Mapping[String]) =
     "companyName" -> text(companyNameRequiredError)
@@ -96,9 +94,7 @@ object BusinessContactDetailsFormProvider {
   private val emailLengthError   = "businessContactDetails.email.length"
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
-  private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
-  private val phoneLengthError   = "businessContactDetails.telephoneNumber.error.length"
-  private val phoneLetterError   = "businessContactDetails.telephoneNumber.error.letter"
+  private val phoneInvalidError  = "businessContactDetails.telephoneNumber.error.format"
 
   private val companyNameRequiredError = "businessContactDetails.companyName.error.required"
 }

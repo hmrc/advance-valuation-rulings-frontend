@@ -18,14 +18,18 @@ package controllers
 
 import javax.inject.Inject
 
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import controllers.common.FileUploadHelper
 import models.{DraftId, Mode, UploadedFile}
-import pages.UploadSupportingDocumentPage
+import models.requests.DataRequest
 import views.html.UploadInProgressView
 
 class UploadInProgressController @Inject() (
@@ -39,31 +43,70 @@ class UploadInProgressController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(draftId: DraftId, key: Option[String]): Action[AnyContent] =
+  def onPageLoad(
+    mode: Mode,
+    draftId: DraftId,
+    key: Option[String],
+    isLetterOfAuthority: Boolean
+  ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(draftId, key))
+      implicit request =>
+        val answers = request.userAnswers
+        val status  = helper.checkForStatus(answers, isLetterOfAuthority)
+        status match {
+          case Some(file) =>
+            file match {
+              case file: UploadedFile.Success =>
+                removeFileOnBackNavigation(mode, draftId, isLetterOfAuthority, file)
+              case _                          =>
+                Ok(view(mode, draftId, key, isLetterOfAuthority))
+            }
+          case _          =>
+            Ok(view(mode, draftId, key, isLetterOfAuthority))
+        }
     }
 
-  def checkProgress(mode: Mode, draftId: DraftId, key: Option[String]): Action[AnyContent] =
+  private def removeFileOnBackNavigation(
+    mode: Mode,
+    draftId: DraftId,
+    isLetterOfAuthority: Boolean,
+    file: UploadedFile.Success
+  )(implicit request: DataRequest[AnyContent], hc: HeaderCarrier) =
+    Await.result(
+      helper.removeFile(
+        mode,
+        draftId,
+        file.fileUrl.get,
+        isLetterOfAuthority
+      ),
+      10.seconds
+    )
+
+  def checkProgress(
+    mode: Mode,
+    draftId: DraftId,
+    key: Option[String],
+    isLetterOfAuthority: Boolean
+  ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val answers = request.userAnswers
         helper
-          .checkForStatus(answers, UploadSupportingDocumentPage)
+          .checkForStatus(answers, isLetterOfAuthority)
           .map {
 
             case file: UploadedFile.Initiated =>
               if (key.contains(file.reference)) {
-                helper.showInProgressPage(draftId, key)
+                helper.showInProgressPage(draftId, key, isLetterOfAuthority)
               } else {
-                helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
+                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
               }
 
             case file: UploadedFile.Success =>
               if (key.contains(file.reference)) {
-                helper.continue(mode, answers, UploadSupportingDocumentPage)
+                helper.continue(mode, answers, isLetterOfAuthority)
               } else {
-                helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
+                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
               }
 
             case file: UploadedFile.Failure =>
@@ -71,12 +114,12 @@ class UploadInProgressController @Inject() (
                 draftId,
                 key,
                 file.failureDetails.failureReason.toString,
-                isLetterOfAuthority = false,
+                isLetterOfAuthority,
                 mode
               )
 
           }
-          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority = true))
+          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority))
     }
 
 }

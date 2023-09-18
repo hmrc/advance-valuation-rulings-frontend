@@ -194,7 +194,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(
           controllers.routes.UploadLetterOfAuthorityController
-            .onPageLoad(NormalMode, draftId, None, None)
+            .onPageLoad(NormalMode, draftId, None, None, false)
             .url
         )
       }
@@ -227,7 +227,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(
           controllers.routes.UploadLetterOfAuthorityController
-            .onPageLoad(NormalMode, draftId, None, None)
+            .onPageLoad(NormalMode, draftId, None, None, false)
             .url
         )
       }

@@ -14,14 +14,26 @@
  * limitations under the License.
  *@
 
+@import components._
+@import config.FrontendAppConfig
+
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    config: FrontendAppConfig,
+    heading: Heading,
+    paragraph: Paragraph,
+    bulletList: BulletList
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("unauthorised.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
-    <p class="govuk-body">@messages("")</p>
+    @heading(messages("unauthorised.heading"))
+    @paragraph(Html(messages("unauthorised.para.reason")))
+    @paragraph(Html(messages("unauthorised.para.bta")))
+    @bulletList(Seq(
+        Html(messages("unauthorised.list.1")),
+        Html(messages("unauthorised.list.2"))
+    ))
 }

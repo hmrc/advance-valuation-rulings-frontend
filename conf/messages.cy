@@ -1,4 +1,5 @@
 service.name = Dyfarniad Prisio Uwch
+service.name.prefix = Apply for an
 
 site.back = Yn ôl
 site.remove = Remove
@@ -66,7 +67,7 @@ requiredInformation.title = Cyn i chi ddechrau’ch cais
 requiredInformation.heading = Cyn i chi ddechrau’ch cais
 requiredInformation.checkYourAnswersLabel = Cyn i chi ddechrau’ch cais
 requiredInformation.change.hidden = required informationrequiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
-requiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
+requiredInformation.inset.para = Mae’n rhaid eich bod yn gallu derbyn y rhagamodau canlynol i fynd yn eich blaen. Os na fyddwch yn gwneud hynny, gallai oedi eich cais am benderfyniad Dyfarniad Prisio Uwch.
 
 requiredInformation.option1.individual = Rwy’n ymwybodol bydd yn rhaid i mi gynnig dull o brisio’r nwyddau.
 requiredInformation.option2.individual = Byddaf yn rhoi fy e-bost cyswllt a rhif ffôn i CThEF fel rhan o’r cais hwn.
@@ -82,14 +83,13 @@ requiredInformation.option4.agentForOrg = Mae’r enw a’r cyfeiriad a gofrestr
 requiredInformation.option5.agentForOrg = Rwy’n ymwybodol y gall gymryd hyd at 120 diwrnod ar ôl i mi gyflwyno fy nghais i gael penderfyniad.
 requiredInformation.option6.agentForOrg = Rwy’n ymwybodol na fydd angen i mi wneud cais am Ddyfarniad Prisio Uwch bob tro y byddaf yn mewnforio’r nwyddau hyn drwy’r un dull prisio, gan fod y dyfarniad yn gyfreithiol rwymol am hyd at dair blynedd o’r dyddiad cyhoeddi.
 
-requiredInformation.option1.agentForTrader = I am aware that I will need a signed letter of authority confirming I can act on the trader’s behalf
-requiredInformation.option2.agentForTrader = I am aware that I will need to propose a method to value the goods
-requiredInformation.option3.agentForTrader = I will supply HMRC with my contact email and phone number as part of this application
-requiredInformation.option4.agentForTrader = I have the trader’s EORI number starting with GB
-requiredInformation.option5.agentForTrader = The name and address registered to the trader’s EORI number is up to date
-requiredInformation.option6.agentForTrader = I am aware that it can take up to 120 days after I submit my application to get a decision
-requiredInformation.option7.agentForTrader = I am aware that the trader will not need to apply for an Advance Valuation Ruling every time they import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
-
+requiredInformation.option1.agentForTrader = Rwy’n ymwybodol bydd angen i mi gael llythyr o awdurdod wedi’i lofnodi yn cadarnhau y gallaf weithredu ar ran y masnachwr.
+requiredInformation.option2.agentForTrader = Rwy’n ymwybodol bydd yn rhaid i mi gynnig dull i brisio’r nwyddau.
+requiredInformation.option3.agentForTrader = Byddaf yn rhoi fy e-bost cyswllt a rhif ffôn i CThEF fel rhan o’r cais hwn.
+requiredInformation.option4.agentForTrader = Mae gen i rif EORI y masnachwr sy’n dechrau gyda GB.
+requiredInformation.option5.agentForTrader = Mae’r enw a’r cyfeiriad sydd wedi’u cofrestru i rif EORI y masnachwr yn gyfredol.
+requiredInformation.option6.agentForTrader = Rwy’n ymwybodol y gall gymryd hyd at 120 diwrnod ar ôl i mi gyflwyno fy nghais i gael penderfyniad.
+requiredInformation.option7.agentForTrader = Rwy’n ymwybodol na fydd angen i’r masnachwr wneud cais am Ddyfarniad Prisio Uwch bob tro y bydd yn mewnforio’r nwyddau hyn drwy’r un dull prisio, gan fod y dyfarniad yn gyfreithiol rwymol am hyd at dair blynedd o’r dyddiad cyhoeddi.
 
 
 importGoods.title = Ydych chi’n bwriadu mewnforio nwyddau i Brydain Fawr?
@@ -123,12 +123,12 @@ checkRegisteredDetails.eori.change.hidden = your registered EORI number
 checkRegisteredDetails.private.title = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.checkYourAnswersLabel = Check the name and address for EORI number
 
-checkRegisteredDetails.warning.agentOnBehalfOfTrader = These are the EORI details we have on record for the trader you are representing. They should be the same details the trader used to register their EORI number.
+checkRegisteredDetails.warning.agentOnBehalfOfTrader = Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
 checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes = Yes, these details are for the trader I am applying on behalf of
 checkRegisteredDetails.radio.agentOnBehalfOfTrader.no = No, these details are incorrect
 
-checkRegisteredDetails.search.link = Search again
-checkRegisteredDetails.search.text = if you think you entered the trader’s EORI number incorrectly
+checkRegisteredDetails.search.link = Chwiliwch eto
+checkRegisteredDetails.search.text = os ydych yn meddwl eich bod wedi nodi cyfeiriad EORI y masnachwr yn anghywir
 
 
 eoriBeUpToDate.caption = Ynglŷn â’r ymgeisydd
@@ -455,7 +455,6 @@ hasCommodityCode.change.hidden = your response to whether you have a commodity c
 contactPage.caption = Ynglŷn â’r ymgeisydd
 contactPage.title = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
 contactPage.heading = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
-contactPage.paragraph.1 = Os bydd angen rhagor o wybodaeth arnom ynghylch eich cais, byddwn yn cysylltu â chi
 contactPage.paragraph.2 = Sylwer – efallai na fydd cyfathrebu drwy e-bost bob amser yn ddiogel, gan ei bod hi’n bosib y gall e-byst gael eu darllen neu eu newid gan rywun arall. Os ydych yn dewis i barhau â’ch cais, rydych yn derbyn y risgiau cysylltiedig.
 
 commodityCode.caption = Ynglŷn â’r nwyddau
@@ -528,23 +527,24 @@ doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych am uwchlwytho unrhyw 
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
 
-uploadLetterOfAuthority.title = Upload your letter of authority
-uploadLetterOfAuthority.heading = Upload your letter of authority
+uploadLetterOfAuthority.title = Uwchlwytho’ch llythyr o awdurdod
+uploadLetterOfAuthority.heading = Uwchlwytho’ch llythyr o awdurdod
 uploadLetterOfAuthority.caption = About the applicant
-uploadLetterOfAuthority.insetPara = You must provide a letter of authority which shows you have permission to make an application on behalf of this trader. HMRC may contact the trader to confirm that you have the right to make this application.
-uploadLetterOfAuthority.paragraph.1 = The letter of authority should:
-uploadLetterOfAuthority.paragraph.2 = An individual file must be:
-uploadLetterOfAuthority.bulletPoint.1 = be written and signed by the trader on letterhead paper
-uploadLetterOfAuthority.bulletPoint.2 = authorise you to make an application on the trader’s behalf
-uploadLetterOfAuthority.bulletPoint.3 = contain the trader’s EORI details including EORI number and registered address
-uploadLetterOfAuthority.bulletPoint.4 = contain your contact details including your EORI number, email address, phone number and the address registered with HMRC
-uploadLetterOfAuthority.bulletPoint.5 = smaller than 5MB
-uploadLetterOfAuthority.bulletPoint.6 = a PDF or JPG
-uploadLetterOfAuthority.label = Upload a file
+uploadLetterOfAuthority.insetPara = Mae’n rhaid i chi ddarparu llythyr o awdurdod sy’n dangos bod gennych ganiatâd i wneud cais ar ran y masnachwr hwn. Gall CThEF gysylltu â’r masnachwr i gadarnhau bod gennych yr hawl i wneud y cais hwn.
+uploadLetterOfAuthority.paragraph.1 = Dylai’r llythyr awdurdod:
+uploadLetterOfAuthority.paragraph.2 = Mae’n rhaid i ffeil unigol fod yn:
+uploadLetterOfAuthority.paragraph.3 = Do not upload password-protected files, as this will prevent the processing of your application.
+uploadLetterOfAuthority.bulletPoint.1 = gael ei ysgrifennu a’i lofnodi gan y masnachwr ar bapur â phennawd
+uploadLetterOfAuthority.bulletPoint.2 = eich awdurdodi i wneud cais ar ran y masnachwr
+uploadLetterOfAuthority.bulletPoint.3 = gynnwys manylion EORI y masnachwr gan gynnwys rhif EORI a chyfeiriad cofrestredig
+uploadLetterOfAuthority.bulletPoint.4 = gynnwys eich manylion cyswllt gan gynnwys eich rhif EORI, cyfeiriad e-bost, rhif ffôn a’r cyfeiriad sydd wedi’i gofrestru gyda CThEF
+uploadLetterOfAuthority.bulletPoint.5 = llai na 5MB
+uploadLetterOfAuthority.bulletPoint.6 = PDF neu JPG
+uploadLetterOfAuthority.label = Uwchlwytho ffeil
 uploadLetterOfAuthority.button = Upload and continue
 
-verifyLetterOfAuthority.title = Uploaded letter of authority
-verifyLetterOfAuthority.heading = Uploaded letter of authority
+verifyLetterOfAuthority.title = Llythyr o awdurdod wedi’i uwchlwytho
+verifyLetterOfAuthority.heading = Llythyr o awdurdod wedi’i uwchlwytho
 verifyLetterOfAuthority.caption = Ynglŷn â’r ymgeisydd
 verifyLetterOfAuthority.keepConfidential = Cadw’n gyfrinachol
 verifyLetterOfAuthority.hiddenText = {0} from your list of supporting documents
@@ -559,7 +559,7 @@ uploadSupportingDocuments.paragraph.2 = Mae’n rhaid i ffeil fod yn:
 uploadSupportingDocuments.bulletPoint.1 = un ffeil ar y tro
 uploadSupportingDocuments.bulletPoint.2 = hyd at {0} ffeil
 uploadSupportingDocuments.bulletPoint.3 = llai na {0}MB
-uploadSupportingDocuments.bulletPoint.4 = ar ffurf pdf neu jpeg
+uploadSupportingDocuments.bulletPoint.4 = ar ffurf PDF neu JPEG
 
 uploadSupportingDocuments.label = Uwchlwytho ffeil
 uploadSupportingDocuments.button = Uwchlwytho a pharhau
@@ -568,13 +568,13 @@ uploadSupportingDocuments.checkYourAnswersLabel = Dogfennau ategol wedi’u huwc
 uploadSupportingDocuments.change.hidden = upload a document
 
 uploadSupportingDocuments.error.entitytoolarge = The selected file must be smaller than {0}MB
-fileUpload.error.entitytoolarge = The selected file must be smaller than {0}MB
-fileUpload.error.entitytoosmall = The selected file is empty
-fileUpload.error.invalidargument = Select a file to upload
+fileUpload.error.entitytoolarge = Mae’n rhaid i’r ffeil dan sylw fod yn llai na {0}MB
+fileUpload.error.entitytoosmall = Mae’r ffeil dan sylw yn wag
+fileUpload.error.invalidargument = Dewiswch ffeil
 fileUpload.error.duplicate = You can only upload distinct files
-fileUpload.error.failed = The selected file failed to upload
-fileUpload.error.quarantine = The selected file contains a virus
-fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf pdf neu jpeg
+fileUpload.error.failed = Nid oedd modd uwchlwytho’r ffeil dan sylw
+fileUpload.error.quarantine = Mae feirws yn y ffeil dan sylw
+fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf PDF neu JPEG
 fileUpload.error.unknown = There was a problem uploading your file
 
 uploadAnotherSupportingDocument.title.one = Rydych wedi uwchlwytho un ddogfen ategol
@@ -728,6 +728,10 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
+unauthorised.para.reason = You cannot access this service because you do you not have a valid enrolment.
+unauthorised.para.bta = To sign up for this service, you will need:
+unauthorised.list.1 = a Government Gateway user ID and password - if you do not have one, you can create one when you apply
+unauthorised.list.2 = an EORI number starting with GB
 
 applicationComplete.title = Cais wedi’i gwblhau
 applicationComplete.heading = Cais wedi’i gwblhau
@@ -763,9 +767,7 @@ whatIsYourRoleAsImporter.title = Sut byddech chi’n disgrifio’ch rôl fel mew
 whatIsYourRoleAsImporter.heading = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
 whatIsYourRoleAsImporter.employeeOfOrg = Gweithiwr sy’n gyflogai yn y sefydliad
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Asiant sy’n gweithredu ar ran sefydliad
-whatIsYourRoleAsImporter.details.label = Asiantau sy’n gweithredu ar ran masnachwyr
 whatIsYourRoleAsImporter.para.1 = Dewiswch yr opsiwn sy’n disgrifio’ch rôl orau:
-whatIsYourRoleAsImporter.para.2 = Ar hyn o bryd, rydym yn datblygu’r trywydd hwn drwy’r broses Dyfarniad Prisio Uwch a bydd ar gael yn fuan.
 whatIsYourRoleAsImporter.employeeOfOrg.hint = Yn mewnforio nwyddau i’r DU ar ran ei sefydliad.
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Yn mewnforio nwyddau i’r DU ar ran sefydliad arall.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
@@ -783,7 +785,7 @@ businessContactDetails.checkYourAnswersLabel = businessContactDetails
 businessContactDetails.fullName.label = Eich enw llawn
 businessContactDetails.email.label = Eich cyfeiriad e-bost
 businessContactDetails.telephoneNumber.label = Eich rhif ffôn
-businessContactDetails.fullName.error.required = Enter a full name
+businessContactDetails.fullName.error.required = Nodwch enw llawn
 businessContactDetails.fullName.error.format = Must contain only letters, space and hyphens
 businessContactDetails.fullName.length = Name must be 70 characters or less
 businessContactDetails.email.error.required = Nodwch eich cyfeiriad e-bost
@@ -791,15 +793,13 @@ businessContactDetails.email.error.format = Enter an email address in the correc
 businessContactDetails.email.length = Email address must be 50 characters or less
 businessContactDetails.telephoneNumber.error.required = Nodwch eich rhif ffôn
 businessContactDetails.telephoneNumber.error.format = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
-businessContactDetails.telephoneNumber.error.length = Telephone number is too long
-businessContactDetails.telephoneNumber.error.letter = Telephone number can only contain numbers
 businessContactDetails.checkYourAnswersLabel = businessContactDetails
 businessContactDetails.change.hidden = applicant’s own contact details
 businessContactDetails.name.change.hidden = your contact name
 businessContactDetails.email.change.hidden = your email address
 businessContactDetails.telephoneNumber.change.hidden = your telephone number
 businessContactDetails.companyName.label = Your company name
-businessContactDetails.companyName.error.required = Enter your company name
+businessContactDetails.companyName.error.required = Nodwch enw cwmni
 
 importingGoods.caption = Ynglŷn â’r ymgeisydd
 importingGoods.title = Mae’r gwasanaeth hwn ar gyfer mewnforio nwyddau i Brydain Fawr
@@ -924,14 +924,14 @@ deleteDraft.error.required = Select yes if you want to delete your application
 deleteDraft.guidance = If you delete your application now, any data will be lost and you will need to make a new application.
 
 #PROVIDE TRADER EORI NUMBER
-provideTraderEori.heading=Provide the trader''s EORI number
-provideTraderEori.p1=You must provide the Economic Operator Registration and Identification (EORI) number for the trader you are acting on behalf of. This must be a valid number starting with GB.
-provideTraderEori.error.required=Enter the trader''s EORI number
-provideTraderEori.error.tooLong=EORI number is too long
-provideTraderEori.error.tooShort=EORI number is not long enough
-provideTraderEori.error.notGB=Enter EORI number beginning with GB
-provideTraderEori.error.specialCharacters=Enter an EORI number in the correct format, like GB123456789010
-provideTraderEori.error.default=Enter an EORI number in the correct format, like GB123456789010
+provideTraderEori.heading=Rhowch rif EORI y masnachwr
+provideTraderEori.p1=Mae’n rhaid i chi roi Rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI) y masnachwr yr ydych yn gweithredu ar ei ran Mae’n rhaid i hwn fod yn rhif dilys sy’n dechrau gyda GB.
+provideTraderEori.error.required=Nodwch rif EORI y masnachwr
+provideTraderEori.error.tooLong=Mae’r rhif EORI yn rhy hir
+provideTraderEori.error.tooShort=Nid yw’r rhif EORI yn ddigon hir
+provideTraderEori.error.notGB=Nodwch y rhif EORI sy’n dechrau gyda GB
+provideTraderEori.error.specialCharacters=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
+provideTraderEori.error.default=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
 
 #TRADER DETAILS - COMMON
 traderDetails.common.searchAgain.link = Search again
@@ -939,11 +939,11 @@ traderDetails.common.searchAgain = {0} if you think you entered the trader''s EO
 
 #TRADER DETAILS - PUBLIC
 traderDetails.public.heading=Check the name and address for EORI number {0}
-traderDetails.public.p1=These are the EORI details we have on record for the trader you are representing. They should be the same details the trader used to register their EORI number.
-traderDetails.public.h2.correct=EORI registration details
-traderDetails.public.h3.businessName=Registered business name
-traderDetails.public.h3.businessAddress=Registered business address
-traderDetails.public.h2=Are the name and address details correct?
+traderDetails.public.p1=Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
+traderDetails.public.h2=traderDetails.public.h2.correct
+traderDetails.public.h3.businessName=Enw’r busnes cofrestredig
+traderDetails.public.h3.businessAddress=Cyfeiriad y busnes cofrestredig
+traderDetails.public.h2.correct=Ydy’r enw a’r manylion cyfeiriad yn gywir?
 traderDetails.public.h2.question.yes=Yes, these details are for the trader I am applying on behalf of
 traderDetails.public.h2.question.no=No, these details are incorrect
 
@@ -951,9 +951,9 @@ traderDetails.public.h2.question.no=No, these details are incorrect
 traderDetails.private.heading=The registration details for EORI number {0} are private
 traderDetails.private.p1=The business this number is registered to has not consented to their name and address being shared.
 traderDetails.private.p2=If you need more information, contact the business directly.
-traderDetails.private.h3.proceed=Do you want to proceed?
+traderDetails.private.h3.proceed=Dewiswch a ydych am barhau â’r cais
 
-verifyTraderDetails.error.required=Select if you want to proceed with the application
+verifyTraderDetails.error.required=Dewiswch a ydych am barhau â’r cais
 
 #INVALID EORI
 invalidTraderEori.heading=EORI number {0} is invalid

@@ -160,13 +160,13 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     "fail to bind an invalid phone number" in {
       val result       = form.bind(Map(phoneField -> "invalid")).apply(phoneField)
       val errorMessage = result.error.value.message
-      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.letter"
+      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.format"
     }
 
     "fail to bind an phone number with trailing letters" in {
       val result       = form.bind(Map(phoneField -> "070 0000 000z")).apply(phoneField)
       val errorMessage = result.error.value.message
-      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.letter"
+      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.format"
     }
 
     "fail to bind a phone number that is too long" in {
@@ -175,7 +175,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
         .bind(Map(phoneField -> "0" * length))
         .apply(phoneField)
       val errorMessage = result.error.value.message
-      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.length"
+      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.format"
     }
   }
 

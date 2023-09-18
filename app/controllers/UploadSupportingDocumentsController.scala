@@ -47,33 +47,15 @@ class UploadSupportingDocumentsController @Inject() (
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val answers    = request.userAnswers
-        val fileStatus = answers
-          .get(UploadSupportingDocumentPage)
+        val fileStatus = answers.get(UploadSupportingDocumentPage)
 
-        fileStatus
-          .map {
-            case file: UploadedFile.Initiated =>
-              errorCode
-                .map(
-                  errorCode =>
-                    helper.showErrorPage(
-                      draftId,
-                      helper.errorForCode(errorCode),
-                      isLetterOfAuthority = false
-                    )
-                )
-                .getOrElse {
-                  if (key.contains(file.reference)) {
-                    helper.showInProgressPage(draftId, key)
-                  } else {
-                    helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
-                  }
-                }
-
-          }
-          .getOrElse {
-            helper.showFallbackPage(mode, draftId, isLetterOfAuthority = false)
-          }
+        helper.onPageLoadWithFileStatus(
+          mode,
+          draftId,
+          errorCode,
+          key,
+          fileStatus,
+          isLetterOfAuthority = false
+        )
     }
-
 }

@@ -18,6 +18,7 @@ package controllers
 
 import java.time.Instant
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import play.api.Application
@@ -28,6 +29,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
@@ -51,7 +53,7 @@ class UploadLetterOfAuthorityControllerSpec
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFileService, mockUserAnswersService)
+    reset(mockFileService, mockFileUploadHelper)
   }
 
   private val maximumFileSizeMB: Long              = 5
@@ -59,15 +61,17 @@ class UploadLetterOfAuthorityControllerSpec
   private def injectView(application: Application) =
     application.injector.instanceOf[UploadLetterOfAuthorityView]
 
-  private val mockFileService        = mock[FileService]
-  private val mockUserAnswersService = mock[UserAnswersService]
+  private val isLetterOfAuthority = true
+
+  private val mockFileService      = mock[FileService]
+  private val mockFileUploadHelper = mock[FileUploadHelper]
 
   private def getRedirectPath(
     errorCode: Option[String] = None,
     key: Option[String] = None
   ): String =
     controllers.routes.UploadLetterOfAuthorityController
-      .onPageLoad(NormalMode, draftId, errorCode, key)
+      .onPageLoad(NormalMode, draftId, errorCode, key, false)
       .url
 
   private def mockFileServiceInitiate(): Unit =
@@ -102,321 +106,118 @@ class UploadLetterOfAuthorityControllerSpec
   private val initiatedFile =
     UploadedFile.Initiated("reference")
 
-  private val successfulFile = UploadedFile.Success(
+  private val successfulFile: UploadedFile.Success = UploadedFile.Success(
     reference = "reference",
     downloadUrl = "downloadUrl",
     uploadDetails = UploadedFile.UploadDetails(
       fileName = "fileName",
       fileMimeType = "fileMimeType",
-      uploadTimestamp = Instant.now(),
+      uploadTimestamp = Instant.EPOCH,
       checksum = "checksum",
       size = 1337
     )
   )
 
-  "when there is no existing file" - {
+  "When the page is redirected from change button the fallback page is displayed" in {
+    val userAnswers = userAnswersAsIndividualTrader
+      .set(UploadLetterOfAuthorityPage, successfulFile)
+      .success
+      .value
 
-    "must initiate a file upload and display the page" in {
-
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
-        .overrides(bind[FileService].toInstance(mockFileService))
-        .build()
-
-      mockFileServiceInitiate()
-
-      val request = FakeRequest(GET, getRedirectPath())
-      val result  = route(application, request).value
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual injectView(application)(
-        draftId = draftId,
-        upscanInitiateResponse = Some(upscanInitiateResponse),
-        errorMessage = None
-      )(messages(application), request).toString
-
-      verifyFileServiceInitiate()
-    }
-  }
-
-  "when there is an initiated file" - {
-
-    val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
-
-    "when there is no error code" - {
-
-      "when the key matches the file" - {
-
-        "must show the interstitial page" in {
-
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[FileService].toInstance(mockFileService))
-            .build()
-
-          val request = FakeRequest(GET, getRedirectPath(key = Some("reference")))
-          val result  = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual injectView(application)(
-            draftId = draftId,
-            upscanInitiateResponse = None,
-            errorMessage = None
-          )(messages(application), request).toString
-
-          verifyFileServiceInitiateZeroTimes()
-        }
-      }
-
-      "when the key does not match the file" - {
-
-        "must initiate a file upload and display the page" in {
-
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[FileService].toInstance(mockFileService))
-            .build()
-
-          mockFileServiceInitiate()
-
-          val request = FakeRequest(GET, getRedirectPath(key = Some("otherReference")))
-          val result  = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual injectView(application)(
-            draftId = draftId,
-            upscanInitiateResponse = Some(upscanInitiateResponse),
-            errorMessage = None
-          )(messages(application), request).toString
-
-          verifyFileServiceInitiate()
-        }
-      }
-
-      "when the key does not exist" - {
-
-        "must initiate a file upload and display the page" in {
-
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[FileService].toInstance(mockFileService))
-            .build()
-
-          mockFileServiceInitiate()
-
-          val request = FakeRequest(GET, getRedirectPath())
-          val result  = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual injectView(application)(
-            draftId = draftId,
-            upscanInitiateResponse = Some(upscanInitiateResponse),
-            errorMessage = None
-          )(messages(application), request).toString
-
-          verifyFileServiceInitiate()
-        }
-      }
-    }
-  }
-
-  "when there is a successful file" - {
-
-    val userAnswers = userAnswersAsIndividualTrader.set(page, successfulFile).success.value
-
-    "when the key matches the file" - {
-
-      "must redirect to the next page" in {
-
-        val onwardRoute = Call("GET", "/foo")
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[FileService].toInstance(mockFileService),
-            bind[Navigator].to(new FakeNavigator(onwardRoute))
-          )
-          .build()
-
-        val request = FakeRequest(GET, getRedirectPath(key = Some(successfulFile.reference)))
-        val result  = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-
-        verifyFileServiceInitiateZeroTimes()
-      }
-    }
-
-    "when the key does not match the file" - {
-
-      "must initiate a file upload and display the page" in {
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[FileService].toInstance(mockFileService))
-          .build()
-
-        mockFileServiceInitiate()
-
-        val request = FakeRequest(GET, getRedirectPath(key = Some("otherReference")))
-        val result  = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual injectView(application)(
-          draftId = draftId,
-          upscanInitiateResponse = Some(upscanInitiateResponse),
-          errorMessage = None
-        )(messages(application), request).toString
-
-        verifyFileServiceInitiate()
-      }
-    }
-
-    "when there is no key" - {
-
-      "must initiate a file upload and display the page" in {
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[FileService].toInstance(mockFileService))
-          .build()
-
-        mockFileServiceInitiate()
-
-        val request = FakeRequest(GET, getRedirectPath())
-        val result  = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual injectView(application)(
-          draftId = draftId,
-          upscanInitiateResponse = Some(upscanInitiateResponse),
-          errorMessage = None
-        )(messages(application), request).toString
-
-        verifyFileServiceInitiate()
-      }
-    }
-  }
-
-  "must redirect to the JourneyRecovery page when there are no user answers" in {
-
-    val application = applicationBuilder(userAnswers = None)
-      .overrides(bind[FileService].toInstance(mockFileService))
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(
+        bind[FileService].toInstance(mockFileService),
+        bind[FileUploadHelper].toInstance(mockFileUploadHelper)
+      )
       .build()
 
-    val request = FakeRequest(GET, getRedirectPath())
-    val result  = route(application, request).value
+    val successTextForHelper = "test upload letter of authority different message lalalala"
+    val okFuture             = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
+    when(
+      mockFileUploadHelper
+        .showFallbackPage(eqTo(NormalMode), eqTo(draftId), eqTo(isLetterOfAuthority))(any(), any())
+    )
+      .thenReturn(okFuture)
 
-    status(result) mustEqual SEE_OTHER
-    redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-
-    verifyFileServiceInitiateZeroTimes()
-  }
-
-  "when there is a failed file" - {
-
-    val parameterisedCases = Table(
-      ("Error code option string", "Failure Reason", "Failure message"),
-      (
-        "Quarantine",
-        UploadedFile.FailureReason.Quarantine,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.quarantine")(messagesProvider)
-      ),
-      (
-        "Rejected",
-        UploadedFile.FailureReason.Rejected,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.rejected")(messagesProvider)
-      ),
-      (
-        "Duplicate",
-        UploadedFile.FailureReason.Duplicate,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.duplicate")(messagesProvider)
-      ),
-      (
-        "Unknown",
-        UploadedFile.FailureReason.Unknown,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.unknown")(messagesProvider)
-      ),
-      (
-        "InvalidArgument",
-        UploadedFile.FailureReason.InvalidArgument,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
-      ),
-      (
-        "EntityTooSmall",
-        UploadedFile.FailureReason.EntityTooSmall,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.entitytoosmall")(messagesProvider)
-      ),
-      (
-        "EntityTooLarge",
-        UploadedFile.FailureReason.EntityTooLarge,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply(s"fileUpload.error.entitytoolarge", maximumFileSizeMB)(
-            messagesProvider
-          )
-      )
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadLetterOfAuthorityController
+        .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = true)
+        .url
     )
 
-    "Parameterised: must initiate a file upload and redirect back to the page with the relevant error code" in {
-      forAll(parameterisedCases) {
-        (
-          errCode: String,
-          failureReason: UploadedFile.FailureReason,
-          _: MessagesProvider => String
-        ) =>
-          val failedFile = UploadedFile.Failure(
-            reference = "reference",
-            failureDetails = UploadedFile.FailureDetails(failureReason, Some("failureMessage"))
-          )
-
-          val userAnswers = userAnswersAsIndividualTrader.set(page, failedFile).success.value
-
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[FileService].toInstance(mockFileService))
-            .build()
-
-          mockFileServiceInitiate()
-
-          val request = FakeRequest(GET, getRedirectPath(key = Some("key")))
-          val result  = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual getRedirectPath(
-            errorCode = Some(errCode),
-            key = Some("key")
-          )
-      }
-    }
-
-    "Parameterised: A redirect with an error code renders the error message" in {
-      forAll(parameterisedCases) {
-        (
-          errCode: String,
-          _: UploadedFile.FailureReason,
-          errMessage: MessagesProvider => String
-        ) =>
-          val initiatedFile = UploadedFile.Initiated(
-            reference = "reference"
-          )
-
-          val userAnswers = userAnswersAsIndividualTrader.set(page, initiatedFile).success.value
-
-          val application = applicationBuilder(Some(userAnswers))
-            .overrides(bind[FileService].toInstance(mockFileService))
-            .build()
-
-          mockFileServiceInitiate()
-
-          val request = FakeRequest(GET, getRedirectPath(errorCode = Some(errCode)))
-          val result  = route(application, request).value
-
-          status(result) mustEqual BAD_REQUEST
-          contentAsString(result) mustEqual injectView(application)(
-            draftId = draftId,
-            upscanInitiateResponse = Some(upscanInitiateResponse),
-            errorMessage = Some(errMessage(messages(application)))
-          )(messages(application), request).toString
-      }
-    }
+    val result = route(application, request).value
+    status(result) mustEqual OK
+    contentAsString(result) mustEqual successTextForHelper
   }
+
+  "When the file status is success the page executes the continue method" in {
+    val userAnswers = userAnswersAsIndividualTrader
+      .set(UploadLetterOfAuthorityPage, successfulFile)
+      .success
+      .value
+
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(
+        bind[FileService].toInstance(mockFileService),
+        bind[FileUploadHelper].toInstance(mockFileUploadHelper)
+      )
+      .build()
+
+    val successTextForHelper = "test upload letter of authority different message"
+    val okFuture             = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
+    when(mockFileUploadHelper.continue(NormalMode, userAnswers, isLetterOfAuthority))
+      .thenReturn(okFuture)
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadLetterOfAuthorityController
+        .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = false)
+        .url
+    )
+
+    val result = route(application, request).value
+    status(result) mustEqual OK
+    contentAsString(result) mustEqual successTextForHelper
+  }
+
+  "When the file status is not success the page executes the onPageLoadWithFileStatus method" in {
+    val userAnswers = userAnswersAsIndividualTrader
+      .set(UploadLetterOfAuthorityPage, initiatedFile)
+      .success
+      .value
+
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(
+        bind[FileService].toInstance(mockFileService),
+        bind[FileUploadHelper].toInstance(mockFileUploadHelper)
+      )
+      .build()
+
+    val successTextForHelper = "test upload letter of authority"
+    val okFuture             = Future.successful(play.api.mvc.Results.Ok(successTextForHelper))
+    when(
+      mockFileUploadHelper.onPageLoadWithFileStatus(
+        eqTo(NormalMode),
+        eqTo(draftId),
+        eqTo(None),
+        eqTo(None),
+        eqTo(Some(initiatedFile)),
+        eqTo(isLetterOfAuthority)
+      )(any(), any())
+    )
+      .thenReturn(okFuture)
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadLetterOfAuthorityController
+        .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = false)
+        .url
+    )
+
+    val result = route(application, request).value
+    status(result) mustEqual OK
+    contentAsString(result) mustEqual successTextForHelper
+  }
+
 }
