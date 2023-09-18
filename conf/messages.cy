@@ -692,9 +692,9 @@ agentForTraderCheckYourAnswers.agent.eori.number.hidden = your company’s regis
 agentForTraderCheckYourAnswers.agent.name.hidden = your company’s registered business name
 agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registered business address
 
-agentForTraderCheckYourAnswers.applicant.name.label = Applicant’s full name
-agentForTraderCheckYourAnswers.applicant.email.label = Applicant’s email address
-agentForTraderCheckYourAnswers.applicant.phone.label = Applicant’s telephone number
+agentForTraderCheckYourAnswers.applicant.name.label = Agents’s full name
+agentForTraderCheckYourAnswers.applicant.email.label = Agents’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Agents’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
 agentForTraderCheckYourAnswers.applicant.companyName.hidden = Agent’s company name
 agentForTraderCheckYourAnswers.goods.heading = About the goods
