@@ -29,24 +29,20 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
 import models.{DraftId, Mode, TraderDetailsWithConfirmation}
-import navigation.Navigator
 import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
-import userrole.UserRoleProvider
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
 class VerifyTraderEoriController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
-  navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   formProvider: VerifyTraderDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   publicView: VerifyPublicTraderDetailView,
-  privateView: VerifyPrivateTraderDetailView,
-  userRoleProvider: UserRoleProvider
+  privateView: VerifyPrivateTraderDetailView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -110,7 +106,8 @@ class VerifyTraderEoriController @Inject() (
                     _              <- userAnswersService.set(updatedAnswers)
                   } yield Redirect(
                     if (continue) {
-                      routes.UploadLetterOfAuthorityController.onPageLoad(mode, draftId, None, None)
+                      routes.UploadLetterOfAuthorityController
+                        .onPageLoad(mode, draftId, None, None, redirectedFromChangeButton = false)
                     } else {
                       routes.EORIBeUpToDateController.onPageLoad(draftId)
                     }

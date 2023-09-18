@@ -251,8 +251,8 @@ POST       /:draftId/supporting-documents/:index/change-remove                  
 
 GET        /:draftId/save-as-draft                       controllers.DraftHasBeenSavedController.onPageLoad(draftId: DraftId)
 
-GET        /:draftId/ars-upload-loa                     controllers.UploadLetterOfAuthorityController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
-GET        /:draftId/ars-change-loa                    controllers.UploadLetterOfAuthorityController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
+GET        /:draftId/ars-upload-loa                     controllers.UploadLetterOfAuthorityController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String], redirectedFromChangeButton: Boolean)
+GET        /:draftId/ars-change-loa                    controllers.UploadLetterOfAuthorityController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String], redirectedFromChangeButton: Boolean)
 
 GET        /:draftId/ars-upload-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/ars-change-loa-uploaded                   controllers.VerifyLetterOfAuthorityController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
@@ -265,5 +265,5 @@ GET        /application-cancelled                       controllers.YourApplicat
 GET        /:draftId/supporting-documents/upload                                  controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
 GET        /:draftId/supporting-documents/change-upload                           controllers.UploadSupportingDocumentsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId, errorCode: Option[String], key: Option[String])
 
-GET        /:draftId/upload-in-progress                       controllers.UploadInProgressController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, key: Option[String])
-POST       /:draftId/upload-in-progress                       controllers.UploadInProgressController.checkProgress(mode: Mode = NormalMode, draftId: DraftId, key: Option[String])
+GET        /:draftId/upload-in-progress                       controllers.UploadInProgressController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId, key: Option[String], isLetterOfAuthority: Boolean)
+POST       /:draftId/upload-in-progress                       controllers.UploadInProgressController.checkProgress(mode: Mode = NormalMode, draftId: DraftId, key: Option[String], isLetterOfAuthority: Boolean)

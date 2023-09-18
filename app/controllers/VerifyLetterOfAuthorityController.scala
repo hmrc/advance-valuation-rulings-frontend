@@ -18,14 +18,12 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.ExecutionContext
-
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
-import controllers.routes.JourneyRecoveryController
+import controllers.routes.{JourneyRecoveryController, UploadLetterOfAuthorityController}
 import models._
 import navigation.Navigator
 import pages.{UploadLetterOfAuthorityPage, VerifyLetterOfAuthorityPage}
@@ -39,15 +37,28 @@ class VerifyLetterOfAuthorityController @Inject() (
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
   view: VerifyLetterOfAuthorityView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
         UploadLetterOfAuthorityPage.get() match {
-          case Some(attachment) => Ok(view(attachment, draftId, mode))
+          case Some(attachment) =>
+            attachment.fileName match {
+              case Some(_) =>
+                Ok(view(attachment, draftId, mode))
+              case None    =>
+                Redirect(
+                  UploadLetterOfAuthorityController.onPageLoad(
+                    mode,
+                    draftId,
+                    None,
+                    None,
+                    redirectedFromChangeButton = false
+                  )
+                )
+            }
           case None             => Redirect(JourneyRecoveryController.onPageLoad())
         }
 

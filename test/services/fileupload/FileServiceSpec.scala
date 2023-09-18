@@ -81,7 +81,7 @@ class FileServiceSpec
     .onPageLoad(NormalMode, DraftId(0), None, None)
     .url
   private val page: QuestionPage[UploadedFile] = UploadSupportingDocumentPage
-  private val hc: HeaderCarrier                = HeaderCarrier()
+  private implicit val hc: HeaderCarrier       = HeaderCarrier()
 
   private val response = UpscanInitiateResponse(
     reference = "reference",
