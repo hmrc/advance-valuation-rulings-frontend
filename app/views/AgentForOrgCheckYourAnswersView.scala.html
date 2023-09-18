@@ -50,7 +50,7 @@ formHelper: FormWithCSRF,
 @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
 
 @subheading(messages("checkYourAnswersForAgents.goods.heading"))
-@govukSummaryList(applicationSummary.method.rows)
+@govukSummaryList(applicationSummary.method.rows.withCssClass("govuk-!-margin-bottom-0"))
 @govukSummaryList(applicationSummary.details.rows.withCssClass("govuk-!-margin-bottom-9"))
 
 @subheading(messages("checkYourAnswersForAgents.declaration.heading"))
