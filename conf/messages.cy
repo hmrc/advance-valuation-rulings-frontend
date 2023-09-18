@@ -648,10 +648,10 @@ checkYourAnswersForAgents.applicant.agent.heading = Ynglŷn â’r asiant
 
 checkYourAnswersForAgents.agent.eori.number.label = Rhif EORI cofrestredig eich cwmni, yn dechrau gyda GB
 checkYourAnswersForAgents.agent.name.label = Enw busnes cofrestredig eich cwmni
-checkYourAnswersForAgents.agent.address.label = Your company’s registered business address
-checkYourAnswersForAgents.agent.eori.number.hidden = your company’s registered EORI number
-checkYourAnswersForAgents.agent.name.hidden = your company’s registered business name
-checkYourAnswersForAgents.agent.address.hidden = your company’s registered business address
+checkYourAnswersForAgents.agent.address.label = Agent’s company’s registered business address
+checkYourAnswersForAgents.agent.eori.number.hidden = Agent’s company’s registered EORI number
+checkYourAnswersForAgents.agent.name.hidden = Agent’s company’s registered business name
+checkYourAnswersForAgents.agent.address.hidden = Agent’s company’s registered business address
 
 checkYourAnswersForAgents.applicant.name.label = Enw llawn yr asiant
 checkYourAnswersForAgents.applicant.email.label = Cyfeiriad e-bost yr asiant
@@ -692,9 +692,9 @@ agentForTraderCheckYourAnswers.agent.eori.number.hidden = your company’s regis
 agentForTraderCheckYourAnswers.agent.name.hidden = your company’s registered business name
 agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registered business address
 
-agentForTraderCheckYourAnswers.applicant.name.label = Agents’s full name
-agentForTraderCheckYourAnswers.applicant.email.label = Agents’s email address
-agentForTraderCheckYourAnswers.applicant.phone.label = Agents’s telephone number
+agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
+agentForTraderCheckYourAnswers.applicant.email.label = Agent’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
 agentForTraderCheckYourAnswers.applicant.companyName.hidden = Agent’s company name
 agentForTraderCheckYourAnswers.goods.heading = About the goods
