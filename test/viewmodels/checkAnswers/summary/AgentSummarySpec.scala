@@ -69,7 +69,7 @@ class AgentSummarySpec extends SpecBase {
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
-        rows.length mustBe 7
+        rows.length mustBe 6
       }
 
       "create row for agent applicant name" in {
