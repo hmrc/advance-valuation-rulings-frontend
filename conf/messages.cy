@@ -938,13 +938,13 @@ provideTraderEori.error.specialCharacters=Gall y cod gwlad EORI fod ar y ffurf g
 provideTraderEori.error.default=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
 
 #TRADER DETAILS - COMMON
-traderDetails.common.searchAgain.link = Search again
-traderDetails.common.searchAgain = {0} if you think you entered the trader''s EORI number incorrectly.
+traderDetails.common.searchAgain.link = Chwiliwch eto
+traderDetails.common.searchAgain = {0} os ydych yn meddwl eich bod wedi nodi cyfeiriad EORI y masnachwr yn anghywir.
 
 #TRADER DETAILS - PUBLIC
 traderDetails.public.heading=Check the name and address for EORI number {0}
 traderDetails.public.p1=Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
-traderDetails.public.h2=traderDetails.public.h2.correct
+traderDetails.public.h2=Manylion cofrestru EORI
 traderDetails.public.h3.businessName=Enw’r busnes cofrestredig
 traderDetails.public.h3.businessAddress=Cyfeiriad y busnes cofrestredig
 traderDetails.public.h2.correct=Ydy’r enw a’r manylion cyfeiriad yn gywir?
@@ -955,7 +955,7 @@ traderDetails.public.h2.question.no=No, these details are incorrect
 traderDetails.private.heading=The registration details for EORI number {0} are private
 traderDetails.private.p1=The business this number is registered to has not consented to their name and address being shared.
 traderDetails.private.p2=If you need more information, contact the business directly.
-traderDetails.private.h3.proceed=Dewiswch a ydych am barhau â’r cais
+traderDetails.private.h3.proceed=Do you want to proceed?
 
 verifyTraderDetails.error.required=Dewiswch a ydych am barhau â’r cais
 
