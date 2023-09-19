@@ -69,6 +69,14 @@
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
         @saveButtons(draftId, messages("checkYourAnswers.button.continue"))
+        @govukButton(
+            ButtonViewModel(
+                messages("site.saveAsDraft")
+            )
+                .asSecondaryButton()
+                .asLink(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
+                .withCssClass("govuk-!-margin-left-2")
+        )
     }
 
     @cancelApplicationLink(draftId)

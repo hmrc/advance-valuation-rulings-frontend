@@ -77,6 +77,14 @@ Html(messages("checkYourAnswersForAgents.agreement.bulletPoint.3"))
 @govukButton(
 ButtonViewModel(messages("checkYourAnswersForAgents.button.continue"))
 )
+ @govukButton(
+  ButtonViewModel(
+   messages("site.saveAsDraft")
+  )
+  .asSecondaryButton()
+  .asLink(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
+  .withCssClass("govuk-!-margin-left-2")
+ )
 }
 
 @cancelApplicationLink(draftId)
