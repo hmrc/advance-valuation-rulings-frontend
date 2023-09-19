@@ -820,8 +820,8 @@ importingGoods.point.4.link = Gwybodaeth gyffredinol (yn agor tab newydd)
 importingGoods.point.5 = {0} - e-byst hysbysu gan CThEF, fideos a gweminarau ynghylch mewnforio ac allforio
 importingGoods.point.5.link = Help a chefnogaeth (yn agor tab newydd)
 
-accountHome.title = Your applications and rulings
-accountHome.heading = Your applications and rulings
+accountHome.title = Your applications
+accountHome.heading = Your applications
 accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
 accountHome.viewApplication = View application
@@ -972,13 +972,13 @@ draftHasBeenSaved.heading = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrn
 draftHasBeenSaved.para.1 = Mae gennych tan {0} i gyflwyno’ch cais.
 draftHasBeenSaved.para.2 = Sylwer: bydd y cyfnod o 28-diwrnod yn ail-ddechrau bob tro yr ewch at eich drafft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
-draftHasBeenSaved.para.link.text = your applications and rulings
+draftHasBeenSaved.para.link.text = your applications
 
 yourApplicationHasBeenCancelled.title = You cannot view this application
 yourApplicationHasBeenCancelled.heading = You cannot view this application
 yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your application for an Advance Valuation Ruling. The data you submitted before has been deleted.
 yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
-yourApplicationHasBeenCancelled.button = Go to your applications and rulings
+yourApplicationHasBeenCancelled.button = Go to your applications
 
 uploadInProgress.title = Upload In Progress
 uploadInProgress.heading = Uploading your document...
