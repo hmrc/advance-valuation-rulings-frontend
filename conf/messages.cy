@@ -705,9 +705,11 @@ agentForTraderCheckYourAnswers.declaration.heading = Your declaration
 agentForTraderCheckYourAnswers.declaration.paragraph1 = By applying for an Advance Valuation Ruling you confirm that:
 agentForTraderCheckYourAnswers.declaration.bulletPoint.1 = you have selected the most relevant method to value the trader’s goods
 agentForTraderCheckYourAnswers.declaration.bulletPoint.2 = the information you have provided is correct and complete to the best of your knowledge
-agentForTraderCheckYourAnswers.declaration.bulletPoint.3 = your application is based on an intention to import goods into Great Britain
-agentForTraderCheckYourAnswers.declaration.bulletPoint.4 = you are aware that it can take up to 90 days from the date your application is accepted to receive an Advance Valuation Ruling decision
-agentForTraderCheckYourAnswers.declaration.bulletPoint.5 = you will not need to apply for an Advance Valuation Ruling every time you import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
+agentForTraderCheckYourAnswers.declaration.bulletPoint.3 = you have provided a signed letter of authority confirming you can act on the trader’s behalf
+agentForTraderCheckYourAnswers.declaration.bulletPoint.4 = you are aware that HMRC may contact the trader to confirm you have the right to make this application
+agentForTraderCheckYourAnswers.declaration.bulletPoint.5 = your application is based on an intention to import goods into Great Britain
+agentForTraderCheckYourAnswers.declaration.bulletPoint.6 = you are aware that it can take up to 90 days from the date your application is accepted to receive an Advance Valuation Ruling decision
+agentForTraderCheckYourAnswers.declaration.bulletPoint.7 = you will not need to apply for an Advance Valuation Ruling every time you import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
 agentForTraderCheckYourAnswers.agreement.subheading = You agree that HMRC can:
 agentForTraderCheckYourAnswers.agreement.bulletPoint.1 = dispute the valuation method you have selected
 agentForTraderCheckYourAnswers.agreement.bulletPoint.2 = store the information you provided (or may provide) after you send your application
@@ -731,7 +733,7 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
-unauthorised.para.reason = You cannot access this service because you do you not have a valid enrolment.
+unauthorised.para.reason = You cannot access this service because you do not have a valid enrolment.
 unauthorised.para.bta = To sign up for this service, you will need:
 unauthorised.list.1 = a Government Gateway user ID and password - if you do not have one, you can create one when you apply
 unauthorised.list.2 = an EORI number starting with GB
@@ -937,13 +939,13 @@ provideTraderEori.error.specialCharacters=Gall y cod gwlad EORI fod ar y ffurf g
 provideTraderEori.error.default=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
 
 #TRADER DETAILS - COMMON
-traderDetails.common.searchAgain.link = Search again
-traderDetails.common.searchAgain = {0} if you think you entered the trader''s EORI number incorrectly.
+traderDetails.common.searchAgain.link = Chwiliwch eto
+traderDetails.common.searchAgain = {0} os ydych yn meddwl eich bod wedi nodi cyfeiriad EORI y masnachwr yn anghywir.
 
 #TRADER DETAILS - PUBLIC
 traderDetails.public.heading=Check the name and address for EORI number {0}
 traderDetails.public.p1=Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
-traderDetails.public.h2=traderDetails.public.h2.correct
+traderDetails.public.h2=Manylion cofrestru EORI
 traderDetails.public.h3.businessName=Enw’r busnes cofrestredig
 traderDetails.public.h3.businessAddress=Cyfeiriad y busnes cofrestredig
 traderDetails.public.h2.correct=Ydy’r enw a’r manylion cyfeiriad yn gywir?
@@ -954,7 +956,7 @@ traderDetails.public.h2.question.no=No, these details are incorrect
 traderDetails.private.heading=The registration details for EORI number {0} are private
 traderDetails.private.p1=The business this number is registered to has not consented to their name and address being shared.
 traderDetails.private.p2=If you need more information, contact the business directly.
-traderDetails.private.h3.proceed=Dewiswch a ydych am barhau â’r cais
+traderDetails.private.h3.proceed=Do you want to proceed?
 
 verifyTraderDetails.error.required=Dewiswch a ydych am barhau â’r cais
 
