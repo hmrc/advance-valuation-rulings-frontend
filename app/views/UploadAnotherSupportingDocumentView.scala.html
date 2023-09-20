@@ -32,7 +32,7 @@
     saveButtons: SaveButtons
 )
 
-@(attachments: Seq[DraftAttachment], form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(attachments: Seq[DraftAttachment], form: Form[_], mode: Mode, draftId: DraftId, letterOfAuthorityFileName: Option[String] = None)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{
     if (numOfDocs == 1) {
@@ -87,6 +87,18 @@
           },
           classes = "govuk-body-s"
         ))
+
+        @if(letterOfAuthorityFileName.isDefined) {
+            <p class="govuk-body">@messages("uploadAnotherSupportingDocument.letterOfAuthority")</p>
+
+            @govukTable(
+                Table(
+                    rows = Seq(
+                        Seq(TableRow(content = Text(letterOfAuthorityFileName.get)))
+                    )
+                )
+            )
+        }
 
         @subheading(messages("uploadAnotherSupportingDocument.subHeading"))
 
