@@ -48,6 +48,7 @@ class TraderEoriNumberFormProvider @Inject() extends Mappings {
             Invalid(ValidationError("provideTraderEori.error.notGB"))
           case s if !s.forall(_.isLetterOrDigit) =>
             Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
+          case _                                 => Invalid(ValidationError("provideTraderEori.error.default"))
         }
       case _ =>
         Invalid(ValidationError("provideTraderEori.error.default"))
