@@ -82,7 +82,12 @@ class BackendConnector @Inject() (
   )(implicit hc: HeaderCarrier): Future[Application] =
     httpClient
       .get(url"$backendUrl/applications/$applicationId")
-      .execute[Application]
+      .execute[HttpResponse]
+      .map {
+        response =>
+          val ret = response.json.as[Application]
+          ret
+      }
 
   def applicationSummaries(implicit hc: HeaderCarrier): Future[ApplicationSummaryResponse] =
     httpClient

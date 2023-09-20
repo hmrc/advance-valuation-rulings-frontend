@@ -28,6 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import connectors.BackendConnector
 import controllers.actions._
+import models.requests.Application
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
 
@@ -46,7 +47,7 @@ class ViewApplicationController @Inject() (
     identify.async {
       implicit request =>
         backendConnector.getApplication(applicationId).map {
-          application =>
+          application: Application =>
             val viewModel   = ApplicationViewModel(application)
             val lastUpdated = formatter.format(application.lastUpdated)
             Ok(view(viewModel, applicationId, lastUpdated))

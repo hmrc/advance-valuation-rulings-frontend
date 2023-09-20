@@ -172,6 +172,11 @@ trait ApplicationRequestGenerator extends Generators {
                         )
       numAttachments <- Gen.choose(0, 5)
       attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
+      whatIsYourRole <- Gen.oneOf(
+                          WhatIsYourRoleResponse.AgentOrg,
+                          WhatIsYourRoleResponse.EmployeeOrg,
+                          WhatIsYourRoleResponse.AgentTrader
+                        )
     } yield ApplicationRequest(
       draftId,
       traderDetail,
@@ -179,7 +184,8 @@ trait ApplicationRequestGenerator extends Generators {
       contact,
       method,
       goodsDetails,
-      attachments
+      attachments,
+      whatIsYourRole
     )
   }
 }
