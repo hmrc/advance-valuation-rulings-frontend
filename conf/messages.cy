@@ -980,4 +980,4 @@ yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if
 yourApplicationHasBeenCancelled.button = Go to your applications
 
 uploadInProgress.title = Upload In Progress
-uploadInProgress.heading = Uploading your document...
+uploadInProgress.heading = Uploading your document
