@@ -368,8 +368,8 @@ importingGoods.point.4.link = General information (opens in new tab)
 importingGoods.point.5 = {0} - HMRC email alerts, videos and webinars about importing and exporting
 importingGoods.point.5.link = Help and support (opens in new tab)
 
-accountHome.title = Your applications and rulings
-accountHome.heading = Your applications and rulings
+accountHome.title = Your applications
+accountHome.heading = Your applications
 accountHome.para = You have not started any applications.
 accountHome.button.text = Start new application
 accountHome.viewApplication = View application
@@ -742,7 +742,7 @@ applicationComplete.paragraph.1 = We have sent your confirmation email to {0}
 applicationComplete.paragraph.2 = We’ll aim to review your application within 30 days, although it can take a further 90 days from the date your application was accepted to receive an Advance Valuation Ruling decision.
 applicationComplete.paragraph.3 = See {0} if you are planning to import goods without applying for an advance ruling.
 applicationComplete.paragraph.3.link = GOV.UK’s step-by-step guidance (opens in new tab)
-applicationComplete.button.continue = Go to your applications and rulings
+applicationComplete.button.continue = Go to your applications
 applicationComplete.ruling.subheading = How to use the ruling
 applicationComplete.ruling.paragraph = When you receive a ruling decision you must:
 applicationComplete.ruling.bulletPoint.1 = declare the Advance Valuation Ruling reference in your {0}
@@ -761,7 +761,7 @@ applicationComplete.applicant.heading = About the applicant
 applicationComplete.agent.heading = About the agent
 applicationComplete.company.heading = About the company
 applicationComplete.goods.heading = About the goods
-applicationComplete.continue.button = Go to your applications and rulings
+applicationComplete.continue.button = Go to your applications
 
 explainWhyYouChoseMethodFour.title = Explain why you have selected Method 4 to value your goods
 explainWhyYouChoseMethodFour.caption = About the goods
@@ -974,13 +974,13 @@ draftHasBeenSaved.heading = Your application draft has been saved for 28 days
 draftHasBeenSaved.para.1 = You have until {0} to submit your application.
 draftHasBeenSaved.para.2 = Please note that the 28-day timer will start again every time you access your draft.
 draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
-draftHasBeenSaved.para.link.text = your applications and rulings
+draftHasBeenSaved.para.link.text = your applications
 
 yourApplicationHasBeenCancelled.title = You cannot view this application
 yourApplicationHasBeenCancelled.heading = You cannot view this application
 yourApplicationHasBeenCancelled.paragraph.1 = This is because you cancelled your application for an Advance Valuation Ruling. The data you submitted before has been deleted.
 yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if you wish to do so.
-yourApplicationHasBeenCancelled.button = Go to your applications and rulings
+yourApplicationHasBeenCancelled.button = Go to your applications
 
 uploadInProgress.title = Upload In Progress
 uploadInProgress.heading = Uploading your document...
