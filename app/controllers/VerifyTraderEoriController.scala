@@ -54,16 +54,23 @@ class VerifyTraderEoriController @Inject() (
       case None        => formProvider()
     }
 
+  private def checkForm(isChecked: Option[Boolean]) = isChecked match {
+    case Some(isChecked) => formProvider().fill(isChecked.toString)
+    case None            => formProvider()
+  }
+
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
+        val checked = CheckRegisteredDetailsPage.get()
+
         VerifyTraderDetailsPage.get() match {
           case None                                                       =>
             traderDetailsNotFoundInSession(draftId)
           case Some(details) if details.consentToDisclosureOfPersonalData =>
-            Ok(publicView(getForm(details), mode, draftId, details))
+            Ok(publicView(checkForm(checked), mode, draftId, details))
           case Some(details)                                              =>
-            Ok(privateView(getForm(details), mode, draftId, details))
+            Ok(privateView(checkForm(checked), mode, draftId, details))
         }
     }
 
