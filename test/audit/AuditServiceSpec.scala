@@ -36,8 +36,7 @@ import org.scalatestplus.mockito.MockitoSugar
 
 class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with MockitoSugar {
 
-  private val mockAuditConnector = mock[AuditConnector]
-
+  private val mockAuditConnector  = mock[AuditConnector]
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuditConnector)

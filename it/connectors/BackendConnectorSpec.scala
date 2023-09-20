@@ -168,7 +168,7 @@ class BackendConnectorSpec
       requestedMethod = MethodOne(None, None, None),
       goodsDetails = GoodsDetails("name", "description", None, None, None),
       attachments = Nil,
-      whatIsYourRoleResponse = WhatIsYourRole.AgentOrg
+      whatIsYourRole = WhatIsYourRole.AgentOrg
     )
 
     "must submit applications to the backend" in {
