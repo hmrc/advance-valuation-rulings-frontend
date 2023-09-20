@@ -255,7 +255,8 @@ object ApplicationViewModelSpec extends Generators {
     contact = contact,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
-    attachments = Nil
+    attachments = Nil,
+    whatIsYourRole = WhatIsYourRole.EmployeeOrg
   )
   val applicationId      = ApplicationId(0L)
   val application        =
@@ -268,6 +269,7 @@ object ApplicationViewModelSpec extends Generators {
       contact = applicationRequest.contact,
       requestedMethod = applicationRequest.requestedMethod,
       goodsDetails = applicationRequest.goodsDetails,
-      attachments = Nil
+      attachments = Nil,
+      whatIsYourRole = Some(WhatIsYourRole.EmployeeOrg)
     )
 }

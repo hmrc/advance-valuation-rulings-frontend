@@ -22,48 +22,35 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import play.api.{Application, Configuration}
-import play.api.Configuration
 import play.api.http.HttpEntity
 import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
-import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
-import play.api.libs.json.JsObject
-import play.api.mvc.{AnyContent, Cookie, MessagesControllerComponents, ResponseHeader, Result}
+import play.api.mvc.{AnyContent, Cookie, ResponseHeader, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.Path
-import uk.gov.hmrc.objectstore.client.config.ObjectStoreClientConfig
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import akka.stream.Materializer
 import base.SpecBase
 import com.typesafe.config.Config
 import controllers.common.FileUploadHelper
-import models.{Done, DraftAttachment, DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
-import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
+import models.{Done, DraftId, Mode, NormalMode, UploadedFile}
 import models.requests.DataRequest
 import models.upscan.UpscanInitiateResponse
 import navigation.Navigator
-import org.eclipse.jetty.http2.ErrorCode
-import org.mockito.ArgumentMatchers.{any, anyString}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.IdiomaticMockito.{returned, DoSomethingOps}
-import org.mockito.Mockito.{doReturn, times, verify}
-import org.mockito.MockitoSugar.{spy, when}
-import org.mockito.MockitoSugar.reset
-import org.mockito.MockitoSugar.when
+import org.mockito.Mockito.{times, verify}
+import org.mockito.MockitoSugar.{reset, spy, when}
 import org.mockito.stubbing.ScalaOngoingStubbing
-import org.scalacheck.Arbitrary
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
 import org.scalatest.prop.Tables.Table
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
-import pages.UploadLetterOfAuthorityPage
-import queries.AllDocuments
 import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}

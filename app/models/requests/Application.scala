@@ -20,6 +20,8 @@ import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 
+import models.WhatIsYourRoleAsImporter
+
 final case class Application(
   id: ApplicationId,
   created: Instant,
@@ -29,7 +31,8 @@ final case class Application(
   contact: ContactDetails,
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
-  attachments: Seq[Attachment]
+  attachments: Seq[Attachment],
+  whatIsYourRole: Option[WhatIsYourRole]
 )
 
 object Application {

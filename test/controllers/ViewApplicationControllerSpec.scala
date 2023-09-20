@@ -18,6 +18,7 @@ package controllers
 
 import java.time.{Clock, Instant, ZoneOffset}
 
+import scala.collection.immutable.List.from
 import scala.concurrent.Future
 
 import play.api.inject.bind
@@ -125,7 +126,8 @@ object ViewApplicationControllerSpec extends Generators {
     contact = contact,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
-    attachments = Nil
+    attachments = Nil,
+    whatIsYourRole = WhatIsYourRole.AgentTrader
   )
   val applicationId      = ApplicationId(0L)
   val ruling             =
@@ -138,7 +140,8 @@ object ViewApplicationControllerSpec extends Generators {
       contact = applicationRequest.contact,
       requestedMethod = applicationRequest.requestedMethod,
       goodsDetails = applicationRequest.goodsDetails,
-      attachments = Nil
+      attachments = from(Nil),
+      whatIsYourRole = Some(WhatIsYourRole.AgentTrader)
     )
 
   val body =
