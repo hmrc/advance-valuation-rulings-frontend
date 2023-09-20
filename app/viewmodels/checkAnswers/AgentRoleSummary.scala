@@ -36,15 +36,6 @@ object AgentRoleSummary {
             key = "checkYourAnswersForAgents.applicant.role.label",
             value = ValueViewModel(
               HtmlFormat.escape(messages(s"whatIsYourRoleAsImporter.$role")).toString
-            ),
-            actions = Seq(
-              ActionItemViewModel(
-                "site.change",
-                routes.WhatIsYourRoleAsImporterController
-                  .onPageLoad(CheckMode, userAnswer.draftId)
-                  .url
-              )
-                .withVisuallyHiddenText(messages("businessContactDetails.role.change.hidden"))
             )
           )
         )

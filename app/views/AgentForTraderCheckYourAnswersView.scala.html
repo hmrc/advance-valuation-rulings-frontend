@@ -29,6 +29,7 @@ paragraph: Paragraph,
 bulletList: BulletList,
 cancelApplicationLink: CancelApplicationLink,
 formHelper: FormWithCSRF,
+applyButtonWithDraft: ApplyButtonWithDraft
 )
 
 @(applicationSummary: ApplicationSummary, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -50,7 +51,7 @@ messages("agentForTraderCheckYourAnswers.applicant.agent.heading")
 @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
 
 @subheading(messages("agentForTraderCheckYourAnswers.goods.heading"))
-@govukSummaryList(applicationSummary.method.rows)
+@govukSummaryList(applicationSummary.method.rows.withCssClass("govuk-!-margin-bottom-0"))
 @govukSummaryList(applicationSummary.details.rows.withCssClass("govuk-!-margin-bottom-9"))
 
 @subheading(messages("agentForTraderCheckYourAnswers.declaration.heading"))
@@ -76,9 +77,7 @@ Html(messages("agentForTraderCheckYourAnswers.agreement.bulletPoint.3"))
 ))
 
 @formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
-@govukButton(
-ButtonViewModel(messages("agentForTraderCheckYourAnswers.button.continue"))
-)
+ @applyButtonWithDraft(draftId, "agentForTraderCheckYourAnswers.button.continue")
 }
 
 @cancelApplicationLink(draftId)

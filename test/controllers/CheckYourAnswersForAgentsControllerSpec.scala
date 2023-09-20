@@ -131,7 +131,7 @@ class CheckYourAnswersForAgentsControllerSpec
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result).contains("An employee of the organisation") mustEqual true;
+          contentAsString(result).contains("About the applicant") mustEqual true;
 
         }
       }
@@ -173,7 +173,7 @@ class CheckYourAnswersForAgentsControllerSpec
 
           status(result) mustEqual OK
           contentAsString(result).contains(
-            "Agent acting on behalf of an organisation"
+            "About the agent"
           ) mustEqual true;
         }
       }
