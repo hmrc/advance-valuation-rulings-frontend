@@ -22,7 +22,7 @@ import cats.implicits._
 import play.api.libs.json._
 
 import com.google.inject.Inject
-import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.{AgentCompanyDetails, BusinessContactDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader}
 import pages._
 
@@ -85,7 +85,7 @@ object TraderDetail {
 
   def agent(userAnswers: UserAnswers) =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case Some(AgentOnBehalfOfOrg) | Some(AgentOnBehalfOfTrader) =>
+      case Some(AgentOnBehalfOfOrg) =>
         userAnswers.validatedF[AgentCompanyDetails, Option[TraderDetail]](
           AgentCompanyDetailsPage,
           acd =>
@@ -102,7 +102,8 @@ object TraderDetail {
               )
             )
         )
-      case _                                                      => Validated.Valid(None)
+
+      case _ => Validated.Valid(None)
     }
 
   def trader(
