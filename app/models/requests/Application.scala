@@ -32,7 +32,7 @@ final case class Application(
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
   attachments: Seq[Attachment],
-  whatIsYourRoleResponse: Option[WhatIsYourRoleResponse]
+  whatIsYourRole: Option[WhatIsYourRole]
 )
 
 object Application {

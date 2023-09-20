@@ -33,9 +33,9 @@ trait ApplicationGenerator extends ApplicationRequestGenerator {
         dateInstant     = date.atStartOfDay(ZoneOffset.UTC).toInstant
         attachments    <- Gen.listOf(arbitrary[Attachment])
         whatIsYourRole <- Gen.oneOf(
-                            WhatIsYourRoleResponse.AgentOrg,
-                            WhatIsYourRoleResponse.EmployeeOrg,
-                            WhatIsYourRoleResponse.AgentTrader
+                            WhatIsYourRole.AgentOrg,
+                            WhatIsYourRole.EmployeeOrg,
+                            WhatIsYourRole.AgentTrader
                           )
       } yield Application(
         id = id,
@@ -47,7 +47,7 @@ trait ApplicationGenerator extends ApplicationRequestGenerator {
         requestedMethod = data.requestedMethod,
         goodsDetails = data.goodsDetails,
         attachments = attachments,
-        whatIsYourRoleResponse = Some(whatIsYourRole)
+        whatIsYourRole = Some(whatIsYourRole)
       )
     }
 

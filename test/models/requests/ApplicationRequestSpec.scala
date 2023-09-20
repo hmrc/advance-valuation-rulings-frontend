@@ -66,7 +66,7 @@ class ApplicationRequestSpec
             requestedMethod = requestedMethod,
             goodsDetails,
             attachments = Seq.empty,
-            whatIsYourRoleResponse = WhatIsYourRoleResponse.EmployeeOrg
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg
           )
         )
       }
@@ -85,7 +85,7 @@ class ApplicationRequestSpec
             requestedMethod = requestedMethod,
             goodsDetails,
             attachments = Seq.empty,
-            whatIsYourRoleResponse = WhatIsYourRoleResponse.AgentOrg
+            whatIsYourRole = WhatIsYourRole.AgentOrg
           )
       }
     }
@@ -100,7 +100,7 @@ class ApplicationRequestSpec
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
           attachments = Seq.empty,
-          whatIsYourRoleResponse = WhatIsYourRoleResponse.EmployeeOrg
+          whatIsYourRole = WhatIsYourRole.EmployeeOrg
         )
       ) shouldBe Json.parse(individualTraderJson)
     }
@@ -166,7 +166,7 @@ class ApplicationRequestSpec
             ),
             goodsDetails = goodsDetailsNoDetails,
             attachments = Seq.empty,
-            whatIsYourRoleResponse = WhatIsYourRoleResponse.EmployeeOrg
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg
           )
         )
       }
@@ -281,7 +281,7 @@ class ApplicationRequestSpec
             ),
             goodsDetails = goodsDetailsNoDetails,
             attachments = Seq.empty,
-            whatIsYourRoleResponse = WhatIsYourRoleResponse.EmployeeOrg
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg
           )
         )
       }
@@ -395,7 +395,7 @@ class ApplicationRequestSpec
             ),
             goodsDetails = goodsDetailsNoDetails,
             attachments = Seq.empty,
-            whatIsYourRoleResponse = WhatIsYourRoleResponse.AgentOrg
+            whatIsYourRole = WhatIsYourRole.AgentOrg
           )
         )
       }
@@ -630,7 +630,7 @@ object ApplicationRequestSpec extends Generators {
        |  "confidentialInformation": "$randomString"
        |},
        |"attachments": [],
-       |"whatIsYourRoleResponse" : "${WhatIsYourRoleResponse.EmployeeOrg}"
+       |"whatIsYourRole" : "${WhatIsYourRole.EmployeeOrg}"
     }""".stripMargin
 
   val agentJson =
@@ -671,6 +671,6 @@ object ApplicationRequestSpec extends Generators {
        |  "confidentialInformation": "$randomString"
        |},
        |"attachments": [],
-       |"whatIsYourRoleResponse" : "${WhatIsYourRoleResponse.AgentOrg}"
+       |"whatIsYourRole" : "${WhatIsYourRole.AgentOrg}"
     }""".stripMargin
 }

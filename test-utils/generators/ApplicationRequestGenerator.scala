@@ -173,9 +173,9 @@ trait ApplicationRequestGenerator extends Generators {
       numAttachments <- Gen.choose(0, 5)
       attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
       whatIsYourRole <- Gen.oneOf(
-                          WhatIsYourRoleResponse.AgentOrg,
-                          WhatIsYourRoleResponse.EmployeeOrg,
-                          WhatIsYourRoleResponse.AgentTrader
+                          WhatIsYourRole.AgentOrg,
+                          WhatIsYourRole.EmployeeOrg,
+                          WhatIsYourRole.AgentTrader
                         )
     } yield ApplicationRequest(
       draftId,

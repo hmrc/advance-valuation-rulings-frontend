@@ -127,7 +127,7 @@ object ViewApplicationControllerSpec extends Generators {
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
     attachments = Nil,
-    whatIsYourRoleResponse = WhatIsYourRoleResponse.AgentTrader
+    whatIsYourRole = WhatIsYourRole.AgentTrader
   )
   val applicationId      = ApplicationId(0L)
   val ruling             =
@@ -141,7 +141,7 @@ object ViewApplicationControllerSpec extends Generators {
       requestedMethod = applicationRequest.requestedMethod,
       goodsDetails = applicationRequest.goodsDetails,
       attachments = from(Nil),
-      whatIsYourRoleResponse = Some(WhatIsYourRoleResponse.AgentTrader)
+      whatIsYourRole = Some(WhatIsYourRole.AgentTrader)
     )
 
   val body =

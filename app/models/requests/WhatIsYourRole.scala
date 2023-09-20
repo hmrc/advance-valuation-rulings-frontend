@@ -20,14 +20,12 @@ import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models.{UserAnswers, WhatIsYourRoleAsImporter}
 import pages.WhatIsYourRoleAsImporterPage
 
-sealed abstract class WhatIsYourRoleResponse(override val entryName: String) extends EnumEntry
+sealed abstract class WhatIsYourRole(override val entryName: String) extends EnumEntry
 
-object WhatIsYourRoleResponse
-    extends Enum[WhatIsYourRoleResponse]
-    with PlayJsonEnum[WhatIsYourRoleResponse] {
-  val values: IndexedSeq[WhatIsYourRoleResponse] = findValues
+object WhatIsYourRole extends Enum[WhatIsYourRole] with PlayJsonEnum[WhatIsYourRole] {
+  val values: IndexedSeq[WhatIsYourRole] = findValues
 
-  def apply(userAnswers: UserAnswers): WhatIsYourRoleResponse =
+  def apply(userAnswers: UserAnswers): WhatIsYourRole =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
       case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)         => EmployeeOrg
       case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)    => AgentOrg
@@ -35,11 +33,11 @@ object WhatIsYourRoleResponse
       case None                                                 => UnansweredLegacySupport
     }
 
-  case object EmployeeOrg extends WhatIsYourRoleResponse("EmployeeOrg")
+  case object EmployeeOrg extends WhatIsYourRole("EmployeeOrg")
 
-  case object AgentOrg extends WhatIsYourRoleResponse("AgentOrg")
+  case object AgentOrg extends WhatIsYourRole("AgentOrg")
 
-  case object AgentTrader extends WhatIsYourRoleResponse("AgentTrader")
+  case object AgentTrader extends WhatIsYourRole("AgentTrader")
 
-  case object UnansweredLegacySupport extends WhatIsYourRoleResponse("UnansweredLegacySupport")
+  case object UnansweredLegacySupport extends WhatIsYourRole("UnansweredLegacySupport")
 }

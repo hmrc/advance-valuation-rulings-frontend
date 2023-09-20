@@ -17,22 +17,19 @@
 package userrole
 
 import play.api.data.Form
-import play.api.data.validation.Valid
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import models.{ApplicationContactDetails, BusinessContactDetails, CDSEstablishmentAddress, ContactInformation, DraftId, NormalMode, TraderDetailsWithCountryCode, UserAnswers}
-import models.requests.ApplicationRequestSpec.emptyUserAnswers
+import models.{ApplicationContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
-import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage, ImportGoodsPage}
-import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, ApplicationSummaryService, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
-import views.html.{AgentForTraderCheckYourAnswersView, CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
+import pages.ApplicationContactDetailsPage
+import viewmodels.checkAnswers.summary._
+import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
 class EmployeeSpec extends SpecBase with Matchers {
 

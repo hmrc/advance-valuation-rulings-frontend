@@ -138,7 +138,7 @@ case class ApplicationRequest(
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
   attachments: Seq[AttachmentRequest],
-  whatIsYourRoleResponse: WhatIsYourRoleResponse
+  whatIsYourRole: WhatIsYourRole
 )
 
 object ApplicationRequest {
@@ -166,7 +166,7 @@ class ApplicationRequestService @Inject() (
     val contact         = contactDetailsService(userAnswers)
     val requestedMethod = RequestedMethod(userAnswers)
     val attachments     = AttachmentRequest(userAnswers)
-    val whatIsYourRole  = WhatIsYourRoleResponse(userAnswers)
+    val whatIsYourRole  = WhatIsYourRole(userAnswers)
 
     (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments)
       .mapN(
