@@ -1,5 +1,4 @@
-service.name = Dyfarniad Prisio Uwch
-service.name.prefix = Apply for an
+service.name = Apply for an Dyfarniad Prisio Uwch
 
 site.back = Yn ôl
 site.remove = Remove
@@ -648,10 +647,10 @@ checkYourAnswersForAgents.applicant.agent.heading = Ynglŷn â’r asiant
 
 checkYourAnswersForAgents.agent.eori.number.label = Rhif EORI cofrestredig eich cwmni, yn dechrau gyda GB
 checkYourAnswersForAgents.agent.name.label = Enw busnes cofrestredig eich cwmni
-checkYourAnswersForAgents.agent.address.label = Your company’s registered business address
-checkYourAnswersForAgents.agent.eori.number.hidden = your company’s registered EORI number
-checkYourAnswersForAgents.agent.name.hidden = your company’s registered business name
-checkYourAnswersForAgents.agent.address.hidden = your company’s registered business address
+checkYourAnswersForAgents.agent.address.label = Agent’s company’s registered business address
+checkYourAnswersForAgents.agent.eori.number.hidden = Agent’s company’s registered EORI number
+checkYourAnswersForAgents.agent.name.hidden = Agent’s company’s registered business name
+checkYourAnswersForAgents.agent.address.hidden = Agent’s company’s registered business address
 
 checkYourAnswersForAgents.applicant.name.label = Enw llawn yr asiant
 checkYourAnswersForAgents.applicant.email.label = Cyfeiriad e-bost yr asiant
@@ -693,16 +692,19 @@ agentForTraderCheckYourAnswers.agent.eori.number.hidden = your company’s regis
 agentForTraderCheckYourAnswers.agent.name.hidden = your company’s registered business name
 agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registered business address
 
-agentForTraderCheckYourAnswers.applicant.name.label = Applicant’s full name
-agentForTraderCheckYourAnswers.applicant.email.label = Applicant’s email address
-agentForTraderCheckYourAnswers.applicant.phone.label = Applicant’s telephone number
+agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
+agentForTraderCheckYourAnswers.applicant.name.hidden = the Agent’s full name
+agentForTraderCheckYourAnswers.applicant.email.label = Agents’s email address
+agentForTraderCheckYourAnswers.applicant.email.hidden = the Agents’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Agents’s telephone number
+agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agents’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
-agentForTraderCheckYourAnswers.applicant.companyName.hidden = Agent’s company name
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = the Agent’s company name
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
 agentForTraderCheckYourAnswers.goods.heading = About the goods
 agentForTraderCheckYourAnswers.declaration.heading = Your declaration
 agentForTraderCheckYourAnswers.declaration.paragraph1 = By applying for an Advance Valuation Ruling you confirm that:
-agentForTraderCheckYourAnswers.declaration.bulletPoint.1 = you have selected the most relevant method to value the company’s goods
+agentForTraderCheckYourAnswers.declaration.bulletPoint.1 = you have selected the most relevant method to value the trader’s goods
 agentForTraderCheckYourAnswers.declaration.bulletPoint.2 = the information you have provided is correct and complete to the best of your knowledge
 agentForTraderCheckYourAnswers.declaration.bulletPoint.3 = you have provided a signed letter of authority confirming you can act on the trader’s behalf
 agentForTraderCheckYourAnswers.declaration.bulletPoint.4 = you are aware that HMRC may contact the trader to confirm you have the right to make this application
@@ -981,4 +983,4 @@ yourApplicationHasBeenCancelled.paragraph.2 = You can start a new application if
 yourApplicationHasBeenCancelled.button = Go to your applications
 
 uploadInProgress.title = Upload In Progress
-uploadInProgress.heading = Uploading your document...
+uploadInProgress.heading = Uploading your document

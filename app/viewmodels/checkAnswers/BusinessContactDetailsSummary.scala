@@ -101,7 +101,9 @@ object BusinessContactDetailsSummary {
           "site.change",
           routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
         )
-          .withVisuallyHiddenText("agentForTraderCheckYourAnswers.applicant.companyName.hidden")
+          .withVisuallyHiddenText(
+            messages("agentForTraderCheckYourAnswers.applicant.companyName.hidden")
+          )
       )
     )
 

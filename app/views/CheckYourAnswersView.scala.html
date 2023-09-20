@@ -28,7 +28,8 @@
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    applyButtonWithDraft: ApplyButtonWithDraft
 )
 
 @(applicationSummary: ApplicationSummary, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -44,7 +45,7 @@
     
     @subheading(messages("checkYourAnswers.goods.heading"))
 
-    @govukSummaryList(applicationSummary.method.rows)
+    @govukSummaryList(applicationSummary.method.rows.withCssClass("govuk-!-margin-bottom-0"))
     @govukSummaryList(applicationSummary.details.rows.withCssClass("govuk-!-margin-bottom-9"))
 
     @subheading(messages("checkYourAnswers.declaration.heading"))
@@ -68,7 +69,7 @@
     ))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
-        @saveButtons(draftId, messages("checkYourAnswers.button.continue"))
+        @applyButtonWithDraft(draftId, "checkYourAnswers.button.continue")
     }
 
     @cancelApplicationLink(draftId)
