@@ -28,7 +28,7 @@ import controllers.actions._
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.Navigator
-import pages.UploadAnotherSupportingDocumentPage
+import pages.{UploadAnotherSupportingDocumentPage, UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
 import queries.AllDocuments
 import views.html.UploadAnotherSupportingDocumentView
 
@@ -50,7 +50,13 @@ class UploadAnotherSupportingDocumentController @Inject() (
       implicit request =>
         val attachments = AllDocuments.get().getOrElse(List.empty)
         val form        = formProvider(attachments)
-        Ok(view(attachments, form, mode, draftId))
+        val loaFile     = request.userAnswers.get(UploadLetterOfAuthorityPage)
+        val loaFileName = loaFile match {
+          case Some(file) => file.fileName
+          case None       =>
+            None
+        }
+        Ok(view(attachments, form, mode, draftId, loaFileName))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
