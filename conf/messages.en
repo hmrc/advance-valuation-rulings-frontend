@@ -108,7 +108,7 @@ checkYourAnswersForAgents.applicant.org.heading = About the applicant
 checkYourAnswersForAgents.applicant.agent.heading = About the agent
 
 checkYourAnswersForAgents.agent.eori.number.label = Agent’s company’s registered EORI number
-checkYourAnswersForAgents.agent.name.label = Agent’scompany’s registered business name
+checkYourAnswersForAgents.agent.name.label = Agent’s company’s registered business name
 checkYourAnswersForAgents.agent.address.label = Agent’s company’s registered business address
 checkYourAnswersForAgents.agent.eori.number.hidden = Agent’s company’s registered EORI number
 checkYourAnswersForAgents.agent.name.hidden = Agent’s company’s registered business name
