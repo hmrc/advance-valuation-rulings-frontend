@@ -28,7 +28,8 @@
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    applyButtonWithDraft: ApplyButtonWithDraft
 )
 
 @(applicationSummary: ApplicationSummary, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -68,15 +69,7 @@
     ))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(draftId)) {
-        @saveButtons(draftId, messages("checkYourAnswers.button.continue"))
-        @govukButton(
-            ButtonViewModel(
-                messages("site.saveAsDraft")
-            )
-                .asSecondaryButton()
-                .asLink(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
-                .withCssClass("govuk-!-margin-left-2")
-        )
+        @applyButtonWithDraft(draftId, "checkYourAnswers.button.continue")
     }
 
     @cancelApplicationLink(draftId)
