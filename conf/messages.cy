@@ -576,8 +576,10 @@ fileUpload.error.quarantine = Mae feirws yn y ffeil dan sylw
 fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf PDF neu JPEG
 fileUpload.error.unknown = There was a problem uploading your file
 
-uploadAnotherSupportingDocument.title.one = Rydych wedi uwchlwytho un ddogfen ategol
-uploadAnotherSupportingDocument.heading.one = Rydych wedi uwchlwytho un ddogfen ategol
+uploadAnotherSupportingDocument.title.one = You have uploaded 1 supporting document
+uploadAnotherSupportingDocument.heading.one = You have uploaded 1 supporting document
+uploadAnotherSupportingDocument.agentForTrader.title.one = You have uploaded 1 supporting document and 1 letter of authority
+uploadAnotherSupportingDocument.agentForTrader.heading.one = You have uploaded 1 supporting document and 1 letter of authority
 uploadAnotherSupportingDocument.title.many = Rydych wedi uwchlwytho {0} ddogfen ategol
 uploadAnotherSupportingDocument.heading.many = Rydych wedi uwchlwytho {0} ddogfen ategol
 uploadAnotherSupportingDocument.subHeading = A ydych eisiau uwchlwytho dogfen ategol arall?
@@ -590,6 +592,17 @@ uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Cadw’n gyfrinachol
 uploadAnotherSupportingDocument.remove.hidden = {0} from your list of supporting documents
 uploadAnotherSupportingDocument.letterOfAuthority = Llythyr o awdurdod
+uploadAnotherSupportingDocument.uploadedDocuments = Uploaded Documents
+uploadAnotherSupportingDocument.title.max = Maximum number of supporting documents uploaded
+uploadAnotherSupportingDocument.heading.max = Maximum number of supporting documents uploaded
+uploadAnotherSupportingDocument.agentForTrader.maxInfo = You can currently upload up to 4 files as evidence and 1 letter of authority. If you have additional documents, please inform your case worker once they are assigned to your case.
+uploadAnotherSupportingDocument.maxInfo = You can currently upload up to 5 files as evidence. If you have additional documents, please inform your case worker once they are assigned to your case.
+uploadAnotherSupportingDocument.agentForTrader.title.many = You have uploaded {0} supporting documents and 1 letter of authority
+uploadAnotherSupportingDocument.agentForTrader.heading.many = You have uploaded {0} supporting documents and 1 letter of authority
+uploadAnotherSupportingDocument.remaining = You can upload {0} more documents.
+uploadAnotherSupportingDocument.remaining.one = You can upload 1 more document.
+
+
 
 isThisFileConfidential.title = Do you want this file to be marked as confidential?
 isThisFileConfidential.heading = Do you want this file to be marked as confidential?

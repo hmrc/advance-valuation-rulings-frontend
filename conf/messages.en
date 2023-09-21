@@ -498,6 +498,7 @@ uploadAnotherSupportingDocument.keepConfidential = Confidential
 uploadAnotherSupportingDocument.remove.hidden = {0} from your list of supporting documents
 uploadAnotherSupportingDocument.letterOfAuthority = Letter of authority
 uploadAnotherSupportingDocument.uploadedDocuments = Uploaded Documents
+uploadAnotherSupportingDocument.title.max = Maximum number of supporting documents uploaded
 uploadAnotherSupportingDocument.heading.max = Maximum number of supporting documents uploaded
 uploadAnotherSupportingDocument.agentForTrader.maxInfo = You can currently upload up to 4 files as evidence and 1 letter of authority. If you have additional documents, please inform your case worker once they are assigned to your case.
 uploadAnotherSupportingDocument.maxInfo = You can currently upload up to 5 files as evidence. If you have additional documents, please inform your case worker once they are assigned to your case.
