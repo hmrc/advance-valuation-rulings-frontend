@@ -76,7 +76,12 @@ class IsThisFileConfidentialController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors => {
-              val fileName = UploadSupportingDocumentPage.get().get.fileName.get
+              val fileName = UploadSupportingDocumentPage.get() match {
+                case Some(file) =>
+                  file.fileName.get
+                case None       =>
+                  "fileName"
+              }
               Future.successful(BadRequest(view(formWithErrors, mode, draftId, fileName)))
             },
             value =>
