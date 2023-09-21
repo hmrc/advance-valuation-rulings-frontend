@@ -985,3 +985,4 @@ yourApplicationHasBeenCancelled.button = Go to your applications
 
 uploadInProgress.title = Upload In Progress
 uploadInProgress.heading = Uploading your document
+uploadInProgress.p1 = Select the check progress button to continue with your application.
