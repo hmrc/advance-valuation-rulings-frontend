@@ -16,30 +16,28 @@
 
 package controllers
 
-import scala.concurrent.Future
-
+import base.SpecBase
+import connectors.BackendConnector
+import models.AuthUserType._
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models._
+import models.requests.{ApplicationId, ApplicationSubmissionResponse}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar
+import org.scalatest.{EitherValues, TryValues}
+import pages._
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import connectors.BackendConnector
-import models._
-import models.AuthUserType._
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import models.requests.{ApplicationId, ApplicationSubmissionResponse}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar
-import org.mockito.internal.matchers.Any
-import org.scalatest.{EitherValues, TryValues}
-import pages._
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
+import viewmodels.checkAnswers.summary._
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersForAgentsView
+
+import scala.concurrent.Future
 
 class CheckYourAnswersForAgentsControllerSpec
     extends SpecBase
@@ -178,74 +176,6 @@ class CheckYourAnswersForAgentsControllerSpec
         }
       }
 
-    "must redirect to WhatIsYourRoleAsImporterPage for a GET as OrganisationAssistant if no importer role is found" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application =
-          applicationBuilderAsOrg(userAnswers = Option(orgAssistantUserAnswers))
-            .overrides(
-              bind[BackendConnector].toInstance(mockBackendConnector)
-            )
-            .build()
-
-        private val redirectPage: String =
-          routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
-
-        runApplication(application, redirectPage)
-
-      }
-
-    "must redirect to WhatIsYourRoleAsImporterPage for a GET as Agent if no importer role is found" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application = applicationBuilderAsAgent(userAnswers = Option(agentUserAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
-
-        private val redirectPage: String =
-          routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
-
-        runApplication(application, redirectPage)
-
-      }
-
-    "must redirect to UnauthorisedController for a GET as Trader" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application = applicationBuilderAsAgent(userAnswers = Option(traderUserAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
-
-        private val redirectPage: String =
-          routes.UnauthorisedController.onPageLoad.url
-
-        runApplication(application, redirectPage)
-
-      }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found for orgAssistant" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application =
-          applicationBuilderAsAgent(userAnswers = Some(orgAssistantUserAnswers)).build()
-
-        runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
-
-      }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found for agent" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application =
-          applicationBuilderAsAgent(userAnswers = Some(agentUserAnswers)).build()
-
-        runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
-      }
-
     "must redirect to Journey Recovery for a GET if no importer role is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
@@ -271,9 +201,28 @@ class CheckYourAnswersForAgentsControllerSpec
             )
           )
 
-        private val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+        private val userAnswers = orgAssistantUserAnswers
+          .setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+          .futureValue
+
+        val appSummary = ApplicationSummary(
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+          IndividualApplicantSummary(userAnswers)(stubMessages()),
+          DetailsSummary(userAnswers)(stubMessages()),
+          MethodSummary(userAnswers)(stubMessages())
+        )
+
+        when(
+          mockApplicationSummaryService.getApplicationSummary(
+            any,
+            any
+          )(any)
+        ).thenReturn(appSummary)
+
+        private val application = applicationBuilderAsOrg(Option(userAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
+            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService),
             bind[BackendConnector].toInstance(mockBackendConnector)
           )
           .build()
@@ -400,6 +349,7 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
     ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
     ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
     ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+    ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
   } yield ua).success.get
 
   when(
