@@ -604,8 +604,11 @@ uploadAnotherSupportingDocument.remaining.one = You can upload 1 more document.
 
 
 
-isThisFileConfidential.title = Do you want this file to be marked as confidential?
-isThisFileConfidential.heading = Do you want this file to be marked as confidential?
+isThisFileConfidential.title = Tell us if you want to make this file confidential
+isThisFileConfidential.heading = Tell us if you want to make this file confidential
+
+isThisFileConfidential.uploadedFile = Uploaded document
+
 isThisFileConfidential.caption = Ynglŷn â’r nwyddau
 isThisFileConfidential.para.1 = Gall hyn gynnwys unrhyw wybodaeth ynghylch trefniadau contractiol neu drefniadau sy’n fasnachol sensitif.
 isThisFileConfidential.para.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrinachol.
