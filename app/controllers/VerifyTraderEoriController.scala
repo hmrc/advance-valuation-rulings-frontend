@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
-import models.{DraftId, Mode, TraderDetailsWithConfirmation}
+import models.{DraftId, Mode}
 import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
@@ -48,16 +48,11 @@ class VerifyTraderEoriController @Inject() (
     with I18nSupport
     with Logging {
 
-  private def getForm(details: TraderDetailsWithConfirmation) =
-    details.confirmation match {
-      case Some(value) => formProvider().fill(value.toString)
-      case None        => formProvider()
+  private def checkForm(isChecked: Option[Boolean]) =
+    isChecked match {
+      case Some(isChecked) => formProvider().fill(isChecked.toString)
+      case None            => formProvider()
     }
-
-  private def checkForm(isChecked: Option[Boolean]) = isChecked match {
-    case Some(isChecked) => formProvider().fill(isChecked.toString)
-    case None            => formProvider()
-  }
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
