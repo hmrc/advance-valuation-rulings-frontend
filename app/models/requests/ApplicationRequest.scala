@@ -22,7 +22,8 @@ import cats.implicits._
 import play.api.libs.json._
 
 import com.google.inject.Inject
-import models.{AgentCompanyDetails, BusinessContactDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
+import models.{AgentCompanyDetails, BusinessContactDetails, DraftId, TraderDetailsWithCountryCode, UploadedFile, UserAnswers}
+import models.UploadedFile.{Success, UploadDetails}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader}
 import pages._
 
@@ -139,7 +140,8 @@ case class ApplicationRequest(
   requestedMethod: RequestedMethod,
   goodsDetails: GoodsDetails,
   attachments: Seq[AttachmentRequest],
-  whatIsYourRole: WhatIsYourRole
+  whatIsYourRole: WhatIsYourRole,
+  letterOfAuthority: Option[AttachmentRequest]
 )
 
 object ApplicationRequest {
@@ -161,17 +163,32 @@ class ApplicationRequestService @Inject() (
     userAnswers: UserAnswers,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode
   ): ValidatedNel[Page, ApplicationRequest] = {
-    val agentDetails    = TraderDetail.agent(userAnswers)
-    val traderDetail    = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
-    val goodsDetails    = GoodsDetails(userAnswers)
-    val contact         = contactDetailsService(userAnswers)
-    val requestedMethod = RequestedMethod(userAnswers)
-    val attachments     = AttachmentRequest(userAnswers)
-    val whatIsYourRole  = WhatIsYourRole(userAnswers)
+    val agentDetails                   = TraderDetail.agent(userAnswers)
+    val traderDetail                   = TraderDetail.trader(userAnswers, traderDetailsWithCountryCode)
+    val goodsDetails                   = GoodsDetails(userAnswers)
+    val contact                        = contactDetailsService(userAnswers)
+    val requestedMethod                = RequestedMethod(userAnswers)
+    val attachments                    = AttachmentRequest(userAnswers)
+    val whatIsYourRole: WhatIsYourRole = WhatIsYourRole(userAnswers)
+    val loa: Option[AttachmentRequest] = letterOfAuthority(userAnswers)
 
-    (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments)
+    (
+      traderDetail,
+      agentDetails,
+      contact,
+      requestedMethod,
+      goodsDetails,
+      attachments
+    )
       .mapN(
-        (traderDetail, agentDetails, contact, requestedMethod, goodsDetails, attachments) =>
+        (
+          traderDetail,
+          agentDetails,
+          contact,
+          requestedMethod,
+          goodsDetails,
+          attachments
+        ) =>
           ApplicationRequest(
             userAnswers.draftId,
             traderDetail,
@@ -180,7 +197,8 @@ class ApplicationRequestService @Inject() (
             requestedMethod,
             goodsDetails,
             attachments,
-            whatIsYourRole
+            whatIsYourRole,
+            loa
           )
       )
       .leftMap( // Removing duplicates whilst retaining order
@@ -190,4 +208,20 @@ class ApplicationRequestService @Inject() (
           )
       )
   }
+
+  def letterOfAuthority(userAnswers: UserAnswers): Option[AttachmentRequest] =
+    userAnswers.get(UploadLetterOfAuthorityPage) match {
+      case Some(Success(_: String, downloadUrl: String, uploadDetails: UploadDetails)) =>
+        Some(
+          AttachmentRequest(
+            name = uploadDetails.fileName,
+            description = None,
+            url = downloadUrl,
+            privacy = Privacy.Public,
+            mimeType = uploadDetails.fileMimeType,
+            size = uploadDetails.size
+          )
+        )
+      case _                                                                           => None
+    }
 }

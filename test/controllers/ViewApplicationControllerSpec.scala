@@ -127,7 +127,8 @@ object ViewApplicationControllerSpec extends Generators {
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
     attachments = Nil,
-    whatIsYourRole = WhatIsYourRole.AgentTrader
+    whatIsYourRole = WhatIsYourRole.AgentTrader,
+    letterOfAuthority = Some(AttachmentRequest("bob", None, "url", Privacy.Public, "jpg", 12L))
   )
   val applicationId      = ApplicationId(0L)
   val ruling             =

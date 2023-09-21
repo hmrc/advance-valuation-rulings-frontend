@@ -16,26 +16,4 @@
 
 package models.requests
 
-import java.time.Instant
-
-import play.api.libs.json.{Json, OFormat}
-
-import models.WhatIsYourRoleAsImporter
-
-final case class Application(
-  id: ApplicationId,
-  created: Instant,
-  lastUpdated: Instant,
-  trader: TraderDetail,
-  agent: Option[TraderDetail],
-  contact: ContactDetails,
-  requestedMethod: RequestedMethod,
-  goodsDetails: GoodsDetails,
-  attachments: Seq[Attachment],
-  whatIsYourRoleResponse: Option[WhatIsYourRole]
-)
-
-object Application {
-
-  implicit lazy val format: OFormat[Application] = Json.format
-}
+class LetterOfAuthorityRequest {}
