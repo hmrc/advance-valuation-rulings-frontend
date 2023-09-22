@@ -35,11 +35,12 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
-import org.mockito.MockitoSugar.{mock, reset}
+import org.mockito.MockitoSugar.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
+import services.UserAnswersService
 import services.fileupload.FileService
 import userrole.{UserRole, UserRoleProvider}
 import views.html.{UploadInProgressView, UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
@@ -65,8 +66,19 @@ class UploadInProgressControllerSpec
 
   private val initiatedFile = UploadedFile.Initiated(reference = reference)
 
-  private val mockUserRole         = mock[UserRole]
-  private val mockUserRoleProvider = mock[UserRoleProvider]
+  private val mockUserRole           = mock[UserRole]
+  private val mockUserRoleProvider   = mock[UserRoleProvider]
+  private val mockUserAnswersService = mock[UserAnswersService]
+
+  private def setMockUserRole(userAnswers: UserAnswers): Unit = {
+    when(mockUserAnswersService.get(any())(any()))
+      .thenReturn(Future.successful(Some(userAnswers)))
+
+    when(mockUserRoleProvider.getUserRole(any()))
+      .thenReturn(mockUserRole)
+
+    when(mockUserRole.getMaxSupportingDocuments).thenReturn(3)
+  }
 
   private val fileUrl        = "some/path/for/the/download/url"
   private val successfulFile = UploadedFile.Success(
@@ -170,10 +182,12 @@ class UploadInProgressControllerSpec
     forAll(parameterisedCases) {
       (isLetterOfAuthority: Boolean) =>
         val userAnswers = getUserAnswers(file, isLetterOfAuthority)
-
+        setMockUserRole(userAnswers)
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[FileService].toInstance(mockFileService)
+            bind[FileService].toInstance(mockFileService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
           )
           .build()
 
@@ -291,11 +305,13 @@ class UploadInProgressControllerSpec
             (isLetterOfAuthority: Boolean) =>
               val mockDataRequest = mock[DataRequest[Any]]
               val userAnswers     = getUserAnswers(successfulFile, isLetterOfAuthority)
-//              setUpUserRoleProviderMock
+              setMockUserRole(userAnswers)
               val application     = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[DataRequest[Any]].toInstance(mockDataRequest),
-                  bind[FileService].toInstance(mockFileService)
+                  bind[FileService].toInstance(mockFileService),
+                  bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+                  bind[UserAnswersService].toInstance(mockUserAnswersService)
                 )
                 .build()
 
@@ -343,7 +359,9 @@ class UploadInProgressControllerSpec
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(
-                bind[FileService].toInstance(mockFileService)
+                bind[FileService].toInstance(mockFileService),
+                bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+                bind[UserAnswersService].toInstance(mockUserAnswersService)
               )
               .build()
 
