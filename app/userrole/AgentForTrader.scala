@@ -103,6 +103,8 @@ package userrole {
         cd => ContactDetails(cd.name, cd.email, Some(cd.phone), cd.companyName)
       )
 
+    override def getMaxFileUploads(): Int = 4
+
   }
 
 }

@@ -97,5 +97,8 @@ package userrole {
           ApplicationContactDetailsPage,
           cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
         )
+
+    override def getMaxFileUploads(): Int = 5
+
   }
 }
