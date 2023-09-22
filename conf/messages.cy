@@ -711,10 +711,10 @@ agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registere
 
 agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
 agentForTraderCheckYourAnswers.applicant.name.hidden = the Agent’s full name
-agentForTraderCheckYourAnswers.applicant.email.label = Agents’s email address
-agentForTraderCheckYourAnswers.applicant.email.hidden = the Agents’s email address
-agentForTraderCheckYourAnswers.applicant.phone.label = Agents’s telephone number
-agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agents’s telephone number
+agentForTraderCheckYourAnswers.applicant.email.label = Agent’s email address
+agentForTraderCheckYourAnswers.applicant.email.hidden = the Agent’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Agent’s telephone number
+agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
 agentForTraderCheckYourAnswers.applicant.companyName.hidden = the Agent’s company name
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
