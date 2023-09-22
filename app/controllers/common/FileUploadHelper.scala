@@ -184,12 +184,9 @@ case class FileUploadHelper @Inject() (
             )
           )
         } else {
-          println("one")
           userAnswersService.get(draftId).map {
             case Some(answers) =>
-              println("two")
               val userRole = userRoleProvider.getUserRole(answers)
-              println("three")
               Ok(
                 supportingDocumentsView(
                   draftId = draftId,

@@ -155,8 +155,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         .url
     }
 
-  private def getFileUploadHelper: FileUploadHelper = {
-    println("providing mocks")
+  private def getFileUploadHelper: FileUploadHelper =
     FileUploadHelper(
       mockMessagesApi,
       mockSupportingDocumentsView,
@@ -168,7 +167,6 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       mockOsClient,
       mockUserRoleProvider
     )
-  }
 
   private def setUploadedFileInUserAnswers(isLetterOfAuthority: Boolean) =
     if (isLetterOfAuthority) {
