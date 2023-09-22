@@ -80,7 +80,7 @@ class IsThisFileConfidentialController @Inject() (
                 case Some(file) =>
                   file.fileName.get
                 case None       =>
-                  "fileName"
+                  ""
               }
               Future.successful(BadRequest(view(formWithErrors, mode, draftId, fileName)))
             },

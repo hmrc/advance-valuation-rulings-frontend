@@ -142,7 +142,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
       val result      = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, NormalMode, draftId, "fileName")(
+      contentAsString(result) mustEqual view(boundForm, NormalMode, draftId, "")(
         request,
         messages(application)
       ).toString
