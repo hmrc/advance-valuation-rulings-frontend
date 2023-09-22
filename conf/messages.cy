@@ -873,9 +873,8 @@ willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = Will you be comparin
 willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 willYouCompareGoodsToIdenticalGoods.change.hidden = your response to whether you will be comparing your goods to identical goods imported by another buyer or seller in the past 90-days
 
-viewApplication.title = Eich cais
-viewApplication.heading = Eich cais
-viewApplication.subheading = Advance Valuation Ruling application details
+viewApplication.title = Advance Valuation Ruling application details
+viewApplication.heading = Advance Valuation Ruling application details
 viewApplication.forYourRecords = Ynglŷn â’r ymgeisydd
 viewApplication.whatHappensNext.heading = What happens next
 viewApplication.whatHappensNext.paragraph = We’ll aim to review your application within 30 days, although it can take a further 90 days from the date your application was accepted to receive an Advance Valuation Ruling decision. You can sign in to Advance Valuation Rulings to check the status of your application.
