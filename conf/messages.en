@@ -468,8 +468,11 @@ doYouWantToUploadDocuments.checkYourAnswersLabel = Do you want to upload any sup
 doYouWantToUploadDocuments.error.required = Select yes if you want to upload any supporting documents
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
 
-isThisFileConfidential.title = Do you want this file to be marked as confidential?
-isThisFileConfidential.heading = Do you want this file to be marked as confidential?
+isThisFileConfidential.title = Tell us if you want to make this file confidential
+isThisFileConfidential.heading = Tell us if you want to make this file confidential
+
+isThisFileConfidential.uploadedFile = Uploaded document
+
 isThisFileConfidential.caption = About the goods
 isThisFileConfidential.para.1 = This could include any information about contractual or sensitive commercial arrangements.
 isThisFileConfidential.para.2 = We will not publish confidential information.

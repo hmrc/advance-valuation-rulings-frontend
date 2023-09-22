@@ -59,7 +59,8 @@ class IsThisFileConfidentialController @Inject() (
 
         if (isSuccessful) {
           val preparedForm = IsThisFileConfidentialPage.fill(form)
-          Ok(view(preparedForm, mode, draftId))
+          val fileName     = UploadSupportingDocumentPage.get().get.fileName.get
+          Ok(view(preparedForm, mode, draftId, fileName))
         } else {
           Redirect(
             routes.UploadSupportingDocumentsController
@@ -74,7 +75,15 @@ class IsThisFileConfidentialController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+            formWithErrors => {
+              val fileName = UploadSupportingDocumentPage.get() match {
+                case Some(file) =>
+                  file.fileName.get
+                case None       =>
+                  ""
+              }
+              Future.successful(BadRequest(view(formWithErrors, mode, draftId, fileName)))
+            },
             value =>
               UploadSupportingDocumentPage.get() match {
                 case Some(file: UploadedFile.Success) =>
