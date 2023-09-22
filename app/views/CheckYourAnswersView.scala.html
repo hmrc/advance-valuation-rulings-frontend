@@ -40,8 +40,10 @@
 
     @subheading(messages("checkYourAnswers.applicant.heading"))
 
-    @govukSummaryList(applicationSummary.eoriDetails.rows)
-    @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-bottom-9"))
+    @govukSummaryList(applicationSummary.eoriDetails.rows.withCssClass("govuk-!-margin-bottom-0"))
+    @govukSummaryList(applicationSummary.applicant.rows.withCssClass("govuk-!-margin-top-0"))
+
+
     
     @subheading(messages("checkYourAnswers.goods.heading"))
 
