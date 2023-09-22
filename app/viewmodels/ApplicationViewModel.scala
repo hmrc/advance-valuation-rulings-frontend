@@ -35,21 +35,15 @@ object ApplicationViewModel {
     messages: Messages
   ): ApplicationViewModel = {
     val eoriRow       = RegisteredDetailsSummary.rows(application.trader)
-    val applicant     = ContactDetailsSummary.rows(application.contact)
     val agentRows     = application.agent.map(agent => AgentDetailsSummary.rows(agent)).getOrElse(Nil)
+    val applicant     = ContactDetailsSummary.rows(application.contact)
     val dateSubmitted = DateSubmittedSummary.row(application)
     val goodsDetails  = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
     val methodDetails = RequestedMethodSummary.rows(application.requestedMethod)
 
-    val applicantSummaryList = applicant ++ agentRows :+ dateSubmitted
-    application.whatIsYourRole match {
-      case Some(WhatIsYourRole.AgentTrader) => applicantSummaryList :+ Thing.rows(application)
-      case None =>  // do nothing
-    }
-
     ApplicationViewModel(
       eori = SummaryList(eoriRow),
-      applicant = SummaryList(applicantSummaryList),
+      applicant = SummaryList(applicant ++ agentRows :+ dateSubmitted),
       details = SummaryList(goodsDetails),
       method = SummaryList(methodDetails)
     )
