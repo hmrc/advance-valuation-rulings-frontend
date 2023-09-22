@@ -35,12 +35,13 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
-import org.mockito.MockitoSugar.reset
+import org.mockito.MockitoSugar.{mock, reset}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import services.fileupload.FileService
+import userrole.{UserRole, UserRoleProvider}
 import views.html.{UploadInProgressView, UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
 class UploadInProgressControllerSpec
@@ -63,6 +64,9 @@ class UploadInProgressControllerSpec
   private val reference: String = "reference"
 
   private val initiatedFile = UploadedFile.Initiated(reference = reference)
+
+  private val mockUserRole         = mock[UserRole]
+  private val mockUserRoleProvider = mock[UserRoleProvider]
 
   private val fileUrl        = "some/path/for/the/download/url"
   private val successfulFile = UploadedFile.Success(
@@ -144,7 +148,8 @@ class UploadInProgressControllerSpec
       view(
         draftId = draftId,
         upscanInitiateResponse = Some(upscanInitiateResponse),
-        errorMessage = None
+        errorMessage = None,
+        expectedSupportedDocumentLimit
       )(messages(application), request).toString
     }
 
@@ -197,6 +202,13 @@ class UploadInProgressControllerSpec
         status(result) mustEqual OK
         contentAsString(result) mustEqual expectedContent
     }
+
+  private val expectedSupportedDocumentLimit = 3
+  private def setUpUserRoleProviderMock()    = {
+    when(mockUserRole.getMaxSupportingDocuments).thenReturn(expectedSupportedDocumentLimit)
+    when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
+      .thenReturn(mockUserRole)
+  }
 
   "UploadInProgress Controller" - {
 
@@ -279,6 +291,7 @@ class UploadInProgressControllerSpec
             (isLetterOfAuthority: Boolean) =>
               val mockDataRequest = mock[DataRequest[Any]]
               val userAnswers     = getUserAnswers(successfulFile, isLetterOfAuthority)
+//              setUpUserRoleProviderMock
               val application     = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(
                   bind[DataRequest[Any]].toInstance(mockDataRequest),

@@ -53,6 +53,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
 import services.fileupload.FileService
+import userrole.{UserRole, UserRoleProvider}
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
 class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
@@ -68,7 +69,9 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       mockConfiguration,
       mockUserAnswersService,
       mockOsClient,
-      mockConfig
+      mockConfig,
+      mockUserRoleProvider,
+      mockUserRole
     )
   }
 
@@ -81,6 +84,9 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val mockUserAnswersService      = mock[UserAnswersService]
   private val mockOsClient                = mock[PlayObjectStoreClient]
   private val mockConfig                  = mock[Config]
+
+  private val mockUserRoleProvider = mock[UserRoleProvider]
+  private val mockUserRole         = mock[UserRole]
 
   private val fakeRequestHeader = FakeRequest()
   private val headerCarrier     = HeaderCarrier()
@@ -149,7 +155,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         .url
     }
 
-  private def getFileUploadHelper: FileUploadHelper =
+  private def getFileUploadHelper: FileUploadHelper = {
+    println("providing mocks")
     FileUploadHelper(
       mockMessagesApi,
       mockSupportingDocumentsView,
@@ -158,8 +165,10 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       mockNavigator,
       mockConfiguration,
       mockUserAnswersService,
-      mockOsClient
+      mockOsClient,
+      mockUserRoleProvider
     )
+  }
 
   private def setUploadedFileInUserAnswers(isLetterOfAuthority: Boolean) =
     if (isLetterOfAuthority) {
@@ -188,10 +197,11 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
     )
       .thenReturn(HtmlFormat.raw(expectedErrorViewText))
 
-  private def setMockSupportingDocumentsView(): Unit =
+  private def setMockSupportingDocumentsView(
+  ): Unit =
     when(
       mockSupportingDocumentsView
-        .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None))(
+        .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None), any())(
           any(),
           any()
         )
@@ -218,6 +228,16 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
 
       val updatedUserAnswers = setUploadedFileInUserAnswers(isLetterOfAuthority)
 
+      println("mocking user stuff")
+      when(mockUserAnswersService.get(any())(any()))
+        .thenReturn(Future.successful(Some(updatedUserAnswers)))
+
+      when(mockUserRoleProvider.getUserRole(any()))
+        .thenReturn(mockUserRole)
+
+      when(mockUserRole.getMaxSupportingDocuments).thenReturn(3)
+
+      println("running test")
       val result = getFileUploadHelper.checkForStatus(updatedUserAnswers, isLetterOfAuthority)
       result.get mustEqual initiatedUploadedFile
     }
@@ -307,7 +327,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           navigator,
           mockConfiguration,
           mockUserAnswersService,
-          mockOsClient
+          mockOsClient,
+          mockUserRoleProvider
         )
           .continue(mode, userAnswers, isLetterOfAuthority)
 
@@ -425,7 +446,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         mockNavigator,
         mockConfiguration,
         mockUserAnswersService,
-        mockOsClient
+        mockOsClient,
+        mockUserRoleProvider
       )
     )
 

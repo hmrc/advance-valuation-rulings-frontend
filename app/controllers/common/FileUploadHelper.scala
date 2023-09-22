@@ -22,20 +22,20 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents, RequestHeader, Result}
-import play.api.mvc.Results.{BadRequest, Ok}
-import play.api.mvc.Results.Redirect
+import play.api.mvc.{AnyContent, RequestHeader, Result}
+import play.api.mvc.Results.{BadRequest, Ok, Redirect}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import controllers.routes
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
 import services.fileupload.FileService
+import userrole.UserRoleProvider
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
 case class FileUploadHelper @Inject() (
@@ -46,7 +46,8 @@ case class FileUploadHelper @Inject() (
   navigator: Navigator,
   configuration: Configuration,
   userAnswersService: UserAnswersService,
-  osClient: PlayObjectStoreClient
+  osClient: PlayObjectStoreClient,
+  userRoleProvider: UserRoleProvider
 )(implicit ec: ExecutionContext)
     extends I18nSupport {
 
@@ -170,24 +171,37 @@ case class FileUploadHelper @Inject() (
   ): Future[Result] = {
     val redirectPath     = getRedirectPath(draftId, isLetterOfAuthority, mode)
     val eventualResponse = fileService.initiate(draftId, redirectPath, isLetterOfAuthority)
-    eventualResponse.map {
+    eventualResponse.flatMap {
       response =>
         if (isLetterOfAuthority) {
-          Ok(
-            letterOfAuthorityView(
-              draftId = draftId,
-              upscanInitiateResponse = Some(response),
-              errorMessage = None
+          Future.successful(
+            Ok(
+              letterOfAuthorityView(
+                draftId = draftId,
+                upscanInitiateResponse = Some(response),
+                errorMessage = None
+              )
             )
           )
         } else {
-          Ok(
-            supportingDocumentsView(
-              draftId = draftId,
-              upscanInitiateResponse = Some(response),
-              errorMessage = None
-            )
-          )
+          println("one")
+          userAnswersService.get(draftId).map {
+            case Some(answers) =>
+              println("two")
+              val userRole = userRoleProvider.getUserRole(answers)
+              println("three")
+              Ok(
+                supportingDocumentsView(
+                  draftId = draftId,
+                  upscanInitiateResponse = Some(response),
+                  errorMessage = None,
+                  userRole.getMaxSupportingDocuments
+                )
+              )
+            case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
+
+          }
+
         }
     }
   }
@@ -202,24 +216,35 @@ case class FileUploadHelper @Inject() (
   ): Future[Result] = {
     val redirectPath = getRedirectPath(draftId, isLetterOfAuthority)
 
-    fileService.initiate(draftId, redirectPath, isLetterOfAuthority).map {
+    fileService.initiate(draftId, redirectPath, isLetterOfAuthority).flatMap {
       response =>
         if (isLetterOfAuthority) {
-          BadRequest(
-            letterOfAuthorityView(
-              draftId = draftId,
-              upscanInitiateResponse = Some(response),
-              errorMessage = Some(errorMessage)
+          Future.successful(
+            BadRequest(
+              letterOfAuthorityView(
+                draftId = draftId,
+                upscanInitiateResponse = Some(response),
+                errorMessage = Some(errorMessage)
+              )
             )
           )
         } else {
-          BadRequest(
-            supportingDocumentsView(
-              draftId = draftId,
-              upscanInitiateResponse = Some(response),
-              errorMessage = Some(errorMessage)
-            )
-          )
+          userAnswersService.get(draftId).map {
+            case Some(answers) =>
+              val userRole = userRoleProvider.getUserRole(answers)
+
+              BadRequest(
+                supportingDocumentsView(
+                  draftId = draftId,
+                  upscanInitiateResponse = Some(response),
+                  errorMessage = Some(errorMessage),
+                  userRole.getMaxSupportingDocuments
+                )
+              )
+            case None          => Redirect(routes.JourneyRecoveryController.onPageLoad())
+
+          }
+
         }
     }
   }

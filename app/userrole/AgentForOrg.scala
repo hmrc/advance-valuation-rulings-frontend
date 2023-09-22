@@ -100,5 +100,6 @@ package userrole {
         cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
       )
 
+    override val getMaxSupportingDocuments: Int = 5
   }
 }
