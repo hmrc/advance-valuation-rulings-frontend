@@ -78,7 +78,9 @@ class AgentForOrgSpec extends SpecBase with Matchers {
       val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
 
       val appSummary = ApplicationSummary(
-        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, emptyUserAnswers)(
+          stubMessages()
+        ),
         IndividualApplicantSummary(emptyUserAnswers)(stubMessages()),
         DetailsSummary(emptyUserAnswers)(stubMessages()),
         MethodSummary(emptyUserAnswers)(stubMessages())

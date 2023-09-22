@@ -263,7 +263,9 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
   )
 
   val appSummary = ApplicationSummary(
-    IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+    IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
+      stubMessages()
+    ),
     IndividualApplicantSummary(userAnswers)(stubMessages()),
     DetailsSummary(userAnswers)(stubMessages()),
     MethodSummary(userAnswers)(stubMessages())

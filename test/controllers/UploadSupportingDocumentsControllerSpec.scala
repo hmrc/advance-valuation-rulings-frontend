@@ -123,7 +123,7 @@ class UploadSupportingDocumentsControllerSpec
 
     val mockUserRoleProvider = mock[UserRoleProvider]
     val mockUserRole         = mock[UserRole]
-    when(mockUserRole.getMaxFileUploads()).thenReturn(5)
+    when(mockUserRole.getMaxSupportingDocuments).thenReturn(5)
     when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
 
     val mockFrontEndAppConfig = mock[FrontendAppConfig]

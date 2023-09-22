@@ -61,7 +61,7 @@ class UploadSupportingDocumentsController @Inject() (
           if (
             numberOfAttachments >= userRoleProvider
               .getUserRole(request.userAnswers)
-              .getMaxFileUploads()
+              .getMaxSupportingDocuments
           ) {
             Future.successful(
               Redirect(UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId))

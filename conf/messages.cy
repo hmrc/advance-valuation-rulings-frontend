@@ -551,8 +551,8 @@ verifyLetterOfAuthority.hiddenText = {0} from your list of supporting documents
 uploadSupportingDocuments.caption = Ynglŷn â’r nwyddau
 uploadSupportingDocuments.title = Uwchlwytho dogfennau ategol
 uploadSupportingDocuments.heading = Uwchlwytho dogfennau ategol
-uploadSupportingDocuments.details.label = Uwchlwytho mwy na 5 ffeil
-uploadSupportingDocuments.details.paragraph = Ar hyn o bryd, gallwch uwchlwytho hyd at 5 ffeil fel tystiolaeth. Os oes gennych unrhyw dystiolaeth ychwanegol i’w chyflwyno, rhowch wybod i’ch gweithiwr achos unwaith y bydd un yn cael ei neilltuo i’ch achos.
+uploadSupportingDocuments.details.label = Uwchlwytho mwy na {0} ffeil
+uploadSupportingDocuments.details.paragraph = Ar hyn o bryd, gallwch uwchlwytho hyd at {0} ffeil fel tystiolaeth. Os oes gennych unrhyw dystiolaeth ychwanegol i’w chyflwyno, rhowch wybod i’ch gweithiwr achos unwaith y bydd un yn cael ei neilltuo i’ch achos.
 uploadSupportingDocuments.paragraph.1 = Gallwch uwchlwytho:
 uploadSupportingDocuments.paragraph.2 = Mae’n rhaid i ffeil fod yn:
 uploadSupportingDocuments.bulletPoint.1 = un ffeil ar y tro
@@ -604,8 +604,11 @@ uploadAnotherSupportingDocument.remaining.one = You can upload 1 more document.
 
 
 
-isThisFileConfidential.title = Do you want this file to be marked as confidential?
-isThisFileConfidential.heading = Do you want this file to be marked as confidential?
+isThisFileConfidential.title = Tell us if you want to make this file confidential
+isThisFileConfidential.heading = Tell us if you want to make this file confidential
+
+isThisFileConfidential.uploadedFile = Uploaded document
+
 isThisFileConfidential.caption = Ynglŷn â’r nwyddau
 isThisFileConfidential.para.1 = Gall hyn gynnwys unrhyw wybodaeth ynghylch trefniadau contractiol neu drefniadau sy’n fasnachol sensitif.
 isThisFileConfidential.para.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrinachol.
@@ -708,10 +711,10 @@ agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registere
 
 agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
 agentForTraderCheckYourAnswers.applicant.name.hidden = the Agent’s full name
-agentForTraderCheckYourAnswers.applicant.email.label = Agents’s email address
-agentForTraderCheckYourAnswers.applicant.email.hidden = the Agents’s email address
-agentForTraderCheckYourAnswers.applicant.phone.label = Agents’s telephone number
-agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agents’s telephone number
+agentForTraderCheckYourAnswers.applicant.email.label = Agent’s email address
+agentForTraderCheckYourAnswers.applicant.email.hidden = the Agent’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Agent’s telephone number
+agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
 agentForTraderCheckYourAnswers.applicant.companyName.hidden = the Agent’s company name
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
