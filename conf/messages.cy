@@ -604,8 +604,9 @@ uploadAnotherSupportingDocument.remaining.one = You can upload 1 more document.
 
 
 
-isThisFileConfidential.title = Tell us if you want to make this file confidential
-isThisFileConfidential.heading = Tell us if you want to make this file confidential
+isThisFileConfidential.title = Tell us if you want to make this document confidential
+isThisFileConfidential.heading = Tell us if you want to make this document confidential
+isThisFileConfidential.question = Do you want to mark this document as confidential?
 
 isThisFileConfidential.uploadedFile = Uploaded document
 
