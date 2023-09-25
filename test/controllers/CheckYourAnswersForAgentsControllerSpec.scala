@@ -50,7 +50,9 @@ class CheckYourAnswersForAgentsControllerSpec
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
         val appSummary = ApplicationSummary(
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, emptyUserAnswers)(
+            stubMessages()
+          ),
           IndividualApplicantSummary(fullUserAnswers)(stubMessages()),
           DetailsSummary(fullUserAnswers)(stubMessages()),
           MethodSummary(fullUserAnswers)(stubMessages())
@@ -101,7 +103,9 @@ class CheckYourAnswersForAgentsControllerSpec
           orgAssistantUserAnswers.setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg).futureValue
 
         val appSummary = ApplicationSummary(
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
+            stubMessages()
+          ),
           IndividualApplicantSummary(userAnswers)(stubMessages()),
           DetailsSummary(userAnswers)(stubMessages()),
           MethodSummary(userAnswers)(stubMessages())
@@ -142,7 +146,9 @@ class CheckYourAnswersForAgentsControllerSpec
           .futureValue
 
         val appSummary = ApplicationSummary(
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId)(stubMessages()),
+          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
+            stubMessages()
+          ),
           IndividualApplicantSummary(userAnswers)(stubMessages()),
           DetailsSummary(userAnswers)(stubMessages()),
           MethodSummary(userAnswers)(stubMessages())

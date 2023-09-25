@@ -551,8 +551,8 @@ verifyLetterOfAuthority.hiddenText = {0} from your list of supporting documents
 uploadSupportingDocuments.caption = Ynglŷn â’r nwyddau
 uploadSupportingDocuments.title = Uwchlwytho dogfennau ategol
 uploadSupportingDocuments.heading = Uwchlwytho dogfennau ategol
-uploadSupportingDocuments.details.label = Uwchlwytho mwy na 5 ffeil
-uploadSupportingDocuments.details.paragraph = Ar hyn o bryd, gallwch uwchlwytho hyd at 5 ffeil fel tystiolaeth. Os oes gennych unrhyw dystiolaeth ychwanegol i’w chyflwyno, rhowch wybod i’ch gweithiwr achos unwaith y bydd un yn cael ei neilltuo i’ch achos.
+uploadSupportingDocuments.details.label = Uwchlwytho mwy na {0} ffeil
+uploadSupportingDocuments.details.paragraph = Ar hyn o bryd, gallwch uwchlwytho hyd at {0} ffeil fel tystiolaeth. Os oes gennych unrhyw dystiolaeth ychwanegol i’w chyflwyno, rhowch wybod i’ch gweithiwr achos unwaith y bydd un yn cael ei neilltuo i’ch achos.
 uploadSupportingDocuments.paragraph.1 = Gallwch uwchlwytho:
 uploadSupportingDocuments.paragraph.2 = Mae’n rhaid i ffeil fod yn:
 uploadSupportingDocuments.bulletPoint.1 = un ffeil ar y tro
@@ -576,8 +576,10 @@ fileUpload.error.quarantine = Mae feirws yn y ffeil dan sylw
 fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf PDF neu JPEG
 fileUpload.error.unknown = There was a problem uploading your file
 
-uploadAnotherSupportingDocument.title.one = Rydych wedi uwchlwytho un ddogfen ategol
-uploadAnotherSupportingDocument.heading.one = Rydych wedi uwchlwytho un ddogfen ategol
+uploadAnotherSupportingDocument.title.one = You have uploaded 1 supporting document
+uploadAnotherSupportingDocument.heading.one = You have uploaded 1 supporting document
+uploadAnotherSupportingDocument.agentForTrader.title.one = You have uploaded 1 supporting document and 1 letter of authority
+uploadAnotherSupportingDocument.agentForTrader.heading.one = You have uploaded 1 supporting document and 1 letter of authority
 uploadAnotherSupportingDocument.title.many = Rydych wedi uwchlwytho {0} ddogfen ategol
 uploadAnotherSupportingDocument.heading.many = Rydych wedi uwchlwytho {0} ddogfen ategol
 uploadAnotherSupportingDocument.subHeading = A ydych eisiau uwchlwytho dogfen ategol arall?
@@ -589,9 +591,25 @@ uploadAnotherSupportingDocument.change.hidden = upload another document
 uploadAnotherSupportingDocument.one = one
 uploadAnotherSupportingDocument.keepConfidential = Cadw’n gyfrinachol
 uploadAnotherSupportingDocument.remove.hidden = {0} from your list of supporting documents
+uploadAnotherSupportingDocument.letterOfAuthority = Llythyr o awdurdod
+uploadAnotherSupportingDocument.uploadedDocuments = Uploaded Documents
+uploadAnotherSupportingDocument.title.max = Maximum number of supporting documents uploaded
+uploadAnotherSupportingDocument.heading.max = Maximum number of supporting documents uploaded
+uploadAnotherSupportingDocument.agentForTrader.maxInfo = You can currently upload up to 4 files as evidence and 1 letter of authority. If you have additional documents, please inform your case worker once they are assigned to your case.
+uploadAnotherSupportingDocument.maxInfo = You can currently upload up to 5 files as evidence. If you have additional documents, please inform your case worker once they are assigned to your case.
+uploadAnotherSupportingDocument.agentForTrader.title.many = You have uploaded {0} supporting documents and 1 letter of authority
+uploadAnotherSupportingDocument.agentForTrader.heading.many = You have uploaded {0} supporting documents and 1 letter of authority
+uploadAnotherSupportingDocument.remaining = You can upload {0} more documents.
+uploadAnotherSupportingDocument.remaining.one = You can upload 1 more document.
 
-isThisFileConfidential.title = Do you want this file to be marked as confidential?
-isThisFileConfidential.heading = Do you want this file to be marked as confidential?
+
+
+isThisFileConfidential.title = Tell us if you want to make this document confidential
+isThisFileConfidential.heading = Tell us if you want to make this document confidential
+isThisFileConfidential.question = Do you want to mark this document as confidential?
+
+isThisFileConfidential.uploadedFile = Uploaded document
+
 isThisFileConfidential.caption = Ynglŷn â’r nwyddau
 isThisFileConfidential.para.1 = Gall hyn gynnwys unrhyw wybodaeth ynghylch trefniadau contractiol neu drefniadau sy’n fasnachol sensitif.
 isThisFileConfidential.para.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrinachol.
@@ -694,10 +712,10 @@ agentForTraderCheckYourAnswers.agent.address.hidden = your company’s registere
 
 agentForTraderCheckYourAnswers.applicant.name.label = Agent’s full name
 agentForTraderCheckYourAnswers.applicant.name.hidden = the Agent’s full name
-agentForTraderCheckYourAnswers.applicant.email.label = Agents’s email address
-agentForTraderCheckYourAnswers.applicant.email.hidden = the Agents’s email address
-agentForTraderCheckYourAnswers.applicant.phone.label = Agents’s telephone number
-agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agents’s telephone number
+agentForTraderCheckYourAnswers.applicant.email.label = Agent’s email address
+agentForTraderCheckYourAnswers.applicant.email.hidden = the Agent’s email address
+agentForTraderCheckYourAnswers.applicant.phone.label = Agent’s telephone number
+agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
 agentForTraderCheckYourAnswers.applicant.companyName.hidden = the Agent’s company name
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
@@ -856,9 +874,8 @@ willYouCompareGoodsToIdenticalGoods.checkYourAnswersLabel = Will you be comparin
 willYouCompareGoodsToIdenticalGoods.error.required = Select yes if you will be comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 willYouCompareGoodsToIdenticalGoods.change.hidden = your response to whether you will be comparing your goods to identical goods imported by another buyer or seller in the past 90-days
 
-viewApplication.title = Eich cais
-viewApplication.heading = Eich cais
-viewApplication.subheading = Advance Valuation Ruling application details
+viewApplication.title = Advance Valuation Ruling application details
+viewApplication.heading = Advance Valuation Ruling application details
 viewApplication.forYourRecords = Ynglŷn â’r ymgeisydd
 viewApplication.whatHappensNext.heading = What happens next
 viewApplication.whatHappensNext.paragraph = We’ll aim to review your application within 30 days, although it can take a further 90 days from the date your application was accepted to receive an Advance Valuation Ruling decision. You can sign in to Advance Valuation Rulings to check the status of your application.
@@ -984,3 +1001,4 @@ yourApplicationHasBeenCancelled.button = Go to your applications
 
 uploadInProgress.title = Upload In Progress
 uploadInProgress.heading = Uploading your document
+uploadInProgress.p1 = Select the check progress button to continue with your application.

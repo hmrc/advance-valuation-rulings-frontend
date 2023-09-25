@@ -37,7 +37,6 @@ case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummar
 
 object IndividualApplicantSummary {
   def apply(userAnswers: UserAnswers)(implicit messages: Messages): IndividualApplicantSummary = {
-
     val contactDetailsRows = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
     IndividualApplicantSummary(SummaryListViewModel(contactDetailsRows))
   }

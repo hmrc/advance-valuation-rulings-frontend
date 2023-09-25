@@ -34,7 +34,8 @@
 @(
         draftId: DraftId,
         upscanInitiateResponse: Option[UpscanInitiateResponse],
-        errorMessage: Option[String]
+        errorMessage: Option[String],
+        maxSupportingDocuments: Int
 )(implicit messages: Messages, requestHeader: RequestHeader)
 
 
@@ -85,14 +86,14 @@
   @caption(messages("uploadSupportingDocuments.caption"))
   @heading(messages("uploadSupportingDocuments.heading"))
 
-  @detailsDrop(messages("uploadSupportingDocuments.details.label"),
-    Html(messages("uploadSupportingDocuments.details.paragraph"))
+  @detailsDrop(messages("uploadSupportingDocuments.details.label", maxSupportingDocuments),
+    Html(messages("uploadSupportingDocuments.details.paragraph", maxSupportingDocuments))
   )
 
   @paragraph(Html(messages("uploadSupportingDocuments.paragraph.1")))
   @list(Seq(
     Html(messages("uploadSupportingDocuments.bulletPoint.1")),
-    Html(messages("uploadSupportingDocuments.bulletPoint.2", appConfig.maximumFilesAllowed)),
+    Html(messages("uploadSupportingDocuments.bulletPoint.2", maxSupportingDocuments)),
   ),
     "govuk-list govuk-list--bullet",
   )

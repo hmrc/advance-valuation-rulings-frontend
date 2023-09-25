@@ -18,15 +18,22 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import scala.concurrent.Future
+
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import _root_.config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.FileUploadHelper
+import controllers.routes.UploadAnotherSupportingDocumentController
 import models._
+import models.requests.DataRequest
 import pages._
-
+import queries.AllDocuments
+import userrole.UserRoleProvider
 @Singleton
 class UploadSupportingDocumentsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -34,7 +41,9 @@ class UploadSupportingDocumentsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  helper: FileUploadHelper
+  helper: FileUploadHelper,
+  userRoleProvider: UserRoleProvider,
+  appConfig: FrontendAppConfig
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -46,16 +55,43 @@ class UploadSupportingDocumentsController @Inject() (
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val answers    = request.userAnswers
-        val fileStatus = answers.get(UploadSupportingDocumentPage)
+        val numberOfAttachments = AllDocuments.get().getOrElse(List.empty).length
 
-        helper.onPageLoadWithFileStatus(
-          mode,
-          draftId,
-          errorCode,
-          key,
-          fileStatus,
-          isLetterOfAuthority = false
-        )
+        if (appConfig.agentOnBehalfOfTrader) {
+          if (
+            numberOfAttachments >= userRoleProvider
+              .getUserRole(request.userAnswers)
+              .getMaxSupportingDocuments
+          ) {
+            Future.successful(
+              Redirect(UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId))
+            )
+          } else {
+            loadUsingFileUploadHelper(mode, draftId, errorCode, key, request)
+          }
+        } else {
+          loadUsingFileUploadHelper(mode, draftId, errorCode, key, request)
+        }
+
     }
+
+  private def loadUsingFileUploadHelper(
+    mode: Mode,
+    draftId: DraftId,
+    errorCode: Option[String],
+    key: Option[String],
+    request: DataRequest[AnyContent]
+  )(implicit dataRequest: DataRequest[AnyContent], hc: HeaderCarrier) = {
+    val answers    = request.userAnswers
+    val fileStatus = answers.get(UploadSupportingDocumentPage)
+
+    helper.onPageLoadWithFileStatus(
+      mode,
+      draftId,
+      errorCode,
+      key,
+      fileStatus,
+      isLetterOfAuthority = false
+    )(dataRequest, hc)
+  }
 }

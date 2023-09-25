@@ -33,7 +33,6 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 import userrole.UserRoleProvider
-import viewmodels.checkAnswers.summary.ApplicationSummaryService
 
 class ApplicationRequestSpec
     extends AnyWordSpec
@@ -66,7 +65,9 @@ class ApplicationRequestSpec
             contact = contact,
             requestedMethod = requestedMethod,
             goodsDetails,
-            attachments = Seq.empty
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
           )
         )
       }
@@ -84,7 +85,9 @@ class ApplicationRequestSpec
             contact = contact,
             requestedMethod = requestedMethod,
             goodsDetails,
-            attachments = Seq.empty
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.AgentOrg,
+            letterOfAuthority = None
           )
       }
     }
@@ -98,7 +101,9 @@ class ApplicationRequestSpec
           contact = contact,
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
-          attachments = Seq.empty
+          attachments = Seq.empty,
+          whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+          letterOfAuthority = None
         )
       ) shouldBe Json.parse(individualTraderJson)
     }
@@ -142,6 +147,8 @@ class ApplicationRequestSpec
           ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
           ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+
         } yield ua).success.get
 
         val result = applicationRequestService(
@@ -161,7 +168,9 @@ class ApplicationRequestSpec
               None
             ),
             goodsDetails = goodsDetailsNoDetails,
-            attachments = Seq.empty
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
           )
         )
       }
@@ -275,7 +284,9 @@ class ApplicationRequestSpec
               None
             ),
             goodsDetails = goodsDetailsNoDetails,
-            attachments = Seq.empty
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
           )
         )
       }
@@ -388,12 +399,14 @@ class ApplicationRequestSpec
               None
             ),
             goodsDetails = goodsDetailsNoDetails,
-            attachments = Seq.empty
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.AgentOrg,
+            letterOfAuthority = None
           )
         )
       }
 
-      "return invalid when missing importer role useranswer" in {
+      "return invalid when missing is the sale subject to conditions" in {
         val ua = emptyUserAnswers
 
         val userAnswers = (for {
@@ -412,7 +425,6 @@ class ApplicationRequestSpec
           ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
           ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
           ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
           ua <- ua.set(
                   BusinessContactDetailsPage,
@@ -442,7 +454,7 @@ class ApplicationRequestSpec
         )
 
         result shouldBe Invalid(
-          NonEmptyList.one(WhatIsYourRoleAsImporterPage)
+          NonEmptyList.one(IsTheSaleSubjectToConditionsPage)
         )
       }
 
@@ -623,7 +635,8 @@ object ApplicationRequestSpec extends Generators {
        |  "knownLegalProceedings": "$randomString",
        |  "confidentialInformation": "$randomString"
        |},
-       |"attachments": []
+       |"attachments": [],
+       |"whatIsYourRole" : "${WhatIsYourRole.EmployeeOrg}"
     }""".stripMargin
 
   val agentJson =
@@ -663,6 +676,7 @@ object ApplicationRequestSpec extends Generators {
        |  "knownLegalProceedings": "$randomString",
        |  "confidentialInformation": "$randomString"
        |},
-       |"attachments": []
+       |"attachments": [],
+       |"whatIsYourRole" : "${WhatIsYourRole.AgentOrg}"
     }""".stripMargin
 }

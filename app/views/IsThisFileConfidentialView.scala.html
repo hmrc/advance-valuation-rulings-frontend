@@ -26,10 +26,12 @@
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    subheading: Subheading,
+    govukTable: GovukTable
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId, fileName: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("isThisFileConfidential.title")), draftId = Some(draftId)) {
 
@@ -40,9 +42,20 @@
     @caption(messages("isThisFileConfidential.caption"))
     @heading(messages("isThisFileConfidential.heading"))
 
+    </br>
+    @subheading(messages("isThisFileConfidential.uploadedFile"))
+    @govukTable(
+        Table(
+            rows = Seq(
+                Seq(TableRow(content = Text(fileName)))
+            )
+        )
+    )
+
     @paragraph(Html(messages("isThisFileConfidential.para.1")))
     @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
+    @subheading(messages("isThisFileConfidential.question"))
 
     @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
         

@@ -18,8 +18,10 @@ package controllers
 
 import java.time.{Clock, Instant, ZoneOffset}
 
+import scala.collection.immutable.List.from
 import scala.concurrent.Future
 
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -53,7 +55,7 @@ class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
       when(mockBackendConnector.getApplication(any())(any()))
         .thenReturn(Future.successful(ruling))
 
-      implicit val msgs = messages(application)
+      implicit val msgs: Messages = messages(application)
 
       running(application) {
         val request = FakeRequest(
@@ -85,7 +87,7 @@ object ViewApplicationControllerSpec extends Generators {
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 
-  val eoriDetails = TraderDetail(
+  val eoriDetails: TraderDetail = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
@@ -96,18 +98,18 @@ object ViewApplicationControllerSpec extends Generators {
     phoneNumber = None
   )
 
-  val contact = ContactDetails(
+  val contact: ContactDetails = ContactDetails(
     name = randomString,
     email = randomString,
     phone = Some(randomString)
   )
 
-  val requestedMethod = MethodThree(
+  val requestedMethod: MethodThree = MethodThree(
     whyNotOtherMethods = randomString,
     previousSimilarGoods = PreviousSimilarGoods(randomString)
   )
 
-  val goodsDetails = GoodsDetails(
+  val goodsDetails: GoodsDetails = GoodsDetails(
     goodsName = randomString,
     goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
@@ -115,20 +117,23 @@ object ViewApplicationControllerSpec extends Generators {
     confidentialInformation = Some(randomString)
   )
 
-  val lastUpdated        = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
-  val lastUpdatedString  = "22/08/2018"
-  val draftId            = DraftId(0L)
-  val applicationRequest = ApplicationRequest(
+  val lastUpdated: Instant                   =
+    Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
+  val lastUpdatedString: String              = "22/08/2018"
+  val draftId: DraftId                       = DraftId(0L)
+  val applicationRequest: ApplicationRequest = ApplicationRequest(
     draftId = draftId,
     trader = eoriDetails,
     agent = None,
     contact = contact,
     requestedMethod = requestedMethod,
     goodsDetails = goodsDetails,
-    attachments = Nil
+    attachments = Nil,
+    whatIsYourRole = WhatIsYourRole.AgentTrader,
+    letterOfAuthority = Some(AttachmentRequest("bob", None, "url", Privacy.Public, "jpg", 12L))
   )
-  val applicationId      = ApplicationId(0L)
-  val ruling             =
+  val applicationId: ApplicationId           = ApplicationId(0L)
+  val ruling: Application                    =
     Application(
       id = applicationId,
       lastUpdated = lastUpdated,
@@ -138,10 +143,11 @@ object ViewApplicationControllerSpec extends Generators {
       contact = applicationRequest.contact,
       requestedMethod = applicationRequest.requestedMethod,
       goodsDetails = applicationRequest.goodsDetails,
-      attachments = Nil
+      attachments = from(Nil),
+      whatIsYourRoleResponse = Some(WhatIsYourRole.AgentTrader)
     )
 
-  val body =
+  val body: String =
     s"""{
     |"draftId": "$draftId",
     |"eoriDetails": {

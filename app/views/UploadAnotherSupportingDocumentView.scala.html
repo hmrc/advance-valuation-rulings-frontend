@@ -32,21 +32,45 @@
     saveButtons: SaveButtons
 )
 
-@(attachments: Seq[DraftAttachment], form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(attachments: Seq[DraftAttachment], form: Form[_], mode: Mode, draftId: DraftId, letterOfAuthorityFileName: Option[String] = None)(implicit request: Request[_], messages: Messages)
 
 @titleMessage = @{
-    if (numOfDocs == 1) {
-        messages("uploadAnotherSupportingDocument.title.one")
+    if(letterOfAuthorityFileName.isDefined) {
+        if(numOfDocs == 4) {
+            messages("uploadAnotherSupportingDocument.heading.max")
+        } else if (numOfDocs == 1) {
+            messages("uploadAnotherSupportingDocument.agentForTrader.title.one")
+        } else {
+            messages("uploadAnotherSupportingDocument.agentForTrader.title.many", messages(s"site.$numOfDocs"))
+        }
     } else {
-        messages("uploadAnotherSupportingDocument.title.many", messages(s"site.$numOfDocs"))
+        if(numOfDocs == 5) {
+            messages("uploadAnotherSupportingDocument.heading.max")
+        } else if (numOfDocs == 1) {
+            messages("uploadAnotherSupportingDocument.title.one")
+        } else {
+            messages("uploadAnotherSupportingDocument.title.many", messages(s"site.$numOfDocs"))
+        }
     }
 }
 
 @pageHeading = @{
-    if (numOfDocs == 1) {
-        messages("uploadAnotherSupportingDocument.heading.one")
+    if(letterOfAuthorityFileName.isDefined) {
+        if(numOfDocs == 4) {
+            messages("uploadAnotherSupportingDocument.heading.max")
+        } else if (numOfDocs == 1) {
+            messages("uploadAnotherSupportingDocument.agentForTrader.heading.one")
+        } else {
+            messages("uploadAnotherSupportingDocument.agentForTrader.heading.many", numOfDocs)
+        }
     } else {
-        messages("uploadAnotherSupportingDocument.heading.many", messages(s"site.$numOfDocs"))
+        if(numOfDocs == 5) {
+            messages("uploadAnotherSupportingDocument.heading.max")
+        } else if (numOfDocs == 1) {
+            messages("uploadAnotherSupportingDocument.heading.one")
+        } else {
+            messages("uploadAnotherSupportingDocument.heading.many", numOfDocs)
+        }
     }
 }
 
@@ -65,6 +89,28 @@
         @caption(messages("uploadAnotherSupportingDocument.caption"))
 
         @heading(pageHeading)
+
+        @if(letterOfAuthorityFileName.isDefined) {
+            @if(numOfDocs == 3) {
+                <br/>
+                <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining.one")</p>
+            } else if (numOfDocs != 4) {
+                <br/>
+                <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining", 4 - numOfDocs)</p>
+            }
+        } else {
+            @if(numOfDocs == 4) {
+                <br/>
+                <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining.one")</p>
+            } else if (numOfDocs != 5) {
+                <br/>
+                <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining", 5 - numOfDocs)</p>
+            }
+        }
+
+        <br/>
+
+        @subheading(messages("uploadAnotherSupportingDocument.uploadedDocuments"))
     
         @govukTable(Table(
           rows = attachments.zipWithIndex.map { case (attachment, i) =>
@@ -88,14 +134,45 @@
           classes = "govuk-body-s"
         ))
 
-        @subheading(messages("uploadAnotherSupportingDocument.subHeading"))
+        @if(letterOfAuthorityFileName.isDefined) {
+            @subheading(messages("uploadAnotherSupportingDocument.letterOfAuthority"))
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = Legend()
+            @govukTable(
+                Table(
+                    rows = Seq(
+                        Seq(TableRow(content = Text(letterOfAuthorityFileName.get)))
+                    )
+                )
             )
-        )
+        }
+
+        @if(letterOfAuthorityFileName.isDefined) {
+            @if(numOfDocs != 4) {
+                @subheading(messages("uploadAnotherSupportingDocument.subHeading"))
+                @govukRadios(
+                    RadiosViewModel.yesNo(
+                        field = form("value"),
+                        legend = Legend()
+                    )
+                )
+            } else {
+                <p class="govuk-body">@messages("uploadAnotherSupportingDocument.agentForTrader.maxInfo")</p>
+                <input class="govuk-visually-hidden" id="value-no" name="value" type="radio" value="false" checked>
+            }
+        } else {
+            @if(numOfDocs != 5) {
+                @subheading(messages("uploadAnotherSupportingDocument.subHeading"))
+                    @govukRadios(
+                        RadiosViewModel.yesNo(
+                        field = form("value"),
+                        legend = Legend()
+                    )
+                )
+            } else {
+                <p class="govuk-body">@messages("uploadAnotherSupportingDocument.maxInfo")</p>
+                <input class="govuk-visually-hidden" id="value-no" name="value" type="radio" value="false" checked>
+            }
+        }
 
         @saveButtons(draftId)
     }

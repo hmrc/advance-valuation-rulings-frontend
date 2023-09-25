@@ -86,7 +86,7 @@ package userrole {
     )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
       (
         IndividualApplicantSummary(userAnswers),
-        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId, userAnswers)
       )
 
     override def getContactDetailsForApplicationRequest(
@@ -97,5 +97,7 @@ package userrole {
           ApplicationContactDetailsPage,
           cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
         )
+
+    override val getMaxSupportingDocuments: Int = 5
   }
 }

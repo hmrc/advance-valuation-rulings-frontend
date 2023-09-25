@@ -29,7 +29,7 @@ import models.{Done, NormalMode, TraderDetailsWithConfirmation}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.VerifyTraderDetailsPage
+import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
@@ -116,6 +116,11 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         .setFuture[TraderDetailsWithConfirmation](
           VerifyTraderDetailsPage,
           traderDetailsWithConfirmation.copy(confirmation = Some(true))
+        )
+        .futureValue
+        .setFuture[Boolean](
+          CheckRegisteredDetailsPage,
+          true
         )
         .futureValue
 
