@@ -27,16 +27,17 @@ trait ApplicationGenerator extends ApplicationRequestGenerator {
   implicit lazy val arbitraryApplication: Arbitrary[Application] =
     Arbitrary {
       for {
-        id             <- applicationIdGen
-        data           <- arbitraryApplicationRequest.arbitrary
-        date           <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        dateInstant     = date.atStartOfDay(ZoneOffset.UTC).toInstant
-        attachments    <- Gen.listOf(arbitrary[Attachment])
-        whatIsYourRole <- Gen.oneOf(
-                            WhatIsYourRole.AgentOrg,
-                            WhatIsYourRole.EmployeeOrg,
-                            WhatIsYourRole.AgentTrader
-                          )
+        id                <- applicationIdGen
+        data              <- arbitraryApplicationRequest.arbitrary
+        date              <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
+        dateInstant        = date.atStartOfDay(ZoneOffset.UTC).toInstant
+        attachments       <- Gen.listOf(arbitrary[Attachment])
+        whatIsYourRole    <- Gen.oneOf(
+                               WhatIsYourRole.AgentOrg,
+                               WhatIsYourRole.EmployeeOrg,
+                               WhatIsYourRole.AgentTrader
+                             )
+        letterOfAuthority <- Gen.option(arbitrary[Attachment])
       } yield Application(
         id = id,
         lastUpdated = dateInstant,
@@ -47,7 +48,8 @@ trait ApplicationGenerator extends ApplicationRequestGenerator {
         requestedMethod = data.requestedMethod,
         goodsDetails = data.goodsDetails,
         attachments = attachments,
-        whatIsYourRole = Some(whatIsYourRole)
+        whatIsYourRoleResponse = Some(whatIsYourRole),
+        letterOfAuthority = letterOfAuthority
       )
     }
 
