@@ -47,7 +47,7 @@ trait ApplicationGenerator extends ApplicationRequestGenerator {
         requestedMethod = data.requestedMethod,
         goodsDetails = data.goodsDetails,
         attachments = attachments,
-        whatIsYourRole = Some(whatIsYourRole)
+        whatIsYourRoleResponse = Some(whatIsYourRole)
       )
     }
 

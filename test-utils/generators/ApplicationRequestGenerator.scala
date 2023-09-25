@@ -158,25 +158,26 @@ trait ApplicationRequestGenerator extends Generators {
 
   implicit lazy val arbitraryApplicationRequest: Arbitrary[ApplicationRequest] = Arbitrary {
     for {
-      draftId        <- arbitraryDraftId.arbitrary
-      traderDetail   <- arbitraryTraderDetail.arbitrary
-      contact        <- arbitraryContactDetails.arbitrary
-      goodsDetails   <- arbitraryGoodsDetails.arbitrary
-      method         <- Gen.oneOf(
-                          arbitraryMethodOne.arbitrary,
-                          arbitraryMethodTwo.arbitrary,
-                          arbitraryMethodThree.arbitrary,
-                          arbitraryMethodFour.arbitrary,
-                          arbitraryMethodFive.arbitrary,
-                          arbitraryMethodSix.arbitrary
-                        )
-      numAttachments <- Gen.choose(0, 5)
-      attachments    <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
-      whatIsYourRole <- Gen.oneOf(
-                          WhatIsYourRole.AgentOrg,
-                          WhatIsYourRole.EmployeeOrg,
-                          WhatIsYourRole.AgentTrader
-                        )
+      draftId           <- arbitraryDraftId.arbitrary
+      traderDetail      <- arbitraryTraderDetail.arbitrary
+      contact           <- arbitraryContactDetails.arbitrary
+      goodsDetails      <- arbitraryGoodsDetails.arbitrary
+      method            <- Gen.oneOf(
+                             arbitraryMethodOne.arbitrary,
+                             arbitraryMethodTwo.arbitrary,
+                             arbitraryMethodThree.arbitrary,
+                             arbitraryMethodFour.arbitrary,
+                             arbitraryMethodFive.arbitrary,
+                             arbitraryMethodSix.arbitrary
+                           )
+      numAttachments    <- Gen.choose(0, 5)
+      attachments       <- Gen.listOfN(numAttachments, arbitraryAttachmentRequest.arbitrary)
+      whatIsYourRole    <- Gen.oneOf(
+                             WhatIsYourRole.AgentOrg,
+                             WhatIsYourRole.EmployeeOrg,
+                             WhatIsYourRole.AgentTrader
+                           )
+      letterOfAuthority <- Gen.option(arbitraryAttachmentRequest.arbitrary)
     } yield ApplicationRequest(
       draftId,
       traderDetail,
@@ -185,7 +186,8 @@ trait ApplicationRequestGenerator extends Generators {
       method,
       goodsDetails,
       attachments,
-      whatIsYourRole
+      whatIsYourRole,
+      letterOfAuthority
     )
   }
 }
