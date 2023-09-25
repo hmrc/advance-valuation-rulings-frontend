@@ -16,29 +16,30 @@
 
 package controllers
 
-import base.SpecBase
-import config.FrontendAppConfig
-import connectors.BackendConnector
-import models.AuthUserType.IndividualTrader
-import models._
-import models.requests._
-import org.mockito.ArgumentMatchers.any
-import org.mockito.{Mockito, MockitoSugar}
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterEach, TryValues}
-import pages._
+import scala.concurrent.Future
+
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
+
+import base.SpecBase
+import config.FrontendAppConfig
+import connectors.BackendConnector
+import models._
+import models.AuthUserType.IndividualTrader
+import models.requests._
+import org.mockito.{Mockito, MockitoSugar}
+import org.mockito.ArgumentMatchers.any
+import org.scalatest.{BeforeAndAfterEach, TryValues}
+import org.scalatest.concurrent.ScalaFutures
+import pages._
 import services.SubmissionService
 import userrole.{UserRole, UserRoleProvider}
 import viewmodels.checkAnswers.summary.{ApplicationSummary, _}
 import viewmodels.govuk.SummaryListFluency
-
-import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec
     extends SpecBase

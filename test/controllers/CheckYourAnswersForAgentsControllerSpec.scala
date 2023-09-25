@@ -16,28 +16,29 @@
 
 package controllers
 
-import base.SpecBase
-import connectors.BackendConnector
-import models.AuthUserType._
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import models._
-import models.requests.{ApplicationId, ApplicationSubmissionResponse}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar
-import org.scalatest.{EitherValues, TryValues}
-import pages._
+import scala.concurrent.Future
+
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+
+import base.SpecBase
+import connectors.BackendConnector
+import models._
+import models.AuthUserType._
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models.requests.{ApplicationId, ApplicationSubmissionResponse}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar
+import org.scalatest.{EitherValues, TryValues}
+import pages._
 import services.SubmissionService
 import viewmodels.checkAnswers.summary._
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersForAgentsView
-
-import scala.concurrent.Future
 
 class CheckYourAnswersForAgentsControllerSpec
     extends SpecBase
