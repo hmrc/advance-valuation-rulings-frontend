@@ -66,7 +66,8 @@ class ApplicationRequestSpec
             requestedMethod = requestedMethod,
             goodsDetails,
             attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.EmployeeOrg
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
           )
         )
       }
@@ -85,7 +86,8 @@ class ApplicationRequestSpec
             requestedMethod = requestedMethod,
             goodsDetails,
             attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.AgentOrg
+            whatIsYourRole = WhatIsYourRole.AgentOrg,
+            letterOfAuthority = None
           )
       }
     }
@@ -100,7 +102,8 @@ class ApplicationRequestSpec
           requestedMethod = requestedMethod,
           goodsDetails = goodsDetails,
           attachments = Seq.empty,
-          whatIsYourRole = WhatIsYourRole.EmployeeOrg
+          whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+          letterOfAuthority = None
         )
       ) shouldBe Json.parse(individualTraderJson)
     }
@@ -166,7 +169,8 @@ class ApplicationRequestSpec
             ),
             goodsDetails = goodsDetailsNoDetails,
             attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.EmployeeOrg
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
           )
         )
       }
@@ -281,7 +285,8 @@ class ApplicationRequestSpec
             ),
             goodsDetails = goodsDetailsNoDetails,
             attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.EmployeeOrg
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
           )
         )
       }
@@ -395,7 +400,8 @@ class ApplicationRequestSpec
             ),
             goodsDetails = goodsDetailsNoDetails,
             attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.AgentOrg
+            whatIsYourRole = WhatIsYourRole.AgentOrg,
+            letterOfAuthority = None
           )
         )
       }

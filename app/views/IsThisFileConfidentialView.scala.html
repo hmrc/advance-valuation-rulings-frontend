@@ -55,6 +55,7 @@
     @paragraph(Html(messages("isThisFileConfidential.para.1")))
     @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
+    @subheading(messages("isThisFileConfidential.question"))
 
     @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
         

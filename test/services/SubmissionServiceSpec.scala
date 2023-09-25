@@ -56,7 +56,8 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
     requestedMethod = MethodOne(None, None, None),
     goodsDetails = GoodsDetails("name", "description", None, None, None),
     attachments = Nil,
-    whatIsYourRole = WhatIsYourRole.EmployeeOrg
+    whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+    letterOfAuthority = None
   )
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
