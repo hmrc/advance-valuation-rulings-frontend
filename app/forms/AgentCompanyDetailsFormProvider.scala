@@ -34,15 +34,9 @@ class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
       "agentEori"            -> text("agentCompanyDetails.error.agentEori.required")
         .verifying(eoriCodeConstraint),
       "agentCompanyName"     -> text("agentCompanyDetails.error.agentCompanyName.required"),
-      "agentStreetAndNumber" -> text("agentCompanyDetails.error.agentStreetAndNumber.required")
-        .verifying(
-          maxLength(maximumValueForAddress, "agentCompanyDetails.error.agentStreetAndNumber.length")
-        ),
-      "agentCity"            -> text("agentCompanyDetails.error.agentCity.required")
-        .verifying(
-          maxLength(maximumValueForTownOrCity, "agentCompanyDetails.error.agentCity.length")
-        ),
-      "agentCountry"         -> text("agentCompanyDetails.error.agentCountry.required")
+      "agentStreetAndNumber" -> text("agentCompanyDetails.error.agentStreetAndNumber.required"),
+      "agentCity"            -> text("agentCompanyDetails.error.agentCity.required"),
+      "country"              -> text("agentCompanyDetails.error.agentCountry.required")
         .verifying(
           "agentCompanyDetails.error.agentCountry.required",
           x => Country.allCountries.exists(_.code == x)
@@ -52,7 +46,6 @@ class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
         "agentCompanyDetails.error.agentPostalCode.required",
         "agentCompanyDetails.error.agentPostalCode.gb"
       )
-        .verifying(optionalPostCodeMaxLength("agentCompanyDetails.error.agentPostalCode.length"))
     )(AgentCompanyDetails.apply)(AgentCompanyDetails.unapply)
   )
 }
