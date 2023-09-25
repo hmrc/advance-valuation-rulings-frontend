@@ -215,7 +215,7 @@ class ApplicationViewModelSpec extends SpecBase {
 
 object ApplicationViewModelSpec extends Generators {
 
-  val eoriDetails = TraderDetail(
+  val eoriDetails: TraderDetail = TraderDetail(
     eori = "eori",
     businessName = "business name",
     addressLine1 = "address line 1",
@@ -226,18 +226,18 @@ object ApplicationViewModelSpec extends Generators {
     phoneNumber = None
   )
 
-  val contact = ContactDetails(
+  val contact: ContactDetails = ContactDetails(
     name = "contact name",
     email = "email@example.com",
     phone = Some("phone")
   )
 
-  val requestedMethod = MethodThree(
+  val requestedMethod: MethodThree = MethodThree(
     whyNotOtherMethods = "method 3 why not",
     previousSimilarGoods = PreviousSimilarGoods("previous similar goods")
   )
 
-  val goodsDetails = GoodsDetails(
+  val goodsDetails: GoodsDetails = GoodsDetails(
     goodsName = "goods name",
     goodsDescription = "goods description",
     envisagedCommodityCode = Some("commodity code"),
@@ -245,10 +245,11 @@ object ApplicationViewModelSpec extends Generators {
     confidentialInformation = Some("confidential")
   )
 
-  val lastUpdated        = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
-  val lastUpdatedString  = "22/08/2018"
-  val draftId            = DraftId(0)
-  val applicationRequest = ApplicationRequest(
+  val lastUpdated: Instant                   =
+    Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC))
+  val lastUpdatedString: String              = "22/08/2018"
+  val draftId: DraftId                       = DraftId(0)
+  val applicationRequest: ApplicationRequest = ApplicationRequest(
     draftId = draftId,
     trader = eoriDetails,
     agent = None,
@@ -259,8 +260,8 @@ object ApplicationViewModelSpec extends Generators {
     whatIsYourRole = WhatIsYourRole.EmployeeOrg,
     letterOfAuthority = None
   )
-  val applicationId      = ApplicationId(0L)
-  val application        =
+  val applicationId: ApplicationId           = ApplicationId(0L)
+  val application: Application               =
     Application(
       id = applicationId,
       lastUpdated = lastUpdated,

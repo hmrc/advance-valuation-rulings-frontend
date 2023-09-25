@@ -20,8 +20,6 @@ import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 
-import models.WhatIsYourRoleAsImporter
-
 final case class Application(
   id: ApplicationId,
   created: Instant,

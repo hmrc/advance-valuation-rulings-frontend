@@ -66,4 +66,6 @@ trait UserRole {
     userAnswers: UserAnswers
   ): ValidatedNel[Page, ContactDetails]
 
+  def getMaxSupportingDocuments: Int
+
 }

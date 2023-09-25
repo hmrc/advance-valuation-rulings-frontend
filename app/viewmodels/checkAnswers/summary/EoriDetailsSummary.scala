@@ -21,7 +21,7 @@ import cats.syntax.all._
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
-import models.{DraftId, TraderDetailsWithCountryCode}
+import models.{DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
@@ -37,11 +37,12 @@ case class IndividualEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSu
 }
 
 object IndividualEoriDetailsSummary {
-  def apply(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
-    messages: Messages
+  def apply(details: TraderDetailsWithCountryCode, draftId: DraftId, userAnswers: UserAnswers)(
+    implicit messages: Messages
   ): EoriDetailsSummary = {
-    val rows = CheckRegisteredDetailsSummary.rows(details, draftId).orEmpty
-    IndividualEoriDetailsSummary(SummaryListViewModel(rows))
+    val roleRow = AgentRoleSummary.row(userAnswers).orEmpty
+    val rows    = CheckRegisteredDetailsSummary.rows(details, draftId).orEmpty
+    IndividualEoriDetailsSummary(SummaryListViewModel(roleRow ++ rows))
   }
 }
 

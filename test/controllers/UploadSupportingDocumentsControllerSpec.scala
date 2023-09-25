@@ -25,8 +25,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
+import config.FrontendAppConfig
 import controllers.common.FileUploadHelper
-import models.{NormalMode, UploadedFile}
+import models.{DraftAttachment, NormalMode, UploadedFile}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.when
@@ -34,7 +35,9 @@ import org.mockito.MockitoSugar.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
+import queries.AllDocuments
 import services.fileupload.FileService
+import userrole.{UserRole, UserRoleProvider}
 
 class UploadSupportingDocumentsControllerSpec
     extends SpecBase
@@ -98,5 +101,49 @@ class UploadSupportingDocumentsControllerSpec
 
     val result = route(application, request).value
     contentAsString(result) mustEqual successTextForHelper
+  }
+
+  "When the maximum number of files is uploaded it must disallow another upload by redirecting" in {
+    val userAnswers = userAnswersAsIndividualTrader
+      .set(
+        AllDocuments,
+        List(
+          DraftAttachment(successfulFile, Some(true)),
+          DraftAttachment(successfulFile, Some(true)),
+          DraftAttachment(successfulFile, Some(true)),
+          DraftAttachment(successfulFile, Some(true)),
+          DraftAttachment(successfulFile, Some(true))
+        )
+      )
+      .success
+      .value
+      .set(UploadSupportingDocumentPage, successfulFile)
+      .success
+      .value
+
+    val mockUserRoleProvider = mock[UserRoleProvider]
+    val mockUserRole         = mock[UserRole]
+    when(mockUserRole.getMaxSupportingDocuments).thenReturn(5)
+    when(mockUserRoleProvider.getUserRole(eqTo(userAnswers))).thenReturn(mockUserRole)
+
+    val mockFrontEndAppConfig = mock[FrontendAppConfig]
+    when(mockFrontEndAppConfig.agentOnBehalfOfTrader).thenReturn(true)
+
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(
+        bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+        bind[FrontendAppConfig].toInstance(mockFrontEndAppConfig)
+      )
+      .build()
+
+    val request = FakeRequest(
+      GET,
+      controllers.routes.UploadSupportingDocumentsController
+        .onPageLoad(NormalMode, draftId, None, None)
+        .url
+    )
+
+    val result = route(application, request).value
+    status(result) mustBe SEE_OTHER
   }
 }

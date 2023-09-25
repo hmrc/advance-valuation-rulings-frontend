@@ -80,7 +80,11 @@ class ApplicationSummaryService @Inject() (
       case Some(IndividualTrader)                    =>
         (
           IndividualApplicantSummary(userAnswers),
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+          IndividualEoriDetailsSummary(
+            traderDetailsWithCountryCode,
+            userAnswers.draftId,
+            userAnswers
+          )
         )
       case Some(OrganisationAdmin)                   =>
         (

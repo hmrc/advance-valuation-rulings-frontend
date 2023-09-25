@@ -22,9 +22,9 @@ import cats.implicits._
 import play.api.libs.json._
 
 import com.google.inject.Inject
-import models.{AgentCompanyDetails, BusinessContactDetails, DraftId, TraderDetailsWithCountryCode, UploadedFile, UserAnswers}
+import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.UploadedFile.{Success, UploadDetails}
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader}
+import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
 import pages._
 
 case class GoodsDetails(
@@ -84,7 +84,7 @@ final case class TraderDetail(
 object TraderDetail {
   implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
-  def agent(userAnswers: UserAnswers) =
+  def agent(userAnswers: UserAnswers): ValidatedNel[QuestionPage[_], Option[TraderDetail]] =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
       case Some(AgentOnBehalfOfOrg) =>
         userAnswers.validatedF[AgentCompanyDetails, Option[TraderDetail]](
