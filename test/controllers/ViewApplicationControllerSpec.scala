@@ -133,7 +133,7 @@ object ViewApplicationControllerSpec extends Generators {
     letterOfAuthority = Some(AttachmentRequest("bob", None, "url", Privacy.Public, "jpg", 12L))
   )
   val applicationId: ApplicationId           = ApplicationId(0L)
-  val ruling: Application =
+  val ruling: Application                    =
     Application(
       id = applicationId,
       lastUpdated = lastUpdated,

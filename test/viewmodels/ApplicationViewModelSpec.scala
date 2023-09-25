@@ -261,7 +261,7 @@ object ApplicationViewModelSpec extends Generators {
     letterOfAuthority = None
   )
   val applicationId: ApplicationId           = ApplicationId(0L)
-  val application: Application =
+  val application: Application               =
     Application(
       id = applicationId,
       lastUpdated = lastUpdated,
