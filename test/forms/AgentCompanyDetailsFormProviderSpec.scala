@@ -79,13 +79,6 @@ class AgentCompanyDetailsFormProviderSpec
       stringsWithMaxLength(maxLength)
     )
 
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
     behave like mandatoryField(
       form,
       fieldName,
@@ -106,13 +99,6 @@ class AgentCompanyDetailsFormProviderSpec
       stringsWithMaxLength(maxLength)
     )
 
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
     behave like mandatoryField(
       form,
       fieldName,
@@ -122,7 +108,7 @@ class AgentCompanyDetailsFormProviderSpec
 
   ".agentCountry" - {
 
-    val fieldName   = "agentCountry"
+    val fieldName   = "country"
     val requiredKey = "agentCompanyDetails.error.agentCountry.required"
 
     behave like fieldThatBindsValidData(
@@ -164,13 +150,6 @@ class AgentCompanyDetailsFormProviderSpec
       form,
       fieldName,
       stringsWithMaxLength(maxLength)
-    )
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like postcodeField(

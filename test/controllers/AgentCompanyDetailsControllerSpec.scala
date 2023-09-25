@@ -71,7 +71,8 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
               ("agentCompanyName", "value 2"),
               ("agentStreetAndNumber", "streetandNumber"),
               ("agentCity", "city"),
-              ("agentCountry", "GB")
+              ("country", "GB"),
+              ("agentPostalCode", "AA1 1AA")
             )
 
         val result = route(application, request).value
@@ -134,7 +135,8 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
               ("agentCompanyName", "value 2"),
               ("agentStreetAndNumber", "streetandNumber"),
               ("agentCity", "city"),
-              ("agentCountry", "GB")
+              ("country", "GB"),
+              ("agentPostalCode", "AA1 1AA")
             )
 
         val result = route(application, request).value
@@ -194,7 +196,8 @@ class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
               ("agentCompanyName", "value 2"),
               ("agentStreetAndNumber", "streetandNumber"),
               ("agentCity", "city"),
-              ("agentCountry", "GB")
+              ("agentCountry", "GB"),
+              ("agentPostalCode", "AA1 1AA")
             )
 
         val result = route(application, request).value
