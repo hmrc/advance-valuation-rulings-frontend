@@ -42,10 +42,10 @@ object ApplicationViewModel {
     val methodDetails = RequestedMethodSummary.rows(application.requestedMethod)
 
     val applicantSummaryList = applicant ++ agentRows :+ dateSubmitted
-    application.whatIsYourRole match {
+    application.whatIsYourRoleResponse match {
       case Some(WhatIsYourRole.AgentTrader) =>
         applicantSummaryList :+ AgentTraderDetailsSummary.rows(application.contact)
-      case None => // do nothing
+      case None                             => // do nothing
     }
 
     ApplicationViewModel(

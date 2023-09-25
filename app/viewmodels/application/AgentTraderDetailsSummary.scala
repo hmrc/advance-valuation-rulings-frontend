@@ -16,9 +16,10 @@
 
 package viewmodels.application
 
-import models.requests.ContactDetails
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
+import models.requests.ContactDetails
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -47,15 +48,15 @@ object AgentTraderDetailsSummary {
     agent.companyName.map {
       companyName =>
         SummaryListRowViewModel(
-        key = "checkYourAnswersForAgents.applicant.companyName.label",
-        value = ValueViewModel(companyName)
-      )
+          key = "checkYourAnswersForAgents.applicant.companyName.label",
+          value = ValueViewModel(companyName)
+        )
     },
     Some(
       SummaryListRowViewModel(
         key = "checkYourAnswersForAgents.applicant.role.label",
         value = ValueViewModel(messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader"))
       )
-    ),
+    )
   ).flatten
 }
