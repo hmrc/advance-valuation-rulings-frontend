@@ -17,46 +17,108 @@
 package viewmodels.application
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
-import models.requests.ContactDetails
+import models.requests.Application
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AgentTraderDetailsSummary {
 
-  def rows(agent: ContactDetails)(implicit messages: Messages): Seq[SummaryListRow] = Seq(
-    Some(
-      SummaryListRowViewModel(
-        key = "checkYourAnswersForAgents.agent.org.name.label",
-        value = ValueViewModel(agent.name)
-      )
-    ),
-    Some(
-      SummaryListRowViewModel(
-        key = "checkYourAnswersForAgents.agent.org.email.label",
-        value = ValueViewModel(agent.email)
-      )
-    ),
-    agent.phone.map {
-      phone =>
-        SummaryListRowViewModel(
-          key = "checkYourAnswersForAgents.agent.org.phone.label",
-          value = ValueViewModel(phone)
+  def rowRoleDescription()(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswersForAgents.applicant.role.label",
+      value = ValueViewModel(messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader"))
+    )
+
+  def rowLetterOfAuthority(
+    application: Application
+  )(implicit messages: Messages): Option[SummaryListRow] =
+    application.letterOfAuthority match {
+      case Some(value) =>
+        Some(
+          SummaryListRowViewModel(
+            key = "agentForTraderCheckYourAnswers.trader.loa.label",
+            value = ValueViewModel(value.name)
+          )
         )
-    },
-    agent.companyName.map {
-      companyName =>
+      case _           => None
+    }
+
+  def rowTraderEori(application: Application)(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "agentForTraderCheckYourAnswers.trader.eori.number.label",
+      value = ValueViewModel(application.trader.eori)
+    )
+
+  def rowsTraderDetails(application: Application)(implicit
+    messages: Messages
+  ): Seq[SummaryListRow] = {
+    val addressLines = Seq(
+      Some(application.trader.addressLine1),
+      application.trader.addressLine2,
+      application.trader.addressLine3,
+      Some(application.trader.postcode),
+      Some(application.trader.countryCode)
+    ).flatten.mkString("<br/>")
+
+    Seq(
+      Some(
         SummaryListRowViewModel(
-          key = "checkYourAnswersForAgents.applicant.companyName.label",
-          value = ValueViewModel(companyName)
+          key = "agentForTraderCheckYourAnswers.trader.name.label",
+          value = ValueViewModel(application.trader.businessName)
         )
-    },
-    Some(
+      ),
+      Some(
+        SummaryListRowViewModel(
+          key = "agentForTraderCheckYourAnswers.trader.address.label",
+          value = ValueViewModel(HtmlContent(Html(addressLines)))
+        )
+      )
+    ).flatten
+  }
+
+  def rowsAgentDetails(application: Application)(implicit
+    messages: Messages
+  ): Seq[SummaryListRow] = {
+    val mandatoryRows = Seq(
       SummaryListRowViewModel(
-        key = "checkYourAnswersForAgents.applicant.role.label",
-        value = ValueViewModel(messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader"))
+        key = "agentForTraderCheckYourAnswers.applicant.name.label",
+        value = ValueViewModel(application.contact.name)
+      ),
+      SummaryListRowViewModel(
+        key = "agentForTraderCheckYourAnswers.applicant.email.label",
+        value = ValueViewModel(application.contact.email)
       )
     )
-  ).flatten
+
+    val phoneRow = makeRow(
+      "agentForTraderCheckYourAnswers.applicant.phone.label",
+      application.contact.phone
+    )
+
+    val companyNameRow = makeRow(
+      "agentForTraderCheckYourAnswers.applicant.companyName.label",
+      application.contact.companyName
+    )
+
+    mandatoryRows ++ phoneRow ++ companyNameRow
+  }
+
+  private def makeRow(key: Key, field: Option[String])(implicit
+    messages: Messages
+  ) =
+    field match {
+      case Some(value) =>
+        Some(
+          SummaryListRowViewModel(
+            key = key,
+            value = ValueViewModel(value)
+          )
+        )
+      case _           => None
+    }
+
 }

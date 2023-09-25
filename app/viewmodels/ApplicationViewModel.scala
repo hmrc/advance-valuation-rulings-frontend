@@ -17,7 +17,7 @@
 package viewmodels
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 
 import models.requests._
 import viewmodels.application._
@@ -34,25 +34,46 @@ object ApplicationViewModel {
   def apply(application: Application)(implicit
     messages: Messages
   ): ApplicationViewModel = {
-    val eoriRow       = RegisteredDetailsSummary.rows(application.trader)
+    val eoriRow       = getEoriRow(application)
     val applicant     = ContactDetailsSummary.rows(application.contact)
     val agentRows     = application.agent.map(agent => AgentDetailsSummary.rows(agent)).getOrElse(Nil)
     val dateSubmitted = DateSubmittedSummary.row(application)
     val goodsDetails  = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
     val methodDetails = RequestedMethodSummary.rows(application.requestedMethod)
 
-    val applicantSummaryList = applicant ++ agentRows :+ dateSubmitted
-    application.whatIsYourRoleResponse match {
-      case Some(WhatIsYourRole.AgentTrader) =>
-        applicantSummaryList :+ AgentTraderDetailsSummary.rows(application.contact)
-      case _                                => // do nothing
-    }
+    val agentDetails =
+      if (isAgentForTrader(application)) {
+        val traderDetails           = AgentTraderDetailsSummary.rowsTraderDetails(application)
+        val agentDetails            = AgentTraderDetailsSummary.rowsAgentDetails(application)
+        val letterOfAuthorityOption = AgentTraderDetailsSummary.rowLetterOfAuthority(application)
+        val roleDescription         = AgentTraderDetailsSummary.rowRoleDescription()
+
+        traderDetails ++ agentDetails ++ letterOfAuthorityOption :+ roleDescription :+ dateSubmitted
+      } else {
+        applicant ++ agentRows :+ dateSubmitted
+      }
 
     ApplicationViewModel(
       eori = SummaryList(eoriRow),
-      applicant = SummaryList(applicantSummaryList),
+      applicant = SummaryList(agentDetails),
       details = SummaryList(goodsDetails),
       method = SummaryList(methodDetails)
     )
   }
+
+  private def getEoriRow(application: Application)(implicit
+    messages: Messages
+  ): Seq[SummaryListRow] =
+    if (isAgentForTrader(application)) {
+      Seq(AgentTraderDetailsSummary.rowTraderEori(application))
+    } else {
+      RegisteredDetailsSummary.rows(application.trader)
+    }
+
+  private def isAgentForTrader(application: Application) =
+    application.whatIsYourRoleResponse match {
+      case Some(WhatIsYourRole.AgentTrader) => true
+      case _                                => false
+    }
+
 }
