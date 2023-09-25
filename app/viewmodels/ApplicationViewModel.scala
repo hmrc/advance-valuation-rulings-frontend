@@ -45,7 +45,7 @@ object ApplicationViewModel {
     application.whatIsYourRoleResponse match {
       case Some(WhatIsYourRole.AgentTrader) =>
         applicantSummaryList :+ AgentTraderDetailsSummary.rows(application.contact)
-      case None                             => // do nothing
+      case _                                => // do nothing
     }
 
     ApplicationViewModel(
