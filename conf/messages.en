@@ -927,7 +927,7 @@ businessContactDetails.name.change.hidden = your contact name
 businessContactDetails.email.change.hidden = your email address
 businessContactDetails.telephoneNumber.change.hidden = your telephone number
 businessContactDetails.companyName.label = Your company name
-businessContactDetails.companyName.error.required = Enter a company name
+businessContactDetails.companyName.error.required = Enter your registered business name
 
 cancelAreYouSure.title = Are you sure you want to cancel your application?
 cancelAreYouSure.heading = Are you sure you want to cancel your application?
