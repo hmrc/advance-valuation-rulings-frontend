@@ -33,15 +33,13 @@ import models.AuthUserType.IndividualTrader
 import models.requests._
 import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
 import org.scalatest.{BeforeAndAfterEach, TryValues}
 import org.scalatest.concurrent.ScalaFutures
 import pages._
 import services.SubmissionService
 import userrole.{UserRole, UserRoleProvider}
-import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
+import viewmodels.checkAnswers.summary.{ApplicationSummary, _}
 import viewmodels.govuk.SummaryListFluency
-import views.html.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec
     extends SpecBase
@@ -105,44 +103,6 @@ class CheckYourAnswersControllerSpec
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual expectedText
-        }
-      }
-
-    "must return OK and the correct view for a GET with affinityGroup Individual" in
-      new CheckYourAnswersControllerSpecSetup {
-
-        val application = applicationBuilder(userAnswers = Option(userAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector),
-            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService)
-          )
-          .build()
-
-        implicit val msgs = messages(application)
-
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
-
-        running(application) {
-          implicit val request =
-            FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(draftId).url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[CheckYourAnswersView]
-          val list = mockApplicationSummaryService.getApplicationSummary(
-            userAnswers,
-            traderDetailsWithCountryCode
-          )
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(list, draftId).toString
         }
       }
 

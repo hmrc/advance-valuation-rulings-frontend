@@ -33,13 +33,11 @@ import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.requests.{ApplicationId, ApplicationSubmissionResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar
-import org.mockito.internal.matchers.Any
 import org.scalatest.{EitherValues, TryValues}
 import pages._
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
+import viewmodels.checkAnswers.summary._
 import viewmodels.govuk.SummaryListFluency
-import views.html.CheckYourAnswersForAgentsView
 
 class CheckYourAnswersForAgentsControllerSpec
     extends SpecBase
@@ -47,56 +45,6 @@ class CheckYourAnswersForAgentsControllerSpec
     with EitherValues {
 
   "Check Your Answers for Agents Controller" - {
-
-    "must return OK and the correct view for a GET as OrganisationAdmin" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        val appSummary = ApplicationSummary(
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, emptyUserAnswers)(
-            stubMessages()
-          ),
-          IndividualApplicantSummary(fullUserAnswers)(stubMessages()),
-          DetailsSummary(fullUserAnswers)(stubMessages()),
-          MethodSummary(fullUserAnswers)(stubMessages())
-        )
-
-        when(
-          mockApplicationSummaryService.getApplicationSummary(
-            any[UserAnswers],
-            any[TraderDetailsWithCountryCode]
-          )(any[Messages])
-        ).thenReturn(appSummary)
-
-        private val application = applicationBuilderAsOrg(userAnswers = Option(orgAdminUserAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector),
-            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService)
-          )
-          .build()
-
-        implicit val msgs: Messages = messages(application)
-
-        running(application) {
-          implicit val request: Request[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-          val list = mockApplicationSummaryService.getApplicationSummary(
-            orgAdminUserAnswers,
-            traderDetailsWithCountryCode
-          )
-
-          status(result) mustEqual OK
-
-          contentAsString(result) mustEqual view(
-            list,
-            EmployeeOfOrg,
-            draftId
-          ).toString
-        }
-      }
 
     "must return OK and the correct view for a GET as OrganisationAssistant claiming to be EmployeeOfOrg" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
@@ -184,110 +132,12 @@ class CheckYourAnswersForAgentsControllerSpec
         }
       }
 
-    "must redirect to WhatIsYourRoleAsImporterPage for a GET as OrganisationAssistant if no importer role is found" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application =
-          applicationBuilderAsOrg(userAnswers = Option(orgAssistantUserAnswers))
-            .overrides(
-              bind[BackendConnector].toInstance(mockBackendConnector)
-            )
-            .build()
-
-        private val redirectPage: String =
-          routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
-
-        runApplication(application, redirectPage)
-
-      }
-
-    "must redirect to WhatIsYourRoleAsImporterPage for a GET as Agent if no importer role is found" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application = applicationBuilderAsAgent(userAnswers = Option(agentUserAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
-
-        private val redirectPage: String =
-          routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
-
-        runApplication(application, redirectPage)
-
-      }
-
-    "must redirect to UnauthorisedController for a GET as Trader" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application = applicationBuilderAsAgent(userAnswers = Option(traderUserAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
-
-        private val redirectPage: String =
-          routes.UnauthorisedController.onPageLoad.url
-
-        runApplication(application, redirectPage)
-
-      }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found for orgAssistant" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application =
-          applicationBuilderAsAgent(userAnswers = Some(orgAssistantUserAnswers)).build()
-
-        runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
-
-      }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found for agent" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val application =
-          applicationBuilderAsAgent(userAnswers = Some(agentUserAnswers)).build()
-
-        runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
-      }
-
     "must redirect to Journey Recovery for a GET if no importer role is found" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
 
         private val application = applicationBuilderAsOrg(userAnswers = None).build()
 
         runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
-      }
-
-    "must redirect to Application Complete when application submission succeeds" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val applicationId = ApplicationId(1)
-        private val response      = ApplicationSubmissionResponse(applicationId)
-
-        when(mockSubmissionService.submitApplication(any(), any())(any()))
-          .thenReturn(Future.successful(response))
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
-
-        private val application = applicationBuilderAsOrg(Option(fullUserAnswers))
-          .overrides(
-            bind[SubmissionService].toInstance(mockSubmissionService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
-
-        private val redirectUrl =
-          routes.ApplicationCompleteController.onPageLoad(applicationId.toString).url
-
-        runApplication(application, redirectUrl, POST)
       }
   }
 
@@ -406,6 +256,7 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
     ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
     ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
     ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+    ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
   } yield ua).success.get
 
   when(

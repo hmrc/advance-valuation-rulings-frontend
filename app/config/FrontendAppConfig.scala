@@ -82,17 +82,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
 
-  val agentOnBehalfOfTrader: Boolean = {
-    val path = "features.agent-on-behalf-of-trader"
-    configuration
-      .getOptional[Boolean](path)
-      .getOrElse {
-        // This feature will be disabled by default until the whole user journey is implemented.
-        // If there is no flag in the config file the application will silently ignore it
-        logger.debug(s"$path is disabled")
-        false
-      }
-  }
+  // ARSSTB-431 - We are turning agent creds feature on permanently for the go live
+  // This flag will later be removed completely in ARSSTB-433 with all the other code that use it
+  val agentOnBehalfOfTrader: Boolean = true
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),
