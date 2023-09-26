@@ -37,6 +37,13 @@ object GoodsDetailsSummary {
       )
     )
 
+    val commodityCodeQuestionRow = Some(
+      SummaryListRowViewModel(
+        key = "hasCommodityCode.checkYourAnswersLabel",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
+
     val commodityCodeRow = goodsDetails.envisagedCommodityCode.map {
       commodityCode =>
         SummaryListRowViewModel(
@@ -44,6 +51,13 @@ object GoodsDetailsSummary {
           value = ValueViewModel(commodityCode)
         )
     }
+
+    val legalChallengesQuestionRow = Some(
+      SummaryListRowViewModel(
+        key = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
 
     val legalChallengeRow = goodsDetails.knownLegalProceedings.map {
       challenge =>
@@ -53,6 +67,13 @@ object GoodsDetailsSummary {
         )
     }
 
+    val confidentialInformationQuestionRow = Some(
+      SummaryListRowViewModel(
+        key = "hasConfidentialInformation.checkYourAnswersLabel",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
+
     val confidentialInformationRow: Option[SummaryListRow] =
       goodsDetails.confidentialInformation.map {
         info =>
@@ -61,6 +82,13 @@ object GoodsDetailsSummary {
             value = ValueViewModel(info)
           )
       }
+
+    val uploadSupportingDocumentsQuestionRow = Some(
+      SummaryListRowViewModel(
+        key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
 
     val attachmentRowContent = attachments
       .map(
@@ -84,9 +112,13 @@ object GoodsDetailsSummary {
 
     Seq(
       descriptionRow,
+      commodityCodeQuestionRow,
       commodityCodeRow,
+      legalChallengesQuestionRow,
       legalChallengeRow,
+      confidentialInformationQuestionRow,
       confidentialInformationRow,
+      uploadSupportingDocumentsQuestionRow,
       attachmentsRow
     ).flatten
   }

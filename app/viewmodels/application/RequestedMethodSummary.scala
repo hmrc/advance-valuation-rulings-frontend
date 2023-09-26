@@ -53,6 +53,13 @@ object RequestedMethodSummary {
       )
     )
 
+    val saleRelatedPartiesRow = Some(
+      SummaryListRowViewModel(
+        key = "isSaleBetweenRelatedParties.checkYourAnswersLabel",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
+
     val relatedPartiesRow = method.saleBetweenRelatedParties.map {
       info =>
         SummaryListRowViewModel(
@@ -61,13 +68,12 @@ object RequestedMethodSummary {
         )
     }
 
-    val conditionsRow = method.saleConditions.map {
-      conditions =>
-        SummaryListRowViewModel(
-          key = "describeTheConditions.checkYourAnswersLabel",
-          value = ValueViewModel(conditions)
-        )
-    }
+    val restrictionsUseResaleRow = Some(
+      SummaryListRowViewModel(
+        key = "areThereRestrictionsOnTheGoods.title",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
 
     val restrictionsRow = method.goodsRestrictions.map {
       restrictions =>
@@ -77,12 +83,30 @@ object RequestedMethodSummary {
         )
     }
 
+    val subjectToConditionsRow = Some(
+      SummaryListRowViewModel(
+        key = "isTheSaleSubjectToConditions.title",
+        value = ValueViewModel(messages("site.yes"))
+      )
+    )
+
+    val conditionsRow = method.saleConditions.map {
+      conditions =>
+        SummaryListRowViewModel(
+          key = "describeTheConditions.checkYourAnswersLabel",
+          value = ValueViewModel(conditions)
+        )
+    }
+
     Seq(
       methodRow,
       saleInvolvedRow,
+      saleRelatedPartiesRow,
       relatedPartiesRow,
-      conditionsRow,
-      restrictionsRow
+      restrictionsUseResaleRow,
+      restrictionsRow,
+      subjectToConditionsRow,
+      conditionsRow
     ).flatten
   }
 
