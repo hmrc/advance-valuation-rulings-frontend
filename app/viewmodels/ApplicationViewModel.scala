@@ -17,7 +17,6 @@
 package viewmodels
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 
 import models.requests._
@@ -45,9 +44,10 @@ object ApplicationViewModel {
 
     val agentDetails =
       if (isAgentForTrader(application)) {
-        val traderDetails           = AgentTraderDetailsSummary.rowsTraderDetails(application)
-        val agentDetails            = AgentTraderDetailsSummary.rowsAgentDetails(application)
-        val letterOfAuthorityOption = AgentTraderDetailsSummary.rowLetterOfAuthority(application)
+        val traderDetails           = AgentTraderDetailsSummary.rowsTraderDetails(application.trader)
+        val agentDetails            = AgentTraderDetailsSummary.rowsAgentDetails(application.contact)
+        val letterOfAuthorityOption =
+          AgentTraderDetailsSummary.rowLetterOfAuthority(application.letterOfAuthority)
 
         traderDetails ++ agentDetails ++ letterOfAuthorityOption ++ roleDescription :+ dateSubmitted
       } else {
@@ -66,7 +66,7 @@ object ApplicationViewModel {
     messages: Messages
   ): Seq[SummaryListRow] =
     if (isAgentForTrader(application)) {
-      Seq(AgentTraderDetailsSummary.rowTraderEori(application))
+      Seq(AgentTraderDetailsSummary.rowTraderEori(application.trader.eori))
     } else {
       RegisteredDetailsSummary.rows(application.trader)
     }

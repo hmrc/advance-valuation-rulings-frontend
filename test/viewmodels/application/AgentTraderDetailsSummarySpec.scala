@@ -18,11 +18,12 @@ package viewmodels.application
 
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
+import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
-import models.requests.ContactDetails
+import models.requests.{Attachment, ContactDetails, Privacy, TraderDetail}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 
@@ -30,39 +31,161 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
   private implicit val m: Messages = stubMessages()
 
-  ".rows" - {
+  private val eori: String                  = "EORI123"
+  val letterOfAuthority: Option[Attachment] = Some(
+    Attachment(
+      45L,
+      "letter of authority",
+      None,
+      "",
+      Privacy.Public,
+      "",
+      3L
+    )
+  )
 
-    "must contain rows for name, email, phone, company name, and description of role" in {
-      val agent = ContactDetails(
-        "name",
-        "email",
-        Some("phone"),
-        Some("company name")
+  val trader: TraderDetail = TraderDetail(
+    eori,
+    "Business Name",
+    "Address Line 1",
+    Some("Address Line 2"),
+    Some("Address Line 3"),
+    "NE1 4FF",
+    "country code",
+    Some("0123456789")
+  )
+
+  val minTraderDetail: TraderDetail = TraderDetail(
+    eori,
+    "Business Name",
+    "Address Line 1",
+    None,
+    None,
+    "NE1 4FF",
+    "country code",
+    None
+  )
+
+  val maxContactDetails: ContactDetails = ContactDetails(
+    "Joe Blogs",
+    "jb@something.com",
+    Some("9876543210"),
+    Some("Company Name")
+  )
+
+  val minContactDetails: ContactDetails = ContactDetails(
+    "Joe Blogs",
+    "jb@something.com",
+    None
+  )
+
+  "Trader EORI row" - {
+    "must return the trader EORI" in {
+      AgentTraderDetailsSummary.rowTraderEori(eori) mustEqual SummaryListRow(
+        Key(Text(m("agentForTraderCheckYourAnswers.trader.eori.number.label"))),
+        Value(Text(eori))
       )
+    }
+  }
 
-      AgentTraderDetailsSummary.rows(agent) must contain theSameElementsAs Seq(
+  "Letter of authority row" - {
+
+    "must return the letter of authority if it exists" in {
+      AgentTraderDetailsSummary
+        .rowLetterOfAuthority(letterOfAuthority)
+        .get mustEqual SummaryListRow(
+        Key(Text(m("agentForTraderCheckYourAnswers.trader.loa.label"))),
+        Value(Text(letterOfAuthority.get.name))
+      )
+    }
+
+    "must return the None if it does not exist" in {
+      AgentTraderDetailsSummary.rowLetterOfAuthority(None) mustEqual None
+    }
+  }
+
+  "Trader details row" - {
+    val allAddressLines = Seq(
+      Some(trader.addressLine1),
+      trader.addressLine2,
+      trader.addressLine3,
+      Some(trader.postcode),
+      Some(trader.countryCode)
+    ).flatten.mkString("<br/>")
+
+    val minAddressLines = Seq(
+      Some(minTraderDetail.addressLine1),
+      Some(minTraderDetail.postcode),
+      Some(minTraderDetail.countryCode)
+    ).flatten.mkString("<br/>")
+
+    "must return all trader details" in {
+      AgentTraderDetailsSummary.rowsTraderDetails(trader) must contain theSameElementsAs Seq(
         SummaryListRow(
-          Key(Text(m("checkYourAnswersForAgents.agent.org.name.label"))),
-          Value(Text(agent.name))
+          Key(Text(m("agentForTraderCheckYourAnswers.trader.name.label"))),
+          Value(Text(trader.businessName))
         ),
         SummaryListRow(
-          Key(Text(m("checkYourAnswersForAgents.agent.org.email.label"))),
-          Value(Text(agent.email))
-        ),
-        SummaryListRow(
-          Key(Text(m("checkYourAnswersForAgents.agent.org.phone.label"))),
-          Value(Text(agent.phone.get))
-        ),
-        SummaryListRow(
-          Key(Text(m("checkYourAnswersForAgents.applicant.companyName.label"))),
-          Value(Text(agent.companyName.get))
-        ),
-        SummaryListRow(
-          Key(Text(m("checkYourAnswersForAgents.applicant.role.label"))),
-          Value(Text("whatIsYourRoleAsImporter.agentOnBehalfOfTrader"))
+          Key(Text(m("agentForTraderCheckYourAnswers.trader.address.label"))),
+          Value(HtmlContent(Html(allAddressLines)))
         )
       )
     }
 
+    "must return minimum trader details" in {
+      AgentTraderDetailsSummary.rowsTraderDetails(
+        minTraderDetail
+      ) must contain theSameElementsAs Seq(
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.trader.name.label"))),
+          Value(Text(minTraderDetail.businessName))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.trader.address.label"))),
+          Value(HtmlContent(Html(minAddressLines)))
+        )
+      )
+    }
   }
+
+  "Agent details row" - {
+    "must return all agent details" in {
+      AgentTraderDetailsSummary.rowsAgentDetails(
+        maxContactDetails
+      ) must contain theSameElementsAs Seq(
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.name.label"))),
+          Value(Text(maxContactDetails.name))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.email.label"))),
+          Value(Text(maxContactDetails.email))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.phone.label"))),
+          Value(Text(maxContactDetails.phone.get))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.companyName.label"))),
+          Value(Text(maxContactDetails.companyName.get))
+        )
+      )
+    }
+
+    "must return minimum agent details" in {
+      AgentTraderDetailsSummary.rowsAgentDetails(
+        minContactDetails
+      ) must contain theSameElementsAs Seq(
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.name.label"))),
+          Value(Text(minContactDetails.name))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.email.label"))),
+          Value(Text(minContactDetails.email))
+        )
+      )
+    }
+  }
+
 }

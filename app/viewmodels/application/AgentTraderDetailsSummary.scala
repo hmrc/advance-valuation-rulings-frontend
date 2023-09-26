@@ -21,22 +21,16 @@ import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
-import models.requests.Application
+import models.requests.{Application, Attachment, ContactDetails, TraderDetail}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AgentTraderDetailsSummary {
 
-  def rowRoleDescription()(implicit messages: Messages): SummaryListRow =
-    SummaryListRowViewModel(
-      key = "checkYourAnswersForAgents.applicant.role.label",
-      value = ValueViewModel(messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader"))
-    )
-
   def rowLetterOfAuthority(
-    application: Application
+    letterOfAuthority: Option[Attachment]
   )(implicit messages: Messages): Option[SummaryListRow] =
-    application.letterOfAuthority match {
+    letterOfAuthority match {
       case Some(value) =>
         Some(
           SummaryListRowViewModel(
@@ -47,28 +41,28 @@ object AgentTraderDetailsSummary {
       case _           => None
     }
 
-  def rowTraderEori(application: Application)(implicit messages: Messages): SummaryListRow =
+  def rowTraderEori(eori: String)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = "agentForTraderCheckYourAnswers.trader.eori.number.label",
-      value = ValueViewModel(application.trader.eori)
+      value = ValueViewModel(eori)
     )
 
-  def rowsTraderDetails(application: Application)(implicit
+  def rowsTraderDetails(traderDetail: TraderDetail)(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
     val addressLines = Seq(
-      Some(application.trader.addressLine1),
-      application.trader.addressLine2,
-      application.trader.addressLine3,
-      Some(application.trader.postcode),
-      Some(application.trader.countryCode)
+      Some(traderDetail.addressLine1),
+      traderDetail.addressLine2,
+      traderDetail.addressLine3,
+      Some(traderDetail.postcode),
+      Some(traderDetail.countryCode)
     ).flatten.mkString("<br/>")
 
     Seq(
       Some(
         SummaryListRowViewModel(
           key = "agentForTraderCheckYourAnswers.trader.name.label",
-          value = ValueViewModel(application.trader.businessName)
+          value = ValueViewModel(traderDetail.businessName)
         )
       ),
       Some(
@@ -80,28 +74,28 @@ object AgentTraderDetailsSummary {
     ).flatten
   }
 
-  def rowsAgentDetails(application: Application)(implicit
+  def rowsAgentDetails(contact: ContactDetails)(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
     val mandatoryRows = Seq(
       SummaryListRowViewModel(
         key = "agentForTraderCheckYourAnswers.applicant.name.label",
-        value = ValueViewModel(application.contact.name)
+        value = ValueViewModel(contact.name)
       ),
       SummaryListRowViewModel(
         key = "agentForTraderCheckYourAnswers.applicant.email.label",
-        value = ValueViewModel(application.contact.email)
+        value = ValueViewModel(contact.email)
       )
     )
 
     val phoneRow = makeRow(
       "agentForTraderCheckYourAnswers.applicant.phone.label",
-      application.contact.phone
+      contact.phone
     )
 
     val companyNameRow = makeRow(
       "agentForTraderCheckYourAnswers.applicant.companyName.label",
-      application.contact.companyName
+      contact.companyName
     )
 
     mandatoryRows ++ phoneRow ++ companyNameRow
