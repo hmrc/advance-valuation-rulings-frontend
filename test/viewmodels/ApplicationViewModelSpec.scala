@@ -272,6 +272,7 @@ object ApplicationViewModelSpec extends Generators {
       requestedMethod = applicationRequest.requestedMethod,
       goodsDetails = applicationRequest.goodsDetails,
       attachments = Nil,
-      whatIsYourRoleResponse = Some(WhatIsYourRole.EmployeeOrg)
+      whatIsYourRoleResponse = Some(WhatIsYourRole.EmployeeOrg),
+      letterOfAuthority = None
     )
 }

@@ -144,7 +144,10 @@ object ViewApplicationControllerSpec extends Generators {
       requestedMethod = applicationRequest.requestedMethod,
       goodsDetails = applicationRequest.goodsDetails,
       attachments = from(Nil),
-      whatIsYourRoleResponse = Some(WhatIsYourRole.AgentTrader)
+      whatIsYourRoleResponse = Some(WhatIsYourRole.AgentTrader),
+      letterOfAuthority = Some(
+        Attachment(0x4L, "bob", None, "the location", Privacy.Public, "application/jpg", 4532L)
+      )
     )
 
   val body: String =
