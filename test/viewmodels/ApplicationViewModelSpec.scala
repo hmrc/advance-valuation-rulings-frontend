@@ -52,8 +52,8 @@ class ApplicationViewModelSpec extends SpecBase {
 
       "must create rows for the applicant" - {
 
-        "must create 4 rows" in {
-          result.applicant.rows.length must be(4)
+        "must create 5 rows" in {
+          result.applicant.rows.length must be(5)
         }
         "must create row for the applicant name" in {
           result.applicant.rows must contain(
@@ -96,16 +96,33 @@ class ApplicationViewModelSpec extends SpecBase {
             Value(Text(goodsDetails.goodsName))
           ),
           SummaryListRow(
+            Key(Text("hasCommodityCode.checkYourAnswersLabel")),
+            Value(Text("site.yes"))
+          ),
+          SummaryListRow(
             Key(Text("commodityCode.checkYourAnswersLabel")),
             Value(Text(goodsDetails.envisagedCommodityCode.get))
+          ),
+          SummaryListRow(
+            // LDS ignore
+            Key(Text("haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel")),
+            Value(Text("site.yes"))
           ),
           SummaryListRow(
             Key(Text("describeTheLegalChallenges.checkYourAnswersLabel")),
             Value(Text(goodsDetails.knownLegalProceedings.get))
           ),
           SummaryListRow(
+            Key(Text("hasConfidentialInformation.checkYourAnswersLabel")),
+            Value(Text("site.yes"))
+          ),
+          SummaryListRow(
             Key(Text("confidentialInformation.checkYourAnswersLabel")),
             Value(Text(goodsDetails.confidentialInformation.get))
+          ),
+          SummaryListRow(
+            Key(Text("doYouWantToUploadDocuments.checkYourAnswersLabel")),
+            Value(Text("site.no"))
           )
         )
       }
@@ -146,8 +163,8 @@ class ApplicationViewModelSpec extends SpecBase {
       val agentApplication = application.copy(agent = Some(agent))
       val result           = ApplicationViewModel(agentApplication)
 
-      "must create 7 rows" in {
-        result.applicant.rows.length must be(7)
+      "must create 8 rows" in {
+        result.applicant.rows.length must be(8)
       }
       "must create row for the applicant name" in {
         result.applicant.rows must contain(

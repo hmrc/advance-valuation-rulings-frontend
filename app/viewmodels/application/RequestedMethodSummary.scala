@@ -17,7 +17,7 @@
 package viewmodels.application
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
 import models.AdaptMethod
 import models.ValuationMethod._
@@ -37,6 +37,22 @@ object RequestedMethodSummary {
       case method: MethodSix   => method6Rows(method)
     }
 
+  private def getRowForOption(option: Option[String], key: Key)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    option match {
+      case Some(_) =>
+        SummaryListRowViewModel(
+          key = key,
+          value = ValueViewModel(messages("site.yes"))
+        )
+      case _       =>
+        SummaryListRowViewModel(
+          key = key,
+          value = ValueViewModel(messages("site.no"))
+        )
+    }
+
   private def method1Rows(method: MethodOne)(implicit messages: Messages): Seq[SummaryListRow] = {
 
     val methodRow = Some(
@@ -53,6 +69,13 @@ object RequestedMethodSummary {
       )
     )
 
+    val saleRelatedPartiesRow = Some(
+      getRowForOption(
+        method.saleBetweenRelatedParties,
+        "isSaleBetweenRelatedParties.checkYourAnswersLabel"
+      )
+    )
+
     val relatedPartiesRow = method.saleBetweenRelatedParties.map {
       info =>
         SummaryListRowViewModel(
@@ -61,13 +84,12 @@ object RequestedMethodSummary {
         )
     }
 
-    val conditionsRow = method.saleConditions.map {
-      conditions =>
-        SummaryListRowViewModel(
-          key = "describeTheConditions.checkYourAnswersLabel",
-          value = ValueViewModel(conditions)
-        )
-    }
+    val restrictionsUseResaleRow = Some(
+      getRowForOption(
+        method.goodsRestrictions,
+        "areThereRestrictionsOnTheGoods.title"
+      )
+    )
 
     val restrictionsRow = method.goodsRestrictions.map {
       restrictions =>
@@ -77,12 +99,30 @@ object RequestedMethodSummary {
         )
     }
 
+    val subjectToConditionsRow = Some(
+      getRowForOption(
+        method.saleConditions,
+        "isTheSaleSubjectToConditions.title"
+      )
+    )
+
+    val conditionsRow = method.saleConditions.map {
+      conditions =>
+        SummaryListRowViewModel(
+          key = "describeTheConditions.checkYourAnswersLabel",
+          value = ValueViewModel(conditions)
+        )
+    }
+
     Seq(
       methodRow,
       saleInvolvedRow,
+      saleRelatedPartiesRow,
       relatedPartiesRow,
-      conditionsRow,
-      restrictionsRow
+      restrictionsUseResaleRow,
+      restrictionsRow,
+      subjectToConditionsRow,
+      conditionsRow
     ).flatten
   }
 
