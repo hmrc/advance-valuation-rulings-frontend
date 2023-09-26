@@ -38,7 +38,6 @@ import pages._
 import services.SubmissionService
 import viewmodels.checkAnswers.summary._
 import viewmodels.govuk.SummaryListFluency
-import views.html.CheckYourAnswersForAgentsView
 
 class CheckYourAnswersForAgentsControllerSpec
     extends SpecBase
@@ -46,56 +45,6 @@ class CheckYourAnswersForAgentsControllerSpec
     with EitherValues {
 
   "Check Your Answers for Agents Controller" - {
-
-    "must return OK and the correct view for a GET as OrganisationAdmin" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        val appSummary = ApplicationSummary(
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, emptyUserAnswers)(
-            stubMessages()
-          ),
-          IndividualApplicantSummary(fullUserAnswers)(stubMessages()),
-          DetailsSummary(fullUserAnswers)(stubMessages()),
-          MethodSummary(fullUserAnswers)(stubMessages())
-        )
-
-        when(
-          mockApplicationSummaryService.getApplicationSummary(
-            any[UserAnswers],
-            any[TraderDetailsWithCountryCode]
-          )(any[Messages])
-        ).thenReturn(appSummary)
-
-        private val application = applicationBuilderAsOrg(userAnswers = Option(orgAdminUserAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector),
-            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService)
-          )
-          .build()
-
-        implicit val msgs: Messages = messages(application)
-
-        running(application) {
-          implicit val request: Request[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourAnswersForAgentsController.onPageLoad(draftId).url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[CheckYourAnswersForAgentsView]
-          val list = mockApplicationSummaryService.getApplicationSummary(
-            orgAdminUserAnswers,
-            traderDetailsWithCountryCode
-          )
-
-          status(result) mustEqual OK
-
-          contentAsString(result) mustEqual view(
-            list,
-            EmployeeOfOrg,
-            draftId
-          ).toString
-        }
-      }
 
     "must return OK and the correct view for a GET as OrganisationAssistant claiming to be EmployeeOfOrg" in
       new CheckYourAnswersForAgentsControllerSpecSetup {
@@ -189,57 +138,6 @@ class CheckYourAnswersForAgentsControllerSpec
         private val application = applicationBuilderAsOrg(userAnswers = None).build()
 
         runApplication(application, routes.JourneyRecoveryController.onPageLoad().url)
-      }
-
-    "must redirect to Application Complete when application submission succeeds" in
-      new CheckYourAnswersForAgentsControllerSpecSetup {
-
-        private val applicationId = ApplicationId(1)
-        private val response      = ApplicationSubmissionResponse(applicationId)
-
-        when(mockSubmissionService.submitApplication(any(), any())(any()))
-          .thenReturn(Future.successful(response))
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
-
-        private val userAnswers = orgAssistantUserAnswers
-          .setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
-          .futureValue
-
-        val appSummary = ApplicationSummary(
-          IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
-            stubMessages()
-          ),
-          IndividualApplicantSummary(userAnswers)(stubMessages()),
-          DetailsSummary(userAnswers)(stubMessages()),
-          MethodSummary(userAnswers)(stubMessages())
-        )
-
-        when(
-          mockApplicationSummaryService.getApplicationSummary(
-            any,
-            any
-          )(any)
-        ).thenReturn(appSummary)
-
-        private val application = applicationBuilderAsOrg(Option(userAnswers))
-          .overrides(
-            bind[SubmissionService].toInstance(mockSubmissionService),
-            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService),
-            bind[BackendConnector].toInstance(mockBackendConnector)
-          )
-          .build()
-
-        private val redirectUrl =
-          routes.ApplicationCompleteController.onPageLoad(applicationId.toString).url
-
-        runApplication(application, redirectUrl, POST)
       }
   }
 

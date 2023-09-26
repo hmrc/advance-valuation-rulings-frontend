@@ -28,6 +28,7 @@ import base.SpecBase
 import config.FrontendAppConfig
 import controllers.common.FileUploadHelper
 import models.{DraftAttachment, NormalMode, UploadedFile}
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.when
@@ -69,6 +70,9 @@ class UploadSupportingDocumentsControllerSpec
   "When the page is loaded it must display the expected content" in {
     val userAnswers = userAnswersAsIndividualTrader
       .set(UploadSupportingDocumentPage, successfulFile)
+      .success
+      .value
+      .set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
       .success
       .value
 
