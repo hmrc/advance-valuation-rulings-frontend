@@ -21,7 +21,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
-import models.requests.{Application, Attachment, ContactDetails, TraderDetail}
+import models.requests.{Attachment, ContactDetails, TraderDetail}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

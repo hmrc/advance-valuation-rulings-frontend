@@ -50,6 +50,18 @@ class RequestedMethodSummarySpec extends AnyFreeSpec with Matchers with ScalaChe
           SummaryListRow(
             Key(Text(m("isThereASaleInvolved.checkYourAnswersLabel"))),
             Value(Text(m("site.yes")))
+          ),
+          SummaryListRow(
+            Key(Text(m("isSaleBetweenRelatedParties.checkYourAnswersLabel"))),
+            Value(Text(m("site.no")))
+          ),
+          SummaryListRow(
+            Key(Text(m("areThereRestrictionsOnTheGoods.title"))),
+            Value(Text(m("site.no")))
+          ),
+          SummaryListRow(
+            Key(Text(m("isTheSaleSubjectToConditions.title"))),
+            Value(Text(m("site.no")))
           )
         )
       }
@@ -68,16 +80,28 @@ class RequestedMethodSummarySpec extends AnyFreeSpec with Matchers with ScalaChe
             Value(Text(m("site.yes")))
           ),
           SummaryListRow(
+            Key(Text(m("isSaleBetweenRelatedParties.checkYourAnswersLabel"))),
+            Value(Text(m("site.yes")))
+          ),
+          SummaryListRow(
             Key(Text(m("explainHowPartiesAreRelated.checkYourAnswersLabel"))),
             Value(Text(method.saleBetweenRelatedParties.get))
           ),
           SummaryListRow(
-            Key(Text(m("describeTheConditions.checkYourAnswersLabel"))),
-            Value(Text(method.saleConditions.get))
+            Key(Text(m("areThereRestrictionsOnTheGoods.title"))),
+            Value(Text(m("site.yes")))
           ),
           SummaryListRow(
             Key(Text(m("describeTheRestrictions.checkYourAnswersLabel"))),
             Value(Text(method.goodsRestrictions.get))
+          ),
+          SummaryListRow(
+            Key(Text(m("isTheSaleSubjectToConditions.title"))),
+            Value(Text(m("site.yes")))
+          ),
+          SummaryListRow(
+            Key(Text(m("describeTheConditions.checkYourAnswersLabel"))),
+            Value(Text(method.saleConditions.get))
           )
         )
       }

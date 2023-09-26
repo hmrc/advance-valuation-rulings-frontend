@@ -29,7 +29,7 @@ import org.scalatest.matchers.must.Matchers
 class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
   private implicit val m: Messages = stubMessages()
-  val goods                        =
+  private val goods                =
     GoodsDetails(
       "name",
       "description",
@@ -61,11 +61,29 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
         None
       )
 
-      GoodsDetailsSummary.rows(goods, Nil) must contain only
+      GoodsDetailsSummary.rows(goods, Nil) must contain theSameElementsInOrderAs Seq(
         SummaryListRow(
           Key(Text(m("descriptionOfGoods.checkYourAnswersLabel"))),
           Value(Text(goods.goodsName))
+        ),
+        SummaryListRow(
+          Key(Text(m("hasCommodityCode.checkYourAnswersLabel"))),
+          Value(Text("site.no"))
+        ),
+        SummaryListRow(
+          // LDS ignore
+          Key(Text(m("haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"))),
+          Value(Text("site.no"))
+        ),
+        SummaryListRow(
+          Key(Text(m("hasConfidentialInformation.checkYourAnswersLabel"))),
+          Value(Text("site.no"))
+        ),
+        SummaryListRow(
+          Key(Text(m("doYouWantToUploadDocuments.checkYourAnswersLabel"))),
+          Value(Text("site.no"))
         )
+      )
     }
 
     "must contain rows for all fields when optional values are present" in {
@@ -76,16 +94,33 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
           Value(Text(goods.goodsName))
         ),
         SummaryListRow(
+          Key(Text(m("hasCommodityCode.checkYourAnswersLabel"))),
+          Value(Text("site.yes"))
+        ),
+        SummaryListRow(
           Key(Text(m("commodityCode.checkYourAnswersLabel"))),
           Value(Text(goods.envisagedCommodityCode.get))
+        ),
+        SummaryListRow(
+          // LDS ignore
+          Key(Text(m("haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"))),
+          Value(Text("site.yes"))
         ),
         SummaryListRow(
           Key(Text(m("describeTheLegalChallenges.checkYourAnswersLabel"))),
           Value(Text(goods.knownLegalProceedings.get))
         ),
         SummaryListRow(
+          Key(Text(m("hasConfidentialInformation.checkYourAnswersLabel"))),
+          Value(Text("site.yes"))
+        ),
+        SummaryListRow(
           Key(Text(m("confidentialInformation.checkYourAnswersLabel"))),
           Value(Text(goods.confidentialInformation.get))
+        ),
+        SummaryListRow(
+          Key(Text(m("doYouWantToUploadDocuments.checkYourAnswersLabel"))),
+          Value(Text("site.yes"))
         ),
         SummaryListRow(
           Key(Text(m("uploadSupportingDocuments.checkYourAnswersLabel"))),

@@ -17,7 +17,7 @@
 package viewmodels.application
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
 import models.AdaptMethod
 import models.ValuationMethod._
@@ -37,6 +37,22 @@ object RequestedMethodSummary {
       case method: MethodSix   => method6Rows(method)
     }
 
+  private def getRowForOption(option: Option[String], key: Key)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    option match {
+      case Some(_) =>
+        SummaryListRowViewModel(
+          key = key,
+          value = ValueViewModel(messages("site.yes"))
+        )
+      case _       =>
+        SummaryListRowViewModel(
+          key = key,
+          value = ValueViewModel(messages("site.no"))
+        )
+    }
+
   private def method1Rows(method: MethodOne)(implicit messages: Messages): Seq[SummaryListRow] = {
 
     val methodRow = Some(
@@ -54,9 +70,9 @@ object RequestedMethodSummary {
     )
 
     val saleRelatedPartiesRow = Some(
-      SummaryListRowViewModel(
-        key = "isSaleBetweenRelatedParties.checkYourAnswersLabel",
-        value = ValueViewModel(messages("site.yes"))
+      getRowForOption(
+        method.saleBetweenRelatedParties,
+        "isSaleBetweenRelatedParties.checkYourAnswersLabel"
       )
     )
 
@@ -69,9 +85,9 @@ object RequestedMethodSummary {
     }
 
     val restrictionsUseResaleRow = Some(
-      SummaryListRowViewModel(
-        key = "areThereRestrictionsOnTheGoods.title",
-        value = ValueViewModel(messages("site.yes"))
+      getRowForOption(
+        method.goodsRestrictions,
+        "areThereRestrictionsOnTheGoods.title"
       )
     )
 
@@ -84,9 +100,9 @@ object RequestedMethodSummary {
     }
 
     val subjectToConditionsRow = Some(
-      SummaryListRowViewModel(
-        key = "isTheSaleSubjectToConditions.title",
-        value = ValueViewModel(messages("site.yes"))
+      getRowForOption(
+        method.saleConditions,
+        "isTheSaleSubjectToConditions.title"
       )
     )
 

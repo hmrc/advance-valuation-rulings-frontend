@@ -18,7 +18,7 @@ package viewmodels.application
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
 import models.requests.{Attachment, GoodsDetails}
 import models.requests.Privacy.Confidential
@@ -26,6 +26,23 @@ import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object GoodsDetailsSummary {
+
+  private def getRowForOption(option: Option[String], key: Key)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    option match {
+      case Some(_) =>
+        SummaryListRowViewModel(
+          key = key,
+          value = ValueViewModel(messages("site.yes"))
+        )
+      case _       =>
+        SummaryListRowViewModel(
+          key = key,
+          value = ValueViewModel(messages("site.no"))
+        )
+    }
+
   def rows(goodsDetails: GoodsDetails, attachments: Seq[Attachment])(implicit
     messages: Messages
   ): Seq[SummaryListRow] = {
@@ -38,9 +55,9 @@ object GoodsDetailsSummary {
     )
 
     val commodityCodeQuestionRow = Some(
-      SummaryListRowViewModel(
-        key = "hasCommodityCode.checkYourAnswersLabel",
-        value = ValueViewModel(messages("site.yes"))
+      getRowForOption(
+        goodsDetails.envisagedCommodityCode,
+        "hasCommodityCode.checkYourAnswersLabel"
       )
     )
 
@@ -53,10 +70,9 @@ object GoodsDetailsSummary {
     }
 
     val legalChallengesQuestionRow = Some(
-      SummaryListRowViewModel(
-        //LDS ignore
-        key = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel",
-        value = ValueViewModel(messages("site.yes"))
+      getRowForOption(
+        goodsDetails.knownLegalProceedings,
+        "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel"
       )
     )
 
@@ -69,9 +85,9 @@ object GoodsDetailsSummary {
     }
 
     val confidentialInformationQuestionRow = Some(
-      SummaryListRowViewModel(
-        key = "hasConfidentialInformation.checkYourAnswersLabel",
-        value = ValueViewModel(messages("site.yes"))
+      getRowForOption(
+        goodsDetails.confidentialInformation,
+        "hasConfidentialInformation.checkYourAnswersLabel"
       )
     )
 
@@ -85,10 +101,17 @@ object GoodsDetailsSummary {
       }
 
     val uploadSupportingDocumentsQuestionRow = Some(
-      SummaryListRowViewModel(
-        key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
-        value = ValueViewModel(messages("site.yes"))
-      )
+      if (attachments.nonEmpty) {
+        SummaryListRowViewModel(
+          key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
+          value = ValueViewModel(messages("site.yes"))
+        )
+      } else {
+        SummaryListRowViewModel(
+          key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
+          value = ValueViewModel(messages("site.no"))
+        )
+      }
     )
 
     val attachmentRowContent = attachments
