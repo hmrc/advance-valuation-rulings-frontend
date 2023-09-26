@@ -54,6 +54,7 @@ object GoodsDetailsSummary {
 
     val legalChallengesQuestionRow = Some(
       SummaryListRowViewModel(
+        //LDS ignore
         key = "haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel",
         value = ValueViewModel(messages("site.yes"))
       )
