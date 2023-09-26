@@ -17,6 +17,7 @@
 package viewmodels
 
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 
 import models.requests._
@@ -34,23 +35,23 @@ object ApplicationViewModel {
   def apply(application: Application)(implicit
     messages: Messages
   ): ApplicationViewModel = {
-    val eoriRow       = getEoriRow(application)
-    val applicant     = ContactDetailsSummary.rows(application.contact)
-    val agentRows     = application.agent.map(agent => AgentDetailsSummary.rows(agent)).getOrElse(Nil)
-    val dateSubmitted = DateSubmittedSummary.row(application)
-    val goodsDetails  = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
-    val methodDetails = RequestedMethodSummary.rows(application.requestedMethod)
+    val eoriRow         = getEoriRow(application)
+    val applicant       = ContactDetailsSummary.rows(application.contact)
+    val agentRows       = application.agent.map(agent => AgentDetailsSummary.rows(agent)).getOrElse(Nil)
+    val dateSubmitted   = DateSubmittedSummary.row(application)
+    val goodsDetails    = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
+    val methodDetails   = RequestedMethodSummary.rows(application.requestedMethod)
+    val roleDescription = RoleDetailsSummary.rowRoleDescription(application)
 
     val agentDetails =
       if (isAgentForTrader(application)) {
         val traderDetails           = AgentTraderDetailsSummary.rowsTraderDetails(application)
         val agentDetails            = AgentTraderDetailsSummary.rowsAgentDetails(application)
         val letterOfAuthorityOption = AgentTraderDetailsSummary.rowLetterOfAuthority(application)
-        val roleDescription         = AgentTraderDetailsSummary.rowRoleDescription()
 
-        traderDetails ++ agentDetails ++ letterOfAuthorityOption :+ roleDescription :+ dateSubmitted
+        traderDetails ++ agentDetails ++ letterOfAuthorityOption ++ roleDescription :+ dateSubmitted
       } else {
-        applicant ++ agentRows :+ dateSubmitted
+        applicant ++ agentRows ++ roleDescription :+ dateSubmitted
       }
 
     ApplicationViewModel(
@@ -75,5 +76,4 @@ object ApplicationViewModel {
       case Some(WhatIsYourRole.AgentTrader) => true
       case _                                => false
     }
-
 }
