@@ -101,5 +101,8 @@ package userrole {
       )
 
     override val getMaxSupportingDocuments: Int = 5
+
+    override def sourceFromUA: Boolean = false
+
   }
 }
