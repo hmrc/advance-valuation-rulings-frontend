@@ -17,9 +17,9 @@
 @import config.FrontendAppConfig
 @import models.upscan.UpscanInitiateResponse
 @import components._
+@import helper._
 
 @this(  mainLayout: templates.Layout,
-        formHelper: FormWithCSRF,
         govukButton: GovukButton,
         govukErrorSummary: GovukErrorSummary,
         caption: Caption,
@@ -64,6 +64,7 @@
       @for(field <- upscanInitiateResponse.uploadRequest.fields) {
         <input type="hidden" name="@field._1" value="@field._2"/>
       }
+        @CSRF.formField
 
       @content
 
