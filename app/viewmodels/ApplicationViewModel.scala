@@ -49,7 +49,7 @@ object ApplicationViewModel {
         val letterOfAuthorityOption =
           AgentTraderDetailsSummary.rowLetterOfAuthority(application.letterOfAuthority)
 
-        traderDetails ++ agentDetails ++ letterOfAuthorityOption ++ roleDescription :+ dateSubmitted
+        agentDetails ++ letterOfAuthorityOption ++ roleDescription :+ dateSubmitted
       } else {
         applicant ++ agentRows ++ roleDescription :+ dateSubmitted
       }
