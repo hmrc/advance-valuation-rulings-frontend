@@ -31,9 +31,10 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import controllers.routes.ProvideTraderEoriController
+  import logging.Logging
   import models.{BusinessContactDetails, UserAnswers}
   import models.requests.ContactDetails
-  import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, ValuationMethodPage}
+  import pages.{BusinessContactDetailsPage, ProvideTraderEoriPage, UploadLetterOfAuthorityPage, ValuationMethodPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, TraderEoriDetailsSummary}
   import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
@@ -43,7 +44,8 @@ package userrole {
     eoriBeUpToDateViewPublic: AgentForTraderPublicEORIBeUpToDateView,
     eoriBeUpToDateViewPrivate: AgentForTraderPrivateEORIBeUpToDateView,
     requiredInformationView: AgentForTraderRequiredInformationView
-  ) extends UserRole {
+  ) extends UserRole
+      with Logging {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
       details: TraderDetailsWithCountryCode,
@@ -86,14 +88,22 @@ package userrole {
       userAnswers: UserAnswers,
       traderDetailsWithCountryCode: TraderDetailsWithCountryCode
     )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
-      (
-        AgentSummary(userAnswers),
-        TraderEoriDetailsSummary(
-          traderDetailsWithCountryCode,
-          userAnswers.draftId,
-          userAnswers.get(UploadLetterOfAuthorityPage).get.fileName.get
-        )
-      )
+      userAnswers.get(VerifyTraderDetailsPage) match {
+        case Some(traderDetailsFromUA) =>
+          (
+            AgentSummary(userAnswers),
+            TraderEoriDetailsSummary(
+              traderDetailsFromUA.withoutConfirmation,
+              userAnswers.draftId,
+              userAnswers.get(UploadLetterOfAuthorityPage).get.fileName.get
+            )
+          )
+
+        case None =>
+          logger.error("VerifyTraderDetailsPage needs to be answered(getApplicationSummary)")
+          throw new Exception("VerifyTraderDetailsPage needs to be answered(getApplicationSummary)")
+
+      }
 
     override def getContactDetailsForApplicationRequest(
       userAnswers: UserAnswers
@@ -104,6 +114,8 @@ package userrole {
       )
 
     override val getMaxSupportingDocuments: Int = 4
+
+    override def sourceFromUA: Boolean = true
 
   }
 

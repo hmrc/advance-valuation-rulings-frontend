@@ -25,11 +25,11 @@ import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, UploadedFile}
+import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UploadedFile}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage}
+import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
 import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, MethodSummary, TraderEoriDetailsSummary}
 import views.html.{AgentForOrgCheckYourAnswersView, AgentForTraderCheckRegisteredDetailsView, AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
@@ -71,6 +71,11 @@ class AgentForTraderSpec extends SpecBase with Matchers {
             "",
             UploadedFile.UploadDetails.apply("", "", Instant.now(), "", 1L)
           )
+        )
+        .futureValue
+        .setFuture(
+          VerifyTraderDetailsPage,
+          TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
         )
         .futureValue
       val summary: (ApplicantSummary, EoriDetailsSummary) =

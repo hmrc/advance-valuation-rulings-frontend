@@ -68,4 +68,5 @@ trait UserRole {
 
   def getMaxSupportingDocuments: Int
 
+  def sourceFromUA: Boolean
 }

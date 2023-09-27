@@ -22,6 +22,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
@@ -29,9 +30,9 @@ import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
-import models.DraftId
+import models.{DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode}
 import models.requests._
-import pages.Page
+import pages.{Page, VerifyTraderDetailsPage}
 import services.SubmissionService
 import userrole.UserRoleProvider
 import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
@@ -80,33 +81,50 @@ class CheckYourAnswersController @Inject() (
             }
         }
     }
-
-  def onSubmit(draftId: DraftId): Action[AnyContent] =
+  def onSubmit(draftId: DraftId): Action[AnyContent]   =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        getTraderDetails {
-          traderDetails =>
-            applicationRequestService(
-              request.userAnswers,
-              traderDetails
-            ) match {
-              case Invalid(errors: cats.data.NonEmptyList[Page]) =>
-                logger.warn(
-                  s"Failed to create application request: ${errors.toList.mkString(", ")}}"
-                )
-                Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-              case Valid(applicationRequest)                     =>
-                submissionService
-                  .submitApplication(applicationRequest, request.userId)
-                  .map {
-                    response =>
-                      Redirect(
-                        routes.ApplicationCompleteController
-                          .onPageLoad(response.applicationId.toString)
-                      )
-                  }
-            }
+        if (userRoleProvider.getUserRole(request.userAnswers).sourceFromUA) {
+          request.userAnswers.get(VerifyTraderDetailsPage) match {
+            case Some(td) => xyz(request, td.withoutConfirmation)
+            case None     =>
+              logger.error(
+                "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
+              )
+              throw new Exception(
+                "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
+              )
+
+          }
+
+        } else {
+          getTraderDetails({ traderDetails => xyz(request, traderDetails) })
         }
+
+    }
+
+  private def xyz(request: DataRequest[AnyContent], traderDetails: TraderDetailsWithCountryCode)(
+    implicit hc: HeaderCarrier
+  ) =
+    applicationRequestService(
+      request.userAnswers,
+      traderDetails
+    ) match {
+      case Invalid(errors: cats.data.NonEmptyList[Page]) =>
+        logger.warn(
+          s"Failed to create application request: ${errors.toList.mkString(", ")}}"
+        )
+        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      case Valid(applicationRequest)                     =>
+        submissionService
+          .submitApplication(applicationRequest, request.userId)
+          .map {
+            response =>
+              Redirect(
+                routes.ApplicationCompleteController
+                  .onPageLoad(response.applicationId.toString)
+              )
+          }
     }
 
 }

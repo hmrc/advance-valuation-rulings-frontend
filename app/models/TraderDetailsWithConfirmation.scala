@@ -25,7 +25,16 @@ final case class TraderDetailsWithConfirmation(
   CDSEstablishmentAddress: CDSEstablishmentAddress,
   contactInformation: Option[ContactInformation],
   confirmation: Option[Boolean]
-)
+) {
+  def withoutConfirmation: TraderDetailsWithCountryCode =
+    TraderDetailsWithCountryCode(
+      EORINo,
+      consentToDisclosureOfPersonalData,
+      CDSFullName,
+      CDSEstablishmentAddress,
+      contactInformation
+    )
+}
 
 object TraderDetailsWithConfirmation {
   def apply(details: TraderDetailsWithCountryCode) =
