@@ -35,14 +35,18 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
   val nameMapping: (String, Mapping[String]) = "name" -> text(nameRequiredError)
     .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
-    .verifying(maxLength(Validation.nameMaxLength, nameLengthError))
 
   val emailMapping: (String, Mapping[String]) = "email" -> text(emailRequiredError)
-    .verifying(maxLength(Validation.emailMaxLength, emailLengthError))
     .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError))
 
   val phoneMapping: (String, Mapping[String]) = "phone" -> text(phoneRequiredError)
-    .verifying(phoneInvalidError, phone => Validation.phoneFormat(phone))
+    .verifying(
+      phoneFormatError,
+      phone =>
+        isValid(phone)
+          && !phone.exists(_.isLetter)
+    )
+    .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError))
 
   val companyNameMapping: (String, Mapping[String]) =
     "companyName" -> text(companyNameRequiredError)
@@ -94,7 +98,8 @@ object BusinessContactDetailsFormProvider {
   private val emailLengthError   = "businessContactDetails.email.length"
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
-  private val phoneInvalidError  = "businessContactDetails.telephoneNumber.error.format"
+  private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
+  private val phoneLengthError   = "businessContactDetails.telephoneNumber.error.length"
 
   private val companyNameRequiredError = "businessContactDetails.companyName.error.required"
 }
