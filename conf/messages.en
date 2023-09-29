@@ -541,6 +541,7 @@ uploadSupportingDocuments.bulletPoint.1 = one file at a time
 uploadSupportingDocuments.bulletPoint.2 = up to {0} files
 uploadSupportingDocuments.bulletPoint.3 = smaller than {0}MB
 uploadSupportingDocuments.bulletPoint.4 = a PDF or JPEG
+uploadSupportingDocuments.paragraph.3 = Do not upload password-protected files, as this will prevent the processing of your application.
 
 uploadSupportingDocuments.label = Upload a file
 uploadSupportingDocuments.button = Upload and continue
