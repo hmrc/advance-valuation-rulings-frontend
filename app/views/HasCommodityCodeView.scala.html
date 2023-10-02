@@ -59,9 +59,8 @@
 
         @heading(s"${messages("hasCommodityCode.heading")}")
 
-        @detailsDrop(messages("hasCommodityCode.details.label"),
-                    detailsContent
-                    )
+        </br>
+        <p class="govuk-body">@detailsContent</p>
 
         @govukRadios(
             RadiosViewModel.yesNo(
