@@ -245,8 +245,8 @@ hasCommodityCode.caption = About the goods
 hasCommodityCode.checkYourAnswersLabel = Do you have a commodity code for the goods?
 hasCommodityCode.error.required = Select yes if you know the commodity code
 hasCommodityCode.details.label = Help finding your commodity code
-hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. If you are unable to find a commodity code you can select ’No’.<br><br>{0}
-hasCommodityCode.paragraph.1.link = Find your commodity code (opens in new tab)
+hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. <br><br>You can {0} if you do not know it.
+hasCommodityCode.paragraph.1.link = look up the commodity code for your goods
 hasCommodityCode.change.hidden = your response to whether you have a commodity code for the goods
 
 #PROVIDE TRADER EORI NUMBER
