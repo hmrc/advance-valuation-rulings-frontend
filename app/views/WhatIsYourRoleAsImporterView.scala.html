@@ -42,7 +42,14 @@
 
         @caption(messages("caption.applicant"))
         @heading(messages("whatIsYourRoleAsImporter.heading"))
-        @para(Html(messages("whatIsYourRoleAsImporter.para.1")))
+
+        <p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-4">
+            @messages("whatIsYourRoleAsImporter.para.1")
+        </p>
+
+        <div class="govuk-inset-text">
+            @messages("whatIsYourRoleAsImporter.warning")
+        </div>
 
         @govukRadios(
             RadiosViewModel(
