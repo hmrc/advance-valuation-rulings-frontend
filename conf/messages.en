@@ -600,7 +600,7 @@ haveYouUsedMethodOneInPast.paragraph.inset = If you cannot provide evidence of a
 haveYouUsedMethodOneInPast.error.required = Select if you can provide evidence of a Method 1 declaration
 haveYouUsedMethodOneInPast.checkYourAnswersLabel = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods identical to those being valued?
 haveYouUsedMethodOneInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration
-haveYouUsedMethodOneInPast.question = Do you have have evidence of a Method 1 declaration?
+haveYouUsedMethodOneInPast.question = Do you have evidence of a Method 1 declaration?
 
 whyTransactionValueOfSimilarGoods.title = Explain why you have not selected Methods 1 or 2 to value your goods
 whyTransactionValueOfSimilarGoods.heading = Explain why you have not selected Methods 1 or 2 to value your goods
