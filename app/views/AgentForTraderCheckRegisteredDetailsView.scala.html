@@ -24,7 +24,6 @@ govukRadios: GovukRadios,
 caption: Caption,
 heading: Heading,
 headingH3: headingH3,
-warning: Warning,
 paragraph: Paragraph,
 subheading: Subheading,
 cancelApplicationLink: CancelApplicationLink,
@@ -36,7 +35,7 @@ link: Link
 
 @headingContent = {
     @if(registeredDetails.consentToDisclosureOfPersonalData) {
-        @heading(messages("checkRegisteredDetails.heading.1", registeredDetails.EORINo))
+        @heading(messages("checkRegisteredDetails.heading.agentTrader", registeredDetails.EORINo))
     } else {
         @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.EORINo))
     }
@@ -62,7 +61,7 @@ link: Link
 @paraContent = {
 @if(registeredDetails.consentToDisclosureOfPersonalData) {
 
-    @warning(content=Html(messages("checkRegisteredDetails.warning.agentOnBehalfOfTrader")))
+    @paragraph(Html(messages("checkRegisteredDetails.warning.agentOnBehalfOfTrader")))
 
     @subheading(messages("checkRegisteredDetails.subheading.1"))
 

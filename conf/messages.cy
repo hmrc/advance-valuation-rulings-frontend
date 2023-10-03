@@ -100,6 +100,9 @@ importGoods.change.hidden = are you importing goods
 
 checkRegisteredDetails.caption = Ynglŷn â’r ymgeisydd
 checkRegisteredDetails.title = Gwirio’r enw a’r cyfeiriad ar gyfer y rhif EORI {0}
+checkRegisteredDetails.heading.employeeOrg = Check your EORI details
+checkRegisteredDetails.heading.agentOrg = Check the organisation’s EORI details
+checkRegisteredDetails.heading.agentTrader = Check the trader’s EORI details
 checkRegisteredDetails.heading.1 = Gwirio’r enw a’r cyfeiriad ar gyfer y rhif EORI {0}
 checkRegisteredDetails.heading.2 = Enw cofrestredig y busnes
 checkRegisteredDetails.heading.3 = Cyfeiriad cofrestredig y busnes
@@ -228,16 +231,18 @@ explainHowPartiesAreRelated.error.required = Nodwch ddisgrifiad o’r cysylltiad
 explainHowPartiesAreRelated.checkYourAnswersLabel = Disgrifiwch beth yw’r cysylltiad rhwng y partïon
 explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
 explainHowPartiesAreRelated.change.hidden = your description of how the parties are related
+explainHowPartiesAreRelated.question = Can you describe how the parties are related?
 
 areThereRestrictionsOnTheGoods.caption = Ynglŷn â’r nwyddau
-areThereRestrictionsOnTheGoods.title = A oes unrhyw gyfyngiadau o ran ailwerthu neu ddefnyddio’r nwyddau?
-areThereRestrictionsOnTheGoods.heading = A oes unrhyw gyfyngiadau o ran ailwerthu neu ddefnyddio’r nwyddau?
+areThereRestrictionsOnTheGoods.title = Restrictions on the use or resale of the goods
+areThereRestrictionsOnTheGoods.heading = Restrictions on the use or resale of the goods
 areThereRestrictionsOnTheGoods.checkYourAnswersLabel = A oes unrhyw gyfyngiadau o ran ailwerthu neu ddefnyddio’r nwyddau?
 areThereRestrictionsOnTheGoods.error.required = Dewiswch ‘Iawn’ os oes unrhyw gyfyngiadau ar waith
 areThereRestrictionsOnTheGoods.paragraph.1 = Gallwn ond derbyn cyfyngiadau os yw’r canlynol yn wir:
 areThereRestrictionsOnTheGoods.bulletPoint.1 = maent wedi’u gorfodi neu’n ofynnol yn ôl y gyfraith neu gan awdurdodau cyhoeddus yn y DU
 areThereRestrictionsOnTheGoods.bulletPoint.2 = maent yn cyfyngu’r ardal ddaearyddol lle gellir ailwerthu’r nwyddau
 areThereRestrictionsOnTheGoods.bulletPoint.3 = nid ydynt yn effeithio’n sylweddol ar werth y nwyddau
+areThereRestrictionsOnTheGoods.question = Do you have any restrictions on the use or the resale of the goods?
 areThereRestrictionsOnTheGoods.change.hidden = your response to whether there are restrictions on the use/resale of the goods
 
 describeTheRestrictions.caption = Ynglŷn â’r nwyddau
@@ -251,14 +256,15 @@ describeTheRestrictions.paragraph.1 = Bydd rhoi disgrifiad manwl o’r cysylltia
 describeTheRestrictions.change.hidden = your description of the restrictions on the use/resale of the goods
 
 isTheSaleSubjectToConditions.caption = Ynglŷn â’r nwyddau
-isTheSaleSubjectToConditions.title = A yw’r gwerthiant yn destun i unrhyw amodau neu amgylchiadau na ellir eu cyfrifo?
-isTheSaleSubjectToConditions.heading = A yw’r gwerthiant yn destun i unrhyw amodau neu amgylchiadau na ellir eu cyfrifo?
+isTheSaleSubjectToConditions.title = Conditions or circumstances that could restrict you from valuing the goods
+isTheSaleSubjectToConditions.heading = Conditions or circumstances that could restrict you from valuing the goods
 isTheSaleSubjectToConditions.checkYourAnswersLabel = A yw’r gwerthiant yn destun i unrhyw amodau neu amgylchiadau na ellir eu cyfrifo?
 isTheSaleSubjectToConditions.error.required = Dewiswch ‘Iawn’ os yw’r gwerthiant yn destun unrhyw amodau neu amgylchiadau a allai eich rhwystro rhag prisio’r nwyddau
 isTheSaleSubjectToConditions.paragraph.1 = Ni ddylai gwerthiant neu bris fod yn seiliedig ar amodau neu amgylchiadau na ellir eu cyfrifo mewn perthynas â’r nwyddau. Mae enghreifftiau’n cynnwys:
 isTheSaleSubjectToConditions.bulletPoint.1 = pan fydd y gwerthwr yn gosod y pris ar yr amod eich bod yn prynu nwyddau eraill ganddyn nhw mewn symiau penodedig
 isTheSaleSubjectToConditions.bulletPoint.2 = pan fydd y pris y byddwch yn ei godi ar y gwerthwr am nwyddau eraill yn pennu’r pris y byddwch yn ei dalu am y nwyddau a fewnforiwyd
 isTheSaleSubjectToConditions.bulletPoint.3 = pan fydd cytundeb rhyngoch chi a’r gwerthwr yn pennu’r pris y byddwch yn ei dalu ar gyfer y nwyddau a fewnforiwyd
+isTheSaleSubjectToConditions.question = Is there anything that could restrict you from valuing the goods?
 isTheSaleSubjectToConditions.change.hidden = your response to whether the sale is subject to conditions or circumstances which cannot be calculated
 
 describeTheConditions.caption = Ynglŷn â’r nwyddau
@@ -284,13 +290,18 @@ whyIdenticalGoods.error.length = Maximum allowed characters is 8168
 whyIdenticalGoods.change.hidden = your reason for not selecting Method 1 to value the goods
 
 haveYouUsedMethodOneInPast.caption = Ynglŷn â’r nwyddau
-haveYouUsedMethodOneInPast.title = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
-haveYouUsedMethodOneInPast.heading = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
-haveYouUsedMethodOneInPast.paragraph.1 = Mae Dull 2 yn seiliedig ar werth nwyddau unfath sy’n cael eu hallforio i’r DU ar yr un adeg neu tua’r un adeg (cyn pen 90 diwrnod) â’r nwyddau sy’n cael eu prisio.
+haveYouUsedMethodOneInPast.title = Provide evidence of a Method 1 declaration
+haveYouUsedMethodOneInPast.heading = Provide evidence of a Method 1 declaration
+haveYouUsedMethodOneInPast.paragraph.1 = Method 2 is based on the transaction value of identical goods exported to the UK within 90-days of the goods you are valuing. It must have been accepted by UK Customs.
+haveYouUsedMethodOneInPast.paragraph.2 = Acceptable evidence of a Method 1 declaration can include:
+haveYouUsedMethodOneInPast.bulletPoint.1 = a copy of the import entry for the identical goods
+haveYouUsedMethodOneInPast.bulletPoint.2 = copies of the supporting documents
+haveYouUsedMethodOneInPast.bulletPoint.3 = data that will help HMRC trace the import of the identical goods
+haveYouUsedMethodOneInPast.paragraph.inset = If you cannot provide evidence of a Method 1 declaration, you will need to choose another valuation method for your goods.
 haveYouUsedMethodOneInPast.error.required = Dewiswch ‘Iawn’ os gallwch roi tystiolaeth o ddatganiad Dull 1
-haveYouUsedMethodOneInPast.no.text = Na – os byddwch yn dewis ‘Na’ bydd angen i chi ddewis dull prisio amgen
 haveYouUsedMethodOneInPast.checkYourAnswersLabel = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
 haveYouUsedMethodOneInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration
+haveYouUsedMethodOneInPast.question = Do you have have evidence of a Method 1 declaration?
 
 describeTheIdenticalGoods.caption = Ynglŷn â’r nwyddau
 describeTheIdenticalGoods.title = Disgrifiwch y nwyddau unfath
@@ -319,12 +330,19 @@ whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = Y rheswm dros beidio �
 whyTransactionValueOfSimilarGoods.change.hidden = your reason for not selecting Methods 1-2 to value the goods
 
 haveYouUsedMethodOneForSimilarGoodsInPast.caption = Ynglŷn â’r nwyddau
-haveYouUsedMethodOneForSimilarGoodsInPast.title = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
-haveYouUsedMethodOneForSimilarGoodsInPast.heading = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
+haveYouUsedMethodOneForSimilarGoodsInPast.title = Provide evidence of a Method 1 declaration
+haveYouUsedMethodOneForSimilarGoodsInPast.heading = Provide evidence of a Method 1 declaration
 haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Mae Dull 3 yn seiliedig ar werth nwyddau tebyg sy’n cael eu hallforio i’r DU ar yr un adeg neu tua’r un adeg (cyn pen 90 diwrnod) â’r nwyddau sy’n cael eu prisio.
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.2 = Cyn i chi roi cynnig ar Ddull 3 dylech fod wedi defnyddio’r canlynol yn gyntaf:
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.3 = Acceptable evidence of a Method 1 declaration can include:
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.1 = Method 1 (transaction value of the identical goods)
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.2 = Dull 2 (gwerth trafodiad nwyddau unfath)
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.3 = a copy of the import entry for the identical goods
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.4 = copies of the supporting documents
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.5 = data that will help HMRC trace the import of the identical goods
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.inset = If you cannot provide evidence of a Method 1 declaration, you will need to choose another valuation method for your goods.
 haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
 haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Dewiswch ‘Iawn’ os gallwch roi tystiolaeth o ddatganiad Dull 1
-haveYouUsedMethodOneForSimilarGoodsInPast.no.text = Na – os byddwch yn dewis ‘Na’ bydd angen i chi ddewis dull prisio amgen
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued
 
 describeTheSimilarGoods.caption = Ynglŷn â’r nwyddau
@@ -517,8 +535,8 @@ confidentialInformation.bulletPoint.3 = cost cynhyrchu
 confidentialInformation.bulletPoint.4 = unrhyw fater contractiol neu sensitif sy’n rhan o’r trefniant masnachol
 
 doYouWantToUploadDocuments.caption = Ynglŷn â’r nwyddau
-doYouWantToUploadDocuments.title = A ydych am uwchlwytho unrhyw ddogfennau ategol?
-doYouWantToUploadDocuments.heading = A ydych am uwchlwytho unrhyw ddogfennau ategol?
+doYouWantToUploadDocuments.title = Supporting documents
+doYouWantToUploadDocuments.heading = Supporting documents
 doYouWantToUploadDocuments.para = Gallwch uwchlwytho unrhyw ddogfennau a fydd yn ategu’ch cais, er enghraifft:
 doYouWantToUploadDocuments.bulletPoint.1 = tystiolaeth o’r pris a dalwyd neu sy’n daladwy am y nwyddau (anfonebau masnachol, archebion prynu)
 doYouWantToUploadDocuments.bulletPoint.2 = copïau datganiadau mewnforio blaenorol
@@ -526,6 +544,7 @@ doYouWantToUploadDocuments.bulletPoint.3 = dadansoddiad o’r costau cynhyrchu
 doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych am uwchlwytho unrhyw ddogfennau ategol?
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
+doYouWantToUploadDocuments.question = A ydych am uwchlwytho unrhyw ddogfennau ategol?
 
 uploadLetterOfAuthority.title = Uwchlwytho’ch llythyr o awdurdod
 uploadLetterOfAuthority.heading = Uwchlwytho’ch llythyr o awdurdod
@@ -630,7 +649,6 @@ checkYourAnswers.applicant.name.label = Enw’r ymgeisdd
 checkYourAnswers.applicant.email.label = Cyfeiriad e-bost yr ymgeisydd
 checkYourAnswers.applicant.phone.label = Rhif ffôn yr ymgeisydd
 checkYourAnswer.applicant.dateSubmitted.label = Date submitted
-checkYourAnswers.goods.uploaddocuments.label = Documents uploaded
 
 checkYourAnswers.agent.heading = Ynglŷn â’r asiant
 checkYourAnswers.goods.heading = Ynglŷn â’r nwyddau
@@ -965,7 +983,7 @@ traderDetails.common.searchAgain.link = Chwiliwch eto
 traderDetails.common.searchAgain = {0} os ydych yn meddwl eich bod wedi nodi cyfeiriad EORI y masnachwr yn anghywir.
 
 #TRADER DETAILS - PUBLIC
-traderDetails.public.heading=Check the name and address for EORI number {0}
+traderDetails.public.heading = Check the trader’s EORI details
 traderDetails.public.p1=Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
 traderDetails.public.h2=Manylion cofrestru EORI
 traderDetails.public.h3.businessName=Enw’r busnes cofrestredig

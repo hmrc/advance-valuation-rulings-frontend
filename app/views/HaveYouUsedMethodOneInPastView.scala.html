@@ -25,6 +25,9 @@
     paragraph: Paragraph,
     heading: Heading,
     cancelLink: CancelApplicationLink,
+    bulletList: BulletList,
+    insetPara: InsetPara,
+    subheading: Subheading,
     saveButtons: SaveButtons
 )
 
@@ -41,12 +44,19 @@
     @caption(messages("haveYouUsedMethodOneInPast.caption"))
     @heading(messages("haveYouUsedMethodOneInPast.heading"))
     @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.1")))
+    @insetPara(Html(messages("haveYouUsedMethodOneInPast.paragraph.inset")))
+    @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.2")))
+    @bulletList(Seq(
+        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.1")),
+        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.2")),
+        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.3")),
+    ))
+    @subheading(messages("haveYouUsedMethodOneInPast.question"))
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend(),
-                noText = messages("haveYouUsedMethodOneInPast.no.text")
+                legend = Legend()
             )
         )
 

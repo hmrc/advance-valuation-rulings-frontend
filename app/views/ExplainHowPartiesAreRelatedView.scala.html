@@ -27,15 +27,18 @@
     caption: Caption,
     heading: Heading,
     cancelLink: CancelApplicationLink,
+    subheading: Subheading,
     saveButtons: SaveButtonsWithDraft
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 @onSubmitAction(saveDraft: Boolean = true) = @{routes.ExplainHowPartiesAreRelatedController.onSubmit(NormalMode, draftId, saveDraft)
 }
-@paraContent = {    @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
-                    @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
-                }
+@paraAndSubheadingContent = {
+    @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
+    @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
+    @subheading(messages("explainHowPartiesAreRelated.question"))
+}
 
 @layout(pageTitle = title(form, messages("explainHowPartiesAreRelated.title")), draftId = Some(draftId)) {
 
@@ -47,14 +50,14 @@
 
         @caption(messages("explainHowPartiesAreRelated.caption"))
 
-         @govukTextarea(
+        @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
                 label = LabelViewModel(messages("explainHowPartiesAreRelated.heading")).asPageHeading()
                 )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
-                .withHint(Hint(content = HtmlContent(paraContent)))
+                .withHint(Hint(content = HtmlContent(paraAndSubheadingContent)))
                 .withId("value")
 
         )

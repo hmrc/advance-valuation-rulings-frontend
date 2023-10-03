@@ -26,6 +26,7 @@
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
+    subheading: Subheading,
     saveButtons: SaveButtons
 )
 
@@ -48,6 +49,8 @@
             Html(messages("areThereRestrictionsOnTheGoods.bulletPoint.2")),
             Html(messages("areThereRestrictionsOnTheGoods.bulletPoint.3"))
         ))
+
+        @subheading(messages("areThereRestrictionsOnTheGoods.question"))
 
         @govukRadios(
             RadiosViewModel.yesNo(

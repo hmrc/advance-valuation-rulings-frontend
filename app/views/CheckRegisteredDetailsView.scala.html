@@ -40,7 +40,6 @@
     caption: Caption,
     heading: Heading,
     headingH3: headingH3,
-    warning: Warning,
     paragraph: Paragraph,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
@@ -68,11 +67,11 @@
 @paraContent = {
         @if(registeredDetails.consentToDisclosureOfPersonalData) {
             @if(authUserType == AuthUserType.IndividualTrader) {
-                @warning(content=Html(messages("checkRegisteredDetails.warning.individual")))
+                @paragraph(Html(messages("checkRegisteredDetails.warning.individual")))
             } else if(authUserType == AuthUserType.Agent) {
-                @warning(content=Html(messages("checkRegisteredDetails.warning.agent")))
+                @paragraph(Html(messages("checkRegisteredDetails.warning.agent")))
             } else {
-                @warning(content=Html(messages("checkRegisteredDetails.warning.organisation")))
+                @paragraph(Html(messages("checkRegisteredDetails.warning.organisation")))
             }
 
         @paragraph(Html(messages("checkRegisteredDetails.paragraph.1")))
