@@ -26,7 +26,8 @@
     para: Paragraph,
     heading: Heading,
     cancelLink: CancelApplicationLink,
-        saveButtons: SaveButtons
+    subheading: Subheading,
+    saveButtons: SaveButtons
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -50,6 +51,8 @@
             ),
         "govuk-list govuk-list--bullet",
         )
+
+        @subheading(messages("doYouWantToUploadDocuments.question"))
 
         @govukRadios(
             RadiosViewModel.yesNo(

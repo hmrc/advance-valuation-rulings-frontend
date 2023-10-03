@@ -89,7 +89,6 @@ checkYourAnswers.applicant.name.label = Applicant name
 checkYourAnswers.applicant.email.label = Applicant email address
 checkYourAnswers.applicant.phone.label = Applicant telephone number
 checkYourAnswer.applicant.dateSubmitted.label = Date submitted
-checkYourAnswers.goods.uploaddocuments.label = Documents uploaded
 
 checkYourAnswersForAgents.title = Check your answers before sending your application
 checkYourAnswersForAgents.heading = Check your answers before sending your application
@@ -265,7 +264,7 @@ traderDetails.common.searchAgain.link = Search again
 traderDetails.common.searchAgain = {0} if you think you entered the trader''s EORI number incorrectly.
 
 #TRADER DETAILS - PUBLIC
-traderDetails.public.heading=Check the name and address for EORI number {0}
+traderDetails.public.heading = Check the trader’s EORI details
 traderDetails.public.p1=These are the EORI details we have on record for the trader you are representing. They should be the same details the trader used to register their EORI number.
 traderDetails.public.h2=EORI registration details
 traderDetails.public.h3.businessName=Registered business name
@@ -386,6 +385,9 @@ accountHome.status.draft = In progress
 
 checkRegisteredDetails.title = Check the name and address for EORI number {0}
 checkRegisteredDetails.private.title = The registration details for EORI number {0} are private
+checkRegisteredDetails.heading.employeeOrg = Check your EORI details
+checkRegisteredDetails.heading.agentOrg = Check the organisation’s EORI details
+checkRegisteredDetails.heading.agentTrader = Check the trader’s EORI details
 checkRegisteredDetails.heading.1 = Check the name and address for EORI number {0}
 checkRegisteredDetails.heading.2 = Registered business name
 checkRegisteredDetails.heading.3 = Registered business address
@@ -457,8 +459,8 @@ eoriBeUpToDate.bulletPoint.1 = {0}
 eoriBeUpToDate.bulletPoint.2.link = import and export: general enquiries (opens in new tab)
 eoriBeUpToDate.bulletPoint.2 = contact {0}
 
-doYouWantToUploadDocuments.title = Do you want to upload any supporting documents?
-doYouWantToUploadDocuments.heading = Do you want to upload any supporting documents?
+doYouWantToUploadDocuments.title = Supporting documents
+doYouWantToUploadDocuments.heading = Supporting documents
 doYouWantToUploadDocuments.caption = About the goods
 doYouWantToUploadDocuments.para = You can upload any documents that will support your application, for example:
 doYouWantToUploadDocuments.bulletPoint.1 = evidence of price paid or payable for the goods (commercial invoices, purchase orders)
@@ -467,6 +469,7 @@ doYouWantToUploadDocuments.bulletPoint.3 = breakdowns of manufacturing costs
 doYouWantToUploadDocuments.checkYourAnswersLabel = Do you want to upload any supporting documents?
 doYouWantToUploadDocuments.error.required = Select yes if you want to upload any supporting documents
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
+doYouWantToUploadDocuments.question = Do you want to upload any supporting documents?
 
 isThisFileConfidential.title = Tell us if you want to make this document confidential
 isThisFileConfidential.heading = Tell us if you want to make this document confidential
@@ -583,14 +586,19 @@ whyComputedValue.error.required = Enter an explanation about why you have not se
 whyComputedValue.error.length = Maximum allowed characters is 8168
 whyComputedValue.change.hidden = your reason for not selecting Methods 1-4 to value the goods
 
-haveYouUsedMethodOneInPast.title = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods identical to those being valued?
-haveYouUsedMethodOneInPast.heading = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods identical to those being valued?
+haveYouUsedMethodOneInPast.title = Provide evidence of a Method 1 declaration
+haveYouUsedMethodOneInPast.heading = Provide evidence of a Method 1 declaration
 haveYouUsedMethodOneInPast.caption = About the goods
-haveYouUsedMethodOneInPast.paragraph.1 = Method 2 is based on the transaction value of identical goods exported to the UK at or about the same time (within 90-days) as the goods being valued.
+haveYouUsedMethodOneInPast.paragraph.1 = Method 2 is based on the transaction value of identical goods exported to the UK within 90-days of the goods you are valuing. It must have been accepted by UK Customs.
+haveYouUsedMethodOneInPast.paragraph.2 = Acceptable evidence of a Method 1 declaration can include:
+haveYouUsedMethodOneInPast.bulletPoint.1 = a copy of the import entry for the identical goods
+haveYouUsedMethodOneInPast.bulletPoint.2 = copies of the supporting documents
+haveYouUsedMethodOneInPast.bulletPoint.3 = data that will help HMRC trace the import of the identical goods
+haveYouUsedMethodOneInPast.paragraph.inset = If you cannot provide evidence of a Method 1 declaration, you will need to choose another valuation method for your goods.
 haveYouUsedMethodOneInPast.error.required = Select if you can provide evidence of a Method 1 declaration
-haveYouUsedMethodOneInPast.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
 haveYouUsedMethodOneInPast.checkYourAnswersLabel = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods identical to those being valued?
 haveYouUsedMethodOneInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration
+haveYouUsedMethodOneInPast.question = Do you have have evidence of a Method 1 declaration?
 
 whyTransactionValueOfSimilarGoods.title = Explain why you have not selected Methods 1 or 2 to value your goods
 whyTransactionValueOfSimilarGoods.heading = Explain why you have not selected Methods 1 or 2 to value your goods
@@ -627,6 +635,7 @@ explainHowPartiesAreRelated.error.required = Enter a description of how the part
 explainHowPartiesAreRelated.checkYourAnswersLabel = Description of how the parties are related
 explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
 explainHowPartiesAreRelated.change.hidden = your description of how the parties are related
+explainHowPartiesAreRelated.question = Can you describe how the parties are related?
 
 isSaleBetweenRelatedParties.title = Is the sale between related parties?
 isSaleBetweenRelatedParties.heading = Is the sale between related parties?
@@ -863,16 +872,21 @@ describeTheSimilarGoods.error.required = Enter a description of the similar good
 describeTheSimilarGoods.error.length = Maximum allowed characters is 8168
 describeTheSimilarGoods.change.hidden = your description of the similar goods
 
-haveYouUsedMethodOneForSimilarGoodsInPast.title = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued?
-haveYouUsedMethodOneForSimilarGoodsInPast.heading = Can you provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued?
+haveYouUsedMethodOneForSimilarGoodsInPast.title = Provide evidence of a Method 1 declaration
+haveYouUsedMethodOneForSimilarGoodsInPast.heading = Provide evidence of a Method 1 declaration
 haveYouUsedMethodOneForSimilarGoodsInPast.caption = About the goods
 haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1 = Method 3 is based on the transaction value of similar goods exported to the UK at or about the same time (within 90-days) as the goods being valued.
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.2 = Before you try Method 3 you must first have used:
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.3 = Acceptable evidence of a Method 1 declaration can include:
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.1 = Method 1 (transaction value of the identical goods)
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.2 = Method 2 (transaction value of identical goods)
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.3 = a copy of the import entry for the identical goods
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.4 = copies of the supporting documents
+haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.5 = data that will help HMRC trace the import of the identical goods
+haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.inset = If you cannot provide evidence of a Method 1 declaration, you will need to choose another valuation method for your goods.
 haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = Can you provide evidence of a Method 1 declaration you have made, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued?
 haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select if you can provide evidence of a Method 1 declaration
-haveYouUsedMethodOneForSimilarGoodsInPast.no.text = No - if you choose ‘no’ you will need to select an alternative valuation method
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued
-
-
 
 whatIsYourRoleAsImporter.title = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?

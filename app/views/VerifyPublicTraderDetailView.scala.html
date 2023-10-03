@@ -29,7 +29,6 @@
     headingH3: headingH3,
     subheading: Subheading,
     paragraph: Paragraph,
-    warning: Warning,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
     link: Link
@@ -58,7 +57,7 @@
     )
 }
 
-@layout(pageTitle = title(form, messages("traderDetails.public.heading", details.EORINo)), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("traderDetails.public.heading")), draftId = Some(draftId)) {
 
     @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId)) {
 
@@ -67,10 +66,10 @@
         }
 
         @caption(messages("caption.applicant"))
-        @heading(messages("traderDetails.public.heading", details.EORINo))
+        @heading(messages("traderDetails.public.heading"))
 
         <br>
-        @warning(content=Html(messages("traderDetails.public.p1")))
+        @paragraph(Html(messages("traderDetails.public.p1")))
 
         @subheading(messages("traderDetails.public.h2"))
 
