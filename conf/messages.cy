@@ -300,7 +300,7 @@ haveYouUsedMethodOneInPast.paragraph.inset = If you cannot provide evidence of a
 haveYouUsedMethodOneInPast.error.required = Dewiswch ‘Iawn’ os gallwch roi tystiolaeth o ddatganiad Dull 1
 haveYouUsedMethodOneInPast.checkYourAnswersLabel = Allwch chi ddarparu tystiolaeth o ddatganiad Dull 1, sydd wedi’i dderbyn gan Dollau’r DU cyn pen 90 diwrnod o fewnforio’r nwyddau hynny, sy’n union yr un fath â’r rhai sy’n cael eu prisio?
 haveYouUsedMethodOneInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration
-haveYouUsedMethodOneInPast.question = Do you have have evidence of a Method 1 declaration?
+haveYouUsedMethodOneInPast.question = Do you have evidence of a Method 1 declaration?
 
 describeTheIdenticalGoods.caption = Ynglŷn â’r nwyddau
 describeTheIdenticalGoods.title = Disgrifiwch y nwyddau unfath
