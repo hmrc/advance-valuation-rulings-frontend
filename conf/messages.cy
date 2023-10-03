@@ -230,6 +230,7 @@ explainHowPartiesAreRelated.error.required = Nodwch ddisgrifiad o’r cysylltiad
 explainHowPartiesAreRelated.checkYourAnswersLabel = Disgrifiwch beth yw’r cysylltiad rhwng y partïon
 explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
 explainHowPartiesAreRelated.change.hidden = your description of how the parties are related
+explainHowPartiesAreRelated.question = Can you describe how the parties are related?
 
 areThereRestrictionsOnTheGoods.caption = Ynglŷn â’r nwyddau
 areThereRestrictionsOnTheGoods.title = Restrictions on the use or resale of the goods
