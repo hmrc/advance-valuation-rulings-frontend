@@ -812,6 +812,7 @@ whatIsYourRoleAsImporter.heading = Sut byddech chi’n disgrifio’ch rôl fel m
 whatIsYourRoleAsImporter.employeeOfOrg = Gweithiwr sy’n gyflogai yn y sefydliad
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Asiant sy’n gweithredu ar ran sefydliad
 whatIsYourRoleAsImporter.para.1 = Dewiswch yr opsiwn sy’n disgrifio’ch rôl orau:
+whatIsYourRoleAsImporter.warning = You should not change your choice once you have started this application. You will need to create a new application if you want to change your role later.
 whatIsYourRoleAsImporter.employeeOfOrg.hint = Yn mewnforio nwyddau i’r DU ar ran ei sefydliad.
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Yn mewnforio nwyddau i’r DU ar ran sefydliad arall.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
