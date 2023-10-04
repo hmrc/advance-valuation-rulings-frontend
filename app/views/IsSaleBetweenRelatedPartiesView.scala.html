@@ -25,10 +25,15 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    radios: YesNoRadios
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+
+@radiosContent = {
+    @paragraph(content = Html(messages("isSaleBetweenRelatedParties.para")))
+}
 
 @layout(pageTitle = title(form, messages("isSaleBetweenRelatedParties.title")), draftId = Some(draftId)) {
 
@@ -39,15 +44,8 @@
         }
 
         @caption(messages("isSaleBetweenRelatedParties.caption"))
-        @heading(messages("isSaleBetweenRelatedParties.heading"))
-        @paragraph(content = Html(messages("isSaleBetweenRelatedParties.para")))
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = Legend()
-            )
-        )
+        @radios(messages("isSaleBetweenRelatedParties.heading"), radiosContent, form("value"))
 
         @saveButtons(draftId)
     }
