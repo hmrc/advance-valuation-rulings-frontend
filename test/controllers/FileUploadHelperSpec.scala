@@ -26,8 +26,7 @@ import play.api.http.HttpEntity
 import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
 import play.api.inject.bind
 import play.api.mvc.{AnyContent, Cookie, ResponseHeader, Result}
-import play.api.test.{CSRFTokenHelper, FakeRequest}
-import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.HeaderCarrier
@@ -604,7 +603,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       application: Application
     ) = {
       val request =
-        CSRFTokenHelper.addCSRFToken(FakeRequest(GET, getRedirectPath(errorCode = Some(errCode))))
+        FakeRequest(GET, getRedirectPath(errorCode = Some(errCode)))
       val result  = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
