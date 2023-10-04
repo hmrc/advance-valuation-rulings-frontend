@@ -27,7 +27,8 @@
     heading: Heading,
     paragraph: Paragraph,
     subheading: Subheading,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -50,12 +51,14 @@
             Html(messages("isTheSaleSubjectToConditions.bulletPoint.3"))
         ))
 
-        @subheading(messages("isTheSaleSubjectToConditions.question"))
-
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend(),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("isTheSaleSubjectToConditions.question")).toString
+                    )
+                )
             )
         )
 
