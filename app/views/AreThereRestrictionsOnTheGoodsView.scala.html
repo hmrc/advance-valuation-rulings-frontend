@@ -32,6 +32,12 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@legend = {
+    <h2 class='govuk-fieldset__legend--m'>
+        @messages("areThereRestrictionsOnTheGoods.question")
+    </h2>
+}
+
 @layout(pageTitle = title(form, messages("areThereRestrictionsOnTheGoods.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.AreThereRestrictionsOnTheGoodsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
@@ -50,12 +56,14 @@
             Html(messages("areThereRestrictionsOnTheGoods.bulletPoint.3"))
         ))
 
-        @subheading(messages("areThereRestrictionsOnTheGoods.question"))
-
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend(),
+                legend = Legend(
+                    HtmlContent(
+                        legend.toString
+                    )
+                ),
             )
         )
 
