@@ -27,16 +27,11 @@
     heading: Heading,
     paragraph: Paragraph,
     subheading: Subheading,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-
-@legend = {
-    <h2 class='govuk-fieldset__legend--m'>
-        @messages("areThereRestrictionsOnTheGoods.question")
-    </h2>
-}
 
 @layout(pageTitle = title(form, messages("areThereRestrictionsOnTheGoods.title")), draftId = Some(draftId)) {
 
@@ -61,7 +56,7 @@
                 field = form("value"),
                 legend = Legend(
                     HtmlContent(
-                        legend.toString
+                        legend(messages("areThereRestrictionsOnTheGoods.question")).toString
                     )
                 ),
             )
