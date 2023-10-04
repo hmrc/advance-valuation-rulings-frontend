@@ -62,25 +62,25 @@ if(field.value.isDefined && field.value.get == "employeeOfOrg") {
     <b>@messages("whatIsYourRoleAsImporter.employeeOfOrg")</b>
    </label>
    <div id="value_0-item-hint" class="govuk-hint govuk-radios__hint">
-    Imports goods into the UK on behalf of their organisation.
+    @messages("whatIsYourRoleAsImporter.employeeOfOrg.hint")
    </div>
   </div>
   <div class="govuk-radios__item">
    <input class="govuk-radios__input" id="value_1" name="value" type="radio" value="agentOnBehalfOfOrg" aria-describedby="value_1-item-hint" @agentOrgChecked>
    <label class="govuk-label govuk-radios__label" for="value_1">
-    <b>Agent acting on behalf of an organisation</b>
+    <b>@messages("whatIsYourRoleAsImporter.agentOnBehalfOfOrg")</b>
    </label>
    <div id="value_1-item-hint" class="govuk-hint govuk-radios__hint">
-    Imports goods into the UK on behalf of another organisation.
+    @messages("whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint")
    </div>
   </div>
   <div class="govuk-radios__item">
    <input class="govuk-radios__input" id="value_2" name="value" type="radio" value="agentOnBehalfOfTrader" aria-describedby="value_2-item-hint" @agentTraderChecked>
    <label class="govuk-label govuk-radios__label" for="value_2">
-    <b>Agent acting on behalf of a trader</b>
+    <b>@messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader")</b>
    </label>
    <div id="value_2-item-hint" class="govuk-hint govuk-radios__hint">
-    Imports goods into the UK on behalf of an individual trader.
+    @messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader.hint")
    </div>
   </div>
  </div>
