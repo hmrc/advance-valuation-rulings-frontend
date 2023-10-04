@@ -51,8 +51,8 @@
                 field = form("name"),
                 label = LabelViewModel(messages("applicationContactDetails.fullName.label"))
             )
-            .withWidth(OneHalf)
             .asContactName()
+            .withWidth(Full)
         )
 
         @govukInput(
@@ -61,7 +61,7 @@
                 label = LabelViewModel(messages("applicationContactDetails.email.label"))
             )
             .asEmail()
-            .withWidth(OneHalf)
+            .withWidth(Full)
         )
 
         @govukInput(
@@ -71,6 +71,15 @@
             )
             .asTelephone()
             .withWidth(OneHalf)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("jobTitle"),
+                label = LabelViewModel(messages("applicationContactDetails.jobTitle.label"))
+            )
+            .asJobTitle()
+            .withWidth(ThreeQuarters)
         )
 
         @saveButtons(draftId, onSubmitAction())

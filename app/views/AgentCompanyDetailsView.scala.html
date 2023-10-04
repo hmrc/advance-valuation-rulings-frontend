@@ -25,6 +25,7 @@
     govukSelect: GovukSelect,
     saveButtons: SaveButtonsWithDraft,
     heading: Heading,
+    paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink
 
 )
@@ -41,6 +42,7 @@
         }
 
         @heading(messages("agentCompanyDetails.heading"))
+        @paragraph(content = Html(messages("agentCompanyDetails.paragraph")))
 
         @govukInput(
             InputViewModel(
@@ -76,7 +78,7 @@
                 field = form("agentCity"),
                 label = LabelViewModel(messages("agentCompanyDetails.agentCity"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed20)
             .withSpellcheck(on = false)
             .withAutocomplete("address-level2")
         )

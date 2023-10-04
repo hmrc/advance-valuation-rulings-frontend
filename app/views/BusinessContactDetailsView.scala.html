@@ -42,16 +42,20 @@
 
         @caption(messages("businessContactDetails.caption"))
         @heading(messages("businessContactDetails.heading"))
-        @paragraph(content = Html(messages("businessContactDetails.paragraph")))
 
+        @if(includeCompanyName){
+            @paragraph(content = Html(messages("businessContactDetails.paragraph.agentTrader")))
+        } else {
+            @paragraph(content = Html(messages("businessContactDetails.paragraph.agentOrg")))
+        }
 
         @govukInput(
             InputViewModel(
                 field = form("name"),
                 label = LabelViewModel(messages("businessContactDetails.fullName.label"))
             )
-            .withWidth(OneHalf)
             .asContactName()
+            .withWidth(Full)
         )
 
         @govukInput(
@@ -60,7 +64,7 @@
                 label = LabelViewModel(messages("businessContactDetails.email.label"))
             )
             .asEmail()
-            .withWidth(OneHalf)
+            .withWidth(Full)
         )
 
         @govukInput(
@@ -78,10 +82,18 @@
                     field = form("companyName"),
                     label = LabelViewModel(messages("businessContactDetails.companyName.label"))
                 )
-                .withWidth(OneHalf)
+                .withWidth(Full)
             )
         }
 
+        @govukInput(
+            InputViewModel(
+                field = form("jobTitle"),
+                label = LabelViewModel(messages("businessContactDetails.jobTitle.label"))
+            )
+            .asJobTitle()
+            .withWidth(ThreeQuarters)
+        )
 
         @saveButtons(draftId, onSubmitAction())
     }
