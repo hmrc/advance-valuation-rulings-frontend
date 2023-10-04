@@ -1,0 +1,87 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.api.i18n.Messages
+
+@this()
+
+@(heading: String, content: Html, field: Field, messages: Messages)
+
+
+@employeeChecked = @{
+if(field.value.isDefined && field.value.get == "employeeOfOrg") {
+"checked"
+} else {
+""
+}
+}
+
+@agentOrgChecked = @{
+ if(field.value.isDefined && field.value.get == "agentOnBehalfOfOrg") {
+  "checked"
+ } else {
+  ""
+ }
+}
+
+@agentTraderChecked = @{
+ if(field.value.isDefined && field.value.get == "agentOnBehalfOfTrader") {
+  "checked"
+ } else {
+  ""
+ }
+}
+
+<fieldset class="govuk-fieldset govuk-!-margin-bottom-4">
+
+ <legend class="govuk-fieldset__legend  govuk-fieldset__legend--xl">
+  <h1 class="govuk-fieldset__heading">
+   @heading
+  </h1>
+ </legend>
+
+ @content
+
+ <div class="govuk-radios" data-module="govuk-radios">
+  <div class="govuk-radios__item">
+   <input class="govuk-radios__input" id="value_0" name="value" type="radio" value="employeeOfOrg" aria-describedby="value_0-item-hint" @employeeChecked>
+   <label class="govuk-label govuk-radios__label" for="value_0">
+    <b>@messages("whatIsYourRoleAsImporter.employeeOfOrg")</b>
+   </label>
+   <div id="value_0-item-hint" class="govuk-hint govuk-radios__hint">
+    Imports goods into the UK on behalf of their organisation.
+   </div>
+  </div>
+  <div class="govuk-radios__item">
+   <input class="govuk-radios__input" id="value_1" name="value" type="radio" value="agentOnBehalfOfOrg" aria-describedby="value_1-item-hint" @agentOrgChecked>
+   <label class="govuk-label govuk-radios__label" for="value_1">
+    <b>Agent acting on behalf of an organisation</b>
+   </label>
+   <div id="value_1-item-hint" class="govuk-hint govuk-radios__hint">
+    Imports goods into the UK on behalf of another organisation.
+   </div>
+  </div>
+  <div class="govuk-radios__item">
+   <input class="govuk-radios__input" id="value_2" name="value" type="radio" value="agentOnBehalfOfTrader" aria-describedby="value_2-item-hint" @agentTraderChecked>
+   <label class="govuk-label govuk-radios__label" for="value_2">
+    <b>Agent acting on behalf of a trader</b>
+   </label>
+   <div id="value_2-item-hint" class="govuk-hint govuk-radios__hint">
+    Imports goods into the UK on behalf of an individual trader.
+   </div>
+  </div>
+ </div>
+</fieldset>
