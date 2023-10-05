@@ -872,11 +872,12 @@ accountHome.viewApplication = View application
 accountHome.continueApplication = Continue application
 accountHome.deleteApplication = Delete application
 accountHome.reference = Reference
-accountHome.goodsName = Name of goods
+accountHome.goodsName = Goods description
 accountHome.date = Date submitted
 accountHome.status = Status
 accountHome.status.submitted = Submitted
 accountHome.status.draft = In progress
+accountHome.noDescription = no description
 
 explainYourGoodsComparingToIdenticalGoods.title = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 explainYourGoodsComparingToIdenticalGoods.caption = Ynglŷn â’r nwyddau

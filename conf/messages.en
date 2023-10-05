@@ -377,11 +377,12 @@ accountHome.viewApplication = View application
 accountHome.continueApplication = Continue application
 accountHome.deleteApplication = Delete application
 accountHome.reference = Reference
-accountHome.goodsName = Name of goods
+accountHome.goodsName = Goods description
 accountHome.date = Date submitted
 accountHome.status = Status
 accountHome.status.submitted = Submitted
 accountHome.status.draft = In progress
+accountHome.noDescription = no description
 
 checkRegisteredDetails.title.employeeOfOrg = Check your EORI details
 checkRegisteredDetails.title.agentOrg = Check the organisation’s EORI details
