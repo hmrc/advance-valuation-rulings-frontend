@@ -24,8 +24,8 @@ object Validation {
   val phoneNumberMaxLength = 24
   val emailMaxLength       = 50
 
-  val nameInputPattern: Regex = "[A-Za-zÀ-ÖØ-öø-ÿĀ-ňŊ-ſ'’ -]+".r.anchored
-  val emailPattern: Regex     = """^\S+@\S+$""".r
+  val simpleCharactersInputPattern: Regex = "[A-Za-zÀ-ÖØ-öø-ÿĀ-ňŊ-ſ'’ -]+".r.anchored
+  val emailPattern: Regex                 = """^\S+@\S+$""".r
 
   def phoneFormat(phoneNumber: String): Boolean = {
     val number             = phoneNumber

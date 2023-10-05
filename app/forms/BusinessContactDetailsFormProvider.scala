@@ -34,7 +34,9 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
   private val util = PhoneNumberUtil.getInstance
 
   private val nameMapping: (String, Mapping[String]) = "name" -> text(nameRequiredError)
-    .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
+    .verifying(
+      Constraints.pattern(Validation.simpleCharactersInputPattern, error = nameFormatError)
+    )
 
   private val emailMapping: (String, Mapping[String]) = "email" -> text(emailRequiredError)
     .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError))
@@ -43,16 +45,18 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
     .verifying(
       phoneFormatError,
       phone =>
-        isValid(phone)
-          && !phone.exists(_.isLetter)
+        isValid(phone) && !phone.exists(
+          _.isLetter
+        ) && phone.length <= Validation.phoneNumberMaxLength
     )
-    .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError))
 
   private val companyNameMapping: (String, Mapping[String]) =
     "companyName" -> text(companyNameRequiredError)
 
   private val jobTitleMapping: (String, Mapping[String]) = "jobTitle" -> text(jobTitleRequiredError)
-    .verifying(Constraints.pattern(Validation.nameInputPattern, error = jobTitleFormatError))
+    .verifying(
+      Constraints.pattern(Validation.simpleCharactersInputPattern, error = jobTitleFormatError)
+    )
 
   private val defaultMap = mapping(nameMapping, emailMapping, phoneMapping, jobTitleMapping)(
     (name, email, phone, jobTitle) =>
@@ -104,7 +108,6 @@ object BusinessContactDetailsFormProvider {
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
-  private val phoneLengthError   = "businessContactDetails.telephoneNumber.error.length"
 
   private val companyNameRequiredError = "businessContactDetails.companyName.error.required"
 

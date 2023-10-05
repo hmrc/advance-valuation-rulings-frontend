@@ -35,19 +35,24 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         "name"     -> text(nameRequiredError)
-          .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError)),
+          .verifying(
+            Constraints.pattern(Validation.simpleCharactersInputPattern, error = nameFormatError)
+          ),
         "email"    -> text(emailRequiredError)
           .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError)),
         "phone"    -> text(phoneRequiredError)
           .verifying(
             phoneFormatError,
             phone =>
-              isValid(phone)
-                && !phone.exists(_.isLetter)
-          )
-          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError)),
+              isValid(phone) && !phone.exists(
+                _.isLetter
+              ) && phone.length <= Validation.phoneNumberMaxLength
+          ),
         "jobTitle" -> text(jobTitleRequiredError)
-          .verifying(Constraints.pattern(Validation.nameInputPattern, error = jobTitleFormatError))
+          .verifying(
+            Constraints
+              .pattern(Validation.simpleCharactersInputPattern, error = jobTitleFormatError)
+          )
       )(ApplicationContactDetails.apply)(
         (applicationContactDetails: ApplicationContactDetails) =>
           Some(
@@ -74,7 +79,6 @@ object ApplicationContactDetailsFormProvider {
 
   private val phoneRequiredError = "applicationContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "applicationContactDetails.telephoneNumber.error.format"
-  private val phoneLengthError   = "applicationContactDetails.telephoneNumber.error.length"
 
   private val jobTitleRequiredError = "applicationContactDetails.jobTitle.error.required"
   private val jobTitleFormatError   = "applicationContactDetails.simpleChars.error.format"

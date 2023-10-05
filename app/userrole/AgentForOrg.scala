@@ -17,7 +17,6 @@
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Call}
-import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
