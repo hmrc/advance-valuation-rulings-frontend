@@ -141,6 +141,14 @@
                 .preventingDoubleClick()
                 .withAttribute(("id" -> "submit"))
       )
+      @govukButton(
+        ButtonViewModel(
+            messages("site.saveAsDraft")
+        )
+        .asSecondaryButton()
+        .asLink(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
+        .preventingDoubleClick()
+      )
     </div>
   }
 
