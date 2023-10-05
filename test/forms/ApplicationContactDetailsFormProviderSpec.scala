@@ -44,7 +44,7 @@ class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
   ".nameField" - {
     val nameField     = "name"
     val lengthKey     = "applicationContactDetails.fullName.length"
-    val invalidKey    = "applicationContactDetails.fullName.error.format"
+    val invalidKey    = "applicationContactDetails.simpleChars.error.format"
     val nameMaxLength = 70
 
     behave like fieldThatBindsValidData(

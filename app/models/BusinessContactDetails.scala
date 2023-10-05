@@ -22,7 +22,8 @@ case class BusinessContactDetails(
   name: String,
   email: String,
   phone: String,
-  companyName: Option[String]
+  companyName: Option[String],
+  jobTitle: String
 )
 
 object BusinessContactDetails {

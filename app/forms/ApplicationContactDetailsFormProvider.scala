@@ -34,25 +34,28 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[ApplicationContactDetails] =
     Form(
       mapping(
-        "name"  -> text(nameRequiredError)
+        "name"     -> text(nameRequiredError)
           .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError)),
-        "email" -> text(emailRequiredError)
+        "email"    -> text(emailRequiredError)
           .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError)),
-        "phone" -> text(phoneRequiredError)
+        "phone"    -> text(phoneRequiredError)
           .verifying(
             phoneFormatError,
             phone =>
               isValid(phone)
                 && !phone.exists(_.isLetter)
           )
-          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError))
+          .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError)),
+        "jobTitle" -> text(jobTitleRequiredError)
+          .verifying(Constraints.pattern(Validation.nameInputPattern, error = jobTitleFormatError))
       )(ApplicationContactDetails.apply)(
         (applicationContactDetails: ApplicationContactDetails) =>
           Some(
             (
               applicationContactDetails.name,
               applicationContactDetails.email,
-              applicationContactDetails.phone
+              applicationContactDetails.phone,
+              applicationContactDetails.jobTitle
             )
           )
       )
@@ -64,16 +67,17 @@ object ApplicationContactDetailsFormProvider {
   private val util = PhoneNumberUtil.getInstance
 
   private val nameRequiredError = "applicationContactDetails.fullName.error.required"
-  private val nameFormatError   = "applicationContactDetails.fullName.error.format"
-  private val nameLengthError   = "applicationContactDetails.fullName.length"
+  private val nameFormatError   = "applicationContactDetails.simpleChars.error.format"
 
   private val emailRequiredError = "applicationContactDetails.email.error.required"
   private val emailFormatError   = "applicationContactDetails.email.error.format"
-  private val emailLengthError   = "applicationContactDetails.email.length"
 
   private val phoneRequiredError = "applicationContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "applicationContactDetails.telephoneNumber.error.format"
   private val phoneLengthError   = "applicationContactDetails.telephoneNumber.error.length"
+
+  private val jobTitleRequiredError = "applicationContactDetails.jobTitle.error.required"
+  private val jobTitleFormatError   = "applicationContactDetails.simpleChars.error.format"
 
   private def isValid(string: String): Boolean =
     Try(util.isPossibleNumber(util.parse(string, "GB")))
