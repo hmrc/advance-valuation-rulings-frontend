@@ -16,46 +16,68 @@
 
 @this()
 
-@(heading: String, content: Html, field: Field)
+@(heading: String, content: Html, form: Form[_])(implicit messages: Messages)
 
-@yesChecked = @{
- if(field.value.isDefined && field.value.get == "true") {
+@(valueToCheck: String) = @{
+ if (form("value").value.isDefined && form("value").value.get == valueToCheck) {
   "checked"
  } else {
   ""
  }
 }
 
-@noChecked = @{
- if(field.value.isDefined && field.value.get == "false") {
-  "checked"
+@yesChecked = @valueToCheck("true")
+@noChecked = @valueToCheck("false")
+
+@errorClassOrNot = @{
+ if(form.errors.nonEmpty) {
+  "govuk-form-group govuk-form-group--error"
+ } else {
+  "govuk-form-group"
+ }
+}
+
+@errorMessage = @{
+ if(form.errors.nonEmpty) {
+  <p id="value-error" class="govuk-error-message">
+   <span class="govuk-visually-hidden">Error:</span>
+     {form.errors.map {
+        error: FormError =>
+         messages(error.message)
+     }}
+  </p>
  } else {
   ""
  }
 }
 
-<fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+<div class="@errorClassOrNot">
 
-<legend class="govuk-fieldset__legend  govuk-fieldset__legend--xl">
- <h1 class="govuk-fieldset__heading">
-  @heading
- </h1>
-</legend>
+ <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
 
-@content
+ <legend class="govuk-fieldset__legend  govuk-fieldset__legend--xl">
+  <h1 class="govuk-fieldset__heading">
+   @heading
+  </h1>
+ </legend>
 
-<div class="govuk-radios" data-module="govuk-radios">
- <div class="govuk-radios__item">
-  <input class="govuk-radios__input" id="value" name="value" type="radio" value="true" @yesChecked>
-  <label class="govuk-label govuk-radios__label" for="value">
-  Yes
-  </label>
+ @content
+ @errorMessage
+
+ <div class="govuk-radios" data-module="govuk-radios">
+  <div class="govuk-radios__item">
+   <input class="govuk-radios__input" id="value" name="value" type="radio" value="true" @yesChecked>
+   <label class="govuk-label govuk-radios__label" for="value">
+    @messages("site.yes")
+   </label>
+  </div>
+  <div class="govuk-radios__item">
+   <input class="govuk-radios__input" id="value-no" name="value" type="radio" value="false" @noChecked>
+   <label class="govuk-label govuk-radios__label" for="value-no">
+    @messages("site.no")
+   </label>
+  </div>
  </div>
- <div class="govuk-radios__item">
-  <input class="govuk-radios__input" id="value-no" name="value" type="radio" value="false" @noChecked>
-  <label class="govuk-label govuk-radios__label" for="value-no">
-   No
-  </label>
- </div>
+ </fieldset>
+
 </div>
-</fieldset>

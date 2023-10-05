@@ -14,36 +14,23 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n.Messages
-
 @this()
 
-@(heading: String, content: Html, field: Field, messages: Messages)
+@(heading: String, content: Html, form: Form[_])(implicit messages: Messages)
 
 
-@employeeChecked = @{
-if(field.value.isDefined && field.value.get == "employeeOfOrg") {
-"checked"
-} else {
-""
-}
-}
-
-@agentOrgChecked = @{
- if(field.value.isDefined && field.value.get == "agentOnBehalfOfOrg") {
+@(role: String) = @{
+ if (form("value").value.isDefined && form("value").value.get == role) {
   "checked"
  } else {
   ""
  }
 }
 
-@agentTraderChecked = @{
- if(field.value.isDefined && field.value.get == "agentOnBehalfOfTrader") {
-  "checked"
- } else {
-  ""
- }
-}
+@employeeChecked = @role("employeeOfOrg")
+@agentOrgChecked = @role("agentOnBehalfOfOrg")
+@agentTraderChecked = @role("agentOnBehalfOfTrader")
+
 
 <fieldset class="govuk-fieldset govuk-!-margin-bottom-4">
 
