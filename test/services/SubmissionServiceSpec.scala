@@ -52,7 +52,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
     draftId = draftId,
     trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
     agent = None,
-    contact = ContactDetails("name", "email", None),
+    contact = ContactDetails("name", "email", None, None, None),
     requestedMethod = MethodOne(None, None, None),
     goodsDetails = GoodsDetails("name", "description", None, None, None),
     attachments = Nil,

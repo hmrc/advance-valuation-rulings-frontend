@@ -97,7 +97,7 @@ class AgentForTraderSpec extends SpecBase with Matchers {
       val details  =
         agentForTrader.getContactDetailsForApplicationRequest(ua)
 
-      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),Some(company name),CEO))"
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),Some(company name),Some(CEO)))"
     }
 
     "should return the correct view for CheckYourAnswers" in {

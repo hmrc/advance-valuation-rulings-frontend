@@ -69,7 +69,7 @@ class EmployeeSpec extends SpecBase with Matchers {
       val details  =
         employee.getContactDetailsForApplicationRequest(ua)
 
-      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None,CEO))"
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None,Some(CEO)))"
     }
 
     "should return the correct view for CheckYourAnswers" in {

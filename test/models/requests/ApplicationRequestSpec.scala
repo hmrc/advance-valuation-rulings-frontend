@@ -589,7 +589,9 @@ object ApplicationRequestSpec extends Generators {
   val contact: ContactDetails = ContactDetails(
     name = randomString,
     email = randomString,
-    phone = Some(randomString)
+    phone = Some(randomString),
+    companyName = None,
+    jobTitle = Some(randomString)
   )
 
   val requestedMethod: MethodThree = MethodThree(

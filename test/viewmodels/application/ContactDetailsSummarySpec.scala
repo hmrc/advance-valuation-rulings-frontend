@@ -37,7 +37,9 @@ class ContactDetailsSummarySpec extends AnyFreeSpec with Matchers {
       val contact = ContactDetails(
         "name",
         "email",
-        Some("phone")
+        Some("phone"),
+        Some("company name"),
+        Some("job title")
       )
 
       ContactDetailsSummary.rows(contact) must contain theSameElementsInOrderAs Seq(
@@ -61,7 +63,9 @@ class ContactDetailsSummarySpec extends AnyFreeSpec with Matchers {
       val contact = ContactDetails(
         "name",
         "email",
-        None
+        None,
+        Some("company name"),
+        Some("job title")
       )
 
       ContactDetailsSummary.rows(contact) must contain theSameElementsInOrderAs Seq(

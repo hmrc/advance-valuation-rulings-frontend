@@ -246,7 +246,9 @@ object ApplicationViewModelSpec extends Generators {
   val contact: ContactDetails = ContactDetails(
     name = "contact name",
     email = "email@example.com",
-    phone = Some("phone")
+    phone = Some("phone"),
+    companyName = Some("company name"),
+    jobTitle = Some("job title")
   )
 
   val requestedMethod: MethodThree = MethodThree(

@@ -28,10 +28,18 @@ trait ApplicationRequestGenerator extends Generators {
 
   implicit lazy val arbitraryContactDetails: Arbitrary[ContactDetails] = Arbitrary {
     for {
-      contactName      <- stringsWithMaxLength(70)
-      contactEmail     <- stringsWithMaxLength(70)
-      contactTelephone <- Gen.option(stringsWithMaxLength(9))
-    } yield ContactDetails(contactName, contactEmail, contactTelephone)
+      contactName        <- stringsWithMaxLength(70)
+      contactEmail       <- stringsWithMaxLength(70)
+      contactTelephone   <- Gen.option(stringsWithMaxLength(9))
+      contactCompanyName <- Gen.option(stringsWithMaxLength(70))
+      contactJobTitle    <- Gen.option(stringsWithMaxLength(70))
+    } yield ContactDetails(
+      name = contactName,
+      email = contactEmail,
+      phone = contactTelephone,
+      companyName = contactCompanyName,
+      jobTitle = contactJobTitle
+    )
   }
 
   implicit lazy val arbitraryTraderDetail: Arbitrary[TraderDetail] = Arbitrary {

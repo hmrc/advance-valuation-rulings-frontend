@@ -110,7 +110,7 @@ package userrole {
     ): ValidatedNel[Page, ContactDetails] =
       userAnswers.validatedF[BusinessContactDetails, ContactDetails](
         BusinessContactDetailsPage,
-        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), cd.companyName)
+        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), cd.companyName, Some(cd.jobTitle))
       )
 
     override val getMaxSupportingDocuments: Int = 4

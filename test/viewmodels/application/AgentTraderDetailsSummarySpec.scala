@@ -70,12 +70,15 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
     "Joe Blogs",
     "jb@something.com",
     Some("9876543210"),
-    Some("Company Name")
+    Some("Company Name"),
+    Some("CEO")
   )
 
   val minContactDetails: ContactDetails = ContactDetails(
     "Joe Blogs",
     "jb@something.com",
+    None,
+    None,
     None
   )
 
