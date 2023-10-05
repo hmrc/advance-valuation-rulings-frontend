@@ -18,7 +18,7 @@
 
 @(heading: String, content: Html, form: Form[_])(implicit messages: Messages)
 
-@(valueToCheck: String) = @{
+@valueToCheck(valueToCheck: String) = @{
  if (form("value").value.isDefined && form("value").value.get == valueToCheck) {
   "checked"
  } else {
@@ -26,8 +26,8 @@
  }
 }
 
-@yesChecked = @valueToCheck("true")
-@noChecked = @valueToCheck("false")
+@yesChecked = @{valueToCheck("true")}
+@noChecked = @{valueToCheck("false")}
 
 @errorClassOrNot = @{
  if(form.errors.nonEmpty) {
@@ -41,10 +41,10 @@
  if(form.errors.nonEmpty) {
   <p id="value-error" class="govuk-error-message">
    <span class="govuk-visually-hidden">Error:</span>
-     {form.errors.map {
-        error: FormError =>
-         messages(error.message)
-     }}
+    {form.errors.map {
+       error: FormError =>
+        messages(error.message)
+    }}
   </p>
  } else {
   ""
