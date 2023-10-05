@@ -247,7 +247,7 @@ hasCommodityCode.checkYourAnswersLabel = Do you have a commodity code for the go
 hasCommodityCode.error.required = Select yes if you know the commodity code
 hasCommodityCode.details.label = Help finding your commodity code
 hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. <br><br>You can {0} if you do not know it.
-hasCommodityCode.paragraph.1.link = look up the commodity code for your goods
+hasCommodityCode.paragraph.1.link = look up the commodity code for your goods (opens in new tab)
 hasCommodityCode.change.hidden = your response to whether you have a commodity code for the goods
 
 #PROVIDE TRADER EORI NUMBER
