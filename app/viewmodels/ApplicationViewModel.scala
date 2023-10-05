@@ -44,12 +44,16 @@ object ApplicationViewModel {
 
     val agentDetails =
       if (isAgentForTrader(application)) {
-        val traderDetails           = AgentTraderDetailsSummary.rowsTraderDetails(application.trader)
+        val traderDetails           = application.trader.isPrivate
+          .filter(isPrivate => !isPrivate)
+          .map(_ => AgentTraderDetailsSummary.rowsTraderDetails(application.trader))
+          .toList
+          .flatten
         val agentDetails            = AgentTraderDetailsSummary.rowsAgentDetails(application.contact)
         val letterOfAuthorityOption =
           AgentTraderDetailsSummary.rowLetterOfAuthority(application.letterOfAuthority)
 
-        agentDetails ++ letterOfAuthorityOption ++ roleDescription :+ dateSubmitted
+        traderDetails ++ agentDetails ++ letterOfAuthorityOption ++ roleDescription :+ dateSubmitted
       } else {
         applicant ++ agentRows ++ roleDescription :+ dateSubmitted
       }
