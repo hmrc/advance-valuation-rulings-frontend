@@ -72,12 +72,28 @@ object ApplicationContactDetailsSummary {
       )
     )
 
+  private def jobTitleRow(answer: ApplicationContactDetails, draftId: DraftId)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "checkYourAnswers.applicant.jobTitle.label",
+      value = ValueViewModel(HtmlFormat.escape(answer.jobTitle).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.ApplicationContactDetailsController.onPageLoad(CheckMode, draftId).url
+        )
+          .withVisuallyHiddenText(messages("applicationContactDetails.jobTitle.change.hidden"))
+      )
+    )
+
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(ApplicationContactDetailsPage)
       name            = nameRow(contactDetails, userAnswer.draftId)
       email           = emailRow(contactDetails, userAnswer.draftId)
       contactNumber   = contactNumberRow(contactDetails, userAnswer.draftId)
-      result          = Seq(name, email, contactNumber)
+      jobTitle        = jobTitleRow(contactDetails, userAnswer.draftId)
+      result          = Seq(name, email, contactNumber, jobTitle)
     } yield result
 }

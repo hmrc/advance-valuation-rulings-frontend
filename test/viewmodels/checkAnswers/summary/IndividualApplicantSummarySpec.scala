@@ -53,7 +53,7 @@ class IndividualApplicantSummarySpec extends SpecBase {
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
-        rows.length mustBe 3
+        rows.length mustBe 4
       }
 
       "create row for applicant name" in {
@@ -82,6 +82,16 @@ class IndividualApplicantSummarySpec extends SpecBase {
           )
         )
       }
+
+      "create row for applicant job title" in {
+        rows must contain(
+          (
+            Key(Text("checkYourAnswers.applicant.jobTitle.label")),
+            Value(Text(JobTitle))
+          )
+        )
+      }
+
     }
   }
 }
