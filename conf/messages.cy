@@ -99,7 +99,9 @@ importGoods.error.required = Dewiswch ‘Iawn’ os oes gwerthiant ar waith er m
 importGoods.change.hidden = are you importing goods
 
 checkRegisteredDetails.caption = Ynglŷn â’r ymgeisydd
-checkRegisteredDetails.title = Gwirio’r enw a’r cyfeiriad ar gyfer y rhif EORI {0}
+checkRegisteredDetails.title.employeeOfOrg = Check your EORI details
+checkRegisteredDetails.title.agentOrg = Check the organisation’s EORI details
+checkRegisteredDetails.title.agentTrader = Check the trader’s EORI details
 checkRegisteredDetails.heading.employeeOrg = Check your EORI details
 checkRegisteredDetails.heading.agentOrg = Check the organisation’s EORI details
 checkRegisteredDetails.heading.agentTrader = Check the trader’s EORI details
