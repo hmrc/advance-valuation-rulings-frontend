@@ -52,19 +52,22 @@
   <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css">
   <link href="@routes.Assets.versioned("stylesheets/accessible-autocomplete.min.css").url" media="screen" rel="stylesheet" type="text/css" />
 
-    @draftId.map { id =>
-        @hmrcTimeoutDialogHelper(
-            timeout             = Some(appConfig.timeout),
-            countdown           = Some(appConfig.countdown),
-            keepAliveUrl        = Some(routes.KeepAliveController.keepAlive(id).url),
-            keepAliveButtonText = Some(messages("timeout.keepAlive")),
-            signOutUrl          = controllers.auth.routes.AuthController.signOut().url,
-            signOutButtonText   = Some(messages("timeout.signOut")),
-            timeoutUrl          = Some(controllers.auth.routes.AuthController.signOutNoSurvey().url),
-            title               = Some(messages("timeout.title")),
-            message             = Some(messages("timeout.message"))
-        )
-    }.getOrElse(additionalHeadBlock)
+    @hmrcTimeoutDialogHelper(
+        timeout             = Some(appConfig.timeout),
+        countdown           = Some(appConfig.countdown),
+        keepAliveUrl        = draftId.map(id => routes.KeepAliveController.keepAlive(id).url),
+        keepAliveButtonText = Some(messages("timeout.keepAlive")),
+        signOutUrl          = controllers.auth.routes.AuthController.signOut().url,
+        signOutButtonText   = Some(messages("timeout.signOut")),
+        timeoutUrl          = Some(controllers.auth.routes.AuthController.signOutNoSurvey().url),
+        title               = Some(messages("timeout.title")),
+        message             = Some(messages("timeout.message"))
+    )
+
+    @if(!draftId.isDefined) {
+        @additionalHeadBlock
+    }
+
 }
 
 @content = {
