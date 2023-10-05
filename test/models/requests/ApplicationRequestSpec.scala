@@ -137,7 +137,7 @@ class ApplicationRequestSpec
                     name = contactName,
                     email = contactEmail,
                     phone = contactPhone,
-                    jobTitle = jobTitle
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -192,7 +192,7 @@ class ApplicationRequestSpec
                     name = contactName,
                     email = contactEmail,
                     phone = contactPhone,
-                    jobTitle = jobTitle
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -257,7 +257,7 @@ class ApplicationRequestSpec
                     name = contactName,
                     email = contactEmail,
                     phone = contactPhone,
-                    jobTitle = jobTitle
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -370,7 +370,7 @@ class ApplicationRequestSpec
                     email = contactEmail,
                     phone = contactPhone,
                     companyName = None,
-                    jobTitle = jobTitle
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(
@@ -437,7 +437,7 @@ class ApplicationRequestSpec
                     email = contactEmail,
                     phone = contactPhone,
                     companyName = None,
-                    jobTitle = jobTitle
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(
@@ -524,6 +524,7 @@ object ApplicationRequestSpec extends Generators {
   val contactName           = "contact name"
   val contactEmail          = "contact email"
   val contactPhone          = "contact phone"
+  val contactJobTitle       = "contact job title"
   val goodsName             = "goods name"
   val goodsDescription      = goodsName // TODO: Fix failing tests which occur when this is different.
   val goodsCommodityCode    = "envisaged commodity code"
@@ -533,8 +534,6 @@ object ApplicationRequestSpec extends Generators {
   val requestedMethodGoods  = "previous similar goods"
 
   val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
-
-  val jobTitle: String = "CEO"
 
   val draftId: DraftId = DraftId(1)
 
@@ -606,7 +605,7 @@ object ApplicationRequestSpec extends Generators {
     email = contactEmail,
     phone = Some(contactPhone),
     companyName = None,
-    jobTitle = Some(jobTitle)
+    jobTitle = Some(contactJobTitle)
   )
 
   val requestedMethod: MethodThree = MethodThree(
@@ -646,7 +645,7 @@ object ApplicationRequestSpec extends Generators {
        |  "name": "$contactName",
        |  "email": "$contactEmail",
        |  "phone": "$contactPhone",
-       |  "jobTitle": "$jobTitle"
+       |  "jobTitle": "$contactJobTitle"
        |},
        |"requestedMethod" : {
        |  "whyNotOtherMethods" : "$requestedMethodReason",
@@ -688,7 +687,7 @@ object ApplicationRequestSpec extends Generators {
        |  "name": "$contactName",
        |  "email": "$contactEmail",
        |  "phone": "$contactPhone",
-       |  "jobTitle": "$jobTitle"
+       |  "jobTitle": "$contactJobTitle"
        |},
        |"requestedMethod" : {
        |  "whyNotOtherMethods" : "$requestedMethodReason",

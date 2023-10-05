@@ -20,9 +20,7 @@ import scala.util.matching.Regex
 
 object Validation {
 
-  val nameMaxLength        = 70
   val phoneNumberMaxLength = 24
-  val emailMaxLength       = 50
 
   val simpleCharactersInputPattern: Regex = "[A-Za-zÀ-ÖØ-öø-ÿĀ-ňŊ-ſ'’ -]+".r.anchored
   val emailPattern: Regex                 = """^\S+@\S+$""".r
