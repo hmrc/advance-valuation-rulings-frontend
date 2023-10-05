@@ -23,14 +23,14 @@ import org.scalacheck.Gen
 
 class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val nameRequiredKey    = "businessContactDetails.fullName.error.required"
-  val emailRequiredKey   = "businessContactDetails.email.error.required"
-  val phoneRequiredKey   = "businessContactDetails.telephoneNumber.error.required"
-  val companyRequiredKey = "businessContactDetails.companyName.error.required"
+  private val nameRequiredKey    = "businessContactDetails.fullName.error.required"
+  private val emailRequiredKey   = "businessContactDetails.email.error.required"
+  private val phoneRequiredKey   = "businessContactDetails.telephoneNumber.error.required"
+  private val companyRequiredKey = "businessContactDetails.companyName.error.required"
 
-  val form = new BusinessContactDetailsFormProvider()(true)
+  private val form = new BusinessContactDetailsFormProvider()(true)
 
-  val validAddresses = Seq(
+  private val validAddresses = Seq(
     "“email”@example.com",
     "email@example.co.uk",
     "email@[123.123.123.123]",
@@ -39,13 +39,13 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     "\"very\\”.unusual@strange.example.com"
   )
 
-  val invalidAddresses =
+  private val invalidAddresses =
     Seq("Abc..123example.com", "Abc..123", "email@111.222 .333.44444", "453235", "@", "test@")
 
   ".nameField" - {
     val nameField     = "name"
     val lengthKey     = "applicationContactDetails.fullName.length"
-    val invalidKey    = "businessContactDetails.fullName.error.format"
+    val invalidKey    = "businessContactDetails.simpleChars.error.format"
     val nameMaxLength = 70
 
     behave like fieldThatBindsValidData(
@@ -95,26 +95,28 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     )
 
     for (address <- validAddresses)
-      s"bind valid email: ${address}" in {
+      s"bind valid email: $address" in {
         val boundForm = form.bind(
           Map[String, String](
             "name"        -> "Julius",
             "email"       -> address,
             "phone"       -> "07123456789",
-            "companyName" -> "company"
+            "companyName" -> "company",
+            "jobTitle"    -> "CEO"
           )
         )
         boundForm.errors mustBe Seq.empty
       }
 
     for (address <- invalidAddresses)
-      s"not bind invalid email: ${address}" in {
+      s"not bind invalid email: $address" in {
         val boundForm = form.bind(
           Map[String, String](
             "name"        -> "Julius",
             "email"       -> address,
             "phone"       -> "07123456789",
-            "companyName" -> "company"
+            "companyName" -> "company",
+            "jobTitle"    -> "CEO"
           )
         )
         boundForm.errors must not be Seq.empty
