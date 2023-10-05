@@ -78,7 +78,8 @@ final case class TraderDetail(
   addressLine3: Option[String],
   postcode: String,
   countryCode: String,
-  phoneNumber: Option[String]
+  phoneNumber: Option[String],
+  isPrivate: Option[Boolean]
 )
 
 object TraderDetail {
@@ -99,7 +100,8 @@ object TraderDetail {
                 addressLine3 = None,
                 postcode = acd.agentPostalCode.getOrElse(""),
                 countryCode = acd.agentCountry.code,
-                phoneNumber = None
+                phoneNumber = None,
+                isPrivate = None
               )
             )
         )
@@ -126,7 +128,8 @@ object TraderDetail {
           addressLine3 = None,
           postcode = crd.CDSEstablishmentAddress.postalCode.getOrElse(""),
           countryCode = crd.CDSEstablishmentAddress.countryCode,
-          phoneNumber = crd.contactInformation.flatMap(_.telephoneNumber)
+          phoneNumber = crd.contactInformation.flatMap(_.telephoneNumber),
+          isPrivate = Some(!crd.consentToDisclosureOfPersonalData)
         )
     )
   }

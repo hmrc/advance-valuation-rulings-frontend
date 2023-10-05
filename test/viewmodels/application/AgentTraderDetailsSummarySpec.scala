@@ -52,7 +52,8 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
     Some("Address Line 3"),
     "NE1 4FF",
     "country code",
-    Some("0123456789")
+    Some("0123456789"),
+    Some(true)
   )
 
   val minTraderDetail: TraderDetail = TraderDetail(
@@ -63,7 +64,8 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
     None,
     "NE1 4FF",
     "country code",
-    None
+    None,
+    Some(false)
   )
 
   val maxContactDetails: ContactDetails = ContactDetails(

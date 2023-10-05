@@ -38,7 +38,8 @@ class RegisteredDetailsSummarySpec extends AnyFreeSpec with Matchers {
     addressLine3 = None,
     postcode = "postcode",
     countryCode = "country code",
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = Some(false)
   )
 
   ".rows" - {

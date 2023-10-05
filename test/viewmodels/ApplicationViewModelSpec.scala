@@ -158,7 +158,8 @@ class ApplicationViewModelSpec extends SpecBase {
         addressLine3 = None,
         postcode = "postcode",
         countryCode = "GB",
-        phoneNumber = None
+        phoneNumber = None,
+        isPrivate = None
       )
       val agentApplication = application.copy(agent = Some(agent))
       val result           = ApplicationViewModel(agentApplication)
@@ -240,7 +241,8 @@ object ApplicationViewModelSpec extends Generators {
     addressLine3 = None,
     postcode = "postcode",
     countryCode = "country code",
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = Some(true)
   )
 
   val contact: ContactDetails = ContactDetails(
