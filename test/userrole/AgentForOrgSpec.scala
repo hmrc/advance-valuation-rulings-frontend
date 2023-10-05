@@ -24,11 +24,11 @@ import play.twirl.api.HtmlFormat
 
 import base.SpecBase
 import controllers.routes.CheckRegisteredDetailsController
-import models.{ApplicationContactDetails, BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage}
+import pages.BusinessContactDetailsPage
 import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
 import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgCheckYourAnswersView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
@@ -65,13 +65,14 @@ class AgentForOrgSpec extends SpecBase with Matchers {
         "test name",
         "name@domain.com",
         "01702123123",
-        None
+        None,
+        "CEO"
       )
       val ua       = emptyUserAnswers.setFuture(BusinessContactDetailsPage, expected).futureValue
       val details  =
         agentForOrg.getContactDetailsForApplicationRequest(ua)
 
-      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None))"
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None,CEO))"
     }
 
     "should return the correct view for CheckYourAnswers" in {

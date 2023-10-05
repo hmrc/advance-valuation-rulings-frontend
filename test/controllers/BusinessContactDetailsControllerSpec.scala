@@ -38,23 +38,23 @@ import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new BusinessContactDetailsFormProvider()
-  val defaultForm  = formProvider(false)
-  val longForm     = formProvider(true)
+  private val formProvider = new BusinessContactDetailsFormProvider()
+  private val defaultForm  = formProvider(false)
+  private val longForm     = formProvider(true)
 
-  lazy val businessContactDetailsRoute =
+  private lazy val businessContactDetailsRoute =
     routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId).url
-  lazy val saveDraftRoute: String      =
+  private lazy val saveDraftRoute: String      =
     routes.BusinessContactDetailsController
       .onSubmit(NormalMode, draftId, saveDraft = true)
       .url
 
-  lazy val continueRoute: String =
+  private lazy val continueRoute: String =
     routes.BusinessContactDetailsController
       .onSubmit(NormalMode, draftId, saveDraft = false)
       .url
 
-  val userAnswersForTest = userAnswersForRole(WhatIsYourRoleAsImporter.EmployeeOfOrg)
+  private val userAnswersForTest = userAnswersForRole(WhatIsYourRoleAsImporter.EmployeeOfOrg)
     .setFuture(AccountHomePage, IndividualTrader)
     .futureValue
 
@@ -96,7 +96,12 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[BusinessContactDetailsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(defaultForm, NormalMode, draftId, false)(
+        contentAsString(result) mustEqual view(
+          defaultForm,
+          NormalMode,
+          draftId,
+          includeCompanyName = false
+        )(
           request,
           messages(application)
         ).toString
@@ -109,7 +114,8 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         name = "name",
         email = "abc@email.com",
         phone = "0123456789",
-        companyName = None
+        companyName = None,
+        jobTitle = "CEO"
       )
 
       val userAnswers =
@@ -132,7 +138,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
           longForm.fill(businessContactDetails),
           NormalMode,
           draftId,
-          false
+          includeCompanyName = false
         )(
           request,
           messages(application)
@@ -146,7 +152,8 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         name = "name",
         email = "abc@email.com",
         phone = "0123456789",
-        companyName = Some("test company")
+        companyName = Some("test company"),
+        jobTitle = "CEO"
       )
 
       val userAnswers =
@@ -172,7 +179,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
           longForm.fill(businessContactDetails),
           NormalMode,
           draftId,
-          true
+          includeCompanyName = true
         )(
           request,
           messages(application)
@@ -200,7 +207,12 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[BusinessContactDetailsView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(longForm, NormalMode, draftId, true)(
+        contentAsString(result) mustEqual view(
+          longForm,
+          NormalMode,
+          draftId,
+          includeCompanyName = true
+        )(
           request,
           messages(application)
         ).toString
@@ -254,7 +266,12 @@ class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, draftId, false)(
+        contentAsString(result) mustEqual view(
+          boundForm,
+          NormalMode,
+          draftId,
+          includeCompanyName = false
+        )(
           request,
           messages(application)
         ).toString

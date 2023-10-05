@@ -54,6 +54,7 @@ trait SpecBase
   val ContactName        = "some name"
   val ContactEmail       = "test@email.com"
   val ContactPhoneNumber = "01234567890"
+  val JobTitle           = "CEO"
 
   val EoriNumber      = "GB123456789000"
   val RegisteredName  = "My Test Company"
@@ -65,8 +66,8 @@ trait SpecBase
   val phoneNumber     = "01234567890"
 
   val userAnswersId: String = "id"
-  val DraftIdSequence       = 123456789L
-  val draftId               = DraftId(DraftIdSequence)
+  val DraftIdSequence: Long = 123456789L
+  val draftId: DraftId      = DraftId(DraftIdSequence)
 
   val emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
 
@@ -88,7 +89,7 @@ trait SpecBase
     .setFuture(WhatIsYourRoleAsImporterPage, role)
     .futureValue
 
-  val contactInformation = ContactInformation(
+  val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
     sepCorrAddrIndicator = Some(false),
     streetAndNumber = Some("Test Street 1"),
@@ -101,7 +102,7 @@ trait SpecBase
     emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
   )
 
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+  val traderDetailsWithCountryCode: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
     EORINo = "GB123456789012345",
     consentToDisclosureOfPersonalData = true,
     CDSFullName = "Test Name",
@@ -114,7 +115,8 @@ trait SpecBase
     contactInformation = Some(contactInformation)
   )
 
-  val traderDetailsWithConfirmation = TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
+  val traderDetailsWithConfirmation: TraderDetailsWithConfirmation =
+    TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
 
   def messages(app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
@@ -169,7 +171,7 @@ trait SpecBase
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
 
-  def setupTestBuild(userAnswers: UserAnswers) = {
+  def setupTestBuild(userAnswers: UserAnswers): Application = {
     val mockUserAnswersService = mock[UserAnswersService]
 
     when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
@@ -181,6 +183,6 @@ trait SpecBase
       .build()
 
   }
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
 }

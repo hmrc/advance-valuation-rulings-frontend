@@ -31,7 +31,7 @@ import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
 import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
 import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, MethodSummary, TraderEoriDetailsSummary}
-import views.html.{AgentForOrgCheckYourAnswersView, AgentForTraderCheckRegisteredDetailsView, AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
 class AgentForTraderSpec extends SpecBase with Matchers {
 
@@ -90,13 +90,14 @@ class AgentForTraderSpec extends SpecBase with Matchers {
         "test name",
         "name@domain.com",
         "01702123123",
-        Some("company name")
+        Some("company name"),
+        "CEO"
       )
       val ua       = emptyUserAnswers.setFuture(BusinessContactDetailsPage, expected).futureValue
       val details  =
         agentForTrader.getContactDetailsForApplicationRequest(ua)
 
-      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),Some(company name)))"
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),Some(company name),CEO))"
     }
 
     "should return the correct view for CheckYourAnswers" in {
@@ -181,8 +182,7 @@ class AgentForTraderSpec extends SpecBase with Matchers {
       ).thenReturn(expectedView)
 
       val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForEoriBeUpToDate(
-        draftId,
-        false
+        draftId
       )(request, messages)
 
       actualView mustBe expectedView
@@ -204,7 +204,7 @@ class AgentForTraderSpec extends SpecBase with Matchers {
 
       val actualView: HtmlFormat.Appendable = agentForTrader.selectViewForEoriBeUpToDate(
         draftId,
-        true
+        isPrivate = true
       )(request, messages)
 
       actualView mustBe expectedView

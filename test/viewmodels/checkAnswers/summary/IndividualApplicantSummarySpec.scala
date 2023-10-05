@@ -32,7 +32,7 @@ class IndividualApplicantSummarySpec extends SpecBase {
     userAnswersAsIndividualTrader
       .set(
         ApplicationContactDetailsPage,
-        ApplicationContactDetails(ContactName, ContactEmail, ContactPhoneNumber)
+        ApplicationContactDetails(ContactName, ContactEmail, ContactPhoneNumber, JobTitle)
       )
 
   "IndividualApplicantSummary" - {

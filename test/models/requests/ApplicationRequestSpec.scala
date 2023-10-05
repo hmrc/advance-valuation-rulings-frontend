@@ -136,7 +136,8 @@ class ApplicationRequestSpec
                   ApplicationContactDetails(
                     name = randomString,
                     email = randomString,
-                    phone = randomString
+                    phone = randomString,
+                    jobTitle = jobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -190,7 +191,8 @@ class ApplicationRequestSpec
                   ApplicationContactDetails(
                     name = randomString,
                     email = randomString,
-                    phone = randomString
+                    phone = randomString,
+                    jobTitle = jobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -254,7 +256,8 @@ class ApplicationRequestSpec
                   ApplicationContactDetails(
                     name = randomString,
                     email = randomString,
-                    phone = randomString
+                    phone = randomString,
+                    jobTitle = jobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -366,7 +369,8 @@ class ApplicationRequestSpec
                     name = randomString,
                     email = randomString,
                     phone = randomString,
-                    companyName = None
+                    companyName = None,
+                    jobTitle = jobTitle
                   )
                 )
           ua <- ua.set(
@@ -432,7 +436,8 @@ class ApplicationRequestSpec
                     name = randomString,
                     email = randomString,
                     phone = randomString,
-                    companyName = None
+                    companyName = None,
+                    jobTitle = jobTitle
                   )
                 )
           ua <- ua.set(
@@ -514,13 +519,15 @@ object ApplicationRequestSpec extends Generators {
 
   val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
 
+  val jobTitle: String = "CEO"
+
   val draftId: DraftId = DraftId(1)
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
-  val country = Country("GB", "United Kingdom")
+  val country: Country = Country("GB", "United Kingdom")
 
-  val contactInformation = ContactInformation(
+  val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
     sepCorrAddrIndicator = Some(false),
     streetAndNumber = Some("Test Street 1"),
@@ -533,7 +540,7 @@ object ApplicationRequestSpec extends Generators {
     emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
   )
 
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+  val traderDetailsWithCountryCode: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
     EORINo = "GB123456789012345",
     consentToDisclosureOfPersonalData = true,
     CDSFullName = "Test Name",
@@ -546,7 +553,7 @@ object ApplicationRequestSpec extends Generators {
     contactInformation = Some(contactInformation)
   )
 
-  val traderDetails = TraderDetail(
+  val traderDetails: TraderDetail = TraderDetail(
     eori = traderDetailsWithCountryCode.EORINo,
     businessName = traderDetailsWithCountryCode.CDSFullName,
     addressLine1 = traderDetailsWithCountryCode.CDSEstablishmentAddress.streetAndNumber,
@@ -557,7 +564,7 @@ object ApplicationRequestSpec extends Generators {
     phoneNumber = traderDetailsWithCountryCode.contactInformation.flatMap(_.telephoneNumber)
   )
 
-  val eoriDetails = TraderDetail(
+  val eoriDetails: TraderDetail = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
@@ -568,7 +575,7 @@ object ApplicationRequestSpec extends Generators {
     phoneNumber = Some(randomString)
   )
 
-  val agentEoriDetails = TraderDetail(
+  val agentEoriDetails: TraderDetail = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
@@ -579,18 +586,18 @@ object ApplicationRequestSpec extends Generators {
     phoneNumber = None
   )
 
-  val contact = ContactDetails(
+  val contact: ContactDetails = ContactDetails(
     name = randomString,
     email = randomString,
     phone = Some(randomString)
   )
 
-  val requestedMethod = MethodThree(
+  val requestedMethod: MethodThree = MethodThree(
     whyNotOtherMethods = randomString,
     previousSimilarGoods = PreviousSimilarGoods(randomString)
   )
 
-  val goodsDetails = GoodsDetails(
+  val goodsDetails: GoodsDetails = GoodsDetails(
     goodsName = randomString,
     goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
@@ -598,7 +605,7 @@ object ApplicationRequestSpec extends Generators {
     confidentialInformation = Some(randomString)
   )
 
-  val goodsDetailsNoDetails = GoodsDetails(
+  val goodsDetailsNoDetails: GoodsDetails = GoodsDetails(
     goodsName = randomString,
     goodsDescription = randomString,
     envisagedCommodityCode = None,
@@ -606,7 +613,7 @@ object ApplicationRequestSpec extends Generators {
     confidentialInformation = None
   )
 
-  val individualTraderJson =
+  val individualTraderJson: String =
     s"""{
        |"draftId": "$draftId",
        |"trader": {
@@ -639,7 +646,7 @@ object ApplicationRequestSpec extends Generators {
        |"whatIsYourRole" : "${WhatIsYourRole.EmployeeOrg}"
     }""".stripMargin
 
-  val agentJson =
+  val agentJson: String =
     s"""{
        |"draftId": "$draftId",
        |"trader": {

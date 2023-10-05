@@ -35,10 +35,10 @@ import userrole.{UserRole, UserRoleProvider}
 
 class NavigatorSpec extends SpecBase {
 
-  val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
-  val appConfig                     = mock[FrontendAppConfig]
-  val userRoleProvider              = mock[UserRoleProvider]
-  val navigator                     = new Navigator(appConfig, userRoleProvider)
+  private val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
+  private val appConfig                     = mock[FrontendAppConfig]
+  private val userRoleProvider              = mock[UserRoleProvider]
+  private val navigator                     = new Navigator(appConfig, userRoleProvider)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
@@ -551,7 +551,7 @@ class NavigatorSpec extends SpecBase {
         val userAnswers =
           userAnswersWith(
             BusinessContactDetailsPage,
-            BusinessContactDetails("name", "email", "phone", None)
+            BusinessContactDetails("name", "email", "phone", None, "jobTitle")
           )
 
         "when OrganisationAssistant claiming to be AgentOnBehalfOfOrg" - {
@@ -659,7 +659,7 @@ class NavigatorSpec extends SpecBase {
         val userAnswers =
           userAnswersWith(
             ApplicationContactDetailsPage,
-            ApplicationContactDetails("name", "email", "phone")
+            ApplicationContactDetails("name", "email", "phone", "jobTitle")
           )
         navigator.nextPage(
           ApplicationContactDetailsPage,

@@ -30,17 +30,17 @@ import views.html.ApplicationContactDetailsView
 
 class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new ApplicationContactDetailsFormProvider()
-  val form         = formProvider()
+  private val formProvider = new ApplicationContactDetailsFormProvider()
+  private val form         = formProvider()
 
-  lazy val applicationContactDetailsRoute =
+  private lazy val applicationContactDetailsRoute: String =
     routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId).url
-  lazy val saveDraftRoute: String         =
+  private lazy val saveDraftRoute: String                 =
     routes.ApplicationContactDetailsController
       .onSubmit(NormalMode, draftId, saveDraft = true)
       .url
 
-  lazy val continueRoute: String =
+  private lazy val continueRoute: String =
     routes.ApplicationContactDetailsController
       .onSubmit(NormalMode, draftId, saveDraft = false)
       .url
@@ -92,7 +92,8 @@ class ApplicationContactDetailsControllerSpec extends SpecBase with MockitoSugar
       val applicationContactDetails = ApplicationContactDetails(
         name = "my name",
         email = "email@example.co.uk",
-        phone = "07123456789"
+        phone = "07123456789",
+        jobTitle = "CEO"
       )
 
       val userAnswers = userAnswersAsIndividualTrader
