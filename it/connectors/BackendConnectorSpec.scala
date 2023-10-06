@@ -150,7 +150,8 @@ class BackendConnectorSpec
         Some("traderLine3"),
         "TraderPostcode",
         "GB",
-        None
+        None,
+        Some(false)
       ),
       agent = Some(
         TraderDetail(
@@ -161,6 +162,7 @@ class BackendConnectorSpec
           None,
           "agentPostcode",
           "agentGB",
+          None,
           None
         )
       ),
