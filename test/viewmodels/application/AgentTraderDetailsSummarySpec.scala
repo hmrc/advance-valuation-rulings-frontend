@@ -171,6 +171,10 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
         SummaryListRow(
           Key(Text(m("agentForTraderCheckYourAnswers.applicant.companyName.label"))),
           Value(Text(maxContactDetails.companyName.get))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.jobTitle.label"))),
+          Value(Text(maxContactDetails.jobTitle.get))
         )
       )
     }

@@ -19,13 +19,13 @@ package viewmodels.application
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import models.requests.{Attachment, ContactDetails, TraderDetail}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AgentTraderDetailsSummary {
+object AgentTraderDetailsSummary extends ApplicationSummaryHelper {
 
   def rowLetterOfAuthority(
     letterOfAuthority: Option[Attachment]
@@ -88,31 +88,22 @@ object AgentTraderDetailsSummary {
       )
     )
 
-    val phoneRow = makeRow(
-      "agentForTraderCheckYourAnswers.applicant.phone.label",
-      contact.phone
+    val phoneRow = makeRowFromOption(
+      key = "agentForTraderCheckYourAnswers.applicant.phone.label",
+      field = contact.phone
     )
 
-    val companyNameRow = makeRow(
-      "agentForTraderCheckYourAnswers.applicant.companyName.label",
-      contact.companyName
+    val companyNameRow = makeRowFromOption(
+      key = "agentForTraderCheckYourAnswers.applicant.companyName.label",
+      field = contact.companyName
     )
 
-    mandatoryRows ++ phoneRow ++ companyNameRow
+    val jobTitleRow = makeRowFromOption(
+      key = "agentForTraderCheckYourAnswers.applicant.jobTitle.label",
+      field = contact.jobTitle
+    )
+
+    mandatoryRows ++ phoneRow ++ companyNameRow ++ jobTitleRow
   }
-
-  private def makeRow(key: Key, field: Option[String])(implicit
-    messages: Messages
-  ) =
-    field match {
-      case Some(value) =>
-        Some(
-          SummaryListRowViewModel(
-            key = key,
-            value = ValueViewModel(value)
-          )
-        )
-      case _           => None
-    }
 
 }
