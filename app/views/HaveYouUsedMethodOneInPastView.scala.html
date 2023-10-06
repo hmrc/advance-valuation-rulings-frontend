@@ -28,7 +28,8 @@
     bulletList: BulletList,
     insetPara: InsetPara,
     subheading: Subheading,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -51,12 +52,15 @@
         Html(messages("haveYouUsedMethodOneInPast.bulletPoint.2")),
         Html(messages("haveYouUsedMethodOneInPast.bulletPoint.3")),
     ))
-    @subheading(messages("haveYouUsedMethodOneInPast.question"))
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend()
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("haveYouUsedMethodOneInPast.question")).toString
+                    )
+                )
             )
         )
 
