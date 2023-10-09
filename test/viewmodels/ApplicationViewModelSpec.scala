@@ -27,6 +27,7 @@ import generators.Generators
 import models._
 import models.ValuationMethod.Method3
 import models.requests._
+import org.scalatest.matchers.must.Matchers
 
 class ApplicationViewModelSpec extends SpecBase {
   import ApplicationViewModelSpec._
@@ -158,7 +159,8 @@ class ApplicationViewModelSpec extends SpecBase {
         addressLine3 = None,
         postcode = "postcode",
         countryCode = "GB",
-        phoneNumber = None
+        phoneNumber = None,
+        isPrivate = None
       )
       val agentApplication = application.copy(agent = Some(agent))
       val result           = ApplicationViewModel(agentApplication)
@@ -227,6 +229,94 @@ class ApplicationViewModelSpec extends SpecBase {
         )
       }
     }
+
+    "when given a valid application with agentTrader details" - {
+      val publicTrader                                 = TraderDetail(
+        eori = "agent eori",
+        businessName = "agent business name",
+        addressLine1 = "agent address line 1",
+        addressLine2 = Some("AgentCity"),
+        addressLine3 = None,
+        postcode = "postcode",
+        countryCode = "GB",
+        phoneNumber = None,
+        isPrivate = Some(false)
+      )
+      val privateTrader                                = publicTrader.copy(isPrivate = Some(true))
+      val undefinedPrivacyTrader                       = publicTrader.copy(isPrivate = None)
+      val agentTraderApplicationPublicTrader           = application.copy(
+        agent = None,
+        trader = publicTrader,
+        whatIsYourRoleResponse = Some(WhatIsYourRole.AgentTrader)
+      )
+      val agentTraderApplicationPrivateTrader          =
+        agentTraderApplicationPublicTrader.copy(trader = privateTrader)
+      val agentTraderApplicationTraderPrivacyUndefined =
+        agentTraderApplicationPublicTrader.copy(trader = undefinedPrivacyTrader)
+      val resultPublic                                 = ApplicationViewModel(agentTraderApplicationPublicTrader)
+      val resultPrivate                                = ApplicationViewModel(agentTraderApplicationPrivateTrader)
+      val resultUndefinedPrivacy                       =
+        ApplicationViewModel(agentTraderApplicationTraderPrivacyUndefined)
+      "must contain trader business name for a public trader" in {
+        resultPublic.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("agentForTraderCheckYourAnswers.trader.name.label")),
+            Value(Text(publicTrader.businessName))
+          )
+        )
+      }
+      "must contain trader address for a public trader" in {
+        resultPublic.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("agentForTraderCheckYourAnswers.trader.address.label")),
+            Value(
+              HtmlContent(
+                publicTrader.addressLine1 + "<br/>" + publicTrader.addressLine2.get + "<br/>" + publicTrader.postcode + "<br/>" + publicTrader.countryCode
+              )
+            )
+          )
+        )
+      }
+      "must not contain trader business name for a private trader" in {
+        resultPrivate.applicant.rows must not contain SummaryListRow(
+          Key(Text("agentForTraderCheckYourAnswers.trader.name.label")),
+          Value(Text(privateTrader.businessName))
+        )
+
+      }
+      "must not contain trader address for a private trader" in {
+        resultPrivate.applicant.rows must not contain
+          SummaryListRow(
+            Key(Text("agentForTraderCheckYourAnswers.trader.address.label")),
+            Value(
+              HtmlContent(
+                privateTrader.addressLine1 + "<br/>" + privateTrader.addressLine2.get + "<br/>" + privateTrader.postcode + "<br/>" + privateTrader.countryCode
+              )
+            )
+          )
+      }
+
+      "must not contain trader business name for an undefined privacy trader" in {
+        resultUndefinedPrivacy.applicant.rows must not contain SummaryListRow(
+          Key(Text("agentForTraderCheckYourAnswers.trader.name.label")),
+          Value(Text(undefinedPrivacyTrader.businessName))
+        )
+
+      }
+      "must not contain trader address for an undefined privacy trader" in {
+        resultUndefinedPrivacy.applicant.rows must not contain
+          SummaryListRow(
+            Key(Text("agentForTraderCheckYourAnswers.trader.address.label")),
+            Value(
+              HtmlContent(
+                undefinedPrivacyTrader.addressLine1 + "<br/>" + undefinedPrivacyTrader.addressLine2.get + "<br/>" +
+                  undefinedPrivacyTrader.postcode + "<br/>" + undefinedPrivacyTrader.countryCode
+              )
+            )
+          )
+      }
+
+    }
   }
 }
 
@@ -240,7 +330,8 @@ object ApplicationViewModelSpec extends Generators {
     addressLine3 = None,
     postcode = "postcode",
     countryCode = "country code",
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = Some(true)
   )
 
   val contact: ContactDetails = ContactDetails(

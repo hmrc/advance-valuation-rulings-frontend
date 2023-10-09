@@ -233,6 +233,79 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
       verify(mockAuditService, times(1)).sendUserTypeEvent()(any(), any(), any())
     }
 
+    "must display 'no description' for applications with no goods description" in {
+
+      val filledDescription        = "socks"
+      val unfilledDescription      = ""
+      val noDescriptionPlaceholder = "no description"
+
+      val appsSummary: Seq[ApplicationSummary] =
+        Seq(
+          ApplicationSummary(
+            ApplicationId(1234L),
+            filledDescription,
+            firstApplicationDate,
+            "eoriStr"
+          ),
+          ApplicationSummary(
+            ApplicationId(1235L),
+            unfilledDescription,
+            secondApplicationDate,
+            "eoriStr"
+          )
+        )
+
+      val draftSummaries = Seq(DraftSummary(draftId, None, Instant.now, None))
+
+      when(
+        mockBackEndConnector.applicationSummaries(any())
+      ) thenReturn Future
+        .successful(ApplicationSummaryResponse(appsSummary))
+
+      when(mockUserAnswersService.summaries()(any()))
+        .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))
+
+      val application = applicationBuilder()
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackEndConnector),
+          bind[AuditService].to(mockAuditService),
+          bind[UserAnswersService].to(mockUserAnswersService)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AccountHomeController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view      = application.injector.instanceOf[AccountHomeView]
+        val navigator = application.injector.instanceOf[Navigator]
+
+        val appsForAccountHome: Seq[ApplicationForAccountHome] =
+          for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
+
+        val draftsForAccountHome = draftSummaries.map {
+          draftSummary =>
+            val userAnswers =
+              userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
+            ApplicationForAccountHome(
+              draftSummary,
+              navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
+            )(messages(application))
+        }
+
+        val viewModels = (appsForAccountHome ++ draftsForAccountHome).sortBy(_.date).reverse
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(viewModels)(
+          request,
+          messages(application)
+        ).toString
+        contentAsString(result) must include(noDescriptionPlaceholder)
+        contentAsString(result) must include(filledDescription)
+      }
+    }
+
     "must REDIRECT and set ApplicantUserType on startApplication" in {
       val fixedTime   = Instant.parse("2018-08-22T10:00:00Z")
       val application =
