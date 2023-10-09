@@ -98,6 +98,7 @@ importGoods.checkYourAnswersLabel = importGoods
 importGoods.error.required = Dewiswch ‘Iawn’ os oes gwerthiant ar waith er mwyn i’r nwyddau gael eu mewnforio i Brydain Fawr
 importGoods.change.hidden = are you importing goods
 
+checkRegisteredDetails.title = Gwirio’r enw a’r cyfeiriad ar gyfer y rhif EORI {0}
 checkRegisteredDetails.private.title = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.title.employeeOrg = Check your EORI details
 checkRegisteredDetails.title.agentOrg = Check the organisation’s EORI details
@@ -111,6 +112,7 @@ checkRegisteredDetails.heading.3 = Cyfeiriad cofrestredig y busnes
 checkRegisteredDetails.private.heading.1 = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.subheading.1 = Manylion cofrestru EORI
 checkRegisteredDetails.subheading.2 = A yw’r manylion hyn yn gywir?
+checkRegisteredDetails.caption = Ynglŷn â’r ymgeisydd
 checkRegisteredDetails.private.subheading.2 = A hoffech fynd yn eich blaen?
 checkRegisteredDetails.paragraph.1 = Gallwch ddarparu eich manylion cyswllt eich hun ar y dudalen nesaf.
 checkRegisteredDetails.private.paragraph.1 = Nid yw’r busnes y mae’r rhif hwn wedi’i gofrestru iddo wedi caniatáu i’w enw a’i gyfeiriad gael eu rhannu.
@@ -878,6 +880,7 @@ accountHome.date = Date submitted
 accountHome.status = Status
 accountHome.status.submitted = Submitted
 accountHome.status.draft = In progress
+accountHome.noDescription = no description
 
 explainYourGoodsComparingToIdenticalGoods.title = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 explainYourGoodsComparingToIdenticalGoods.caption = Ynglŷn â’r nwyddau
