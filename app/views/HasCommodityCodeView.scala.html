@@ -30,7 +30,8 @@
     detailsDrop: DetailsDrop,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
-    radios: YesNoRadios
+    radios: YesNoRadios,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -61,8 +62,19 @@
         }
 
         @caption(messages("hasCommodityCode.caption"))
+        @heading(messages("hasCommodityCode.heading"))
+        @radiosContent
 
-        @radios(messages("hasCommodityCode.heading"), radiosContent, form)
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("hasCommodityCode.question")).toString
+                    )
+                )
+            )
+        )
 
         @saveButtons(draftId)
     }

@@ -461,14 +461,15 @@ descriptionOfGoods.error.length = Mae’n rhaid i ddisgrifiad byr o’r nwyddau 
 descriptionOfGoods.change.hidden = your short description of the goods
 
 hasCommodityCode.caption = Ynglŷn â’r nwyddau
-hasCommodityCode.title = A oes gennych chi god nwyddau ar gyfer y nwyddau?
-hasCommodityCode.heading = A oes gennych chi god nwyddau ar gyfer y nwyddau?
+hasCommodityCode.title = Commodity code for the goods
+hasCommodityCode.heading = Commodity code for the goods
 hasCommodityCode.checkYourAnswersLabel = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 hasCommodityCode.error.required = Dewiswch ‘Iawn’ os ydych yn gwybod y cod nwyddau
 hasCommodityCode.details.label = Help i ddod o hyd i’ch cod nwyddau
-hasCommodityCode.paragraph.1 = Cyfeirnod sy’n cael ei gydnabod yn rhyngwladol yw cod nwyddau. Bydd o gymorth i ni wrth adnabod y cynnyrch penodol rydych yn ei fewnforio. Os nad ydych yn gallu dod o hyd i god nwyddau, dewiswch ‘Na’.<br><br>{0}
-hasCommodityCode.paragraph.1.link = Dod o hyd i’ch cod nwyddau (yn agor tab newydd)
+hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. <br><br>You can {0} if you don’t know it.
+hasCommodityCode.paragraph.1.link = look up the commodity code for your goods (opens in new tab)
 hasCommodityCode.change.hidden = your response to whether you have a commodity code for the goods
+hasCommodityCode.question = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 
 contactPage.caption = Ynglŷn â’r ymgeisydd
 contactPage.title = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
