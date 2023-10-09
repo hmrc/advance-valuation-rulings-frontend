@@ -29,7 +29,8 @@
     insetPara: InsetPara,
     subheading: Subheading,
     saveButtons: SaveButtons,
-    radios: YesNoRadios
+    radios: YesNoRadios,
+    legend: LegendH2
 )
 
 
@@ -60,8 +61,19 @@
         }
 
         @caption(messages("haveYouUsedMethodOneForSimilarGoodsInPast.caption"))
+        @heading(messages("haveYouUsedMethodOneForSimilarGoodsInPast.heading"))
+        @radiosContent
 
-        @radios(messages("haveYouUsedMethodOneForSimilarGoodsInPast.heading"), radiosContent, form)
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("haveYouUsedMethodOneInPast.question")).toString
+                    )
+                )
+            )
+        )
 
         @saveButtons(draftId)
     }

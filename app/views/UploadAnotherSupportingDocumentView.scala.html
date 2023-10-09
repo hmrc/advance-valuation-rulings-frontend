@@ -42,7 +42,7 @@
         } else if (numOfDocs == 1) {
             messages("uploadAnotherSupportingDocument.agentForTrader.title.one")
         } else {
-            messages("uploadAnotherSupportingDocument.agentForTrader.title.many", messages(s"site.$numOfDocs"))
+            messages("uploadAnotherSupportingDocument.agentForTrader.title.many", numOfDocs)
         }
     } else {
         if(numOfDocs == 5) {
@@ -50,7 +50,7 @@
         } else if (numOfDocs == 1) {
             messages("uploadAnotherSupportingDocument.title.one")
         } else {
-            messages("uploadAnotherSupportingDocument.title.many", messages(s"site.$numOfDocs"))
+            messages("uploadAnotherSupportingDocument.title.many", numOfDocs)
         }
     }
 }
