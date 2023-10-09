@@ -33,12 +33,16 @@
 
 @theRows = @{for(app <- applications) yield Seq(
                     TableRow(content = Text(app.id), format = Some("text")),
-                    TableRow(content = Text(app.goodsName), format = Some("text")),
+                    TableRow(content = Text(if (app.goodsName.trim.isEmpty) messages("accountHome.noDescription") else app.goodsName), format = Some("text")),
                     TableRow(content = Text(app.dateString()), format = Some("text")),
                     TableRow(content = HtmlContent(govukTag(app.statusTag))),
-                    TableRow(content = HtmlContent(app.actions.map { a =>
-                        s"""<a href="${a.href}" class="govuk-link">${a.content.asHtml}</a>"""
-                    }.mkString("<br/>")))
+                    TableRow(content = HtmlContent {
+                        app.actions.map { a =>
+                            s"""<div class="govuk-!-margin-bottom-3 govuk-!-margin-top-3">
+                                    <a href="${a.href}" class="govuk-link">${a.content.asHtml}</a>
+                            </div>"""
+                        }.mkString("")
+                    })
                 )}
 @appsTable = @{
 

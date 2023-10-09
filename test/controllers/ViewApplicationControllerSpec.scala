@@ -95,7 +95,8 @@ object ViewApplicationControllerSpec extends Generators {
     addressLine3 = None,
     postcode = randomString,
     countryCode = randomString,
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = Some(false)
   )
 
   val contact: ContactDetails = ContactDetails(

@@ -99,7 +99,9 @@ importGoods.error.required = Dewiswch ‘Iawn’ os oes gwerthiant ar waith er m
 importGoods.change.hidden = are you importing goods
 
 checkRegisteredDetails.caption = Ynglŷn â’r ymgeisydd
-checkRegisteredDetails.title = Gwirio’r enw a’r cyfeiriad ar gyfer y rhif EORI {0}
+checkRegisteredDetails.title.employeeOfOrg = Check your EORI details
+checkRegisteredDetails.title.agentOrg = Check the organisation’s EORI details
+checkRegisteredDetails.title.agentTrader = Check the trader’s EORI details
 checkRegisteredDetails.heading.employeeOrg = Check your EORI details
 checkRegisteredDetails.heading.agentOrg = Check the organisation’s EORI details
 checkRegisteredDetails.heading.agentTrader = Check the trader’s EORI details
@@ -871,11 +873,12 @@ accountHome.viewApplication = View application
 accountHome.continueApplication = Continue application
 accountHome.deleteApplication = Delete application
 accountHome.reference = Reference
-accountHome.goodsName = Name of goods
+accountHome.goodsName = Goods description
 accountHome.date = Date submitted
 accountHome.status = Status
 accountHome.status.submitted = Submitted
 accountHome.status.draft = In progress
+accountHome.noDescription = no description
 
 explainYourGoodsComparingToIdenticalGoods.title = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 explainYourGoodsComparingToIdenticalGoods.caption = Ynglŷn â’r nwyddau
