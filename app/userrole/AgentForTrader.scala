@@ -34,8 +34,8 @@ package userrole {
   import logging.Logging
   import models.{BusinessContactDetails, UserAnswers}
   import models.requests.ContactDetails
-  import pages.{BusinessContactDetailsPage, ProvideTraderEoriPage, UploadLetterOfAuthorityPage, ValuationMethodPage, VerifyTraderDetailsPage}
-  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, TraderEoriDetailsSummary}
+  import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, ValuationMethodPage, VerifyTraderDetailsPage}
+  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
   import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
   private case class AgentForTrader @Inject() (
@@ -110,7 +110,7 @@ package userrole {
     ): ValidatedNel[Page, ContactDetails] =
       userAnswers.validatedF[BusinessContactDetails, ContactDetails](
         BusinessContactDetailsPage,
-        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), cd.companyName)
+        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), cd.companyName, Some(cd.jobTitle))
       )
 
     override val getMaxSupportingDocuments: Int = 4

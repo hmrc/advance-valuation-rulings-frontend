@@ -20,7 +20,7 @@ import scala.concurrent.Future
 
 import play.api.i18n.Messages
 import play.api.inject.bind
-import play.api.mvc.AnyContent
+import play.api.mvc.{AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
@@ -59,14 +59,14 @@ class CheckYourAnswersControllerSpec
     "must return OK and the correct view for a GET for a UserRole with the agent creds flag on" in
       new CheckYourAnswersControllerSpecSetup {
 
-        val mockAppConfig = mock[FrontendAppConfig]
+        private val mockAppConfig = mock[FrontendAppConfig]
         when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
-        val mockUserRoleProvider = mock[UserRoleProvider]
-        val mockUserRole         = mock[UserRole]
+        private val mockUserRoleProvider = mock[UserRoleProvider]
+        private val mockUserRole         = mock[UserRole]
 
-        val expectedText = "Expected"
-        val expectedView = HtmlFormat.raw(expectedText)
+        private val expectedText = "Expected"
+        private val expectedView = HtmlFormat.raw(expectedText)
 
         when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
         when(
@@ -77,7 +77,7 @@ class CheckYourAnswersControllerSpec
         )
           .thenReturn(expectedView)
 
-        val application = applicationBuilder(userAnswers = Option(userAnswers))
+        private val application = applicationBuilder(userAnswers = Option(userAnswers))
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector),
             bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService),
@@ -96,7 +96,7 @@ class CheckYourAnswersControllerSpec
           )
 
         running(application) {
-          implicit val request =
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(draftId).url)
 
           val result = route(application, request).value
@@ -109,7 +109,7 @@ class CheckYourAnswersControllerSpec
     "must redirect to Journey Recovery for a GET if no existing data is found" in
       new CheckYourAnswersControllerSpecSetup {
 
-        val application = applicationBuilder(userAnswers = None).build()
+        private val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
           val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(draftId).url)
@@ -123,15 +123,15 @@ class CheckYourAnswersControllerSpec
 
     "must redirect to Application Complete when application submission succeeds" in
       new CheckYourAnswersControllerSpecSetup {
-        val applicationId = ApplicationId(1)
-        val response      = ApplicationSubmissionResponse(applicationId)
+        private val applicationId = ApplicationId(1)
+        private val response      = ApplicationSubmissionResponse(applicationId)
 
         when(mockSubmissionService.submitApplication(any(), any())(any()))
           .thenReturn(Future.successful(response))
         when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
           .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
 
-        val application = applicationBuilder(Option(fullUserAnswers))
+        private val application = applicationBuilder(Option(fullUserAnswers))
           .overrides(
             bind[SubmissionService].toInstance(mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector),
@@ -155,15 +155,15 @@ class CheckYourAnswersControllerSpec
 
   "must redirect to journey Recovery when unable to fetch trader details" in
     new CheckYourAnswersControllerSpecSetup {
-      val applicationId = ApplicationId(1)
-      val response      = ApplicationSubmissionResponse(applicationId)
+      private val applicationId = ApplicationId(1)
+      private val response      = ApplicationSubmissionResponse(applicationId)
 
       when(mockSubmissionService.submitApplication(any(), any())(any()))
         .thenReturn(Future.successful(response))
       when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
         .thenReturn(Future.successful(Left(BackendError(500, "error"))))
 
-      val application = applicationBuilderAsOrg(Option(fullUserAnswers))
+      private val application = applicationBuilderAsOrg(Option(fullUserAnswers))
         .overrides(
           bind[SubmissionService].toInstance(mockSubmissionService),
           bind[BackendConnector].toInstance(mockBackendConnector)
@@ -187,16 +187,16 @@ class CheckYourAnswersControllerSpec
 trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues with ScalaFutures {
   val userAnswersId: String    = "id"
   val DraftIdSequence          = 123456789L
-  val draftId                  = DraftId(DraftIdSequence)
+  val draftId: DraftId         = DraftId(DraftIdSequence)
   val userAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
     .setFuture(AccountHomePage, IndividualTrader)
     .futureValue
 
-  val mockSubmissionService         = mock[SubmissionService]
-  val mockBackendConnector          = mock[BackendConnector]
-  val mockApplicationSummaryService = mock[ApplicationSummaryService]
+  val mockSubmissionService: SubmissionService                 = mock[SubmissionService]
+  val mockBackendConnector: BackendConnector                   = mock[BackendConnector]
+  val mockApplicationSummaryService: ApplicationSummaryService = mock[ApplicationSummaryService]
 
-  val contactInformation = ContactInformation(
+  val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
     sepCorrAddrIndicator = Some(false),
     streetAndNumber = Some("Test Street 1"),
@@ -209,7 +209,7 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
     emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
   )
 
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+  val traderDetailsWithCountryCode: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
     EORINo = "GB123456789012345",
     consentToDisclosureOfPersonalData = true,
     CDSFullName = "Test Name",
@@ -222,7 +222,7 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
     contactInformation = Some(contactInformation)
   )
 
-  val appSummary = ApplicationSummary(
+  val appSummary: ApplicationSummary = ApplicationSummary(
     IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
       stubMessages()
     ),
@@ -238,7 +238,7 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
     )(any[Messages])
   ).thenReturn(appSummary)
 
-  val fullUserAnswers = (for {
+  val fullUserAnswers: UserAnswers = (for {
     ua <- userAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
     ua <- ua.set(HasCommodityCodePage, false)
     ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
@@ -253,7 +253,8 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
             ApplicationContactDetails(
               name = "name",
               email = "email",
-              phone = "phone"
+              phone = "phone",
+              jobTitle = "jobTitle"
             )
           )
     ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)

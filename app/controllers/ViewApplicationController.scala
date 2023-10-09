@@ -56,7 +56,7 @@ class ViewApplicationController @Inject() (
 }
 
 object ViewApplicationController {
-  val formatter = DateTimeFormatter
+  val formatter: DateTimeFormatter = DateTimeFormatter
     .ofPattern("dd/MM/yyyy")
-    .withZone(ZoneId.systemDefault());
+    .withZone(ZoneId.systemDefault())
 }

@@ -33,40 +33,34 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
   private val util = PhoneNumberUtil.getInstance
 
-  val nameMapping: (String, Mapping[String]) = "name" -> text(nameRequiredError)
-    .verifying(Constraints.pattern(Validation.nameInputPattern, error = nameFormatError))
+  private val nameMapping: (String, Mapping[String]) = "name" -> text(nameRequiredError)
+    .verifying(
+      Constraints.pattern(Validation.simpleCharactersInputPattern, error = nameFormatError)
+    )
 
-  val emailMapping: (String, Mapping[String]) = "email" -> text(emailRequiredError)
+  private val emailMapping: (String, Mapping[String]) = "email" -> text(emailRequiredError)
     .verifying(Constraints.pattern(Validation.emailPattern, error = emailFormatError))
 
-  val phoneMapping: (String, Mapping[String]) = "phone" -> text(phoneRequiredError)
+  private val phoneMapping: (String, Mapping[String]) = "phone" -> text(phoneRequiredError)
     .verifying(
       phoneFormatError,
       phone =>
-        isValid(phone)
-          && !phone.exists(_.isLetter)
+        isValid(phone) && !phone.exists(
+          _.isLetter
+        ) && phone.length <= Validation.phoneNumberMaxLength
     )
-    .verifying(maxLength(Validation.phoneNumberMaxLength, phoneLengthError))
 
-  val companyNameMapping: (String, Mapping[String]) =
+  private val companyNameMapping: (String, Mapping[String]) =
     "companyName" -> text(companyNameRequiredError)
 
-  val defaultMap = mapping(nameMapping, emailMapping, phoneMapping)(
-    (name, email, phone) => BusinessContactDetails.apply(name, email, phone, None)
-  )(
-    (businessContactDetails: BusinessContactDetails) =>
-      Some(
-        (
-          businessContactDetails.name,
-          businessContactDetails.email,
-          businessContactDetails.phone
-        )
-      )
-  )
+  private val jobTitleMapping: (String, Mapping[String]) = "jobTitle" -> text(jobTitleRequiredError)
+    .verifying(
+      Constraints.pattern(Validation.simpleCharactersInputPattern, error = jobTitleFormatError)
+    )
 
-  val companyNameIncMap = mapping(nameMapping, emailMapping, phoneMapping, companyNameMapping)(
-    (name, email, phone, companyName) =>
-      BusinessContactDetails.apply(name, email, phone, Some(companyName))
+  private val defaultMap = mapping(nameMapping, emailMapping, phoneMapping, jobTitleMapping)(
+    (name, email, phone, jobTitle) =>
+      BusinessContactDetails.apply(name, email, phone, None, jobTitle)
   )(
     (businessContactDetails: BusinessContactDetails) =>
       Some(
@@ -74,10 +68,27 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
           businessContactDetails.name,
           businessContactDetails.email,
           businessContactDetails.phone,
-          businessContactDetails.companyName.getOrElse("")
+          businessContactDetails.jobTitle
         )
       )
   )
+
+  private val companyNameIncMap =
+    mapping(nameMapping, emailMapping, phoneMapping, companyNameMapping, jobTitleMapping)(
+      (name, email, phone, companyName, jobTitle) =>
+        BusinessContactDetails.apply(name, email, phone, Some(companyName), jobTitle)
+    )(
+      (businessContactDetails: BusinessContactDetails) =>
+        Some(
+          (
+            businessContactDetails.name,
+            businessContactDetails.email,
+            businessContactDetails.phone,
+            businessContactDetails.companyName.getOrElse(""),
+            businessContactDetails.jobTitle
+          )
+        )
+    )
 
   def apply(includeCompanyName: Boolean): Form[BusinessContactDetails] =
     Form(if (includeCompanyName) companyNameIncMap else defaultMap)
@@ -90,16 +101,16 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 object BusinessContactDetailsFormProvider {
 
   private val nameRequiredError = "businessContactDetails.fullName.error.required"
-  private val nameFormatError   = "businessContactDetails.fullName.error.format"
-  private val nameLengthError   = "businessContactDetails.fullName.length"
+  private val nameFormatError   = "businessContactDetails.simpleChars.error.format"
 
   private val emailRequiredError = "businessContactDetails.email.error.required"
   private val emailFormatError   = "businessContactDetails.email.error.format"
-  private val emailLengthError   = "businessContactDetails.email.length"
 
   private val phoneRequiredError = "businessContactDetails.telephoneNumber.error.required"
   private val phoneFormatError   = "businessContactDetails.telephoneNumber.error.format"
-  private val phoneLengthError   = "businessContactDetails.telephoneNumber.error.length"
 
   private val companyNameRequiredError = "businessContactDetails.companyName.error.required"
+
+  private val jobTitleRequiredError = "businessContactDetails.jobTitle.error.required"
+  private val jobTitleFormatError   = "businessContactDetails.simpleChars.error.format"
 }

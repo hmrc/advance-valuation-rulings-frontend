@@ -14,19 +14,28 @@
  * limitations under the License.
  */
 
-package models
+package viewmodels.application
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
-case class BusinessContactDetails(
-  name: String,
-  email: String,
-  phone: String,
-  companyName: Option[String],
-  jobTitle: String
-)
+import viewmodels.govuk.summarylist._
+import viewmodels.implicits._
 
-object BusinessContactDetails {
+trait ApplicationSummaryHelper {
 
-  implicit val format: OFormat[BusinessContactDetails] = Json.format[BusinessContactDetails]
+  def makeRowFromOption(key: Key, field: Option[String])(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    field match {
+      case Some(value) =>
+        Some(
+          SummaryListRowViewModel(
+            key = key,
+            value = ValueViewModel(value)
+          )
+        )
+      case _           => None
+    }
+
 }

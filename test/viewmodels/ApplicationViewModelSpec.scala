@@ -27,7 +27,6 @@ import generators.Generators
 import models._
 import models.ValuationMethod.Method3
 import models.requests._
-import org.scalatest.matchers.must.Matchers
 
 class ApplicationViewModelSpec extends SpecBase {
   import ApplicationViewModelSpec._
@@ -53,8 +52,8 @@ class ApplicationViewModelSpec extends SpecBase {
 
       "must create rows for the applicant" - {
 
-        "must create 5 rows" in {
-          result.applicant.rows.length must be(5)
+        "must create 6 rows" in {
+          result.applicant.rows.length must be(6)
         }
         "must create row for the applicant name" in {
           result.applicant.rows must contain(
@@ -77,6 +76,22 @@ class ApplicationViewModelSpec extends SpecBase {
             SummaryListRow(
               Key(Text("checkYourAnswers.applicant.phone.label")),
               Value(Text(contact.phone.get))
+            )
+          )
+        }
+        "must create row for the applicant job title" in {
+          result.applicant.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.applicant.jobTitle.label")),
+              Value(Text(contact.jobTitle.get))
+            )
+          )
+        }
+        "must create row for the applicant description of role" in {
+          result.applicant.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswersForAgents.applicant.role.label")),
+              Value(Text("whatIsYourRoleAsImporter.employeeOfOrg"))
             )
           )
         }
@@ -165,8 +180,8 @@ class ApplicationViewModelSpec extends SpecBase {
       val agentApplication = application.copy(agent = Some(agent))
       val result           = ApplicationViewModel(agentApplication)
 
-      "must create 8 rows" in {
-        result.applicant.rows.length must be(8)
+      "must create 9 rows" in {
+        result.applicant.rows.length must be(9)
       }
       "must create row for the applicant name" in {
         result.applicant.rows must contain(
@@ -189,6 +204,22 @@ class ApplicationViewModelSpec extends SpecBase {
           SummaryListRow(
             Key(Text("checkYourAnswers.applicant.phone.label")),
             Value(Text(contact.phone.get))
+          )
+        )
+      }
+      "must create row for the applicant job title" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswers.applicant.jobTitle.label")),
+            Value(Text(contact.jobTitle.get))
+          )
+        )
+      }
+      "must create row for the applicant description of role" in {
+        result.applicant.rows must contain(
+          SummaryListRow(
+            Key(Text("checkYourAnswersForAgents.applicant.role.label")),
+            Value(Text("whatIsYourRoleAsImporter.employeeOfOrg"))
           )
         )
       }
@@ -337,7 +368,9 @@ object ApplicationViewModelSpec extends Generators {
   val contact: ContactDetails = ContactDetails(
     name = "contact name",
     email = "email@example.com",
-    phone = Some("phone")
+    phone = Some("phone"),
+    companyName = Some("company name"),
+    jobTitle = Some("job title")
   )
 
   val requestedMethod: MethodThree = MethodThree(

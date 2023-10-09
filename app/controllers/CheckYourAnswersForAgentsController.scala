@@ -35,7 +35,7 @@ import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.requests._
 import pages.{AccountHomePage, Page, WhatIsYourRoleAsImporterPage}
 import services.SubmissionService
-import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
+import viewmodels.checkAnswers.summary.ApplicationSummaryService
 import views.html.CheckYourAnswersForAgentsView
 
 class CheckYourAnswersForAgentsController @Inject() (
@@ -55,7 +55,7 @@ class CheckYourAnswersForAgentsController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  private implicit val logger = Logger(this.getClass)
+  private implicit val logger: Logger = Logger(this.getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {

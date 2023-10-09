@@ -32,7 +32,8 @@ class BusinessContactDetailsPageSpec extends PageBehaviours {
       phone      <- arbitraryString(Gen.numChar, maxSize = 24)
       email      <- arbitraryString(Gen.asciiChar)
       companyOpt <- Arbitrary.arbitrary[Option[String]]
-    } yield BusinessContactDetails(name, phone, email, companyOpt))
+      jobTitle   <- arbitraryString(Gen.alphaChar)
+    } yield BusinessContactDetails(name, phone, email, companyOpt, jobTitle))
 
     beRetrievable[BusinessContactDetails](BusinessContactDetailsPage)
 
