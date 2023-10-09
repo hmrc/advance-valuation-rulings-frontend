@@ -22,8 +22,8 @@ import scala.concurrent.Future
 
 import play.api.Application
 import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, Request}
-import play.api.test.{CSRFTokenHelper, FakeRequest}
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
@@ -146,7 +146,7 @@ class UploadInProgressControllerSpec
   private def expectedContentForView(
     isLetterOfAuthority: Boolean,
     application: Application,
-    request: Request[AnyContentAsEmpty.type]
+    request: FakeRequest[AnyContentAsEmpty.type]
   ) =
     if (isLetterOfAuthority) {
       val view = application.injector.instanceOf[UploadLetterOfAuthorityView]
@@ -202,13 +202,11 @@ class UploadInProgressControllerSpec
         )
           .thenReturn(Future.successful(upscanInitiateResponse))
 
-        val request = CSRFTokenHelper.addCSRFToken(
-          FakeRequest(
-            POST,
-            controllers.routes.UploadInProgressController
-              .checkProgress(draftId, Some("otherReference"), isLetterOfAuthority)
-              .url
-          )
+        val request = FakeRequest(
+          POST,
+          controllers.routes.UploadInProgressController
+            .checkProgress(draftId, Some("otherReference"), isLetterOfAuthority)
+            .url
         )
 
         val expectedContent = expectedContentForView(isLetterOfAuthority, application, request)
@@ -330,13 +328,11 @@ class UploadInProgressControllerSpec
                 .thenReturn(Future.successful(upscanInitiateResponse))
 
               running(application) {
-                val request = CSRFTokenHelper.addCSRFToken(
-                  FakeRequest(
-                    GET,
-                    routes.UploadInProgressController
-                      .onPageLoad(draftId, None, isLetterOfAuthority)
-                      .url
-                  )
+                val request = FakeRequest(
+                  GET,
+                  routes.UploadInProgressController
+                    .onPageLoad(draftId, None, isLetterOfAuthority)
+                    .url
                 )
 
                 val expectedContent =

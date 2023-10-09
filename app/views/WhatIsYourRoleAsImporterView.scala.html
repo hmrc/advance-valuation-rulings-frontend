@@ -27,10 +27,21 @@
     para: Paragraph,
     details: DetailsDrop,
     saveButtons: SaveButtons,
-    config: FrontendAppConfig
+    config: FrontendAppConfig,
+    radios: DescribeRoleRadios
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+
+@radioContent = {
+    <p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-4">
+        @messages("whatIsYourRoleAsImporter.para.1")
+    </p>
+
+    <div class="govuk-inset-text">
+        @messages("whatIsYourRoleAsImporter.warning")
+    </div>
+}
 
 @layout(pageTitle = title(form, messages("whatIsYourRoleAsImporter.title")), draftId = Some(draftId)) {
 
@@ -41,16 +52,8 @@
         }
 
         @caption(messages("caption.applicant"))
-        @heading(messages("whatIsYourRoleAsImporter.heading"))
-        @para(Html(messages("whatIsYourRoleAsImporter.para.1")))
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = Legend(),
-                items  = WhatIsYourRoleAsImporter.options(config)
-            )
-        )
+        @radios(messages("whatIsYourRoleAsImporter.heading"), radioContent, form)
 
         @saveButtons(draftId)
     }

@@ -50,7 +50,7 @@ class SubmissionServiceSpec extends SpecBase with MockitoSugar {
 
   private val applicationRequest = ApplicationRequest(
     draftId = draftId,
-    trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None),
+    trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None, Some(false)),
     agent = None,
     contact = ContactDetails("name", "email", None, None, None),
     requestedMethod = MethodOne(None, None, None),

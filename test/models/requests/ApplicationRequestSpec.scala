@@ -19,7 +19,7 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import play.api.libs.json.{Json, JsSuccess}
+import play.api.libs.json.{Json, JsResult, JsSuccess}
 
 import config.FrontendAppConfig
 import generators._
@@ -53,7 +53,8 @@ class ApplicationRequestSpec
 
     "be able to deserialize successful body" when {
       "when the user is an individual" in {
-        val result = ApplicationRequest.format.reads(Json.parse(individualTraderJson))
+        val result: JsResult[ApplicationRequest] =
+          ApplicationRequest.format.reads(Json.parse(individualTraderJson))
 
         result.isSuccess shouldBe true
 
@@ -575,7 +576,8 @@ object ApplicationRequestSpec extends Generators {
     addressLine3 = None,
     postcode = traderDetailsWithCountryCode.CDSEstablishmentAddress.postalCode.getOrElse(""),
     countryCode = traderDetailsWithCountryCode.CDSEstablishmentAddress.countryCode,
-    phoneNumber = traderDetailsWithCountryCode.contactInformation.flatMap(_.telephoneNumber)
+    phoneNumber = traderDetailsWithCountryCode.contactInformation.flatMap(_.telephoneNumber),
+    isPrivate = Some(!traderDetailsWithCountryCode.consentToDisclosureOfPersonalData)
   )
 
   val eoriDetails: TraderDetail = TraderDetail(
@@ -586,7 +588,8 @@ object ApplicationRequestSpec extends Generators {
     addressLine3 = None,
     postcode = postcode,
     countryCode = country.code,
-    phoneNumber = Some(phoneNumber)
+    phoneNumber = Some(phoneNumber),
+    isPrivate = Some(randomBoolean)
   )
 
   val agentEoriDetails: TraderDetail = TraderDetail(
@@ -597,7 +600,8 @@ object ApplicationRequestSpec extends Generators {
     addressLine3 = None,
     postcode = postcode,
     countryCode = country.code,
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = None
   )
 
   val contact: ContactDetails = ContactDetails(
@@ -639,7 +643,8 @@ object ApplicationRequestSpec extends Generators {
        |  "addressLine2": "$addressLine2",
        |  "postcode": "$postcode",
        |  "countryCode": "${country.code}",
-       |  "phoneNumber": "$phoneNumber"
+       |  "phoneNumber": "$phoneNumber",
+       |  "isPrivate": $randomBoolean
        |},
        |"contact": {
        |  "name": "$contactName",
@@ -673,7 +678,8 @@ object ApplicationRequestSpec extends Generators {
        |  "addressLine2": "$addressLine2",
        |  "postcode": "$postcode",
        |  "countryCode": "${country.code}",
-       |  "phoneNumber": "$phoneNumber"
+       |  "phoneNumber": "$phoneNumber",
+       |  "isPrivate": $randomBoolean
        |},
        |"agent": {
        |  "eori": "$eori",

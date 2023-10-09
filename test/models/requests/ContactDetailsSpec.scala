@@ -143,6 +143,7 @@ object ContactDetailsSpec extends Generators {
     addressLine3 = None,
     postcode = "abc",
     countryCode = randomString,
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = Some(false)
   )
 }
