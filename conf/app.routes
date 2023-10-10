@@ -225,6 +225,16 @@ POST       /:draftId/describe-role-importer                        controllers.W
 GET        /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
+GET        /:draftId/was-there-a-previous-decision                 controllers.HaveYouReceivedADecisionController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/was-there-a-previous-decision                 controllers.HaveYouReceivedADecisionController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/change-was-there-a-previous-decision          controllers.HaveYouReceivedADecisionController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-was-there-a-previous-decision          controllers.HaveYouReceivedADecisionController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+
+GET        /:draftId/tell-us-about-a-previous-decision             controllers.TellUsAboutYourRulingController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/tell-us-about-a-previous-decision             controllers.TellUsAboutYourRulingController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/change-tell-us-about-a-previous-decision      controllers.TellUsAboutYourRulingController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-tell-us-about-a-previous-decision      controllers.TellUsAboutYourRulingController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+
 GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
 GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)
 

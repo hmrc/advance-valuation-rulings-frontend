@@ -54,6 +54,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ConfidentialInformationPage                      => confidentialInformationPage
     case ImportGoodsPage                                  => importGoodsPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
+    case TellUsAboutYourRulingPage                        => tellUsAboutYourRuling
+    case HaveYouReceivedADecisionPage                     => haveYouRecievedADecisionPage
     case ContactPagePage                                  => contactsNextPage
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
@@ -335,7 +337,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
   private def descriptionOfGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(DescriptionOfGoodsPage) match {
       case None    => DescriptionOfGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => HaveYouReceivedADecisionController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def hasCommodityCodePage(userAnswers: UserAnswers): Call                         =
@@ -486,6 +488,19 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
       case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
+    }
+
+  private def tellUsAboutYourRuling(userAnswers: UserAnswers): Call =
+    userAnswers.get(TellUsAboutYourRulingPage) match {
+      case None    => TellUsAboutYourRulingController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
+    }
+
+  private def haveYouRecievedADecisionPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(HaveYouReceivedADecisionPage) match {
+      case None        => HaveYouReceivedADecisionController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  => TellUsAboutYourRulingController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(false) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def contactsNextPage(userAnswers: UserAnswers): Call =
