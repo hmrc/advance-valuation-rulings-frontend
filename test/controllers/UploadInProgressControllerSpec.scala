@@ -349,7 +349,7 @@ class UploadInProgressControllerSpec
     }
 
     "Check Progress" - {
-      "when there is an initiated file (upload in progress)" - {
+      "when there is an initiated file (Uploading your document)" - {
 
         "when the key matches the file" - {
 
