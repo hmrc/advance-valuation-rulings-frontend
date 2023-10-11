@@ -27,5 +27,6 @@ class TellUsAboutYourRulingFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("tellUsAboutYourRuling.error.required")
+        .verifying(maxLength(8000, "textCount.tooLong"))
     )
 }

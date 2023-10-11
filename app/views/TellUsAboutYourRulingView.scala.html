@@ -15,6 +15,9 @@
  *@
 
 @import components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.{CharacterCount => CharCount}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
 
 @this(
     layout: templates.Layout,
@@ -22,6 +25,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     list: BulletList,
     paragraph: Paragraph,
     caption: Caption,
@@ -57,21 +61,19 @@
         @caption(messages("caption.goods"))
         @heading(messages("tellUsAboutYourRuling.heading"))
 
+        @hmrcCharacterCount(CharCount(
+            id = "value",
+            name = "value",
+            maxLength = Some(8000),
+            label = Label(
+                content = Text(messages("tellUsAboutYourRuling.label")),
+                classes = "govuk-visually-hidden"
+            ),
+            hint = Some(Hint(content = HtmlContent(content))),
+            value = form("value").value,
+            errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+        ))
 
-
-        @govukTextarea(
-            TextareaViewModel(
-                field = form("value"),
-                label = Label(
-                    content = Text(messages("tellUsAboutYourRuling.label")),
-                    classes = "govuk-visually-hidden",
-                    )
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8000")
-                .withHint(Hint(content = HtmlContent(content)))
-                .withId("value")
-        )
 
         @saveButtons(draftId, onSubmitAction())
     }

@@ -1041,3 +1041,4 @@ tellUsAboutYourRuling.bulletPoint.4 = the expiry date for the ruling
 
 tellUsAboutYourRuling.error.required = Tell us about the ruling
 
+textCount.tooLong = Description of rulings must be 8000 characters or less
