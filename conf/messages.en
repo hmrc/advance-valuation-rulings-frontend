@@ -117,6 +117,7 @@ checkYourAnswersForAgents.applicant.name.label = Applicant’s full name
 checkYourAnswersForAgents.applicant.email.label = Applicant’s email address
 checkYourAnswersForAgents.applicant.phone.label = Applicant’s telephone number
 checkYourAnswersForAgents.applicant.companyName.label = Agent’s company name
+checkYourAnswersForAgents.applicant.jobTitle.label = Agent’s job title
 checkYourAnswersForAgents.applicant.role.label = Description of role
 checkYourAnswersForAgents.goods.heading = About the goods
 checkYourAnswersForAgents.declaration.heading = Your declaration
@@ -1006,6 +1007,7 @@ checkYourAnswersForAgents.applicant.role.hidden = the description of your role
 checkYourAnswersForAgents.applicant.name.change.hidden = your contact name
 checkYourAnswersForAgents.applicant.email.change.hidden = your email address
 checkYourAnswersForAgents.applicant.phone.change.hidden = your telephone number
+checkYourAnswersForAgents.applicant.jobTitle.change.hidden = your job title
 
 deleteDraft.title = Are you sure you want to delete your application?
 deleteDraft.heading = Are you sure you want to delete your application?
