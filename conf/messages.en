@@ -439,6 +439,7 @@ applicationContactDetails.telephoneNumber.error.format = Enter a telephone numbe
 applicationContactDetails.name.change.hidden = your contact name
 applicationContactDetails.email.change.hidden = your email address
 applicationContactDetails.phone.change.hidden = your telephone number
+applicationContactDetails.jobTitle.change.hidden = your job title
 applicationContactDetails.jobTitle.error.required = Enter your job title
 
 eoriBeUpToDate.title = Your EORI number details must be correct to use this service

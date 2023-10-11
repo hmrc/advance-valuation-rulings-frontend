@@ -178,6 +178,7 @@ applicationContactDetails.telephoneNumber.error.format = Nodwch rif ffôn, megis
 applicationContactDetails.name.change.hidden = your contact name
 applicationContactDetails.email.change.hidden = your email address
 applicationContactDetails.phone.change.hidden = your telephone number
+applicationContactDetails.jobTitle.change.hidden = your job title
 applicationContactDetails.jobTitle.error.required = Enter your job title
 
 valuationMethod.caption = Ynglŷn â’r nwyddau
