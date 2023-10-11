@@ -31,7 +31,8 @@
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
-    link: Link
+    link: Link,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId, registeredDetails: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
@@ -49,14 +50,6 @@
                     @heading(messages("checkRegisteredDetails.heading.agentTrader", registeredDetails.EORINo))
                 } else {
                     @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.EORINo))
-                }
-}
-
-@radioHeading = {
-                @if(registeredDetails.CDSFullName.trim != ""){
-                    @subheading(messages("checkRegisteredDetails.subheading.2"))
-                }else{
-                    @subheading(messages("checkRegisteredDetails.private.subheading.2"))
                 }
 }
 
@@ -82,7 +75,6 @@
         } else {
             @paragraph(Html(messages("checkRegisteredDetails.private.paragraph.1")))
         }
-        @radioHeading
 }
 
 @layout(
@@ -108,23 +100,29 @@
 
         <br></br>
 
+        @paraContent
+
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = LegendViewModel(HtmlContent(radioHeading)).visuallyHidden(),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("checkRegisteredDetails.subheading.2")).toString
+                    )
+                ),
                 items = Seq(
                     RadioItem(
-                    id = Some(form("value").id),
-                    value = Some("true"),
-                    content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes")
+                        id = Some(form("value").id),
+                        value = Some("true"),
+                        content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes")
                     ),
                     RadioItem(
-                    id = Some(s"${form("value").id}-no"),
-                    value = Some("false"),
-                    content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
+                        id = Some(s"${form("value").id}-no"),
+                        value = Some("false"),
+                        content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
                     )
                 )
-            ).withHint(Hint(content = HtmlContent(paraContent)))
+            )
         )
 
         @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
