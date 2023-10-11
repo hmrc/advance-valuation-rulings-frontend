@@ -180,6 +180,7 @@ applicationContactDetails.telephoneNumber.error.format = Nodwch rif ffôn, megis
 applicationContactDetails.name.change.hidden = your contact name
 applicationContactDetails.email.change.hidden = your email address
 applicationContactDetails.phone.change.hidden = your telephone number
+applicationContactDetails.jobTitle.change.hidden = your job title
 applicationContactDetails.jobTitle.error.required = Enter your job title
 
 valuationMethod.caption = Ynglŷn â’r nwyddau
@@ -699,6 +700,7 @@ checkYourAnswersForAgents.applicant.name.label = Enw llawn yr asiant
 checkYourAnswersForAgents.applicant.email.label = Cyfeiriad e-bost yr asiant
 checkYourAnswersForAgents.applicant.phone.label = Rhif ffôn yr asiant
 checkYourAnswersForAgents.applicant.companyName.label = Enw cwmni’r asiant
+checkYourAnswersForAgents.applicant.jobTitle.label = Agent’s job title
 checkYourAnswersForAgents.applicant.role.label = Disgrifiad o’r rôl
 checkYourAnswersForAgents.goods.heading = Ynglŷn â’r nwyddau
 checkYourAnswersForAgents.declaration.heading = Eich datganiad
@@ -973,6 +975,7 @@ checkYourAnswersForAgents.applicant.role.hidden = the description of your role
 checkYourAnswersForAgents.applicant.name.change.hidden = your contact name
 checkYourAnswersForAgents.applicant.email.change.hidden = your email address
 checkYourAnswersForAgents.applicant.phone.change.hidden = your telephone number
+checkYourAnswersForAgents.applicant.jobTitle.change.hidden = your job title
 
 deleteDraft.title = Are you sure you want to delete your application?
 deleteDraft.heading = Are you sure you want to delete your application?
