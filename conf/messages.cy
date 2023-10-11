@@ -496,8 +496,9 @@ commodityCode.error.length.min = Mae’n rhaid i’r cod nwyddau fod rhwng 4 a 1
 commodityCode.change.hidden = the commodity code you provided
 
 haveTheGoodsBeenSubjectToLegalChallenges.caption = Ynglŷn â’r nwyddau
-haveTheGoodsBeenSubjectToLegalChallenges.title = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
-haveTheGoodsBeenSubjectToLegalChallenges.heading = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
+haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges relating to goods
+haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges relating to goods
+haveTheGoodsBeenSubjectToLegalChallenges.question = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
 haveTheGoodsBeenSubjectToLegalChallenges.para.1 = Gallai her gyfreithiol ymwneud â’r dull o brisio neu brisiad nwyddau a ddefnyddiwyd yn flaenorol yn y DU neu gan wlad arall.
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Mae darparu’r wybodaeth hon yn gallu helpu i adnabod nwyddau sydd â dyfarniadau tebyg.
 haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
@@ -515,8 +516,9 @@ describeTheLegalChallenges.error.length = Maximum allowed characters is 8168
 describeTheLegalChallenges.change.hidden = your description of the legal challenges
 
 hasConfidentialInformation.caption = Ynglŷn â’r nwyddau
-hasConfidentialInformation.title = A ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau?
-hasConfidentialInformation.heading = A ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau?
+hasConfidentialInformation.title = Confidential information about the goods
+hasConfidentialInformation.heading = Confidential information about the goods
+hasConfidentialInformation.question = A ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau?
 hasConfidentialInformation.paragraph.1 = Gall hyn gynnwys unrhyw wybodaeth ynghylch trefniadau contractiol neu drefniadau sy’n fasnachol sensitif.
 hasConfidentialInformation.paragraph.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrinachol.
 hasConfidentialInformation.paragraph.inset = Byddwch yn gallu uwchlwytho ffeiliau yn hwyrach yn y cais.
@@ -812,8 +814,9 @@ applicationComplete.company.heading = Ynglŷn â’r cwmni
 applicationComplete.goods.heading = Ynglŷn â’r nwyddau
 applicationComplete.continue.button = Ewch i’ch ceisiadau a’ch dyfarniadau
 
-whatIsYourRoleAsImporter.title = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
-whatIsYourRoleAsImporter.heading = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
+whatIsYourRoleAsImporter.title = Disgrifio’ch rôl fel mewnforiwr
+whatIsYourRoleAsImporter.heading = Disgrifio’ch rôl fel mewnforiwr
+whatIsYourRoleAsImporter.question = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
 whatIsYourRoleAsImporter.employeeOfOrg = Gweithiwr sy’n gyflogai yn y sefydliad
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Asiant sy’n gweithredu ar ran sefydliad
 whatIsYourRoleAsImporter.para.1 = Dewiswch yr opsiwn sy’n disgrifio’ch rôl orau:
