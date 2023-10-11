@@ -26,14 +26,16 @@
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
     saveButtons: SaveButtons,
-    radios: YesNoRadios
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@radiosContent = {
-    @paragraph(Html(messages("haveTheGoodsBeenSubjectToLegalChallenges.para.1")))
-    @paragraph(Html(messages("haveTheGoodsBeenSubjectToLegalChallenges.para.2")))
+@paraContent = {
+    <div class="govuk-!-margin-top-4">
+        @paragraph(Html(messages("haveTheGoodsBeenSubjectToLegalChallenges.para.1")))
+        @paragraph(Html(messages("haveTheGoodsBeenSubjectToLegalChallenges.para.2")))
+    </div>
 }
 
 @layout(pageTitle = title(form, messages("haveTheGoodsBeenSubjectToLegalChallenges.title")), draftId = Some(draftId)) {
@@ -46,7 +48,20 @@
 
         @caption(messages("haveTheGoodsBeenSubjectToLegalChallenges.caption"))
 
-        @radios(messages("haveTheGoodsBeenSubjectToLegalChallenges.heading"), radiosContent, form)
+        @heading(messages("haveTheGoodsBeenSubjectToLegalChallenges.heading"))
+
+        @paraContent
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("haveTheGoodsBeenSubjectToLegalChallenges.question")).toString
+                    )
+                )
+            )
+        )
 
         @saveButtons(draftId)
     }

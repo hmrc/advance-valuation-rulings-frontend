@@ -345,8 +345,9 @@ confidentialInformation.bulletPoint.2 = the price paid to the supplier
 confidentialInformation.bulletPoint.3 = the cost of production
 confidentialInformation.bulletPoint.4 = anything contractual or sensitive in the commercial arrangement
 
-hasConfidentialInformation.title = Do you want to add any confidential information about the goods?
-hasConfidentialInformation.heading = Do you want to add any confidential information about the goods?
+hasConfidentialInformation.title = Confidential information about the goods
+hasConfidentialInformation.heading = Confidential information about the goods
+hasConfidentialInformation.question = Do you want to add any confidential information about the goods?
 hasConfidentialInformation.caption = About the goods
 hasConfidentialInformation.paragraph.1 = This could include any information about contractual or sensitive commercial arrangements.
 hasConfidentialInformation.paragraph.2 = We will not publish confidential information.
@@ -760,8 +761,9 @@ descriptionOfGoods.error.required = Enter a short description of the goods
 descriptionOfGoods.error.length = Short description of the goods must be 100 characters or less
 descriptionOfGoods.change.hidden = your short description of the goods
 
-haveTheGoodsBeenSubjectToLegalChallenges.title = Have the goods been subject to any legal challenges?
-haveTheGoodsBeenSubjectToLegalChallenges.heading = Have the goods been subject to any legal challenges?
+haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges relating to goods
+haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges relating to goods
+haveTheGoodsBeenSubjectToLegalChallenges.question = Have the goods been subject to any legal challenges?
 haveTheGoodsBeenSubjectToLegalChallenges.caption = About the goods
 haveTheGoodsBeenSubjectToLegalChallenges.para.1 = A legal challenge could relate to the method of valuation or the valuation of goods previously used in the UK or another country.
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Providing this information can help to identify goods with similar rulings.
