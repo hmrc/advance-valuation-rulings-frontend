@@ -27,14 +27,14 @@
     caption: Caption,
     heading: Heading,
     headingH3: headingH3,
-    subheading: Subheading,
     paragraph: Paragraph,
+    subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
     link: Link
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId, registeredDetails: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
 
 @searchAgainLink = {
   @link(
@@ -44,56 +44,88 @@
     call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
 }
 
-@radioItems = @{
-    Seq(
-        RadioItem(
-            value = Some("true"),
-            checked = form.value.fold(false)(_ == "true"),
-            content = Text(messages("traderDetails.public.h2.question.yes"))),
-        RadioItem(
-            value = Some("false"),
-            checked = form.value.fold(false)(_ == "false"),
-            content = Text(messages("traderDetails.public.h2.question.no")))
-    )
+@headingContent = {
+                @if(registeredDetails.consentToDisclosureOfPersonalData) {
+                    @heading(messages("checkRegisteredDetails.heading.agentTrader", registeredDetails.EORINo))
+                } else {
+                    @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.EORINo))
+                }
 }
 
-@layout(pageTitle = title(form, messages("traderDetails.public.heading")), draftId = Some(draftId)) {
+@radioHeading = {
+                @if(registeredDetails.CDSFullName.trim != ""){
+                    @subheading(messages("checkRegisteredDetails.subheading.2"))
+                }else{
+                    @subheading(messages("checkRegisteredDetails.private.subheading.2"))
+                }
+}
 
-    @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId)) {
+@paraContent = {
+        @if(registeredDetails.consentToDisclosureOfPersonalData) {
+
+            @paragraph(Html(messages("checkRegisteredDetails.warning.agentOnBehalfOfTrader")))
+
+            @subheading(messages("checkRegisteredDetails.subheading.1"))
+
+            @if(registeredDetails.CDSFullName.trim != "") {
+                @headingH3(messages("checkRegisteredDetails.heading.2"), "s")
+                @paragraph(content=Html(registeredDetails.CDSFullName))
+            }
+
+            @headingH3(messages("checkRegisteredDetails.heading.3"), "s")
+            @paragraph(content=Html(
+                    registeredDetails.CDSEstablishmentAddress.streetAndNumber + "<br>" +
+                    registeredDetails.CDSEstablishmentAddress.city + "<br>" +
+                    registeredDetails.CDSEstablishmentAddress.postalCode.map(_ + "<br>").getOrElse("") +
+                    Country.fromCountryCode(registeredDetails.CDSEstablishmentAddress.countryCode).name
+            ))
+        } else {
+            @paragraph(Html(messages("checkRegisteredDetails.private.paragraph.1")))
+        }
+        @radioHeading
+}
+
+@layout(
+    pageTitle = title(
+        form,
+        messages(
+            if (registeredDetails.consentToDisclosureOfPersonalData) "checkRegisteredDetails.title.agentTrader" else "checkRegisteredDetails.private.title",
+            registeredDetails.EORINo
+        )
+    ),
+    draftId = Some(draftId)
+) {
+
+
+    @formHelper(action = routes.CheckRegisteredDetailsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value")))
         }
 
-        @caption(messages("caption.applicant"))
-        @heading(messages("traderDetails.public.heading"))
+        @caption(messages("checkRegisteredDetails.caption"))
+        @headingContent
 
-        <br>
-        @paragraph(Html(messages("traderDetails.public.p1")))
-
-        @subheading(messages("traderDetails.public.h2"))
-
-        @headingH3(messages("traderDetails.public.h3.businessName"), "s")
-        @paragraph(content=Html(details.CDSFullName))
-
-
-        @headingH3(messages("traderDetails.public.h3.businessAddress"), "s")
-
-        @paragraph(content=Html(
-            details.CDSEstablishmentAddress.streetAndNumber + "<br>" +
-            details.CDSEstablishmentAddress.city + "<br>" +
-            details.CDSEstablishmentAddress.postalCode.map(_ + "<br>").getOrElse("") +
-            Country.fromCountryCode(details.CDSEstablishmentAddress.countryCode).name
-        ))
-
-        @subheading(messages("traderDetails.public.h2.correct"))
+        <br></br>
 
         @govukRadios(
-            Radios(
-                idPrefix = Some("traderDetailsCorrect"),
-                name = "traderDetailsCorrect",
-                items = radioItems
-        ))
+            RadiosViewModel(
+                field = form("value"),
+                legend = LegendViewModel(HtmlContent(radioHeading)).visuallyHidden(),
+                items = Seq(
+                    RadioItem(
+                    id = Some(form("value").id),
+                    value = Some("true"),
+                    content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes")
+                    ),
+                    RadioItem(
+                    id = Some(s"${form("value").id}-no"),
+                    value = Some("false"),
+                    content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
+                    )
+                )
+            ).withHint(Hint(content = HtmlContent(paraContent)))
+        )
 
         @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 

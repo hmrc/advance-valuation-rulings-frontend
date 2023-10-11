@@ -74,12 +74,6 @@
         @radioHeading
 }
 
-@*Combined following content for a screen reader to present heading 1 and subheading clearly within legend*@
-@legendContent = {  @headingContent.
-                    @radioHeading
-}
-
-
 @layout(
     pageTitle = title(
         form,
@@ -106,7 +100,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden()
+                legend = LegendViewModel(HtmlContent(radioHeading)).visuallyHidden()
             ).withHint(Hint(content = HtmlContent(paraContent)))
         )
 

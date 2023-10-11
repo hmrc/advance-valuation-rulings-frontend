@@ -44,17 +44,12 @@
     call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
 }
 
-@radioItems = @{
-    Seq(
-        RadioItem(
-            value = Some("true"),
-            checked = form.value.fold(false)(_ == "true"),
-            content = Text(messages("site.yes"))),
-        RadioItem(
-            value = Some("false"),
-            checked = form.value.fold(false)(_ == "false"),
-            content = Text(messages("site.no")))
-    )
+@radioHeading = { @subheading(messages("traderDetails.private.h3.proceed")) }
+
+@paraContent = {
+        @warning(content=Html(messages("traderDetails.private.p1")))
+        @paragraph(Html(messages("traderDetails.private.p2")))
+        @radioHeading
 }
 
 @layout(pageTitle = title(form, messages("traderDetails.private.heading", details.EORINo)), draftId = Some(draftId)) {
@@ -69,18 +64,13 @@
         @heading(messages("traderDetails.private.heading", details.EORINo))
 
         <br>
-        @warning(content=Html(messages("traderDetails.private.p1")))
-        @paragraph(Html(messages("traderDetails.private.p2")))
-
-
-        @subheading(messages("traderDetails.private.h3.proceed"))
 
         @govukRadios(
-            Radios(
-                idPrefix = Some("traderDetailsCorrect"),
-                name = "traderDetailsCorrect",
-                items = radioItems
-        ))
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = LegendViewModel(HtmlContent(radioHeading)).visuallyHidden()
+            ).withHint(Hint(content = HtmlContent(paraContent)))
+        )
 
         @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
