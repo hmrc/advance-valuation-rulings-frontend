@@ -897,8 +897,9 @@ haveYouUsedMethodOneForSimilarGoodsInPast.checkYourAnswersLabel = Can you provid
 haveYouUsedMethodOneForSimilarGoodsInPast.error.required = Select if you can provide evidence of a Method 1 declaration
 haveYouUsedMethodOneForSimilarGoodsInPast.change.hidden = your response to whether you can provide evidence of a Method 1 declaration, which has been accepted by UK Customs within 90 days of importation, for goods similar to those being valued
 
-whatIsYourRoleAsImporter.title = How would you describe your role as an importer?
-whatIsYourRoleAsImporter.heading = How would you describe your role as an importer?
+whatIsYourRoleAsImporter.title = Your role as an importer
+whatIsYourRoleAsImporter.heading = Your role as an importer
+whatIsYourRoleAsImporter.question = How would you describe your role as an importer?
 whatIsYourRoleAsImporter.employeeOfOrg = An employee of the organisation
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Agent acting on behalf of an organisation
 whatIsYourRoleAsImporter.para.1 = Choose the option that best describes your role as an importer.
