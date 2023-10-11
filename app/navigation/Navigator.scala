@@ -55,7 +55,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ImportGoodsPage                                  => importGoodsPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
     case TellUsAboutYourRulingPage                        => tellUsAboutYourRuling
-    case HaveYouReceivedADecisionPage                     => haveYouRecievedADecisionPage
+    case HaveYouReceivedADecisionPage                     => haveYouReceivedADecision
     case ContactPagePage                                  => contactsNextPage
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
@@ -496,7 +496,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       case Some(_) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
-  private def haveYouRecievedADecisionPage(userAnswers: UserAnswers): Call =
+  private def haveYouReceivedADecision(userAnswers: UserAnswers): Call =
     userAnswers.get(HaveYouReceivedADecisionPage) match {
       case None        => HaveYouReceivedADecisionController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  => TellUsAboutYourRulingController.onPageLoad(NormalMode, userAnswers.draftId)
