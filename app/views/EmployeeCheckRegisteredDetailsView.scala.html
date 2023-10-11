@@ -27,7 +27,8 @@
     paragraph: Paragraph,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    legend: LegendH2
 )
 
 @(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -37,14 +38,6 @@
                     @heading(messages("checkRegisteredDetails.heading.employeeOrg", registeredDetails.EORINo))
                 } else {
                     @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.EORINo))
-                }
-}
-
-@radioHeading = {
-                @if(registeredDetails.CDSFullName.trim != ""){
-                    @subheading(messages("checkRegisteredDetails.subheading.2"))
-                }else{
-                    @subheading(messages("checkRegisteredDetails.private.subheading.2"))
                 }
 }
 
@@ -71,7 +64,6 @@
         } else {
             @paragraph(Html(messages("checkRegisteredDetails.private.paragraph.1")))
         }
-        @radioHeading
 }
 
 @layout(
@@ -97,11 +89,17 @@
 
         <br></br>
 
+        @paraContent
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(HtmlContent(radioHeading)).visuallyHidden()
-            ).withHint(Hint(content = HtmlContent(paraContent)))
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("checkRegisteredDetails.subheading.2")).toString
+                    )
+                )
+            )
         )
 
         @saveButtons(draftId)
