@@ -496,8 +496,8 @@ commodityCode.error.length.min = Mae’n rhaid i’r cod nwyddau fod rhwng 4 a 1
 commodityCode.change.hidden = the commodity code you provided
 
 haveTheGoodsBeenSubjectToLegalChallenges.caption = Ynglŷn â’r nwyddau
-haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges relating to goods
-haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges relating to goods
+haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges relating to the goods
+haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges relating to the goods
 haveTheGoodsBeenSubjectToLegalChallenges.question = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
 haveTheGoodsBeenSubjectToLegalChallenges.para.1 = Gallai her gyfreithiol ymwneud â’r dull o brisio neu brisiad nwyddau a ddefnyddiwyd yn flaenorol yn y DU neu gan wlad arall.
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Mae darparu’r wybodaeth hon yn gallu helpu i adnabod nwyddau sydd â dyfarniadau tebyg.
