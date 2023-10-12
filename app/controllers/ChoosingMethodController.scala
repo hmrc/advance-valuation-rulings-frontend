@@ -16,21 +16,23 @@
 
 package controllers
 
+import javax.inject.Inject
+
+import scala.concurrent.{ExecutionContext, Future}
+
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
 import controllers.actions._
 import forms.ValuationMethodFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ValuationMethodPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ValuationMethodView
+import views.html.ChoosingMethodView
 
-import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
-
-class ChoosingMethodController @Inject()(
+class ChoosingMethodController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
@@ -39,7 +41,7 @@ class ChoosingMethodController @Inject()(
   requireData: DataRequiredAction,
   formProvider: ValuationMethodFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: ValuationMethodView
+  view: ChoosingMethodView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {

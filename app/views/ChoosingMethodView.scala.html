@@ -43,6 +43,10 @@
 
 @legendH2 = {@subheading(messages("valuationMethod.h2"))}
 
+@h3(text: String) = {
+    <h3 class="govuk-heading-s">@messages(text)</h3>
+}
+
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
 
@@ -52,19 +56,31 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @caption(messages("valuationMethod.caption"))
-        @heading(messages("valuationMethod.heading"))
-        @paragraph(Html(messages("valuationMethod.paragraph.1", overviewLink)))
-        @paragraph(Html(messages("valuationMethod.paragraph.2")))
-        @paragraph(Html(messages("valuationMethod.paragraph.3")))
+        @caption(messages("choosingMethod.caption"))
+        @heading(messages("choosingMethod.heading"))
+        <br/>
+        @paragraph(Html(messages("choosingMethod.paragraph.1", overviewLink)))
+        @paragraph(Html(messages("choosingMethod.para")))
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(content = HtmlContent(legendH2)),
-                items  = ValuationMethod.options
-            ).withHint(Hint(content = HtmlContent(messages("valuationMethod.hint"))))
-        )
+        @subheading(messages("choosingMethod.methods"))
+
+        @h3("valuationMethod.method1")
+        @paragraph(Html(messages("valuationMethod.method1.hint")))
+
+        @h3("valuationMethod.method2")
+        @paragraph(Html(messages("valuationMethod.method2.hint")))
+
+        @h3("valuationMethod.method3")
+        @paragraph(Html(messages("valuationMethod.method3.hint")))
+
+        @h3("valuationMethod.method4")
+        @paragraph(Html(messages("valuationMethod.method4.hint")))
+
+        @h3("valuationMethod.method5")
+        @paragraph(Html(messages("valuationMethod.method5.hint")))
+
+        @h3("valuationMethod.method6")
+        @paragraph(Html(messages("valuationMethod.method6.hint")))
 
         @saveButtons(draftId)
     }
