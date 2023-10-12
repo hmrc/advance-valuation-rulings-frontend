@@ -103,7 +103,9 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case EORIBeUpToDatePage                               => ua => EORIBeUpToDateController.onPageLoad(ua.draftId)
     case ProvideTraderEoriPage                            =>
       ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
+    case ChoosingMethodPage                               => ua => ValuationMethodController.onPageLoad(NormalMode, ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
+
   }
 
   private def startApplicationRouting(userAnswers: UserAnswers): Call = {
@@ -128,7 +130,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
-      case None                  => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case None                  => ChoosingMethodController.onPageLoad(userAnswers.draftId)
       case Some(valuationMethod) =>
         import models.ValuationMethod._
         valuationMethod match {
@@ -149,7 +151,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
             )
         }
     }
-  // Method 1----------------------------------------------------------------
 
   private def areThereRestrictionsOnTheGoodsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AreThereRestrictionsOnTheGoodsPage) match {
@@ -517,7 +518,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ApplicationContactDetailsPage) match {
       case None    => ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => ChoosingMethodController.onPageLoad(userAnswers.draftId)
     }
 
   private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
@@ -530,11 +531,11 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
   private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
     userAnswers.get(AccountHomePage) match {
       case Some(OrganisationAdmin)                   =>
-        ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+        ChoosingMethodController.onPageLoad(userAnswers.draftId)
       case Some(OrganisationAssistant) | Some(Agent) =>
         userAnswers.get(WhatIsYourRoleAsImporterPage) match {
           case Some(EmployeeOfOrg)      =>
-            ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+            ChoosingMethodController.onPageLoad(userAnswers.draftId)
           case Some(AgentOnBehalfOfOrg) =>
             AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
           case _                        =>
@@ -547,7 +548,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
   private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
     userAnswers.get(AgentCompanyDetailsPage) match {
       case None    => AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => ValuationMethodController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => ChoosingMethodController.onPageLoad(userAnswers.draftId)
     }
 
   private def uploadLetterOfAuthorityPage(userAnswers: UserAnswers): Call =

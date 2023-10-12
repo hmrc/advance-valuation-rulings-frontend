@@ -28,13 +28,12 @@ import controllers.actions._
 import forms.ValuationMethodFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
-import pages.ValuationMethodPage
+import pages.ChoosingMethodPage
 import services.UserAnswersService
 import views.html.ChoosingMethodView
 
 class ChoosingMethodController @Inject() (
   override val messagesApi: MessagesApi,
-  userAnswersService: UserAnswersService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -46,30 +45,18 @@ class ChoosingMethodController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val preparedForm = ValuationMethodPage.fill(form)
-
-        Ok(view(preparedForm, mode, draftId))
+      implicit request => Ok(view(formProvider(), mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
-            value =>
-              for {
-                updatedAnswers <- ValuationMethodPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(ValuationMethodPage, mode, updatedAnswers)
-              )
+        Future.successful(
+          Redirect(
+            navigator.nextPage(ChoosingMethodPage, mode, request.userAnswers)
           )
+        )
     }
 }

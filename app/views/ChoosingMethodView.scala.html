@@ -49,12 +49,7 @@
 
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
-
-    @formHelper(action = routes.ValuationMethodController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
-        }
+    @formHelper(action = routes.ChoosingMethodController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
         @caption(messages("choosingMethod.caption"))
         @heading(messages("choosingMethod.heading"))
