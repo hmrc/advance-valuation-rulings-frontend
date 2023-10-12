@@ -28,6 +28,9 @@ GET        /cannot-access-valuation-service             controllers.Unauthorised
 GET        /applications-and-rulings                    controllers.AccountHomeController.onPageLoad()
 POST       /applications-and-rulings                    controllers.AccountHomeController.startApplication()
 
+GET        /:draftId/choosing-valuation-method                     controllers.ChoosingMethodController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/choosing-valuation-method                     controllers.ChoosingMethodController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+
 GET        /:draftId/select-valuation-method                     controllers.ValuationMethodController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/select-valuation-method                     controllers.ValuationMethodController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/change-select-valuation-method               controllers.ValuationMethodController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)

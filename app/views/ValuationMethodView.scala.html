@@ -41,7 +41,7 @@
             call = Call("GET", config.overviewForMethodsUrl)
         )}
 
-@legendH2 = {@subheading(messages("valuationMethod.h2"))}
+@legend = {@heading(messages("valuationMethod.heading"))}
 
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
@@ -52,16 +52,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @caption(messages("valuationMethod.caption"))
-        @heading(messages("valuationMethod.heading"))
-        @paragraph(Html(messages("valuationMethod.paragraph.1", overviewLink)))
-        @paragraph(Html(messages("valuationMethod.paragraph.2")))
-        @paragraph(Html(messages("valuationMethod.paragraph.3")))
-
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(content = HtmlContent(legendH2)),
+                legend = LegendViewModel(content = HtmlContent(legend)),
                 items  = ValuationMethod.options
             ).withHint(Hint(content = HtmlContent(messages("valuationMethod.hint"))))
         )
