@@ -50,7 +50,7 @@
             "govuk-list govuk-list--bullet",
             )}
 
-@layout(pageTitle = title(form, messages("tellUsAboutYourRuling.title")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("tellUsAboutYourRuling.heading")), draftId = Some(draftId)) {
 
     @formHelper(action = onSubmitAction(saveDraft = false)) {
 
@@ -65,6 +65,7 @@
             id = "value",
             name = "value",
             maxLength = Some(8000),
+            rows = 10,
             label = Label(
                 content = Text(messages("tellUsAboutYourRuling.label")),
                 classes = "govuk-visually-hidden"
