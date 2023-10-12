@@ -109,27 +109,33 @@ object ContactDetailsSpec extends Generators {
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 
+  val jobTitle: String = "CEO"
+
   val draftId: DraftId = DraftId(1)
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
-  val applicationContactDetails = ApplicationContactDetails(
-    name = randomString,
-    email = randomString,
-    phone = randomString
-  )
-  val businessContactDetails    = BusinessContactDetails(
+  val applicationContactDetails: ApplicationContactDetails = ApplicationContactDetails(
     name = randomString,
     email = randomString,
     phone = randomString,
-    companyName = None
+    jobTitle = jobTitle
   )
-  val contactDetails            = ContactDetails(
+  val businessContactDetails: BusinessContactDetails       = BusinessContactDetails(
     name = randomString,
     email = randomString,
-    phone = Some(randomString)
+    phone = randomString,
+    companyName = None,
+    jobTitle = jobTitle
   )
-  val eoriDetails               = TraderDetail(
+  val contactDetails: ContactDetails                       = ContactDetails(
+    name = randomString,
+    email = randomString,
+    phone = Some(randomString),
+    companyName = None,
+    jobTitle = Some(jobTitle)
+  )
+  val eoriDetails: TraderDetail                            = TraderDetail(
     eori = randomString,
     businessName = randomString,
     addressLine1 = randomString,
@@ -137,6 +143,7 @@ object ContactDetailsSpec extends Generators {
     addressLine3 = None,
     postcode = "abc",
     countryCode = randomString,
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = Some(false)
   )
 }

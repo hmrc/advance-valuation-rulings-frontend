@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-package utils
+package viewmodels.application
 
-object PostcodeValidator {
-  val regexString: String   = "^([A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$"
-  private val postcodeRegex = regexString.r
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
-  def validate(candidate: String): Boolean = {
-    val postcode = candidate.trim.toUpperCase
+import viewmodels.govuk.summarylist._
+import viewmodels.implicits._
 
-    val result = postcode match {
-      case postcodeRegex(_*) => true
-      case _                 => false
+trait ApplicationSummaryHelper {
+
+  def makeRowFromOption(key: Key, field: Option[String])(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    field match {
+      case Some(value) =>
+        Some(
+          SummaryListRowViewModel(
+            key = key,
+            value = ValueViewModel(value)
+          )
+        )
+      case _           => None
     }
 
-    result
-  }
 }

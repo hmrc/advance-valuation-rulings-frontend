@@ -111,21 +111,20 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
   private def startApplicationRouting(userAnswers: UserAnswers): Call = {
     val agentsOn: Boolean = appConfig.agentOnBehalfOfTrader
 
-    agentsOn match {
-      case true  =>
-        userAnswers.get(AccountHomePage) match {
-          case Some(_) =>
-            WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-          case _       => UnauthorisedController.onPageLoad
-        }
-      case false =>
-        userAnswers.get(AccountHomePage) match {
-          case Some(IndividualTrader) | Some(OrganisationAdmin) =>
-            RequiredInformationController.onPageLoad(userAnswers.draftId)
-          case Some(_)                                          =>
-            WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-          case _                                                => UnauthorisedController.onPageLoad
-        }
+    if (agentsOn) {
+      userAnswers.get(AccountHomePage) match {
+        case Some(_) =>
+          WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+        case _       => UnauthorisedController.onPageLoad
+      }
+    } else {
+      userAnswers.get(AccountHomePage) match {
+        case Some(IndividualTrader) | Some(OrganisationAdmin) =>
+          RequiredInformationController.onPageLoad(userAnswers.draftId)
+        case Some(_)                                          =>
+          WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+        case _                                                => UnauthorisedController.onPageLoad
+      }
     }
   }
 

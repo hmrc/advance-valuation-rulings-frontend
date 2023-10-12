@@ -23,27 +23,30 @@ import models.requests.ContactDetails
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ContactDetailsSummary {
+object ContactDetailsSummary extends ApplicationSummaryHelper {
 
-  def rows(contact: ContactDetails)(implicit messages: Messages): Seq[SummaryListRow] = Seq(
-    Some(
+  def rows(contact: ContactDetails)(implicit messages: Messages): Seq[SummaryListRow] = {
+    val mandatoryRows = Seq(
       SummaryListRowViewModel(
         key = "checkYourAnswers.applicant.name.label",
         value = ValueViewModel(contact.name)
-      )
-    ),
-    Some(
+      ),
       SummaryListRowViewModel(
         key = "checkYourAnswers.applicant.email.label",
         value = ValueViewModel(contact.email)
       )
-    ),
-    contact.phone.map {
-      phone =>
-        SummaryListRowViewModel(
-          key = "checkYourAnswers.applicant.phone.label",
-          value = ValueViewModel(phone)
-        )
-    }
-  ).flatten
+    )
+
+    val phoneRow = makeRowFromOption(
+      key = "checkYourAnswers.applicant.phone.label",
+      field = contact.phone
+    )
+
+    val jobTitleRow = makeRowFromOption(
+      key = "checkYourAnswers.applicant.jobTitle.label",
+      field = contact.jobTitle
+    )
+
+    mandatoryRows ++ phoneRow ++ jobTitleRow
+  }
 }

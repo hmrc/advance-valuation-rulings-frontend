@@ -62,13 +62,14 @@ class EmployeeSpec extends SpecBase with Matchers {
       val expected = ApplicationContactDetails.apply(
         "test name",
         "name@domain.com",
-        "01702123123"
+        "01702123123",
+        "CEO"
       )
       val ua       = emptyUserAnswers.setFuture(ApplicationContactDetailsPage, expected).futureValue
       val details  =
         employee.getContactDetailsForApplicationRequest(ua)
 
-      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None))"
+      details.toString mustEqual "Valid(ContactDetails(test name,name@domain.com,Some(01702123123),None,Some(CEO)))"
     }
 
     "should return the correct view for CheckYourAnswers" in {

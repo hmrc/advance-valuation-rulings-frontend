@@ -19,7 +19,7 @@ package models.requests
 import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import play.api.libs.json.{Json, JsSuccess}
+import play.api.libs.json.{Json, JsResult, JsSuccess}
 
 import config.FrontendAppConfig
 import generators._
@@ -53,7 +53,8 @@ class ApplicationRequestSpec
 
     "be able to deserialize successful body" when {
       "when the user is an individual" in {
-        val result = ApplicationRequest.format.reads(Json.parse(individualTraderJson))
+        val result: JsResult[ApplicationRequest] =
+          ApplicationRequest.format.reads(Json.parse(individualTraderJson))
 
         result.isSuccess shouldBe true
 
@@ -123,7 +124,7 @@ class ApplicationRequestSpec
 
         val userAnswers = (for {
           ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
-          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
           ua <- ua.set(HasConfidentialInformationPage, false)
@@ -134,9 +135,10 @@ class ApplicationRequestSpec
           ua <- ua.set(
                   ApplicationContactDetailsPage,
                   ApplicationContactDetails(
-                    name = randomString,
-                    email = randomString,
-                    phone = randomString
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -180,7 +182,7 @@ class ApplicationRequestSpec
 
         val userAnswers = (for {
           ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
-          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
           ua <- ua.set(HasConfidentialInformationPage, false)
@@ -188,9 +190,10 @@ class ApplicationRequestSpec
           ua <- ua.set(
                   ApplicationContactDetailsPage,
                   ApplicationContactDetails(
-                    name = randomString,
-                    email = randomString,
-                    phone = randomString
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -241,7 +244,7 @@ class ApplicationRequestSpec
         val userAnswers = (for {
           ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
           ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
-          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
           ua <- ua.set(HasConfidentialInformationPage, false)
@@ -252,9 +255,10 @@ class ApplicationRequestSpec
           ua <- ua.set(
                   ApplicationContactDetailsPage,
                   ApplicationContactDetails(
-                    name = randomString,
-                    email = randomString,
-                    phone = randomString
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
@@ -343,7 +347,7 @@ class ApplicationRequestSpec
 
         val userAnswers = (for {
           ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
-          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
           ua <- ua.set(HasConfidentialInformationPage, false)
@@ -363,10 +367,11 @@ class ApplicationRequestSpec
           ua <- ua.set(
                   BusinessContactDetailsPage,
                   BusinessContactDetails(
-                    name = randomString,
-                    email = randomString,
-                    phone = randomString,
-                    companyName = None
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    companyName = None,
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(
@@ -411,7 +416,7 @@ class ApplicationRequestSpec
 
         val userAnswers = (for {
           ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
-          ua <- ua.set(DescriptionOfGoodsPage, randomString)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
           ua <- ua.set(HasCommodityCodePage, false)
           ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
           ua <- ua.set(HasConfidentialInformationPage, false)
@@ -429,10 +434,11 @@ class ApplicationRequestSpec
           ua <- ua.set(
                   BusinessContactDetailsPage,
                   BusinessContactDetails(
-                    name = randomString,
-                    email = randomString,
-                    phone = randomString,
-                    companyName = None
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    companyName = None,
+                    jobTitle = contactJobTitle
                   )
                 )
           ua <- ua.set(
@@ -508,9 +514,25 @@ class ApplicationRequestSpec
 }
 
 object ApplicationRequestSpec extends Generators {
-  // TODO: Replace this global reused string. Reusing in multiple fields doesn't allow us to check against regressions
-  //       where the data from the json are mapped to the wrong fields in the models.
-  val randomString: String = stringsWithMaxLength(8).sample.get
+  val eori                  = "Trader EORI"
+  val businessName          = "Trader business name"
+  val addressLine1          = "Trader address line 1"
+  val addressLine2          = "Trader address line 2"
+  val addressLine3          = "Trader address line 3"
+  val postcode              = "Trader postcode"
+  val countryCode           = "Trader country code"
+  val phoneNumber           = "1234567890"
+  val contactName           = "contact name"
+  val contactEmail          = "contact email"
+  val contactPhone          = "contact phone"
+  val contactJobTitle       = "contact job title"
+  val goodsName             = "goods name"
+  val goodsDescription      = goodsName // TODO: Fix failing tests which occur when this is different.
+  val goodsCommodityCode    = "envisaged commodity code"
+  val goodsLegalProceedings = "known legal proceedings"
+  val goodsInformation      = "confidential information"
+  val requestedMethodReason = "why not other methods"
+  val requestedMethodGoods  = "previous similar goods"
 
   val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
 
@@ -518,9 +540,9 @@ object ApplicationRequestSpec extends Generators {
 
   val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
 
-  val country = Country("GB", "United Kingdom")
+  val country: Country = Country("GB", "United Kingdom")
 
-  val contactInformation = ContactInformation(
+  val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
     sepCorrAddrIndicator = Some(false),
     streetAndNumber = Some("Test Street 1"),
@@ -533,7 +555,7 @@ object ApplicationRequestSpec extends Generators {
     emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
   )
 
-  val traderDetailsWithCountryCode = TraderDetailsWithCountryCode(
+  val traderDetailsWithCountryCode: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
     EORINo = "GB123456789012345",
     consentToDisclosureOfPersonalData = true,
     CDSFullName = "Test Name",
@@ -546,7 +568,7 @@ object ApplicationRequestSpec extends Generators {
     contactInformation = Some(contactInformation)
   )
 
-  val traderDetails = TraderDetail(
+  val traderDetails: TraderDetail = TraderDetail(
     eori = traderDetailsWithCountryCode.EORINo,
     businessName = traderDetailsWithCountryCode.CDSFullName,
     addressLine1 = traderDetailsWithCountryCode.CDSEstablishmentAddress.streetAndNumber,
@@ -554,127 +576,136 @@ object ApplicationRequestSpec extends Generators {
     addressLine3 = None,
     postcode = traderDetailsWithCountryCode.CDSEstablishmentAddress.postalCode.getOrElse(""),
     countryCode = traderDetailsWithCountryCode.CDSEstablishmentAddress.countryCode,
-    phoneNumber = traderDetailsWithCountryCode.contactInformation.flatMap(_.telephoneNumber)
+    phoneNumber = traderDetailsWithCountryCode.contactInformation.flatMap(_.telephoneNumber),
+    isPrivate = Some(!traderDetailsWithCountryCode.consentToDisclosureOfPersonalData)
   )
 
-  val eoriDetails = TraderDetail(
-    eori = randomString,
-    businessName = randomString,
-    addressLine1 = randomString,
-    addressLine2 = Some(randomString),
+  val eoriDetails: TraderDetail = TraderDetail(
+    eori = eori,
+    businessName = businessName,
+    addressLine1 = addressLine1,
+    addressLine2 = Some(addressLine2),
     addressLine3 = None,
-    postcode = randomString,
+    postcode = postcode,
     countryCode = country.code,
-    phoneNumber = Some(randomString)
+    phoneNumber = Some(phoneNumber),
+    isPrivate = Some(randomBoolean)
   )
 
-  val agentEoriDetails = TraderDetail(
-    eori = randomString,
-    businessName = randomString,
-    addressLine1 = randomString,
-    addressLine2 = Some(randomString),
+  val agentEoriDetails: TraderDetail = TraderDetail(
+    eori = eori,
+    businessName = businessName,
+    addressLine1 = addressLine1,
+    addressLine2 = Some(addressLine2),
     addressLine3 = None,
-    postcode = randomString,
+    postcode = postcode,
     countryCode = country.code,
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = None
   )
 
-  val contact = ContactDetails(
-    name = randomString,
-    email = randomString,
-    phone = Some(randomString)
+  val contact: ContactDetails = ContactDetails(
+    name = contactName,
+    email = contactEmail,
+    phone = Some(contactPhone),
+    companyName = None,
+    jobTitle = Some(contactJobTitle)
   )
 
-  val requestedMethod = MethodThree(
-    whyNotOtherMethods = randomString,
-    previousSimilarGoods = PreviousSimilarGoods(randomString)
+  val requestedMethod: MethodThree = MethodThree(
+    whyNotOtherMethods = requestedMethodReason,
+    previousSimilarGoods = PreviousSimilarGoods(requestedMethodGoods)
   )
 
-  val goodsDetails = GoodsDetails(
-    goodsName = randomString,
-    goodsDescription = randomString,
-    envisagedCommodityCode = Some(randomString),
-    knownLegalProceedings = Some(randomString),
-    confidentialInformation = Some(randomString)
+  val goodsDetails: GoodsDetails = GoodsDetails(
+    goodsName = goodsName,
+    goodsDescription = goodsDescription,
+    envisagedCommodityCode = Some(goodsCommodityCode),
+    knownLegalProceedings = Some(goodsLegalProceedings),
+    confidentialInformation = Some(goodsInformation)
   )
 
-  val goodsDetailsNoDetails = GoodsDetails(
-    goodsName = randomString,
-    goodsDescription = randomString,
+  val goodsDetailsNoDetails: GoodsDetails = GoodsDetails(
+    goodsName = goodsName,
+    goodsDescription = goodsDescription,
     envisagedCommodityCode = None,
     knownLegalProceedings = None,
     confidentialInformation = None
   )
 
-  val individualTraderJson =
+  val individualTraderJson: String =
     s"""{
        |"draftId": "$draftId",
        |"trader": {
-       |  "eori": "$randomString",
-       |  "businessName": "$randomString",
-       |  "addressLine1": "$randomString",
-       |  "addressLine2": "$randomString",
-       |  "postcode": "$randomString",
+       |  "eori": "$eori",
+       |  "businessName": "$businessName",
+       |  "addressLine1": "$addressLine1",
+       |  "addressLine2": "$addressLine2",
+       |  "postcode": "$postcode",
        |  "countryCode": "${country.code}",
-       |  "phoneNumber": "$randomString"
+       |  "phoneNumber": "$phoneNumber",
+       |  "isPrivate": $randomBoolean
        |},
        |"contact": {
-       |  "name": "$randomString",
-       |  "email": "$randomString",
-       |  "phone": "$randomString"
+       |  "name": "$contactName",
+       |  "email": "$contactEmail",
+       |  "phone": "$contactPhone",
+       |  "jobTitle": "$contactJobTitle"
        |},
        |"requestedMethod" : {
-       |  "whyNotOtherMethods" : "$randomString",
-       |  "previousSimilarGoods" : "$randomString",
+       |  "whyNotOtherMethods" : "$requestedMethodReason",
+       |  "previousSimilarGoods" : "$requestedMethodGoods",
        |  "type" : "MethodThree"
        |},
        |"goodsDetails": {
-       |  "goodsName": "$randomString",
-       |  "goodsDescription": "$randomString",
-       |  "envisagedCommodityCode": "$randomString",
-       |  "knownLegalProceedings": "$randomString",
-       |  "confidentialInformation": "$randomString"
+       |  "goodsName": "$goodsName",
+       |  "goodsDescription": "$goodsDescription",
+       |  "envisagedCommodityCode": "$goodsCommodityCode",
+       |  "knownLegalProceedings": "$goodsLegalProceedings",
+       |  "confidentialInformation": "$goodsInformation"
        |},
        |"attachments": [],
        |"whatIsYourRole" : "${WhatIsYourRole.EmployeeOrg}"
     }""".stripMargin
 
-  val agentJson =
+  val agentJson: String =
     s"""{
        |"draftId": "$draftId",
        |"trader": {
-       |  "eori": "$randomString",
-       |  "businessName": "$randomString",
-       |  "addressLine1": "$randomString",
-       |  "addressLine2": "$randomString",
-       |  "postcode": "$randomString",
+       |  "eori": "$eori",
+       |  "businessName": "$businessName",
+       |  "addressLine1": "$addressLine1",
+       |  "addressLine2": "$addressLine2",
+       |  "postcode": "$postcode",
        |  "countryCode": "${country.code}",
-       |  "phoneNumber": "$randomString"
+       |  "phoneNumber": "$phoneNumber",
+       |  "isPrivate": $randomBoolean
        |},
        |"agent": {
-       |  "eori": "$randomString",
-       |  "businessName": "$randomString",
-       |  "addressLine1": "$randomString",
-       |  "addressLine2": "$randomString",
-       |  "postcode": "$randomString",
+       |  "eori": "$eori",
+       |  "businessName": "$businessName",
+       |  "addressLine1": "$addressLine1",
+       |  "addressLine2": "$addressLine2",
+       |  "postcode": "$postcode",
        |  "countryCode": "${country.code}"
        |},
        |"contact": {
-       |  "name": "$randomString",
-       |  "email": "$randomString",
-       |  "phone": "$randomString"
+       |  "name": "$contactName",
+       |  "email": "$contactEmail",
+       |  "phone": "$contactPhone",
+       |  "jobTitle": "$contactJobTitle"
        |},
        |"requestedMethod" : {
-       |  "whyNotOtherMethods" : "$randomString",
-       |  "previousSimilarGoods" : "$randomString",
+       |  "whyNotOtherMethods" : "$requestedMethodReason",
+       |  "previousSimilarGoods" : "$requestedMethodGoods",
        |  "type" : "MethodThree"
        |},
        |"goodsDetails": {
-       |  "goodsName": "$randomString",
-       |  "goodsDescription": "$randomString",
-       |  "envisagedCommodityCode": "$randomString",
-       |  "knownLegalProceedings": "$randomString",
-       |  "confidentialInformation": "$randomString"
+       |  "goodsName": "$goodsName",
+       |  "goodsDescription": "$goodsDescription",
+       |  "envisagedCommodityCode": "$goodsCommodityCode",
+       |  "knownLegalProceedings": "$goodsLegalProceedings",
+       |  "confidentialInformation": "$goodsInformation"
        |},
        |"attachments": [],
        |"whatIsYourRole" : "${WhatIsYourRole.AgentOrg}"

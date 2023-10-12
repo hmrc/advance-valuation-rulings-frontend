@@ -40,7 +40,8 @@ case class ContactDetails(
   name: String,
   email: String,
   phone: Option[String],
-  companyName: Option[String] = None
+  companyName: Option[String],
+  jobTitle: Option[String]
 )
 
 object ContactDetails {
@@ -68,19 +69,19 @@ class ContactDetailsService @Inject() (
               case IndividualTrader              =>
                 answers.validatedF[ApplicationContactDetails, ContactDetails](
                   ApplicationContactDetailsPage,
-                  cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
+                  cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None, Some(cd.jobTitle))
                 )
               case OrganisationAdmin             =>
                 answers
                   .validatedF[ApplicationContactDetails, ContactDetails](
                     ApplicationContactDetailsPage,
-                    cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
+                    cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None, Some(cd.jobTitle))
                   )
               case OrganisationAssistant | Agent =>
                 answers
                   .validatedF[BusinessContactDetails, ContactDetails](
                     BusinessContactDetailsPage,
-                    cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
+                    cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None, Some(cd.jobTitle))
                   )
             }
         )

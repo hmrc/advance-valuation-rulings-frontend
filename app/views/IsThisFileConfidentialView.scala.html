@@ -28,7 +28,8 @@
     paragraph: Paragraph,
     govukButton: GovukButton,
     subheading: Subheading,
-    govukTable: GovukTable
+    govukTable: GovukTable,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId, fileName: String)(implicit request: Request[_], messages: Messages)
@@ -55,14 +56,16 @@
     @paragraph(Html(messages("isThisFileConfidential.para.1")))
     @paragraph(Html(messages("isThisFileConfidential.para.2")))
 
-    @subheading(messages("isThisFileConfidential.question"))
-
     @formHelper(action = routes.IsThisFileConfidentialController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
         
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend()
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("isThisFileConfidential.question")).toString
+                    )
+                )
             )
         )
 

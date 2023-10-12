@@ -52,7 +52,8 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
     Some("Address Line 3"),
     "NE1 4FF",
     "country code",
-    Some("0123456789")
+    Some("0123456789"),
+    Some(true)
   )
 
   val minTraderDetail: TraderDetail = TraderDetail(
@@ -63,19 +64,23 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
     None,
     "NE1 4FF",
     "country code",
-    None
+    None,
+    Some(false)
   )
 
   val maxContactDetails: ContactDetails = ContactDetails(
     "Joe Blogs",
     "jb@something.com",
     Some("9876543210"),
-    Some("Company Name")
+    Some("Company Name"),
+    Some("CEO")
   )
 
   val minContactDetails: ContactDetails = ContactDetails(
     "Joe Blogs",
     "jb@something.com",
+    None,
+    None,
     None
   )
 
@@ -168,6 +173,10 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
         SummaryListRow(
           Key(Text(m("agentForTraderCheckYourAnswers.applicant.companyName.label"))),
           Value(Text(maxContactDetails.companyName.get))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.jobTitle.label"))),
+          Value(Text(maxContactDetails.jobTitle.get))
         )
       )
     }

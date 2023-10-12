@@ -1,0 +1,83 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this()
+
+@(heading: String, content: Html, form: Form[_])(implicit messages: Messages)
+
+@valueToCheck(valueToCheck: String) = @{
+ if (form("value").value.isDefined && form("value").value.get == valueToCheck) {
+  "checked"
+ } else {
+  ""
+ }
+}
+
+@yesChecked = @{valueToCheck("true")}
+@noChecked = @{valueToCheck("false")}
+
+@errorClassOrNot = @{
+ if(form.errors.nonEmpty) {
+  "govuk-form-group govuk-form-group--error"
+ } else {
+  "govuk-form-group"
+ }
+}
+
+@errorMessage = @{
+ if(form.errors.nonEmpty) {
+  <p id="value-error" class="govuk-error-message">
+   <span class="govuk-visually-hidden">Error:</span>
+    {form.errors.map {
+       error: FormError =>
+        messages(error.message)
+    }}
+  </p>
+ } else {
+  ""
+ }
+}
+
+<div class="@errorClassOrNot">
+
+ <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+
+ <legend class="govuk-fieldset__legend  govuk-fieldset__legend--xl">
+  <h1 class="govuk-fieldset__heading">
+   @heading
+  </h1>
+ </legend>
+
+ @content
+ @errorMessage
+
+ <div class="govuk-radios" data-module="govuk-radios">
+  <div class="govuk-radios__item">
+   <input class="govuk-radios__input" id="value" name="value" type="radio" value="true" @yesChecked>
+   <label class="govuk-label govuk-radios__label" for="value">
+    @messages("site.yes")
+   </label>
+  </div>
+  <div class="govuk-radios__item">
+   <input class="govuk-radios__input" id="value-no" name="value" type="radio" value="false" @noChecked>
+   <label class="govuk-label govuk-radios__label" for="value-no">
+    @messages("site.no")
+   </label>
+  </div>
+ </div>
+ </fieldset>
+
+</div>

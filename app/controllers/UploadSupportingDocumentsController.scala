@@ -82,8 +82,8 @@ class UploadSupportingDocumentsController @Inject() (
     key: Option[String],
     request: DataRequest[AnyContent]
   )(implicit dataRequest: DataRequest[AnyContent], hc: HeaderCarrier) = {
-    val answers    = request.userAnswers
-    val fileStatus = answers.get(UploadSupportingDocumentPage)
+    val answers                          = request.userAnswers
+    val fileStatus: Option[UploadedFile] = answers.get(UploadSupportingDocumentPage)
 
     helper.onPageLoadWithFileStatus(
       mode,

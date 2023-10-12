@@ -29,7 +29,9 @@
     config: FrontendAppConfig,
     detailsDrop: DetailsDrop,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    radios: YesNoRadios,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -47,6 +49,10 @@
                     searchLink)
                 )}
 
+@radiosContent = {
+    <p class="govuk-body">@detailsContent</p>
+}
+
 @layout(pageTitle = title(form, messages("hasCommodityCode.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.HasCommodityCodeController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
@@ -56,15 +62,17 @@
         }
 
         @caption(messages("hasCommodityCode.caption"))
-
-        @heading(s"${messages("hasCommodityCode.heading")}")
-
-        <p class="govuk-body">@detailsContent</p>
+        @heading(messages("hasCommodityCode.heading"))
+        @radiosContent
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend()
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("hasCommodityCode.question")).toString
+                    )
+                )
             )
         )
 

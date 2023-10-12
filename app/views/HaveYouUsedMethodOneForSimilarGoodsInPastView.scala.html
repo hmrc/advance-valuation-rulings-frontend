@@ -28,11 +28,29 @@
     bulletList: BulletList,
     insetPara: InsetPara,
     subheading: Subheading,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    radios: YesNoRadios,
+    legend: LegendH2
 )
 
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+
+@radiosContent = {
+    @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1")))
+    @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.2")))
+    @bulletList(Seq(
+    Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.1")),
+    Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.2")),
+    ))
+    @insetPara(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.inset")))
+    @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.3")))
+    @bulletList(Seq(
+    Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.3")),
+    Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.4")),
+    Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.5")),
+    ))
+}
 
 @layout(pageTitle = title(form, messages("haveYouUsedMethodOneForSimilarGoodsInPast.title")), draftId = Some(draftId)) {
 
@@ -44,24 +62,16 @@
 
         @caption(messages("haveYouUsedMethodOneForSimilarGoodsInPast.caption"))
         @heading(messages("haveYouUsedMethodOneForSimilarGoodsInPast.heading"))
-        @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1")))
-        @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.2")))
-        @bulletList(Seq(
-            Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.1")),
-            Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.2")),
-        ))
-        @insetPara(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.inset")))
-        @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.3")))
-        @bulletList(Seq(
-            Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.3")),
-            Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.4")),
-            Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.5")),
-        ))
+        @radiosContent
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = Legend()
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("haveYouUsedMethodOneInPast.question")).toString
+                    )
+                )
             )
         )
 

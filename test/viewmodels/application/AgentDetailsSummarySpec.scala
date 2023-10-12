@@ -43,7 +43,8 @@ class AgentDetailsSummarySpec extends AnyFreeSpec with Matchers {
         addressLine3 = None,
         postcode = "AA1 1AA",
         countryCode = "GB",
-        phoneNumber = None
+        phoneNumber = None,
+        isPrivate = None
       )
 
       AgentDetailsSummary.rows(agent) must contain theSameElementsInOrderAs Seq(

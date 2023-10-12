@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package utils
+@this()
 
-object PostcodeValidator {
-  val regexString: String   = "^([A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$"
-  private val postcodeRegex = regexString.r
+@(message: String)
 
-  def validate(candidate: String): Boolean = {
-    val postcode = candidate.trim.toUpperCase
-
-    val result = postcode match {
-      case postcodeRegex(_*) => true
-      case _                 => false
-    }
-
-    result
-  }
-}
+<h2 class='govuk-fieldset__legend--m'>
+ @message
+</h2>

@@ -27,7 +27,8 @@
     paragraph: Paragraph,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    legend: LegendH2
 )
 
 @(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -37,14 +38,6 @@
                     @heading(messages("checkRegisteredDetails.heading.employeeOrg", registeredDetails.EORINo))
                 } else {
                     @heading(messages("checkRegisteredDetails.private.heading.1", registeredDetails.EORINo))
-                }
-}
-
-@radioHeading = {
-                @if(registeredDetails.CDSFullName.trim != ""){
-                    @subheading(messages("checkRegisteredDetails.subheading.2"))
-                }else{
-                    @subheading(messages("checkRegisteredDetails.private.subheading.2"))
                 }
 }
 
@@ -71,20 +64,13 @@
         } else {
             @paragraph(Html(messages("checkRegisteredDetails.private.paragraph.1")))
         }
-        @radioHeading
 }
-
-@*Combined following content for a screen reader to present heading 1 and subheading clearly within legend*@
-@legendContent = {  @headingContent.
-                    @radioHeading
-}
-
 
 @layout(
     pageTitle = title(
         form,
         messages(
-            if (registeredDetails.consentToDisclosureOfPersonalData) "checkRegisteredDetails.title.employeeOfOrg" else "checkRegisteredDetails.private.title",
+            if (registeredDetails.consentToDisclosureOfPersonalData) "checkRegisteredDetails.title.employeeOrg" else "checkRegisteredDetails.private.title",
             registeredDetails.EORINo
         )
     ),
@@ -103,11 +89,17 @@
 
         <br></br>
 
+        @paraContent
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden()
-            ).withHint(Hint(content = HtmlContent(paraContent)))
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("checkRegisteredDetails.subheading.2")).toString
+                    )
+                )
+            )
         )
 
         @saveButtons(draftId)

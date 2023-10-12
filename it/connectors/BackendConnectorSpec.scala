@@ -150,7 +150,8 @@ class BackendConnectorSpec
         Some("traderLine3"),
         "TraderPostcode",
         "GB",
-        None
+        None,
+        Some(false)
       ),
       agent = Some(
         TraderDetail(
@@ -161,10 +162,11 @@ class BackendConnectorSpec
           None,
           "agentPostcode",
           "agentGB",
+          None,
           None
         )
       ),
-      contact = ContactDetails("name", "email", None),
+      contact = ContactDetails("name", "email", None, None, None),
       requestedMethod = MethodOne(None, None, None),
       goodsDetails = GoodsDetails("name", "description", None, None, None),
       attachments = Nil,

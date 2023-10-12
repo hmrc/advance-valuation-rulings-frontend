@@ -95,13 +95,16 @@ object ViewApplicationControllerSpec extends Generators {
     addressLine3 = None,
     postcode = randomString,
     countryCode = randomString,
-    phoneNumber = None
+    phoneNumber = None,
+    isPrivate = Some(false)
   )
 
   val contact: ContactDetails = ContactDetails(
     name = randomString,
     email = randomString,
-    phone = Some(randomString)
+    phone = Some(randomString),
+    companyName = Some(randomString),
+    jobTitle = Some(randomString)
   )
 
   val requestedMethod: MethodThree = MethodThree(

@@ -29,7 +29,8 @@
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
     link: Link,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtons,
+    legend: LegendH2
 )
 
 @(attachments: Seq[DraftAttachment], form: Form[_], mode: Mode, draftId: DraftId, letterOfAuthorityFileName: Option[String] = None)(implicit request: Request[_], messages: Messages)
@@ -41,7 +42,7 @@
         } else if (numOfDocs == 1) {
             messages("uploadAnotherSupportingDocument.agentForTrader.title.one")
         } else {
-            messages("uploadAnotherSupportingDocument.agentForTrader.title.many", messages(s"site.$numOfDocs"))
+            messages("uploadAnotherSupportingDocument.agentForTrader.title.many", numOfDocs)
         }
     } else {
         if(numOfDocs == 5) {
@@ -49,7 +50,7 @@
         } else if (numOfDocs == 1) {
             messages("uploadAnotherSupportingDocument.title.one")
         } else {
-            messages("uploadAnotherSupportingDocument.title.many", messages(s"site.$numOfDocs"))
+            messages("uploadAnotherSupportingDocument.title.many", numOfDocs)
         }
     }
 }
@@ -148,11 +149,14 @@
 
         @if(letterOfAuthorityFileName.isDefined) {
             @if(numOfDocs != 4) {
-                @subheading(messages("uploadAnotherSupportingDocument.subHeading"))
                 @govukRadios(
                     RadiosViewModel.yesNo(
                         field = form("value"),
-                        legend = Legend()
+                        legend = Legend(
+                            HtmlContent(
+                                legend(messages("uploadAnotherSupportingDocument.subHeading")).toString
+                            )
+                        )
                     )
                 )
             } else {
@@ -161,11 +165,14 @@
             }
         } else {
             @if(numOfDocs != 5) {
-                @subheading(messages("uploadAnotherSupportingDocument.subHeading"))
-                    @govukRadios(
-                        RadiosViewModel.yesNo(
+                @govukRadios(
+                    RadiosViewModel.yesNo(
                         field = form("value"),
-                        legend = Legend()
+                        legend = Legend(
+                            HtmlContent(
+                                legend(messages("uploadAnotherSupportingDocument.subHeading")).toString
+                            )
+                        )
                     )
                 )
             } else {

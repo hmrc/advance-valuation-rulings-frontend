@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{__, OFormat, OWrites, Reads}
 
-case class ApplicationContactDetails(name: String, email: String, phone: String)
+case class ApplicationContactDetails(name: String, email: String, phone: String, jobTitle: String)
 
 object ApplicationContactDetails {
 
@@ -29,7 +29,8 @@ object ApplicationContactDetails {
     (
       (__ \ "name").read[String] and
         (__ \ "email").read[String] and
-        (__ \ "phone").read[String]
+        (__ \ "phone").read[String] and
+        (__ \ "jobTitle").read[String]
     )(ApplicationContactDetails.apply _)
   }
 
@@ -40,7 +41,8 @@ object ApplicationContactDetails {
     (
       (__ \ "name").write[String] and
         (__ \ "email").write[String] and
-        (__ \ "phone").write[String]
+        (__ \ "phone").write[String] and
+        (__ \ "jobTitle").write[String]
     )(unlift(ApplicationContactDetails.unapply))
   }
 
