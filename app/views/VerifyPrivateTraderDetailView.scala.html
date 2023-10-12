@@ -31,7 +31,8 @@
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
     warning: Warning,
-    link: Link
+    link: Link,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
@@ -44,17 +45,9 @@
     call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
 }
 
-@radioItems = @{
-    Seq(
-        RadioItem(
-            value = Some("true"),
-            checked = form.value.fold(false)(_ == "true"),
-            content = Text(messages("site.yes"))),
-        RadioItem(
-            value = Some("false"),
-            checked = form.value.fold(false)(_ == "false"),
-            content = Text(messages("site.no")))
-    )
+@paraContent = {
+        @warning(content=Html(messages("traderDetails.private.p1")))
+        @paragraph(Html(messages("traderDetails.private.p2")))
 }
 
 @layout(pageTitle = title(form, messages("traderDetails.private.heading", details.EORINo)), draftId = Some(draftId)) {
@@ -69,18 +62,19 @@
         @heading(messages("traderDetails.private.heading", details.EORINo))
 
         <br>
-        @warning(content=Html(messages("traderDetails.private.p1")))
-        @paragraph(Html(messages("traderDetails.private.p2")))
 
-
-        @subheading(messages("traderDetails.private.h3.proceed"))
+        @paraContent
 
         @govukRadios(
-            Radios(
-                idPrefix = Some("traderDetailsCorrect"),
-                name = "traderDetailsCorrect",
-                items = radioItems
-        ))
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("traderDetails.private.h3.proceed")).toString
+                    )
+                )
+            )
+        )
 
         @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 

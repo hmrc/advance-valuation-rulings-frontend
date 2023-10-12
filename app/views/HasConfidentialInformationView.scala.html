@@ -27,15 +27,17 @@
     paragraph: Paragraph,
     insetPara: InsetPara,
     saveButtons: SaveButtons,
-    radios: YesNoRadios
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@radiosContent = {
-    @paragraph(Html(messages("hasConfidentialInformation.paragraph.1")))
-    @paragraph(Html(messages("hasConfidentialInformation.paragraph.2")))
-    @insetPara(Html(messages("hasConfidentialInformation.paragraph.inset")))
+@content = {
+    <div class="govuk-!-margin-top-4">
+        @paragraph(Html(messages("hasConfidentialInformation.paragraph.1")))
+        @paragraph(Html(messages("hasConfidentialInformation.paragraph.2")))
+        @insetPara(Html(messages("hasConfidentialInformation.paragraph.inset")))
+    </div>
 }
 
 @layout(pageTitle = title(form, messages("hasConfidentialInformation.title")), draftId = Some(draftId)) {
@@ -48,7 +50,20 @@
 
         @caption(messages("hasConfidentialInformation.caption"))
 
-        @radios(messages("hasConfidentialInformation.heading"), radiosContent, form)
+        @heading(messages("hasConfidentialInformation.heading"))
+
+        @content
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("hasConfidentialInformation.question")).toString
+                    )
+                )
+            )
+        )
 
         @saveButtons(draftId)
     }
