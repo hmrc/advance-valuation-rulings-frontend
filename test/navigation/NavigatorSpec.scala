@@ -192,6 +192,63 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "TellUsAboutYourRulingPage" - {
+        "must navigate to TellUsAboutYourRulingController when no answer saved" in {
+          val userAnswers = userAnswersAsIndividualTrader
+
+          navigator.nextPage(
+            TellUsAboutYourRulingPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.TellUsAboutYourRulingController.onPageLoad(NormalMode, draftId)
+        }
+
+        "must navigate to HasCommodityController when answer saved" in {
+          val userAnswers = userAnswersWith(TellUsAboutYourRulingPage, "test string")
+
+          navigator.nextPage(
+            TellUsAboutYourRulingPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "HaveYouReceivedADecisionPage" - {
+        "must navigate to HaveYouReceivedADecisionController when no answer saved" in {
+          val userAnswers = userAnswersAsIndividualTrader
+
+          navigator.nextPage(
+            HaveYouReceivedADecisionPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HaveYouReceivedADecisionController.onPageLoad(NormalMode, draftId)
+
+        }
+
+        "must navigate to TellUsAboutYourRulingController when true answer saved" in {
+          val userAnswers = userAnswersWith(HaveYouReceivedADecisionPage, true)
+
+          navigator.nextPage(
+            HaveYouReceivedADecisionPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.TellUsAboutYourRulingController.onPageLoad(NormalMode, draftId)
+
+        }
+
+        "must navigate to HasCommodityCodeController when false answer saved" in {
+          val userAnswers = userAnswersWith(HaveYouReceivedADecisionPage, false)
+
+          navigator.nextPage(
+            HaveYouReceivedADecisionPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+
+        }
+      }
+
       "WhyTransactionValueOfSimilarGoods page" - {
 
         "must navigate to HaveYouUsedMethodOneInPast page" in {
