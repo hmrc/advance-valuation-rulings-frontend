@@ -874,20 +874,22 @@ importingGoods.point.4.link = Gwybodaeth gyffredinol (yn agor tab newydd)
 importingGoods.point.5 = {0} - e-byst hysbysu gan CThEF, fideos a gweminarau ynghylch mewnforio ac allforio
 importingGoods.point.5.link = Help a chefnogaeth (yn agor tab newydd)
 
-accountHome.title = Your applications
-accountHome.heading = Your applications
-accountHome.para = You have not started any applications.
-accountHome.button.text = Start new application
-accountHome.viewApplication = View application
-accountHome.continueApplication = Continue application
-accountHome.deleteApplication = Delete application
-accountHome.reference = Reference
-accountHome.goodsName = Name of goods
-accountHome.date = Date submitted
-accountHome.status = Status
-accountHome.status.submitted = Submitted
-accountHome.status.draft = In progress
+accountHome.title = Eich ceisiadau
+accountHome.heading = Eich ceisiadau
+accountHome.para = Nid ydych wedi dechrau unrhyw geisiadau.
+accountHome.button.text = Dechrau cais newydd
+accountHome.viewApplication = Bwrw golwg dros y cais
+accountHome.continueApplication = Yn eich blaen â’r cais
+accountHome.deleteApplication = Dileu’r cais
+accountHome.reference = Cyfeirnod
+accountHome.goodsName = Enw’r nwyddau
+accountHome.date = Dyddiad cyflwyno
+accountHome.status = Statws
+accountHome.status.submitted = Wedi cyflwyno
+accountHome.status.draft = Ar y gweill
 accountHome.noDescription = no description
+accountHome.actions = Actions
+
 
 explainYourGoodsComparingToIdenticalGoods.title = Explain how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
 explainYourGoodsComparingToIdenticalGoods.caption = Ynglŷn â’r nwyddau

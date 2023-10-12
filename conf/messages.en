@@ -389,6 +389,7 @@ accountHome.status = Status
 accountHome.status.submitted = Submitted
 accountHome.status.draft = In progress
 accountHome.noDescription = no description
+accountHome.actions = Actions
 
 checkRegisteredDetails.title = Check the name and address for EORI number {0}
 checkRegisteredDetails.private.title = The registration details for EORI number {0} are private
