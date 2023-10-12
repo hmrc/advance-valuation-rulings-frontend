@@ -48,10 +48,18 @@
         )
     }
 
+@inAndOutOfNILink = {
+    @link(
+            id = "in_and_out_of_northern_ireland",
+            text = messages("importingGoods.point.3.link"),
+            call = Call("GET", config.inAndOutOfNIUrl)
+        )
+    }
+
 @guideLink = {
     @link(
             id = "step_by_step_guide_link",
-            text = messages("importingGoods.point.3.link"),
+            text = messages("importingGoods.point.4.link"),
             call = Call("GET", config.stepByStepGuideUrl)
         )
     }
@@ -59,7 +67,7 @@
 @generalInformationLink = {
     @link(
             id = "general_information_link",
-            text = messages("importingGoods.point.4.link"),
+            text = messages("importingGoods.point.5.link"),
             call = Call("GET", config.generalInformationUrl)
         )
     }
@@ -67,7 +75,7 @@
 @helpLink = {
     @link(
             id = "help_and_support_link",
-            text = messages("importingGoods.point.5.link"),
+            text = messages("importingGoods.point.6.link"),
             call = Call("GET", config.helpAndSupportUrl)
         )
     }
@@ -82,9 +90,10 @@
             Seq(
                 Html(messages("importingGoods.point.1", advanceTariffRulingsLink)),
                 Html(messages("importingGoods.point.2", advanceOriginRulingsLink)),
-                Html(messages("importingGoods.point.3", guideLink)),
-                Html(messages("importingGoods.point.4", generalInformationLink)),
-                Html(messages("importingGoods.point.5", helpLink))
+                Html(messages("importingGoods.point.3", inAndOutOfNILink)),
+                Html(messages("importingGoods.point.4", guideLink)),
+                Html(messages("importingGoods.point.5", generalInformationLink)),
+                Html(messages("importingGoods.point.6", helpLink))
             ),
             "govuk-list govuk-list--bullet govuk-list--spaced",
         )
