@@ -19,7 +19,8 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukInsetText: GovukInsetText
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId, index: Index, fileName: String)(implicit request: Request[_], messages: Messages)
@@ -32,10 +33,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        <h1 class="govuk-heading-xl">@messages("removeSupportingDocument.heading")</h1>
+
+        @govukInsetText(InsetText(content = Text(fileName)))
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("removeSupportingDocument.heading", fileName)).asPageHeading()
+                legend = LegendViewModel(messages("removeSupportingDocument.heading")).visuallyHidden()
             )
         )
 

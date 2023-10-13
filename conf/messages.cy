@@ -1026,8 +1026,9 @@ verifyTraderDetails.error.required=Dewiswch a ydych am barhau â’r cais
 invalidTraderEori.heading=EORI number {0} is invalid
 invalidTraderEori.p1=The EORI number you have provided does not match any business on our records.
 invalidTraderEori.p2=You will need to contact the trader directly to clarify their EORI number.
-removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu {0}?
-removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu {0}?
+
+removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu ffeil hon?
+removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu ffeil hon?
 removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu’r ffeil hon
 
 draftHasBeenSaved.title = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrnod
