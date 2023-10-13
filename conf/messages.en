@@ -1023,9 +1023,9 @@ deleteDraft.heading = Are you sure you want to delete your application?
 deleteDraft.error.required = Select yes if you want to delete your application
 deleteDraft.guidance = If you delete your application now, any data will be lost and you will need to make a new application.
 
-removeSupportingDocument.title = Are you sure you want to remove {0}
-removeSupportingDocument.heading = Are you sure you want to remove {0}
-removeSupportingDocument.error.required = Select if you want to remove this file
+removeSupportingDocument.title = Are you sure you want to remove this file?
+removeSupportingDocument.heading = Are you sure you want to remove this file?
+removeSupportingDocument.error.required = Select yes if you want to remove this file
 
 draftHasBeenSaved.title = Your application draft has been saved for 28 days
 draftHasBeenSaved.heading = Your application draft has been saved for 28 days
