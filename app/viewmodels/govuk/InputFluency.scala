@@ -75,7 +75,7 @@ trait InputFluency {
 
     def asJobTitle(): Input =
       input
-        .withAutocomplete("name")
+        .withAutocomplete("organization-title")
         .withSpellcheck(on = false)
 
     def withId(id: String): Input =
