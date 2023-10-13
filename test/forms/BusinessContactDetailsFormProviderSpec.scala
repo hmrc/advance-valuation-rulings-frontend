@@ -23,14 +23,16 @@ import org.scalacheck.Gen
 
 class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val nameRequiredKey    = "businessContactDetails.fullName.error.required"
-  val emailRequiredKey   = "businessContactDetails.email.error.required"
-  val phoneRequiredKey   = "businessContactDetails.telephoneNumber.error.required"
-  val companyRequiredKey = "businessContactDetails.companyName.error.required"
+  private val maxLength           = 77 // Arbitrary maximum length
+  private val nameRequiredKey     = "businessContactDetails.fullName.error.required"
+  private val emailRequiredKey    = "businessContactDetails.email.error.required"
+  private val phoneRequiredKey    = "businessContactDetails.telephoneNumber.error.required"
+  private val companyRequiredKey  = "businessContactDetails.companyName.error.required"
+  private val jobTitleRequiredKey = "businessContactDetails.jobTitle.error.required"
 
-  val form = new BusinessContactDetailsFormProvider()(true)
+  private val form = new BusinessContactDetailsFormProvider()(true)
 
-  val validAddresses = Seq(
+  private val validAddresses = Seq(
     "“email”@example.com",
     "email@example.co.uk",
     "email@[123.123.123.123]",
@@ -39,33 +41,24 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     "\"very\\”.unusual@strange.example.com"
   )
 
-  val invalidAddresses =
+  private val invalidAddresses =
     Seq("Abc..123example.com", "Abc..123", "email@111.222 .333.44444", "453235", "@", "test@")
 
   ".nameField" - {
-    val nameField     = "name"
-    val lengthKey     = "applicationContactDetails.fullName.length"
-    val invalidKey    = "businessContactDetails.fullName.error.format"
-    val nameMaxLength = 70
+    val nameField  = "name"
+    val invalidKey = "businessContactDetails.simpleChars.error.format"
 
     behave like fieldThatBindsValidData(
       form,
       nameField,
-      safeNameInputsWithMaxLength(nameMaxLength)
+      safeNameInputsWithMaxLength(maxLength)
     )
 
     behave like fieldThatDoesNotBindInvalidData(
       form,
       nameField,
-      unsafeInputsWithMaxLength(nameMaxLength),
-      FormError(nameField, invalidKey, Seq(Validation.nameInputPattern))
-    )
-
-    behave like alphaStringWithMaxLength(
-      form,
-      nameField,
-      nameMaxLength,
-      FormError(nameField, lengthKey)
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(nameField, invalidKey, Seq(Validation.simpleCharactersInputPattern))
     )
 
     behave like mandatoryField(
@@ -77,9 +70,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
   }
 
   ".emailField" - {
-    val emailField     = "email"
-    val emailMaxLength = 50
-    val lengthKey      = "businessContactDetails.email.length"
+    val emailField = "email"
 
     behave like mandatoryField(
       form,
@@ -87,34 +78,29 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(emailField, emailRequiredKey)
     )
 
-    behave like alphaStringWithMaxLength(
-      form,
-      emailField,
-      emailMaxLength,
-      FormError(emailField, lengthKey)
-    )
-
     for (address <- validAddresses)
-      s"bind valid email: ${address}" in {
+      s"bind valid email: $address" in {
         val boundForm = form.bind(
           Map[String, String](
             "name"        -> "Julius",
             "email"       -> address,
             "phone"       -> "07123456789",
-            "companyName" -> "company"
+            "companyName" -> "company",
+            "jobTitle"    -> "CEO"
           )
         )
         boundForm.errors mustBe Seq.empty
       }
 
     for (address <- invalidAddresses)
-      s"not bind invalid email: ${address}" in {
+      s"not bind invalid email: $address" in {
         val boundForm = form.bind(
           Map[String, String](
             "name"        -> "Julius",
             "email"       -> address,
             "phone"       -> "07123456789",
-            "companyName" -> "company"
+            "companyName" -> "company",
+            "jobTitle"    -> "CEO"
           )
         )
         boundForm.errors must not be Seq.empty
@@ -123,14 +109,14 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".phoneField" - {
     val phoneField     = "phone"
-    val lengthKey      = "applicationContactDetails.fullName.length"
-    val phoneMaxLength = 25
+    val phoneMaxLength = 24
+    val invalidKey     = "businessContactDetails.telephoneNumber.error.format"
 
     behave like numericStringWithMaxLength(
       form,
       phoneField,
       maxLength = phoneMaxLength,
-      lengthError = FormError(phoneField, lengthKey, Seq(phoneMaxLength))
+      lengthError = FormError(phoneField, invalidKey, Seq(phoneMaxLength))
     )
 
     behave like fieldThatBindsValidData(
@@ -160,13 +146,13 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
     "fail to bind an invalid phone number" in {
       val result       = form.bind(Map(phoneField -> "invalid")).apply(phoneField)
       val errorMessage = result.error.value.message
-      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.format"
+      errorMessage mustEqual invalidKey
     }
 
     "fail to bind an phone number with trailing letters" in {
       val result       = form.bind(Map(phoneField -> "070 0000 000z")).apply(phoneField)
       val errorMessage = result.error.value.message
-      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.format"
+      errorMessage mustEqual invalidKey
     }
 
     "fail to bind a phone number that is too long" in {
@@ -175,7 +161,7 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
         .bind(Map(phoneField -> "0" * length))
         .apply(phoneField)
       val errorMessage = result.error.value.message
-      errorMessage mustEqual "businessContactDetails.telephoneNumber.error.format"
+      errorMessage mustEqual invalidKey
     }
   }
 
@@ -187,6 +173,31 @@ class BusinessContactDetailsFormProviderSpec extends StringFieldBehaviours {
       companyField,
       requiredError = FormError(companyField, companyRequiredKey)
     )
+  }
+
+  ".jobTitleField" - {
+    val jobTitleField = "jobTitle"
+    val invalidKey    = "businessContactDetails.simpleChars.error.format"
+
+    behave like fieldThatBindsValidData(
+      form,
+      jobTitleField,
+      safeNameInputsWithMaxLength(maxLength)
+    )
+
+    behave like fieldThatDoesNotBindInvalidData(
+      form,
+      jobTitleField,
+      unsafeInputsWithMaxLength(maxLength),
+      FormError(jobTitleField, invalidKey, Seq(Validation.simpleCharactersInputPattern))
+    )
+
+    behave like mandatoryField(
+      form,
+      jobTitleField,
+      requiredError = FormError(jobTitleField, jobTitleRequiredKey)
+    )
+
   }
 
 }

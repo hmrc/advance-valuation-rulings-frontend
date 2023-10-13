@@ -32,12 +32,14 @@ class ContactDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
   ".rows" - {
 
-    "must contain rows for name, email and phone when a phone number is present" in {
+    "must contain all rows when all contact details are present" in {
 
       val contact = ContactDetails(
         "name",
         "email",
-        Some("phone")
+        Some("phone"),
+        Some("company name"),
+        Some("job title")
       )
 
       ContactDetailsSummary.rows(contact) must contain theSameElementsInOrderAs Seq(
@@ -52,15 +54,21 @@ class ContactDetailsSummarySpec extends AnyFreeSpec with Matchers {
         SummaryListRow(
           Key(Text(m("checkYourAnswers.applicant.phone.label"))),
           Value(Text(contact.phone.get))
+        ),
+        SummaryListRow(
+          Key(Text(m("checkYourAnswers.applicant.jobTitle.label"))),
+          Value(Text(contact.jobTitle.get))
         )
       )
     }
 
-    "must contain rows for name and email when no phone number is present" in {
+    "must contain rows for name and email when other fields are not present" in {
 
       val contact = ContactDetails(
         "name",
         "email",
+        None,
+        None,
         None
       )
 

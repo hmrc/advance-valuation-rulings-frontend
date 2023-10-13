@@ -17,7 +17,6 @@
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Call}
-import play.twirl.api.HtmlFormat
 
 import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
@@ -97,7 +96,7 @@ package userrole {
     ): ValidatedNel[Page, ContactDetails] =
       userAnswers.validatedF[BusinessContactDetails, ContactDetails](
         BusinessContactDetailsPage,
-        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None)
+        cd => ContactDetails(cd.name, cd.email, Some(cd.phone), None, Some(cd.jobTitle))
       )
 
     override val getMaxSupportingDocuments: Int = 5

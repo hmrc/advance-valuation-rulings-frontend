@@ -52,7 +52,7 @@ class CheckYourAnswersForAgentsControllerSpec
         private val userAnswers =
           orgAssistantUserAnswers.setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg).futureValue
 
-        val appSummary = ApplicationSummary(
+        private val appSummary = ApplicationSummary(
           IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
             stubMessages()
           ),
@@ -83,7 +83,7 @@ class CheckYourAnswersForAgentsControllerSpec
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          contentAsString(result).contains("About the applicant") mustEqual true;
+          contentAsString(result).contains("About the applicant") mustEqual true
 
         }
       }
@@ -95,7 +95,7 @@ class CheckYourAnswersForAgentsControllerSpec
           .setFuture(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
           .futureValue
 
-        val appSummary = ApplicationSummary(
+        private val appSummary = ApplicationSummary(
           IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
             stubMessages()
           ),
@@ -128,7 +128,7 @@ class CheckYourAnswersForAgentsControllerSpec
           status(result) mustEqual OK
           contentAsString(result).contains(
             "About the agent"
-          ) mustEqual true;
+          ) mustEqual true
         }
       }
 
@@ -201,7 +201,7 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
   val mockSubmissionService: SubmissionService = mock[SubmissionService]
   val mockBackendConnector: BackendConnector   = mock[BackendConnector]
 
-  val mockApplicationSummaryService = mock[ApplicationSummaryService]
+  val mockApplicationSummaryService: ApplicationSummaryService = mock[ApplicationSummaryService]
 
   val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
@@ -245,7 +245,8 @@ trait CheckYourAnswersForAgentsControllerSpecSetup extends MockitoSugar with Try
               name = "name",
               email = "email",
               phone = "phone",
-              None
+              None,
+              jobTitle = "CEO"
             )
           )
     ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)

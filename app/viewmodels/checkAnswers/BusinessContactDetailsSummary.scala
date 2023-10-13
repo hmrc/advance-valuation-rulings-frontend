@@ -23,7 +23,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import controllers.routes
 import models.{BusinessContactDetails, CheckMode, DraftId, UserAnswers, WhatIsYourRoleAsImporter}
 import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
-import viewmodels.checkAnswers.BusinessContactDetailsSummary.contactNumberRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -107,6 +106,25 @@ object BusinessContactDetailsSummary {
       )
     )
 
+  private def jobTitleRow(
+    answer: BusinessContactDetails,
+    role: WhatIsYourRoleAsImporter,
+    draftId: DraftId
+  )(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRowViewModel(
+      key = getMessageKey(role, "jobTitle"),
+      value = ValueViewModel(HtmlFormat.escape(answer.jobTitle).toString),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.BusinessContactDetailsController.onPageLoad(CheckMode, draftId).url
+        )
+          .withVisuallyHiddenText(messages(getAriaMessageKey(role, "jobTitle")))
+      )
+    )
+
   def rows(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     for {
       contactDetails <- userAnswer.get(BusinessContactDetailsPage)
@@ -115,10 +133,11 @@ object BusinessContactDetailsSummary {
       email           = emailRow(contactDetails, role, userAnswer.draftId)
       contactNumber   = contactNumberRow(contactDetails, role, userAnswer.draftId)
       companyName     = companyNameRow(contactDetails, role, userAnswer.draftId)
+      jobTitle        = jobTitleRow(contactDetails, role, userAnswer.draftId)
       result          = if (role == WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader) {
-                          Seq(name, email, contactNumber, companyName)
+                          Seq(name, email, contactNumber, companyName, jobTitle)
                         } else {
-                          Seq(name, email, contactNumber)
+                          Seq(name, email, contactNumber, jobTitle)
                         }
     } yield result
 

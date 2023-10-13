@@ -30,12 +30,12 @@ import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
-import models.{DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode}
+import models.{DraftId, TraderDetailsWithCountryCode}
 import models.requests._
 import pages.{Page, VerifyTraderDetailsPage}
 import services.SubmissionService
 import userrole.UserRoleProvider
-import viewmodels.checkAnswers.summary.{ApplicationSummary, ApplicationSummaryService}
+import viewmodels.checkAnswers.summary.ApplicationSummaryService
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
@@ -56,7 +56,7 @@ class CheckYourAnswersController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  private implicit val logger = Logger(this.getClass)
+  private implicit val logger: Logger = Logger(this.getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
@@ -86,7 +86,7 @@ class CheckYourAnswersController @Inject() (
       implicit request =>
         if (userRoleProvider.getUserRole(request.userAnswers).sourceFromUA) {
           request.userAnswers.get(VerifyTraderDetailsPage) match {
-            case Some(td) => xyz(request, td.withoutConfirmation)
+            case Some(td) => redirectJourney(request, td.withoutConfirmation)
             case None     =>
               logger.error(
                 "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
@@ -98,13 +98,16 @@ class CheckYourAnswersController @Inject() (
           }
 
         } else {
-          getTraderDetails({ traderDetails => xyz(request, traderDetails) })
+          getTraderDetails({ traderDetails => redirectJourney(request, traderDetails) })
         }
 
     }
 
-  private def xyz(request: DataRequest[AnyContent], traderDetails: TraderDetailsWithCountryCode)(
-    implicit hc: HeaderCarrier
+  private def redirectJourney(
+    request: DataRequest[AnyContent],
+    traderDetails: TraderDetailsWithCountryCode
+  )(implicit
+    hc: HeaderCarrier
   ) =
     applicationRequestService(
       request.userAnswers,

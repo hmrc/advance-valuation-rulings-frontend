@@ -166,7 +166,7 @@ class BackendConnectorSpec
           None
         )
       ),
-      contact = ContactDetails("name", "email", None),
+      contact = ContactDetails("name", "email", None, None, None),
       requestedMethod = MethodOne(None, None, None),
       goodsDetails = GoodsDetails("name", "description", None, None, None),
       attachments = Nil,

@@ -72,12 +72,15 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
     "Joe Blogs",
     "jb@something.com",
     Some("9876543210"),
-    Some("Company Name")
+    Some("Company Name"),
+    Some("CEO")
   )
 
   val minContactDetails: ContactDetails = ContactDetails(
     "Joe Blogs",
     "jb@something.com",
+    None,
+    None,
     None
   )
 
@@ -170,6 +173,10 @@ class AgentTraderDetailsSummarySpec extends AnyFreeSpec with Matchers {
         SummaryListRow(
           Key(Text(m("agentForTraderCheckYourAnswers.applicant.companyName.label"))),
           Value(Text(maxContactDetails.companyName.get))
+        ),
+        SummaryListRow(
+          Key(Text(m("agentForTraderCheckYourAnswers.applicant.jobTitle.label"))),
+          Value(Text(maxContactDetails.jobTitle.get))
         )
       )
     }
