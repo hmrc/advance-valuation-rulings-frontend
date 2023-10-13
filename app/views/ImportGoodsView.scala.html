@@ -23,6 +23,8 @@
     govukRadios: GovukRadios,
     heading: Heading,
     caption: Caption,
+    paragraph: Paragraph,
+    radios: YesNoRadios,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtons,
     govukButton: GovukButton
@@ -30,26 +32,23 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
+@radiosContent = {
+    @paragraph(content = Html(messages("importGoods.paragraph")))
+}
+
 @layout(pageTitle = title(form, messages("importGoods.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.ImportGoodsController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
-
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
         @caption(messages("importGoods.caption"))
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(messages("importGoods.heading")).asPageHeading()
-            )
-        )
+
+        @radios(messages("importGoods.heading"), radiosContent, form)
 
         @saveButtons(draftId)
     }
-
-
 
     @cancelApplicationLink(draftId)
 }

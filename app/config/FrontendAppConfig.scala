@@ -49,6 +49,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val advanceTariffRulingUrl: String = configuration.get[String]("urls.advanceTariffRuling")
   val advanceOriginRulingUrl: String = configuration.get[String]("urls.advanceOriginRuling")
+  val inAndOutOfNIUrl: String        = configuration.get[String]("urls.inAndOutOfNI")
   val stepByStepGuideUrl: String     = configuration.get[String]("urls.stepByStepGuide")
   val generalInformationUrl: String  = configuration.get[String]("urls.generalInformation")
   val helpAndSupportUrl: String      = configuration.get[String]("urls.helpAndSupport")
