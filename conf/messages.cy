@@ -1032,9 +1032,9 @@ removeSupportingDocument.error.required = Dewiswch ‘Iawn’ os ydych am dynnu�
 
 draftHasBeenSaved.title = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrnod
 draftHasBeenSaved.heading = Mae’r drafft o’ch cais wedi’i gadw am 28 diwrnod
-draftHasBeenSaved.para.1 = Mae gennych tan {0} i gyflwyno’ch cais.
-draftHasBeenSaved.para.2 = Sylwer: bydd y cyfnod o 28-diwrnod yn ail-ddechrau bob tro yr ewch at eich drafft.
-draftHasBeenSaved.para.3 = To continue working on your application, you can access it via {0}.
+draftHasBeenSaved.para.1 = You have until {0} to submit your application. Any answers or information you have submitted have been saved.
+draftHasBeenSaved.para.2 = The 28-day timer will reset each time you access your application. You may need to re-upload any supporting documents.
+draftHasBeenSaved.para.3 = Your draft will be stored in {0}.
 draftHasBeenSaved.para.link.text = your applications
 
 yourApplicationHasBeenCancelled.title = You cannot view this application
