@@ -14,20 +14,33 @@
  * limitations under the License.
  */
 
-package utils
+package forms
 
-object PostcodeValidator {
-  val regexString: String   = "^([A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$"
-  private val postcodeRegex = regexString.r
+import play.api.data.FormError
 
-  def validate(candidate: String): Boolean = {
-    val postcode = candidate.trim.toUpperCase
+import forms.behaviours.StringFieldBehaviours
 
-    val result = postcode match {
-      case postcodeRegex(_*) => true
-      case _                 => false
-    }
+class TellUsAboutYourRulingFormProviderSpec extends StringFieldBehaviours {
 
-    result
+  val requiredKey = "tellUsAboutYourRuling.error.required"
+  val maxLength   = 8000
+
+  val form = new TellUsAboutYourRulingFormProvider()()
+
+  ".value" - {
+
+    val fieldName = "value"
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      stringsWithMaxLength(maxLength)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

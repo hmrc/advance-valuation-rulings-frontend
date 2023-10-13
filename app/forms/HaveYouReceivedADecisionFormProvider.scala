@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package utils
+package forms
 
-object PostcodeValidator {
-  val regexString: String   = "^([A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$"
-  private val postcodeRegex = regexString.r
+import javax.inject.Inject
 
-  def validate(candidate: String): Boolean = {
-    val postcode = candidate.trim.toUpperCase
+import play.api.data.Form
 
-    val result = postcode match {
-      case postcodeRegex(_*) => true
-      case _                 => false
-    }
+import forms.mappings.Mappings
 
-    result
-  }
+class HaveYouReceivedADecisionFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("haveYouReceivedADecision.error.required")
+    )
 }

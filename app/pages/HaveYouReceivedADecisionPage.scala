@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package utils
+package pages
 
-object PostcodeValidator {
-  val regexString: String   = "^([A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$"
-  private val postcodeRegex = regexString.r
+import play.api.libs.json.JsPath
 
-  def validate(candidate: String): Boolean = {
-    val postcode = candidate.trim.toUpperCase
+case object HaveYouReceivedADecisionPage extends QuestionPage[Boolean] {
 
-    val result = postcode match {
-      case postcodeRegex(_*) => true
-      case _                 => false
-    }
+  override def path: JsPath = JsPath \ toString()
 
-    result
-  }
+  override def toString: String = "haveYouReceivedADecisionPage"
 }
