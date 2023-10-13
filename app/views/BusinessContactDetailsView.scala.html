@@ -82,6 +82,7 @@
                     field = form("companyName"),
                     label = LabelViewModel(messages("businessContactDetails.companyName.label"))
                 )
+                .asCompanyName()
                 .withWidth(Full)
             )
         }
