@@ -37,6 +37,14 @@
  }
 }
 
+@ariaDescribedBy = @{
+if(form.errors.nonEmpty) {
+  "value-hint value-error"
+ } else {
+  "value-hint"
+ }
+}
+
 @errorMessage = @{
  if(form.errors.nonEmpty) {
   <p id="value-error" class="govuk-error-message">
@@ -53,7 +61,7 @@
 
 <div class="@errorClassOrNot">
 
- <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+ <fieldset class="govuk-fieldset govuk-!-margin-bottom-6" aria-describedby="@ariaDescribedBy">
 
  <legend class="govuk-fieldset__legend  govuk-fieldset__legend--xl">
   <h1 class="govuk-fieldset__heading">
