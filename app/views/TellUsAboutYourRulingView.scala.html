@@ -1,0 +1,82 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.{CharacterCount => CharCount}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
+    list: BulletList,
+    paragraph: Paragraph,
+    caption: Caption,
+    heading: Heading,
+    cancelLink: CancelApplicationLink,
+    saveButtons: SaveButtonsWithDraft
+)
+
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.TellUsAboutYourRulingController.onSubmit(NormalMode, draftId)
+}
+
+@content = {
+            @paragraph(Html(messages("tellUsAboutYourRuling.para")))
+            @list(
+                Seq(
+                    Html(messages("tellUsAboutYourRuling.bulletPoint.1")),
+                    Html(messages("tellUsAboutYourRuling.bulletPoint.2")),
+                    Html(messages("tellUsAboutYourRuling.bulletPoint.3")),
+                    Html(messages("tellUsAboutYourRuling.bulletPoint.4"))
+                ),
+            "govuk-list govuk-list--bullet",
+            )}
+
+@layout(pageTitle = title(form, messages("tellUsAboutYourRuling.heading")), draftId = Some(draftId)) {
+
+    @formHelper(action = onSubmitAction(saveDraft = false)) {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @caption(messages("caption.goods"))
+        @heading(messages("tellUsAboutYourRuling.heading"))
+
+        @hmrcCharacterCount(CharCount(
+            id = "value",
+            name = "value",
+            maxLength = Some(8000),
+            rows = 10,
+            label = Label(
+                content = Text(messages("tellUsAboutYourRuling.label")),
+                classes = "govuk-visually-hidden"
+            ),
+            hint = Some(Hint(content = HtmlContent(content))),
+            value = form("value").value,
+            errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+        ))
+
+
+        @saveButtons(draftId, onSubmitAction())
+    }
+    @cancelLink(draftId)
+}

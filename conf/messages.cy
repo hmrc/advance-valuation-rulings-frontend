@@ -1046,3 +1046,19 @@ yourApplicationHasBeenCancelled.button = Go to your applications
 uploadInProgress.title = Uploading your document
 uploadInProgress.heading = Uploading your document
 uploadInProgress.p1 = Select the check progress button to continue with your application.
+
+haveYouReceivedADecision.heading = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
+haveYouReceivedADecision.para.1 = Mae’n rhaid i hyn fod yn benderfyniad dyfarnu o Brydain Fawr (Cymru, Lloegr, a’r Alban). Nid oes angen iddo fod yn gysylltiedig â’ch cais presennol.
+haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg rydych wedi’u cael yn ein helpu ni i brosesu’ch cais presennol.
+haveYouReceivedADecision.error.required = Tell us if you have ever received a ruling based on a similar method
+
+tellUsAboutYourRuling.heading = Rhowch wybod i ni am y dyfarniad
+tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
+tellUsAboutYourRuling.bulletPoint.1 = cyfeirnodau dyfarniadau – gallwch ddod o hyd i’r rhain ar y llythyrau penderfyniad dyfarnu gan CThEF
+tellUsAboutYourRuling.bulletPoint.2 = os yw’r dyfarniad wedi cael ei ganslo neu ei ddiddymu – bydd angen i chi esbonio pam
+tellUsAboutYourRuling.bulletPoint.3 = y dyddiad y cafodd y dyfarniad ei roi
+tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
+tellUsAboutYourRuling.error.required = Rhowch wybod i ni am y dyfarniad
+
+textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8000 o gymeriadau neu lai
+
