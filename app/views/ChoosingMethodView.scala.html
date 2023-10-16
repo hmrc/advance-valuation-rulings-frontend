@@ -47,7 +47,7 @@
     <h3 class="govuk-heading-s">@messages(text)</h3>
 }
 
-@layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("choosingMethod.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.ChoosingMethodController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
