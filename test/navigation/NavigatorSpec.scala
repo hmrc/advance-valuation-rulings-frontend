@@ -581,7 +581,7 @@ class NavigatorSpec extends SpecBase {
         }
 
         "when OrganisationAssistant claiming to be EmployeeOfOrg" - {
-          "navigate to ChoosingMethodPage when Yes" in {
+          "navigate to choose valuation method page when Yes" in {
             val ua = userAnswers
               .set(AccountHomePage, value = OrganisationAssistant)
               .flatMap(_.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg))
