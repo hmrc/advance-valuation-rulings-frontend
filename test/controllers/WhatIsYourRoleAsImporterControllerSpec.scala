@@ -44,11 +44,11 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
     reset(mockAuditService)
   }
 
-  lazy val whatIsYourRoleAsImporterRoute =
+  private lazy val whatIsYourRoleAsImporterRoute =
     routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
 
-  val formProvider = new WhatIsYourRoleAsImporterFormProvider()
-  val form         = formProvider()
+  private val formProvider = new WhatIsYourRoleAsImporterFormProvider()
+  private val form         = formProvider()
 
   "WhatIsYourRoleAsImporter Controller" - {
 
@@ -151,7 +151,15 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
       verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
     }
 
-    "must remove answer for AgentCompanyDetails when answered as Employee" in {
+    "must clear answers on subsequent pages if a different role is selected" in {
+      testUserAnswers(true)
+    }
+
+    "must not clear answers on subsequent pages if the same role is selected" in {
+      testUserAnswers(false)
+    }
+
+    def testUserAnswers(setDifferentRole: Boolean): Unit = {
       val emptyAnswers           = UserAnswers(userAnswersId, draftId)
         .set(AccountHomePage, AuthUserType.OrganisationAdmin)
         .success
@@ -159,23 +167,9 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
       val mockUserAnswersService = mock[UserAnswersService]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-      val userAnswers = emptyAnswers
-        .set(
-          AgentCompanyDetailsPage,
-          AgentCompanyDetails(
-            agentEori = "agentEori",
-            agentCompanyName = "agentCompanyName",
-            agentStreetAndNumber = "agentStreetAndNumber",
-            agentCity = "agentCity",
-            agentCountry = Country("GB", "United Kingdom"),
-            agentPostalCode = Some("agentPostalCode")
-          )
-        )
-        .success
-        .value
 
       val application =
-        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+        applicationBuilderAsAgent(userAnswers = Some(fullUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
@@ -184,19 +178,30 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
           .build()
 
       running(application) {
+        val selectedRole = if (setDifferentRole) {
+          WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
+        } else {
+          WhatIsYourRoleAsImporter.EmployeeOfOrg
+        }
+
         val request =
-          FakeRequest(POST, whatIsYourRoleAsImporterRoute)
-            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.EmployeeOfOrg.toString))
+          FakeRequest(POST, whatIsYourRoleAsImporterRoute).withFormUrlEncodedBody(
+            ("value", selectedRole.toString)
+          )
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
       }
 
-      val expectedUserAnswers = emptyAnswers
-        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-        .success
-        .value
+      val expectedUserAnswers = if (setDifferentRole) {
+        emptyAnswers
+          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+          .success
+          .value
+      } else {
+        fullUserAnswers
+      }
 
       verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
       verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())

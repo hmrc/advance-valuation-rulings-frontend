@@ -238,33 +238,4 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
     )(any[Messages])
   ).thenReturn(appSummary)
 
-  val fullUserAnswers: UserAnswers = (for {
-    ua <- userAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
-    ua <- ua.set(HasCommodityCodePage, false)
-    ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-    ua <- ua.set(HasConfidentialInformationPage, false)
-    ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-    ua <- ua.set(
-            CheckRegisteredDetailsPage,
-            true
-          )
-    ua <- ua.set(
-            ApplicationContactDetailsPage,
-            ApplicationContactDetails(
-              name = "name",
-              email = "email",
-              phone = "phone",
-              jobTitle = "jobTitle"
-            )
-          )
-    ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
-    ua <- ua.set(IsThereASaleInvolvedPage, true)
-    ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-    ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-    ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-    ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-    ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
-    ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-  } yield ua).success.get
-
 }
