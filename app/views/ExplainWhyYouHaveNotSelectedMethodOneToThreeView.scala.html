@@ -17,6 +17,7 @@
 @import viewmodels.InputWidth._
 @import components._
 
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -60,16 +61,11 @@
 )
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2")))
 
-        @subheading(messages("explainWhyYouHaveNotSelectedMethodOneToThree.h2"))
-
         @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.label")),
-                    classes = "govuk-visually-hidden",
-                    )
-                )
+                label = LabelViewModel(Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.h2"))).asLegendHeading()
+            )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
         )
