@@ -41,7 +41,7 @@
             call = Call("GET", config.overviewForMethodsUrl)
         )}
 
-@legend = {@heading(messages("valuationMethod.heading"))}
+@legend = {<h1 class="govuk-heading-xl">@messages("valuationMethod.heading")</h1>}
 
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
@@ -57,7 +57,7 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(content = HtmlContent(legend)),
+                legend = Legend(content = HtmlContent(legend)),
                 items  = ValuationMethod.options
             ).withHint(Hint(content = HtmlContent(messages("valuationMethod.hint"))))
         )
