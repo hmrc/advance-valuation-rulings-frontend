@@ -178,6 +178,16 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "ChoosingMethodPage" - {
+        "must navigate to ValuationMethod" in {
+          navigator.nextPage(
+            ChoosingMethodPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
       "WhatIsYourRoleAsImporterPage" - {
 
         "must navigate to RequiredInformationPage page" in {
@@ -628,7 +638,7 @@ class NavigatorSpec extends SpecBase {
         }
 
         "when OrganisationAssistant claiming to be EmployeeOfOrg" - {
-          "navigate to ValuationMethodPage when Yes" in {
+          "navigate to choose valuation method page when Yes" in {
             val ua = userAnswers
               .set(AccountHomePage, value = OrganisationAssistant)
               .flatMap(_.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg))
@@ -639,7 +649,7 @@ class NavigatorSpec extends SpecBase {
               BusinessContactDetailsPage,
               NormalMode,
               ua
-            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+            ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
           }
         }
 
@@ -659,13 +669,13 @@ class NavigatorSpec extends SpecBase {
         }
 
         "when an OrganisationAdmin" - {
-          "navigate to valuation method page" in {
+          "navigate to choose valuation method page" in {
 
             navigator.nextPage(
               BusinessContactDetailsPage,
               NormalMode,
               userAnswers.set(AccountHomePage, value = OrganisationAdmin).success.value
-            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+            ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
           }
         }
 
@@ -709,7 +719,7 @@ class NavigatorSpec extends SpecBase {
           AgentCompanyDetailsPage,
           NormalMode,
           userAnswers
-        ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
       }
 
       "ApplicationContactDetailsPage must" in {
@@ -722,7 +732,7 @@ class NavigatorSpec extends SpecBase {
           ApplicationContactDetailsPage,
           NormalMode,
           userAnswers
-        ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
       }
 
       "DoYouWantToUploadDocumentsPage must" - {
@@ -875,12 +885,12 @@ class NavigatorSpec extends SpecBase {
       }
 
       "valuationMethod page must navigate to" - {
-        "self when no method is selected" in {
+        "choose valuation method when no method is selected" in {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+          ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
         }
 
         "isThereASaleInvolved page when method 1 is selected" in {

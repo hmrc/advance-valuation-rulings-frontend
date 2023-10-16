@@ -41,24 +41,41 @@
             call = Call("GET", config.overviewForMethodsUrl)
         )}
 
-@legend = {@heading(messages("valuationMethod.heading"))}
+@legendH2 = {@subheading(messages("valuationMethod.h2"))}
+
+@h3(text: String) = {
+    <h3 class="govuk-heading-s">@messages(text)</h3>
+}
 
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
+    @formHelper(action = routes.ChoosingMethodController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
-    @formHelper(action = routes.ValuationMethodController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
+        @caption(messages("choosingMethod.caption"))
+        @heading(messages("choosingMethod.heading"))
+        <br/>
+        @paragraph(Html(messages("choosingMethod.paragraph.1", overviewLink)))
+        @paragraph(Html(messages("choosingMethod.para")))
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
-        }
+        @subheading(messages("choosingMethod.methods"))
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(content = HtmlContent(legend)),
-                items  = ValuationMethod.options
-            ).withHint(Hint(content = HtmlContent(messages("valuationMethod.hint"))))
-        )
+        @h3("valuationMethod.method1")
+        @paragraph(Html(messages("valuationMethod.method1.hint")))
+
+        @h3("valuationMethod.method2")
+        @paragraph(Html(messages("valuationMethod.method2.hint")))
+
+        @h3("valuationMethod.method3")
+        @paragraph(Html(messages("valuationMethod.method3.hint")))
+
+        @h3("valuationMethod.method4")
+        @paragraph(Html(messages("valuationMethod.method4.hint")))
+
+        @h3("valuationMethod.method5")
+        @paragraph(Html(messages("valuationMethod.method5.hint")))
+
+        @h3("valuationMethod.method6")
+        @paragraph(Html(messages("valuationMethod.method6.hint")))
 
         @saveButtons(draftId)
     }
