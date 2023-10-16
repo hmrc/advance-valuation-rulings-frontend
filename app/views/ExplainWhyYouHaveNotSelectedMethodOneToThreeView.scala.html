@@ -28,7 +28,8 @@
     caption: Caption,
     heading: Heading,
     cancelLink: CancelApplicationLink,
-    saveButtons: SaveButtonsWithDraft
+    saveButtons: SaveButtonsWithDraft,
+    subheading: Subheading
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -59,6 +60,7 @@
 )
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2")))
 
+        @subheading(messages("explainWhyYouHaveNotSelectedMethodOneToThree.h2"))
 
         @govukTextarea(
             TextareaViewModel(
