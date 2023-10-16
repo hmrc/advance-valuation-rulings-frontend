@@ -188,6 +188,16 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "AgentForTraderContactDetailsPage" - {
+        "must navigate to ChoosingMethod page" in {
+          navigator.nextPage(
+            AgentForTraderContactDetailsPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
+        }
+      }
+
       "WhatIsYourRoleAsImporterPage" - {
 
         "must navigate to RequiredInformationPage page" in {

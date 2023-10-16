@@ -48,6 +48,8 @@
 
     @formHelper(action = routes.ValuationMethodController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
+        @caption(messages("valuationMethod.caption"))
+
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }

@@ -190,6 +190,7 @@ choosingMethod.para = Mae’n rhaid i chi weithio drwy’r dulliau yn eu trefn, 
 choosingMethod.caption = Ynglŷn â’r nwyddau
 choosingMethod.paragraph.1 = You need to select a method to {0}.
 choosingMethod.methods = Dulliau 1 i 6
+choosingMethod.continue = Yn eich blaen a dewis dull
 
 valuationMethod.caption = Ynglŷn â’r nwyddau
 valuationMethod.title = Pa ddull rydych am ei ddefnyddio i brisio’ch nwyddau?

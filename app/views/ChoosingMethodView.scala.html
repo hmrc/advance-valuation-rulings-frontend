@@ -47,7 +47,7 @@
     <h3 class="govuk-heading-s">@messages(text)</h3>
 }
 
-@layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("choosingMethod.title")), draftId = Some(draftId)) {
 
     @formHelper(action = routes.ChoosingMethodController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
@@ -77,7 +77,7 @@
         @h3("valuationMethod.method6")
         @paragraph(Html(messages("valuationMethod.method6.hint")))
 
-        @saveButtons(draftId)
+        @saveButtons(draftId, "choosingMethod.continue")
     }
     @cancelApplicationLink(draftId)
 }

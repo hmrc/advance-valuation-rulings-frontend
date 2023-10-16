@@ -209,6 +209,7 @@ choosingMethod.para = You have to work through the methods in order, starting wi
 choosingMethod.caption = About the goods
 choosingMethod.paragraph.1 = You need to select a method to {0}.
 choosingMethod.methods = Methods 1 to 6
+choosingMethod.continue = Continue and select a method
 
 valuationMethod.title = Which method do you want to use to value your goods?
 valuationMethod.heading = Which method do you want to use to value your goods?
