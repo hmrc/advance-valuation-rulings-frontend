@@ -64,7 +64,6 @@ class ChoosingMethodControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, routes.ChoosingMethodController.onSubmit(draftId).url)
-            .withFormUrlEncodedBody(("value", "answer"))
 
         val result = route(application, request).value
 
