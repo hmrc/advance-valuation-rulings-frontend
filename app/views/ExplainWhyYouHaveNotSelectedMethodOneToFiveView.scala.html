@@ -27,7 +27,8 @@
     caption: Caption,
     heading: Heading,
     cancelLink: CancelApplicationLink,
-    saveButtons: SaveButtonsWithDraft
+    saveButtons: SaveButtonsWithDraft,
+    legend: LegendH2
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -44,7 +45,8 @@
 
         @caption(messages("explainWhyYouHaveNotSelectedMethodOneToFive.caption"))
 
-        @heading(messages("explainWhyYouHaveNotSelectedMethodOneToFive.heading"))
+        @heading(messages("Explain why you have not used Methods 1 to 5"))
+        <br><br/>
 
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1")))
 
@@ -58,15 +60,13 @@
             ),
         "govuk-list govuk-list--bullet",
         )
-        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.2")))
 
 
         @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
                 label = Label(
-                    content = Text(messages("explainWhyYouHaveNotSelectedMethodOneToFive.label")),
-                    classes = "govuk-visually-hidden",
+                    content = HtmlContent(legend(messages("Can you explain why you cannot use Methods 1 to 5 to work out the customs value of your imports?"))),
                     )
                 )
                 .withRows(15)
