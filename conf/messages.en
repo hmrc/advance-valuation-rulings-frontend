@@ -1057,3 +1057,21 @@ tellUsAboutYourRuling.error.required = Tell us about the ruling
 
 textCount.tooLong = Description of rulings must be 8000 characters or less
 
+aboutSimilarGoods.para.1 = These can be:
+aboutSimilarGoods.para.2 = Include as much information as possible, such as:
+
+aboutSimilarGoods.bulletPoint.1 = ruling decisions for similar goods that were issued by other countries - they do not have to be rulings issued to you
+aboutSimilarGoods.bulletPoint.2 = ruling decisions for similar goods that were issued to other companies in your ogranisation
+aboutSimilarGoods.bulletPoint.3 = ruling reference number
+aboutSimilarGoods.bulletPoint.4 = start and expiry dates of the rulings
+aboutSimilarGoods.bulletPoint.5 = current status for the rulings
+
+aboutSimilarGoods.heading = About the rulings for similar goods
+
+aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
+
+aboutSimilarGoods.error.required = Tell us about the the rulings for similar goods
+
+awareOfRuling.heading = Are you aware of any other rulings that have used a similar method?
+awareOfRuling.para = Telling us about other rulings that have used a similar method will help the caseworker process your application.
+awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method

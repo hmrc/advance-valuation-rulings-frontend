@@ -235,6 +235,17 @@ POST       /:draftId/tell-us-about-a-previous-decision             controllers.T
 GET        /:draftId/change-tell-us-about-a-previous-decision      controllers.TellUsAboutYourRulingController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-tell-us-about-a-previous-decision      controllers.TellUsAboutYourRulingController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
+GET        /:draftId/aware-of-previous-ruling                 controllers.AwareOfRulingController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/aware-of-previous-ruling                 controllers.AwareOfRulingController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/change-aware-of-previous-ruling          controllers.AwareOfRulingController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-aware-of-previous-ruling          controllers.AwareOfRulingController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+
+GET        /:draftId/about-similar-goods             controllers.AboutSimilarGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/about-similar-goods             controllers.AboutSimilarGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/change-about-similar-goods      controllers.AboutSimilarGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-about-similar-goods      controllers.AboutSimilarGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+
+
 GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
 GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)
 
