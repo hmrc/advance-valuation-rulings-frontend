@@ -16,6 +16,7 @@
 
 package controllers
 
+import play.api.Application
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -52,6 +53,26 @@ class ChoosingMethodControllerSpec extends SpecBase with MockitoSugar {
           request,
           messages(application)
         ).toString
+      }
+    }
+
+    "must redirect to valuation method on submit" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, routes.ChoosingMethodController.onSubmit(draftId).url)
+            .withFormUrlEncodedBody(("value", "answer"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.ValuationMethodController
+          .onPageLoad(NormalMode, draftId)
+          .url
       }
     }
   }
