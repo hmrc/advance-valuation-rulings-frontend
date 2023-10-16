@@ -104,6 +104,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ProvideTraderEoriPage                            =>
       ua => VerifyTraderEoriController.onPageLoad(NormalMode, ua.draftId)
     case ChoosingMethodPage                               => ua => ValuationMethodController.onPageLoad(NormalMode, ua.draftId)
+    case AgentForTraderContactDetailsPage                 => ua => ChoosingMethodController.onPageLoad(ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
 
   }

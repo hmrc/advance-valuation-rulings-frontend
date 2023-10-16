@@ -34,7 +34,7 @@ package userrole {
   import logging.Logging
   import models.{BusinessContactDetails, UserAnswers}
   import models.requests.ContactDetails
-  import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, ValuationMethodPage, VerifyTraderDetailsPage}
+  import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, ValuationMethodPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
   import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
 
@@ -76,7 +76,7 @@ package userrole {
 
     override def contactDetailsIncludeCompanyName: Boolean = true
 
-    override def selectBusinessContactDetailsPage(): Page = ValuationMethodPage
+    override def selectBusinessContactDetailsPage(): Page = AgentForTraderContactDetailsPage
 
     override def selectViewForCheckYourAnswers(
       applicationSummary: ApplicationSummary,
