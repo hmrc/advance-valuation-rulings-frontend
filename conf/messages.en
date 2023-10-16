@@ -849,9 +849,9 @@ adaptMethod.checkYourAnswersLabel = Which method would you like to adapt?
 adaptMethod.error.required = Select the method you would like flexibility on
 adaptMethod.change.hidden = the method you would like to adapt
 
-explainWhyYouHaveNotSelectedMethodOneToFive.title = Explain why you have not selected Methods 1-5 to value your goods
-explainWhyYouHaveNotSelectedMethodOneToFive.heading = Explain why you have not selected Methods 1-5 to value your goods
-explainWhyYouHaveNotSelectedMethodOneToFive.label = Explain why you have not selected Methods 1-5 to value your goods
+explainWhyYouHaveNotSelectedMethodOneToFive.title = Explain why you have not used Methods 1 to 5
+explainWhyYouHaveNotSelectedMethodOneToFive.heading = Explain why you have not used Methods 1 to 5
+explainWhyYouHaveNotSelectedMethodOneToFive.label = Can you explain why you cannot use Methods 1 to 5 to work out the customs value of your imports?
 explainWhyYouHaveNotSelectedMethodOneToFive.caption = About the goods
 explainWhyYouHaveNotSelectedMethodOneToFive.checkYourAnswersLabel = Reason for not selecting Methods 1-5 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToFive.error.required = Enter an explanation about why you have not selected methods 1 to 5 to value your goods
