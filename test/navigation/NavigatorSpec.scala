@@ -191,7 +191,7 @@ class NavigatorSpec extends SpecBase {
       "AgentForTraderContactDetailsPage" - {
         "must navigate to ChoosingMethod page" in {
           navigator.nextPage(
-            ChoosingMethodPage,
+            AgentForTraderContactDetailsPage,
             NormalMode,
             emptyUserAnswers
           ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
