@@ -22,7 +22,6 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukTable: GovukTable,
     caption: Caption,
     heading: Heading,
     subheading: Subheading,
@@ -112,39 +111,42 @@
         <br/>
 
         @subheading(messages("uploadAnotherSupportingDocument.uploadedDocuments"))
-    
-        @govukTable(Table(
-          rows = attachments.zipWithIndex.map { case (attachment, i) =>
-            Seq(
-              TableRow(content = Text(attachment.file.fileName.getOrElse(""))),
-              TableRow(content = Text(if(attachment.isThisFileConfidential.contains(true)) messages("uploadAnotherSupportingDocument.keepConfidential") else "")),
-              TableRow(
-                HtmlContent(
-                    link(
-                        id = "change",
-                        text = messages("site.remove"),
-                        call = controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(i)),
-                        newTab = false,
-                        hiddenText = true,
-                        hiddenTextContent =  messages("uploadAnotherSupportingDocument.remove.hidden", attachment.file.fileName.getOrElse(""))
-                    )
-                )
-              )
-            )
-          },
-          classes = "govuk-body-s"
-        ))
 
-        @if(letterOfAuthorityFileName.isDefined) {
+        <div class="govuk-form-group">
+            <dl class="govuk-summary-list">
+            @attachments.zipWithIndex.map { case (attachment, index) =>
+                <div class="govuk-summary-list__row">
+                    <dd class="govuk-summary-list__value">
+                        @attachment.file.fileName.getOrElse("")
+                    </dd>
+                    <dd>
+                        @if(attachment.isThisFileConfidential.contains(true)) {
+                            @messages("uploadAnotherSupportingDocument.keepConfidential")
+                        }
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="@controllers.routes.RemoveSupportingDocumentController.onPageLoad(mode, draftId, Index(index))">
+                            <span aria-hidden="true">@messages("site.remove")</span>
+                            <span class="govuk-visually-hidden">@messages("site.remove") @messages("uploadAnotherSupportingDocument.remove.hidden", attachment.file.fileName.getOrElse(""))</span>
+                        </a>
+                    </dd>
+                </div>
+            }
+            </dl>
+        </div>
+
+        @letterOfAuthorityFileName.map { filename =>
             @subheading(messages("uploadAnotherSupportingDocument.letterOfAuthority"))
 
-            @govukTable(
-                Table(
-                    rows = Seq(
-                        Seq(TableRow(content = Text(letterOfAuthorityFileName.get)))
-                    )
-                )
-            )
+            <div class="govuk-form-group">
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dd class="govuk-summary-list__value">
+                            @filename
+                        </dd>
+                    </div>
+                </dl>
+            </div>
         }
 
         @if(letterOfAuthorityFileName.isDefined) {
