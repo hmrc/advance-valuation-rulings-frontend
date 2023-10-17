@@ -63,6 +63,13 @@ class WhatIsYourRoleAsImporterController @Inject() (
     (identify andThen getData(draftId) andThen requireData).async {
 
       implicit request =>
+        (form.bindFromRequest(), true) match {
+          case (a, false) if !a.errors.isEmpty => ???
+          case (a, true) if a.value.isDefined  => a.value.get
+          case (_, _)                          => ???
+
+        }
+
         form
           .bindFromRequest()
           .fold(
