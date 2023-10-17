@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import audit.AuditService
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{DraftId, Mode, UserAnswers, WhatIsYourRoleAsImporter}
+import models.{DraftId, Mode, ReadOnlyMode, UserAnswers, WhatIsYourRoleAsImporter}
 import models.WhatIsYourRoleAsImporter._
 import models.requests.DataRequest
 import navigation.Navigator
@@ -55,24 +55,26 @@ class WhatIsYourRoleAsImporterController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm  = WhatIsYourRoleAsImporterPage.fill(form)
-        val disableRadios = request.userAnswers.get(WhatIsYourRoleAsImporterPage).isDefined
+        val preparedForm          = WhatIsYourRoleAsImporterPage.fill(form)
+        val whatIsYourRoleAnswers = request.userAnswers.get(WhatIsYourRoleAsImporterPage)
+        // If this page has already been answered then the mode should be read only.
+        val modeForView           = whatIsYourRoleAnswers.map(_ => ReadOnlyMode).getOrElse(mode)
 
-        Ok(view(preparedForm, mode, draftId, disableRadios))
+        Ok(view(preparedForm, modeForView, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId, readOnly: Boolean): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
 
       implicit request =>
-        if (readOnly) {
-          Future.successful(
-            Redirect(
-              navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, request.userAnswers)
+        mode match {
+          case ReadOnlyMode =>
+            Future.successful(
+              Redirect(
+                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, request.userAnswers)
+              )
             )
-          )
-        } else {
-          updateUserAnswersSubmit(mode, draftId)
+          case _            => updateUserAnswersSubmit(mode, draftId)
         }
     }
 
@@ -84,7 +86,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
       .fold(
         formWithErrors =>
           Future.successful(
-            BadRequest(view(formWithErrors, mode, draftId, shouldRadiosBeDisabled = false))
+            BadRequest(view(formWithErrors, mode, draftId))
           ),
         value => {
           auditService.sendRoleIndicatorEvent(value)

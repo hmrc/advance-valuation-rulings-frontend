@@ -224,9 +224,10 @@ GET        /:draftId/change-method-1-import-similar-goods                  contr
 POST       /:draftId/change-method-1-import-similar-goods                  controllers.HaveYouUsedMethodOneForSimilarGoodsInPastController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, readOnly: Boolean)
+POST       /:draftId/describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, readOnly: Boolean)
+POST       /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/read-only-describe-role-importer              controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = ReadOnlyMode, draftId: DraftId)
 
 GET        /:draftId/was-there-a-previous-decision                 controllers.HaveYouReceivedADecisionController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/was-there-a-previous-decision                 controllers.HaveYouReceivedADecisionController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
