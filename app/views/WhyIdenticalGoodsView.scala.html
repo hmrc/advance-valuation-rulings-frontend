@@ -35,12 +35,7 @@
 
 @onSubmitAction(saveDraft: Boolean = true) = @{routes.WhyIdenticalGoodsController.onSubmit(NormalMode, draftId: DraftId, saveDraft)}
 
-@paraContent = {@paragraph(Html(messages("whyIdenticalGoods.paragraph.1")))
-                @bulletList(Seq(
-                    Html(messages("whyIdenticalGoods.bulletPoint.1"))
-                ))
-                @paragraph(Html(messages("whyIdenticalGoods.paragraph.2")))
-                }
+@paraContent = {@paragraph(Html(messages("whyIdenticalGoods.paragraph.1")))}
 
 @layout(pageTitle = title(form, messages("whyIdenticalGoods.title")), draftId = Some(draftId)) {
 

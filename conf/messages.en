@@ -636,15 +636,13 @@ whyTransactionValueOfSimilarGoods.error.length = Maximum allowed characters is 8
 whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = Reason for not selecting Methods 1 or 2 to value your goods
 whyTransactionValueOfSimilarGoods.change.hidden = your reason for not selecting Methods 1-2 to value the goods
 
-whyIdenticalGoods.title = Explain why you have not selected Method 1 to value your goods
+whyIdenticalGoods.title = Explain why you have not used Method 1
 whyIdenticalGoods.caption = About the goods
-whyIdenticalGoods.heading = Explain why you have not selected Method 1 to value your goods
-whyIdenticalGoods.label = Explain why you have not selected Method 1 to value your goods
-whyIdenticalGoods.paragraph.1 = Before you try Method 2 you must first have used:
-whyIdenticalGoods.bulletPoint.1 = Method 1 (transaction value of imported goods)
-whyIdenticalGoods.paragraph.2 = Explain why you believe Method 1 is not suitable to work out the customs value of your goods.
+whyIdenticalGoods.heading = Explain why you have not used Method 1
+whyIdenticalGoods.label = Can you explain why you cannot use Method 1 to work out the customs value of your goods?
+whyIdenticalGoods.paragraph.1 = Before you try Method 2 you must first have used Method 1 (transaction value of imported goods).
 whyIdenticalGoods.checkYourAnswersLabel = Reason for not selecting Method 1 to value your goods
-whyIdenticalGoods.error.required = Enter an explanation of why you have not selected Method 1 to value your goods
+whyIdenticalGoods.error.required = Enter a reason why method 1 cannot be used
 whyIdenticalGoods.error.length = Maximum allowed characters is 8168
 whyIdenticalGoods.change.hidden = your reason for not selecting Method 1 to value the goods
 
