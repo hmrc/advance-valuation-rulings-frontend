@@ -16,13 +16,14 @@
 
 @import viewmodels.InputWidth._
 @import components._
+@import viewmodels.LabelSize.Medium
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     caption: Caption,
     paragraph: Paragraph,
     heading: Heading,
@@ -53,16 +54,17 @@
 
     @paragraph(Html(messages("explainWhyYouChoseMethodFour.paragraph.3")))
 
-    @govukTextarea(
-        TextareaViewModel(
+    @hmrcCharacterCount(
+        CharacterCountViewModel(
             field = form("value"),
             label = Label(
                 content = Text(messages("explainWhyYouChoseMethodFour.label")),
             )
-            .asLegendHeading()
+            .withSize(Medium)
         )
         .withRows(15)
-        .withAttribute("maxlength","8167")
+        .withMaxLength(8167)
+        .withThreshold(75)
     )
 
         @saveButtons(draftId, onSubmitAction())

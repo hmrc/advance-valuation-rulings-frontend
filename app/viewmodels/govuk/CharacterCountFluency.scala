@@ -21,6 +21,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.charactercount.CharacterCount
+
 import viewmodels.ErrorMessageAwareness
 
 object characterCount extends CharacterCountFluency
@@ -30,9 +31,9 @@ trait CharacterCountFluency {
   object CharacterCountViewModel extends ErrorMessageAwareness {
 
     def apply(
-               field: Field,
-               label: Label
-             )(implicit messages: Messages): CharacterCount =
+      field: Field,
+      label: Label
+    )(implicit messages: Messages): CharacterCount =
       CharacterCount(
         id = field.id,
         name = field.name,

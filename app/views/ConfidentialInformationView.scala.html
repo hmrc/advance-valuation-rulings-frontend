@@ -20,7 +20,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink,
     caption: Caption,
@@ -53,15 +53,16 @@
 
         @caption(messages("confidentialInformation.caption"))
 
-        @govukTextarea(
-            TextareaViewModel(
+        @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
                 label = LabelViewModel(messages("confidentialInformation.heading")).asPageHeading()
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-                .withHint(Hint(content = HtmlContent(paraContent)))
-                .withId("value")
+            )
+            .withRows(15)
+            .withMaxLength(8167)
+            .withHint(Hint(content = HtmlContent(paraContent)))
+            .withId("value")
+            .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())

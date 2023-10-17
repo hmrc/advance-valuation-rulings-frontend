@@ -242,7 +242,7 @@ explainHowPartiesAreRelated.para.1 = Gallwn ond a derbyn y pris a dalwyd neu sy�
 explainHowPartiesAreRelated.para.2 = Bydd rhoi disgrifiad manwl o’r cysylltiad yn ein helpu ni i brosesu’ch cais cyn gynted â phosibl.
 explainHowPartiesAreRelated.error.required = Nodwch ddisgrifiad o’r cysylltiad rhwng y partïon
 explainHowPartiesAreRelated.checkYourAnswersLabel = Disgrifiwch beth yw’r cysylltiad rhwng y partïon
-explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
+explainHowPartiesAreRelated.error.length = Mae’n rhaid i’r disgrifiad o sut mae’r partïon yn gysylltiedig fod yn 8,167 o gymeriadau neu lai
 explainHowPartiesAreRelated.change.hidden = your description of how the parties are related
 explainHowPartiesAreRelated.question = Can you describe how the parties are related?
 
@@ -264,7 +264,7 @@ describeTheRestrictions.heading = Disgrifiwch unrhyw gyfyngiadau o ran defnyddio
 describeTheRestrictions.label = Disgrifiwch unrhyw gyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
 describeTheRestrictions.checkYourAnswersLabel = Disgrifiad o’r cyfyngiadau
 describeTheRestrictions.error.required = Nodwch ddisgrifiad o’r cyfyngiadau sydd ar waith
-describeTheRestrictions.error.length = Maximum allowed characters is 8168
+describeTheRestrictions.error.length = Mae’n rhaid i’r disgrifiad o’r cyfyngiadau fod yn 8,167 o gymeriadau neu lai
 describeTheRestrictions.paragraph.1 = Bydd rhoi disgrifiad manwl o’r cysylltiad yn ein helpu ni i brosesu’ch cais cyn gynted â phosibl
 describeTheRestrictions.change.hidden = your description of the restrictions on the use/resale of the goods
 
@@ -286,7 +286,7 @@ describeTheConditions.heading = Disgrifiwch yr amodau neu’r amgylchiadau na el
 describeTheConditions.label = Disgrifiwch yr amodau neu’r amgylchiadau na ellir eu cyfrifo
 describeTheConditions.checkYourAnswersLabel = Disgrifiad o’r amodau/amgylchiadau
 describeTheConditions.error.required = Nodwch ddisgrifiad o unrhyw amodau neu amgylchiadau na allant gael eu cyfrifo
-describeTheConditions.error.length = Maximum allowed characters is 8168
+describeTheConditions.error.length = Mae’n rhaid i’r disgrifiad o’r amgylchiadau fod yn 8,167 o gymeriadau neu lai
 describeTheConditions.paragraph.1 = Bydd rhoi disgrifiad manwl o’r cysylltiad yn ein helpu ni i brosesu’ch cais cyn gynted â phosibl.
 describeTheConditions.change.hidden = your description of the conditions or circumstances which cannot be calculated
 
@@ -299,7 +299,7 @@ whyIdenticalGoods.bulletPoint.1 = Dull 1 (gwerth trafodiad y nwyddau a fewnforiw
 whyIdenticalGoods.paragraph.2 = Esboniwch pam rydych o’r farn nad yw Dull 1 yn addas i gyfrifo gwerth tollau eich nwyddau.
 whyIdenticalGoods.checkYourAnswersLabel = Y rheswm dros beidio â dewis Dull 1 i brisio’ch nwyddau
 whyIdenticalGoods.error.required = Nodwch esboniad ynghylch pam na wnaethoch ddewis Dull 1 i brisio’ch nwyddau
-whyIdenticalGoods.error.length = Maximum allowed characters is 8168
+whyIdenticalGoods.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dull 1 fod yn 8,167 o gymeriadau neu lai
 whyIdenticalGoods.change.hidden = your reason for not selecting Method 1 to value the goods
 
 haveYouUsedMethodOneInPast.caption = Ynglŷn â’r nwyddau
@@ -326,7 +326,7 @@ describeTheIdenticalGoods.bulletPoint.2 = wedi’u hallforio i’r DU ar neu o g
 describeTheIdenticalGoods.bulletPoint.3 = yn union yr un fath ym mhob ffordd gan gynnwys nodweddion ffisegol, ansawdd ac enw da – nid yw mân wahaniaethau o ran golwg yn bwysig
 describeTheIdenticalGoods.checkYourAnswersLabel = Disgrifiad o’r nwyddau unfath
 describeTheIdenticalGoods.error.required = Nodwch ddisgrifiad o’r nwyddau unfath
-describeTheIdenticalGoods.error.length = Maximum allowed characters is 8168
+describeTheIdenticalGoods.error.length = Mae’n rhaid i’r disgrifiad o nwyddau unfath fod yn 8,167 o gymeriadau neu lai
 describeTheIdenticalGoods.change.hidden = your description of the identical goods
 
 whyTransactionValueOfSimilarGoods.caption = Ynglŷn â’r nwyddau
@@ -338,7 +338,7 @@ whyTransactionValueOfSimilarGoods.paragraph.2 = Esboniwch pam rydych o’r farn 
 whyTransactionValueOfSimilarGoods.bulletPoint.1 = Dull 1 (gwerth trafodiad y nwyddau a fewnforiwyd)
 whyTransactionValueOfSimilarGoods.bulletPoint.2 = Dull 2 (gwerth trafodiad y nwyddau unfath a fewnforiwyd)
 whyTransactionValueOfSimilarGoods.error.required = Nodwch esboniad ynghylch pam na wnaethoch ddewis Dull 1 na 2 i brisio’ch nwyddau
-whyTransactionValueOfSimilarGoods.error.length = Maximum allowed characters is 8168
+whyTransactionValueOfSimilarGoods.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dull 1 na 2 fod yn 8,167 o gymeriadau neu lai
 whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = Y rheswm dros beidio â dewis Dulliau 1 neu 2 i brisio’ch nwyddau
 whyTransactionValueOfSimilarGoods.change.hidden = your reason for not selecting Methods 1-2 to value the goods
 
@@ -368,7 +368,7 @@ describeTheSimilarGoods.bulletPoint.2 = gall y nwyddau gyflawni’r un tasgau
 describeTheSimilarGoods.bulletPoint.3 = mae’r nwyddau’n fasnachol gyfnewidiol
 describeTheSimilarGoods.checkYourAnswersLabel = Description of similar goods
 describeTheSimilarGoods.error.required = Nodwch ddisgrifiad o’r nwyddau tebyg
-describeTheSimilarGoods.error.length = Maximum allowed characters is 8168
+describeTheSimilarGoods.error.length = Mae’n rhaid i’r disgrifiad o nwyddau tebyg fod yn 8,167 o gymeriadau neu lai
 describeTheSimilarGoods.change.hidden = your description of the similar goods
 
 explainWhyYouHaveNotSelectedMethodOneToThree.caption = Ynglŷn â’r nwyddau
@@ -382,7 +382,7 @@ explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.3 = Dull 3 (gwerth traf
 explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2 = Esboniwch pam rydych o’r farn nad yw Dulliau 1-3 yn addas i gyfrifo gwerth tollau eich nwyddau.
 explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel = Rheswm dros beidio â dewis Dulliau 1-3 i brisio’ch nwyddau
 explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Nodwch esboniad ynghylch pam na wnaethoch ddewis dulliau 1 i 3 i brisio’ch nwyddau
-explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Maximum allowed characters is 8168
+explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dulliau 1 i 3 fod yn 8,167 o gymeriadau neu lai
 explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = your reason for not selecting Methods 1-3 to value the goods
 
 explainWhyYouChoseMethodFour.caption = Ynglŷn â’r nwyddau
@@ -394,7 +394,7 @@ explainWhyYouChoseMethodFour.paragraph.2 = Gallwch ond defnyddio Dull 4 os bydd 
 explainWhyYouChoseMethodFour.paragraph.3 = Mae ‘heb gysylltiad’ yn golygu nad oes perthynas neu gysylltiad cyffredin rhwng y ddau gwmni.
 explainWhyYouChoseMethodFour.checkYourAnswersLabel = Rheswm dros ddewis Dull 4 i brisio’ch nwyddau
 explainWhyYouChoseMethodFour.error.required = Nodwch esboniad ynghylch pam yr ydych wedi dewis Dull 4 i brisio’ch nwyddau
-explainWhyYouChoseMethodFour.error.length = Maximum allowed characters is 8168
+explainWhyYouChoseMethodFour.error.length = Mae’n rhaid i’r esboniad o pam rydych wedi defnyddio Dull 4 fod yn 8,167 o gymeriadau neu lai
 explainWhyYouChoseMethodFour.change.hidden = your reason for selecting Method 4 to value the goods
 
 whyComputedValue.caption = Ynglŷn â’r nwyddau
@@ -409,7 +409,7 @@ whyComputedValue.bulletPoint.4 = Dull 4 (dull casgliadol)
 whyComputedValue.paragraph.2 = Esboniwch pam ydych o’r farn nad yw Dulliau 1-4 yn addas i gyfrifo gwerth tollau eich nwyddau.
 whyComputedValue.checkYourAnswersLabel = Rheswm dros beidio â dewis Dulliau 1-4 i brisio’ch nwyddau
 whyComputedValue.error.required = Nodwch esboniad ynghylch pam na wnaethoch ddewis dulliau 1 i 4 i brisio’ch nwyddau
-whyComputedValue.error.length = Maximum allowed characters is 8168
+whyComputedValue.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dulliau 1 i 4 fod yn 8,167 o gymeriadau neu lai
 whyComputedValue.change.hidden = your reason for not selecting Methods 1-4 to value the goods
 
 explainReasonComputedValue.caption = Ynglŷn â’r nwyddau
@@ -419,7 +419,7 @@ explainReasonComputedValue.label = Esboniwch pam rydych wedi dewis Dull 5 i bris
 explainReasonComputedValue.paragraph = Mae Dull 5 (dull cyfrifiadurol) yn seiliedig ar gostau cynhyrchu’r nwyddau.
 explainReasonComputedValue.checkYourAnswersLabel = Rheswm dros ddewis Dull 5 i brisio’ch nwyddau
 explainReasonComputedValue.error.required = Nodwch esboniad ynghylch pam yr ydych wedi dewis Dull 5 i brisio’ch nwyddau
-explainReasonComputedValue.error.length = Maximum allowed characters is 8168
+explainReasonComputedValue.error.length = Mae’n rhaid i’r esboniad o pam rydych wedi defnyddio Dull 5 fod yn 8,167 o gymeriadau neu lai
 explainReasonComputedValue.change.hidden = your reason for selecting Method 5 to value the goods
 
 explainWhyYouHaveNotSelectedMethodOneToFive.caption = Ynglŷn â’r nwyddau
@@ -428,7 +428,7 @@ explainWhyYouHaveNotSelectedMethodOneToFive.heading = Eglurwch pam nad ydych wed
 explainWhyYouHaveNotSelectedMethodOneToFive.label = Eglurwch pam nad ydych wedi dewis Dulliau 1-5 i brisio’ch nwyddau
 explainWhyYouHaveNotSelectedMethodOneToFive.checkYourAnswersLabel = Rheswm dros beidio â dewis Dulliau 1-5 i brisio’ch nwyddau
 explainWhyYouHaveNotSelectedMethodOneToFive.error.required = Nodwch esboniad ynghylch pam na wnaethoch ddewis dulliau 1 i 5 i brisio’ch nwyddau
-explainWhyYouHaveNotSelectedMethodOneToFive.error.length = Maximum allowed characters is 8168
+explainWhyYouHaveNotSelectedMethodOneToFive.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dulliau 1 i 5 fod yn 8,167 o gymeriadau neu lai
 explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1 = Dull 6 yw’r dull ‘wrth gefn’ i’w ddefnyddio pan na fyddwch yn gallu defnyddio unrhyw un o’r dulliau eraill. Cyn i chi ddefnyddio Dull 6 mae’n rhaid eich bod wedi rhoi cynnig ar y canlynol yn gyntaf:
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.1 = Dull 1 (gwerth trafodiad y nwyddau a fewnforiwyd)
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.2 = Dull 2 (gwerth trafodiad nwyddau unfath)
@@ -458,7 +458,7 @@ explainHowYouWillUseMethodSix.heading = Esboniwch sut rydych wedi defnyddio Dull
 explainHowYouWillUseMethodSix.label = Esboniwch sut rydych wedi defnyddio Dull 6 i brisio’ch nwyddau
 explainHowYouWillUseMethodSix.checkYourAnswersLabel = Esboniad o sut rydych wedi defnyddio Dull 6 i brisio’ch nwyddau
 explainHowYouWillUseMethodSix.error.required = Nodwch esboniad ynghylch sut yr ydych wedi defnyddio Dull 6 i brisio’ch nwyddau
-explainHowYouWillUseMethodSix.error.length = Maximum allowed characters is 8168
+explainHowYouWillUseMethodSix.error.length = Mae’n rhaid i’r esboniad o pam rydych wedi defnyddio Dull 6 fod yn 8,167 o gymeriadau neu lai
 explainHowYouWillUseMethodSix.paragraph.1 = Dull 6 (y dull wrth gefn) yw’r math olaf o ddull y gallwch roi cynnig arno.
 explainHowYouWillUseMethodSix.paragraph.2 = Disgrifiwch sut rydych yn bwriadu defnyddio Dull 6. Dylech hefyd roi gwybod i ni os ydych am addasu dull arall ar gyfer eich amgylchiadau chi.
 explainHowYouWillUseMethodSix.change.hidden = your explanation of how you have used Method 6 to value the goods
@@ -521,7 +521,7 @@ describeTheLegalChallenges.label = Disgrifiwch yr heriau cyfreithiol sy’n bert
 describeTheLegalChallenges.para = Bydd rhoi disgrifiad manwl o’r heriau cyfreithiol yn ein helpu ni i brosesu’ch cais cyn gynted â phosibl.
 describeTheLegalChallenges.checkYourAnswersLabel = Disgrifiad o’r heriau cyfreithiol
 describeTheLegalChallenges.error.required = Nodwch ddisgrifiad o’r heriau cyfreithiol sy’n ymwneud â’r nwyddau
-describeTheLegalChallenges.error.length = Maximum allowed characters is 8168
+describeTheLegalChallenges.error.length = Mae’n rhaid i’r disgrifiad o heriau cyfreithiol sy’n berthnasol i’r nwyddau fod yn 8,167 o gymeriadau neu lai
 describeTheLegalChallenges.change.hidden = your description of the legal challenges
 
 hasConfidentialInformation.caption = Ynglŷn â’r nwyddau
@@ -541,7 +541,7 @@ confidentialInformation.label = Disgrifiwch unrhyw wybodaeth gyfrinachol yr hoff
 confidentialInformation.caption = Ynglŷn â’r nwyddau
 confidentialInformation.checkYourAnswersLabel = Disgrifiad o’r wybodaeth gyfrinachol
 confidentialInformation.error.required = Nodwch ddisgrifiad o’r wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
-confidentialInformation.error.length = Maximum allowed characters is 8168
+confidentialInformation.error.length = Mae’n rhaid i’r disgrifiad o’r wybodaeth gyfrinachol fod yn 8,167 o gymeriadau neu lai
 confidentialInformation.change.hidden = describe confidential information
 confidentialInformation.paragraph.1 = Gall gwybodaeth gyfrinachol gynnwys:
 confidentialInformation.paragraph.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrinachol.
@@ -911,7 +911,7 @@ explainYourGoodsComparingToIdenticalGoods.bulletPoint.1 = you do not think Metho
 explainYourGoodsComparingToIdenticalGoods.bulletPoint.2 = you do not have any further information about the identical goods
 explainYourGoodsComparingToIdenticalGoods.checkYourAnswersLabel = Esboniad o sut rydych yn defnyddio nwyddau unfath cynhyrchydd arall er mwyn cymharu
 explainYourGoodsComparingToIdenticalGoods.error.required = Enter an explanation about how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
-explainYourGoodsComparingToIdenticalGoods.error.length = Maximum allowed characters is 8168
+explainYourGoodsComparingToIdenticalGoods.error.length = Mae’n rhaid i’r esboniad fod yn 8,167 o gymeriadau neu lai
 explainYourGoodsComparingToIdenticalGoods.change.hidden = your explanation of how you are using another producer’s identical goods for comparison
 
 willYouCompareGoodsToIdenticalGoods.title = Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days?
@@ -1069,7 +1069,7 @@ tellUsAboutYourRuling.bulletPoint.3 = y dyddiad y cafodd y dyfarniad ei roi
 tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
 tellUsAboutYourRuling.error.required = Rhowch wybod i ni am y dyfarniad
 
-textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8000 o gymeriadau neu lai
+textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
 
 aboutSimilarGoods.para.1 = Gall y rhain fod yn:
 aboutSimilarGoods.para.2 = Rhowch gymaint o wybodaeth ag y gallwch, megis:

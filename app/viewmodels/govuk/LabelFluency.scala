@@ -38,11 +38,6 @@ trait LabelFluency {
         .copy(isPageHeading = true)
         .withCssClass(size.toString)
 
-    def asLegendHeading(): Label =
-      label
-        .copy(isPageHeading = false)
-        .withCssClass(LabelSize.Medium.toString)
-
     def withCssClass(className: String): Label =
       label copy (classes = s"${label.classes} $className")
 
@@ -51,5 +46,11 @@ trait LabelFluency {
 
     def forAttr(attr: String): Label =
       label copy (forAttr = Some(attr))
+
+    def withSize(size: LabelSize): Label =
+      label.withCssClass(size.toString)
+
+    def visuallyHidden(): Label =
+      label.withCssClass("govuk-visually-hidden")
   }
 }
