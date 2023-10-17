@@ -594,10 +594,10 @@ explainReasonComputedValue.error.required = Enter an explanation about why you h
 explainReasonComputedValue.error.length = Maximum allowed characters is 8168
 explainReasonComputedValue.change.hidden = your reason for selecting Method 5 to value the goods
 
-whyComputedValue.title = Explain why you have not selected Methods 1-4 to value your goods
+whyComputedValue.title = Explain why you have not used Methods 1 to 4
 whyComputedValue.caption = About the goods
-whyComputedValue.heading = Explain why you have not selected Methods 1-4 to value your goods
-whyComputedValue.label = Explain why you have not selected Methods 1-4 to value your goods
+whyComputedValue.heading = Explain why you have not used Methods 1 to 4
+whyComputedValue.label = Can you explain why you cannot use Methods 1 to 4 to work out the customs value of your goods?
 whyComputedValue.paragraph.1 = Before you try Method 5 you must first have used:
 whyComputedValue.bulletPoint.1 = Method 1 (transaction value of imported goods)
 whyComputedValue.bulletPoint.2 = Method 2 (transaction value of identical goods)
@@ -605,7 +605,7 @@ whyComputedValue.bulletPoint.3 = Method 3 (transaction value of similar goods)
 whyComputedValue.bulletPoint.4 = Method 4 (deductive method)
 whyComputedValue.paragraph.2 = Explain why you believe Methods 1-4 are not suitable to work out the customs value of your goods.
 whyComputedValue.checkYourAnswersLabel = Reason for not selecting Methods 1-4 to value your goods
-whyComputedValue.error.required = Enter an explanation about why you have not selected methods 1 to 4 to value your goods
+whyComputedValue.error.required = Enter a reason why methods 1, Method 2, Method 3 and Method 4 cannot be used
 whyComputedValue.error.length = Maximum allowed characters is 8168
 whyComputedValue.change.hidden = your reason for not selecting Methods 1-4 to value the goods
 
