@@ -60,6 +60,9 @@
 
         @caption(messages("caption.goods"))
         @heading(messages("tellUsAboutYourRuling.heading"))
+
+        <br></br>
+
         @content
 
         @hmrcCharacterCount(CharCount(
@@ -67,7 +70,7 @@
             name = "value",
             maxLength = Some(8000),
             rows = 10,
-            label = LabelViewModel(messages("tellUsAboutYourRuling.label")).asLegendHeading()))
+            label = LabelViewModel(messages("tellUsAboutYourRuling.label")).asLegendHeading(),
             value = form("value").value,
             errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
         ))
