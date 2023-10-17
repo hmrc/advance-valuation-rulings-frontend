@@ -57,12 +57,14 @@
 
         @heading(messages("describeTheSimilarGoods.heading"))
 
+        <br></br>
+
         @paraContent
 
          @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label =  LabelViewModel(messages("describeTheSimilarGoods.label")).asLegendHeading())
+                label =  LabelViewModel(messages("describeTheSimilarGoods.label")).asLegendHeading()
                 )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
