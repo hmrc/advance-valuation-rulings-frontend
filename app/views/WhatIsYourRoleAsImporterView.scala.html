@@ -31,7 +31,7 @@
     legend: LegendH2
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId, shouldRadiosBeDisabled: Boolean)(implicit request: Request[_], messages: Messages)
 
 @content = {
     <p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-4">
@@ -45,7 +45,7 @@
 
 @layout(pageTitle = title(form, messages("whatIsYourRoleAsImporter.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.WhatIsYourRoleAsImporterController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.WhatIsYourRoleAsImporterController.onSubmit(mode, draftId, shouldRadiosBeDisabled), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -58,14 +58,14 @@
         @content
 
         @govukRadios(
-        RadiosViewModel(
-            field  = form("value"),
-            legend = Legend(
-                HtmlContent(
-                    legend(messages("whatIsYourRoleAsImporter.question")).toString
-                )
-            ),
-            items  = WhatIsYourRoleAsImporter.options(config)
+            RadiosViewModel(
+                field  = form("value"),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("whatIsYourRoleAsImporter.question")).toString
+                    )
+                ),
+                items  = WhatIsYourRoleAsImporter.options(config, shouldRadiosBeDisabled)
             )
         )
 

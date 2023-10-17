@@ -46,10 +46,12 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
     AgentOnBehalfOfTrader
   )
 
-  def filteredValues(appConfig: FrontendAppConfig): Seq[WhatIsYourRoleAsImporter]        =
+  def filteredValues(appConfig: FrontendAppConfig): Seq[WhatIsYourRoleAsImporter] =
     if (appConfig.agentOnBehalfOfTrader) values
     else values.filterNot(_ == AgentOnBehalfOfTrader)
-  def options(appConfig: FrontendAppConfig)(implicit messages: Messages): Seq[RadioItem] =
+  def options(appConfig: FrontendAppConfig, shouldRadiosBeDisabled: Boolean)(implicit
+    messages: Messages
+  ): Seq[RadioItem] =
     filteredValues(appConfig).zipWithIndex.map {
       case (value, index) =>
         RadioItem(
@@ -58,7 +60,8 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
           ),
           value = Some(value.toString),
           id = Some(s"value_$index"),
-          hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint"))))
+          hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint")))),
+          disabled = shouldRadiosBeDisabled
         )
     }
 
