@@ -27,11 +27,11 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import audit.AuditService
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{DraftId, Mode, ReadOnlyMode, UserAnswers, WhatIsYourRoleAsImporter}
+import models.{DraftId, Mode, ReadOnlyMode}
 import models.WhatIsYourRoleAsImporter._
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.{AccountHomePage, AgentCompanyDetailsPage, ImportGoodsPage, WhatIsYourRoleAsImporterPage}
+import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
