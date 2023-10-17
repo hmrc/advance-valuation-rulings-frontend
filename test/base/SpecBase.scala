@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.{ApplicationContactDetails, CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UserAnswers, ValuationMethod, WhatIsYourRoleAsImporter}
+import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UserAnswers, WhatIsYourRoleAsImporter}
 import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -38,7 +38,7 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import pages.{AccountHomePage, ApplicationContactDetailsPage, AreThereRestrictionsOnTheGoodsPage, CheckRegisteredDetailsPage, DescribeTheRestrictionsPage, DescriptionOfGoodsPage, DoYouWantToUploadDocumentsPage, ExplainHowPartiesAreRelatedPage, HasCommodityCodePage, HasConfidentialInformationPage, HaveTheGoodsBeenSubjectToLegalChallengesPage, IsSaleBetweenRelatedPartiesPage, IsThereASaleInvolvedPage, IsTheSaleSubjectToConditionsPage, ValuationMethodPage, WhatIsYourRoleAsImporterPage}
+import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import repositories.CounterRepository
 import services.UserAnswersService
 
@@ -70,51 +70,6 @@ trait SpecBase
   val draftId: DraftId      = DraftId(DraftIdSequence)
 
   val emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
-
-  val fullUserAnswers: UserAnswers = UserAnswers(userAnswersId, draftId)
-    .setFuture(AccountHomePage, IndividualTrader)
-    .futureValue
-    .set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")
-    .get
-    .set(HasCommodityCodePage, false)
-    .get
-    .set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-    .get
-    .set(HasConfidentialInformationPage, false)
-    .get
-    .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-    .get
-    .set(
-      CheckRegisteredDetailsPage,
-      value = true
-    )
-    .get
-    .set(
-      ApplicationContactDetailsPage,
-      ApplicationContactDetails(
-        name = "name",
-        email = "email",
-        phone = "phone",
-        jobTitle = "jobTitle"
-      )
-    )
-    .get
-    .set(ValuationMethodPage, ValuationMethod.Method1)
-    .get
-    .set(IsThereASaleInvolvedPage, true)
-    .get
-    .set(IsSaleBetweenRelatedPartiesPage, true)
-    .get
-    .set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-    .get
-    .set(AreThereRestrictionsOnTheGoodsPage, true)
-    .get
-    .set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-    .get
-    .set(IsTheSaleSubjectToConditionsPage, false)
-    .get
-    .set(DoYouWantToUploadDocumentsPage, false)
-    .get
 
   val userAnswersAsIndividualTrader: UserAnswers =
     emptyUserAnswers
