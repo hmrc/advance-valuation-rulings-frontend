@@ -94,7 +94,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(WhatIsYourRoleAsImporter.values.head),
-          NormalMode,
+          ReadOnlyMode,
           draftId
         )(request, messages(application)).toString
       }
@@ -151,25 +151,11 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
       verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
     }
 
-    "must clear answers on subsequent pages if a different role is selected" in {
-      testUserAnswers(true)
-    }
-
-    "must not clear answers on subsequent pages if the same role is selected" in {
-      testUserAnswers(false)
-    }
-
-    def testUserAnswers(setDifferentRole: Boolean): Unit = {
-      val emptyAnswers           = UserAnswers(userAnswersId, draftId)
-        .set(AccountHomePage, AuthUserType.OrganisationAdmin)
-        .success
-        .value
+    "must redirect to the next page without modifying user answers when in read only mode" in {
       val mockUserAnswersService = mock[UserAnswersService]
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-
       val application =
-        applicationBuilderAsAgent(userAnswers = Some(fullUserAnswers))
+        applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
@@ -178,30 +164,69 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
           .build()
 
       running(application) {
-        val selectedRole = if (setDifferentRole) {
-          WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
-        } else {
-          WhatIsYourRoleAsImporter.EmployeeOfOrg
-        }
-
         val request =
-          FakeRequest(POST, whatIsYourRoleAsImporterRoute).withFormUrlEncodedBody(
-            ("value", selectedRole.toString)
+          FakeRequest(
+            POST,
+            routes.WhatIsYourRoleAsImporterController.onSubmit(ReadOnlyMode, draftId).url
           )
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+
+      verifyZeroInteractions(mockUserAnswersService)
+      verifyZeroInteractions(mockAuditService)
+    }
+
+    "must remove answer for AgentCompanyDetails when answered as Employee" in {
+      val emptyAnswers           = UserAnswers(userAnswersId, draftId)
+        .set(AccountHomePage, AuthUserType.OrganisationAdmin)
+        .success
+        .value
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      val userAnswers = emptyAnswers
+        .set(
+          AgentCompanyDetailsPage,
+          AgentCompanyDetails(
+            agentEori = "agentEori",
+            agentCompanyName = "agentCompanyName",
+            agentStreetAndNumber = "agentStreetAndNumber",
+            agentCity = "agentCity",
+            agentCountry = Country("GB", "United Kingdom"),
+            agentPostalCode = Some("agentPostalCode")
+          )
+        )
+        .success
+        .value
+
+      val application =
+        applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[AuditService].to(mockAuditService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whatIsYourRoleAsImporterRoute)
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.EmployeeOfOrg.toString))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
       }
 
-      val expectedUserAnswers = if (setDifferentRole) {
-        emptyAnswers
-          .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-          .success
-          .value
-      } else {
-        fullUserAnswers
-      }
+      val expectedUserAnswers = emptyAnswers
+        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+        .success
+        .value
 
       verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
       verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
