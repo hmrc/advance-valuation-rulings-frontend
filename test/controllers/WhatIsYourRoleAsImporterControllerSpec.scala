@@ -44,11 +44,11 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
     reset(mockAuditService)
   }
 
-  lazy val whatIsYourRoleAsImporterRoute =
+  private lazy val whatIsYourRoleAsImporterRoute =
     routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
 
-  val formProvider = new WhatIsYourRoleAsImporterFormProvider()
-  val form         = formProvider()
+  private val formProvider = new WhatIsYourRoleAsImporterFormProvider()
+  private val form         = formProvider()
 
   "WhatIsYourRoleAsImporter Controller" - {
 
@@ -94,7 +94,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(WhatIsYourRoleAsImporter.values.head),
-          NormalMode,
+          ReadOnlyMode,
           draftId
         )(request, messages(application)).toString
       }
@@ -149,6 +149,36 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar 
 
       verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
       verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
+    }
+
+    "must redirect to the next page without modifying user answers when in read only mode" in {
+      val mockUserAnswersService = mock[UserAnswersService]
+
+      val application =
+        applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[AuditService].to(mockAuditService)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(
+            POST,
+            routes.WhatIsYourRoleAsImporterController.onSubmit(ReadOnlyMode, draftId).url
+          )
+            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+      }
+
+      verifyZeroInteractions(mockUserAnswersService)
+      verifyZeroInteractions(mockAuditService)
     }
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {

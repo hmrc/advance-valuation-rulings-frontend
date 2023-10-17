@@ -589,10 +589,10 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      routes(page)(userAnswers)
-    case CheckMode  =>
+    case CheckMode =>
       CheckModeNavigator.nextPage(page, userAnswers)
+    case _         =>
+      routes(page)(userAnswers)
   }
 
 }
