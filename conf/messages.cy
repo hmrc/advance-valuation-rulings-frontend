@@ -317,8 +317,8 @@ haveYouUsedMethodOneInPast.change.hidden = your response to whether you can prov
 haveYouUsedMethodOneInPast.question = Do you have evidence of a Method 1 declaration?
 
 describeTheIdenticalGoods.caption = Ynglŷn â’r nwyddau
-describeTheIdenticalGoods.title = Disgrifiwch y nwyddau unfath
-describeTheIdenticalGoods.heading = Disgrifiwch y nwyddau unfath
+describeTheIdenticalGoods.title = Disgrifiad o’r nwyddau unfath
+describeTheIdenticalGoods.heading = Disgrifiad o’r nwyddau unfath
 describeTheIdenticalGoods.label = Disgrifiwch y nwyddau unfath
 describeTheIdenticalGoods.paragraph = Wrth gymharu’r nwyddau â’r nwyddau rydych chi’n eu prisio, mae’n rhaid i nwyddau unfath fod:
 describeTheIdenticalGoods.bulletPoint.1 = wedi’u cynhyrchu yn yr un wlad
