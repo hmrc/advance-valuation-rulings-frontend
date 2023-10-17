@@ -836,7 +836,7 @@ explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.2 = Method 2 (transacti
 explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.3 = Method 3 (transaction value of similar goods)
 explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2 = Explain why you believe Methods 1-3 are not suitable to work out the customs value of your goods.
 explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel = Reason for not selecting Methods 1-3 to value your goods
-explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Enter an explanation about why you have not selected methods 1 to 3 to value your goods
+explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Enter a reason why methods 1, Method 2 and Method 3 cannot be used
 explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Maximum allowed characters is 8168
 explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = your reason for not selecting Methods 1-3 to value the goods
 
