@@ -342,9 +342,9 @@ requiredInformation.option5.agentForTrader = The name and address registered to 
 requiredInformation.option6.agentForTrader = I am aware that it can take up to 120 days after I submit my application to get a decision
 requiredInformation.option7.agentForTrader = I am aware that the trader will not need to apply for an Advance Valuation Ruling every time they import these goods via the same valuation method, since the ruling is legally binding for three years from the date of issue
 
-confidentialInformation.title = Describe any confidential information you would like to add about the goods
-confidentialInformation.heading = Describe any confidential information you would like to add about the goods
-confidentialInformation.label = Describe any confidential information you would like to add about the goods
+confidentialInformation.title = Description of any confidential information you would like to add about the goods
+confidentialInformation.heading = Description of any confidential information you would like to add about the goods
+confidentialInformation.label = Can you describe any confidential information about the goods?
 confidentialInformation.caption = About the goods
 confidentialInformation.checkYourAnswersLabel = Description of confidential information	
 confidentialInformation.error.required = Enter a description of the confidential information you would like to add about the goods
