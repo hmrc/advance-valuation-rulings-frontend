@@ -52,14 +52,19 @@
 
     @caption(messages("whyIdenticalGoods.caption"))
 
+    @heading(messages("whyIdenticalGoods.heading"))
+
+    <br></br>
+
+    @paraContent
+
     @govukTextarea(
         TextareaViewModel(
             field = form("value"),
-            label = LabelViewModel(messages("whyIdenticalGoods.heading")).asPageHeading()
+            label = LabelViewModel(messages("whyIdenticalGoods.label")).asLegendHeading()
             )
             .withRows(15)
             .withAttribute("maxlength","8167")
-            .withHint(Hint(content = HtmlContent(paraContent)))
             .withId("value")
     )
 

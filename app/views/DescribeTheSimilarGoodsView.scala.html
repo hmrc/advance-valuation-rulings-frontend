@@ -55,14 +55,17 @@
 
         @caption(messages("describeTheSimilarGoods.caption"))
 
+        @heading(messages("describeTheSimilarGoods.heading"))
+
+        @paraContent
+
          @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("describeTheSimilarGoods.heading")).asPageHeading()
+                label =  LabelViewModel(messages("describeTheSimilarGoods.label")).asLegendHeading())
                 )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
-                .withHint(Hint(content = HtmlContent(paraContent)))
                 .withId("value")
 
         )

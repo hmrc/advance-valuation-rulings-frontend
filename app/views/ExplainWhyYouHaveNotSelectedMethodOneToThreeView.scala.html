@@ -49,6 +49,8 @@
 
         @heading(messages("explainWhyYouHaveNotSelectedMethodOneToThree.heading"))
 
+        <br></br>
+
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.1")))
 
         @list(
@@ -64,7 +66,7 @@
         @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.h2"))).asLegendHeading()
+                label = LabelViewModel(Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.label"))).asLegendHeading()
             )
                 .withRows(15)
                 .withAttribute("maxlength","8167")

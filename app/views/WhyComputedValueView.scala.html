@@ -47,6 +47,8 @@
 
     @heading(messages("whyComputedValue.heading"))
 
+    <br></br>
+
     @paragraph(Html(messages("whyComputedValue.paragraph.1")))
 
     @bulletList(Seq(
@@ -61,10 +63,7 @@
     @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("whyComputedValue.label")),
-                    classes = "govuk-visually-hidden",
-                    )
+                label = LabelViewModel(messages("whyComputedValue.label")).asLegendHeading()
                 )
                 .withRows(15)
                 .withAttribute("maxlength","8167")

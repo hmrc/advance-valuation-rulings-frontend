@@ -60,17 +60,14 @@
 
         @caption(messages("caption.goods"))
         @heading(messages("tellUsAboutYourRuling.heading"))
+        @content
 
         @hmrcCharacterCount(CharCount(
             id = "value",
             name = "value",
             maxLength = Some(8000),
             rows = 10,
-            label = Label(
-                content = Text(messages("tellUsAboutYourRuling.label")),
-                classes = "govuk-visually-hidden"
-            ),
-            hint = Some(Hint(content = HtmlContent(content))),
+            label = LabelViewModel(messages("tellUsAboutYourRuling.label")).asLegendHeading()))
             value = form("value").value,
             errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
         ))

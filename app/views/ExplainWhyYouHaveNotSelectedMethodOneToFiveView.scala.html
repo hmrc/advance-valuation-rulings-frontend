@@ -46,7 +46,8 @@
         @caption(messages("explainWhyYouHaveNotSelectedMethodOneToFive.caption"))
 
         @heading(messages("explainWhyYouHaveNotSelectedMethodOneToFive.heading"))
-        <br><br/>
+
+        <br></br>
 
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1")))
 
@@ -61,15 +62,10 @@
         "govuk-list govuk-list--bullet",
         )
 
-        @subheading(messages("explainWhyYouHaveNotSelectedMethodOneToFive.h2"))
-
         @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("explainWhyYouHaveNotSelectedMethodOneToFive.label")),
-                    classes = "govuk-visually-hidden"
-                ),
+                label = LabelViewModel(Text(messages("explainWhyYouHaveNotSelectedMethodOneToFive.label"))).asLegendHeading()
             ).withRows(15)
             .withAttribute("maxlength","8167")
         )

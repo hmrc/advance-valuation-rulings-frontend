@@ -46,6 +46,8 @@
 
     @heading(messages("whyTransactionValueOfSimilarGoods.heading"))
 
+    <br></br>
+
     @paragraph(Html(messages("whyTransactionValueOfSimilarGoods.paragraph.1")))
 
     @bulletList(Seq(
@@ -58,10 +60,7 @@
     @govukTextarea(
             TextareaViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("whyTransactionValueOfSimilarGoods.label")),
-                    classes = "govuk-visually-hidden",
-                    )
+                label = LabelViewModel(messages("whyTransactionValueOfSimilarGoods.label")).asLegendHeading()
                 )
                 .withRows(15)
                 .withAttribute("maxlength","8167")
