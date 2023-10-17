@@ -503,7 +503,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     userAnswers.get(HaveYouReceivedADecisionPage) match {
       case None        => HaveYouReceivedADecisionController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  => TellUsAboutYourRulingController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(false) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(false) => AwareOfRulingController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def awareOfRulingsWithSimilarMethod(userAnswers: UserAnswers): Call =
