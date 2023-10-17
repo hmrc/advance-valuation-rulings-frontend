@@ -56,6 +56,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
     case TellUsAboutYourRulingPage                        => tellUsAboutYourRuling
     case HaveYouReceivedADecisionPage                     => haveYouReceivedADecision
+    case AwareOfRulingPage                                => awareOfRulingsWithSimilarMethod
+    case AboutSimilarGoodsPage                            => aboutSimilarGoods
     case ContactPagePage                                  => contactsNextPage
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
@@ -494,7 +496,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
   private def tellUsAboutYourRuling(userAnswers: UserAnswers): Call =
     userAnswers.get(TellUsAboutYourRulingPage) match {
       case None    => TellUsAboutYourRulingController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => AwareOfRulingController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def haveYouReceivedADecision(userAnswers: UserAnswers): Call =
@@ -502,6 +504,19 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       case None        => HaveYouReceivedADecisionController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  => TellUsAboutYourRulingController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
+    }
+
+  private def awareOfRulingsWithSimilarMethod(userAnswers: UserAnswers): Call =
+    userAnswers.get(AwareOfRulingPage) match {
+      case None        => AwareOfRulingController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(true)  => AboutSimilarGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(false) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
+    }
+
+  private def aboutSimilarGoods(userAnswers: UserAnswers): Call =
+    userAnswers.get(AboutSimilarGoodsPage) match {
+      case None    => AboutSimilarGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
+      case Some(_) => HasCommodityCodeController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def contactsNextPage(userAnswers: UserAnswers): Call =

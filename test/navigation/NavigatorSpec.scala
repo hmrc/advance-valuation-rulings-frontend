@@ -223,14 +223,14 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.TellUsAboutYourRulingController.onPageLoad(NormalMode, draftId)
         }
 
-        "must navigate to HasCommodityController when answer saved" in {
+        "must navigate to AwareOfRulingController when answer saved" in {
           val userAnswers = userAnswersWith(TellUsAboutYourRulingPage, "test string")
 
           navigator.nextPage(
             TellUsAboutYourRulingPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+          ) mustBe routes.AwareOfRulingController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -262,6 +262,63 @@ class NavigatorSpec extends SpecBase {
 
           navigator.nextPage(
             HaveYouReceivedADecisionPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+
+        }
+      }
+
+      "AboutSimilarGoodsPage" - {
+        "must navigate to AboutSimilarGoodsController when no answer saved" in {
+          val userAnswers = userAnswersAsIndividualTrader
+
+          navigator.nextPage(
+            AboutSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AboutSimilarGoodsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "must navigate to HasCommodityController when answer saved" in {
+          val userAnswers = userAnswersWith(AboutSimilarGoodsPage, "test string")
+
+          navigator.nextPage(
+            AboutSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "AwareOfRulingPage" - {
+        "must navigate to AwareOfRulingController when no answer saved" in {
+          val userAnswers = userAnswersAsIndividualTrader
+
+          navigator.nextPage(
+            AwareOfRulingPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AwareOfRulingController.onPageLoad(NormalMode, draftId)
+
+        }
+
+        "must navigate to AboutSimilarGoodsController when true answer saved" in {
+          val userAnswers = userAnswersWith(AwareOfRulingPage, true)
+
+          navigator.nextPage(
+            AwareOfRulingPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AboutSimilarGoodsController.onPageLoad(NormalMode, draftId)
+
+        }
+
+        "must navigate to HasCommodityCodeController when false answer saved" in {
+          val userAnswers = userAnswersWith(AwareOfRulingPage, false)
+
+          navigator.nextPage(
+            AwareOfRulingPage,
             NormalMode,
             userAnswers
           ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)

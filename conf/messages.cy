@@ -1071,3 +1071,21 @@ tellUsAboutYourRuling.error.required = Rhowch wybod i ni am y dyfarniad
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8000 o gymeriadau neu lai
 
+aboutSimilarGoods.para.1 = Gall y rhain fod yn:
+aboutSimilarGoods.para.2 = Rhowch gymaint o wybodaeth ag y gallwch, megis:
+
+aboutSimilarGoods.bulletPoint.1 = penderfyniadau dyfarnu ar gyfer nwyddau tebyg, a gyhoeddwyd gan wledydd eraill – nid oes rhaid iddynt fod yn ddyfarniadau a gyhoeddwyd i chi
+aboutSimilarGoods.bulletPoint.2 = penderfyniadau dyfarnu ar gyfer nwyddau tebyg, a gyhoeddwyd i gwmnïau eraill o fewn eich sefydliad
+aboutSimilarGoods.bulletPoint.3 = cyfeirnod y dyfarniad
+aboutSimilarGoods.bulletPoint.4 = dyddiadau dechrau a dod i ben y dyfarniadau
+aboutSimilarGoods.bulletPoint.5 = statws presennol ar gyfer y dyfarniadau
+
+aboutSimilarGoods.heading = About the rulings for similar goods
+
+aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
+
+aboutSimilarGoods.error.required = Tell us about the the rulings for similar goods
+
+awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
+awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
+awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method
