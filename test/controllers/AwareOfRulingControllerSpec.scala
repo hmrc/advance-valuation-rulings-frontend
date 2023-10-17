@@ -18,31 +18,29 @@ package controllers
 
 import scala.concurrent.Future
 
-import play.api.http.Status.OK
-import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.TellUsAboutYourRulingFormProvider
+import forms.{AwareOfRulingFormProvider, HaveYouReceivedADecisionFormProvider}
 import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.TellUsAboutYourRulingPage
+import pages.{AwareOfRulingPage, HaveYouReceivedADecisionPage}
 import services.UserAnswersService
-import views.html.TellUsAboutYourRulingView
+import views.html.{AwareOfRulingView, HaveYouReceivedADecisionView}
 
-class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
+class AwareOfRulingControllerSpec extends SpecBase with MockitoSugar {
 
-  lazy val getRoute  = routes.TellUsAboutYourRulingController.onPageLoad(NormalMode, draftId).url
-  lazy val postRoute = routes.TellUsAboutYourRulingController.onSubmit(NormalMode, draftId).url
+  lazy val getRoute  = routes.AwareOfRulingController.onPageLoad(NormalMode, draftId).url
+  lazy val postRoute = routes.AwareOfRulingController.onSubmit(NormalMode, draftId).url
 
-  val formProvider = new TellUsAboutYourRulingFormProvider()
+  val formProvider = new AwareOfRulingFormProvider()
   val form         = formProvider()
 
-  "TellUsAboutYourRulingController" - {
+  "AwareOfRulingController" - {
     "onPageLoad" - {
       "must return OK when no answers" in {
 
@@ -52,7 +50,7 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(app, request).value
 
-          val view = app.injector.instanceOf[TellUsAboutYourRulingView]
+          val view = app.injector.instanceOf[AwareOfRulingView]
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(form, NormalMode, draftId)(
@@ -64,8 +62,7 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
 
       "must prepopulate the dialog if already answered" in {
 
-        val userAnswers =
-          userAnswersAsIndividualTrader.set(TellUsAboutYourRulingPage, "test string").get
+        val userAnswers = userAnswersAsIndividualTrader.set(AwareOfRulingPage, true).get
 
         val app = applicationBuilder(Some(userAnswers)).build()
         running(app) {
@@ -73,14 +70,10 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
 
           val result = route(app, request).value
 
-          val view = app.injector.instanceOf[TellUsAboutYourRulingView]
+          val view = app.injector.instanceOf[AwareOfRulingView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            formProvider().fill("test string"),
-            NormalMode,
-            draftId
-          )(
+          contentAsString(result) mustEqual view(formProvider().fill(true), NormalMode, draftId)(
             request,
             messages(app)
           ).toString
@@ -104,7 +97,7 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
         running(application) {
           val request = FakeRequest(POST, postRoute)
 
-          val view = application.injector.instanceOf[TellUsAboutYourRulingView]
+          val view = application.injector.instanceOf[AwareOfRulingView]
 
           val result = route(application, request).value
 
@@ -120,7 +113,7 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
         }
       }
 
-      "must redirect to HasCommodityCodeController when data submitted" in {
+      "must redirect to TellUsAboutYourRuling when data submitted" in {
         val mockUserAnswersService = mock[UserAnswersService]
         when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
@@ -138,7 +131,7 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustBe Some(
-            controllers.routes.AwareOfRulingController.onPageLoad(NormalMode, draftId).url
+            controllers.routes.AboutSimilarGoodsController.onPageLoad(NormalMode, draftId).url
           )
         }
       }

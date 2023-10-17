@@ -184,30 +184,38 @@ applicationContactDetails.phone.change.hidden = your telephone number
 applicationContactDetails.jobTitle.change.hidden = your job title
 applicationContactDetails.jobTitle.error.required = Enter your job title
 
+choosingMethod.title = Choosing the most appropriate method to value your goods
+choosingMethod.heading = Choosing the most appropriate method to value your goods
+choosingMethod.para = Mae’n rhaid i chi weithio drwy’r dulliau yn eu trefn, gan ddechrau gyda Dull 1.
+choosingMethod.caption = Ynglŷn â’r nwyddau
+choosingMethod.paragraph.1 = You need to select a method to {0}.
+choosingMethod.methods = Dulliau 1 i 6
+choosingMethod.continue = Yn eich blaen a dewis dull
+
 valuationMethod.caption = Ynglŷn â’r nwyddau
-valuationMethod.title = Dewiswch y dull mwyaf priodol i brisio’ch nwyddau
-valuationMethod.heading = Dewiswch y dull mwyaf priodol i brisio’ch nwyddau
+valuationMethod.title = Pa ddull rydych am ei ddefnyddio i brisio’ch nwyddau?
+valuationMethod.heading = Pa ddull rydych am ei ddefnyddio i brisio’ch nwyddau?
 valuationMethod.paragraph.1 = Bydd angen i chi ddewis dull i {0}.
 valuationMethod.paragraph.2 = Yna, byddwn yn adolygu’ch dull arfaethedig ac yn gwneud penderfyniad. Bydd ein penderfyniad yn gyfreithiol rwymol.
 valuationMethod.paragraph.3 = Efallai y byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom neu i argymell dull sy’n fwy priodol.
 valuationMethod.link.text = gyfrifo gwerth tollau eich mewnforion (yn agor tab newydd).
 valuationMethod.h2 = Pa ddull ydych am ei ddefnyddio i brisio’ch nwyddau?
 valuationMethod.hint = Dewiswch un dull.
-valuationMethod.method1 = Dull 1: Gwerth trafodiad
+valuationMethod.method1 = Dull 1 (gwerth y trafodyn)
 valuationMethod.method1.hint = Mae hyn yn seiliedig ar y pris a dalwyd neu sy’n daladwy pan fydd y nwyddau’n cael eu gwerthu i’w hallforio i’r DU. Gellir ond defnyddio Dull 1 os oes gwerthiant dan sylw.
-valuationMethod.method2 = Dull 2: Gwerth trafodiad nwyddau unfath
-valuationMethod.method2.hint = Mae hyn yn seiliedig ar werth y nwyddau unfath sy’n cael eu hallforio i’r DU ar yr un adeg neu tua’r un adeg (cyn pen 90 diwrnod) â phan brisiwyd y nwyddau.
-valuationMethod.method3 = Dull 3: Gwerth trafodiad nwyddau tebyg
-valuationMethod.method3.hint = Mae hyn yn seiliedig ar werth trafodiad nwyddau tebyg a allforiwyd i’r DU ar yr un adeg neu tua’r un adeg (cyn pen 90 diwrnod) a phan brisiwyd y nwyddau.
-valuationMethod.method4 = Dull 4: Dull casgliadol
-valuationMethod.method4.hint = Mae hyn yn seiliedig ar bris gwerthu’r nwyddau yn y DU, nwyddau unfath neu nwyddau tebyg.
-valuationMethod.method5 = Dull 5: Dull cyfrifiadurol
-valuationMethod.method5.hint = Mae hwn yn seiliedig ar gostau cynhyrchu’r nwyddau a fewnforiwyd, gan ddefnyddio cyfanswm cost neu werth y deunyddiau a’u saernïaeth neu brosesau eraill a ddefnyddiwyd wrth gynhyrchu’r nwyddau.
-valuationMethod.method6 = Dull 6: Dull wrth gefn
-valuationMethod.method6.hint = Mae hwn yn seiliedig ar addasu dulliau 1 i 5 a’i defnyddio mewn modd hyblyg er mwyn bodloni amgylchiadau anarferol.
+valuationMethod.method2 = Dull 2 (Gwerth trafodiad nwyddau unfath)
+valuationMethod.method2.hint = Mae hyn yn seiliedig ar werth trafodyn nwyddau unfath sy’n cael eu hallforio i’r DU ar yr un adeg neu tua’r un adeg (o fewn 90 diwrnod) â’r nwyddau sy’n cael eu prisio.
+valuationMethod.method3 = Dull 3 (Gwerth trafodiad nwyddau tebyg)
+valuationMethod.method3.hint = Mae’r dull hwn yn seiliedig ar werth trafodyn nwyddau tebyg sy’n cael eu hallforio i’r DU ar yr un adeg neu tua’r un adeg (o fewn 90 diwrnod) â’r nwyddau sy’n cael eu prisio.
+valuationMethod.method4 = Dull 4 (Dull casgliadol)
+valuationMethod.method4.hint = Defnyddiwch y dull hwn os ydych yn seilio’ch prisiad ar bris gwerthu nwyddau yn y DU. Gall y nwyddau fod yr union nwyddau sydd wedi’u mewnforio, nwyddau unfath, neu nwyddau tebyg.
+valuationMethod.method5 = Dull 5 (gwerth cyfrifedig)
+valuationMethod.method5.hint = Gallwch ddefnyddio’r dull hwn os ydych yn seilio’ch prisiad ar gostau cynhyrchu’r nwyddau a fewnforir. Mae’n defnyddio cyfanswm cost neu werth y deunyddiau a’r gwneuthuriad neu brosesu arall a ddefnyddir wrth gynhyrchu’r nwyddau.
+valuationMethod.method6 = Dull 6 (dull ‘wrth gefn’)
+valuationMethod.method6.hint = Dyma’r dull olaf y gallwch roi cynnig arno. Gallwch ond ei ddefnyddio os na allwch ddefnyddio unrhyw ddull arall. Mae’n golygu addasu Dulliau 1 i 5 er mwyn ystyried amgylchiadau anarferol.
 valuationMethod.checkYourAnswersLabel = Y dull prisio arfaethedig
 valuationMethod.error.required = Dewiswch ddull i brisio’r nwyddau
-valuationMethod.change.hidden = your proposed valuation method
+valuationMethod.change.hidden = eich dull prisio arfaethedig
 
 isThereASaleInvolved.caption = Ynglŷn â’r nwyddau
 isThereASaleInvolved.title = Oes gwerthiant ar waith?
@@ -1063,3 +1071,21 @@ tellUsAboutYourRuling.error.required = Rhowch wybod i ni am y dyfarniad
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8000 o gymeriadau neu lai
 
+aboutSimilarGoods.para.1 = Gall y rhain fod yn:
+aboutSimilarGoods.para.2 = Rhowch gymaint o wybodaeth ag y gallwch, megis:
+
+aboutSimilarGoods.bulletPoint.1 = penderfyniadau dyfarnu ar gyfer nwyddau tebyg, a gyhoeddwyd gan wledydd eraill – nid oes rhaid iddynt fod yn ddyfarniadau a gyhoeddwyd i chi
+aboutSimilarGoods.bulletPoint.2 = penderfyniadau dyfarnu ar gyfer nwyddau tebyg, a gyhoeddwyd i gwmnïau eraill o fewn eich sefydliad
+aboutSimilarGoods.bulletPoint.3 = cyfeirnod y dyfarniad
+aboutSimilarGoods.bulletPoint.4 = dyddiadau dechrau a dod i ben y dyfarniadau
+aboutSimilarGoods.bulletPoint.5 = statws presennol ar gyfer y dyfarniadau
+
+aboutSimilarGoods.heading = About the rulings for similar goods
+
+aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
+
+aboutSimilarGoods.error.required = Tell us about the the rulings for similar goods
+
+awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
+awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
+awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method

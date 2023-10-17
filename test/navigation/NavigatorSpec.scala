@@ -178,6 +178,26 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
+      "ChoosingMethodPage" - {
+        "must navigate to ValuationMethod" in {
+          navigator.nextPage(
+            ChoosingMethodPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "AgentForTraderContactDetailsPage" - {
+        "must navigate to ChoosingMethod page" in {
+          navigator.nextPage(
+            AgentForTraderContactDetailsPage,
+            NormalMode,
+            emptyUserAnswers
+          ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
+        }
+      }
+
       "WhatIsYourRoleAsImporterPage" - {
 
         "must navigate to RequiredInformationPage page" in {
@@ -203,14 +223,14 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.TellUsAboutYourRulingController.onPageLoad(NormalMode, draftId)
         }
 
-        "must navigate to HasCommodityController when answer saved" in {
+        "must navigate to AwareOfRulingController when answer saved" in {
           val userAnswers = userAnswersWith(TellUsAboutYourRulingPage, "test string")
 
           navigator.nextPage(
             TellUsAboutYourRulingPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+          ) mustBe routes.AwareOfRulingController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -242,6 +262,63 @@ class NavigatorSpec extends SpecBase {
 
           navigator.nextPage(
             HaveYouReceivedADecisionPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+
+        }
+      }
+
+      "AboutSimilarGoodsPage" - {
+        "must navigate to AboutSimilarGoodsController when no answer saved" in {
+          val userAnswers = userAnswersAsIndividualTrader
+
+          navigator.nextPage(
+            AboutSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AboutSimilarGoodsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "must navigate to HasCommodityController when answer saved" in {
+          val userAnswers = userAnswersWith(AboutSimilarGoodsPage, "test string")
+
+          navigator.nextPage(
+            AboutSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "AwareOfRulingPage" - {
+        "must navigate to AwareOfRulingController when no answer saved" in {
+          val userAnswers = userAnswersAsIndividualTrader
+
+          navigator.nextPage(
+            AwareOfRulingPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AwareOfRulingController.onPageLoad(NormalMode, draftId)
+
+        }
+
+        "must navigate to AboutSimilarGoodsController when true answer saved" in {
+          val userAnswers = userAnswersWith(AwareOfRulingPage, true)
+
+          navigator.nextPage(
+            AwareOfRulingPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AboutSimilarGoodsController.onPageLoad(NormalMode, draftId)
+
+        }
+
+        "must navigate to HasCommodityCodeController when false answer saved" in {
+          val userAnswers = userAnswersWith(AwareOfRulingPage, false)
+
+          navigator.nextPage(
+            AwareOfRulingPage,
             NormalMode,
             userAnswers
           ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
@@ -628,7 +705,7 @@ class NavigatorSpec extends SpecBase {
         }
 
         "when OrganisationAssistant claiming to be EmployeeOfOrg" - {
-          "navigate to ValuationMethodPage when Yes" in {
+          "navigate to choose valuation method page when Yes" in {
             val ua = userAnswers
               .set(AccountHomePage, value = OrganisationAssistant)
               .flatMap(_.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg))
@@ -639,7 +716,7 @@ class NavigatorSpec extends SpecBase {
               BusinessContactDetailsPage,
               NormalMode,
               ua
-            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+            ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
           }
         }
 
@@ -659,13 +736,13 @@ class NavigatorSpec extends SpecBase {
         }
 
         "when an OrganisationAdmin" - {
-          "navigate to valuation method page" in {
+          "navigate to choose valuation method page" in {
 
             navigator.nextPage(
               BusinessContactDetailsPage,
               NormalMode,
               userAnswers.set(AccountHomePage, value = OrganisationAdmin).success.value
-            ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+            ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
           }
         }
 
@@ -709,7 +786,7 @@ class NavigatorSpec extends SpecBase {
           AgentCompanyDetailsPage,
           NormalMode,
           userAnswers
-        ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
       }
 
       "ApplicationContactDetailsPage must" in {
@@ -722,7 +799,7 @@ class NavigatorSpec extends SpecBase {
           ApplicationContactDetailsPage,
           NormalMode,
           userAnswers
-        ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+        ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
       }
 
       "DoYouWantToUploadDocumentsPage must" - {
@@ -875,12 +952,12 @@ class NavigatorSpec extends SpecBase {
       }
 
       "valuationMethod page must navigate to" - {
-        "self when no method is selected" in {
+        "choose valuation method when no method is selected" in {
           navigator.nextPage(
             ValuationMethodPage,
             NormalMode,
             EmptyUserAnswers
-          ) mustBe routes.ValuationMethodController.onPageLoad(NormalMode, draftId)
+          ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
         }
 
         "isThereASaleInvolved page when method 1 is selected" in {
