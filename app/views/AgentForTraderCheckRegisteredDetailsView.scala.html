@@ -28,7 +28,8 @@ paragraph: Paragraph,
 subheading: Subheading,
 cancelApplicationLink: CancelApplicationLink,
 saveButtons: SaveButtons,
-link: Link
+link: Link,
+legend: LegendH2
 )
 
 @(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -41,11 +42,11 @@ link: Link
     }
 }
 
-@radioHeading = {
-    @if(registeredDetails.CDSFullName.trim != ""){
-        @subheading(messages("checkRegisteredDetails.subheading.2"))
+@radioHeading = @{
+    if(registeredDetails.CDSFullName.trim != ""){
+        messages("checkRegisteredDetails.subheading.2")
     }else{
-        @subheading(messages("checkRegisteredDetails.private.subheading.2"))
+        messages("checkRegisteredDetails.private.subheading.2")
     }
 }
 
@@ -80,14 +81,7 @@ link: Link
     } else {
         @paragraph(Html(messages("checkRegisteredDetails.private.paragraph.1")))
     }
-    @radioHeading
 }
-
-@*Combined following content for a screen reader to present heading 1 and subheading clearly within legend*@
-@legendContent = {  @headingContent.
-    @radioHeading
-}
-
 
 @layout(
     pageTitle = title(
@@ -112,10 +106,16 @@ link: Link
 
 <br></br>
 
+@paraContent
+
 @govukRadios(
     RadiosViewModel(
         field = form("value"),
-        legend = LegendViewModel(HtmlContent(legendContent)).visuallyHidden(),
+        legend = Legend(
+            HtmlContent(
+            legend(radioHeading).toString
+            )
+        ),
         items = Seq(
             RadioItem(
             id = Some(form("value").id),
@@ -128,7 +128,7 @@ link: Link
             content = messages("checkRegisteredDetails.radio.agentOnBehalfOfTrader.no")
             )
         )
-    ).withHint(Hint(content = HtmlContent(paraContent)))
+    )
 )
 
     @paragraph(content = Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
