@@ -21,7 +21,7 @@ object AppDependencies {
   val HmrcMongoTestPlayVersion  = "0.74.0"
   val FlexmarkVersion           = "0.62.2"
   val EnumeratumVersion         = "1.6.3"
-  val ObjectStoreVersion        = "1.0.0"
+  val ObjectStoreVersion        = "1.1.0"
   val InternalAuthVersion       = "1.2.0"
   val LibPhoneNumberVersion     = "8.12.47"
 
