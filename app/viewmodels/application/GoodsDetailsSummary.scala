@@ -54,14 +54,14 @@ object GoodsDetailsSummary {
       )
     )
 
-    val similarRulingGoodsQuestionRow = Some(
+    val similarRulingMethodQuestionRow = Some(
       getRowForOption(
-        goodsDetails.similarRulingGoodsInfo,
+        goodsDetails.similarRulingMethodInfo,
         "haveYouReceivedADecision.checkYourAnswersLabel"
       )
     )
 
-    val similarRulingGoodsInfoRow = goodsDetails.similarRulingGoodsInfo.map {
+    val similarRulingMethodInfoRow = goodsDetails.similarRulingMethodInfo.map {
       info =>
         SummaryListRowViewModel(
           key = "tellUsAboutYourRuling.checkYourAnswersLabel",
@@ -69,14 +69,14 @@ object GoodsDetailsSummary {
         )
     }
 
-    val similarRulingMethodQuestionRow = Some(
+    val similarRulingGoodsQuestionRow = Some(
       getRowForOption(
-        goodsDetails.similarRulingMethodInfo,
+        goodsDetails.similarRulingGoodsInfo,
         "awareOfRuling.checkYourAnswersLabel"
       )
     )
 
-    val similarRulingMethodInfoRow = goodsDetails.similarRulingGoodsInfo.map {
+    val similarRulingGoodsInfoRow = goodsDetails.similarRulingGoodsInfo.map {
       info =>
         SummaryListRowViewModel(
           key = "aboutSimilarGoods.checkYourAnswersLabel",

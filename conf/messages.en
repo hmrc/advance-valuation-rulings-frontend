@@ -1068,8 +1068,8 @@ aboutSimilarGoods.bulletPoint.4 = start and expiry dates of the rulings
 aboutSimilarGoods.bulletPoint.5 = current status for the rulings
 aboutSimilarGoods.heading = About the rulings for similar goods
 aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
-aboutSimilarGoods.error.required = Tell us about the the rulings for similar goods
-aboutSimilarGoods.checkYourAnswersLabel = Tell us about rulings for similar goods
+aboutSimilarGoods.error.required = Tell us about the rulings for similar goods
+aboutSimilarGoods.checkYourAnswersLabel = Tell us about the rulings for similar goods
 
 awareOfRuling.heading = Are you aware of any other rulings that have used a similar method?
 awareOfRuling.para = Telling us about other rulings that have used a similar method will help the caseworker process your application.
