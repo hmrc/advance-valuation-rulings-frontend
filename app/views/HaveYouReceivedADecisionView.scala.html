@@ -31,15 +31,22 @@ subheading: Subheading,
 paragraph: Paragraph,
 cancelApplicationLink: CancelApplicationLink,
 saveButtons: SaveButtons,
-link: Link,
-radios: YesNoRadios
+link: Link
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@radiosContent = {
-    @paragraph(Html(messages("haveYouReceivedADecision.para.1")))
-    @paragraph(Html(messages("haveYouReceivedADecision.para.2")))
+@radioItems = @{
+    Seq(
+        RadioItem(
+            value = Some("true"),
+            checked = form.value.fold(false)(_ == "true"),
+            content = Text(messages("site.yes"))),
+        RadioItem(
+            value = Some("false"),
+            checked = form.value.fold(false)(_ == "false"),
+            content = Text(messages("site.no")))
+    )
 }
 
 @layout(pageTitle = title(form, messages("haveYouReceivedADecision.heading")), draftId = Some(draftId)) {
@@ -51,11 +58,23 @@ radios: YesNoRadios
         }
 
         @caption(messages("caption.goods"))
+        @heading(messages("haveYouReceivedADecision.heading"))
 
-        @radios(messages("haveYouReceivedADecision.heading"), radiosContent, form)
+        <br></br>
+
+        @paragraph(Html(messages("haveYouReceivedADecision.para.1")))
+        @paragraph(Html(messages("haveYouReceivedADecision.para.2")))
+
+        @govukRadios(
+            RadiosViewModel(
+                field = form("value"),
+                legend = LegendViewModel(messages("haveYouReceivedADecision.legend")).asLegendHeading(),
+                items = radioItems
+            ))
 
         @saveButtons(draftId)
+
     }
 
-    @cancelApplicationLink(draftId)
+@cancelApplicationLink(draftId)
 }

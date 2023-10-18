@@ -1056,10 +1056,11 @@ uploadInProgress.title = Uploading your document
 uploadInProgress.heading = Uploading your document
 uploadInProgress.p1 = Select the check progress button to continue with your application.
 
-haveYouReceivedADecision.heading = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
+haveYouReceivedADecision.heading = Dyfarniadau blaenorol yn seiliedig ar ddulliau tebyg
 haveYouReceivedADecision.para.1 = Mae’n rhaid i hyn fod yn benderfyniad dyfarnu o Brydain Fawr (Cymru, Lloegr, a’r Alban). Nid oes angen iddo fod yn gysylltiedig â’ch cais presennol.
 haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg rydych wedi’u cael yn ein helpu ni i brosesu’ch cais presennol.
-haveYouReceivedADecision.error.required = Tell us if you have ever received a ruling based on a similar method
+haveYouReceivedADecision.error.required = Rhowch wybod i ni os ydych erioed wedi cael dyfarniad yn seiliedig ar ddull tebyg
+haveYouReceivedADecision.legend = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
 
 tellUsAboutYourRuling.heading = Rhowch wybod i ni am y dyfarniad
 tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
