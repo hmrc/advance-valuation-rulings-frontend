@@ -256,7 +256,7 @@ areThereRestrictionsOnTheGoods.bulletPoint.1 = maent wedi’u gorfodi neu’n of
 areThereRestrictionsOnTheGoods.bulletPoint.2 = maent yn cyfyngu’r ardal ddaearyddol lle gellir ailwerthu’r nwyddau
 areThereRestrictionsOnTheGoods.bulletPoint.3 = nid ydynt yn effeithio’n sylweddol ar werth y nwyddau
 areThereRestrictionsOnTheGoods.question = Do you have any restrictions on the use or the resale of the goods?
-areThereRestrictionsOnTheGoods.change.hidden = your response to whether there are restrictions on the use/resale of the goods
+areThereRestrictionsOnTheGoods.change.hidden = your response to whether there are restrictions on the use or resale of the goods
 
 describeTheRestrictions.caption = Ynglŷn â’r nwyddau
 describeTheRestrictions.title =  Disgrifiwch unrhyw gyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
@@ -266,7 +266,7 @@ describeTheRestrictions.checkYourAnswersLabel = Disgrifiad o’r cyfyngiadau
 describeTheRestrictions.error.required = Nodwch ddisgrifiad o’r cyfyngiadau sydd ar waith
 describeTheRestrictions.error.length = Mae’n rhaid i’r disgrifiad o’r cyfyngiadau fod yn 8,167 o gymeriadau neu lai
 describeTheRestrictions.paragraph.1 = Bydd rhoi disgrifiad manwl o’r cysylltiad yn ein helpu ni i brosesu’ch cais cyn gynted â phosibl
-describeTheRestrictions.change.hidden = your description of the restrictions on the use/resale of the goods
+describeTheRestrictions.change.hidden = your description of the restrictions on the use or resale of the goods
 
 isTheSaleSubjectToConditions.caption = Ynglŷn â’r nwyddau
 isTheSaleSubjectToConditions.title = Conditions or circumstances that could restrict you from valuing the goods
@@ -559,7 +559,8 @@ doYouWantToUploadDocuments.bulletPoint.2 = copïau datganiadau mewnforio blaenor
 doYouWantToUploadDocuments.bulletPoint.3 = dadansoddiad o’r costau cynhyrchu
 doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych am uwchlwytho unrhyw ddogfennau ategol?
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
-doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
+doYouWantToUploadDocuments.change.hidden = p’un a ydych am uwchlwytho unrhyw ddogfennau ategol
+doYouWantToUploadDocuments.files.change.hidden = y dogfennau ategol rydych wedi’u huwchlwytho
 doYouWantToUploadDocuments.question = A ydych am uwchlwytho unrhyw ddogfennau ategol?
 
 uploadLetterOfAuthority.title = Uwchlwytho’ch llythyr o awdurdod

@@ -491,6 +491,7 @@ doYouWantToUploadDocuments.bulletPoint.3 = breakdowns of manufacturing costs
 doYouWantToUploadDocuments.checkYourAnswersLabel = Do you want to upload any supporting documents?
 doYouWantToUploadDocuments.error.required = Select yes if you want to upload any supporting documents
 doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
+doYouWantToUploadDocuments.files.change.hidden = the supporting documents you uploaded
 doYouWantToUploadDocuments.question = Do you want to upload any supporting documents?
 
 isThisFileConfidential.title = Tell us if you want to make this document confidential
@@ -680,14 +681,14 @@ isThereASaleInvolved.change.hidden = your response to whether a sale is involved
 areThereRestrictionsOnTheGoods.title = Restrictions on the use or resale of the goods
 areThereRestrictionsOnTheGoods.heading = Restrictions on the use or resale of the goods
 areThereRestrictionsOnTheGoods.caption = About the goods
-areThereRestrictionsOnTheGoods.checkYourAnswersLabel = Are there restrictions on the use/resale of the goods?
+areThereRestrictionsOnTheGoods.checkYourAnswersLabel = Are there restrictions on the use or resale of the goods?
 areThereRestrictionsOnTheGoods.error.required = Select yes if there are any restrictions involved
 areThereRestrictionsOnTheGoods.paragraph.1 = We can only accept restrictions that:
 areThereRestrictionsOnTheGoods.bulletPoint.1 = are imposed or required by law or by public authorities in the UK
 areThereRestrictionsOnTheGoods.bulletPoint.2 = limit the geographical area where the goods can be resold
 areThereRestrictionsOnTheGoods.bulletPoint.3 = do not substantially affect the value of the goods
 areThereRestrictionsOnTheGoods.question = Do you have any restrictions on the use or the resale of the goods?
-areThereRestrictionsOnTheGoods.change.hidden = your response to whether there are restrictions on the use/resale of the goods
+areThereRestrictionsOnTheGoods.change.hidden = your response to whether there are restrictions on the use or resale of the goods
 
 describeTheRestrictions.title =  Describe any restrictions on the use or resale of goods
 describeTheRestrictions.heading = Describe any restrictions on the use or resale of goods
@@ -697,7 +698,7 @@ describeTheRestrictions.checkYourAnswersLabel = Description of restrictions
 describeTheRestrictions.error.required = Enter a description of the restrictions involved
 describeTheRestrictions.error.length = Description of the restrictions must be 8,167 characters or less
 describeTheRestrictions.paragraph.1 = Giving a detailed description of any restrictions helps us process your application as quickly as possible
-describeTheRestrictions.change.hidden = your description of the restrictions on the use/resale of the goods
+describeTheRestrictions.change.hidden = your description of the restrictions on the use or resale of the goods
 
 isTheSaleSubjectToConditions.title = Conditions or circumstances that could restrict you from valuing the goods
 isTheSaleSubjectToConditions.heading = Conditions or circumstances that could restrict you from valuing the goods
