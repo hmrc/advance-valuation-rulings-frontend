@@ -27,8 +27,9 @@ import play.twirl.api.HtmlFormat
 
 import base.SpecBase
 import config.FrontendAppConfig
+import forms.EmployeeCheckRegisteredDetailsFormProvider
 import generators.ModelGenerators
-import models.{Done, TraderDetailsWithConfirmation, UserAnswers}
+import models.{Done, TraderDetailsWithConfirmation, UserAnswers, WhatIsYourRoleAsImporter}
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers
@@ -36,7 +37,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
-import pages.VerifyTraderDetailsPage
+import pages.{VerifyTraderDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import userrole.{UserRole, UserRoleProvider}
 
@@ -48,6 +49,10 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with Model
   private lazy val eoriBeUpToDateRoute =
     routes.EORIBeUpToDateController.onPageLoad(draftId).url
 
+  private val userAnswersAsEmployeeOfOrg = userAnswersAsIndividualTrader
+    .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+    .get
+
   private val mockUserRoleProvider   = mock[UserRoleProvider]
   private val mockUserRole           = mock[UserRole]
   private val mockUserAnswersService = mock[UserAnswersService]
@@ -55,16 +60,19 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with Model
 
   when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
-  private def setUpUserAnswersServiceMock(answers: UserAnswers): Unit = {
+  private def setUpUserAnswersServiceMock(): Unit = {
     when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
     when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
       Some(userAnswersAsIndividualTrader)
     )
   }
 
-  private def setUpUserRoleProviderMock() =
+  private def setUpUserRoleProviderMock() = {
     when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
       .thenReturn(mockUserRole)
+    when(mockUserRole.getFormForCheckRegisteredDetails)
+      .thenReturn(new EmployeeCheckRegisteredDetailsFormProvider()())
+  }
 
   private def setUpViewMockForUserRole(expectedViewBody: String = "") = {
     val expectedView = HtmlFormat.raw(expectedViewBody)
@@ -81,7 +89,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with Model
   override def beforeEach(): Unit = {
     setUpUserRoleProviderMock()
     setUpViewMockForUserRole()
-    setUpUserAnswersServiceMock(userAnswersAsIndividualTrader)
+    setUpUserAnswersServiceMock()
   }
 
   "EORIBeUpToDate Controller" - {
@@ -131,7 +139,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with Model
     "must redirect to the next page when 'no' is submitted" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        applicationBuilder(userAnswers = Some(userAnswersAsEmployeeOfOrg))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService)

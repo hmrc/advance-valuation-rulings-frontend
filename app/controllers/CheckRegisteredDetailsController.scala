@@ -29,7 +29,6 @@ import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
-import forms.CheckRegisteredDetailsFormProvider
 import models._
 import navigation.Navigator
 import pages.{AccountHomePage, CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
@@ -44,7 +43,6 @@ class CheckRegisteredDetailsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  formProvider: CheckRegisteredDetailsFormProvider,
   userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
   view: CheckRegisteredDetailsView,
@@ -55,14 +53,15 @@ class CheckRegisteredDetailsController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  private implicit val logger = Logger(this.getClass)
+  private implicit val logger: Logger = Logger(this.getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val form = CheckRegisteredDetailsPage.get match {
-          case Some(value) => formProvider().fill(value)
-          case None        => formProvider()
+        val formProvider = getFormForRole(request.userAnswers)
+        val form         = CheckRegisteredDetailsPage.get match {
+          case Some(value) => formProvider.fill(value)
+          case None        => formProvider
         }
 
         getTraderDetails {
@@ -96,7 +95,7 @@ class CheckRegisteredDetailsController @Inject() (
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val form = formProvider()
+        val form = getFormForRole(request.userAnswers)
         form
           .bindFromRequest()
           .fold(
@@ -147,4 +146,7 @@ class CheckRegisteredDetailsController @Inject() (
     } else {
       EORIBeUpToDatePage
     }
+
+  private def getFormForRole(userAnswers: UserAnswers) =
+    userRoleProvider.getUserRole(userAnswers).getFormForCheckRegisteredDetails
 }

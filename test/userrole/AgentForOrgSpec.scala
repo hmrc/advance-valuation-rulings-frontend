@@ -24,6 +24,7 @@ import play.twirl.api.HtmlFormat
 
 import base.SpecBase
 import controllers.routes.CheckRegisteredDetailsController
+import forms.AgentForOrgCheckRegisteredDetailsFormProvider
 import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
@@ -35,12 +36,14 @@ import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgCheckYourAn
 class AgentForOrgSpec extends SpecBase with Matchers {
 
   private val agentForOrgCheckRegisteredDetailsView = mock[AgentForOrgCheckRegisteredDetailsView]
+  private val formProvider                          = mock[AgentForOrgCheckRegisteredDetailsFormProvider]
   private val agentForOrgEORIBeUpToDateView         = mock[AgentForOrgEORIBeUpToDateView]
   private val requiredInformationView               = mock[AgentForOrgRequiredInformationView]
   private val checkYourAnswersView                  = mock[AgentForOrgCheckYourAnswersView]
 
   private val agentForOrg = AgentForOrg(
     agentForOrgCheckRegisteredDetailsView,
+    formProvider,
     checkYourAnswersView,
     agentForOrgEORIBeUpToDateView,
     requiredInformationView

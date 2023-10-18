@@ -25,6 +25,7 @@ import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
+import forms.AgentForTraderCheckRegisteredDetailsFormProvider
 import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UploadedFile}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
@@ -37,6 +38,9 @@ class AgentForTraderSpec extends SpecBase with Matchers {
 
   private val agentForTraderCheckRegisteredDetailsView =
     mock[AgentForTraderCheckRegisteredDetailsView]
+
+  private val formProvider =
+    mock[AgentForTraderCheckRegisteredDetailsFormProvider]
 
   private val agentForTraderPrivateEORIBeUpToDateView =
     mock[AgentForTraderPrivateEORIBeUpToDateView]
@@ -51,6 +55,7 @@ class AgentForTraderSpec extends SpecBase with Matchers {
 
   private val agentForTrader = AgentForTrader(
     agentForTraderCheckRegisteredDetailsView,
+    formProvider,
     checkYourAnswersView,
     agentForTraderPublicEORIBeUpToDateView,
     agentForTraderPrivateEORIBeUpToDateView,

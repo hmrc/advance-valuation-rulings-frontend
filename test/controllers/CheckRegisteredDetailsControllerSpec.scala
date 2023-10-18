@@ -29,7 +29,7 @@ import play.twirl.api.HtmlFormat
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.BackendConnector
-import forms.CheckRegisteredDetailsFormProvider
+import forms.EmployeeCheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
@@ -38,7 +38,7 @@ import org.mockito.ArgumentMatchers.{any, same}
 import org.mockito.Mockito.when
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AgentForTraderCheckRegisteredDetailsPage, CheckRegisteredDetailsPage}
+import pages.{AgentForTraderCheckRegisteredDetailsPage, CheckRegisteredDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import userrole.{UserRole, UserRoleProvider}
 
@@ -47,25 +47,24 @@ class CheckRegisteredDetailsControllerSpec
     with MockitoSugar
     with TableDrivenPropertyChecks {
 
-  lazy val checkRegisteredDetailsRoute =
+  private lazy val checkRegisteredDetailsRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
 
-  val formProvider = new CheckRegisteredDetailsFormProvider()
-  val form         = formProvider()
-
-  val userAnswers = userAnswersAsIndividualTrader
+  private val userAnswers = userAnswersAsIndividualTrader
     .set(CheckRegisteredDetailsPage, true)
     .success
     .value
+    .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+    .get
 
-  val consentToDisclosureOfPersonalDataScenarios =
+  private val consentToDisclosureOfPersonalDataScenarios =
     Table("consentToDisclosureOfPersonalData", true, false)
 
-  val mockBackendConnector   = mock[BackendConnector]
-  val mockUserAnswersService = mock[UserAnswersService]
-  val mockUserRoleProvider   = mock[UserRoleProvider]
-  val mockUserRole           = mock[UserRole]
-  val mockAppConfig          = mock[FrontendAppConfig]
+  private val mockBackendConnector   = mock[BackendConnector]
+  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockUserRoleProvider   = mock[UserRoleProvider]
+  private val mockUserRole           = mock[UserRole]
+  private val mockAppConfig          = mock[FrontendAppConfig]
 
   when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
@@ -97,6 +96,8 @@ class CheckRegisteredDetailsControllerSpec
     when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
     when(mockUserRole.selectGetRegisteredDetailsPage())
       .thenReturn(AgentForTraderCheckRegisteredDetailsPage)
+    when(mockUserRole.getFormForCheckRegisteredDetails)
+      .thenReturn(new EmployeeCheckRegisteredDetailsFormProvider()())
   }
 
   private def setUpViewMockForUserRole(expectedViewBody: String = "") = {
@@ -216,7 +217,7 @@ class CheckRegisteredDetailsControllerSpec
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.UploadLetterOfAuthorityController
-          .onPageLoad(NormalMode, draftId, None, None, false)
+          .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = false)
           .url
       }
     }
@@ -275,7 +276,7 @@ class CheckRegisteredDetailsControllerSpec
     "must redirect to Journey Recovery on submit when user has no answers" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
+        applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =
@@ -346,7 +347,7 @@ class CheckRegisteredDetailsControllerSpec
 
     "redirect to Journey Recovery if the registered details retrieval from backend fails" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[BackendConnector].toInstance(mockBackendConnector),
           bind[FrontendAppConfig].toInstance(mockAppConfig)

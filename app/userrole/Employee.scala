@@ -29,14 +29,16 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import controllers.routes
-  import models.{ApplicationContactDetails, BusinessContactDetails, NormalMode, UserAnswers}
+  import forms.EmployeeCheckRegisteredDetailsFormProvider
+  import models.{ApplicationContactDetails, NormalMode, UserAnswers}
   import models.requests.ContactDetails
-  import pages.{ApplicationContactDetailsPage, BusinessContactDetailsPage, CheckRegisteredDetailsPage, Page, ValuationMethodPage}
-  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary}
+  import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page, ValuationMethodPage}
+  import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary}
   import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
   private case class Employee @Inject() (
     checkRegisteredDetailsView: EmployeeCheckRegisteredDetailsView,
+    formProvider: EmployeeCheckRegisteredDetailsFormProvider,
     checkYourAnswersView: CheckYourAnswersView,
     eoriBeUpToDateView: EmployeeEORIBeUpToDateView,
     requiredInformationRequiredView: IndividualInformationRequiredView
@@ -53,6 +55,8 @@ package userrole {
         mode,
         draftId
       )
+
+    override def getFormForCheckRegisteredDetails: Form[Boolean] = formProvider.apply()
 
     override def selectViewForEoriBeUpToDate(
       draftId: DraftId,

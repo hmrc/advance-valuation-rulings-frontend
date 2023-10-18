@@ -23,6 +23,7 @@ import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
+import forms.EmployeeCheckRegisteredDetailsFormProvider
 import models.{ApplicationContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
@@ -34,12 +35,14 @@ import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, Emp
 class EmployeeSpec extends SpecBase with Matchers {
 
   private val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
+  private val formProvider                       = mock[EmployeeCheckRegisteredDetailsFormProvider]
   private val employeeEORIBeUpToDateView         = mock[EmployeeEORIBeUpToDateView]
   private val requiredInformationView            = mock[IndividualInformationRequiredView]
   private val checkYourAnswersView               = mock[CheckYourAnswersView]
 
   private val employee = Employee(
     employeeCheckRegisteredDetailsView,
+    formProvider,
     checkYourAnswersView,
     employeeEORIBeUpToDateView,
     requiredInformationView
