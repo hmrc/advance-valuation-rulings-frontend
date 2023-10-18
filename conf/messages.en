@@ -348,7 +348,7 @@ confidentialInformation.label = Describe any confidential information you would 
 confidentialInformation.caption = About the goods
 confidentialInformation.checkYourAnswersLabel = Description of confidential information	
 confidentialInformation.error.required = Enter a description of the confidential information you would like to add about the goods
-confidentialInformation.error.length = Maximum allowed characters is 8168
+confidentialInformation.error.length = Description of confidential information must be 8,167 characters or less
 confidentialInformation.change.hidden = describe confidential information
 confidentialInformation.paragraph.1 = Confidential information can include:
 confidentialInformation.paragraph.2 = We will not publish confidential information.
@@ -591,7 +591,7 @@ explainReasonComputedValue.label = Explain why you have selected Method 5 to val
 explainReasonComputedValue.paragraph = Method 5 (computed value) is based on the costs of production of the goods.
 explainReasonComputedValue.checkYourAnswersLabel = Reason for selecting Method 5 to value your goods	
 explainReasonComputedValue.error.required = Enter an explanation about why you have selected Method 5 to value your goods
-explainReasonComputedValue.error.length = Maximum allowed characters is 8168
+explainReasonComputedValue.error.length = Explanation of why you have used Method 5 must be 8,167 characters or less
 explainReasonComputedValue.change.hidden = your reason for selecting Method 5 to value the goods
 
 whyComputedValue.title = Explain why you have not selected Methods 1-4 to value your goods
@@ -606,7 +606,7 @@ whyComputedValue.bulletPoint.4 = Method 4 (deductive method)
 whyComputedValue.paragraph.2 = Explain why you believe Methods 1-4 are not suitable to work out the customs value of your goods.
 whyComputedValue.checkYourAnswersLabel = Reason for not selecting Methods 1-4 to value your goods
 whyComputedValue.error.required = Enter an explanation about why you have not selected methods 1 to 4 to value your goods
-whyComputedValue.error.length = Maximum allowed characters is 8168
+whyComputedValue.error.length = Explanation of why you have not used Methods 1 to 4 must be 8,167 characters or less
 whyComputedValue.change.hidden = your reason for not selecting Methods 1-4 to value the goods
 
 haveYouUsedMethodOneInPast.title = Provide evidence of a Method 1 declaration
@@ -632,7 +632,7 @@ whyTransactionValueOfSimilarGoods.paragraph.2 = Explain why you believe Methods 
 whyTransactionValueOfSimilarGoods.bulletPoint.1 = Method 1 (transaction value of imported goods)
 whyTransactionValueOfSimilarGoods.bulletPoint.2 = Method 2 (transaction value of identical goods)
 whyTransactionValueOfSimilarGoods.error.required = Enter an explanation about why you have not selected Method 1 or 2 to value your goods
-whyTransactionValueOfSimilarGoods.error.length = Maximum allowed characters is 8168
+whyTransactionValueOfSimilarGoods.error.length = Explanation of why you have not selected Methods 1 or 2 must be 8,167 or less
 whyTransactionValueOfSimilarGoods.checkYourAnswersLabel = Reason for not selecting Methods 1 or 2 to value your goods
 whyTransactionValueOfSimilarGoods.change.hidden = your reason for not selecting Methods 1-2 to value the goods
 
@@ -645,7 +645,7 @@ whyIdenticalGoods.bulletPoint.1 = Method 1 (transaction value of imported goods)
 whyIdenticalGoods.paragraph.2 = Explain why you believe Method 1 is not suitable to work out the customs value of your goods.
 whyIdenticalGoods.checkYourAnswersLabel = Reason for not selecting Method 1 to value your goods
 whyIdenticalGoods.error.required = Enter an explanation of why you have not selected Method 1 to value your goods
-whyIdenticalGoods.error.length = Maximum allowed characters is 8168
+whyIdenticalGoods.error.length = Explanation of wht you have not selected Method 1 must be 8,167 characters or less
 whyIdenticalGoods.change.hidden = your reason for not selecting Method 1 to value the goods
 
 explainHowPartiesAreRelated.title = Describe how the parties are related
@@ -656,7 +656,7 @@ explainHowPartiesAreRelated.para.1 = We can only accept the price paid or payabl
 explainHowPartiesAreRelated.para.2 = Giving a detailed description of the relationship helps us process your application as quickly as possible.
 explainHowPartiesAreRelated.error.required = Enter a description of how the parties are related
 explainHowPartiesAreRelated.checkYourAnswersLabel = Description of how the parties are related
-explainHowPartiesAreRelated.error.length = Maximum allowed characters is 8168
+explainHowPartiesAreRelated.error.length = Description of how the parties are related must be 8,167 characters or less
 explainHowPartiesAreRelated.change.hidden = your description of how the parties are related
 explainHowPartiesAreRelated.question = Can you describe how the parties are related?
 
@@ -695,7 +695,7 @@ describeTheRestrictions.label = Describe any restrictions on the use or resale o
 describeTheRestrictions.caption = About the goods
 describeTheRestrictions.checkYourAnswersLabel = Description of restrictions
 describeTheRestrictions.error.required = Enter a description of the restrictions involved
-describeTheRestrictions.error.length = Maximum allowed characters is 8168
+describeTheRestrictions.error.length = Description of the restrictions must be 8,167 characters or less
 describeTheRestrictions.paragraph.1 = Giving a detailed description of any restrictions helps us process your application as quickly as possible
 describeTheRestrictions.change.hidden = your description of the restrictions on the use/resale of the goods
 
@@ -717,7 +717,7 @@ describeTheConditions.label = Describe the conditions or circumstances which can
 describeTheConditions.caption = About the goods
 describeTheConditions.checkYourAnswersLabel = Description of conditions/circumstances
 describeTheConditions.error.required = Enter a description of any conditions or circumstances that cannot be calculated
-describeTheConditions.error.length = Maximum allowed characters is 8168
+describeTheConditions.error.length = Description of the circumstances must be 8,167 characters or less
 describeTheConditions.paragraph.1 = Giving a detailed description of any conditions or circumstances helps us process your application as quickly as possible.
 describeTheConditions.change.hidden = your description of the conditions or circumstances which cannot be calculated
 
@@ -731,7 +731,7 @@ describeTheIdenticalGoods.bulletPoint.2 = exported to the UK at or about the sam
 describeTheIdenticalGoods.bulletPoint.3 = the same in all respects including physical characteristics, quality and reputation — minor differences in appearance do not matter
 describeTheIdenticalGoods.checkYourAnswersLabel = Description of identical goods
 describeTheIdenticalGoods.error.required = Enter a description of the identical goods
-describeTheIdenticalGoods.error.length = Maximum allowed characters is 8168
+describeTheIdenticalGoods.error.length = Description of identical goods must be 8,167 characters or less
 describeTheIdenticalGoods.change.hidden = your description of the identical goods
 
 
@@ -744,7 +744,7 @@ explainYourGoodsComparingToIdenticalGoods.bulletPoint.1 = you do not think Metho
 explainYourGoodsComparingToIdenticalGoods.bulletPoint.2 = you do not have any further information about the identical goods
 explainYourGoodsComparingToIdenticalGoods.checkYourAnswersLabel = Explanation of how you are using another producer’s identical goods for comparison
 explainYourGoodsComparingToIdenticalGoods.error.required = Enter an explanation about how you are comparing your goods to identical goods imported by another buyer or seller in the past 90 days
-explainYourGoodsComparingToIdenticalGoods.error.length = Maximum allowed characters is 8168
+explainYourGoodsComparingToIdenticalGoods.error.length = Explanation must be 8,167 characters or less
 explainYourGoodsComparingToIdenticalGoods.change.hidden = your explanation of how you are using another producer’s identical goods for comparison
 
 willYouCompareGoodsToIdenticalGoods.title = Will you be comparing your goods to identical goods imported by another buyer or seller in the past 90-days?
@@ -762,7 +762,7 @@ describeTheLegalChallenges.caption = About the goods
 describeTheLegalChallenges.para = Giving a detailed description of legal challenges helps us process your application as quickly as possible.
 describeTheLegalChallenges.checkYourAnswersLabel = Description of legal challenges
 describeTheLegalChallenges.error.required = Enter a description of the legal challenges relating to the goods
-describeTheLegalChallenges.error.length = Maximum allowed characters is 8168
+describeTheLegalChallenges.error.length = Description of legal challenges relating to the goods must be 8,167 characters or less
 describeTheLegalChallenges.change.hidden = your description of the legal challenges
 
 
@@ -825,7 +825,7 @@ explainWhyYouChoseMethodFour.paragraph.2 = You can only use Method 4 if the good
 explainWhyYouChoseMethodFour.paragraph.3 = ‘Unrelated’ means there isn’t an existing relationship or common interest between two companies.
 explainWhyYouChoseMethodFour.checkYourAnswersLabel = Reason for selecting Method 4 to value your goods
 explainWhyYouChoseMethodFour.error.required = Enter an explanation about why you have selected Method 4 to value your goods
-explainWhyYouChoseMethodFour.error.length = Maximum allowed characters is 8168
+explainWhyYouChoseMethodFour.error.length = xplanation of why you have used Method 4 must be 8,167 characters or less
 explainWhyYouChoseMethodFour.change.hidden = your reason for selecting Method 4 to value the goods
 
 explainWhyYouHaveNotSelectedMethodOneToThree.title = Explain why you have not selected Methods 1-3 to value your goods
@@ -839,7 +839,7 @@ explainWhyYouHaveNotSelectedMethodOneToThree.bulletPoint.3 = Method 3 (transacti
 explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2 = Explain why you believe Methods 1-3 are not suitable to work out the customs value of your goods.
 explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel = Reason for not selecting Methods 1-3 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Enter an explanation about why you have not selected methods 1 to 3 to value your goods
-explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Maximum allowed characters is 8168
+explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Explanation of why you have not used Methods 1 to 3 must be 8,167 characters or less
 explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = your reason for not selecting Methods 1-3 to value the goods
 
 adaptMethod.title = Which method would you like to adapt?
@@ -862,7 +862,7 @@ explainWhyYouHaveNotSelectedMethodOneToFive.label = Explain why you have not sel
 explainWhyYouHaveNotSelectedMethodOneToFive.caption = About the goods
 explainWhyYouHaveNotSelectedMethodOneToFive.checkYourAnswersLabel = Reason for not selecting Methods 1-5 to value your goods
 explainWhyYouHaveNotSelectedMethodOneToFive.error.required = Enter an explanation about why you have not selected methods 1 to 5 to value your goods
-explainWhyYouHaveNotSelectedMethodOneToFive.error.length = Maximum allowed characters is 8168
+explainWhyYouHaveNotSelectedMethodOneToFive.error.length = Explanation of why you have not used Methods 1 to 5 must be 8,167 characters or less
 explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1 = Method 6 is the ‘fall-back’ method to use when you are unable to use any of the other methods. Before you try Method 6 you must first have used:
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.1 = Method 1 (transaction value of imported goods)
 explainWhyYouHaveNotSelectedMethodOneToFive.bulletPoint.2 = Method 2 (transaction value of identical goods)
@@ -878,7 +878,7 @@ explainHowYouWillUseMethodSix.label = Explain how you have used Method 6 to valu
 explainHowYouWillUseMethodSix.caption = About the goods
 explainHowYouWillUseMethodSix.checkYourAnswersLabel = Explanation of how you have used Method 6 to value your goods
 explainHowYouWillUseMethodSix.error.required = Enter an explanation about how you have used Method 6 to value your goods
-explainHowYouWillUseMethodSix.error.length = Maximum allowed characters is 8168
+explainHowYouWillUseMethodSix.error.length = Explanation of why you have used Method 6 must be 8,167 characters or less
 explainHowYouWillUseMethodSix.paragraph.1 = Method 6 (fall-back method) is the final valuation method you can try.
 explainHowYouWillUseMethodSix.paragraph.2 = Tell us how you plan to use Method 6. You should also let us know if you want to adapt another method for your circumstances.
 explainHowYouWillUseMethodSix.change.hidden = your explanation of how you have used Method 6 to value the goods
@@ -893,7 +893,7 @@ describeTheSimilarGoods.bulletPoint.2 = can carry out the same tasks
 describeTheSimilarGoods.bulletPoint.3 = are commercially interchangeable
 describeTheSimilarGoods.checkYourAnswersLabel = Description of similar goods
 describeTheSimilarGoods.error.required = Enter a description of the similar goods
-describeTheSimilarGoods.error.length = Maximum allowed characters is 8168
+describeTheSimilarGoods.error.length = Description of similar goods must be 8,167 characters or less
 describeTheSimilarGoods.change.hidden = your description of the similar goods
 
 haveYouUsedMethodOneForSimilarGoodsInPast.title = Provide evidence of a Method 1 declaration
@@ -1065,7 +1065,7 @@ tellUsAboutYourRuling.bulletPoint.4 = the expiry date for the ruling
 
 tellUsAboutYourRuling.error.required = Tell us about the ruling
 
-textCount.tooLong = Description of rulings must be 8000 characters or less
+textCount.tooLong = Description of rulings must be 8,000 characters or less
 
 aboutSimilarGoods.para.1 = These can be:
 aboutSimilarGoods.para.2 = Include as much information as possible, such as:

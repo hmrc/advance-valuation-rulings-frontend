@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     list: BulletList,
     paragraph: Paragraph,
     caption: Caption,
@@ -60,8 +60,8 @@
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2")))
 
 
-        @govukTextarea(
-            TextareaViewModel(
+        @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
                 label = Label(
                     content = Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.label")),
@@ -69,7 +69,8 @@
                     )
                 )
                 .withRows(15)
-                .withAttribute("maxlength","8167")
+                .withMaxLength(8167)
+                .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())

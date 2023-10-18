@@ -21,7 +21,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     cancelLink: CancelApplicationLink,
     paragraph: Paragraph,
     caption: Caption,
@@ -55,8 +55,8 @@
 
     @paragraph(Html(messages("whyTransactionValueOfSimilarGoods.paragraph.2")))
 
-    @govukTextarea(
-            TextareaViewModel(
+    @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
                 label = Label(
                     content = Text(messages("whyTransactionValueOfSimilarGoods.label")),
@@ -64,7 +64,8 @@
                     )
                 )
                 .withRows(15)
-                .withAttribute("maxlength","8167")
+                .withMaxLength(8167)
+                .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())
