@@ -37,19 +37,6 @@ radios: YesNoRadios
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@radioItems = @{
-    Seq(
-        RadioItem(
-            value = Some("true"),
-            checked = form.value.fold(false)(_ == "true"),
-            content = Text(messages("site.yes"))),
-        RadioItem(
-            value = Some("false"),
-            checked = form.value.fold(false)(_ == "false"),
-            content = Text(messages("site.no")))
-    )
-}
-
 @radiosContent = {
     @paragraph(Html(messages("haveYouReceivedADecision.para.1")))
     @paragraph(Html(messages("haveYouReceivedADecision.para.2")))
@@ -70,5 +57,5 @@ radios: YesNoRadios
         @saveButtons(draftId)
     }
 
-@cancelApplicationLink(draftId)
+    @cancelApplicationLink(draftId)
 }
