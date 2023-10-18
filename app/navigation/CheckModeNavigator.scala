@@ -150,7 +150,7 @@ object CheckModeNavigator {
     userAnswers.get(HaveYouReceivedADecisionPage) match {
       case None        => HaveYouReceivedADecisionController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  => TellUsAboutYourRulingController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(false) => HasCommodityCodeController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(false) => AwareOfRulingController.onPageLoad(CheckMode, userAnswers.draftId)
     }
 
   private def awareOfRulingsWithSimilarMethod(userAnswers: UserAnswers): Call =

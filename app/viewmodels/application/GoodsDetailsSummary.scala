@@ -54,6 +54,36 @@ object GoodsDetailsSummary {
       )
     )
 
+    val similarRulingGoodsQuestionRow = Some(
+      getRowForOption(
+        goodsDetails.similarRulingGoodsInfo,
+        "haveYouReceivedADecision.checkYourAnswersLabel"
+      )
+    )
+
+    val similarRulingGoodsInfoRow = goodsDetails.similarRulingGoodsInfo.map {
+      info =>
+        SummaryListRowViewModel(
+          key = "tellUsAboutYourRuling.checkYourAnswersLabel",
+          value = ValueViewModel(info)
+        )
+    }
+
+    val similarRulingMethodQuestionRow = Some(
+      getRowForOption(
+        goodsDetails.similarRulingMethodInfo,
+        "awareOfRuling.checkYourAnswersLabel"
+      )
+    )
+
+    val similarRulingMethodInfoRow = goodsDetails.similarRulingGoodsInfo.map {
+      info =>
+        SummaryListRowViewModel(
+          key = "aboutSimilarGoods.checkYourAnswersLabel",
+          value = ValueViewModel(info)
+        )
+    }
+
     val commodityCodeQuestionRow = Some(
       getRowForOption(
         goodsDetails.envisagedCommodityCode,
@@ -136,6 +166,10 @@ object GoodsDetailsSummary {
 
     Seq(
       descriptionRow,
+      similarRulingMethodQuestionRow,
+      similarRulingMethodInfoRow,
+      similarRulingGoodsQuestionRow,
+      similarRulingGoodsInfoRow,
       commodityCodeQuestionRow,
       commodityCodeRow,
       legalChallengesQuestionRow,
