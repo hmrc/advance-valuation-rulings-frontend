@@ -21,7 +21,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     cancelLink: CancelApplicationLink,
     caption: Caption,
     heading: Heading,
@@ -44,15 +44,16 @@
 
         @caption(messages("describeTheLegalChallenges.caption"))
 
-        @govukTextarea(
-            TextareaViewModel(
+        @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
                 label = LabelViewModel(messages("describeTheLegalChallenges.heading")).asPageHeading()
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-                .withHint(Hint(content = HtmlContent(paraContent)))
-                .withId("value")
+            )
+            .withRows(15)
+            .withMaxLength(8167)
+            .withHint(Hint(content = HtmlContent(paraContent)))
+            .withId("value")
+            .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())

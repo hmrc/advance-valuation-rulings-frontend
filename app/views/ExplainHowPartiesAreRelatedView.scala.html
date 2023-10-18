@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
@@ -55,14 +55,15 @@
 
         @paraContent
 
-        @govukTextarea(
-            TextareaViewModel(
+        @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
                 label = LabelViewModel(messages("explainHowPartiesAreRelated.question")).asLegendHeading()
-                )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-                .withId("value")
+            )
+            .withRows(15)
+            .withMaxLength(8167)
+            .withId("value")
+            .withThreshold(75)
 
         )
 

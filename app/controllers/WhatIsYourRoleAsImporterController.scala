@@ -27,8 +27,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import audit.AuditService
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{DraftId, Mode}
+import models.{DraftId, Mode, ReadOnlyMode}
 import models.WhatIsYourRoleAsImporter._
+import models.requests.DataRequest
 import navigation.Navigator
 import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
@@ -49,40 +50,60 @@ class WhatIsYourRoleAsImporterController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val preparedForm = WhatIsYourRoleAsImporterPage.fill(form)
+        val preparedForm          = WhatIsYourRoleAsImporterPage.fill(form)
+        val whatIsYourRoleAnswers = request.userAnswers.get(WhatIsYourRoleAsImporterPage)
+        // If this page has already been answered then the mode should be read only.
+        val modeForView           = whatIsYourRoleAnswers.map(_ => ReadOnlyMode).getOrElse(mode)
 
-        Ok(view(preparedForm, mode, draftId))
+        Ok(view(preparedForm, modeForView, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
 
       implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
-            value => {
-              auditService.sendRoleIndicatorEvent(value)
-              for {
-                ua <- value match {
-                        case EmployeeOfOrg         => AgentCompanyDetailsPage.remove()
-                        case AgentOnBehalfOfOrg    =>
-                          Future.successful(request.userAnswers)
-                        case AgentOnBehalfOfTrader =>
-                          Future.successful(request.userAnswers)
-                      }
-                ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)
-                _  <- userAnswersService.set(ua)
-              } yield Redirect(
-                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, ua)
+        mode match {
+          case ReadOnlyMode =>
+            Future.successful(
+              Redirect(
+                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, request.userAnswers)
               )
-            }
-          )
+            )
+          case _            => updateUserAnswersSubmit(mode, draftId)
+        }
     }
+
+  private def updateUserAnswersSubmit(mode: Mode, draftId: DraftId)(implicit
+    request: DataRequest[AnyContent]
+  ) =
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors =>
+          Future.successful(
+            BadRequest(view(formWithErrors, mode, draftId))
+          ),
+        value => {
+          auditService.sendRoleIndicatorEvent(value)
+          for {
+            ua <- value match {
+                    case EmployeeOfOrg         => AgentCompanyDetailsPage.remove()
+                    case AgentOnBehalfOfOrg    =>
+                      Future.successful(request.userAnswers)
+                    case AgentOnBehalfOfTrader =>
+                      Future.successful(request.userAnswers)
+                  }
+            ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)
+            _  <- userAnswersService.set(ua)
+          } yield Redirect(
+            navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, ua)
+          )
+        }
+      )
+
 }

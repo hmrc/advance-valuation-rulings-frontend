@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
@@ -60,13 +60,14 @@
 
     @paragraph(Html(messages("whyComputedValue.paragraph.2")))
 
-    @govukTextarea(
-            TextareaViewModel(
+    @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
                 label = LabelViewModel(messages("whyComputedValue.label")).asLegendHeading()
                 )
                 .withRows(15)
-                .withAttribute("maxlength","8167")
+                .withMaxLength(8167)
+                .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())

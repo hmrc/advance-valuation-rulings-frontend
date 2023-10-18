@@ -17,20 +17,18 @@
 @import viewmodels.InputWidth._
 @import components._
 
-
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     list: BulletList,
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
     cancelLink: CancelApplicationLink,
-    saveButtons: SaveButtonsWithDraft,
-    subheading: Subheading
+    saveButtons: SaveButtonsWithDraft
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -63,13 +61,14 @@
 )
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2")))
 
-        @govukTextarea(
-            TextareaViewModel(
+        @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
                 label = LabelViewModel(Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.label"))).asLegendHeading()
             )
-                .withRows(15)
-                .withAttribute("maxlength","8167")
+            .withRows(15)
+            .withMaxLength(8167)
+            .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())

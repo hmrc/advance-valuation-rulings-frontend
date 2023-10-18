@@ -21,7 +21,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     list: BulletList,
     paragraph: Paragraph,
     caption: Caption,
@@ -50,13 +50,15 @@
 
         @paraContent
 
-        @govukTextarea(
-            TextareaViewModel(
+        @hmrcCharacterCount(
+            CharacterCountViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("explainHowYouWillUseMethodSix.label")).asLegendHeading())
-                .withRows(15)
-                .withAttribute("maxlength","8167")
-                .withId("value")
+                label = LabelViewModel(messages("explainHowYouWillUseMethodSix.label")).asLegendHeading()
+            )
+            .withRows(15)
+            .withMaxLength(8167)
+            .withId("value")
+            .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())

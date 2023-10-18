@@ -264,7 +264,7 @@ class NavigatorSpec extends SpecBase {
             HaveYouReceivedADecisionPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+          ) mustBe routes.AwareOfRulingController.onPageLoad(NormalMode, draftId)
 
         }
       }

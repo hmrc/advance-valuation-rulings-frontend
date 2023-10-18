@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
+    hmrcCharacterCount: HmrcCharacterCount,
     paragraph: Paragraph,
     bulletList: BulletList,
     caption: Caption,
@@ -53,14 +53,15 @@
 
     @paraContent
 
-    @govukTextarea(
-        TextareaViewModel(
+    @hmrcCharacterCount(
+        CharacterCountViewModel(
             field = form("value"),
             label = LabelViewModel(messages("whyIdenticalGoods.label")).asLegendHeading()
-            )
-            .withRows(15)
-            .withAttribute("maxlength","8167")
-            .withId("value")
+        )
+        .withRows(15)
+        .withMaxLength(8167)
+        .withId("value")
+        .withThreshold(75)
     )
 
         @saveButtons(draftId, onSubmitAction())

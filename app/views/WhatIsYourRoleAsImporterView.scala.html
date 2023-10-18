@@ -58,14 +58,14 @@
         @content
 
         @govukRadios(
-        RadiosViewModel(
-            field  = form("value"),
-            legend = Legend(
-                HtmlContent(
-                    legend(messages("whatIsYourRoleAsImporter.question")).toString
-                )
-            ),
-            items  = WhatIsYourRoleAsImporter.options(config)
+            RadiosViewModel(
+                field  = form("value"),
+                legend = Legend(
+                    HtmlContent(
+                        legend(messages("whatIsYourRoleAsImporter.question")).toString
+                    )
+                ),
+                items  = WhatIsYourRoleAsImporter.options(config, mode)
             )
         )
 

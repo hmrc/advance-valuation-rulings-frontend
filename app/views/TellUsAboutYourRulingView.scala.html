@@ -15,16 +15,13 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.{CharacterCount => CharCount}
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukTextarea: GovukTextarea,
     hmrcCharacterCount: HmrcCharacterCount,
     list: BulletList,
     paragraph: Paragraph,
@@ -65,16 +62,15 @@
 
         @content
 
-        @hmrcCharacterCount(CharCount(
-            id = "value",
-            name = "value",
-            maxLength = Some(8000),
-            rows = 10,
-            label = LabelViewModel(messages("tellUsAboutYourRuling.label")).asLegendHeading(),
-            value = form("value").value,
-            errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
-        ))
-
+        @hmrcCharacterCount(
+            CharacterCountViewModel(
+                field = form("value"),
+                label = LabelViewModel(messages("tellUsAboutYourRuling.label")).asLegendHeading()
+            )
+            .withRows(10)
+            .withMaxLength(8000)
+            .withThreshold(75)
+        )
 
         @saveButtons(draftId, onSubmitAction())
     }
