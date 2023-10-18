@@ -31,7 +31,8 @@ subheading: Subheading,
 paragraph: Paragraph,
 cancelApplicationLink: CancelApplicationLink,
 saveButtons: SaveButtons,
-link: Link
+link: Link,
+radios: YesNoRadios
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -49,6 +50,11 @@ link: Link
     )
 }
 
+@radiosContent = {
+    @paragraph(Html(messages("haveYouReceivedADecision.para.1")))
+    @paragraph(Html(messages("haveYouReceivedADecision.para.2")))
+}
+
 @layout(pageTitle = title(form, messages("haveYouReceivedADecision.heading")), draftId = Some(draftId)) {
 
     @formHelper(action = controllers.routes.HaveYouReceivedADecisionController.onSubmit(mode, draftId)) {
@@ -58,20 +64,10 @@ link: Link
         }
 
         @caption(messages("caption.goods"))
-        @heading(messages("haveYouReceivedADecision.heading"))
 
-        @paragraph(Html(messages("haveYouReceivedADecision.para.1")))
-        @paragraph(Html(messages("haveYouReceivedADecision.para.2")))
-
-        @govukRadios(
-            RadiosViewModel(
-                field = form("value"),
-                legend = Legend(),
-                items = radioItems
-            ))
+        @radios(messages("haveYouReceivedADecision.heading"), radiosContent, form)
 
         @saveButtons(draftId)
-
     }
 
 @cancelApplicationLink(draftId)
