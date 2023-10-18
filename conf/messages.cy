@@ -535,9 +535,9 @@ hasConfidentialInformation.checkYourAnswersLabel = A ydych am ychwanegu unrhyw w
 hasConfidentialInformation.error.required = Dewiswch ‘Iawn’ os ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau
 hasConfidentialInformation.change.hidden = your response to whether you want to add any confidential information about the goods
 
-confidentialInformation.title = Disgrifiwch unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y’r nwyddau
-confidentialInformation.heading = Disgrifiwch unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y’r nwyddau
-confidentialInformation.label = Disgrifiwch unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y’r nwyddau
+confidentialInformation.title = Disgrifiad o unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
+confidentialInformation.heading = Disgrifiad o unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
+confidentialInformation.label = A fedrwch chi ddisgrifio unrhyw wybodaeth gyfrinachol am y nwyddau?
 confidentialInformation.caption = Ynglŷn â’r nwyddau
 confidentialInformation.checkYourAnswersLabel = Disgrifiad o’r wybodaeth gyfrinachol
 confidentialInformation.error.required = Nodwch ddisgrifiad o’r wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
