@@ -1068,6 +1068,7 @@ tellUsAboutYourRuling.bulletPoint.2 = os yw’r dyfarniad wedi cael ei ganslo ne
 tellUsAboutYourRuling.bulletPoint.3 = y dyddiad y cafodd y dyfarniad ei roi
 tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
 tellUsAboutYourRuling.error.required = Rhowch wybod i ni am y dyfarniad
+tellUsAboutYourRuling.label = Can you give us more information about the ruling?
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
 

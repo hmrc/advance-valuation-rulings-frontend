@@ -1054,12 +1054,13 @@ haveYouReceivedADecision.para.1 = This must be a ruling decision from Great Brit
 haveYouReceivedADecision.para.2 = Telling us about similar rulings you have received will help us process your current application.
 haveYouReceivedADecision.error.required = Tell us if you have ever received a ruling based on a similar method
 
-tellUsAboutYourRuling.heading = Tell us about the ruling
+tellUsAboutYourRuling.heading = About the previous ruling
 tellUsAboutYourRuling.para = Examples of information can include:
 tellUsAboutYourRuling.bulletPoint.1 = ruling reference numbers - this can be found on ruling decision letters from HMRC
 tellUsAboutYourRuling.bulletPoint.2 = if the ruling has been cancelled or annulled - you will need to tell us why
 tellUsAboutYourRuling.bulletPoint.3 = the date the ruling was granted
 tellUsAboutYourRuling.bulletPoint.4 = the expiry date for the ruling
+tellUsAboutYourRuling.label = Can you give us more information about the ruling?
 
 tellUsAboutYourRuling.error.required = Tell us about the ruling
 
