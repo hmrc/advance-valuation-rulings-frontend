@@ -70,7 +70,7 @@
             )
             .withWidth(Full)
             .withSpellcheck(on = false)
-            .withAutocomplete("address-level1")
+            .withAutocomplete("address-line-1")
         )
 
         @govukInput(
@@ -80,7 +80,7 @@
             )
             .withWidth(Fixed20)
             .withSpellcheck(on = false)
-            .withAutocomplete("address-level2")
+            .withAutocomplete("address-line-2")
         )
 
         @govukInput(
@@ -99,6 +99,7 @@
                 items = Country.selectItems,
                 label = LabelViewModel(messages("agentCompanyDetails.agentCountry"))
             )
+            .withAutocomplete("country")
         )
 
         @saveButtons(draftId, onSubmitAction())
