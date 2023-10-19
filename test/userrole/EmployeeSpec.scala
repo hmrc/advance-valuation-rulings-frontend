@@ -140,6 +140,16 @@ class EmployeeSpec extends SpecBase with Matchers {
 
       actualView mustBe expectedView
     }
+
+    "should return the correct form for CheckRegisteredDetails" in {
+      val expectedForm = new EmployeeCheckRegisteredDetailsFormProvider().apply()
+
+      when(formProvider.apply()).thenReturn(expectedForm)
+
+      val actualForm = employee.getFormForCheckRegisteredDetails
+
+      actualForm mustBe expectedForm
+    }
   }
 
   "should return the correct view for EORIBeUpToDate" in {

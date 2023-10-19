@@ -58,10 +58,10 @@ class CheckRegisteredDetailsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val formProvider = getFormForRole(request.userAnswers)
-        val form         = CheckRegisteredDetailsPage.get match {
-          case Some(value) => formProvider.fill(value)
-          case None        => formProvider
+        val form          = getFormForRole(request.userAnswers)
+        val processedForm = CheckRegisteredDetailsPage.get match {
+          case Some(value) => form.fill(value)
+          case None        => form
         }
 
         getTraderDetails {
@@ -72,7 +72,7 @@ class CheckRegisteredDetailsController @Inject() (
                   userRoleProvider
                     .getUserRole(request.userAnswers)
                     .selectViewForCheckRegisteredDetails(
-                      form,
+                      processedForm,
                       details,
                       mode,
                       draftId
@@ -85,7 +85,7 @@ class CheckRegisteredDetailsController @Inject() (
                   Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
                 case Some(authUserType) =>
                   Future.successful(
-                    Ok(view(form, details, mode, authUserType, draftId))
+                    Ok(view(processedForm, details, mode, authUserType, draftId))
                   )
               }
             }

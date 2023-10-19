@@ -172,6 +172,16 @@ class AgentForTraderSpec extends SpecBase with Matchers {
       actualView mustBe expectedView
     }
 
+    "should return the correct form for CheckRegisteredDetails" in {
+      val expectedForm = new AgentForTraderCheckRegisteredDetailsFormProvider().apply()
+
+      when(formProvider.apply()).thenReturn(expectedForm)
+
+      val actualForm = agentForTrader.getFormForCheckRegisteredDetails
+
+      actualForm mustBe expectedForm
+    }
+
     "should return the correct view for EORIBeUpToDate (Public)" in {
 
       val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
