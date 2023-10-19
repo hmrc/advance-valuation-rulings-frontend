@@ -96,7 +96,7 @@ importGoods.heading = Ydych chi’n bwriadu mewnforio nwyddau i Brydain Fawr?
 importGoods.caption = Ynglŷn â’r ymgeisydd
 importGoods.paragraph = Mae’r gwasanaeth hwn ar gyfer mewnforio nwyddau i mewn i Brydain Fawr (Cymru, Lloegr, a’r Alban) yn unig. Ni ddylech ddefnyddio’r gwasanaeth hwn os ydych yn masnachu neu’n symud nwyddau i mewn ac allan o Ogledd Iwerddon.
 importGoods.checkYourAnswersLabel = importGoods
-importGoods.error.required = Dewiswch ‘Iawn’ os oes gwerthiant ar waith er mwyn i’r nwyddau gael eu mewnforio i Brydain Fawr
+importGoods.error.required = Dewiswch a ydych chi’n bwriadu mewnforio nwyddau i Brydain Fawr
 importGoods.change.hidden = a ydych yn mewnforio nwyddau
 
 checkRegisteredDetails.title = Gwirio’r enw a’r cyfeiriad ar gyfer y rhif EORI {0}
@@ -487,8 +487,8 @@ hasCommodityCode.change.hidden = eich ymateb i a oes gennych god nwyddau ar gyfe
 hasCommodityCode.question = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 
 contactPage.caption = Ynglŷn â’r ymgeisydd
-contactPage.title = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
-contactPage.heading = Os oes angen i ni gysylltu â chi ynglŷn â’ch cais
+contactPage.title = Os bydd angen rhagor o wybodaeth arnom am eich cais, byddwn yn cysylltu â chi
+contactPage.heading = Os bydd angen rhagor o wybodaeth arnom am eich cais, byddwn yn cysylltu â chi
 contactPage.paragraph.2 = Sylwer – efallai na fydd cyfathrebu drwy e-bost bob amser yn ddiogel, gan ei bod hi’n bosib y gall e-byst gael eu darllen neu eu newid gan rywun arall. Os ydych yn dewis i barhau â’ch cais, rydych yn derbyn y risgiau cysylltiedig.
 
 commodityCode.caption = Ynglŷn â’r nwyddau
@@ -704,7 +704,7 @@ checkYourAnswersForAgents.applicant.org.heading = Ynglŷn â’r ymgeisydd
 checkYourAnswersForAgents.applicant.agent.heading = Ynglŷn â’r asiant
 
 checkYourAnswersForAgents.agent.eori.number.label =  Rhif EORI cofrestredig sefydliad yr asiant
-checkYourAnswersForAgents.agent.name.label =  Enw busnes cofrestredig sefydliad yr asiant
+checkYourAnswersForAgents.agent.name.label = Enw busnes cofrestredig cwmni’r asiant
 checkYourAnswersForAgents.agent.address.label = Cyfeiriad busnes cofrestredig cwmni’r asiant
 checkYourAnswersForAgents.agent.eori.number.hidden = Rhif EORI cofrestredig cwmni’r asiant
 checkYourAnswersForAgents.agent.name.hidden = Enw busnes cofrestredig cwmni’r asiant
@@ -841,7 +841,7 @@ whatIsYourRoleAsImporter.warning = You should not change your choice once you ha
 whatIsYourRoleAsImporter.employeeOfOrg.hint = Yn mewnforio nwyddau i’r DU ar ran ei sefydliad.
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg.hint = Yn mewnforio nwyddau i’r DU ar ran sefydliad arall.
 whatIsYourRoleAsImporter.checkYourAnswersLabel = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
-whatIsYourRoleAsImporter.error.required = Dewiswch yr opsiwn sy’n disgrifio’ch rôl
+whatIsYourRoleAsImporter.error.required = Dewiswch eich rôl fel mewnforiwr
 whatIsYourRoleAsImporter.change.hidden = eich disgrifiad o’ch rôl fel mewnforiwr
 
 whatIsYourRoleAsImporter.agentOnBehalfOfTrader = Asiant sy’n gweithredu ar ran masnachwr
@@ -1017,7 +1017,7 @@ traderDetails.common.searchAgain.link = Chwiliwch eto
 traderDetails.common.searchAgain = {0} os ydych yn meddwl eich bod wedi nodi cyfeiriad EORI y masnachwr yn anghywir.
 
 #TRADER DETAILS - PUBLIC
-traderDetails.public.heading = Check the trader’s EORI details
+traderDetails.public.heading = Gwirio manylion EORI y masnachwr
 traderDetails.public.p1=Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
 traderDetails.public.h2=Manylion cofrestru EORI
 traderDetails.public.h3.businessName=Enw’r busnes cofrestredig
