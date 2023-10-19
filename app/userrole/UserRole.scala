@@ -41,6 +41,8 @@ trait UserRole {
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
 
+  def getFormForCheckRegisteredDetails: Form[Boolean]
+
   def selectGetRegisteredDetailsPage(): Page
 
   def selectBusinessContactDetailsPage(): Page
