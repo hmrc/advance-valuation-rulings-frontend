@@ -112,7 +112,7 @@ checkRegisteredDetails.heading.2 = Enw cofrestredig y busnes
 checkRegisteredDetails.heading.3 = Cyfeiriad cofrestredig y busnes
 checkRegisteredDetails.private.heading.1 = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.subheading.1 = Manylion cofrestru EORI
-checkRegisteredDetails.subheading.2 = A yw’r manylion hyn yn gywir?
+checkRegisteredDetails.subheading.2 = A yw’r enw a manylion y cyfeiriad yn gywir?
 checkRegisteredDetails.caption = Ynglŷn â’r ymgeisydd
 checkRegisteredDetails.private.subheading.2 = A hoffech fynd yn eich blaen?
 checkRegisteredDetails.paragraph.1 = Gallwch ddarparu eich manylion cyswllt eich hun ar y dudalen nesaf.
@@ -1021,7 +1021,7 @@ traderDetails.public.p1=Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefyd
 traderDetails.public.h2=Manylion cofrestru EORI
 traderDetails.public.h3.businessName=Enw’r busnes cofrestredig
 traderDetails.public.h3.businessAddress=Cyfeiriad y busnes cofrestredig
-traderDetails.public.h2.correct=Ydy’r enw a’r manylion cyfeiriad yn gywir?
+traderDetails.public.h2.correct=A yw’r enw a manylion y cyfeiriad yn gywir?
 traderDetails.public.h2.question.yes=Yes, these details are for the trader I am applying on behalf of
 traderDetails.public.h2.question.no=No, these details are incorrect
 
