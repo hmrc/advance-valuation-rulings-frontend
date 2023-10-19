@@ -268,7 +268,14 @@ case class FileUploadHelper @Inject() (
       case "EntityTooLarge"  =>
         Messages(s"fileUpload.error.entitytoolarge", maxFileSize)
       case "EntityTooSmall"  =>
-        Messages("fileUpload.error.entitytoosmall")
+        /*
+         * As of writing this comment, Upscan has an issue in detecting whether a file has been selected.
+         * If the minimum file size is 0, the user will see the error message associated with the "Rejected" case
+         * rather than the "InvalidArgument" case they should expect when not selecting a file.
+         * The fix is to set a positive minimum file size and display the expected error message via this case.
+         * See the application.conf for the minimum file size.
+         */
+        Messages("fileUpload.error.invalidargument")
       case "Rejected"        =>
         Messages("fileUpload.error.rejected")
       case "Quarantine"      =>

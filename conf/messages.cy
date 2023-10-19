@@ -41,6 +41,7 @@ timeout.keepAlive = Parhau i fod wedi’ch mewngofnodi
 timeout.signOut = Allgofnodi
 
 error.browser.title.prefix = Gwall:
+error.message.prefix = Gwall
 error.boolean = Rhowch ateb
 error.invalid_date = Rhowch ddyddiad cywir
 error.date.day_blank = Nodwch ddiwrnod
@@ -201,7 +202,7 @@ valuationMethod.paragraph.1 = Bydd angen i chi ddewis dull i {0}.
 valuationMethod.paragraph.2 = Mae’n rhaid i chi weithio drwy’r dulliau yn eu trefn, gan ddechrau gyda Dull 1.
 valuationMethod.paragraph.3 = Efallai y byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom neu i argymell dull sy’n fwy priodol.
 valuationMethod.link.text = gyfrifo gwerth tollau eich mewnforion (yn agor tab newydd).
-valuationMethod.h2 = Dulliau 1 i 6
+valuationMethod.h2 = Pa ddull ydych am ei ddefnyddio i brisio’ch nwyddau?
 valuationMethod.hint = Dewiswch un dull.
 valuationMethod.method1 = Dull 1 (gwerth y trafodyn)
 valuationMethod.method1.hint = Mae’r dull hwn yn seiliedig ar y pris a dalwyd neu sy’n daladwy pan fydd y nwyddau’n cael eu gwerthu i’w hallforio i’r DU. Gallwch ond defnyddio Dull 1 os oes gwerthiant dan sylw.
