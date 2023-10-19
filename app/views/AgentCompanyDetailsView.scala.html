@@ -99,7 +99,7 @@
                 items = Country.selectItems,
                 label = LabelViewModel(messages("agentCompanyDetails.agentCountry"))
             )
-            .withAutocomplete("country")
+            .withAttribute("autocomplete", "country")
         )
 
         @saveButtons(draftId, onSubmitAction())
