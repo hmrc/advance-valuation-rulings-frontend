@@ -185,7 +185,7 @@ applicationContactDetails.name.change.hidden = your contact name
 applicationContactDetails.email.change.hidden = your email address
 applicationContactDetails.phone.change.hidden = your telephone number
 applicationContactDetails.jobTitle.change.hidden = your job title
-applicationContactDetails.jobTitle.error.required = Enter your job title
+applicationContactDetails.jobTitle.error.required = Nodwch deitl eich swydd
 
 choosingMethod.title = Choosing the most appropriate method to value your goods
 choosingMethod.heading = Choosing the most appropriate method to value your goods
@@ -869,8 +869,8 @@ businessContactDetails.name.change.hidden = your contact name
 businessContactDetails.email.change.hidden = your email address
 businessContactDetails.telephoneNumber.change.hidden = your telephone number
 businessContactDetails.companyName.label = Registered business name
-businessContactDetails.companyName.error.required = Nodwch enw cwmni
-businessContactDetails.jobTitle.error.required = Enter your job title
+businessContactDetails.companyName.error.required = Nodwch enw’ch busnes cofrestredig
+businessContactDetails.jobTitle.error.required = Nodwch deitl eich swydd
 
 importingGoods.caption = Ynglŷn â’r ymgeisydd
 importingGoods.title = Mae’r gwasanaeth hwn ar gyfer mewnforio nwyddau i Brydain Fawr
@@ -961,12 +961,12 @@ agentCompanyDetails.agentCountry = Gwlad
 agentCompanyDetails.agentPostalCode = Cod post
 
 agentCompanyDetails.checkYourAnswersLabel = agentCompanyDetails
-agentCompanyDetails.error.agentEori.required = Nodwch rif EORI cofrestredig eich cwmni
+agentCompanyDetails.error.agentEori.required = Nodwch rif EORI cofrestredig eich cwmni, sy’n dechrau gyda GB
 agentCompanyDetails.error.agentCompanyName.required = Nodwch enw busnes cofrestredig eich cwmni
-agentCompanyDetails.error.agentStreetAndNumber.required = Nodwch gyfeiriad llinell 1
+agentCompanyDetails.error.agentStreetAndNumber.required = Nodwch linell gyntaf eich cyfeiriad
 agentCompanyDetails.error.agentCity.required = Nodwch dref neu ddinas
 agentCompanyDetails.error.agentCountry.required = Nodwch wlad
-agentCompanyDetails.error.agentPostalCode.required = Nodwch god post
+agentCompanyDetails.error.agentPostalCode.required = Nodwch eich cod post
 
 agentCompanyDetails.error.agentEori.format = Enter an EORI number in the correct format
 
@@ -975,7 +975,7 @@ agentCompanyDetails.error.agentStreetAndNumber.length = Address line 1 must be 7
 agentCompanyDetails.error.agentCity.length = Town or city must be 35 characters or less
 agentCompanyDetails.error.agentCountry.length = Country must be 50 characters or less
 agentCompanyDetails.error.agentPostalCode.length = Postcode must be 9 characters or less
-agentCompanyDetails.error.agentPostalCode.gb = Enter a postcode in the right format, like AA1 1AA
+agentCompanyDetails.error.agentPostalCode.gb = Nodwch god post yn y fformat cywir, megis AA1 1AA
 agentCompanyDetails.agentCompanyName.change.hidden = Enw busnes cofrestredig eich cwmni
 agentCompanyDetails.agentStreetAndNumber.change.hidden = Cyfeiriad – llinell 1
 agentCompanyDetails.agentCity.change.hidden = Tref neu ddinas
