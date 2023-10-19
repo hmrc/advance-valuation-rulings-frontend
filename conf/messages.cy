@@ -704,7 +704,7 @@ checkYourAnswersForAgents.applicant.org.heading = Ynglŷn â’r ymgeisydd
 checkYourAnswersForAgents.applicant.agent.heading = Ynglŷn â’r asiant
 
 checkYourAnswersForAgents.agent.eori.number.label =  Rhif EORI cofrestredig sefydliad yr asiant
-checkYourAnswersForAgents.agent.name.label = Enw busnes cofrestredig cwmni’r asiant
+checkYourAnswersForAgents.agent.name.label =  Enw busnes cofrestredig sefydliad yr asiant
 checkYourAnswersForAgents.agent.address.label = Cyfeiriad busnes cofrestredig cwmni’r asiant
 checkYourAnswersForAgents.agent.eori.number.hidden = Rhif EORI cofrestredig cwmni’r asiant
 checkYourAnswersForAgents.agent.name.hidden = Enw busnes cofrestredig cwmni’r asiant
@@ -807,7 +807,6 @@ applicationComplete.subheading = Yr hyn sy’n digwydd nesaf
 applicationComplete.paragraph.0 = Yr hyn sy’n digwydd nesaf
 applicationComplete.paragraph.1 = Rydym wedi anfon e-bost cadamhau i {0}
 applicationComplete.paragraph.2 = Mae cael penderfyniad yn gallu cymryd hyd at 120 diwrnod ar ôl y dyddiad y derbynnir eich cais.
-
 applicationComplete.paragraph.3 = Gweler {0} os ydych yn bwriadu mewnforio nwyddau heb wneud cais am ddyfamiad uwch.
 applicationComplete.paragraph.3.link = arweiniad cam wrth gam ar GOV.UK (yn agor tab newydd)
 applicationComplete.button.continue = Ewch i’ch ceisiadau a’ch dyfamiadau
@@ -1037,7 +1036,7 @@ verifyTraderDetails.error.required=Dewiswch a ydych am barhau â’r cais
 #INVALID EORI
 invalidTraderEori.heading = Mae’r rhif EORI {0} yn annilys
 invalidTraderEori.p1 = Nid yw’r rhif EORI rydych wedi’i roi yn cyfateb i unrhyw fusnes ar ein cofnodion.
-invalidTraderEori.p2=You will need to contact the trader directly to clarify their EORI number.
+invalidTraderEori.p2 = Bydd angen i chi gysylltu â’r masnachwr yn uniongyrchol i gadarnhau ei rif EORI.
 
 removeSupportingDocument.title = A ydych yn siŵr eich bod am dynnu ffeil hon?
 removeSupportingDocument.heading = A ydych yn siŵr eich bod am dynnu ffeil hon?
