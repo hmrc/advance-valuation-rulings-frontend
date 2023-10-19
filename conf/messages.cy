@@ -40,7 +40,8 @@ timeout.message = For security reasons, you will be signed out of this service i
 timeout.keepAlive = Stay signed in
 timeout.signOut = Sign out
 
-error.browser.title.prefix = Error:
+error.browser.title.prefix = Gwall:
+error.message.prefix = Gwall
 error.boolean = Please give an answer
 error.invalid_date = Give a correct date
 error.date.day_blank = Enter a day
