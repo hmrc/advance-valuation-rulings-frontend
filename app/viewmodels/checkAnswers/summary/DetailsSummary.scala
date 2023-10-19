@@ -32,6 +32,10 @@ object DetailsSummary {
 
     val rows = Seq(
       DescriptionOfGoodsSummary.row(userAnswers),
+      HaveYouReceivedADecisionSummary.row(userAnswers),
+      TellUsAboutYourRulingSummary.row(userAnswers),
+      AwareOfRulingSummary.row(userAnswers),
+      AboutSimilarGoodsSummary.row(userAnswers),
       HasCommodityCodeSummary.row(userAnswers),
       CommodityCodeSummary.row(userAnswers),
       HaveTheGoodsBeenSubjectToLegalChallengesSummary.row(userAnswers),

@@ -1064,6 +1064,7 @@ haveYouReceivedADecision.heading = A ydych erioed wedi cael dyfarniad ar sail du
 haveYouReceivedADecision.para.1 = Mae’n rhaid i hyn fod yn benderfyniad dyfarnu o Brydain Fawr (Cymru, Lloegr, a’r Alban). Nid oes angen iddo fod yn gysylltiedig â’ch cais presennol.
 haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg rydych wedi’u cael yn ein helpu ni i brosesu’ch cais presennol.
 haveYouReceivedADecision.error.required = Tell us if you have ever received a ruling based on a similar method
+haveYouReceivedADecision.checkYourAnswersLabel = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
 
 tellUsAboutYourRuling.heading = Rhowch wybod i ni am y dyfarniad
 tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
@@ -1072,6 +1073,7 @@ tellUsAboutYourRuling.bulletPoint.2 = os yw’r dyfarniad wedi cael ei ganslo ne
 tellUsAboutYourRuling.bulletPoint.3 = y dyddiad y cafodd y dyfarniad ei roi
 tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
 tellUsAboutYourRuling.error.required = Rhowch wybod i ni am y dyfarniad
+tellUsAboutYourRuling.checkYourAnswersLabel = Rhowch wybod i ni am y dyfarniad
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
 
@@ -1083,13 +1085,12 @@ aboutSimilarGoods.bulletPoint.2 = penderfyniadau dyfarnu ar gyfer nwyddau tebyg,
 aboutSimilarGoods.bulletPoint.3 = cyfeirnod y dyfarniad
 aboutSimilarGoods.bulletPoint.4 = dyddiadau dechrau a dod i ben y dyfarniadau
 aboutSimilarGoods.bulletPoint.5 = statws presennol ar gyfer y dyfarniadau
-
 aboutSimilarGoods.heading = About the rulings for similar goods
-
 aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
-
-aboutSimilarGoods.error.required = Tell us about the the rulings for similar goods
+aboutSimilarGoods.error.required = Tell us about the rulings for similar goods
+aboutSimilarGoods.checkYourAnswersLabel = Tell us about the rulings for similar goods
 
 awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
 awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method
+awareOfRuling.checkYourAnswersLabel = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
