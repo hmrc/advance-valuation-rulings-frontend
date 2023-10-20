@@ -20,6 +20,7 @@ import scala.util.Try
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 
 import base.SpecBase
@@ -60,7 +61,7 @@ class IndividualApplicantSummarySpec extends SpecBase {
         rows must contain(
           (
             Key(Text("checkYourAnswers.applicant.name.label")),
-            Value(Text(ContactName))
+            Value(HtmlContent(ContactName))
           )
         )
       }

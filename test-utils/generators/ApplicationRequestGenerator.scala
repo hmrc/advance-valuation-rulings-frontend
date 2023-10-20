@@ -74,6 +74,8 @@ trait ApplicationRequestGenerator extends Generators {
     for {
       goodName                <- stringsWithMaxLength(100)
       goodDescription         <- stringsWithMaxLength(100)
+      similarGoods            <- Gen.option(stringsWithMaxLength(100))
+      similarMethods          <- Gen.option(stringsWithMaxLength(100))
       envisagedCommodityCode  <- Gen.option(stringsWithMaxLength(10))
       knownLegalProceedings   <- Gen.option(stringsWithMaxLength(100))
       confidentialInformation <- Gen.option(stringsWithMaxLength(100))
@@ -82,7 +84,9 @@ trait ApplicationRequestGenerator extends Generators {
       goodDescription,
       envisagedCommodityCode,
       knownLegalProceedings,
-      confidentialInformation
+      confidentialInformation,
+      similarGoods,
+      similarMethods
     )
   }
 
