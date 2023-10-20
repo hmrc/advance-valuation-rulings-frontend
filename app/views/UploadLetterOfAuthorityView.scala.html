@@ -22,6 +22,7 @@
         formHelper: FormWithCSRF,
         govukButton: GovukButton,
         govukErrorSummary: GovukErrorSummary,
+        govukFileUpload: GovukFileUpload,
         caption: Caption,
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
@@ -42,21 +43,6 @@
   upscanInitiateResponse.isEmpty
 }
 
-@formInputClass = @{
-  if(errorMessage.isDefined) {
-    "govuk-file-upload govuk-file-upload--error"
-  } else {
-    "govuk-file-upload"
-  }
-}
-
-@formGroupClass = @{
-  if(errorMessage.isDefined) {
-    "govuk-form-group govuk-form-group--error"
-  } else {
-    "govuk-form-group"
-  }
-}
 
 @formWrapper(content: Html) = {
 
@@ -84,7 +70,15 @@
   }
 }
 
-@mainLayout(pageTitle = titleNoForm(messages("uploadLetterOfAuthority.title")), additionalHeadBlock = Some(refreshBlock)) {
+@pageTitleCopy = @{
+  if(errorMessage.isDefined) {
+    messages("error.browser.title.prefix") + " " + titleNoForm(messages("uploadLetterOfAuthority.title"))
+  } else {
+    titleNoForm(messages("uploadLetterOfAuthority.title"))
+  }
+}
+
+@mainLayout(pageTitle = pageTitleCopy, additionalHeadBlock = Some(refreshBlock)) {
 
   @errorMessage.map { errorMessage =>
     @govukErrorSummary(ErrorSummaryViewModel.withoutForm(Map("file-input" -> messages(errorMessage))))
@@ -115,31 +109,24 @@
 
   @formWrapper {
 
-    <div class="mt-3">
-      <div class="@formGroupClass">
+    
 
-        @errorMessage.map { errorMessage =>
-          <p id="file-input-error" class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> @{messages(errorMessage)}
-          </p>
-        }
+    @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.3")))
 
-        @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.3")))
-
-        <label class="govuk-label" for="file-input">
-        @messages("uploadLetterOfAuthority.label")
-        </label>
-        <div class="form-control-wrapper">
-          <input
-          class="@formInputClass"
-          type="file"
-          id="file-input"
-          name="file"
-          accept=".pdf,.jpeg,.jpg"
-          />
-        </div>
-      </div>
-    </div>
+    @govukFileUpload(FileUpload(
+      name = "file",
+      id = "file-input",
+      label = Label(
+        classes = "govuk-label--s",
+        content = messages("uploadLetterOfAuthority.label")                
+      ),
+      errorMessage = errorMessage.map(errorMessage => ErrorMessage(
+        content = messages(errorMessage), 
+        visuallyHiddenText = Some(messages("error.message.prefix"))
+        )
+      ),
+      attributes = Map("accept" -> ".pdf,.jpeg,.jpg")
+    ))
 
     <div class="govuk-button-group">
       @govukButton(

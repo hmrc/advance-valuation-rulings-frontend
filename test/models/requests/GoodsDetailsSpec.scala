@@ -40,6 +40,10 @@ class GoodsDetailsSpec
 
       val userAnswers = (for {
         ua <- ua.set(DescriptionOfGoodsPage, randomString)
+        ua <- ua.set(HaveYouReceivedADecisionPage, true)
+        ua <- ua.set(TellUsAboutYourRulingPage, randomString)
+        ua <- ua.set(AwareOfRulingPage, true)
+        ua <- ua.set(AboutSimilarGoodsPage, randomString)
         ua <- ua.set(HasCommodityCodePage, true)
         ua <- ua.set(CommodityCodePage, randomString)
         ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, true)
@@ -56,7 +60,9 @@ class GoodsDetailsSpec
           goodsDescription = randomString,
           envisagedCommodityCode = Some(randomString),
           knownLegalProceedings = Some(randomString),
-          confidentialInformation = Some(randomString)
+          confidentialInformation = Some(randomString),
+          similarRulingGoodsInfo = Some(randomString),
+          similarRulingMethodInfo = Some(randomString)
         )
       )
     }
