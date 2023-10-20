@@ -65,7 +65,6 @@ class WhatIsYourRoleAsImporterController @Inject() (
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
-
       implicit request =>
         mode match {
           case ReadOnlyMode =>

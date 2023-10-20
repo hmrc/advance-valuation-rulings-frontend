@@ -112,6 +112,22 @@ class ApplicationViewModelSpec extends SpecBase {
             Value(Text(goodsDetails.goodsName))
           ),
           SummaryListRow(
+            Key(Text("haveYouReceivedADecision.checkYourAnswersLabel")),
+            Value(Text("site.yes"))
+          ),
+          SummaryListRow(
+            Key(Text("tellUsAboutYourRuling.checkYourAnswersLabel")),
+            Value(Text(goodsDetails.similarRulingMethodInfo.get))
+          ),
+          SummaryListRow(
+            Key(Text("awareOfRuling.checkYourAnswersLabel")),
+            Value(Text("site.yes"))
+          ),
+          SummaryListRow(
+            Key(Text("aboutSimilarGoods.checkYourAnswersLabel")),
+            Value(Text(goodsDetails.similarRulingGoodsInfo.get))
+          ),
+          SummaryListRow(
             Key(Text("hasCommodityCode.checkYourAnswersLabel")),
             Value(Text("site.yes"))
           ),
@@ -383,7 +399,9 @@ object ApplicationViewModelSpec extends Generators {
     goodsDescription = "goods description",
     envisagedCommodityCode = Some("commodity code"),
     knownLegalProceedings = Some("legal"),
-    confidentialInformation = Some("confidential")
+    confidentialInformation = Some("confidential"),
+    similarRulingGoodsInfo = Some("goods info"),
+    similarRulingMethodInfo = Some("methods info")
   )
 
   val lastUpdated: Instant                   =

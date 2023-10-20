@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import scala.util.Try
+import javax.inject.Inject
 
-import play.api.libs.json.JsPath
+import play.api.data.Form
 
-import models.UserAnswers
+import forms.mappings.Mappings
 
-case object HaveYouReceivedADecisionPage extends QuestionPage[Boolean] {
+class AgentForTraderCheckRegisteredDetailsFormProvider @Inject() extends Mappings {
 
-  override def path: JsPath = JsPath \ toString()
-
-  override def toString: String = "haveYouReceivedADecisionPage"
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    value match {
-      case Some(false) => userAnswers.remove(TellUsAboutYourRulingPage)
-      case _           => super.cleanup(value, userAnswers)
-    }
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean(
+        "checkRegisteredDetails.error.required.agentForTrader.consent"
+      )
+    )
 }

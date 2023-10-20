@@ -22,12 +22,12 @@ import play.api.data.Form
 
 import forms.mappings.Mappings
 
-class CheckRegisteredDetailsFormProvider @Inject() extends Mappings {
+class EmployeeCheckRegisteredDetailsFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
       "value" -> boolean(
-        "checkRegisteredDetails.error.required.consent"
+        "checkRegisteredDetails.error.required.employee.consent"
       )
     )
 }

@@ -23,7 +23,7 @@
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    saveButtons: SaveButtons,
+    saveButtons: SaveButtonsWithTarget,
     insetPara: InsetPara,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink
@@ -50,9 +50,7 @@
             )
         )
 
-        @form(action = routes.ImportGoodsController.onPageLoad(NormalMode, draftId)) {
-            @saveButtons(draftId)
-        }
+        @saveButtons(routes.ImportGoodsController.onPageLoad(NormalMode, draftId), draftId)
 
         @cancelApplicationLink(draftId)
 }

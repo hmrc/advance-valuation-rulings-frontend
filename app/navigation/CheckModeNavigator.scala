@@ -140,6 +140,32 @@ object CheckModeNavigator {
     }
   }
 
+  private def tellUsAboutYourRuling(userAnswers: UserAnswers): Call =
+    userAnswers.get(TellUsAboutYourRulingPage) match {
+      case None    => TellUsAboutYourRulingController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(_) => AwareOfRulingController.onPageLoad(CheckMode, userAnswers.draftId)
+    }
+
+  private def haveYouReceivedADecision(userAnswers: UserAnswers): Call =
+    userAnswers.get(HaveYouReceivedADecisionPage) match {
+      case None        => HaveYouReceivedADecisionController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(true)  => TellUsAboutYourRulingController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(false) => AwareOfRulingController.onPageLoad(CheckMode, userAnswers.draftId)
+    }
+
+  private def awareOfRulingsWithSimilarMethod(userAnswers: UserAnswers): Call =
+    userAnswers.get(AwareOfRulingPage) match {
+      case None        => AwareOfRulingController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(true)  => AboutSimilarGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(false) => HasCommodityCodeController.onPageLoad(CheckMode, userAnswers.draftId)
+    }
+
+  private def aboutSimilarGoods(userAnswers: UserAnswers): Call =
+    userAnswers.get(AboutSimilarGoodsPage) match {
+      case None    => AboutSimilarGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(_) => HasCommodityCodeController.onPageLoad(CheckMode, userAnswers.draftId)
+    }
+
   // Valuation Method
   private def valuationMethod(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
@@ -325,6 +351,11 @@ object CheckModeNavigator {
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
       case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)
       case RemoveSupportingDocumentPage(_)              => removeSupportingDocumentPage(userAnswers)
+
+      case TellUsAboutYourRulingPage    => tellUsAboutYourRuling(userAnswers)
+      case HaveYouReceivedADecisionPage => haveYouReceivedADecision(userAnswers)
+      case AwareOfRulingPage            => awareOfRulingsWithSimilarMethod(userAnswers)
+      case AboutSimilarGoodsPage        => aboutSimilarGoods(userAnswers)
 
       // agent
       case UploadLetterOfAuthorityPage => uploadLetterOfAuthority(userAnswers)

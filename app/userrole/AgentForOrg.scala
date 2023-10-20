@@ -31,6 +31,7 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import controllers.routes.CheckRegisteredDetailsController
+  import forms.AgentForOrgCheckRegisteredDetailsFormProvider
   import models.{BusinessContactDetails, NormalMode, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage, BusinessContactDetailsPage}
@@ -39,6 +40,7 @@ package userrole {
 
   private case class AgentForOrg @Inject() (
     checkRegisteredDetailsView: AgentForOrgCheckRegisteredDetailsView,
+    formProvider: AgentForOrgCheckRegisteredDetailsFormProvider,
     agentForOrgCheckYourAnswersView: AgentForOrgCheckYourAnswersView,
     eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView,
     requiredInformation: AgentForOrgRequiredInformationView
@@ -55,6 +57,8 @@ package userrole {
         mode,
         draftId
       )
+
+    override def getFormForCheckRegisteredDetails: Form[Boolean] = formProvider.apply()
 
     override def selectViewForEoriBeUpToDate(
       draftId: DraftId,

@@ -78,7 +78,7 @@ object UploadedDocumentsSummary {
               routes.UploadAnotherSupportingDocumentController
                 .onPageLoad(CheckMode, userAnswers.draftId)
                 .url
-            ).withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+            ).withVisuallyHiddenText(messages("doYouWantToUploadDocuments.files.change.hidden"))
           )
         )
     }

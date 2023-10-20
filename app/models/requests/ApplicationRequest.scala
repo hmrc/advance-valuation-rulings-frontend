@@ -32,7 +32,9 @@ case class GoodsDetails(
   goodsDescription: String,
   envisagedCommodityCode: Option[String],
   knownLegalProceedings: Option[String],
-  confidentialInformation: Option[String]
+  confidentialInformation: Option[String],
+  similarRulingGoodsInfo: Option[String],
+  similarRulingMethodInfo: Option[String]
 )
 
 object GoodsDetails {
@@ -57,6 +59,16 @@ object GoodsDetails {
       confidentialInformation    <- userAnswers.get(ConfidentialInformationPage)
     } yield confidentialInformation
 
+    val similarRulingGoodsInfo = for {
+      _                 <- userAnswers.get(AwareOfRulingPage)
+      aboutSimilarGoods <- userAnswers.get(AboutSimilarGoodsPage)
+    } yield aboutSimilarGoods
+
+    val similarRulingMethodInfo = for {
+      _          <- userAnswers.get(HaveYouReceivedADecisionPage)
+      methodInfo <- userAnswers.get(TellUsAboutYourRulingPage)
+    } yield methodInfo
+
     goodsDescription.map(
       description =>
         GoodsDetails(
@@ -64,7 +76,9 @@ object GoodsDetails {
           goodsDescription = description,
           envisagedCommodityCode = envisagedCommodityCode,
           knownLegalProceedings = knownLegalProceedings,
-          confidentialInformation = confidentialInformation
+          confidentialInformation = confidentialInformation,
+          similarRulingGoodsInfo = similarRulingGoodsInfo,
+          similarRulingMethodInfo = similarRulingMethodInfo
         )
     )
   }

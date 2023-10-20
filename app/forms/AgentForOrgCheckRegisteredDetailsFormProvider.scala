@@ -16,30 +16,18 @@
 
 package forms
 
-import play.api.data.FormError
+import javax.inject.Inject
 
-import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.Form
 
-class CheckRegisteredDetailsFormProviderSpec extends BooleanFieldBehaviours {
+import forms.mappings.Mappings
 
-  val form = new CheckRegisteredDetailsFormProvider()()
+class AgentForOrgCheckRegisteredDetailsFormProvider @Inject() extends Mappings {
 
-  ".value" - {
-
-    val fieldName   = "value"
-    val requiredKey = "checkRegisteredDetails.error.required.consent"
-    val invalidKey  = "error.boolean"
-
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean(
+        "checkRegisteredDetails.error.required.agentForOrg.consent"
+      )
     )
-
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
-  }
 }
