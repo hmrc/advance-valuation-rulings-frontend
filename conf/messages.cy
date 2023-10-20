@@ -187,11 +187,11 @@ applicationContactDetails.phone.change.hidden = eich rhif ffôn
 applicationContactDetails.jobTitle.change.hidden = Teitl eich swydd
 applicationContactDetails.jobTitle.error.required = Nodwch deitl eich swydd
 
-choosingMethod.title = Choosing the most appropriate method to value your goods
-choosingMethod.heading = Choosing the most appropriate method to value your goods
+choosingMethod.title = Dewis y dull mwyaf priodol i brisio’ch nwyddau
+choosingMethod.heading = Dewis y dull mwyaf priodol i brisio’ch nwyddau
 choosingMethod.para = Mae’n rhaid i chi weithio drwy’r dulliau yn eu trefn, gan ddechrau gyda Dull 1.
 choosingMethod.caption = Ynglŷn â’r nwyddau
-choosingMethod.paragraph.1 = You need to select a method to {0}.
+choosingMethod.paragraph.1 = Mae angen i chi ddewis dull er mwyn {0}.
 choosingMethod.methods = Dulliau 1 i 6
 choosingMethod.continue = Yn eich blaen a dewis dull
 
@@ -201,7 +201,7 @@ valuationMethod.heading = Pa ddull rydych am ei ddefnyddio i brisio’ch nwyddau
 valuationMethod.paragraph.1 = Bydd angen i chi ddewis dull i {0}.
 valuationMethod.paragraph.2 = Mae’n rhaid i chi weithio drwy’r dulliau yn eu trefn, gan ddechrau gyda Dull 1.
 valuationMethod.paragraph.3 = Efallai y byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom neu i argymell dull sy’n fwy priodol.
-valuationMethod.link.text = gyfrifo gwerth tollau eich mewnforion (yn agor tab newydd).
+valuationMethod.link.text = cyfrifo gwerth tollau eich mewnforion (yn agor tab newydd).
 valuationMethod.h2 = Pa ddull ydych am ei ddefnyddio i brisio’ch nwyddau?
 valuationMethod.hint = Dewiswch un dull.
 valuationMethod.method1 = Dull 1 (gwerth y trafodyn)
