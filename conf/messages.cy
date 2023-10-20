@@ -902,8 +902,8 @@ accountHome.date = Dyddiad cyflwyno
 accountHome.status = Statws
 accountHome.status.submitted = Wedi cyflwyno
 accountHome.status.draft = Ar y gweill
-accountHome.noDescription = no description
-accountHome.actions = Actions
+accountHome.noDescription = Dim disgrifiad
+accountHome.actions = Camau i’w cymryd
 
 
 explainYourGoodsComparingToIdenticalGoods.title = Esboniwch sut rydych yn cymharu’ch nwyddau â nwyddau unfath a fewnforiwyd gan brynwr neu werthwr arall yn ystod y 90 diwrnod diwethaf
