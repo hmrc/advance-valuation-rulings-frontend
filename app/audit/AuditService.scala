@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import models.WhatIsYourRoleAsImporter
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader, EmployeeOfOrg}
 import models.events.{RoleIndicatorEvent, UserTypeEvent}
 import models.requests.{DataRequest, IdentifierRequest}
 

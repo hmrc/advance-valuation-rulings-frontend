@@ -28,7 +28,7 @@ import controllers.actions._
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.Navigator
-import pages.{UploadAnotherSupportingDocumentPage, UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
+import pages.{UploadAnotherSupportingDocumentPage, UploadLetterOfAuthorityPage}
 import queries.AllDocuments
 import views.html.UploadAnotherSupportingDocumentView
 

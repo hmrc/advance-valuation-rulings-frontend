@@ -17,9 +17,7 @@
 package viewmodels
 
 import play.api.i18n.Messages
-import play.twirl.api.Html
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import models.requests.{Application, WhatIsYourRole}
 import viewmodels.govuk.summarylist._

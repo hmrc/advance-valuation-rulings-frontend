@@ -26,9 +26,6 @@ import models.{AgentCompanyDetails, Country}
 
 class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
 
-  private val maximumValueForAddress    = 70
-  private val maximumValueForTownOrCity = 35
-
   def apply(): Form[AgentCompanyDetails] = Form(
     mapping(
       "agentEori"            -> text("agentCompanyDetails.error.agentEori.required")

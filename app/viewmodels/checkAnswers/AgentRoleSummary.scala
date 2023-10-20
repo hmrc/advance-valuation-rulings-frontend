@@ -20,8 +20,7 @@ import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
-import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.UserAnswers
 import pages.WhatIsYourRoleAsImporterPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._

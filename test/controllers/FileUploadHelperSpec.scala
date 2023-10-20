@@ -47,6 +47,7 @@ import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.{reset, spy, when}
 import org.mockito.stubbing.ScalaOngoingStubbing
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
 import org.scalatest.prop.Tables.Table
 import org.scalatestplus.mockito.MockitoSugar
@@ -542,6 +543,37 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual expectedErrorViewText
+    }
+  }
+
+  "when there is a Failure file" - {
+    "Throw runtime exception when in Failure state" in {
+      val isLetterOfAuthority = true
+      val redirectPath        = getRedirectPath()
+
+      setMockLetterOfAuthorityView()
+      when(mockConfiguration.underlying).thenReturn(mockConfig)
+      setUpMockFileService(redirectPath, isLetterOfAuthority)
+      val fileUploadHelper = spyMockFileUploadHelper()
+
+      val result: Future[Result] = fileUploadHelper.onPageLoadWithFileStatus(
+        NormalMode,
+        draftId,
+        None,
+        Some("reference"),
+        Some(
+          UploadedFile.Failure(
+            reference = "ref",
+            failureDetails = UploadedFile.FailureDetails(
+              failureReason = UploadedFile.FailureReason.Duplicate,
+              failureMessage = None
+            )
+          )
+        ),
+        isLetterOfAuthority
+      )(mock[DataRequest[AnyContent]], headerCarrier)
+
+      result.failed.futureValue shouldBe a[RuntimeException]
     }
   }
 

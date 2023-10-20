@@ -59,21 +59,21 @@ class BusinessContactDetailsController @Inject() (
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val form         = formProvider(includeCompanyName)
+        val form         = formProvider(includeCompanyName())
         val preparedForm = BusinessContactDetailsPage.fill(form)
-        Ok(view(preparedForm, mode, draftId, includeCompanyName))
+        Ok(view(preparedForm, mode, draftId, includeCompanyName()))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val form = formProvider(includeCompanyName)
+        val form = formProvider(includeCompanyName())
         form
           .bindFromRequest()
           .fold(
             formWithErrors =>
               Future
-                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName))),
+                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName()))),
             value =>
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)
