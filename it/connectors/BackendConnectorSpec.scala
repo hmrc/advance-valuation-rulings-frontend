@@ -168,7 +168,7 @@ class BackendConnectorSpec
       ),
       contact = ContactDetails("name", "email", None, None, None),
       requestedMethod = MethodOne(None, None, None),
-      goodsDetails = GoodsDetails("name", "description", None, None, None),
+      goodsDetails = GoodsDetails("name", "description", None, None, None, None, None),
       attachments = Nil,
       whatIsYourRole = WhatIsYourRole.AgentOrg,
       letterOfAuthority = None

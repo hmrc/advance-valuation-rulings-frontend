@@ -117,7 +117,9 @@ object ViewApplicationControllerSpec extends Generators {
     goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),
-    confidentialInformation = Some(randomString)
+    confidentialInformation = Some(randomString),
+    similarRulingGoodsInfo = Some(randomString),
+    similarRulingMethodInfo = Some(randomString)
   )
 
   val lastUpdated: Instant                   =

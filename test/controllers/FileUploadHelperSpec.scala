@@ -132,7 +132,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   ): String =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(mode, draftId, errorCode, key, false)
+        .onPageLoad(mode, draftId, errorCode, key, redirectedFromChangeButton = false)
         .url
     } else {
       controllers.routes.UploadSupportingDocumentsController
@@ -650,7 +650,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         "EntityTooSmall",
         UploadedFile.FailureReason.EntityTooSmall,
         (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.entitytoosmall")(messagesProvider)
+          Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
       ),
       (
         "EntityTooLarge",

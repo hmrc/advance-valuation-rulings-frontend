@@ -35,7 +35,9 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
       "description",
       Some("commodity code"),
       Some("legal proceedings"),
-      Some("confidential info")
+      Some("confidential info"),
+      Some("goods info"),
+      Some("methods info")
     )
 
   private val attachments: Seq[Attachment]                     =
@@ -58,6 +60,8 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
         "description",
         None,
         None,
+        None,
+        None,
         None
       )
 
@@ -65,6 +69,14 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
         SummaryListRow(
           Key(Text(m("descriptionOfGoods.checkYourAnswersLabel"))),
           Value(Text(goods.goodsName))
+        ),
+        SummaryListRow(
+          Key(Text(m("haveYouReceivedADecision.checkYourAnswersLabel"))),
+          Value(Text("site.no"))
+        ),
+        SummaryListRow(
+          Key(Text(m("awareOfRuling.checkYourAnswersLabel"))),
+          Value(Text("site.no"))
         ),
         SummaryListRow(
           Key(Text(m("hasCommodityCode.checkYourAnswersLabel"))),
@@ -92,6 +104,22 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
         SummaryListRow(
           Key(Text(m("descriptionOfGoods.checkYourAnswersLabel"))),
           Value(Text(goods.goodsName))
+        ),
+        SummaryListRow(
+          Key(Text(m("haveYouReceivedADecision.checkYourAnswersLabel"))),
+          Value(Text("site.yes"))
+        ),
+        SummaryListRow(
+          Key(Text(m("tellUsAboutYourRuling.checkYourAnswersLabel"))),
+          Value(Text(goods.similarRulingMethodInfo.get))
+        ),
+        SummaryListRow(
+          Key(Text(m("awareOfRuling.checkYourAnswersLabel"))),
+          Value(Text("site.yes"))
+        ),
+        SummaryListRow(
+          Key(Text(m("aboutSimilarGoods.checkYourAnswersLabel"))),
+          Value(Text(goods.similarRulingGoodsInfo.get))
         ),
         SummaryListRow(
           Key(Text(m("hasCommodityCode.checkYourAnswersLabel"))),

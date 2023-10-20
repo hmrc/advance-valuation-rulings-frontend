@@ -76,7 +76,7 @@ class AgentSummarySpec extends SpecBase {
         rows must contain(
           (
             Key(Text("checkYourAnswersForAgents.agent.org.name.label")),
-            Value(Text(ContactName))
+            Value(HtmlContent(ContactName))
           )
         )
       }

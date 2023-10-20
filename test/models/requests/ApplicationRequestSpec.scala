@@ -533,6 +533,8 @@ object ApplicationRequestSpec extends Generators {
   val goodsInformation      = "confidential information"
   val requestedMethodReason = "why not other methods"
   val requestedMethodGoods  = "previous similar goods"
+  val similarGoods          = "info on previous goods ruling"
+  val similarMethod         = "info on previous methods ruling"
 
   val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
 
@@ -622,7 +624,9 @@ object ApplicationRequestSpec extends Generators {
     goodsDescription = goodsDescription,
     envisagedCommodityCode = Some(goodsCommodityCode),
     knownLegalProceedings = Some(goodsLegalProceedings),
-    confidentialInformation = Some(goodsInformation)
+    confidentialInformation = Some(goodsInformation),
+    similarRulingGoodsInfo = Some(similarGoods),
+    similarRulingMethodInfo = Some(similarMethod)
   )
 
   val goodsDetailsNoDetails: GoodsDetails = GoodsDetails(
@@ -630,7 +634,9 @@ object ApplicationRequestSpec extends Generators {
     goodsDescription = goodsDescription,
     envisagedCommodityCode = None,
     knownLegalProceedings = None,
-    confidentialInformation = None
+    confidentialInformation = None,
+    similarRulingGoodsInfo = None,
+    similarRulingMethodInfo = None
   )
 
   val individualTraderJson: String =
@@ -662,7 +668,9 @@ object ApplicationRequestSpec extends Generators {
        |  "goodsDescription": "$goodsDescription",
        |  "envisagedCommodityCode": "$goodsCommodityCode",
        |  "knownLegalProceedings": "$goodsLegalProceedings",
-       |  "confidentialInformation": "$goodsInformation"
+       |  "confidentialInformation": "$goodsInformation",
+       |  "similarRulingGoodsInfo": "$similarGoods",
+       |  "similarRulingMethodInfo": "$similarMethod"
        |},
        |"attachments": [],
        |"whatIsYourRole" : "${WhatIsYourRole.EmployeeOrg}"
@@ -705,7 +713,9 @@ object ApplicationRequestSpec extends Generators {
        |  "goodsDescription": "$goodsDescription",
        |  "envisagedCommodityCode": "$goodsCommodityCode",
        |  "knownLegalProceedings": "$goodsLegalProceedings",
-       |  "confidentialInformation": "$goodsInformation"
+       |  "confidentialInformation": "$goodsInformation",
+       |  "similarRulingGoodsInfo": "$similarGoods",
+       |  "similarRulingMethodInfo": "$similarMethod"
        |},
        |"attachments": [],
        |"whatIsYourRole" : "${WhatIsYourRole.AgentOrg}"

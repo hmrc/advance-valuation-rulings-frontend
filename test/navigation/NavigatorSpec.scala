@@ -257,7 +257,7 @@ class NavigatorSpec extends SpecBase {
 
         }
 
-        "must navigate to HasCommodityCodeController when false answer saved" in {
+        "must navigate to AwareOfRulingController when false answer saved" in {
           val userAnswers = userAnswersWith(HaveYouReceivedADecisionPage, false)
 
           navigator.nextPage(
