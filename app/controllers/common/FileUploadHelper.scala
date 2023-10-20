@@ -30,6 +30,7 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import controllers.routes
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
+import models.UploadedFile.Failure
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
@@ -85,6 +86,12 @@ case class FileUploadHelper @Inject() (
             }
         case file: UploadedFile.Success   =>
           removeFile(mode, draftId, file.fileUrl.get, isLetterOfAuthority)
+        case _: Failure                   =>
+          Future.failed(
+            new RuntimeException(
+              "Unexpected Error: Failure received when uploading file"
+            )
+          )
       }
       .getOrElse {
         showFallbackPage(mode, draftId, isLetterOfAuthority)

@@ -84,15 +84,6 @@ object CheckModeNavigator {
       case Some(false) => navigateWithAuthUserType(userAnswers)
     }
 
-  private def whatIsYourRoleAsImporter(userAnswers: UserAnswers): Call =
-    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case None                                              =>
-        WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
-        AgentCompanyDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      => navigateWithAuthUserType(userAnswers)
-    }
-
   private def doYouWantToUploadDocuments(userAnswers: UserAnswers): Call =
     userAnswers.get(DoYouWantToUploadDocumentsPage) match {
       case None        => DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, userAnswers.draftId)
@@ -349,7 +340,6 @@ object CheckModeNavigator {
       case UploadSupportingDocumentPage                 => uploadSupportingDocumentPage(userAnswers)
       case IsThisFileConfidentialPage                   => isThisFileConfidential(userAnswers)
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
-      case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)
       case RemoveSupportingDocumentPage(_)              => removeSupportingDocumentPage(userAnswers)
 
       case TellUsAboutYourRulingPage    => tellUsAboutYourRuling(userAnswers)
