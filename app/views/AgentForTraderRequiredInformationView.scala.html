@@ -24,7 +24,7 @@
     para: InsetPara,
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButtons: SaveButtonsWithTarget
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -49,9 +49,7 @@
             )
         )
 
-        @form(action = routes.ImportGoodsController.onPageLoad(NormalMode, draftId)) {
-            @saveButtons(draftId)
-        }
+    @saveButtons(routes.ImportGoodsController.onPageLoad(NormalMode, draftId), draftId)
 
-        @cancelApplicationLink(draftId)
+    @cancelApplicationLink(draftId)
 }
