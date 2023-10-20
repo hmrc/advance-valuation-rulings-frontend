@@ -475,13 +475,13 @@ descriptionOfGoods.error.length = Mae’n rhaid i ddisgrifiad byr o’r nwyddau 
 descriptionOfGoods.change.hidden = eich disgrifiad byr o’r nwyddau
 
 hasCommodityCode.caption = Ynglŷn â’r nwyddau
-hasCommodityCode.title = Commodity code for the goods
-hasCommodityCode.heading = Commodity code for the goods
+hasCommodityCode.title = god nwyddau ar gyfer y nwyddau
+hasCommodityCode.heading = god nwyddau ar gyfer y nwyddau
 hasCommodityCode.checkYourAnswersLabel = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 hasCommodityCode.error.required = Dewiswch ‘Iawn’ os ydych yn gwybod y cod nwyddau
 hasCommodityCode.details.label = Help i ddod o hyd i’ch cod nwyddau
-hasCommodityCode.paragraph.1 = Mae cod nwyddau yn gyfeirnod sy’n cael ei gydnabod yn rhyngwladol. Bydd o gymorth i ni wrth adnabod y cynnyrch penodol rydych yn ei fewnforio.
-hasCommodityCode.paragraph.1.link = look up the commodity code for your goods (opens in new tab)
+hasCommodityCode.paragraph.1 = Mae cod nwyddau yn gyfeirnod sy’n cael ei gydnabod yn rhyngwladol. Bydd o gymorth i ni wrth adnabod y cynnyrch penodol rydych yn ei fewnforio. <br><br>{0}, os nad ydych yn ei wybod.
+hasCommodityCode.paragraph.1.link = Gallwch chwilio am y cod nwyddau ar gyfer eich nwyddau (yn agor tab newydd)
 hasCommodityCode.change.hidden = eich ymateb i a oes gennych god nwyddau ar gyfer y nwyddau
 hasCommodityCode.question = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 
@@ -506,8 +506,8 @@ commodityCode.error.length.min = Mae’n rhaid i’r cod nwyddau fod rhwng 4 a 1
 commodityCode.change.hidden = y cod nwyddau rydych wedi’i roi
 
 haveTheGoodsBeenSubjectToLegalChallenges.caption = Ynglŷn â’r nwyddau
-haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges relating to the goods
-haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges relating to the goods
+haveTheGoodsBeenSubjectToLegalChallenges.title = Heriau cyfreithiol sy’n berthnasol i’r nwyddau
+haveTheGoodsBeenSubjectToLegalChallenges.heading = Heriau cyfreithiol sy’n berthnasol i’r nwyddau
 haveTheGoodsBeenSubjectToLegalChallenges.question = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
 haveTheGoodsBeenSubjectToLegalChallenges.para.1 = Gallai her gyfreithiol ymwneud â’r dull o brisio neu brisiad nwyddau a ddefnyddiwyd yn flaenorol yn y DU neu gan wlad arall.
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Mae darparu’r wybodaeth hon yn gallu helpu i adnabod nwyddau sydd â dyfarniadau tebyg.
@@ -526,8 +526,8 @@ describeTheLegalChallenges.error.length = Caniateir uchafswm o 8168 o gymeriadau
 describeTheLegalChallenges.change.hidden = eich disgrifiad o’r heriau cyfreithiol
 
 hasConfidentialInformation.caption = Ynglŷn â’r nwyddau
-hasConfidentialInformation.title = Confidential information about the goods
-hasConfidentialInformation.heading = Confidential information about the goods
+hasConfidentialInformation.title = Gwybodaeth gyfrinachol am y nwyddau
+hasConfidentialInformation.heading = Gwybodaeth gyfrinachol am y nwyddau
 hasConfidentialInformation.question = A ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau?
 hasConfidentialInformation.paragraph.1 = Gall hyn gynnwys unrhyw wybodaeth ynghylch trefniadau contractiol neu drefniadau sy’n fasnachol sensitif.
 hasConfidentialInformation.paragraph.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrinachol.
@@ -829,8 +829,8 @@ applicationComplete.company.heading = Ynglŷn â’r cwmni
 applicationComplete.goods.heading = Ynglŷn â’r nwyddau
 applicationComplete.continue.button = Ewch i’ch ceisiadau a’ch dyfarniadau
 
-whatIsYourRoleAsImporter.title = Disgrifio’ch rôl fel mewnforiwr
-whatIsYourRoleAsImporter.heading = Disgrifio’ch rôl fel mewnforiwr
+whatIsYourRoleAsImporter.title = Eich rôl fel mewnforiwr
+whatIsYourRoleAsImporter.heading = Eich rôl fel mewnforiwr
 whatIsYourRoleAsImporter.question = Sut byddech chi’n disgrifio’ch rôl fel mewnforiwr?
 whatIsYourRoleAsImporter.employeeOfOrg = Gweithiwr sy’n gyflogai yn y sefydliad
 whatIsYourRoleAsImporter.agentOnBehalfOfOrg = Asiant sy’n gweithredu ar ran sefydliad
@@ -1054,7 +1054,7 @@ yourApplicationHasBeenCancelled.paragraph.1 = Mae hyn o achos eich bod wedi cans
 yourApplicationHasBeenCancelled.paragraph.2 = Gallwch ddechrau cais newydd os hoffech chi.
 yourApplicationHasBeenCancelled.button = Ewch i’ch ceisiadau
 
-uploadInProgress.title = Uwchlwytho ar y gweill
+uploadInProgress.title = Wrthi’n uwchlwytho’ch dogfen
 uploadInProgress.heading = Wrthi’n uwchlwytho’ch dogfen
 uploadInProgress.p1 = Dewiswch y botwm ‘Gwirio cynnydd’ i fynd yn eich blaen â’ch cais.
 

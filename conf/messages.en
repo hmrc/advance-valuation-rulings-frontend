@@ -778,8 +778,8 @@ descriptionOfGoods.error.required = Enter a short description of the goods
 descriptionOfGoods.error.length = Short description of the goods must be 100 characters or less
 descriptionOfGoods.change.hidden = your short description of the goods
 
-haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges relating to the goods
-haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges relating to the goods
+haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges related to the goods
+haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges related to the goods
 haveTheGoodsBeenSubjectToLegalChallenges.question = Have the goods been subject to any legal challenges?
 haveTheGoodsBeenSubjectToLegalChallenges.caption = About the goods
 haveTheGoodsBeenSubjectToLegalChallenges.para.1 = A legal challenge could relate to the method of valuation or the valuation of goods previously used in the UK or another country.
