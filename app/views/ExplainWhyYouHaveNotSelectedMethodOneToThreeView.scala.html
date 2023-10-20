@@ -47,6 +47,8 @@
 
         @heading(messages("explainWhyYouHaveNotSelectedMethodOneToThree.heading"))
 
+        <br></br>
+
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.1")))
 
         @list(
@@ -57,20 +59,15 @@
             ),
         "govuk-list govuk-list--bullet",
 )
-        @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2")))
-
 
         @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.label")),
-                    classes = "govuk-visually-hidden",
-                    )
-                )
-                .withRows(15)
-                .withMaxLength(8167)
-                .withThreshold(75)
+                label = LabelViewModel(Text(messages("explainWhyYouHaveNotSelectedMethodOneToThree.label"))).asLegendHeading()
+            )
+            .withRows(15)
+            .withMaxLength(8167)
+            .withThreshold(75)
         )
 
         @saveButtons(draftId, onSubmitAction())

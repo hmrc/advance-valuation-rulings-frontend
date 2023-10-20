@@ -58,17 +58,18 @@
         @caption(messages("caption.goods"))
         @heading(messages("tellUsAboutYourRuling.heading"))
 
+        <br></br>
+
+        @content
+
         @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("value"),
-                label = Label(
-                    content = Text(messages("tellUsAboutYourRuling.label")),
-                ).visuallyHidden()
+                label = LabelViewModel(messages("tellUsAboutYourRuling.label")).asLegendHeading()
             )
             .withRows(10)
             .withMaxLength(8000)
             .withThreshold(75)
-            .withHint(HintViewModel(content = HtmlContent(content)))
         )
 
         @saveButtons(draftId, onSubmitAction())

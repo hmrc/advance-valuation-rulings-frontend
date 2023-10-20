@@ -38,6 +38,11 @@ trait LabelFluency {
         .copy(isPageHeading = true)
         .withCssClass(size.toString)
 
+    def asLegendHeading(): Label =
+      label
+        .copy(isPageHeading = false)
+        .withCssClass(LabelSize.Medium.toString)
+
     def withCssClass(className: String): Label =
       label copy (classes = s"${label.classes} $className")
 

@@ -55,14 +55,19 @@
 
         @caption(messages("describeTheSimilarGoods.caption"))
 
-         @hmrcCharacterCount(
+        @heading(messages("describeTheSimilarGoods.heading"))
+
+        <br></br>
+
+        @paraContent
+
+        @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("describeTheSimilarGoods.heading")).asPageHeading()
+                label = LabelViewModel(messages("describeTheSimilarGoods.label")).asLegendHeading()
             )
             .withRows(15)
             .withMaxLength(8167)
-            .withHint(Hint(content = HtmlContent(paraContent)))
             .withId("value")
             .withThreshold(75)
 

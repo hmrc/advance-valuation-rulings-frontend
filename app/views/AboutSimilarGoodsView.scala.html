@@ -68,16 +68,17 @@
         @caption(messages("caption.goods"))
         @heading(messages("aboutSimilarGoods.heading"))
 
+        <br></br>
+
+        @content
+
         @hmrcCharacterCount(CharCount(
             id = "value",
             name = "value",
             maxLength = Some(8000),
+            threshold = Some(75),
             rows = 10,
-            label = Label(
-                content = Text(messages("aboutSimilarGoods.label")),
-                classes = "govuk-visually-hidden"
-            ),
-            hint = Some(Hint(content = HtmlContent(content))),
+            label = LabelViewModel(messages("aboutSimilarGoods.label")).asLegendHeading(),
             value = form("value").value,
             errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
         ))

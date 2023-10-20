@@ -53,14 +53,19 @@
 
         @caption(messages("confidentialInformation.caption"))
 
+        @heading(messages("confidentialInformation.heading"))
+
+        <br></br>
+
+        @paraContent
+
         @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("confidentialInformation.heading")).asPageHeading()
+                label = LabelViewModel(messages("confidentialInformation.label")).asLegendHeading()
             )
             .withRows(15)
             .withMaxLength(8167)
-            .withHint(Hint(content = HtmlContent(paraContent)))
             .withId("value")
             .withThreshold(75)
         )

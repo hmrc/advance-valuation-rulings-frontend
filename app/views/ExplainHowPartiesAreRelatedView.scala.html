@@ -34,10 +34,9 @@
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 @onSubmitAction(saveDraft: Boolean = true) = @{routes.ExplainHowPartiesAreRelatedController.onSubmit(NormalMode, draftId, saveDraft)
 }
-@paraAndSubheadingContent = {
+@paraContent = {
     @paragraph(Html(messages("explainHowPartiesAreRelated.para.1")))
     @paragraph(Html(messages("explainHowPartiesAreRelated.para.2")))
-    @subheading(messages("explainHowPartiesAreRelated.question"))
 }
 
 @layout(pageTitle = title(form, messages("explainHowPartiesAreRelated.title")), draftId = Some(draftId)) {
@@ -50,14 +49,19 @@
 
         @caption(messages("explainHowPartiesAreRelated.caption"))
 
+        @heading(messages("explainHowPartiesAreRelated.heading"))
+
+        <br></br>
+
+        @paraContent
+
         @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("explainHowPartiesAreRelated.heading")).asPageHeading()
+                label = LabelViewModel(messages("explainHowPartiesAreRelated.question")).asLegendHeading()
             )
             .withRows(15)
             .withMaxLength(8167)
-            .withHint(Hint(content = HtmlContent(paraAndSubheadingContent)))
             .withId("value")
             .withThreshold(75)
 

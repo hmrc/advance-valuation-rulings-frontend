@@ -60,13 +60,15 @@ link: Link
         @caption(messages("caption.goods"))
         @heading(messages("haveYouReceivedADecision.heading"))
 
+        <br></br>
+
         @paragraph(Html(messages("haveYouReceivedADecision.para.1")))
         @paragraph(Html(messages("haveYouReceivedADecision.para.2")))
 
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = Legend(),
+                legend = LegendViewModel(messages("haveYouReceivedADecision.legend")).asLegendHeading(),
                 items = radioItems
             ))
 
