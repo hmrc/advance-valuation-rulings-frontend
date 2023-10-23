@@ -887,7 +887,7 @@ explainHowYouWillUseMethodSix.change.hidden = your explanation of how you have u
 
 describeTheSimilarGoods.title = Describe the similar goods
 describeTheSimilarGoods.heading = Describe the similar goods
-describeTheSimilarGoods.label = Describe the similar goods
+describeTheSimilarGoods.label = Can you describe the similar goods?
 describeTheSimilarGoods.caption = About the goods
 describeTheSimilarGoods.paragraph.1 = Similar goods are not identical to the goods being valued but:
 describeTheSimilarGoods.bulletPoint.1 = are produced in the same country
