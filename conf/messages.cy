@@ -558,11 +558,11 @@ doYouWantToUploadDocuments.para = Gallwch uwchlwytho unrhyw ddogfennau a fydd yn
 doYouWantToUploadDocuments.bulletPoint.1 = tystiolaeth o’r pris a dalwyd neu sy’n daladwy am y nwyddau (anfonebau masnachol, archebion prynu)
 doYouWantToUploadDocuments.bulletPoint.2 = copïau datganiadau mewnforio blaenorol
 doYouWantToUploadDocuments.bulletPoint.3 = dadansoddiad o’r costau cynhyrchu
-doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych am uwchlwytho unrhyw ddogfennau ategol?
+doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych eisiau uwchlwytho unrhyw ddogfennau ategol?
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
 doYouWantToUploadDocuments.change.hidden = eich ymateb i a ydych eisiau uwchlwytho unrhyw ddogfennau ategol
 doYouWantToUploadDocuments.files.change.hidden = y dogfennau ategol rydych wedi’u huwchlwytho
-doYouWantToUploadDocuments.question = A ydych am uwchlwytho unrhyw ddogfennau ategol?
+doYouWantToUploadDocuments.question = A ydych eisiau uwchlwytho unrhyw ddogfennau ategol?
 
 uploadLetterOfAuthority.title = Uwchlwytho’ch llythyr o awdurdod
 uploadLetterOfAuthority.heading = Uwchlwytho’ch llythyr o awdurdod
@@ -1057,6 +1057,7 @@ yourApplicationHasBeenCancelled.button = Ewch i’ch ceisiadau
 uploadInProgress.title = Wrthi’n uwchlwytho’ch dogfen
 uploadInProgress.heading = Wrthi’n uwchlwytho’ch dogfen
 uploadInProgress.p1 = Dewiswch y botwm ‘Gwirio cynnydd’ i fynd yn eich blaen â’ch cais.
+uploadInProgress.button = Gwirio cynnydd
 
 haveYouReceivedADecision.heading = Dyfarniadau blaenorol yn seiliedig ar ddulliau tebyg
 haveYouReceivedADecision.para.1 = Mae’n rhaid i hyn fod yn benderfyniad dyfarnu o Brydain Fawr (Cymru, Lloegr, a’r Alban). Nid oes angen iddo fod yn gysylltiedig â’ch cais presennol.

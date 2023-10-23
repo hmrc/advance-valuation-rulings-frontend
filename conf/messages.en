@@ -1052,6 +1052,7 @@ yourApplicationHasBeenCancelled.button = Go to your applications
 uploadInProgress.title = Uploading your document
 uploadInProgress.heading = Uploading your document
 uploadInProgress.p1 = Select the check progress button to continue with your application.
+uploadInProgress.button = Check progress
 
 haveYouReceivedADecision.heading = Previous rulings based on similar methods
 haveYouReceivedADecision.para.1 = This must be a ruling decision from Great Britain (England, Scotland and Wales). It does not need to be related to your current application.
