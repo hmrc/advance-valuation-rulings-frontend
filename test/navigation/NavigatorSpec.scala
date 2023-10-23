@@ -759,26 +759,26 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.CheckYourAnswersController.onPageLoad(draftId)
         }
 
-        "CheckYourAnswersForAgents page when No is selected and the user is an OrganisationAdmin" in {
+        "CheckYourAnswers page when No is selected and the user is an OrganisationAdmin" in {
           val userAnswers =
             userAnswersAsOrgAdmin.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(
             draftId
           )
         }
 
-        "CheckYourAnswersForAgents page when No is selected and the user is an OrganisationAssistant" in {
+        "CheckYourAnswers page when No is selected and the user is an OrganisationAssistant" in {
           val userAnswers =
             userAnswersAsOrgAssistant.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(
             draftId
           )
         }
