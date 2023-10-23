@@ -964,7 +964,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               UploadAnotherSupportingDocumentPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            ) mustBe routes.CheckYourAnswersController.onPageLoad(
               draftId
             )
           }
@@ -976,7 +976,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               UploadAnotherSupportingDocumentPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            ) mustBe routes.CheckYourAnswersController.onPageLoad(
               draftId
             )
           }

@@ -16,9 +16,6 @@ GET        /there-is-a-problem                          controllers.JourneyRecov
 GET        /:draftId/check-your-answers                          controllers.CheckYourAnswersController.onPageLoad(draftId: DraftId)
 POST       /:draftId/check-your-answers                          controllers.CheckYourAnswersController.onSubmit(draftId: DraftId)
 
-GET        /:draftId/check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onPageLoad(draftId: DraftId)
-POST       /:draftId/check-your-answers-for-agents               controllers.CheckYourAnswersForAgentsController.onSubmit(draftId: DraftId)
-
 GET        /account/sign-out-survey                     controllers.auth.AuthController.signOut()
 GET        /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
 GET        /account/signed-out                          controllers.auth.SignedOutController.onPageLoad
