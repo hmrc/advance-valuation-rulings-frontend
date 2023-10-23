@@ -22,7 +22,6 @@ import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
-import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
   import cats.data.ValidatedNel
