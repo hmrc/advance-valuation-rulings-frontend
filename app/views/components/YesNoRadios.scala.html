@@ -48,7 +48,7 @@ if(form.errors.nonEmpty) {
 @errorMessage = @{
  if(form.errors.nonEmpty) {
   <p id="value-error" class="govuk-error-message">
-   <span class="govuk-visually-hidden">Error:</span>
+   <span class="govuk-visually-hidden">{messages("error.message.prefix")}</span>
     {form.errors.map {
        error: FormError =>
         messages(error.message)
