@@ -114,15 +114,15 @@ object AgentForTraderCheckRegisteredDetailsSummary {
   )(implicit
     messages: Messages
   ): Option[Seq[SummaryListRow]] = {
-    val number          = registeredNumberRow(EoriNumber(details.EORINo), draftId)
-    val personalDetails = if (details.consentToDisclosureOfPersonalData) {
-      val name              = registeredNameRow(details, draftId)
-      val address           = registeredAddressRow(details, draftId)
-      val letterOfAuthority = letterOfAuthorityRow(draftId, letterOfAuthorityFileName)
-      Seq(name, address, letterOfAuthority)
+    val number            = registeredNumberRow(EoriNumber(details.EORINo), draftId)
+    val letterOfAuthority = letterOfAuthorityRow(draftId, letterOfAuthorityFileName)
+    val personalDetails   = if (details.consentToDisclosureOfPersonalData) {
+      val name    = registeredNameRow(details, draftId)
+      val address = registeredAddressRow(details, draftId)
+      Seq(name, address)
     } else {
       Nil
     }
-    Some(number +: personalDetails)
+    Some(number +: personalDetails :+ letterOfAuthority)
   }
 }
