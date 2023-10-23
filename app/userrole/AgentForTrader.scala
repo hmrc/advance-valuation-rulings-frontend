@@ -33,14 +33,14 @@ package userrole {
   import controllers.routes.ProvideTraderEoriController
   import forms.AgentForTraderCheckRegisteredDetailsFormProvider
   import logging.Logging
-  import models.{BusinessContactDetails, UserAnswers}
+  import models.{BusinessContactDetails, TraderDetailsWithConfirmation, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
-  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, VerifyPublicTraderDetailView}
 
   private case class AgentForTrader @Inject() (
-    checkRegisteredDetailsView: AgentForTraderCheckRegisteredDetailsView,
+    checkRegisteredDetailsView: VerifyPublicTraderDetailView,
     formProvider: AgentForTraderCheckRegisteredDetailsFormProvider,
     agentForTraderCheckYourAnswersView: AgentForTraderCheckYourAnswersView,
     eoriBeUpToDateViewPublic: AgentForTraderPublicEORIBeUpToDateView,
@@ -54,12 +54,7 @@ package userrole {
       mode: Mode,
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      checkRegisteredDetailsView(
-        form,
-        details,
-        mode,
-        draftId
-      )
+      checkRegisteredDetailsView(form, mode, draftId, TraderDetailsWithConfirmation(details))
 
     override def getFormForCheckRegisteredDetails: Form[Boolean] = formProvider.apply()
 
