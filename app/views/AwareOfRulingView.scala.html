@@ -38,7 +38,7 @@ radios: YesNoRadios
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
 @radiosContent = {
-    @paragraph(Html(messages("awareOfRuling.para")))
+    <p class="govuk-body govuk-!-margin-top-4" id="value-hint">@messages("awareOfRuling.para")</p>
 }
 
 @layout(pageTitle = title(form, messages("awareOfRuling.heading")), draftId = Some(draftId)) {
