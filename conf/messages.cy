@@ -259,7 +259,7 @@ areThereRestrictionsOnTheGoods.bulletPoint.1 = maent wedi’u gorfodi neu’n of
 areThereRestrictionsOnTheGoods.bulletPoint.2 = maent yn cyfyngu’r ardal ddaearyddol lle gellir ailwerthu’r nwyddau
 areThereRestrictionsOnTheGoods.bulletPoint.3 = nid ydynt yn effeithio’n sylweddol ar werth y nwyddau
 areThereRestrictionsOnTheGoods.question = A oes gennych gyfyngiadau o ran ailwerthu neu ddefnyddio’r nwyddau?
-areThereRestrictionsOnTheGoods.change.hidden = your response to whether there are restrictions on the use or resale of the goods
+areThereRestrictionsOnTheGoods.change.hidden = eich ymateb ynghylch a oes cyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
 
 describeTheRestrictions.caption = Ynglŷn â’r nwyddau
 describeTheRestrictions.title =  Disgrifiwch unrhyw gyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
@@ -269,7 +269,7 @@ describeTheRestrictions.checkYourAnswersLabel = Disgrifiad o’r cyfyngiadau
 describeTheRestrictions.error.required = Nodwch ddisgrifiad o’r cyfyngiadau sydd ar waith
 describeTheRestrictions.error.length = Caniateir uchafswm o 8168 o gymeriadau
 describeTheRestrictions.paragraph.1 = Bydd rhoi disgrifiad manwl o’r cysylltiad yn ein helpu ni i brosesu’ch cais cyn gynted â phosibl
-describeTheRestrictions.change.hidden = eich disgrifiad o’r cyfyngiadau ar ddefnyddio/ailwerthu’r nwyddau
+describeTheRestrictions.change.hidden = eich disgrifiad o’r cyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
 
 isTheSaleSubjectToConditions.caption = Ynglŷn â’r nwyddau
 isTheSaleSubjectToConditions.title = Amodau neu amgylchiadau a allai eich atal rhag prisio’r nwyddau
