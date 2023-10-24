@@ -25,6 +25,7 @@ import play.api.test.Helpers._
 import base.SpecBase
 import config.FrontendAppConfig
 import controllers.routes
+import controllers.routes.ApplicationContactDetailsController
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
@@ -608,64 +609,33 @@ class NavigatorSpec extends SpecBase {
       }
 
       "CheckRegisteredDetailsPage must" - {
+        "navigate to Page from UserRole when Yes" in {
+          val userAnswers = userAnswersAsIndividualTrader
+            .setFuture(CheckRegisteredDetailsPage, value = true)
+            .futureValue
 
-        "when Individual" - {
+          val userRole = mock[UserRole]
+          when(userRoleProvider.getUserRole(userAnswers)).thenReturn(userRole)
+          when(userRole.getContactDetailsJourney(draftId))
+            .thenReturn(ApplicationContactDetailsController.onPageLoad(NormalMode, draftId))
 
-          "navigate to ApplicationContactDetailsPage when Yes" in {
-            val userAnswers = userAnswersAsIndividualTrader
-              .setFuture(CheckRegisteredDetailsPage, value = true)
-              .futureValue
-
-            navigator.nextPage(
-              CheckRegisteredDetailsPage,
-              NormalMode,
-              userAnswers
-            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
-          }
-
-          "and navigate to EORIBeUpToDatePage when No" in {
-            val userAnswers = userAnswersAsIndividualTrader
-              .setFuture(CheckRegisteredDetailsPage, value = false)
-              .futureValue
-
-            navigator.nextPage(
-              CheckRegisteredDetailsPage,
-              NormalMode,
-              userAnswers
-            ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
-          }
+          navigator.nextPage(
+            CheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
         }
 
-        "when OrganisationAdmin" - {
+        "and navigate to EORIBeUpToDatePage when No" in {
+          val userAnswers = userAnswersAsIndividualTrader
+            .setFuture(CheckRegisteredDetailsPage, value = false)
+            .futureValue
 
-          "navigate to ApplicationContactDetailsController when Yes" in {
-
-            val userAnswers = userAnswersAsOrgAdmin
-              .setFuture(CheckRegisteredDetailsPage, value = true)
-              .futureValue
-
-            navigator.nextPage(
-              CheckRegisteredDetailsPage,
-              NormalMode,
-              userAnswers
-            ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
-          }
-        }
-
-        "when OrganisationAssistant" - {
-
-          "navigate to BusinessContactDetailsPage when Yes" in {
-
-            val userAnswers = userAnswersAsOrgAssistant
-              .setFuture(CheckRegisteredDetailsPage, value = true)
-              .futureValue
-
-            navigator.nextPage(
-              CheckRegisteredDetailsPage,
-              NormalMode,
-              userAnswers
-            ) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
-          }
+          navigator.nextPage(
+            CheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.EORIBeUpToDateController.onPageLoad(draftId)
         }
       }
 
@@ -1295,16 +1265,5 @@ class NavigatorSpec extends SpecBase {
         userAnswersAsIndividualTrader
       ) mustBe routes.AccountHomeController.onPageLoad()
     }
-
-    "must go from ContactPage to CheckRegisteredDetails when agentOnBehalfOfTrader is false" in {
-      when(appConfig.agentOnBehalfOfTrader) thenReturn false
-
-      navigator.nextPage(
-        ContactPagePage,
-        NormalMode,
-        userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
-      ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
-    }
-
   }
 }
