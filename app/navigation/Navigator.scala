@@ -32,12 +32,6 @@ import userrole.UserRoleProvider
 
 class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserRoleProvider) {
 
-  private def checkYourAnswers(draftId: DraftId): Call =
-    CheckYourAnswersController.onPageLoad(draftId)
-
-  private def checkYourAnswersForAgents(draftId: DraftId): Call =
-    CheckYourAnswersForAgentsController.onPageLoad(draftId)
-
   private def routes: Page => UserAnswers => Call = {
     case AccountHomePage                                  => startApplicationRouting
     case ValuationMethodPage                              => valuationMethodPage
@@ -418,15 +412,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
         UploadSupportingDocumentsController
           .onPageLoad(NormalMode, userAnswers.draftId, None, None)
       case Some(false) =>
-        userAnswers.get(AccountHomePage) match {
-          case None               => UnauthorisedController.onPageLoad
-          case Some(authUserType) =>
-            resolveAuthUserType(authUserType)(
-              checkYourAnswers(userAnswers.draftId),
-              checkYourAnswersForAgents(userAnswers.draftId),
-              checkYourAnswersForAgents(userAnswers.draftId)
-            )
-        }
+        CheckYourAnswersController.onPageLoad(userAnswers.draftId)
     }
 
   private def uploadSupportingDocumentPage(
@@ -456,16 +442,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
             None,
             None
           )
-        case false =>
-          userAnswers.get(AccountHomePage) match {
-            case None               => UnauthorisedController.onPageLoad
-            case Some(authUserType) =>
-              resolveAuthUserType(authUserType)(
-                checkYourAnswers(userAnswers.draftId),
-                checkYourAnswersForAgents(userAnswers.draftId),
-                checkYourAnswersForAgents(userAnswers.draftId)
-              )
-          }
+        case false => CheckYourAnswersController.onPageLoad(userAnswers.draftId)
       }
       .getOrElse(JourneyRecoveryController.onPageLoad())
 

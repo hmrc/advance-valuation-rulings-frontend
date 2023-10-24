@@ -47,10 +47,14 @@
 
     @caption(messages("explainReasonComputedValue.caption"))
 
+    @heading(messages("explainReasonComputedValue.heading"))
+
+    <br></br>
+
     @hmrcCharacterCount(
         CharacterCountViewModel(
             field = form("value"),
-            label = LabelViewModel(messages("explainReasonComputedValue.heading")).asPageHeading()
+                label = LabelViewModel(messages("explainReasonComputedValue.heading")).visuallyHidden()
         )
         .withRows(15)
         .withMaxLength(8167)

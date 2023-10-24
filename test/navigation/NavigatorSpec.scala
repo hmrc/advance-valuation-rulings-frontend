@@ -900,7 +900,7 @@ class NavigatorSpec extends SpecBase {
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(
             draftId
           )
         }
@@ -912,7 +912,7 @@ class NavigatorSpec extends SpecBase {
             UploadAnotherSupportingDocumentPage,
             NormalMode,
             userAnswers
-          ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(
             draftId
           )
         }
