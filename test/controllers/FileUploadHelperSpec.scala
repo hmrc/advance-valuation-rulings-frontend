@@ -30,6 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import base.SpecBase
@@ -263,7 +264,12 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
     setMockSupportingDocumentsView()
     setMockUserRole(userAnswers)
     when(frontEndAppConfig.appName).thenReturn(appName)
-    when(mockOsClient.deleteObject(any(), ArgumentMatchers.eq(appName))(any[HeaderCarrier]))
+    when(
+      mockOsClient.deleteObject(
+        ArgumentMatchers.eq(Path.File(successfulFile.fileUrl.get)),
+        ArgumentMatchers.eq(appName)
+      )(any[HeaderCarrier])
+    )
       .thenReturn(Future.successful(()))
     when(mockUserAnswersService.set(any())(any()))
       .thenReturn(Future.successful(Done))
