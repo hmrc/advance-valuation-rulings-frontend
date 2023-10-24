@@ -30,16 +30,17 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import base.SpecBase
 import com.typesafe.config.Config
+import config.FrontendAppConfig
 import controllers.common.FileUploadHelper
 import models.{Done, DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import models.upscan.UpscanInitiateResponse
 import navigation.Navigator
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.IdiomaticMockito.{returned, DoSomethingOps}
@@ -85,6 +86,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val mockUserAnswersService      = mock[UserAnswersService]
   private val mockOsClient                = mock[PlayObjectStoreClient]
   private val mockConfig                  = mock[Config]
+  private val frontEndAppConfig           = mock[FrontendAppConfig]
 
   private val mockUserRoleProvider = mock[UserRoleProvider]
   private val mockUserRole         = mock[UserRole]
@@ -101,6 +103,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val errorCode               = "InvalidArgument"
   private val maximumFileSizeMB: Long = 5
   private val page                    = UploadLetterOfAuthorityPage
+  private val appName                 = "App name"
 
   private val upscanInitiateResponse               = UpscanInitiateResponse(
     reference = "reference",
@@ -166,7 +169,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       mockConfiguration,
       mockUserAnswersService,
       mockOsClient,
-      mockUserRoleProvider
+      mockUserRoleProvider,
+      frontEndAppConfig
     )
 
   private def setUploadedFileInUserAnswers(isLetterOfAuthority: Boolean) =
@@ -258,7 +262,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
 
     setMockSupportingDocumentsView()
     setMockUserRole(userAnswers)
-    when(mockOsClient.deleteObject(any[Path.File], any[String])(any[HeaderCarrier]))
+    when(frontEndAppConfig.appName).thenReturn(appName)
+    when(mockOsClient.deleteObject(any(), ArgumentMatchers.eq(appName))(any[HeaderCarrier]))
       .thenReturn(Future.successful(()))
     when(mockUserAnswersService.set(any())(any()))
       .thenReturn(Future.successful(Done))
@@ -329,7 +334,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           mockConfiguration,
           mockUserAnswersService,
           mockOsClient,
-          mockUserRoleProvider
+          mockUserRoleProvider,
+          frontEndAppConfig
         )
           .continue(mode, userAnswers, isLetterOfAuthority)
 
@@ -449,7 +455,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         mockConfiguration,
         mockUserAnswersService,
         mockOsClient,
-        mockUserRoleProvider
+        mockUserRoleProvider,
+        frontEndAppConfig
       )
     )
 

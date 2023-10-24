@@ -28,6 +28,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
+import config.FrontendAppConfig
 import controllers.routes
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.UploadedFile.Failure
@@ -48,7 +49,8 @@ case class FileUploadHelper @Inject() (
   configuration: Configuration,
   userAnswersService: UserAnswersService,
   osClient: PlayObjectStoreClient,
-  userRoleProvider: UserRoleProvider
+  userRoleProvider: UserRoleProvider,
+  appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends I18nSupport {
 
@@ -114,7 +116,7 @@ case class FileUploadHelper @Inject() (
   ): Future[Result] = {
     osClient.deleteObject(
       Path.File(fileUrl),
-      owner = "advance-valuation-rulings-frontend" // TODO: Remove asap.
+      appConfig.appName
     )
     showFallbackPage(mode, draftId, isLetterOfAuthority)
   }
