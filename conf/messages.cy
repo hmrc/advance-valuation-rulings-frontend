@@ -808,7 +808,7 @@ applicationComplete.paragraph.1 = Rydym wedi anfon e-bost cadamhau i {0}
 applicationComplete.paragraph.2 = Mae cael penderfyniad yn gallu cymryd hyd at 120 diwrnod ar ôl y dyddiad y derbynnir eich cais.
 applicationComplete.paragraph.3 = Gweler {0} os ydych yn bwriadu mewnforio nwyddau heb wneud cais am ddyfamiad uwch.
 applicationComplete.paragraph.3.link = arweiniad cam wrth gam ar GOV.UK (yn agor tab newydd)
-applicationComplete.button.continue = Ewch i’ch ceisiadau a’ch dyfamiadau
+applicationComplete.button.continue = Ewch i’ch ceisiadau
 applicationComplete.ruling.subheading = Sut i ddefnyddio’r dyfamiad
 applicationComplete.ruling.paragraph = Pan fyddwch yn cael dyfamiad, mae’n rhiad i chi wneud y canlynol:
 applicationComplete.ruling.bulletPoint.1 = datgan eich cyfeimod Dyfamiadau Prisio Uwch yn eich {0}
@@ -827,7 +827,7 @@ applicationComplete.applicant.heading = Ynglŷn â’r ymgeisydd
 applicationComplete.agent.heading = Ynglŷn â’r asiant
 applicationComplete.company.heading = Ynglŷn â’r cwmni
 applicationComplete.goods.heading = Ynglŷn â’r nwyddau
-applicationComplete.continue.button = Ewch i’ch ceisiadau a’ch dyfarniadau
+applicationComplete.continue.button = Ewch i’ch ceisiadau
 
 whatIsYourRoleAsImporter.title = Eich rôl fel mewnforiwr
 whatIsYourRoleAsImporter.heading = Eich rôl fel mewnforiwr
