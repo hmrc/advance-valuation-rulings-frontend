@@ -44,14 +44,20 @@
 
     @caption(messages("haveYouUsedMethodOneInPast.caption"))
     @heading(messages("haveYouUsedMethodOneInPast.heading"))
+
+    <br></br>
+
+    @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.2")))
+
+    @bulletList(Seq(
+    Html(messages("haveYouUsedMethodOneInPast.bulletPoint.1")),
+    Html(messages("haveYouUsedMethodOneInPast.bulletPoint.2")),
+    Html(messages("haveYouUsedMethodOneInPast.bulletPoint.3")),
+    ))
+
     @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.1")))
     @insetPara(Html(messages("haveYouUsedMethodOneInPast.paragraph.inset")))
-    @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.2")))
-    @bulletList(Seq(
-        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.1")),
-        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.2")),
-        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.3")),
-    ))
+
 
         @govukRadios(
             RadiosViewModel.yesNo(

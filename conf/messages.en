@@ -887,9 +887,9 @@ explainHowYouWillUseMethodSix.paragraph.1 = Method 6 (fall-back method) is the f
 explainHowYouWillUseMethodSix.paragraph.2 = Tell us how you plan to use Method 6. You should also let us know if you want to adapt another method for your circumstances.
 explainHowYouWillUseMethodSix.change.hidden = your explanation of how you have used Method 6 to value the goods
 
-describeTheSimilarGoods.title = Describe the similar goods
-describeTheSimilarGoods.heading = Describe the similar goods
-describeTheSimilarGoods.label = Describe the similar goods
+describeTheSimilarGoods.title = Description of the similar goods
+describeTheSimilarGoods.heading = Description of the similar goods
+describeTheSimilarGoods.label = Can you describe the similar goods?
 describeTheSimilarGoods.caption = About the goods
 describeTheSimilarGoods.paragraph.1 = Similar goods are not identical to the goods being valued but:
 describeTheSimilarGoods.bulletPoint.1 = are produced in the same country
