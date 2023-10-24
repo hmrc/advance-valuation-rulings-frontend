@@ -18,10 +18,10 @@ package models.requests
 
 import cats.data.NonEmptyList
 import cats.data.Validated._
+import scala.util.Try
 
 import play.api.libs.json.{Json, JsResult, JsSuccess}
 
-import config.FrontendAppConfig
 import generators._
 import models._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
@@ -31,8 +31,7 @@ import org.scalacheck.Arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages._
-import userrole.UserRoleProvider
+import pages.{ApplicationContactDetailsPage, _}
 
 class ApplicationRequestSpec
     extends AnyWordSpec
@@ -44,11 +43,7 @@ class ApplicationRequestSpec
 
   "ApplicationRequest" should {
 
-    val mockAppConfig         = mock[FrontendAppConfig]
-    when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(false)
-    val mockUserRoleProvider  = mock[UserRoleProvider]
-    val contactDetailsService = new ContactDetailsService(mockAppConfig, mockUserRoleProvider)
-
+    val contactDetailsService     = mock[ContactDetailsService]
     val applicationRequestService = new ApplicationRequestService(contactDetailsService)
 
     "be able to deserialize successful body" when {
@@ -153,6 +148,7 @@ class ApplicationRequestSpec
 
         } yield ua).success.get
 
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
         val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
@@ -206,6 +202,8 @@ class ApplicationRequestSpec
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
         } yield ua).success.get
 
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
+
         val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
@@ -220,8 +218,13 @@ class ApplicationRequestSpec
 
       "return invalid for an Individual when built from empty userAnswers" in {
 
+        val anwsersWithLogin: Try[UserAnswers] =
+          emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader)
+        when(contactDetailsService.apply(anwsersWithLogin.get))
+          .thenReturn(Invalid(NonEmptyList.of(ApplicationContactDetailsPage)))
+
         val result = applicationRequestService(
-          emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader).success.get,
+          anwsersWithLogin.success.get,
           traderDetailsWithCountryCode
         )
 
@@ -271,6 +274,8 @@ class ApplicationRequestSpec
           ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
         } yield ua).success.get
 
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
+
         val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
@@ -301,6 +306,9 @@ class ApplicationRequestSpec
           ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         } yield ua).get
 
+        when(contactDetailsService.apply(userAnswers))
+          .thenReturn(Invalid(NonEmptyList.of(ApplicationContactDetailsPage)))
+
         val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
@@ -310,29 +318,6 @@ class ApplicationRequestSpec
           NonEmptyList.of(
             CheckRegisteredDetailsPage,
             ApplicationContactDetailsPage,
-            ValuationMethodPage,
-            DescriptionOfGoodsPage,
-            DoYouWantToUploadDocumentsPage
-          )
-        )
-      }
-
-      "return invalid when missing AccountHomePage in userAnswers" in {
-        val ua = emptyUserAnswers
-
-        val userAnswers = (for {
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
-        } yield ua).success.get
-
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Invalid(
-          NonEmptyList.of(
-            CheckRegisteredDetailsPage,
-            AccountHomePage,
             ValuationMethodPage,
             DescriptionOfGoodsPage,
             DoYouWantToUploadDocumentsPage
@@ -387,6 +372,7 @@ class ApplicationRequestSpec
                 )
         } yield ua).success.get
 
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
         val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
@@ -454,6 +440,7 @@ class ApplicationRequestSpec
                 )
         } yield ua).success.get
 
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
         val result = applicationRequestService(
           userAnswers,
           traderDetailsWithCountryCode
@@ -469,6 +456,8 @@ class ApplicationRequestSpec
           ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant)
           ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
         } yield ua).get
+        when(contactDetailsService.apply(userAnswers))
+          .thenReturn(Invalid(NonEmptyList.of(BusinessContactDetailsPage)))
 
         val result = applicationRequestService(
           userAnswers,
@@ -487,28 +476,6 @@ class ApplicationRequestSpec
         )
       }
 
-      "return invalid when missing AccountHomePage" in {
-        val userAnswers = (for {
-          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
-        } yield ua).get
-
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Invalid(
-          NonEmptyList.of(
-            CheckRegisteredDetailsPage,
-            AgentCompanyDetailsPage,
-            BusinessContactDetailsPage,
-            ValuationMethodPage,
-            DescriptionOfGoodsPage,
-            DoYouWantToUploadDocumentsPage
-          )
-        )
-      }
     }
   }
 }

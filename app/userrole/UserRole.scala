@@ -71,4 +71,6 @@ trait UserRole {
   def getMaxSupportingDocuments: Int
 
   def sourceFromUA: Boolean
+
+  def getContactDetailsJourney(draftId: DraftId): Call
 }
