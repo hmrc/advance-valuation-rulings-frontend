@@ -20,7 +20,7 @@ import java.time.{Instant, ZoneId}
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
@@ -35,11 +35,11 @@ final case class ApplicationForAccountHome(
   statusTag: Tag,
   actions: Seq[ActionItem]
 ) {
-  def dateString(isWelsh: Boolean = false): String =
-    if (isWelsh) {
-      ApplicationForAccountHome.welshFormatter.format(date)
-    } else {
+  def dateString(lang: Lang): String =
+    if (lang == Lang("en")) {
       ApplicationForAccountHome.formatter.format(date)
+    } else {
+      ApplicationForAccountHome.welshFormatter.format(date)
     }
 }
 
