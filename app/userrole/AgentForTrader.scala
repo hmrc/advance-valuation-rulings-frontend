@@ -76,8 +76,8 @@ package userrole {
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformationView(draftId)
 
-    override def getEORIDetailsJourney(draftId: DraftId): Call =
-      ProvideTraderEoriController.onPageLoad(draftId)
+    override def getEORIDetailsJourney(mode: Mode, draftId: DraftId): Call =
+      ProvideTraderEoriController.onPageLoad(mode, draftId)
 
     override def contactDetailsIncludeCompanyName: Boolean = true
 

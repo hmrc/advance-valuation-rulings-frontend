@@ -166,7 +166,7 @@ class NavigatorSpec extends SpecBase {
 
           when(userRoleProvider.getUserRole(userAnswers)) thenReturn mockUserRole
           when(
-            mockUserRole.getEORIDetailsJourney(draftId)
+            mockUserRole.getEORIDetailsJourney(NormalMode, draftId)
           ) thenReturn onwardRoute
 
           navigator.nextPage(

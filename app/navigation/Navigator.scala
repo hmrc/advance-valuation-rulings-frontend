@@ -498,7 +498,9 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
 
   private def contactsNextPage(userAnswers: UserAnswers): Call =
     if (appConfig.agentOnBehalfOfTrader) {
-      userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(userAnswers.draftId)
+      userRoleProvider
+        .getUserRole(userAnswers)
+        .getEORIDetailsJourney(NormalMode, userAnswers.draftId)
     } else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
   private def checkRegisteredDetailsPage(

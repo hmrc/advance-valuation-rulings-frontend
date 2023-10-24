@@ -197,7 +197,7 @@ class EmployeeSpec extends SpecBase with Matchers {
   "getEORIDetailsJourney" - {
     "should return CheckRegisteredDetails page" in {
       employee
-        .getEORIDetailsJourney(draftId)
+        .getEORIDetailsJourney(NormalMode, draftId)
         .url mustBe controllers.routes.CheckRegisteredDetailsController
         .onPageLoad(NormalMode, draftId)
         .url
