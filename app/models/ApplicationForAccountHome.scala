@@ -18,6 +18,7 @@ package models
 
 import java.time.{Instant, ZoneId}
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 import play.api.i18n.Messages
 import play.api.mvc.Call
@@ -34,8 +35,12 @@ final case class ApplicationForAccountHome(
   statusTag: Tag,
   actions: Seq[ActionItem]
 ) {
-  def dateString(): String =
-    ApplicationForAccountHome.formatter.format(date)
+  def dateString(isWelsh: Boolean = false): String =
+    if (isWelsh) {
+      ApplicationForAccountHome.welshFormatter.format(date)
+    } else {
+      ApplicationForAccountHome.formatter.format(date)
+    }
 }
 
 object ApplicationForAccountHome {
@@ -44,6 +49,12 @@ object ApplicationForAccountHome {
     DateTimeFormatter
       .ofPattern("dd MMMM yyyy")
       .withZone(ZoneId.systemDefault())
+
+  private val welshFormatter =
+    DateTimeFormatter
+      .ofPattern("dd MMMM yyyy")
+      .withZone(ZoneId.systemDefault())
+      .withLocale(new Locale("cy", "GB"))
 
   def apply(applicationSummary: ApplicationSummary)(implicit
     messages: Messages
