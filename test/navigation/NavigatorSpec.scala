@@ -23,7 +23,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import config.FrontendAppConfig
 import controllers.routes
 import controllers.routes.ApplicationContactDetailsController
 import models._
@@ -37,11 +36,8 @@ import userrole.{UserRole, UserRoleProvider}
 class NavigatorSpec extends SpecBase {
 
   private val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
-  private val appConfig                     = mock[FrontendAppConfig]
   private val userRoleProvider              = mock[UserRoleProvider]
-  private val navigator                     = new Navigator(appConfig, userRoleProvider)
-
-  when(appConfig.agentOnBehalfOfTrader) thenReturn false
+  private val navigator                     = new Navigator(userRoleProvider)
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
@@ -88,7 +84,6 @@ class NavigatorSpec extends SpecBase {
     "Account Home" - {
 
       "should navigate to RequiredInformation page for a IndividualTrader" in {
-        when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
         navigator.nextPage(
           AccountHomePage,
@@ -99,7 +94,6 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to WhatIsYourRole page for an OrganisationAssistant" in {
-        when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
         navigator.nextPage(
           AccountHomePage,
@@ -112,7 +106,6 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to RequiredInformation page for an OrganisationAdmin" in {
-        when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
         navigator.nextPage(
           AccountHomePage,
@@ -123,7 +116,6 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to WhatIsYourRole page for an Agent" in {
-        when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
         navigator.nextPage(
           AccountHomePage,
@@ -133,7 +125,6 @@ class NavigatorSpec extends SpecBase {
       }
 
       "should navigate to JourneyRecovery page when ApplicantUserType does not exist in userAnswers" in {
-        when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
         navigator.nextPage(
           AccountHomePage,
@@ -160,7 +151,6 @@ class NavigatorSpec extends SpecBase {
       "If we need to contact you page" - {
 
         "must receive next page from userRoleProvider" in {
-          when(appConfig.agentOnBehalfOfTrader) thenReturn true
 
           val userAnswers  = emptyUserAnswers // usage is mocked in this test
           val mockUserRole = mock[UserRole]
@@ -648,94 +638,6 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswersAsIndividualTrader
           ) mustBe routes.VerifyLetterOfAuthorityController.onPageLoad(NormalMode, draftId)
-        }
-      }
-
-      "BusinessContactDetailsPage must" - {
-        val userAnswers =
-          userAnswersWith(
-            BusinessContactDetailsPage,
-            BusinessContactDetails("name", "email", "phone", None, "jobTitle")
-          )
-
-        "when OrganisationAssistant claiming to be AgentOnBehalfOfOrg" - {
-          "navigate to AgentCompanyDetailsPage when Yes" in {
-            val ua = userAnswers
-              .set(AccountHomePage, value = OrganisationAssistant)
-              .flatMap(_.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg))
-              .success
-              .value
-
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              ua
-            ) mustBe routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId)
-          }
-        }
-
-        "when OrganisationAssistant claiming to be EmployeeOfOrg" - {
-          "navigate to choose valuation method page when Yes" in {
-            val ua = userAnswers
-              .set(AccountHomePage, value = OrganisationAssistant)
-              .flatMap(_.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg))
-              .success
-              .value
-
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              ua
-            ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
-          }
-        }
-
-        "when OrganisationAssistant without Importer role" - {
-          "navigate to WhatIsYourRoleAsImporterPage when Yes" in {
-            val ua = userAnswers
-              .set(AccountHomePage, value = OrganisationAssistant)
-              .success
-              .value
-
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              ua
-            ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
-          }
-        }
-
-        "when an OrganisationAdmin" - {
-          "navigate to choose valuation method page" in {
-
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              userAnswers.set(AccountHomePage, value = OrganisationAdmin).success.value
-            ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
-          }
-        }
-
-        "when an IndividualTrader" - {
-          "navigate to JourneyRecovery page" in {
-
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              userAnswers.set(AccountHomePage, value = IndividualTrader).success.value
-            ) mustBe routes.UnauthorisedController.onPageLoad
-          }
-        }
-
-        "when ApplicantUserType is missing from user answers" - {
-          "navigate to JourneyRecovery page" in {
-
-            navigator.nextPage(
-              BusinessContactDetailsPage,
-              NormalMode,
-              userAnswers
-            ) mustBe routes.UnauthorisedController.onPageLoad
-          }
         }
       }
 

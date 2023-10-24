@@ -20,17 +20,14 @@ import javax.inject.Inject
 
 import play.api.mvc.Call
 
-import config.FrontendAppConfig
 import controllers.routes._
 import models._
-import models.AuthUserType.{Agent, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 import userrole.UserRoleProvider
 
-class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserRoleProvider) {
+class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
 
   private def routes: Page => UserAnswers => Call = {
     case AccountHomePage                                  => startApplicationRouting
@@ -55,7 +52,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ContactPagePage                                  => contactsNextPage
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
-    case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
     case UploadSupportingDocumentPage                     => uploadSupportingDocumentPage
@@ -502,30 +498,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     userAnswers.get(ApplicationContactDetailsPage) match {
       case None    => ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => ChoosingMethodController.onPageLoad(userAnswers.draftId)
-    }
-
-  private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(BusinessContactDetailsPage) match {
-      case None    =>
-        BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => agentContactDetailsNavigation(userAnswers)
-    }
-
-  private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
-    userAnswers.get(AccountHomePage) match {
-      case Some(OrganisationAdmin)                   =>
-        ChoosingMethodController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAssistant) | Some(Agent) =>
-        userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-          case Some(EmployeeOfOrg)      =>
-            ChoosingMethodController.onPageLoad(userAnswers.draftId)
-          case Some(AgentOnBehalfOfOrg) =>
-            AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-          case _                        =>
-            WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-        }
-      case _                                         =>
-        UnauthorisedController.onPageLoad
     }
 
   private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
