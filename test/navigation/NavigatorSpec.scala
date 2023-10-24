@@ -27,7 +27,7 @@ import controllers.routes
 import controllers.routes.ApplicationContactDetailsController
 import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import org.mockito.MockitoSugar.{mock, when}
 import pages._
 import queries._
