@@ -35,7 +35,7 @@ final case class ApplicationForAccountHome(
   statusTag: Tag,
   actions: Seq[ActionItem]
 ) {
-  def dateString(lang: Lang): String =
+  def dateString(lang: Lang = Lang("en")): String =
     if (lang == Lang("en")) {
       ApplicationForAccountHome.formatter.format(date)
     } else {
