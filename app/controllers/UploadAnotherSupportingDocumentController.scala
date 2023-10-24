@@ -27,7 +27,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import controllers.actions._
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
-import models.requests.DataRequest
 import navigation.Navigator
 import pages.{UploadAnotherSupportingDocumentPage, UploadLetterOfAuthorityPage}
 import queries.AllDocuments
@@ -51,7 +50,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
       implicit request =>
         val attachments = AllDocuments.get().getOrElse(List.empty)
         val form        = formProvider(attachments)
-        val loaFileName = getLetterOfAuthorityFileName(request)
+        val loaFileName = getLetterOfAuthorityFileName(request.userAnswers)
         Ok(view(attachments, form, mode, draftId, loaFileName))
     }
 
@@ -70,7 +69,7 @@ class UploadAnotherSupportingDocumentController @Inject() (
                     formWithErrors,
                     mode,
                     draftId,
-                    getLetterOfAuthorityFileName(request)
+                    getLetterOfAuthorityFileName(request.userAnswers)
                   )
                 )
               ),
@@ -83,8 +82,8 @@ class UploadAnotherSupportingDocumentController @Inject() (
           )
     }
 
-  private def getLetterOfAuthorityFileName(request: DataRequest[AnyContent]) = {
-    val loaFile     = request.userAnswers.get(UploadLetterOfAuthorityPage)
+  private def getLetterOfAuthorityFileName(userAnswers: UserAnswers): Option[String] = {
+    val loaFile     = userAnswers.get(UploadLetterOfAuthorityPage)
     val loaFileName = loaFile match {
       case Some(file) => file.fileName
       case None       => None
