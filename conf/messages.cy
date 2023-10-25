@@ -259,7 +259,7 @@ areThereRestrictionsOnTheGoods.bulletPoint.1 = maent wedi’u gorfodi neu’n of
 areThereRestrictionsOnTheGoods.bulletPoint.2 = maent yn cyfyngu’r ardal ddaearyddol lle gellir ailwerthu’r nwyddau
 areThereRestrictionsOnTheGoods.bulletPoint.3 = nid ydynt yn effeithio’n sylweddol ar werth y nwyddau
 areThereRestrictionsOnTheGoods.question = A oes gennych gyfyngiadau o ran ailwerthu neu ddefnyddio’r nwyddau?
-areThereRestrictionsOnTheGoods.change.hidden = your response to whether there are restrictions on the use or resale of the goods
+areThereRestrictionsOnTheGoods.change.hidden = eich ymateb ynghylch a oes cyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
 
 describeTheRestrictions.caption = Ynglŷn â’r nwyddau
 describeTheRestrictions.title =  Disgrifiwch unrhyw gyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
@@ -269,7 +269,7 @@ describeTheRestrictions.checkYourAnswersLabel = Disgrifiad o’r cyfyngiadau
 describeTheRestrictions.error.required = Nodwch ddisgrifiad o’r cyfyngiadau sydd ar waith
 describeTheRestrictions.error.length = Caniateir uchafswm o 8168 o gymeriadau
 describeTheRestrictions.paragraph.1 = Bydd rhoi disgrifiad manwl o’r cysylltiad yn ein helpu ni i brosesu’ch cais cyn gynted â phosibl
-describeTheRestrictions.change.hidden = eich disgrifiad o’r cyfyngiadau ar ddefnyddio/ailwerthu’r nwyddau
+describeTheRestrictions.change.hidden = eich disgrifiad o’r cyfyngiadau o ran defnyddio neu ailwerthu’r nwyddau
 
 isTheSaleSubjectToConditions.caption = Ynglŷn â’r nwyddau
 isTheSaleSubjectToConditions.title = Amodau neu amgylchiadau a allai eich atal rhag prisio’r nwyddau
@@ -1066,6 +1066,8 @@ haveYouReceivedADecision.para.1 = Mae’n rhaid i hyn fod yn benderfyniad dyfarn
 haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg rydych wedi’u cael yn ein helpu ni i brosesu’ch cais presennol.
 haveYouReceivedADecision.error.required = Rhowch wybod i ni os ydych erioed wedi cael dyfarniad yn seiliedig ar ddull tebyg
 haveYouReceivedADecision.legend = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
+haveYouReceivedADecision.checkYourAnswersLabel = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
+haveYouReceivedADecision.change.hidden = have you ever received a ruling based on a similar method
 
 tellUsAboutYourRuling.heading = Ynghylch y dyfarniad blaenorol
 tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
@@ -1075,7 +1077,8 @@ tellUsAboutYourRuling.bulletPoint.3 = y dyddiad y cafodd y dyfarniad ei roi
 tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
 tellUsAboutYourRuling.error.required = Rhowch wybod i ni am ddyfarniadau ar gyfer nwyddau tebyg
 tellUsAboutYourRuling.label = A allwch roi rhagor o wybodaeth i ni am y dyfarniad?
-tellUsAboutYourRuling.checkYourAnswersLabel = Rhowch wybod i ni am ddyfarniadau ar gyfer nwyddau tebyg
+tellUsAboutYourRuling.checkYourAnswersLabel = Ynghylch y dyfarniad blaenorol
+tellUsAboutYourRuling.change.hidden = details about the ruling
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
 
@@ -1091,8 +1094,10 @@ aboutSimilarGoods.heading = Ynghylch y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.label = Allwch chi rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg?
 aboutSimilarGoods.error.required = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.checkYourAnswersLabel = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
+aboutSimilarGoods.change.hidden = details about the rulings for similar goods
 
 awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
 awareOfRuling.error.required = Rhowch wybod i ni os ydych yn ymwybodol o unrhyw ddyfarniadau eraill a ddefnyddiodd ddull tebyg
 awareOfRuling.checkYourAnswersLabel = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
+awareOfRuling.change.hidden = are you aware of any other rulings that have used a similar method

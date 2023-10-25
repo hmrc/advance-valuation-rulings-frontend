@@ -16,10 +16,8 @@
 
 package models.requests
 
-import cats.data.NonEmptyList
 import cats.data.Validated._
 
-import config.FrontendAppConfig
 import generators._
 import models._
 import org.mockito.Mockito.when
@@ -28,7 +26,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
-import userrole.UserRoleProvider
+import userrole.{UserRole, UserRoleProvider}
 
 class ContactDetailsSpec
     extends AnyWordSpec
@@ -40,13 +38,12 @@ class ContactDetailsSpec
 
   "ContactDetails" should {
 
-    val mockAppConfig        = mock[FrontendAppConfig]
-    when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(false)
     val mockUserRoleProvider = mock[UserRoleProvider]
+    val userRole             = mock[UserRole]
 
-    val contactDetailsService = new ContactDetailsService(mockAppConfig, mockUserRoleProvider)
+    val contactDetailsService = new ContactDetailsService(mockUserRoleProvider)
 
-    "succeed for an individual" in {
+    "succeed for a given userRole" in {
 
       val ua = emptyUserAnswers
 
@@ -56,51 +53,12 @@ class ContactDetailsSpec
 
       } yield ua).success.get
 
-      val result = contactDetailsService(userAnswers)
-      result shouldBe Valid(contactDetails)
-    }
-
-    "succeed for an organisation admin" in {
-
-      val ua = emptyUserAnswers
-
-      val userAnswers = (for {
-        ua <- ua.set(ApplicationContactDetailsPage, applicationContactDetails)
-        ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
-
-      } yield ua).success.get
+      when(mockUserRoleProvider.getUserRole(userAnswers)).thenReturn(userRole)
+      when(userRole.getContactDetailsForApplicationRequest(userAnswers))
+        .thenReturn(Valid(contactDetails))
 
       val result = contactDetailsService(userAnswers)
       result shouldBe Valid(contactDetails)
-    }
-
-    "succeed for an organisation assistant" in {
-
-      val ua = emptyUserAnswers
-
-      val userAnswers = (for {
-        ua <- ua.set(BusinessContactDetailsPage, businessContactDetails)
-        ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
-
-      } yield ua).success.get
-
-      val result = contactDetailsService(userAnswers)
-      result shouldBe Valid(contactDetails)
-    }
-
-    "fail when individual contact details are missing" in {
-      val userAnswers = emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader).get
-
-      val result = contactDetailsService(userAnswers)
-      result shouldBe Invalid(NonEmptyList.one(ApplicationContactDetailsPage))
-    }
-
-    "fail when organisation contact details are missing" in {
-      val userAnswers =
-        emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant).get
-
-      val result = contactDetailsService(userAnswers)
-      result shouldBe Invalid(NonEmptyList.one(BusinessContactDetailsPage))
     }
   }
 }
