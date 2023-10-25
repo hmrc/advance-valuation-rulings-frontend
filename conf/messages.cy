@@ -187,8 +187,8 @@ applicationContactDetails.phone.change.hidden = eich rhif ffôn
 applicationContactDetails.jobTitle.change.hidden = Teitl eich swydd
 applicationContactDetails.jobTitle.error.required = Nodwch deitl eich swydd
 
-choosingMethod.title = Dewis y dull mwyaf priodol i brisio’ch nwyddau
-choosingMethod.heading = Dewis y dull mwyaf priodol i brisio’ch nwyddau
+choosingMethod.title = Dulliau o brisio’ch nwyddau
+choosingMethod.heading = Dulliau o brisio’ch nwyddau
 choosingMethod.para = Mae’n rhaid i chi weithio drwy’r dulliau yn eu trefn, gan ddechrau gyda Dull 1.
 choosingMethod.caption = Ynglŷn â’r nwyddau
 choosingMethod.paragraph.1 = Mae angen i chi ddewis dull er mwyn {0}.
