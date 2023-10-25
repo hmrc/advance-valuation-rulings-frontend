@@ -1066,6 +1066,8 @@ haveYouReceivedADecision.para.1 = Mae’n rhaid i hyn fod yn benderfyniad dyfarn
 haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg rydych wedi’u cael yn ein helpu ni i brosesu’ch cais presennol.
 haveYouReceivedADecision.error.required = Rhowch wybod i ni os ydych erioed wedi cael dyfarniad yn seiliedig ar ddull tebyg
 haveYouReceivedADecision.legend = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
+haveYouReceivedADecision.checkYourAnswersLabel = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
+haveYouReceivedADecision.change.hidden = have you ever received a ruling based on a similar method
 
 tellUsAboutYourRuling.heading = Ynghylch y dyfarniad blaenorol
 tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
@@ -1076,6 +1078,7 @@ tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
 tellUsAboutYourRuling.error.required = Rhowch wybod i ni am y dyfarniad
 tellUsAboutYourRuling.label = A allwch roi rhagor o wybodaeth i ni am y dyfarniad?
 tellUsAboutYourRuling.checkYourAnswersLabel = Ynghylch y dyfarniad blaenorol
+tellUsAboutYourRuling.change.hidden = details about the ruling
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
 
@@ -1091,8 +1094,10 @@ aboutSimilarGoods.heading = About the rulings for similar goods
 aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
 aboutSimilarGoods.error.required = Tell us about the rulings for similar goods
 aboutSimilarGoods.checkYourAnswersLabel = Tell us about the rulings for similar goods
+aboutSimilarGoods.change.hidden = details about the rulings for similar goods
 
 awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
 awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method
 awareOfRuling.checkYourAnswersLabel = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
+awareOfRuling.change.hidden = are you aware of any other rulings that have used a similar method
