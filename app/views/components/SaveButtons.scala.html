@@ -23,9 +23,13 @@
             ButtonViewModel(messages(submitButtonMessageKey))
         )
 
-        <a href="@routes.DraftHasBeenSavedController.onPageLoad(draftId).url" role="button" class="govuk-button govuk-button--secondary">
-            @messages("site.saveAsDraft")
-        </a>
+        @govukButton(Button(
+            classes = "govuk-button--secondary",
+            content = Text(messages("site.saveAsDraft")),
+            href = Some(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
+            )
+        )
+
     </div>
 
     
