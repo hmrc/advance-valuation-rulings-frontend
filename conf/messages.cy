@@ -1094,10 +1094,10 @@ aboutSimilarGoods.heading = Ynghylch y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.label = Allwch chi rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg?
 aboutSimilarGoods.error.required = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.checkYourAnswersLabel = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
-aboutSimilarGoods.change.hidden = details about the rulings for similar goods
+aboutSimilarGoods.change.hidden = Change the information on rulings using similar goods
 
 awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
 awareOfRuling.error.required = Rhowch wybod i ni os ydych yn ymwybodol o unrhyw ddyfarniadau eraill a ddefnyddiodd ddull tebyg
 awareOfRuling.checkYourAnswersLabel = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
-awareOfRuling.change.hidden = are you aware of any other rulings that have used a similar method
+awareOfRuling.change.hidden = Change whether you are aware of any other rulings using a similar method

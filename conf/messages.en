@@ -1073,7 +1073,7 @@ tellUsAboutYourRuling.bulletPoint.4 = the expiry date for the ruling
 tellUsAboutYourRuling.label = Can you give us more information about the ruling?
 tellUsAboutYourRuling.error.required = Tell us about the ruling
 tellUsAboutYourRuling.checkYourAnswersLabel = Tell us about the ruling
-tellUsAboutYourRuling.change.hidden = details about the ruling
+tellUsAboutYourRuling.change.hidden = Change the information you submitted about the ruling
 
 textCount.tooLong = Description of rulings must be 8,000 characters or less
 
@@ -1089,10 +1089,10 @@ aboutSimilarGoods.heading = About the rulings for similar goods
 aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
 aboutSimilarGoods.error.required = Tell us about the rulings for similar goods
 aboutSimilarGoods.checkYourAnswersLabel = Tell us about the rulings for similar goods
-aboutSimilarGoods.change.hidden = details about the rulings for similar goods
+aboutSimilarGoods.change.hidden = Change the information on rulings using similar goods
 
 awareOfRuling.heading = Are you aware of any other rulings that have used a similar method?
 awareOfRuling.para = Telling us about other rulings that have used a similar method will help the caseworker process your application.
 awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method
 awareOfRuling.checkYourAnswersLabel = Are you aware of any other rulings that have used a similar method?
-awareOfRuling.change.hidden = are you aware of any other rulings that have used a similar method
+awareOfRuling.change.hidden = Change whether you are aware of any other rulings using a similar method
