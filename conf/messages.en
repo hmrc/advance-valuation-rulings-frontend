@@ -97,9 +97,9 @@ checkYourAnswersForAgents.heading = Check your answers before sending your appli
 checkYourAnswersForAgents.business.eori.number.label = Company’s registered EORI number
 checkYourAnswersForAgents.business.name.label = Company’s registered business name
 checkYourAnswersForAgents.business.address.label = Company’s registered business address
-checkYourAnswersForAgents.business.eori.number.hidden = the company’s registered EORI number
-checkYourAnswersForAgents.business.name.hidden = the company’s registered business name
-checkYourAnswersForAgents.business.address.hidden = the company’s registered business address
+checkYourAnswersForAgents.business.eori.number.hidden = Change the agent’s organisation’s registered EORI number
+checkYourAnswersForAgents.business.name.hidden = Change the agent’s organisation’s registered business name
+checkYourAnswersForAgents.business.address.hidden = Change the agent’s organisation’s registered business address
 
 checkYourAnswersForAgents.company.org.heading = About the company
 checkYourAnswersForAgents.company.agent.heading = About the company you are representing
@@ -1018,10 +1018,10 @@ checkYourAnswersForAgents.agent.org.name.label = Agent’s full name
 checkYourAnswersForAgents.agent.org.email.label = Agent’s email address
 checkYourAnswersForAgents.agent.org.phone.label = Agent’s telephone number
 checkYourAnswersForAgents.agent.org.jobTitle.label = Agent’s job title
-checkYourAnswersForAgents.agent.org.name.change.hidden = your contact name
-checkYourAnswersForAgents.agent.org.email.change.hidden = your email address
-checkYourAnswersForAgents.agent.org.phone.change.hidden = your telephone number
-checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = your job title
+checkYourAnswersForAgents.agent.org.name.change.hidden = Change the agent’s full name
+checkYourAnswersForAgents.agent.org.email.change.hidden = Change the agent’s email address
+checkYourAnswersForAgents.agent.org.phone.change.hidden = Change the agent’s telephone number
+checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = Change the agent’s job title
 
 checkYourAnswersForAgents.applicant.role.hidden = the description of your role
 checkYourAnswersForAgents.applicant.name.change.hidden = your contact name

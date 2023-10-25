@@ -692,9 +692,9 @@ checkYourAnswersForAgents.heading = Gwirio’ch atebion cyn anfon eich cais
 checkYourAnswersForAgents.business.eori.number.label = Rhif EORI cofrestredig y sefydliad
 checkYourAnswersForAgents.business.name.label = Enw busnes cofrestredig y sefydliad
 checkYourAnswersForAgents.business.address.label = Cyfeiriad busnes cofrestredig y sefydliad
-checkYourAnswersForAgents.business.eori.number.hidden = Rhif EORI cofrestredig y sefydliad
-checkYourAnswersForAgents.business.name.hidden = Enw busnes cofrestredig y sefydliad
-checkYourAnswersForAgents.business.address.hidden = Cyfeiriad busnes cofrestredig y sefydliad
+checkYourAnswersForAgents.business.eori.number.hidden = Newid y rhif EORI cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.business.name.hidden = Newid yr enw busnes cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.business.address.hidden = Newid y cyfeiriad busnes cofrestredig ar gyfer sefydliad yr asiant
 
 checkYourAnswersForAgents.company.org.heading = Ynglŷn â’r sefydliad
 checkYourAnswersForAgents.company.agent.heading = Ynglŷn â’r sefydliad yr ydych yn ei gynrychioli
@@ -986,10 +986,10 @@ checkYourAnswersForAgents.agent.org.name.label = Enw llawn yr asiant
 checkYourAnswersForAgents.agent.org.email.label = Cyfeiriad e-bost yr asiant
 checkYourAnswersForAgents.agent.org.phone.label = Rhif ffôn yr asiant
 checkYourAnswersForAgents.agent.org.jobTitle.label = Teitl swydd yr asiant
-checkYourAnswersForAgents.agent.org.name.change.hidden = eich enw cyswllt
-checkYourAnswersForAgents.agent.org.email.change.hidden = eich cyfeiriad e-bost
-checkYourAnswersForAgents.agent.org.phone.change.hidden = eich rhif ffôn
-checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = Teitl eich swydd
+checkYourAnswersForAgents.agent.org.name.change.hidden = Newid enw llawn yr asiant
+checkYourAnswersForAgents.agent.org.email.change.hidden = Newid cyfeiriad e-bost yr asiant
+checkYourAnswersForAgents.agent.org.phone.change.hidden = Newid rhif ffôn yr asiant
+checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = Newid teitl swydd yr asiant
 
 checkYourAnswersForAgents.applicant.role.hidden = disgrifiad o’ch rôl
 checkYourAnswersForAgents.applicant.name.change.hidden = eich enw cyswllt
