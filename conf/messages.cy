@@ -184,7 +184,7 @@ applicationContactDetails.telephoneNumber.error.format = Nodwch rif ffôn, megis
 applicationContactDetails.name.change.hidden = Newid enw llawn yr ymgeisydd
 applicationContactDetails.email.change.hidden = Newid cyfeiriad yr ymgeisydd
 applicationContactDetails.phone.change.hidden = Newid rhif ffôn yr ymgeisydd
-applicationContactDetails.jobTitle.change.hidden = Teitl eich swydd
+applicationContactDetails.jobTitle.change.hidden = Newid teitl swydd yr ymgeisydd
 applicationContactDetails.jobTitle.error.required = Nodwch deitl eich swydd
 
 choosingMethod.title = Dewis y dull mwyaf priodol i brisio’ch nwyddau

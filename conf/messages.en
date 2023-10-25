@@ -457,7 +457,7 @@ applicationContactDetails.telephoneNumber.error.format = Enter a telephone numbe
 applicationContactDetails.name.change.hidden = Change the applicant’s full name
 applicationContactDetails.email.change.hidden = Change the applicant’s address
 applicationContactDetails.phone.change.hidden = Change the applicant’s telephone number
-applicationContactDetails.jobTitle.change.hidden = your job title
+applicationContactDetails.jobTitle.change.hidden = Change the applicant’s job title
 applicationContactDetails.jobTitle.error.required = Enter your job title
 
 eoriBeUpToDate.title = Your EORI number details must be correct to use this service
