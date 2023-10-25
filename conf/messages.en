@@ -435,9 +435,9 @@ checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes = Yes, these details are 
 checkRegisteredDetails.radio.agentOnBehalfOfTrader.no = No, these details are incorrect
 checkRegisteredDetails.search.link = Search again
 checkRegisteredDetails.search.text = if you think you entered the trader’s EORI number incorrectly
-checkRegisteredDetails.name.change.hidden = your registered business name
-checkRegisteredDetails.address.change.hidden = your registered business address
-checkRegisteredDetails.eori.change.hidden = your registered EORI number
+checkRegisteredDetails.name.change.hidden = Change the organisation’s registered business name
+checkRegisteredDetails.address.change.hidden = Change the organisation’s registered business address
+checkRegisteredDetails.eori.change.hidden = Change the organisation’s registered EORI number
 
 applicationContactDetails.title = Your contact details
 applicationContactDetails.heading = Your contact details

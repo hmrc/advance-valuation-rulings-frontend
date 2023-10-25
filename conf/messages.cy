@@ -127,9 +127,9 @@ checkRegisteredDetails.error.required.agentForTrader.consent = Dewiswch ‘Iawn�
 checkRegisteredDetails.warning.individual = Dyma’r manylion sydd gennym ar gofnod. Dylai’r rhain fod yr un manylion a ddefnyddiwyd i gofrestru eich rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI).
 checkRegisteredDetails.warning.organisation = Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
 checkRegisteredDetails.warning.agent = Dyma’r manylion sydd gennym ar gofnod. Dylai’r rhain fod yr un manylion a ddefnyddiwyd i gofrestru eich rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI).
-checkRegisteredDetails.name.change.hidden = enw’ch busnes cofrestredig
-checkRegisteredDetails.address.change.hidden = eich cyfeiriad busnes cofrestredig
-checkRegisteredDetails.eori.change.hidden = eich rhif EORI cofrestredig
+checkRegisteredDetails.name.change.hidden = Newid enw busnes cofrestredig y sefydliad
+checkRegisteredDetails.address.change.hidden = Newid cyfeiriad busnes cofrestredig y sefydliad
+checkRegisteredDetails.eori.change.hidden = Newid rhif EORI cofrestredig y sefydliad
 checkRegisteredDetails.private.title = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.checkYourAnswersLabel = Gwirio’r enw a’r cyfeiriad ar gyfer rhif EORI
 
