@@ -454,9 +454,9 @@ applicationContactDetails.email.error.required = Enter your email address
 applicationContactDetails.email.error.format = Enter an email address in the correct format, like name@example.com
 applicationContactDetails.telephoneNumber.error.required = Enter your telephone number
 applicationContactDetails.telephoneNumber.error.format = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192	
-applicationContactDetails.name.change.hidden = your contact name
-applicationContactDetails.email.change.hidden = your email address
-applicationContactDetails.phone.change.hidden = your telephone number
+applicationContactDetails.name.change.hidden = Change the applicant’s full name
+applicationContactDetails.email.change.hidden = Change the applicant’s address
+applicationContactDetails.phone.change.hidden = Change the applicant’s telephone number
 applicationContactDetails.jobTitle.change.hidden = your job title
 applicationContactDetails.jobTitle.error.required = Enter your job title
 

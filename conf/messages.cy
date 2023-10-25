@@ -181,9 +181,9 @@ applicationContactDetails.email.error.required = Nodwch eich cyfeiriad e-bost
 applicationContactDetails.email.error.format = Nodwch gyfeiriad e-bost yn y fformat cywir, megis enw@enghraifft.com
 applicationContactDetails.telephoneNumber.error.required = Nodwch eich rhif ffôn
 applicationContactDetails.telephoneNumber.error.format = Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +44 808 157 0192
-applicationContactDetails.name.change.hidden = eich enw cyswllt
-applicationContactDetails.email.change.hidden = eich cyfeiriad e-bost
-applicationContactDetails.phone.change.hidden = eich rhif ffôn
+applicationContactDetails.name.change.hidden = Newid enw llawn yr ymgeisydd
+applicationContactDetails.email.change.hidden = Newid cyfeiriad yr ymgeisydd
+applicationContactDetails.phone.change.hidden = Newid rhif ffôn yr ymgeisydd
 applicationContactDetails.jobTitle.change.hidden = Teitl eich swydd
 applicationContactDetails.jobTitle.error.required = Nodwch deitl eich swydd
 
