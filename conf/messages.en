@@ -647,7 +647,7 @@ whyIdenticalGoods.label = Can you explain why you cannot use Method 1 to work ou
 whyIdenticalGoods.paragraph.1 = Before you try Method 2 you must first have used Method 1 (transaction value of imported goods).
 whyIdenticalGoods.checkYourAnswersLabel = Reason for not selecting Method 1 to value your goods
 whyIdenticalGoods.error.required = Enter a reason why method 1 cannot be used
-whyIdenticalGoods.error.length = Explanation of wht you have not selected Method 1 must be 8,167 characters or less
+whyIdenticalGoods.error.length = Explanation of why you have not selected Method 1 must be 8,167 characters or less
 whyIdenticalGoods.change.hidden = your reason for not selecting Method 1 to value the goods
 
 explainHowPartiesAreRelated.title = Describe how the parties are related
@@ -829,7 +829,7 @@ explainWhyYouChoseMethodFour.paragraph.2 = You can only use Method 4 if the good
 explainWhyYouChoseMethodFour.paragraph.3 = ‘Unrelated’ means there isn’t an existing relationship or common interest between two companies.
 explainWhyYouChoseMethodFour.checkYourAnswersLabel = Reason for selecting Method 4 to value your goods
 explainWhyYouChoseMethodFour.error.required = Enter an explanation about why you have selected Method 4 to value your goods
-explainWhyYouChoseMethodFour.error.length = xplanation of why you have used Method 4 must be 8,167 characters or less
+explainWhyYouChoseMethodFour.error.length = Explanation of why you have used Method 4 must be 8,167 characters or less
 explainWhyYouChoseMethodFour.change.hidden = your reason for selecting Method 4 to value the goods
 
 explainWhyYouHaveNotSelectedMethodOneToThree.title = Explain why you have not used Methods 1 to 3
