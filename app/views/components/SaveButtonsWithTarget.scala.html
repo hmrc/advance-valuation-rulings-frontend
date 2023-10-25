@@ -20,13 +20,18 @@
 
     <div class="govuk-button-group">
 
-        <a href="@target" role="button" class="govuk-button">
-            @messages(submitButtonMessageKey)
-        </a>
+        @govukButton(Button(
+            content = Text(messages(submitButtonMessageKey)),
+            href = Some(target.toString)
+            )
+        )
 
-        <a href="@routes.DraftHasBeenSavedController.onPageLoad(draftId).url" role="button" class="govuk-button govuk-button--secondary">
-            @messages("site.saveAsDraft")
-        </a>
+        @govukButton(Button(
+            classes = "govuk-button--secondary",
+            content = Text(messages("site.saveAsDraft")),
+            href = Some(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
+            )
+        )
     </div>
 
     
