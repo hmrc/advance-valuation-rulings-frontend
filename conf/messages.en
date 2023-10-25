@@ -234,7 +234,7 @@ valuationMethod.method6 = Method 6 (fall-back method)
 valuationMethod.method6.hint = This is the last method you can try. You can only use it if you are unable to use any of the other methods. It involves adapting Methods 1 to 5 to fit unusual circumstances.
 valuationMethod.checkYourAnswersLabel = Proposed method of Valuation
 valuationMethod.error.required = Select a method to value the goods
-valuationMethod.change.hidden = your proposed valuation method
+valuationMethod.change.hidden = Change the proposed method of valuation
 
 commodityCode.title = What is the commodity code for the goods?
 commodityCode.heading = What is the commodity code for the goods?
@@ -259,7 +259,7 @@ hasCommodityCode.error.required = Select yes if you know the commodity code
 hasCommodityCode.details.label = Help finding your commodity code
 hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. <br><br>You can {0} if you don’t know it.
 hasCommodityCode.paragraph.1.link = look up the commodity code for your goods (opens in new tab)
-hasCommodityCode.change.hidden = your response to whether you have a commodity code for the goods
+hasCommodityCode.change.hidden = Change whether you have a commodity code for the goods
 hasCommodityCode.question = Do you have a commodity code for the goods?
 
 #PROVIDE TRADER EORI NUMBER
@@ -367,7 +367,7 @@ hasConfidentialInformation.paragraph.2 = We will not publish confidential inform
 hasConfidentialInformation.paragraph.inset = You will be able to upload files later in the application.
 hasConfidentialInformation.checkYourAnswersLabel = Do you want to add any confidential information about the goods?
 hasConfidentialInformation.error.required = Select yes if you want to add any confidential information about the goods
-hasConfidentialInformation.change.hidden = your response to whether you want to add any confidential information about the goods
+hasConfidentialInformation.change.hidden = Change whether you want to add confidential information about the goods
 
 importingGoods.title = This service is for importing goods into Great Britain
 importingGoods.heading = This service is for importing goods into Great Britain
@@ -493,8 +493,8 @@ doYouWantToUploadDocuments.bulletPoint.2 = copies of previous import declaration
 doYouWantToUploadDocuments.bulletPoint.3 = breakdowns of manufacturing costs
 doYouWantToUploadDocuments.checkYourAnswersLabel = Do you want to upload any supporting documents?
 doYouWantToUploadDocuments.error.required = Select yes if you want to upload any supporting documents
-doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
-doYouWantToUploadDocuments.files.change.hidden = the supporting documents you uploaded
+doYouWantToUploadDocuments.change.hidden = Change whether you want to upload any supporting documents
+doYouWantToUploadDocuments.files.change.hidden = Change the supporting documents you uploaded
 doYouWantToUploadDocuments.question = Do you want to upload any supporting documents?
 
 isThisFileConfidential.title = Tell us if you want to make this document confidential
@@ -776,7 +776,7 @@ descriptionOfGoods.hint = For example, silicone smartphone case
 descriptionOfGoods.checkYourAnswersLabel = Short description of the goods
 descriptionOfGoods.error.required = Enter a short description of the goods
 descriptionOfGoods.error.length = Short description of the goods must be 100 characters or less
-descriptionOfGoods.change.hidden = your short description of the goods
+descriptionOfGoods.change.hidden = Change the short description of the goods
 
 haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges related to the goods
 haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges related to the goods
@@ -786,7 +786,7 @@ haveTheGoodsBeenSubjectToLegalChallenges.para.1 = A legal challenge could relate
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Providing this information can help to identify goods with similar rulings.
 haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = Have the goods been subject to any legal challenges?
 haveTheGoodsBeenSubjectToLegalChallenges.error.required = Select yes if the goods have been subject to any legal challenges
-haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = your response to whether the goods have been subject to legal challenges
+haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = Change whether the goods have been subject to any legal challenges
 
 applicationComplete.title = Application complete
 applicationComplete.heading = Application complete
@@ -1062,7 +1062,7 @@ haveYouReceivedADecision.para.2 = Telling us about similar rulings you have rece
 haveYouReceivedADecision.error.required = Tell us if you have ever received a ruling based on a similar method
 haveYouReceivedADecision.legend = Have you ever received a ruling based on a similar method?
 haveYouReceivedADecision.checkYourAnswersLabel = Have you ever received a ruling based on a similar method?
-haveYouReceivedADecision.change.hidden = have you ever received a ruling based on a similar method
+haveYouReceivedADecision.change.hidden = Change whether you have ever received a ruling based on a similar method
 
 tellUsAboutYourRuling.heading = About the previous ruling
 tellUsAboutYourRuling.para = Examples of information can include:

@@ -218,7 +218,7 @@ valuationMethod.method6 = Dull 6 (dull ‘wrth gefn’)
 valuationMethod.method6.hint = Dyma’r dull olaf y gallwch roi cynnig arno. Gallwch ond ei ddefnyddio os na allwch ddefnyddio unrhyw ddull arall. Mae’n golygu addasu Dulliau 1 i 5 er mwyn ystyried amgylchiadau anarferol.
 valuationMethod.checkYourAnswersLabel = Y dull prisio arfaethedig
 valuationMethod.error.required = Dewiswch ddull i brisio’r nwyddau
-valuationMethod.change.hidden = eich dull prisio arfaethedig
+valuationMethod.change.hidden = Newid y dull prisio arfaethedig
 
 isThereASaleInvolved.caption = Ynglŷn â’r nwyddau
 isThereASaleInvolved.title = Oes gwerthiant ar waith?
@@ -472,7 +472,7 @@ descriptionOfGoods.hint = Er enghraifft, cas ffôn clyfar silicôn
 descriptionOfGoods.checkYourAnswersLabel = Disgrifiad byr o’r nwyddau
 descriptionOfGoods.error.required = Nodwch ddisgrifiad byr o’r nwyddau
 descriptionOfGoods.error.length = Mae’n rhaid i ddisgrifiad byr o’r nwyddau fod yn 100 o gymeriadau neu lai
-descriptionOfGoods.change.hidden = eich disgrifiad byr o’r nwyddau
+descriptionOfGoods.change.hidden = Newid y disgrifiad byr o’r nwyddau
 
 hasCommodityCode.caption = Ynglŷn â’r nwyddau
 hasCommodityCode.title = god nwyddau ar gyfer y nwyddau
@@ -482,7 +482,7 @@ hasCommodityCode.error.required = Dewiswch ‘Iawn’ os ydych yn gwybod y cod n
 hasCommodityCode.details.label = Help i ddod o hyd i’ch cod nwyddau
 hasCommodityCode.paragraph.1 = Mae cod nwyddau yn gyfeirnod sy’n cael ei gydnabod yn rhyngwladol. Bydd o gymorth i ni wrth adnabod y cynnyrch penodol rydych yn ei fewnforio. <br><br>{0}, os nad ydych yn ei wybod.
 hasCommodityCode.paragraph.1.link = Gallwch chwilio am y cod nwyddau ar gyfer eich nwyddau (yn agor tab newydd)
-hasCommodityCode.change.hidden = eich ymateb i a oes gennych god nwyddau ar gyfer y nwyddau
+hasCommodityCode.change.hidden = Newid p’un a oes gennych god nwyddau ar gyfer y nwyddau
 hasCommodityCode.question = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 
 contactPage.caption = Ynglŷn â’r ymgeisydd
@@ -513,7 +513,7 @@ haveTheGoodsBeenSubjectToLegalChallenges.para.1 = Gallai her gyfreithiol ymwneud
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Mae darparu’r wybodaeth hon yn gallu helpu i adnabod nwyddau sydd â dyfarniadau tebyg.
 haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
 haveTheGoodsBeenSubjectToLegalChallenges.error.required = Dewiswch ‘Iawn’ os yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol
-haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = eich ymateb i a yw’r nwyddau wedi bod yn destun heriau cyfreithiol
+haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = Newid p’un a yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol
 
 describeTheLegalChallenges.caption = Ynglŷn â’r nwyddau
 describeTheLegalChallenges.title = Disgrifiwch yr heriau cyfreithiol sy’n berthnasol i’r nwyddau
@@ -534,7 +534,7 @@ hasConfidentialInformation.paragraph.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrin
 hasConfidentialInformation.paragraph.inset = Byddwch yn gallu uwchlwytho ffeiliau yn hwyrach yn y cais.
 hasConfidentialInformation.checkYourAnswersLabel = A ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau?
 hasConfidentialInformation.error.required = Dewiswch ‘Iawn’ os ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau
-hasConfidentialInformation.change.hidden = eich ymateb i a ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau
+hasConfidentialInformation.change.hidden = Newid p’un a ydych am ychwanegu gwybodaeth gyfrinachol am y nwyddau
 
 confidentialInformation.title = Disgrifiad o unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
 confidentialInformation.heading = Disgrifiad o unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
@@ -560,8 +560,8 @@ doYouWantToUploadDocuments.bulletPoint.2 = copïau datganiadau mewnforio blaenor
 doYouWantToUploadDocuments.bulletPoint.3 = dadansoddiad o’r costau cynhyrchu
 doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych eisiau uwchlwytho unrhyw ddogfennau ategol?
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
-doYouWantToUploadDocuments.change.hidden = eich ymateb i a ydych eisiau uwchlwytho unrhyw ddogfennau ategol
-doYouWantToUploadDocuments.files.change.hidden = y dogfennau ategol rydych wedi’u huwchlwytho
+doYouWantToUploadDocuments.change.hidden = Newid p’un a ydych am uwchlwytho unrhyw ddogfennau ategol
+doYouWantToUploadDocuments.files.change.hidden = Newid y dogfennau ategol rydych wedi’u huwchlwytho
 doYouWantToUploadDocuments.question = A ydych eisiau uwchlwytho unrhyw ddogfennau ategol?
 
 uploadLetterOfAuthority.title = Uwchlwytho’ch llythyr o awdurdod
@@ -1067,7 +1067,7 @@ haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg ry
 haveYouReceivedADecision.error.required = Rhowch wybod i ni os ydych erioed wedi cael dyfarniad yn seiliedig ar ddull tebyg
 haveYouReceivedADecision.legend = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
 haveYouReceivedADecision.checkYourAnswersLabel = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
-haveYouReceivedADecision.change.hidden = have you ever received a ruling based on a similar method
+haveYouReceivedADecision.change.hidden = Newid p’un a ydych wedi cael dyfarniad yn seiliedig ar ddull tebyg
 
 tellUsAboutYourRuling.heading = Ynghylch y dyfarniad blaenorol
 tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
