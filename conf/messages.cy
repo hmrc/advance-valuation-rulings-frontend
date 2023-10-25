@@ -597,7 +597,7 @@ uploadSupportingDocuments.bulletPoint.1 = un ffeil ar y tro
 uploadSupportingDocuments.bulletPoint.2 = hyd at {0} ffeil
 uploadSupportingDocuments.bulletPoint.3 = llai na {0}MB
 uploadSupportingDocuments.bulletPoint.4 = ar ffurf PDF neu JPEG
-uploadSupportingDocuments.paragraph.3 = Do not upload password-protected files, as this will prevent the processing of your application.
+uploadSupportingDocuments.paragraph.3 = Peidiwch ag uwchlwytho ffeiliau sydd wedi’u diogelu gan gyfrinair, gan y bydd hyn yn atal prosesu’ch cais.
 
 uploadSupportingDocuments.label = Uwchlwytho ffeil
 uploadSupportingDocuments.button = Uwchlwytho a pharhau
