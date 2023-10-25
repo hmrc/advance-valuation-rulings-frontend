@@ -757,7 +757,7 @@ agentForTraderCheckYourAnswers.applicant.email.hidden = cyfeiriad e-bost yr Asia
 agentForTraderCheckYourAnswers.applicant.phone.label = Rhif ffôn yr asiant
 agentForTraderCheckYourAnswers.applicant.phone.hidden = rhif ffôn yr Asiant
 agentForTraderCheckYourAnswers.applicant.companyName.label = Enw cwmni’r asiant
-agentForTraderCheckYourAnswers.applicant.companyName.hidden = enw cwmni’r Asiant
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = Newid enw cwmni’r asiant
 agentForTraderCheckYourAnswers.applicant.jobTitle.label = Teitl swydd yr asiant
 agentForTraderCheckYourAnswers.applicant.jobTitle.hidden = teitl swydd yr asiant
 agentForTraderCheckYourAnswers.applicant.role.label = Disgrifiad o’r rôl
@@ -777,7 +777,7 @@ agentForTraderCheckYourAnswers.agreement.bulletPoint.2 = storio’r wybodaeth a 
 agentForTraderCheckYourAnswers.agreement.bulletPoint.3 = cysylltu â chi drwy e-bost
 agentForTraderCheckYourAnswers.button.continue = Derbyn a gwneud cais am ddyfarniad
 agentForTraderCheckYourAnswers.trader.loa.label = Llythyr o awdurdod
-agentForTraderCheckYourAnswers.trader.loa.hidden = Llythyr o awdurdod
+agentForTraderCheckYourAnswers.trader.loa.hidden = Newid y llythyr o awdurdod
 
 
 journeyRecovery.continue.title = Mae’n ddrwg gennym, ond mae problem gyda’r gwasanaeth

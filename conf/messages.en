@@ -162,7 +162,7 @@ agentForTraderCheckYourAnswers.applicant.email.hidden = the Agent’s email addr
 agentForTraderCheckYourAnswers.applicant.phone.label = Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
-agentForTraderCheckYourAnswers.applicant.companyName.hidden = the Agent’s company name
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = Change the agent’s company name
 agentForTraderCheckYourAnswers.applicant.jobTitle.label = Agent’s job title
 agentForTraderCheckYourAnswers.applicant.jobTitle.hidden = the Agent’s job title
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
@@ -182,7 +182,7 @@ agentForTraderCheckYourAnswers.agreement.bulletPoint.2 = store the information y
 agentForTraderCheckYourAnswers.agreement.bulletPoint.3 = contact you by email
 agentForTraderCheckYourAnswers.button.continue = Accept and apply for a ruling
 agentForTraderCheckYourAnswers.trader.loa.label = Letter of authority
-agentForTraderCheckYourAnswers.trader.loa.hidden = Letter of authority
+agentForTraderCheckYourAnswers.trader.loa.hidden = Change the letter of authority
 
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
