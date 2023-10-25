@@ -140,9 +140,9 @@ agentForTraderCheckYourAnswers.heading = Check your answers before sending your 
 agentForTraderCheckYourAnswers.trader.eori.number.label = Trader’s registered EORI number
 agentForTraderCheckYourAnswers.trader.name.label = Trader’s registered business name
 agentForTraderCheckYourAnswers.trader.address.label = Trader’s registered business address
-agentForTraderCheckYourAnswers.trader.eori.number.hidden = the trader’s registered EORI number
-agentForTraderCheckYourAnswers.trader.name.hidden = the trader’s registered business name
-agentForTraderCheckYourAnswers.trader.address.hidden = the trader’s registered business address
+agentForTraderCheckYourAnswers.trader.eori.number.hidden = Change the trader’s EORI number
+agentForTraderCheckYourAnswers.trader.name.hidden = Change the trader's business name
+agentForTraderCheckYourAnswers.trader.address.hidden = Change the trader's business address
 
 agentForTraderCheckYourAnswers.trader.heading = About the trader
 

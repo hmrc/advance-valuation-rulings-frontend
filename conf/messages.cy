@@ -735,9 +735,9 @@ agentForTraderCheckYourAnswers.heading = Gwirio’ch atebion
 agentForTraderCheckYourAnswers.trader.eori.number.label = Rhif EORI cofrestredig y masnachwr
 agentForTraderCheckYourAnswers.trader.name.label = Enw busnes cofrestredig y masnachwr
 agentForTraderCheckYourAnswers.trader.address.label = Cyfeiriad busnes cofrestredig y masnachwr
-agentForTraderCheckYourAnswers.trader.eori.number.hidden = rhif EORI cofrestredig y masnachwr
-agentForTraderCheckYourAnswers.trader.name.hidden = enw busnes cofrestredig y masnachwr
-agentForTraderCheckYourAnswers.trader.address.hidden = cyfeiriad busnes cofrestredig y masnachwr
+agentForTraderCheckYourAnswers.trader.eori.number.hidden = Newid rhif EORI y masnachwra
+agentForTraderCheckYourAnswers.trader.name.hidden = Newid enw busnes cofrestredig y masnachwr
+agentForTraderCheckYourAnswers.trader.address.hidden = Newid cyfeiriad busnes cofrestredig y masnachwr
 
 agentForTraderCheckYourAnswers.trader.heading = Ynglŷn â’r masnachwr
 
