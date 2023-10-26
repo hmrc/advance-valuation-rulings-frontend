@@ -21,7 +21,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.{AwareOfRulingPage, HaveYouReceivedADecisionPage}
+import pages.AwareOfRulingPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 

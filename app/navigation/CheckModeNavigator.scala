@@ -25,24 +25,6 @@ import pages._
 import queries.AllDocuments
 
 object CheckModeNavigator {
-  import controllers._
-
-  private def checkYourAnswers(draftId: DraftId) =
-    routes.CheckYourAnswersController.onPageLoad(draftId)
-
-  private def checkYourAnswersForAgents(draftId: DraftId) =
-    routes.CheckYourAnswersForAgentsController.onPageLoad(draftId)
-
-  private def navigateWithAuthUserType(userAnswers: UserAnswers) =
-    userAnswers.get(AccountHomePage) match {
-      case None               => UnauthorisedController.onPageLoad
-      case Some(authUserType) =>
-        resolveAuthUserType(authUserType)(
-          checkYourAnswers(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId),
-          checkYourAnswersForAgents(userAnswers.draftId)
-        )
-    }
 
   // Pre nav
   private def checkRegisteredDetails(userAnswers: UserAnswers): Call =
@@ -50,7 +32,7 @@ object CheckModeNavigator {
       case None        => CheckRegisteredDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(value) =>
         if (value) {
-          navigateWithAuthUserType(userAnswers)
+          CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
         } else {
           EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
         }
@@ -62,7 +44,7 @@ object CheckModeNavigator {
       case None        => HasConfidentialInformationController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  =>
         ConfidentialInformationController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(false) => navigateWithAuthUserType(userAnswers)
+      case Some(false) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   private def haveBeenSubjectToLegalChallenges(userAnswers: UserAnswers): Call =
@@ -74,23 +56,14 @@ object CheckModeNavigator {
         )
       case Some(true)  =>
         DescribeTheLegalChallengesController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(false) => navigateWithAuthUserType(userAnswers)
+      case Some(false) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   private def hasCommodityCode(userAnswers: UserAnswers): Call =
     userAnswers.get(HasCommodityCodePage) match {
       case None        => HasCommodityCodeController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  => CommodityCodeController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(false) => navigateWithAuthUserType(userAnswers)
-    }
-
-  private def whatIsYourRoleAsImporter(userAnswers: UserAnswers): Call =
-    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-      case None                                              =>
-        WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg) =>
-        AgentCompanyDetailsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)      => navigateWithAuthUserType(userAnswers)
+      case Some(false) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   private def doYouWantToUploadDocuments(userAnswers: UserAnswers): Call =
@@ -99,7 +72,7 @@ object CheckModeNavigator {
       case Some(true)  =>
         UploadSupportingDocumentsController
           .onPageLoad(CheckMode, userAnswers.draftId, None, None)
-      case Some(false) => navigateWithAuthUserType(userAnswers)
+      case Some(false) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   private def uploadSupportingDocumentPage(userAnswers: UserAnswers): Call =
@@ -122,7 +95,7 @@ object CheckModeNavigator {
             None,
             None
           )
-        case false => navigateWithAuthUserType(userAnswers)
+        case false => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
       }
       .getOrElse(JourneyRecoveryController.onPageLoad())
 
@@ -227,13 +200,13 @@ object CheckModeNavigator {
     userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
       case None        => IsTheSaleSubjectToConditionsController.onPageLoad(CheckMode, userAnswers.draftId)
       case Some(true)  => nextPage(DescribeTheConditionsPage, userAnswers)
-      case Some(false) => navigateWithAuthUserType(userAnswers)
+      case Some(false) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   private def explainTheConditions(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheConditionsPage) match {
       case None    => DescribeTheConditionsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => navigateWithAuthUserType(userAnswers)
+      case Some(_) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   // Method 2----------------------------------------------------------------
@@ -253,7 +226,7 @@ object CheckModeNavigator {
   private def describeTheIdenticalGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheIdenticalGoodsPage) match {
       case None    => DescribeTheIdenticalGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => navigateWithAuthUserType(userAnswers)
+      case Some(_) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   // Method 3----------------------------------------------------------------
@@ -279,7 +252,7 @@ object CheckModeNavigator {
   private def describeTheSimilarGoods(userAnswers: UserAnswers): Call =
     userAnswers.get(DescribeTheSimilarGoodsPage) match {
       case None    => DescribeTheSimilarGoodsController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => navigateWithAuthUserType(userAnswers)
+      case Some(_) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   // method 4 ----------------------------------------------------------------
@@ -296,7 +269,7 @@ object CheckModeNavigator {
   private def explainWhyYouChoseMethodFour(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainWhyYouChoseMethodFourPage) match {
       case None    => ExplainWhyYouChoseMethodFourController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => navigateWithAuthUserType(userAnswers)
+      case Some(_) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   // method 5----------------------------------------------------------------
@@ -309,7 +282,7 @@ object CheckModeNavigator {
   private def explainReasonComputedValue(userAnswers: UserAnswers): Call =
     userAnswers.get(ExplainReasonComputedValuePage) match {
       case None    => ExplainReasonComputedValueController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => navigateWithAuthUserType(userAnswers)
+      case Some(_) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   // method 6----------------------------------------------------------------
@@ -333,7 +306,7 @@ object CheckModeNavigator {
     userAnswers.get(ExplainHowYouWillUseMethodSixPage) match {
       case None    =>
         ExplainHowYouWillUseMethodSixController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => navigateWithAuthUserType(userAnswers)
+      case Some(_) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call =
@@ -349,7 +322,6 @@ object CheckModeNavigator {
       case UploadSupportingDocumentPage                 => uploadSupportingDocumentPage(userAnswers)
       case IsThisFileConfidentialPage                   => isThisFileConfidential(userAnswers)
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
-      case WhatIsYourRoleAsImporterPage                 => whatIsYourRoleAsImporter(userAnswers)
       case RemoveSupportingDocumentPage(_)              => removeSupportingDocumentPage(userAnswers)
 
       case TellUsAboutYourRulingPage    => tellUsAboutYourRuling(userAnswers)
@@ -394,6 +366,6 @@ object CheckModeNavigator {
         explainWhyYouHaveNotSelectedMethodOneToFivePage(userAnswers)
       case ExplainHowYouWillUseMethodSixPage               => explainHowYouWillUseMethodSixPage(userAnswers)
       case AdaptMethodPage                                 => adaptMethodPage(userAnswers)
-      case _                                               => navigateWithAuthUserType(userAnswers)
+      case _                                               => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
     }
 }

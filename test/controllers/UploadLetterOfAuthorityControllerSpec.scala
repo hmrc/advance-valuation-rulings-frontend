@@ -18,13 +18,10 @@ package controllers
 
 import java.time.Instant
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import play.api.Application
-import play.api.i18n.{Messages, MessagesProvider}
 import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -32,7 +29,6 @@ import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile}
 import models.upscan.UpscanInitiateResponse
-import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.Mockito.{verify, when}
@@ -41,7 +37,6 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
-import services.UserAnswersService
 import services.fileupload.FileService
 import views.html.UploadLetterOfAuthorityView
 

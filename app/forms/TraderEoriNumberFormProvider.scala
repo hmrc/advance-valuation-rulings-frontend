@@ -50,7 +50,5 @@ class TraderEoriNumberFormProvider @Inject() extends Mappings {
             Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
           case _                                 => Invalid(ValidationError("provideTraderEori.error.default"))
         }
-      case _ =>
-        Invalid(ValidationError("provideTraderEori.error.default"))
     }
 }

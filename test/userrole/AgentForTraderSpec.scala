@@ -254,8 +254,17 @@ class AgentForTraderSpec extends SpecBase with Matchers {
           .onPageLoad(draftId)
           .url
       }
-
     }
+    "getContactDetailsJourney should return" - {
+      "should return BusinessContactDetails page" in {
 
+        agentForTrader
+          .getContactDetailsJourney(draftId)
+          .url mustBe controllers.routes.BusinessContactDetailsController
+          .onPageLoad(NormalMode, draftId)
+          .url
+
+      }
+    }
   }
 }

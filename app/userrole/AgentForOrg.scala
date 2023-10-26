@@ -30,7 +30,7 @@ package userrole {
 
   import play.twirl.api.HtmlFormat
 
-  import controllers.routes.CheckRegisteredDetailsController
+  import controllers.routes.{BusinessContactDetailsController, CheckRegisteredDetailsController}
   import forms.AgentForOrgCheckRegisteredDetailsFormProvider
   import models.{BusinessContactDetails, NormalMode, UserAnswers}
   import models.requests.ContactDetails
@@ -106,6 +106,9 @@ package userrole {
     override val getMaxSupportingDocuments: Int = 5
 
     override def sourceFromUA: Boolean = false
+
+    override def getContactDetailsJourney(draftId: DraftId): Call =
+      BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
 
   }
 }

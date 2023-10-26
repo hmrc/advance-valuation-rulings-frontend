@@ -35,11 +35,13 @@ import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 
 import base.SpecBase
 import com.typesafe.config.Config
+import config.FrontendAppConfig
 import controllers.common.FileUploadHelper
 import models.{Done, DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import models.requests.DataRequest
 import models.upscan.UpscanInitiateResponse
 import navigation.Navigator
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.IdiomaticMockito.{returned, DoSomethingOps}
@@ -47,6 +49,7 @@ import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.{reset, spy, when}
 import org.mockito.stubbing.ScalaOngoingStubbing
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
 import org.scalatest.prop.Tables.Table
 import org.scalatestplus.mockito.MockitoSugar
@@ -84,6 +87,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val mockUserAnswersService      = mock[UserAnswersService]
   private val mockOsClient                = mock[PlayObjectStoreClient]
   private val mockConfig                  = mock[Config]
+  private val frontEndAppConfig           = mock[FrontendAppConfig]
 
   private val mockUserRoleProvider = mock[UserRoleProvider]
   private val mockUserRole         = mock[UserRole]
@@ -100,6 +104,7 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
   private val errorCode               = "InvalidArgument"
   private val maximumFileSizeMB: Long = 5
   private val page                    = UploadLetterOfAuthorityPage
+  private val appName                 = "App name"
 
   private val upscanInitiateResponse               = UpscanInitiateResponse(
     reference = "reference",
@@ -165,7 +170,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       mockConfiguration,
       mockUserAnswersService,
       mockOsClient,
-      mockUserRoleProvider
+      mockUserRoleProvider,
+      frontEndAppConfig
     )
 
   private def setUploadedFileInUserAnswers(isLetterOfAuthority: Boolean) =
@@ -257,7 +263,13 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
 
     setMockSupportingDocumentsView()
     setMockUserRole(userAnswers)
-    when(mockOsClient.deleteObject(any[Path.File], any[String])(any[HeaderCarrier]))
+    when(frontEndAppConfig.appName).thenReturn(appName)
+    when(
+      mockOsClient.deleteObject(
+        ArgumentMatchers.eq(Path.File(successfulFile.fileUrl.get)),
+        ArgumentMatchers.eq(appName)
+      )(any[HeaderCarrier])
+    )
       .thenReturn(Future.successful(()))
     when(mockUserAnswersService.set(any())(any()))
       .thenReturn(Future.successful(Done))
@@ -328,7 +340,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
           mockConfiguration,
           mockUserAnswersService,
           mockOsClient,
-          mockUserRoleProvider
+          mockUserRoleProvider,
+          frontEndAppConfig
         )
           .continue(mode, userAnswers, isLetterOfAuthority)
 
@@ -448,7 +461,8 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
         mockConfiguration,
         mockUserAnswersService,
         mockOsClient,
-        mockUserRoleProvider
+        mockUserRoleProvider,
+        frontEndAppConfig
       )
     )
 
@@ -542,6 +556,37 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual expectedErrorViewText
+    }
+  }
+
+  "when there is a Failure file" - {
+    "Throw runtime exception when in Failure state" in {
+      val isLetterOfAuthority = true
+      val redirectPath        = getRedirectPath()
+
+      setMockLetterOfAuthorityView()
+      when(mockConfiguration.underlying).thenReturn(mockConfig)
+      setUpMockFileService(redirectPath, isLetterOfAuthority)
+      val fileUploadHelper = spyMockFileUploadHelper()
+
+      val result: Future[Result] = fileUploadHelper.onPageLoadWithFileStatus(
+        NormalMode,
+        draftId,
+        None,
+        Some("reference"),
+        Some(
+          UploadedFile.Failure(
+            reference = "ref",
+            failureDetails = UploadedFile.FailureDetails(
+              failureReason = UploadedFile.FailureReason.Duplicate,
+              failureMessage = None
+            )
+          )
+        ),
+        isLetterOfAuthority
+      )(mock[DataRequest[AnyContent]], headerCarrier)
+
+      result.failed.futureValue shouldBe a[RuntimeException]
     }
   }
 

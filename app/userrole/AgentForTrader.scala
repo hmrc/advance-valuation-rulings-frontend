@@ -29,10 +29,10 @@ package userrole {
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
-  import controllers.routes.ProvideTraderEoriController
+  import controllers.routes.{BusinessContactDetailsController, ProvideTraderEoriController}
   import forms.AgentForTraderCheckRegisteredDetailsFormProvider
   import logging.Logging
-  import models.{BusinessContactDetails, TraderDetailsWithConfirmation, UserAnswers}
+  import models.{BusinessContactDetails, TraderDetailsWithConfirmation, NormalMode, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
@@ -116,6 +116,8 @@ package userrole {
 
     override def sourceFromUA: Boolean = true
 
+    override def getContactDetailsJourney(draftId: DraftId): Call =
+      BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
   }
 
 }

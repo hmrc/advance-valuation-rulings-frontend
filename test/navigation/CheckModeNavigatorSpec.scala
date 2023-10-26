@@ -35,7 +35,7 @@ class CheckModeNavigatorSpec extends SpecBase {
   val userRoleProvider              = mock[UserRoleProvider]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
   val appConfig                     = mock[FrontendAppConfig]
-  val navigator                     = new Navigator(appConfig, userRoleProvider)
+  val navigator                     = new Navigator(userRoleProvider)
   val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false
@@ -964,7 +964,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               UploadAnotherSupportingDocumentPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            ) mustBe routes.CheckYourAnswersController.onPageLoad(
               draftId
             )
           }
@@ -976,7 +976,7 @@ class CheckModeNavigatorSpec extends SpecBase {
               UploadAnotherSupportingDocumentPage,
               CheckMode,
               userAnswers
-            ) mustBe routes.CheckYourAnswersForAgentsController.onPageLoad(
+            ) mustBe routes.CheckYourAnswersController.onPageLoad(
               draftId
             )
           }
@@ -1013,32 +1013,6 @@ class CheckModeNavigatorSpec extends SpecBase {
               userAnswersAsIndividualTrader
             ) mustBe routes.DoYouWantToUploadDocumentsController.onPageLoad(CheckMode, draftId)
           }
-        }
-      }
-
-      "WhatIsYourRoleAsImporter page" - {
-        "navigate to CheckYourAnswers when An Employee of the Organisation" in {
-          val userAnswers = userAnswersWith(
-            WhatIsYourRoleAsImporterPage,
-            WhatIsYourRoleAsImporter.EmployeeOfOrg
-          )
-          navigator.nextPage(
-            WhatIsYourRoleAsImporterPage,
-            CheckMode,
-            userAnswers
-          ) mustBe checkYourAnswers
-        }
-
-        "navigate to AgentCompanyDetails when user answers are empty and selecting Agent acting on behalf" in {
-          val userAnswers = userAnswersWith(
-            WhatIsYourRoleAsImporterPage,
-            WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
-          )
-          navigator.nextPage(
-            WhatIsYourRoleAsImporterPage,
-            CheckMode,
-            userAnswers
-          ) mustBe routes.AgentCompanyDetailsController.onPageLoad(CheckMode, draftId)
         }
       }
 

@@ -30,8 +30,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
-  private val logger = play.api.Logger(getClass)
-
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
 

@@ -18,7 +18,7 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -29,7 +29,6 @@ import forms.ValuationMethodFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ChoosingMethodPage
-import services.UserAnswersService
 import views.html.ChoosingMethodView
 
 class ChoosingMethodController @Inject() (
@@ -41,8 +40,7 @@ class ChoosingMethodController @Inject() (
   formProvider: ValuationMethodFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ChoosingMethodView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =

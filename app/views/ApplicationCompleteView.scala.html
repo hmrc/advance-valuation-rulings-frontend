@@ -39,7 +39,7 @@
 @guideLink = {
     @link(
             id = "step_by_step_guide_link",
-            text = messages("applicationComplete.paragraph.3.link"),
+            text = messages("applicationComplete.paragraph.4.link"),
             call = Call("GET", config.stepByStepGuideUrl)
         )
     }
@@ -92,22 +92,25 @@
 
     @paragraph(Html(messages("applicationComplete.paragraph.1", email)))
     @paragraph(Html(messages("applicationComplete.paragraph.2")))
-    @paragraph(Html(messages("applicationComplete.paragraph.3", guideLink)))
+    @paragraph(Html(messages("applicationComplete.paragraph.3")))
+    @paragraph(Html(messages("applicationComplete.paragraph.4", guideLink)))
 
 
     @govukButton(
-        ButtonViewModel("Go to your applications")
+        ButtonViewModel(messages("applicationComplete.button.continue"))
         .asLink(routes.AccountHomeController.onPageLoad().url)
     )
 
 <!--How to use the ruling-->
     @subheading(messages("applicationComplete.ruling.subheading"))
-    @paragraph(Html(messages("applicationComplete.ruling.paragraph")))
+    @paragraph(Html(messages("applicationComplete.ruling.paragraph.1")))
 
     @bulletList(Seq(
         Html(messages("applicationComplete.ruling.bulletPoint.1", customsDeclarationLink)),
         Html(messages("applicationComplete.ruling.bulletPoint.2"))
     ))
+
+    @paragraph(Html(messages("applicationComplete.ruling.paragraph.2")))
 
 <!--If you have any questions about your application-->
     @subheading(messages("applicationComplete.questions.subheading"))

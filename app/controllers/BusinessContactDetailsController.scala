@@ -54,26 +54,26 @@ class BusinessContactDetailsController @Inject() (
   private def includeCompanyName()(implicit request: DataRequest[AnyContent]): Boolean =
     userRoleProvider
       .getUserRole(request.userAnswers)
-      .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
+      .contactDetailsIncludeCompanyName
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        val form         = formProvider(includeCompanyName)
+        val form         = formProvider(includeCompanyName())
         val preparedForm = BusinessContactDetailsPage.fill(form)
-        Ok(view(preparedForm, mode, draftId, includeCompanyName))
+        Ok(view(preparedForm, mode, draftId, includeCompanyName()))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        val form = formProvider(includeCompanyName)
+        val form = formProvider(includeCompanyName())
         form
           .bindFromRequest()
           .fold(
             formWithErrors =>
               Future
-                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName))),
+                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName()))),
             value =>
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)
@@ -81,21 +81,16 @@ class BusinessContactDetailsController @Inject() (
               } yield saveDraft match {
                 case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
                 case false =>
-                  if (appConfig.agentOnBehalfOfTrader) {
-                    Redirect(
-                      navigator.nextPage(
-                        userRoleProvider
-                          .getUserRole(updatedAnswers)
-                          .selectBusinessContactDetailsPage(),
-                        mode,
-                        updatedAnswers
-                      )
+                  Redirect(
+                    navigator.nextPage(
+                      userRoleProvider
+                        .getUserRole(updatedAnswers)
+                        .selectBusinessContactDetailsPage(),
+                      mode,
+                      updatedAnswers
                     )
-                  } else {
-                    Redirect(
-                      navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
-                    )
-                  }
+                  )
+
               }
           )
     }

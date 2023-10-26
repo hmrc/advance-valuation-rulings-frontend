@@ -59,7 +59,7 @@ class CheckRegisteredDetailsController @Inject() (
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         val form          = getFormForRole(request.userAnswers)
-        val processedForm = CheckRegisteredDetailsPage.get match {
+        val processedForm = CheckRegisteredDetailsPage.get() match {
           case Some(value) => form.fill(value)
           case None        => form
         }
