@@ -204,8 +204,8 @@ unauthorised.para.bta = To sign up for this service, you will need:
 unauthorised.list.1 = a Government Gateway user ID and password - if you do not have one, you can create one when you apply
 unauthorised.list.2 = an EORI number starting with GB
 
-choosingMethod.title = Choosing the most appropriate method to value your goods
-choosingMethod.heading = Choosing the most appropriate method to value your goods
+choosingMethod.title = Methods for valuing your goods
+choosingMethod.heading = Methods for valuing your goods
 choosingMethod.para = You have to work through the methods in order, starting with Method 1.
 choosingMethod.caption = About the goods
 choosingMethod.paragraph.1 = You need to select a method to {0}.
