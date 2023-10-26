@@ -54,7 +54,7 @@ class BusinessContactDetailsController @Inject() (
   private def includeCompanyName()(implicit request: DataRequest[AnyContent]): Boolean =
     userRoleProvider
       .getUserRole(request.userAnswers)
-      .contactDetailsIncludeCompanyName && appConfig.agentOnBehalfOfTrader
+      .contactDetailsIncludeCompanyName
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
@@ -81,21 +81,16 @@ class BusinessContactDetailsController @Inject() (
               } yield saveDraft match {
                 case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
                 case false =>
-                  if (appConfig.agentOnBehalfOfTrader) {
-                    Redirect(
-                      navigator.nextPage(
-                        userRoleProvider
-                          .getUserRole(updatedAnswers)
-                          .selectBusinessContactDetailsPage(),
-                        mode,
-                        updatedAnswers
-                      )
+                  Redirect(
+                    navigator.nextPage(
+                      userRoleProvider
+                        .getUserRole(updatedAnswers)
+                        .selectBusinessContactDetailsPage(),
+                      mode,
+                      updatedAnswers
                     )
-                  } else {
-                    Redirect(
-                      navigator.nextPage(BusinessContactDetailsPage, mode, updatedAnswers)
-                    )
-                  }
+                  )
+
               }
           )
     }
