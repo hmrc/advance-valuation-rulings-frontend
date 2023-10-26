@@ -35,7 +35,7 @@
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.AboutSimilarGoodsController.onSubmit(NormalMode, draftId)
+@onSubmitAction(saveDraft: Boolean = true) = @{routes.AboutSimilarGoodsController.onSubmit(NormalMode, draftId, saveDraft)
 }
 
 @content = {

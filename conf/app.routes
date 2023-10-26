@@ -244,9 +244,9 @@ GET        /:draftId/change-aware-of-previous-ruling          controllers.AwareO
 POST       /:draftId/change-aware-of-previous-ruling          controllers.AwareOfRulingController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/about-similar-goods             controllers.AboutSimilarGoodsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
-POST       /:draftId/about-similar-goods             controllers.AboutSimilarGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/about-similar-goods             controllers.AboutSimilarGoodsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
 GET        /:draftId/change-about-similar-goods      controllers.AboutSimilarGoodsController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/change-about-similar-goods      controllers.AboutSimilarGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-about-similar-goods      controllers.AboutSimilarGoodsController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 
 GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
