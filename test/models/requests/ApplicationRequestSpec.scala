@@ -493,8 +493,7 @@ object ApplicationRequestSpec extends Generators {
   val contactEmail          = "contact email"
   val contactPhone          = "contact phone"
   val contactJobTitle       = "contact job title"
-  val goodsName             = "goods name"
-  val goodsDescription      = goodsName // TODO: Fix failing tests which occur when this is different.
+  val goodsDescription      = "goods description"
   val goodsCommodityCode    = "envisaged commodity code"
   val goodsLegalProceedings = "known legal proceedings"
   val goodsInformation      = "confidential information"
@@ -587,7 +586,7 @@ object ApplicationRequestSpec extends Generators {
   )
 
   val goodsDetails: GoodsDetails = GoodsDetails(
-    goodsName = goodsName,
+    goodsName = goodsDescription,
     goodsDescription = goodsDescription,
     envisagedCommodityCode = Some(goodsCommodityCode),
     knownLegalProceedings = Some(goodsLegalProceedings),
@@ -597,7 +596,7 @@ object ApplicationRequestSpec extends Generators {
   )
 
   val goodsDetailsNoDetails: GoodsDetails = GoodsDetails(
-    goodsName = goodsName,
+    goodsName = goodsDescription,
     goodsDescription = goodsDescription,
     envisagedCommodityCode = None,
     knownLegalProceedings = None,
@@ -631,7 +630,7 @@ object ApplicationRequestSpec extends Generators {
        |  "type" : "MethodThree"
        |},
        |"goodsDetails": {
-       |  "goodsName": "$goodsName",
+       |  "goodsName": "$goodsDescription",
        |  "goodsDescription": "$goodsDescription",
        |  "envisagedCommodityCode": "$goodsCommodityCode",
        |  "knownLegalProceedings": "$goodsLegalProceedings",
@@ -676,7 +675,7 @@ object ApplicationRequestSpec extends Generators {
        |  "type" : "MethodThree"
        |},
        |"goodsDetails": {
-       |  "goodsName": "$goodsName",
+       |  "goodsName": "$goodsDescription",
        |  "goodsDescription": "$goodsDescription",
        |  "envisagedCommodityCode": "$goodsCommodityCode",
        |  "knownLegalProceedings": "$goodsLegalProceedings",
