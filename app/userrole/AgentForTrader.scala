@@ -38,7 +38,6 @@ package userrole {
   import viewmodels.checkAnswers.summary._
   import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, VerifyPublicTraderDetailView}
 
-
   private case class AgentForTrader @Inject() (
     checkRegisteredDetailsView: VerifyPublicTraderDetailView,
     formProvider: AgentForTraderCheckRegisteredDetailsFormProvider,
