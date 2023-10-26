@@ -168,7 +168,6 @@ object ApplicationRequest {
       JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
   )
 
-  // TODO: Make this an OWrites as we don't need to read this model from JSON
   implicit val format: OFormat[ApplicationRequest] =
     Json.configured(jsonConfig).format[ApplicationRequest]
 }

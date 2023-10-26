@@ -61,7 +61,7 @@ class VerifyTraderEoriController @Inject() (
 
         VerifyTraderDetailsPage.get() match {
           case None                                                       =>
-            traderDetailsNotFoundInSession(draftId)
+            traderDetailsNotFoundInSession(mode, draftId)
           case Some(details) if details.consentToDisclosureOfPersonalData =>
             Ok(publicView(checkForm(checked), mode, draftId, details))
           case Some(details)                                              =>
@@ -69,12 +69,13 @@ class VerifyTraderEoriController @Inject() (
         }
     }
 
-  private def traderDetailsNotFoundInSession(draftId: DraftId) = {
+  private def traderDetailsNotFoundInSession(mode: Mode, draftId: DraftId) = {
     logger.warn("No trader details found in session")
     Redirect(
       controllers.routes.JourneyRecoveryController.onPageLoad(
-        continueUrl =
-          Some(RedirectUrl(controllers.routes.ProvideTraderEoriController.onPageLoad(draftId).url))
+        continueUrl = Some(
+          RedirectUrl(controllers.routes.ProvideTraderEoriController.onPageLoad(mode, draftId).url)
+        )
       )
     )
   }
@@ -87,7 +88,7 @@ class VerifyTraderEoriController @Inject() (
           .fold(
             formWithErrors =>
               VerifyTraderDetailsPage.get() match {
-                case None                                                       => Future.successful(traderDetailsNotFoundInSession(draftId))
+                case None                                                       => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
                 case Some(details) if details.consentToDisclosureOfPersonalData =>
                   Future.successful(BadRequest(publicView(formWithErrors, mode, draftId, details)))
                 case Some(details)                                              =>
@@ -95,7 +96,7 @@ class VerifyTraderEoriController @Inject() (
               },
             value =>
               VerifyTraderDetailsPage.get() match {
-                case None          => Future.successful(traderDetailsNotFoundInSession(draftId))
+                case None          => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
                 case Some(details) =>
                   val continue = value.toBoolean
                   for {

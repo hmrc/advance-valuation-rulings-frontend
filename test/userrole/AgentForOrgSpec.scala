@@ -227,10 +227,22 @@ class AgentForOrgSpec extends SpecBase with Matchers {
 
   "getEORIDetailsJourney" - {
     "should return CheckRegisteredDetails page" in {
-      agentForOrg.getEORIDetailsJourney(draftId).url mustBe CheckRegisteredDetailsController
+      agentForOrg
+        .getEORIDetailsJourney(NormalMode, draftId)
+        .url mustBe CheckRegisteredDetailsController
         .onPageLoad(NormalMode, draftId)
         .url
     }
+  }
+  "getContactDetailsJourney should return" - {
+    "should return BusinessContactDetails page" in {
 
+      agentForOrg
+        .getContactDetailsJourney(draftId)
+        .url mustBe controllers.routes.BusinessContactDetailsController
+        .onPageLoad(NormalMode, draftId)
+        .url
+
+    }
   }
 }

@@ -36,14 +36,14 @@ import views.html.{InvalidTraderEoriView, ProvideTraderEoriView}
 
 class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
-  lazy val provideTraderEoriPageRoute     =
-    routes.ProvideTraderEoriController.onPageLoad(draftId).url
-  lazy val provideTraderEoriPagePostRoute =
-    routes.ProvideTraderEoriController.onSubmit(draftId, false).url
+  private lazy val provideTraderEoriPageRoute     =
+    routes.ProvideTraderEoriController.onPageLoad(NormalMode, draftId).url
+  private lazy val provideTraderEoriPagePostRoute =
+    routes.ProvideTraderEoriController.onSubmit(NormalMode, draftId, saveDraft = false).url
 
-  val mockBackendConnector = mock[BackendConnector]
-  val formProvider         = new TraderEoriNumberFormProvider()
-  val form                 = formProvider()
+  private val mockBackendConnector = mock[BackendConnector]
+  private val formProvider         = new TraderEoriNumberFormProvider()
+  private val form                 = formProvider()
 
   "ProvideTraderEoriController" - {
 

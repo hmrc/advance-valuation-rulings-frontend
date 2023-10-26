@@ -50,7 +50,7 @@ trait UserRole {
   def selectViewForRequiredInformation(
     draftId: DraftId
   )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable
-  def getEORIDetailsJourney(draftId: DraftId): Call
+  def getEORIDetailsJourney(mode: Mode, draftId: DraftId): Call
 
   def contactDetailsIncludeCompanyName: Boolean
 
@@ -71,4 +71,6 @@ trait UserRole {
   def getMaxSupportingDocuments: Int
 
   def sourceFromUA: Boolean
+
+  def getContactDetailsJourney(draftId: DraftId): Call
 }

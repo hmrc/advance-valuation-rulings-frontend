@@ -36,7 +36,7 @@ import views.html._
 class AgentForTraderSpec extends SpecBase with Matchers {
 
   private val agentForTraderCheckRegisteredDetailsView =
-    mock[AgentForTraderCheckRegisteredDetailsView]
+    mock[VerifyPublicTraderDetailView]
 
   private val formProvider =
     mock[AgentForTraderCheckRegisteredDetailsFormProvider]
@@ -171,9 +171,9 @@ class AgentForTraderSpec extends SpecBase with Matchers {
       when(
         agentForTraderCheckRegisteredDetailsView.apply(
           form,
-          traderDetailsWithCountryCode,
           NormalMode,
-          draftId
+          draftId,
+          TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
         )(request, messages)
       ).thenReturn(expectedView)
 
@@ -264,13 +264,22 @@ class AgentForTraderSpec extends SpecBase with Matchers {
     "getEORIDetailsJourney" - {
       "should return ProvideEoriNumber page" in {
         agentForTrader
-          .getEORIDetailsJourney(draftId)
+          .getEORIDetailsJourney(NormalMode, draftId)
           .url mustBe controllers.routes.ProvideTraderEoriController
-          .onPageLoad(draftId)
+          .onPageLoad(NormalMode, draftId)
           .url
       }
-
     }
+    "getContactDetailsJourney should return" - {
+      "should return BusinessContactDetails page" in {
 
+        agentForTrader
+          .getContactDetailsJourney(draftId)
+          .url mustBe controllers.routes.BusinessContactDetailsController
+          .onPageLoad(NormalMode, draftId)
+          .url
+
+      }
+    }
   }
 }

@@ -80,7 +80,7 @@ object AgentForTraderCheckRegisteredDetailsSummary {
       actions = Seq(
         ActionItemViewModel(
           "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
+          routes.ProvideTraderEoriController.onPageLoad(CheckMode, draftId).url
         )
           .withVisuallyHiddenText(
             messages("agentForTraderCheckYourAnswers.trader.eori.number.hidden")

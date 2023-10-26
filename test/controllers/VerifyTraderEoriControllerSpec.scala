@@ -35,13 +35,13 @@ import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
 class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
-  lazy val verifyTraderEoriPageRoute     =
+  private lazy val verifyTraderEoriPageRoute     =
     routes.VerifyTraderEoriController.onPageLoad(NormalMode, draftId).url
-  lazy val verifyTraderEoriPagePostRoute =
+  private lazy val verifyTraderEoriPagePostRoute =
     routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId).url
 
-  val formProvider = new VerifyTraderDetailsFormProvider()
-  val form         = formProvider()
+  private val formProvider = new VerifyTraderDetailsFormProvider()
+  private val form         = formProvider()
 
   "VerifyTraderEoriController" - {
 
@@ -163,7 +163,9 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           controllers.routes.JourneyRecoveryController
             .onPageLoad(
               continueUrl = Some(
-                RedirectUrl(controllers.routes.ProvideTraderEoriController.onPageLoad(draftId).url)
+                RedirectUrl(
+                  controllers.routes.ProvideTraderEoriController.onPageLoad(NormalMode, draftId).url
+                )
               )
             )
             .url
@@ -199,7 +201,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(
           controllers.routes.UploadLetterOfAuthorityController
-            .onPageLoad(NormalMode, draftId, None, None, false)
+            .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = false)
             .url
         )
       }
@@ -232,7 +234,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(
           controllers.routes.UploadLetterOfAuthorityController
-            .onPageLoad(NormalMode, draftId, None, None, false)
+            .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = false)
             .url
         )
       }

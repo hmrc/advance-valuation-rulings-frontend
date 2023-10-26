@@ -29,6 +29,7 @@ package userrole {
   import play.twirl.api.HtmlFormat
 
   import controllers.routes
+  import controllers.routes.ApplicationContactDetailsController
   import forms.EmployeeCheckRegisteredDetailsFormProvider
   import models.{ApplicationContactDetails, NormalMode, UserAnswers}
   import models.requests.ContactDetails
@@ -73,8 +74,8 @@ package userrole {
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformationRequiredView(draftId)
 
-    override def getEORIDetailsJourney(draftId: DraftId): Call =
-      routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+    override def getEORIDetailsJourney(mode: Mode, draftId: DraftId): Call =
+      routes.CheckRegisteredDetailsController.onPageLoad(mode, draftId)
 
     override def contactDetailsIncludeCompanyName: Boolean = false
 
@@ -111,5 +112,8 @@ package userrole {
     override val getMaxSupportingDocuments: Int = 5
 
     override def sourceFromUA: Boolean = false
+
+    override def getContactDetailsJourney(draftId: DraftId): Call =
+      ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
   }
 }

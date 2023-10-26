@@ -25,7 +25,6 @@ import pages._
 import queries.AllDocuments
 
 object CheckModeNavigator {
-  import controllers._
 
   // Pre nav
   private def checkRegisteredDetails(userAnswers: UserAnswers): Call =
