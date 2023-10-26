@@ -32,12 +32,12 @@ import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
 import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
 import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, MethodSummary, TraderEoriDetailsSummary}
-import views.html.{AgentForTraderCheckRegisteredDetailsView, AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, VerifyPublicTraderDetailView}
 
 class AgentForTraderSpec extends SpecBase with Matchers {
 
   private val agentForTraderCheckRegisteredDetailsView =
-    mock[AgentForTraderCheckRegisteredDetailsView]
+    mock[VerifyPublicTraderDetailView]
 
   private val formProvider =
     mock[AgentForTraderCheckRegisteredDetailsFormProvider]
@@ -156,9 +156,9 @@ class AgentForTraderSpec extends SpecBase with Matchers {
       when(
         agentForTraderCheckRegisteredDetailsView.apply(
           form,
-          traderDetailsWithCountryCode,
           NormalMode,
-          draftId
+          draftId,
+          TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
         )(request, messages)
       ).thenReturn(expectedView)
 
