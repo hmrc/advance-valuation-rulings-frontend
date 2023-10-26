@@ -480,7 +480,7 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
     }
 
   private def contactsNextPage(userAnswers: UserAnswers): Call =
-    userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(userAnswers.draftId)
+    userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(NormalMode, userAnswers.draftId)
 
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers

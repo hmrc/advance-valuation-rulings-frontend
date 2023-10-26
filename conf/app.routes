@@ -35,6 +35,8 @@ POST       /:draftId/change-select-valuation-method               controllers.Va
 
 GET        /:draftId/provide-trader-eori                                          controllers.ProvideTraderEoriController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/provide-trader-eori                                          controllers.ProvideTraderEoriController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
+GET        /:draftId/change-provide-trader-eori                                    controllers.ProvideTraderEoriController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-provide-trader-eori                                    controllers.ProvideTraderEoriController.onSubmit(mode: Mode = CheckMode, draftId: DraftId, saveDraft: Boolean)
 
 GET        /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/enter-commodity-code                                          controllers.CommodityCodeController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)

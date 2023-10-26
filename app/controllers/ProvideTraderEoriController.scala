@@ -55,9 +55,9 @@ class ProvideTraderEoriController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  val form = formProvider()
+  private val form = formProvider()
 
-  private implicit val logger = Logger(this.getClass)
+  private implicit val logger: Logger = Logger(this.getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {

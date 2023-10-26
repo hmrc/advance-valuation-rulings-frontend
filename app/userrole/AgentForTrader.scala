@@ -32,7 +32,7 @@ package userrole {
   import controllers.routes.{BusinessContactDetailsController, ProvideTraderEoriController}
   import forms.AgentForTraderCheckRegisteredDetailsFormProvider
   import logging.Logging
-  import models.{BusinessContactDetails, TraderDetailsWithConfirmation, NormalMode, UserAnswers}
+  import models.{BusinessContactDetails, NormalMode, TraderDetailsWithConfirmation, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
@@ -70,8 +70,8 @@ package userrole {
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
       requiredInformationView(draftId)
 
-    override def getEORIDetailsJourney(draftId: DraftId): Call =
-      ProvideTraderEoriController.onPageLoad(draftId)
+    override def getEORIDetailsJourney(mode: Mode, draftId: DraftId): Call =
+      ProvideTraderEoriController.onPageLoad(mode, draftId)
 
     override def contactDetailsIncludeCompanyName: Boolean = true
 

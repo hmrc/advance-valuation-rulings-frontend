@@ -249,9 +249,9 @@ class AgentForTraderSpec extends SpecBase with Matchers {
     "getEORIDetailsJourney" - {
       "should return ProvideEoriNumber page" in {
         agentForTrader
-          .getEORIDetailsJourney(draftId)
+          .getEORIDetailsJourney(NormalMode, draftId)
           .url mustBe controllers.routes.ProvideTraderEoriController
-          .onPageLoad(draftId)
+          .onPageLoad(NormalMode, draftId)
           .url
       }
     }

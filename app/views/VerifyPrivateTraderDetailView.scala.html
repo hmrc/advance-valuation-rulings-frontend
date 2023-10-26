@@ -42,7 +42,7 @@
     id = "search_again",
     text = messages("traderDetails.common.searchAgain.link"),
     newTab = false,
-    call = controllers.routes.ProvideTraderEoriController.onPageLoad(draftId))
+    call = controllers.routes.ProvideTraderEoriController.onPageLoad(mode, draftId))
 }
 
 @paraContent = {
