@@ -36,7 +36,7 @@ package userrole {
   import models.requests.ContactDetails
   import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary._
-  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, VerifyPublicTraderDetailView}
+  import views.html._
 
   private case class AgentForTrader @Inject() (
     checkRegisteredDetailsView: VerifyPublicTraderDetailView,
