@@ -97,9 +97,9 @@ checkYourAnswersForAgents.heading = Check your answers before sending your appli
 checkYourAnswersForAgents.business.eori.number.label = Company’s registered EORI number
 checkYourAnswersForAgents.business.name.label = Company’s registered business name
 checkYourAnswersForAgents.business.address.label = Company’s registered business address
-checkYourAnswersForAgents.business.eori.number.hidden = the company’s registered EORI number
-checkYourAnswersForAgents.business.name.hidden = the company’s registered business name
-checkYourAnswersForAgents.business.address.hidden = the company’s registered business address
+checkYourAnswersForAgents.business.eori.number.hidden = Change the agent’s organisation’s registered EORI number
+checkYourAnswersForAgents.business.name.hidden = Change the agent’s organisation’s registered business name
+checkYourAnswersForAgents.business.address.hidden = Change the agent’s organisation’s registered business address
 
 checkYourAnswersForAgents.company.org.heading = About the company
 checkYourAnswersForAgents.company.agent.heading = About the company you are representing
@@ -140,9 +140,9 @@ agentForTraderCheckYourAnswers.heading = Check your answers before sending your 
 agentForTraderCheckYourAnswers.trader.eori.number.label = Trader’s registered EORI number
 agentForTraderCheckYourAnswers.trader.name.label = Trader’s registered business name
 agentForTraderCheckYourAnswers.trader.address.label = Trader’s registered business address
-agentForTraderCheckYourAnswers.trader.eori.number.hidden = the trader’s registered EORI number
-agentForTraderCheckYourAnswers.trader.name.hidden = the trader’s registered business name
-agentForTraderCheckYourAnswers.trader.address.hidden = the trader’s registered business address
+agentForTraderCheckYourAnswers.trader.eori.number.hidden = Change the trader’s EORI number
+agentForTraderCheckYourAnswers.trader.name.hidden = Change the trader's business name
+agentForTraderCheckYourAnswers.trader.address.hidden = Change the trader's business address
 
 agentForTraderCheckYourAnswers.trader.heading = About the trader
 
@@ -162,7 +162,7 @@ agentForTraderCheckYourAnswers.applicant.email.hidden = the Agent’s email addr
 agentForTraderCheckYourAnswers.applicant.phone.label = Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.phone.hidden = the Agent’s telephone number
 agentForTraderCheckYourAnswers.applicant.companyName.label = Agent’s company name
-agentForTraderCheckYourAnswers.applicant.companyName.hidden = the Agent’s company name
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = Change the agent’s company name
 agentForTraderCheckYourAnswers.applicant.jobTitle.label = Agent’s job title
 agentForTraderCheckYourAnswers.applicant.jobTitle.hidden = the Agent’s job title
 agentForTraderCheckYourAnswers.applicant.role.label = Description of role
@@ -182,7 +182,7 @@ agentForTraderCheckYourAnswers.agreement.bulletPoint.2 = store the information y
 agentForTraderCheckYourAnswers.agreement.bulletPoint.3 = contact you by email
 agentForTraderCheckYourAnswers.button.continue = Accept and apply for a ruling
 agentForTraderCheckYourAnswers.trader.loa.label = Letter of authority
-agentForTraderCheckYourAnswers.trader.loa.hidden = Letter of authority
+agentForTraderCheckYourAnswers.trader.loa.hidden = Change the letter of authority
 
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
@@ -234,7 +234,7 @@ valuationMethod.method6 = Method 6 (fall-back method)
 valuationMethod.method6.hint = This is the last method you can try. You can only use it if you are unable to use any of the other methods. It involves adapting Methods 1 to 5 to fit unusual circumstances.
 valuationMethod.checkYourAnswersLabel = Proposed method of Valuation
 valuationMethod.error.required = Select a method to value the goods
-valuationMethod.change.hidden = your proposed valuation method
+valuationMethod.change.hidden = Change the proposed method of valuation
 
 commodityCode.title = What is the commodity code for the goods?
 commodityCode.heading = What is the commodity code for the goods?
@@ -259,7 +259,7 @@ hasCommodityCode.error.required = Select yes if you know the commodity code
 hasCommodityCode.details.label = Help finding your commodity code
 hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. <br><br>You can {0} if you don’t know it.
 hasCommodityCode.paragraph.1.link = look up the commodity code for your goods (opens in new tab)
-hasCommodityCode.change.hidden = your response to whether you have a commodity code for the goods
+hasCommodityCode.change.hidden = Change whether you have a commodity code for the goods
 hasCommodityCode.question = Do you have a commodity code for the goods?
 
 #PROVIDE TRADER EORI NUMBER
@@ -367,7 +367,7 @@ hasConfidentialInformation.paragraph.2 = We will not publish confidential inform
 hasConfidentialInformation.paragraph.inset = You will be able to upload files later in the application.
 hasConfidentialInformation.checkYourAnswersLabel = Do you want to add any confidential information about the goods?
 hasConfidentialInformation.error.required = Select yes if you want to add any confidential information about the goods
-hasConfidentialInformation.change.hidden = your response to whether you want to add any confidential information about the goods
+hasConfidentialInformation.change.hidden = Change whether you want to add confidential information about the goods
 
 importingGoods.title = This service is for importing goods into Great Britain
 importingGoods.heading = This service is for importing goods into Great Britain
@@ -435,9 +435,9 @@ checkRegisteredDetails.radio.agentOnBehalfOfTrader.yes = Yes, these details are 
 checkRegisteredDetails.radio.agentOnBehalfOfTrader.no = No, these details are incorrect
 checkRegisteredDetails.search.link = Search again
 checkRegisteredDetails.search.text = if you think you entered the trader’s EORI number incorrectly
-checkRegisteredDetails.name.change.hidden = your registered business name
-checkRegisteredDetails.address.change.hidden = your registered business address
-checkRegisteredDetails.eori.change.hidden = your registered EORI number
+checkRegisteredDetails.name.change.hidden = Change the organisation’s registered business name
+checkRegisteredDetails.address.change.hidden = Change the organisation’s registered business address
+checkRegisteredDetails.eori.change.hidden = Change the organisation’s registered EORI number
 
 applicationContactDetails.title = Your contact details
 applicationContactDetails.heading = Your contact details
@@ -454,10 +454,10 @@ applicationContactDetails.email.error.required = Enter your email address
 applicationContactDetails.email.error.format = Enter an email address in the correct format, like name@example.com
 applicationContactDetails.telephoneNumber.error.required = Enter your telephone number
 applicationContactDetails.telephoneNumber.error.format = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192	
-applicationContactDetails.name.change.hidden = your contact name
-applicationContactDetails.email.change.hidden = your email address
-applicationContactDetails.phone.change.hidden = your telephone number
-applicationContactDetails.jobTitle.change.hidden = your job title
+applicationContactDetails.name.change.hidden = Change the applicant’s full name
+applicationContactDetails.email.change.hidden = Change the applicant’s address
+applicationContactDetails.phone.change.hidden = Change the applicant’s telephone number
+applicationContactDetails.jobTitle.change.hidden = Change the applicant’s job title
 applicationContactDetails.jobTitle.error.required = Enter your job title
 
 eoriBeUpToDate.title = Your EORI number details must be correct to use this service
@@ -493,8 +493,8 @@ doYouWantToUploadDocuments.bulletPoint.2 = copies of previous import declaration
 doYouWantToUploadDocuments.bulletPoint.3 = breakdowns of manufacturing costs
 doYouWantToUploadDocuments.checkYourAnswersLabel = Do you want to upload any supporting documents?
 doYouWantToUploadDocuments.error.required = Select yes if you want to upload any supporting documents
-doYouWantToUploadDocuments.change.hidden = your response to whether you want to upload any supporting documents
-doYouWantToUploadDocuments.files.change.hidden = the supporting documents you uploaded
+doYouWantToUploadDocuments.change.hidden = Change whether you want to upload any supporting documents
+doYouWantToUploadDocuments.files.change.hidden = Change the supporting documents you uploaded
 doYouWantToUploadDocuments.question = Do you want to upload any supporting documents?
 
 isThisFileConfidential.title = Tell us if you want to make this document confidential
@@ -776,7 +776,7 @@ descriptionOfGoods.hint = For example, silicone smartphone case
 descriptionOfGoods.checkYourAnswersLabel = Short description of the goods
 descriptionOfGoods.error.required = Enter a short description of the goods
 descriptionOfGoods.error.length = Short description of the goods must be 100 characters or less
-descriptionOfGoods.change.hidden = your short description of the goods
+descriptionOfGoods.change.hidden = Change the short description of the goods
 
 haveTheGoodsBeenSubjectToLegalChallenges.title = Legal challenges related to the goods
 haveTheGoodsBeenSubjectToLegalChallenges.heading = Legal challenges related to the goods
@@ -786,7 +786,7 @@ haveTheGoodsBeenSubjectToLegalChallenges.para.1 = A legal challenge could relate
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Providing this information can help to identify goods with similar rulings.
 haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = Have the goods been subject to any legal challenges?
 haveTheGoodsBeenSubjectToLegalChallenges.error.required = Select yes if the goods have been subject to any legal challenges
-haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = your response to whether the goods have been subject to legal challenges
+haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = Change whether the goods have been subject to any legal challenges
 
 applicationComplete.title = Application complete
 applicationComplete.heading = Application complete
@@ -1018,10 +1018,10 @@ checkYourAnswersForAgents.agent.org.name.label = Agent’s full name
 checkYourAnswersForAgents.agent.org.email.label = Agent’s email address
 checkYourAnswersForAgents.agent.org.phone.label = Agent’s telephone number
 checkYourAnswersForAgents.agent.org.jobTitle.label = Agent’s job title
-checkYourAnswersForAgents.agent.org.name.change.hidden = your contact name
-checkYourAnswersForAgents.agent.org.email.change.hidden = your email address
-checkYourAnswersForAgents.agent.org.phone.change.hidden = your telephone number
-checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = your job title
+checkYourAnswersForAgents.agent.org.name.change.hidden = Change the agent’s full name
+checkYourAnswersForAgents.agent.org.email.change.hidden = Change the agent’s email address
+checkYourAnswersForAgents.agent.org.phone.change.hidden = Change the agent’s telephone number
+checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = Change the agent’s job title
 
 checkYourAnswersForAgents.applicant.role.hidden = the description of your role
 checkYourAnswersForAgents.applicant.name.change.hidden = your contact name
@@ -1062,7 +1062,7 @@ haveYouReceivedADecision.para.2 = Telling us about similar rulings you have rece
 haveYouReceivedADecision.error.required = Tell us if you have ever received a ruling based on a similar method
 haveYouReceivedADecision.legend = Have you ever received a ruling based on a similar method?
 haveYouReceivedADecision.checkYourAnswersLabel = Have you ever received a ruling based on a similar method?
-haveYouReceivedADecision.change.hidden = have you ever received a ruling based on a similar method
+haveYouReceivedADecision.change.hidden = Change whether you have ever received a ruling based on a similar method
 
 tellUsAboutYourRuling.heading = About the previous ruling
 tellUsAboutYourRuling.para = Examples of information can include:
@@ -1073,7 +1073,7 @@ tellUsAboutYourRuling.bulletPoint.4 = the expiry date for the ruling
 tellUsAboutYourRuling.label = Can you give us more information about the ruling?
 tellUsAboutYourRuling.error.required = Tell us about the ruling
 tellUsAboutYourRuling.checkYourAnswersLabel = Tell us about the ruling
-tellUsAboutYourRuling.change.hidden = details about the ruling
+tellUsAboutYourRuling.change.hidden = Change the information you submitted about the ruling
 
 textCount.tooLong = Description of rulings must be 8,000 characters or less
 
@@ -1089,10 +1089,10 @@ aboutSimilarGoods.heading = About the rulings for similar goods
 aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
 aboutSimilarGoods.error.required = Tell us about the rulings for similar goods
 aboutSimilarGoods.checkYourAnswersLabel = Tell us about the rulings for similar goods
-aboutSimilarGoods.change.hidden = details about the rulings for similar goods
+aboutSimilarGoods.change.hidden = Change the information on rulings using similar goods
 
 awareOfRuling.heading = Are you aware of any other rulings that have used a similar method?
 awareOfRuling.para = Telling us about other rulings that have used a similar method will help the caseworker process your application.
 awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method
 awareOfRuling.checkYourAnswersLabel = Are you aware of any other rulings that have used a similar method?
-awareOfRuling.change.hidden = are you aware of any other rulings that have used a similar method
+awareOfRuling.change.hidden = Change whether you are aware of any other rulings using a similar method
