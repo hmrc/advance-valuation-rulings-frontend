@@ -984,6 +984,7 @@ cancelAreYouSure.inset.text = If you cancel now any data will be lost and you wi
 
 agentCompanyDetails.title = Your organisation’s contact details
 agentCompanyDetails.heading = Your organisation’s contact details
+agentCompanyDetails.caption = About the applicant
 agentCompanyDetails.paragraph = We will only use your organisation’s contact details if we need to get in touch about the application you are submitting.
 agentCompanyDetails.agentEori = Organisation’s registered EORI number starting with GB
 agentCompanyDetails.agentCompanyName = Organisation’s registered business name

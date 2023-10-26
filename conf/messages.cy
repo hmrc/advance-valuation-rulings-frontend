@@ -952,6 +952,7 @@ cancelAreYouSure.inset.text = Os byddwch yn canslo nawr, bydd unrhyw ddata yn ca
 
 agentCompanyDetails.title = Manylion cyswllt eich sefydliad
 agentCompanyDetails.heading = Manylion cyswllt eich sefydliad
+agentCompanyDetails.caption = Ynglŷn â’r ymgeisydd
 agentCompanyDetails.paragraph = Byddwn ond yn defnyddio manylion cyswllt eich sefydliad os oes angen i ni gysylltu â chi ynghylch y cais rydych yn ei gyflwyno.
 agentCompanyDetails.agentEori = Rhif EORI cofrestredig eich sefydliad, sy’n dechrau gyda GB
 agentCompanyDetails.agentCompanyName = Enw busnes cofrestredig y sefydliad
