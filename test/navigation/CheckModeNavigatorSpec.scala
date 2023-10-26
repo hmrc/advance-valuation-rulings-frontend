@@ -32,11 +32,11 @@ import userrole.UserRoleProvider
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  private val userRoleProvider = mock[UserRoleProvider]
-  private val EmptyUserAnswers = userAnswersAsIndividualTrader
-  private val appConfig        = mock[FrontendAppConfig]
-  private val navigator        = new Navigator(appConfig, userRoleProvider)
-  private val checkYourAnswers = routes.CheckYourAnswersController.onPageLoad(draftId)
+  val userRoleProvider              = mock[UserRoleProvider]
+  val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
+  val appConfig                     = mock[FrontendAppConfig]
+  val navigator                     = new Navigator(userRoleProvider)
+  val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
 
   when(appConfig.agentOnBehalfOfTrader) thenReturn false
 

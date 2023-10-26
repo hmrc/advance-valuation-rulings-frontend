@@ -22,7 +22,6 @@ import com.google.inject.Inject
 import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
 import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
-import views.html.AgentForTraderCheckRegisteredDetailsView
 
 package userrole {
   import cats.data.ValidatedNel
@@ -30,17 +29,17 @@ package userrole {
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
 
-  import controllers.routes.ProvideTraderEoriController
+  import controllers.routes.{BusinessContactDetailsController, ProvideTraderEoriController}
   import forms.AgentForTraderCheckRegisteredDetailsFormProvider
   import logging.Logging
-  import models.{BusinessContactDetails, UserAnswers}
+  import models.{BusinessContactDetails, TraderDetailsWithConfirmation, NormalMode, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
-  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView}
+  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, VerifyPublicTraderDetailView}
 
   private case class AgentForTrader @Inject() (
-    checkRegisteredDetailsView: AgentForTraderCheckRegisteredDetailsView,
+    checkRegisteredDetailsView: VerifyPublicTraderDetailView,
     formProvider: AgentForTraderCheckRegisteredDetailsFormProvider,
     agentForTraderCheckYourAnswersView: AgentForTraderCheckYourAnswersView,
     eoriBeUpToDateViewPublic: AgentForTraderPublicEORIBeUpToDateView,
@@ -54,12 +53,7 @@ package userrole {
       mode: Mode,
       draftId: DraftId
     )(implicit request: DataRequest[AnyContent], messages: Messages): HtmlFormat.Appendable =
-      checkRegisteredDetailsView(
-        form,
-        details,
-        mode,
-        draftId
-      )
+      checkRegisteredDetailsView(form, mode, draftId, TraderDetailsWithConfirmation(details))
 
     override def getFormForCheckRegisteredDetails: Form[Boolean] = formProvider.apply()
 
@@ -122,6 +116,8 @@ package userrole {
 
     override def sourceFromUA: Boolean = true
 
+    override def getContactDetailsJourney(draftId: DraftId): Call =
+      BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
   }
 
 }

@@ -202,6 +202,17 @@ class EmployeeSpec extends SpecBase with Matchers {
         .onPageLoad(NormalMode, draftId)
         .url
     }
+  }
 
+  "getContactDetailsJourney should return" - {
+    "should return ApplicationContactDetails page" in {
+
+      employee
+        .getContactDetailsJourney(draftId)
+        .url mustBe controllers.routes.ApplicationContactDetailsController
+        .onPageLoad(NormalMode, draftId)
+        .url
+
+    }
   }
 }

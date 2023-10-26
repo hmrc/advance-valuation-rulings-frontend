@@ -31,6 +31,7 @@ import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.{FakeNavigator, Navigator}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.UploadLetterOfAuthorityPage
 import queries.DraftAttachmentAt
 import views.html.UploadAnotherSupportingDocumentView
 
@@ -81,6 +82,38 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       ).toString
     }
 
+    "must return OK and the correct view for a GET with a letter of authority" in {
+
+      val answers: UserAnswers = userAnswersAsIndividualTrader
+        .set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(false)))
+        .success
+        .value
+        .set(UploadLetterOfAuthorityPage, successfulFile)
+        .success
+        .value
+
+      val attachments = Seq(
+        DraftAttachment(successfulFile, isThisFileConfidential = Some(false))
+      )
+
+      val application            = applicationBuilder(userAnswers = Some(answers)).build()
+      val request                = FakeRequest(GET, uploadAnotherSupportingDocumentRoute)
+      val result: Future[Result] = route(application, request).value
+      val view                   = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(
+        attachments,
+        form,
+        NormalMode,
+        draftId,
+        successfulFile.fileName
+      )(
+        request,
+        messages(application)
+      ).toString
+    }
+
     "must redirect to the next page when valid data is submitted" in {
 
       val application =
@@ -111,11 +144,35 @@ class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with Mockit
       val result      = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
+      contentAsString(result) mustEqual view(Seq.empty, boundForm, NormalMode, draftId)(
+        request,
+        messages(application)
+      ).toString
+    }
+
+    "must return a Bad Request and errors when invalid data is submitted with a letter of authority" in {
+
+      val answers: UserAnswers = userAnswersAsIndividualTrader
+        .set(UploadLetterOfAuthorityPage, successfulFile)
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(answers)).build()
+      val request     =
+        FakeRequest(POST, uploadAnotherSupportingDocumentRoute)
+          .withFormUrlEncodedBody(("value", ""))
+      val boundForm   = form.bind(Map("value" -> ""))
+      val view        = application.injector.instanceOf[UploadAnotherSupportingDocumentView]
+      val result      = route(application, request).value
+
+      status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
         Seq.empty,
         boundForm,
         NormalMode,
-        draftId
+        draftId,
+        successfulFile.fileName
       )(
         request,
         messages(application)

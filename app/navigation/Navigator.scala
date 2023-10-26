@@ -20,17 +20,14 @@ import javax.inject.Inject
 
 import play.api.mvc.Call
 
-import config.FrontendAppConfig
 import controllers.routes._
 import models._
-import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
 import models.ValuationMethod._
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import pages._
 import queries.AllDocuments
 import userrole.UserRoleProvider
 
-class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserRoleProvider) {
+class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
 
   private def routes: Page => UserAnswers => Call = {
     case AccountHomePage                                  => startApplicationRouting
@@ -55,7 +52,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     case ContactPagePage                                  => contactsNextPage
     case CheckRegisteredDetailsPage                       => checkRegisteredDetailsPage
     case ApplicationContactDetailsPage                    => applicationContactDetailsPage
-    case BusinessContactDetailsPage                       => businessContactDetailsPage
     case AgentCompanyDetailsPage                          => agentCompanyDetailsPage
     case DoYouWantToUploadDocumentsPage                   => doYouWantToUploadDocumentsPage
     case UploadSupportingDocumentPage                     => uploadSupportingDocumentPage
@@ -107,25 +103,12 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
 
   }
 
-  private def startApplicationRouting(userAnswers: UserAnswers): Call = {
-    val agentsOn: Boolean = appConfig.agentOnBehalfOfTrader
-
-    if (agentsOn) {
-      userAnswers.get(AccountHomePage) match {
-        case Some(_) =>
-          WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-        case _       => UnauthorisedController.onPageLoad
-      }
-    } else {
-      userAnswers.get(AccountHomePage) match {
-        case Some(IndividualTrader) | Some(OrganisationAdmin) =>
-          RequiredInformationController.onPageLoad(userAnswers.draftId)
-        case Some(_)                                          =>
-          WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-        case _                                                => UnauthorisedController.onPageLoad
-      }
+  private def startApplicationRouting(userAnswers: UserAnswers): Call =
+    userAnswers.get(AccountHomePage) match {
+      case Some(_) =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _       => UnauthorisedController.onPageLoad
     }
-  }
 
   private def valuationMethodPage(userAnswers: UserAnswers): Call =
     userAnswers.get(ValuationMethodPage) match {
@@ -497,11 +480,7 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     }
 
   private def contactsNextPage(userAnswers: UserAnswers): Call =
-    if (appConfig.agentOnBehalfOfTrader) {
-      userRoleProvider
-        .getUserRole(userAnswers)
-        .getEORIDetailsJourney(NormalMode, userAnswers.draftId)
-    } else CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
+    userRoleProvider.getUserRole(userAnswers).getEORIDetailsJourney(NormalMode, userAnswers.draftId)
 
   private def checkRegisteredDetailsPage(
     userAnswers: UserAnswers
@@ -510,18 +489,8 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
       case None        => CheckRegisteredDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(value) =>
         if (value) {
-          userAnswers.get(AccountHomePage) match {
-            case None               => UnauthorisedController.onPageLoad
-            case Some(authUserType) =>
-              resolveAuthUserType(authUserType)(
-                isTrader =
-                  ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
-                isEmployee =
-                  ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId),
-                isAgent =
-                  BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-              )
-          }
+          userRoleProvider.getUserRole(userAnswers).getContactDetailsJourney(userAnswers.draftId)
+
         } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
     }
 
@@ -529,30 +498,6 @@ class Navigator @Inject() (appConfig: FrontendAppConfig, userRoleProvider: UserR
     userAnswers.get(ApplicationContactDetailsPage) match {
       case None    => ApplicationContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => ChoosingMethodController.onPageLoad(userAnswers.draftId)
-    }
-
-  private def businessContactDetailsPage(userAnswers: UserAnswers): Call =
-    userAnswers.get(BusinessContactDetailsPage) match {
-      case None    =>
-        BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-      case Some(_) => agentContactDetailsNavigation(userAnswers)
-    }
-
-  private def agentContactDetailsNavigation(userAnswers: UserAnswers): Call =
-    userAnswers.get(AccountHomePage) match {
-      case Some(OrganisationAdmin)                   =>
-        ChoosingMethodController.onPageLoad(userAnswers.draftId)
-      case Some(OrganisationAssistant) | Some(Agent) =>
-        userAnswers.get(WhatIsYourRoleAsImporterPage) match {
-          case Some(EmployeeOfOrg)      =>
-            ChoosingMethodController.onPageLoad(userAnswers.draftId)
-          case Some(AgentOnBehalfOfOrg) =>
-            AgentCompanyDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
-          case _                        =>
-            WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
-        }
-      case _                                         =>
-        UnauthorisedController.onPageLoad
     }
 
   private def agentCompanyDetailsPage(userAnswers: UserAnswers): Call =
