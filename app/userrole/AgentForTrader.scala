@@ -32,7 +32,7 @@ package userrole {
   import controllers.routes.{BusinessContactDetailsController, ProvideTraderEoriController}
   import forms.AgentForTraderCheckRegisteredDetailsFormProvider
   import logging.Logging
-  import models.{BusinessContactDetails, NormalMode, TraderDetailsWithConfirmation, UserAnswers}
+  import models.{BusinessContactDetails, TraderDetailsWithConfirmation, NormalMode, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
   import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
