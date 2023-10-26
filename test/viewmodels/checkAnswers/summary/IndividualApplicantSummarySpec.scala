@@ -41,7 +41,8 @@ class IndividualApplicantSummarySpec extends SpecBase {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
-      val summary = IndividualApplicantSummary(userAnswersAsIndividualTrader)
+      val summary =
+        new IndividualApplicantSummaryCreator().summaryRows(userAnswersAsIndividualTrader)
       val rows    = summary.rows.rows
 
       "must create no rows" in {
@@ -50,7 +51,7 @@ class IndividualApplicantSummarySpec extends SpecBase {
     }
 
     "when the user has answers for all relevant pages" - {
-      val summary = IndividualApplicantSummary(answers.success.value)
+      val summary = new IndividualApplicantSummaryCreator().summaryRows(answers.success.value)
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {

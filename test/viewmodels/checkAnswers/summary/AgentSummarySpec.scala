@@ -56,7 +56,7 @@ class AgentSummarySpec extends SpecBase {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
-      val summary = AgentSummary(userAnswersAsIndividualTrader)
+      val summary = new AgentSummaryCreator().summaryRows(userAnswersAsIndividualTrader)
       val rows    = summary.rows.rows
 
       "must create no rows" in {
@@ -65,7 +65,7 @@ class AgentSummarySpec extends SpecBase {
     }
 
     "when the user has answers for all relevant pages" - {
-      val summary = AgentSummary(answers)
+      val summary = new AgentSummaryCreator().summaryRows(answers)
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {

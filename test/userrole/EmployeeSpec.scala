@@ -19,7 +19,6 @@ package userrole
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
@@ -34,18 +33,22 @@ import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, Emp
 
 class EmployeeSpec extends SpecBase with Matchers {
 
-  private val employeeCheckRegisteredDetailsView = mock[EmployeeCheckRegisteredDetailsView]
-  private val formProvider                       = mock[EmployeeCheckRegisteredDetailsFormProvider]
-  private val employeeEORIBeUpToDateView         = mock[EmployeeEORIBeUpToDateView]
-  private val requiredInformationView            = mock[IndividualInformationRequiredView]
-  private val checkYourAnswersView               = mock[CheckYourAnswersView]
+  private val employeeCheckRegisteredDetailsView  = mock[EmployeeCheckRegisteredDetailsView]
+  private val formProvider                        = mock[EmployeeCheckRegisteredDetailsFormProvider]
+  private val employeeEORIBeUpToDateView          = mock[EmployeeEORIBeUpToDateView]
+  private val requiredInformationView             = mock[IndividualInformationRequiredView]
+  private val checkYourAnswersView                = mock[CheckYourAnswersView]
+  private val individualApplicantSummaryCreator   = mock[IndividualApplicantSummaryCreator]
+  private val individualEoriDetailsSummaryCreator = mock[IndividualEoriDetailsSummaryCreator]
 
   private val employee = Employee(
     employeeCheckRegisteredDetailsView,
     formProvider,
     checkYourAnswersView,
     employeeEORIBeUpToDateView,
-    requiredInformationView
+    requiredInformationView,
+    individualApplicantSummaryCreator,
+    individualEoriDetailsSummaryCreator
   )
 
   private val mockMessages    = mock[Messages]
@@ -54,11 +57,26 @@ class EmployeeSpec extends SpecBase with Matchers {
   "Employee" - {
 
     "should return the correct ApplicationSummary" in {
-      val summary: (ApplicantSummary, EoriDetailsSummary) =
+
+      val individualApplicantSummary   = mock[IndividualApplicantSummary]
+      val individualEoriDetailsSummary = mock[IndividualEoriDetailsSummary]
+
+      when(individualApplicantSummaryCreator.summaryRows(emptyUserAnswers)(mockMessages))
+        .thenReturn(individualApplicantSummary)
+      when(
+        individualEoriDetailsSummaryCreator.summaryRows(
+          traderDetailsWithCountryCode,
+          draftId,
+          emptyUserAnswers
+        )(mockMessages)
+      ).thenReturn(individualEoriDetailsSummary)
+
+      val (applicantSummary, eoriDetailsSummary): (ApplicantSummary, EoriDetailsSummary) =
         employee.getApplicationSummary(emptyUserAnswers, traderDetailsWithCountryCode)(
           mockMessages
         )
-      summary.isInstanceOf[(IndividualApplicantSummary, IndividualEoriDetailsSummary)] mustBe true
+      applicantSummary mustBe individualApplicantSummary
+      eoriDetailsSummary mustBe individualEoriDetailsSummary
     }
 
     "should return the correct ContactDetails for Application Request" in {
@@ -78,14 +96,7 @@ class EmployeeSpec extends SpecBase with Matchers {
     "should return the correct view for CheckYourAnswers" in {
       val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
 
-      val appSummary = ApplicationSummary(
-        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, emptyUserAnswers)(
-          stubMessages()
-        ),
-        IndividualApplicantSummary(emptyUserAnswers)(stubMessages()),
-        DetailsSummary(emptyUserAnswers)(stubMessages()),
-        MethodSummary(emptyUserAnswers)(stubMessages())
-      )
+      val appSummary = mock[ApplicationSummary]
 
       when(
         checkYourAnswersView.apply(

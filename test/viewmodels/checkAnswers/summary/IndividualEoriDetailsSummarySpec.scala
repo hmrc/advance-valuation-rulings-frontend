@@ -42,7 +42,11 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when the user has answers for all relevant pages" - {
-      val summary = IndividualEoriDetailsSummary(registeredDetails, DraftId(0), emptyUserAnswers)
+      val summary = new IndividualEoriDetailsSummaryCreator().summaryRows(
+        registeredDetails,
+        DraftId(0),
+        emptyUserAnswers
+      )
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
@@ -78,7 +82,7 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
     }
 
     "when consentToDisclosureOfPersonalData is false" - {
-      val summary = IndividualEoriDetailsSummary(
+      val summary = new IndividualEoriDetailsSummaryCreator().summaryRows(
         registeredDetails.copy(consentToDisclosureOfPersonalData = false),
         DraftId(0),
         emptyUserAnswers

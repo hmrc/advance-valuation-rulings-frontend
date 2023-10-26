@@ -45,7 +45,11 @@ class TraderSummarySpec extends SpecBase with Generators {
 
     "when the user has answers for all relevant pages" - {
       val summary =
-        TraderEoriDetailsSummary(registeredDetails, DraftId(0), letterOfAuthorityFileName)
+        new TraderEoriDetailsSummaryCreator().summaryRows(
+          registeredDetails,
+          DraftId(0),
+          letterOfAuthorityFileName
+        )
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
@@ -92,7 +96,11 @@ class TraderSummarySpec extends SpecBase with Generators {
 
     "when consentToDisclosureOfPersonalData is false" - {
       val details = registeredDetails.copy(consentToDisclosureOfPersonalData = false)
-      val summary = TraderEoriDetailsSummary(details, DraftId(0), letterOfAuthorityFileName)
+      val summary = new TraderEoriDetailsSummaryCreator().summaryRows(
+        details,
+        DraftId(0),
+        letterOfAuthorityFileName
+      )
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {

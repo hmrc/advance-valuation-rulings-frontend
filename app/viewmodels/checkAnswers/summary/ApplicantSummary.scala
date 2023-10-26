@@ -35,20 +35,23 @@ case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummar
     IndividualApplicantSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
 }
 
-object IndividualApplicantSummary {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): IndividualApplicantSummary = {
+class IndividualApplicantSummaryCreator {
+  def summaryRows(
+    userAnswers: UserAnswers
+  )(implicit messages: Messages): IndividualApplicantSummary = {
     val contactDetailsRows = ApplicationContactDetailsSummary.rows(userAnswers).orEmpty
     IndividualApplicantSummary(SummaryListViewModel(contactDetailsRows))
   }
 }
 
 case class AgentSummary(rows: SummaryList) extends ApplicantSummary {
+
   def removeActions(): AgentSummary =
     AgentSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
 }
 
-object AgentSummary {
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): AgentSummary = {
+class AgentSummaryCreator {
+  def summaryRows(userAnswers: UserAnswers)(implicit messages: Messages): AgentSummary = {
     val roleRow            = AgentRoleSummary.row(userAnswers).orEmpty
     val contactDetailsRows = BusinessContactDetailsSummary.rows(userAnswers).orEmpty
     val agentCompanyRow    = AgentCompanySummary.rows(userAnswers).orEmpty

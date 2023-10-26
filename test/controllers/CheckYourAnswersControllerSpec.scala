@@ -222,14 +222,7 @@ trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues wi
     contactInformation = Some(contactInformation)
   )
 
-  val appSummary: ApplicationSummary = ApplicationSummary(
-    IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, userAnswers)(
-      stubMessages()
-    ),
-    IndividualApplicantSummary(userAnswers)(stubMessages()),
-    DetailsSummary(userAnswers)(stubMessages()),
-    MethodSummary(userAnswers)(stubMessages())
-  )
+  val appSummary: ApplicationSummary = mock[ApplicationSummary]
 
   when(
     mockApplicationSummaryService.getApplicationSummary(
