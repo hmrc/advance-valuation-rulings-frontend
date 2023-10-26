@@ -50,37 +50,8 @@ class UploadInProgressController @Inject() (
     isLetterOfAuthority: Boolean
   ): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val answers = request.userAnswers
-        val status  = helper.checkForStatus(answers, isLetterOfAuthority)
-        status match {
-          case Some(file) =>
-            file match {
-              case file: UploadedFile.Success =>
-                removeFileOnBackNavigation(mode, draftId, isLetterOfAuthority, file)
-              case _                          =>
-                Ok(view(mode, draftId, key, isLetterOfAuthority))
-            }
-          case _          =>
-            Ok(view(mode, draftId, key, isLetterOfAuthority))
-        }
+      implicit request => Ok(view(mode, draftId, key, isLetterOfAuthority))
     }
-
-  private def removeFileOnBackNavigation(
-    mode: Mode,
-    draftId: DraftId,
-    isLetterOfAuthority: Boolean,
-    file: UploadedFile.Success
-  )(implicit request: DataRequest[AnyContent], hc: HeaderCarrier) =
-    Await.result(
-      helper.removeFile(
-        mode,
-        draftId,
-        file.fileUrl.get,
-        isLetterOfAuthority
-      ),
-      10.seconds
-    )
 
   def checkProgress(
     mode: Mode,
