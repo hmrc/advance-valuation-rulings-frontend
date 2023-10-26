@@ -994,8 +994,8 @@ agentCompanyDetails.agentCountry = Country
 agentCompanyDetails.agentPostalCode = Postcode
 
 agentCompanyDetails.checkYourAnswersLabel = agentCompanyDetails
-agentCompanyDetails.error.agentEori.required = Enter your company’s registered EORI number starting with GB
-agentCompanyDetails.error.agentCompanyName.required = Enter your company’s registered business name
+agentCompanyDetails.error.agentEori.required = Enter your organisation’s registered EORI number starting with GB
+agentCompanyDetails.error.agentCompanyName.required = Enter your organisation’s registered business name
 agentCompanyDetails.error.agentStreetAndNumber.required = Enter the first line of your address
 agentCompanyDetails.error.agentCity.required = Enter a town or city
 agentCompanyDetails.error.agentCountry.required = Select a country
