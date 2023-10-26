@@ -62,7 +62,12 @@ class DescribeTheSimilarGoodsController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+            formWithErrors =>
+              if (saveDraft) {
+                Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+              } else {
+                Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
+              },
             value =>
               for {
                 updatedAnswers <-
