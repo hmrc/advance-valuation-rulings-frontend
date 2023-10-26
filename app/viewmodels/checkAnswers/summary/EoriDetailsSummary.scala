@@ -36,9 +36,13 @@ case class IndividualEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSu
   )
 }
 
-object IndividualEoriDetailsSummary {
-  def apply(details: TraderDetailsWithCountryCode, draftId: DraftId, userAnswers: UserAnswers)(
-    implicit messages: Messages
+class IndividualEoriDetailsSummaryCreator {
+  def summaryRows(
+    details: TraderDetailsWithCountryCode,
+    draftId: DraftId,
+    userAnswers: UserAnswers
+  )(implicit
+    messages: Messages
   ): EoriDetailsSummary = {
     val roleRow = AgentRoleSummary.row(userAnswers).orEmpty
     val rows    = CheckRegisteredDetailsSummary.rows(details, draftId).orEmpty
@@ -47,13 +51,14 @@ object IndividualEoriDetailsSummary {
 }
 
 case class BusinessEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary {
+
   def removeActions(): EoriDetailsSummary = BusinessEoriDetailsSummary(
     SummaryListViewModel(rows.rows.map(_.copy(actions = None)))
   )
 }
 
-object BusinessEoriDetailsSummary {
-  def apply(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
+class BusinessEoriDetailsSummaryCreator {
+  def summaryRows(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
     messages: Messages
   ): EoriDetailsSummary = {
 
@@ -67,8 +72,8 @@ case class TraderEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummar
     SummaryListViewModel(rows.rows.map(_.copy(actions = None)))
   )
 }
-object TraderEoriDetailsSummary {
-  def apply(
+class TraderEoriDetailsSummaryCreator {
+  def summaryRows(
     details: TraderDetailsWithCountryCode,
     draftId: DraftId,
     letterOfAuthorityFileName: String

@@ -35,7 +35,7 @@ package userrole {
   import models.{BusinessContactDetails, NormalMode, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage, BusinessContactDetailsPage}
-  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, EoriDetailsSummary}
+  import viewmodels.checkAnswers.summary._
   import views.html.AgentForOrgCheckYourAnswersView
 
   private case class AgentForOrg @Inject() (
@@ -43,7 +43,9 @@ package userrole {
     formProvider: AgentForOrgCheckRegisteredDetailsFormProvider,
     agentForOrgCheckYourAnswersView: AgentForOrgCheckYourAnswersView,
     eoriBeUpToDateView: AgentForOrgEORIBeUpToDateView,
-    requiredInformation: AgentForOrgRequiredInformationView
+    requiredInformation: AgentForOrgRequiredInformationView,
+    agentSummaryCreator: AgentSummaryCreator,
+    businessEoriDetailsSummaryCreator: BusinessEoriDetailsSummaryCreator
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -91,8 +93,11 @@ package userrole {
       traderDetailsWithCountryCode: TraderDetailsWithCountryCode
     )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
       (
-        AgentSummary(userAnswers),
-        BusinessEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId)
+        agentSummaryCreator.summaryRows(userAnswers),
+        businessEoriDetailsSummaryCreator.summaryRows(
+          traderDetailsWithCountryCode,
+          userAnswers.draftId
+        )
       )
 
     override def getContactDetailsForApplicationRequest(

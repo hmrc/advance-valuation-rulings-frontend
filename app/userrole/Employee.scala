@@ -34,7 +34,7 @@ package userrole {
   import models.{ApplicationContactDetails, NormalMode, UserAnswers}
   import models.requests.ContactDetails
   import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page, ValuationMethodPage}
-  import viewmodels.checkAnswers.summary.{ApplicantSummary, ApplicationSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary}
+  import viewmodels.checkAnswers.summary._
   import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
   private case class Employee @Inject() (
@@ -42,7 +42,9 @@ package userrole {
     formProvider: EmployeeCheckRegisteredDetailsFormProvider,
     checkYourAnswersView: CheckYourAnswersView,
     eoriBeUpToDateView: EmployeeEORIBeUpToDateView,
-    requiredInformationRequiredView: IndividualInformationRequiredView
+    requiredInformationRequiredView: IndividualInformationRequiredView,
+    individualApplicantSummaryCreator: IndividualApplicantSummaryCreator,
+    individualEoriDetailsSummaryCreator: IndividualEoriDetailsSummaryCreator
   ) extends UserRole {
     override def selectViewForCheckRegisteredDetails(
       form: Form[Boolean],
@@ -90,8 +92,12 @@ package userrole {
       traderDetailsWithCountryCode: TraderDetailsWithCountryCode
     )(implicit messages: Messages): (ApplicantSummary, EoriDetailsSummary) =
       (
-        IndividualApplicantSummary(userAnswers),
-        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, userAnswers.draftId, userAnswers)
+        individualApplicantSummaryCreator.summaryRows(userAnswers),
+        individualEoriDetailsSummaryCreator.summaryRows(
+          traderDetailsWithCountryCode,
+          userAnswers.draftId,
+          userAnswers
+        )
       )
 
     override def getContactDetailsForApplicationRequest(

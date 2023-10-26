@@ -43,7 +43,8 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
     "when the user has answers for all relevant pages" - {
-      val summary = BusinessEoriDetailsSummary(registeredDetails, DraftId(0))
+      val summary =
+        new BusinessEoriDetailsSummaryCreator().summaryRows(registeredDetails, DraftId(0))
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "must create rows for each page" in {
@@ -80,7 +81,7 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
 
     "when consentToDisclosureOfPersonalData is false" - {
       val details = registeredDetails.copy(consentToDisclosureOfPersonalData = false)
-      val summary = BusinessEoriDetailsSummary(details, DraftId(0))
+      val summary = new BusinessEoriDetailsSummaryCreator().summaryRows(details, DraftId(0))
       val rows    = summary.rows.rows.map(row => (row.key, row.value))
 
       "create only EORI number row" in {

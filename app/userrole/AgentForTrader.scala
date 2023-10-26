@@ -35,8 +35,8 @@ package userrole {
   import models.{BusinessContactDetails, NormalMode, TraderDetailsWithConfirmation, UserAnswers}
   import models.requests.ContactDetails
   import pages.{AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
-  import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, EoriDetailsSummary, TraderEoriDetailsSummary}
-  import views.html.{AgentForTraderCheckYourAnswersView, AgentForTraderPrivateEORIBeUpToDateView, AgentForTraderPublicEORIBeUpToDateView, AgentForTraderRequiredInformationView, VerifyPublicTraderDetailView}
+  import viewmodels.checkAnswers.summary._
+  import views.html._
 
   private case class AgentForTrader @Inject() (
     checkRegisteredDetailsView: VerifyPublicTraderDetailView,
@@ -44,7 +44,9 @@ package userrole {
     agentForTraderCheckYourAnswersView: AgentForTraderCheckYourAnswersView,
     eoriBeUpToDateViewPublic: AgentForTraderPublicEORIBeUpToDateView,
     eoriBeUpToDateViewPrivate: AgentForTraderPrivateEORIBeUpToDateView,
-    requiredInformationView: AgentForTraderRequiredInformationView
+    requiredInformationView: AgentForTraderRequiredInformationView,
+    agentSummaryCreator: AgentSummaryCreator,
+    traderEoriDetailsSummaryCreator: TraderEoriDetailsSummaryCreator
   ) extends UserRole
       with Logging {
     override def selectViewForCheckRegisteredDetails(
@@ -90,8 +92,8 @@ package userrole {
       userAnswers.get(VerifyTraderDetailsPage) match {
         case Some(traderDetailsFromUA) =>
           (
-            AgentSummary(userAnswers),
-            TraderEoriDetailsSummary(
+            agentSummaryCreator.summaryRows(userAnswers),
+            traderEoriDetailsSummaryCreator.summaryRows(
               traderDetailsFromUA.withoutConfirmation,
               userAnswers.draftId,
               userAnswers.get(UploadLetterOfAuthorityPage).get.fileName.get

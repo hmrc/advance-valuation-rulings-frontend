@@ -19,18 +19,17 @@ package userrole
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import play.api.test.Helpers.stubMessages
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
 import controllers.routes.CheckRegisteredDetailsController
 import forms.AgentForOrgCheckRegisteredDetailsFormProvider
-import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, WhatIsYourRoleAsImporter}
 import models.requests.DataRequest
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import pages.BusinessContactDetailsPage
-import viewmodels.checkAnswers.summary.{AgentSummary, ApplicantSummary, ApplicationSummary, BusinessEoriDetailsSummary, DetailsSummary, EoriDetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
+import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
+import viewmodels.checkAnswers.summary._
 import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgCheckYourAnswersView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
 class AgentForOrgSpec extends SpecBase with Matchers {
@@ -40,13 +39,17 @@ class AgentForOrgSpec extends SpecBase with Matchers {
   private val agentForOrgEORIBeUpToDateView         = mock[AgentForOrgEORIBeUpToDateView]
   private val requiredInformationView               = mock[AgentForOrgRequiredInformationView]
   private val checkYourAnswersView                  = mock[AgentForOrgCheckYourAnswersView]
+  private val agentSummaryCreator                   = mock[AgentSummaryCreator]
+  private val businessEoriDetailsSummaryCreator     = mock[BusinessEoriDetailsSummaryCreator]
 
   private val agentForOrg = AgentForOrg(
     agentForOrgCheckRegisteredDetailsView,
     formProvider,
     checkYourAnswersView,
     agentForOrgEORIBeUpToDateView,
-    requiredInformationView
+    requiredInformationView,
+    agentSummaryCreator,
+    businessEoriDetailsSummaryCreator
   )
 
   private val mockMessages    = mock[Messages]
@@ -55,12 +58,30 @@ class AgentForOrgSpec extends SpecBase with Matchers {
   "AgentForOrg" - {
 
     "should return the correct ApplicationSummary" in {
-      val summary: (ApplicantSummary, EoriDetailsSummary) =
-        agentForOrg.getApplicationSummary(emptyUserAnswers, traderDetailsWithCountryCode)(
+
+      val userAnswers = emptyUserAnswers
+        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+        .get
+
+      val populatedAgentSummary       = mock[AgentSummary]
+      val populatedEoriDetailsSummary = mock[BusinessEoriDetailsSummary]
+
+      when(agentSummaryCreator.summaryRows(userAnswers)(mockMessages))
+        .thenReturn(populatedAgentSummary)
+      when(
+        businessEoriDetailsSummaryCreator.summaryRows(traderDetailsWithCountryCode, draftId)(
           mockMessages
         )
-      summary.isInstanceOf[(AgentSummary, BusinessEoriDetailsSummary)] mustBe true
-      // TODO check that we're getting the right stuff back
+      ).thenReturn(populatedEoriDetailsSummary)
+
+      val (applicantSummary, eoriDetailsSummary): (ApplicantSummary, EoriDetailsSummary) =
+        agentForOrg.getApplicationSummary(userAnswers, traderDetailsWithCountryCode)(
+          mockMessages
+        )
+
+      applicantSummary mustBe populatedAgentSummary
+      eoriDetailsSummary mustBe populatedEoriDetailsSummary
+
     }
 
     "should return the correct ContactDetails for Application Request" in {
@@ -81,14 +102,7 @@ class AgentForOrgSpec extends SpecBase with Matchers {
     "should return the correct view for CheckYourAnswers" in {
       val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
 
-      val appSummary = ApplicationSummary(
-        IndividualEoriDetailsSummary(traderDetailsWithCountryCode, draftId, emptyUserAnswers)(
-          stubMessages()
-        ),
-        IndividualApplicantSummary(emptyUserAnswers)(stubMessages()),
-        DetailsSummary(emptyUserAnswers)(stubMessages()),
-        MethodSummary(emptyUserAnswers)(stubMessages())
-      )
+      val appSummary = mock[ApplicationSummary]
 
       when(
         checkYourAnswersView.apply(
