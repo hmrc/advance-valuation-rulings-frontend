@@ -16,18 +16,19 @@
 
 package userrole
 
-import base.SpecBase
-import controllers.routes.CheckRegisteredDetailsController
-import forms.AgentForOrgCheckRegisteredDetailsFormProvider
-import models.requests.DataRequest
-import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, WhatIsYourRoleAsImporter}
-import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.matchers.must.Matchers
-import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
+
+import base.SpecBase
+import controllers.routes.CheckRegisteredDetailsController
+import forms.AgentForOrgCheckRegisteredDetailsFormProvider
+import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, WhatIsYourRoleAsImporter}
+import models.requests.DataRequest
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalatest.matchers.must.Matchers
+import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 import viewmodels.checkAnswers.summary._
 import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgCheckYourAnswersView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
