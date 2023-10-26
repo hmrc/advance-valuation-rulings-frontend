@@ -21,10 +21,8 @@ import java.time.Instant
 import play.api.libs.json.Writes
 
 import base.SpecBase
-import config.FrontendAppConfig
 import controllers.routes
 import models._
-import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import pages._
 import queries._
@@ -34,11 +32,8 @@ class CheckModeNavigatorSpec extends SpecBase {
 
   val userRoleProvider              = mock[UserRoleProvider]
   val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
-  val appConfig                     = mock[FrontendAppConfig]
   val navigator                     = new Navigator(userRoleProvider)
   val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
-
-  when(appConfig.agentOnBehalfOfTrader) thenReturn false
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",

@@ -25,7 +25,6 @@ import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import _root_.config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.FileUploadHelper
 import controllers.routes.UploadAnotherSupportingDocumentController
@@ -42,8 +41,7 @@ class UploadSupportingDocumentsController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   helper: FileUploadHelper,
-  userRoleProvider: UserRoleProvider,
-  appConfig: FrontendAppConfig
+  userRoleProvider: UserRoleProvider
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -57,18 +55,14 @@ class UploadSupportingDocumentsController @Inject() (
       implicit request =>
         val numberOfAttachments = AllDocuments.get().getOrElse(List.empty).length
 
-        if (appConfig.agentOnBehalfOfTrader) {
-          if (
-            numberOfAttachments >= userRoleProvider
-              .getUserRole(request.userAnswers)
-              .getMaxSupportingDocuments
-          ) {
-            Future.successful(
-              Redirect(UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId))
-            )
-          } else {
-            loadUsingFileUploadHelper(mode, draftId, errorCode, key, request)
-          }
+        if (
+          numberOfAttachments >= userRoleProvider
+            .getUserRole(request.userAnswers)
+            .getMaxSupportingDocuments
+        ) {
+          Future.successful(
+            Redirect(UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId))
+          )
         } else {
           loadUsingFileUploadHelper(mode, draftId, errorCode, key, request)
         }

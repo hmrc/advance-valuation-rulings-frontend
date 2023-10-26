@@ -29,12 +29,11 @@ import play.api.test.Helpers._
 import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile, UserAnswers}
-import models.requests.DataRequest
 import models.upscan.UpscanInitiateResponse
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Mockito.when
 import org.mockito.MockitoSugar.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks

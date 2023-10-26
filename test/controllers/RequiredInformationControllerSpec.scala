@@ -86,8 +86,6 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for userRole where agentcreds flag is set" in {
 
-      val config: FrontendAppConfig          = mock[FrontendAppConfig]
-      when(config.agentOnBehalfOfTrader).thenReturn(true)
       val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
 
       val userRole: UserRole = mock[UserRole]
@@ -103,7 +101,6 @@ class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsOrgAdmin))
           .overrides(
-            bind[FrontendAppConfig].toInstance(config),
             bind[UserRoleProvider].toInstance(userRoleProvider)
           )
           .build()

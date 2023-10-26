@@ -130,13 +130,9 @@ class UploadSupportingDocumentsControllerSpec
     when(mockUserRole.getMaxSupportingDocuments).thenReturn(5)
     when(mockUserRoleProvider.getUserRole(eqTo(userAnswers))).thenReturn(mockUserRole)
 
-    val mockFrontEndAppConfig = mock[FrontendAppConfig]
-    when(mockFrontEndAppConfig.agentOnBehalfOfTrader).thenReturn(true)
-
     val application = applicationBuilder(userAnswers = Some(userAnswers))
       .overrides(
-        bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-        bind[FrontendAppConfig].toInstance(mockFrontEndAppConfig)
+        bind[UserRoleProvider].toInstance(mockUserRoleProvider)
       )
       .build()
 

@@ -64,9 +64,6 @@ class CheckRegisteredDetailsControllerSpec
   private val mockUserAnswersService = mock[UserAnswersService]
   private val mockUserRoleProvider   = mock[UserRoleProvider]
   private val mockUserRole           = mock[UserRole]
-  private val mockAppConfig          = mock[FrontendAppConfig]
-
-  when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
   private def setUpBackendConnectorMock(isInternalServerError: Boolean = false) =
     if (isInternalServerError) {
@@ -127,8 +124,7 @@ class CheckRegisteredDetailsControllerSpec
             .overrides(
               bind[BackendConnector].toInstance(mockBackendConnector),
               bind[UserAnswersService].toInstance(mockUserAnswersService),
-              bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-              bind[FrontendAppConfig].toInstance(mockAppConfig)
+              bind[UserRoleProvider].toInstance(mockUserRoleProvider)
             )
             .build()
 
@@ -158,8 +154,7 @@ class CheckRegisteredDetailsControllerSpec
               .overrides(
                 bind[UserAnswersService].toInstance(mockUserAnswersService),
                 bind[BackendConnector].toInstance(mockBackendConnector),
-                bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-                bind[FrontendAppConfig].toInstance(mockAppConfig)
+                bind[UserRoleProvider].toInstance(mockUserRoleProvider)
               )
               .build()
 
@@ -180,8 +175,7 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-            bind[FrontendAppConfig].toInstance(mockAppConfig)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
@@ -203,8 +197,7 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-            bind[FrontendAppConfig].toInstance(mockAppConfig)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
@@ -229,8 +222,7 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector),
             bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-            bind[FrontendAppConfig].toInstance(mockAppConfig)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
@@ -257,8 +249,7 @@ class CheckRegisteredDetailsControllerSpec
           .overrides(
             bind[UserAnswersService].toInstance(mockUserAnswersService),
             bind[BackendConnector].toInstance(mockBackendConnector),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-            bind[FrontendAppConfig].toInstance(mockAppConfig)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 
@@ -330,8 +321,7 @@ class CheckRegisteredDetailsControllerSpec
         .overrides(
           bind[BackendConnector].toInstance(mockBackendConnector),
           bind[UserAnswersService].toInstance(mockUserAnswersService),
-          bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-          bind[FrontendAppConfig].toInstance(mockAppConfig)
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
         )
         .build()
 
@@ -349,8 +339,7 @@ class CheckRegisteredDetailsControllerSpec
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[BackendConnector].toInstance(mockBackendConnector),
-          bind[FrontendAppConfig].toInstance(mockAppConfig)
+          bind[BackendConnector].toInstance(mockBackendConnector)
         )
         .build()
 
