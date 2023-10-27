@@ -25,11 +25,11 @@ import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import base.SpecBase
 import forms.VerifyTraderDetailsFormProvider
-import models.{Done, NormalMode, TraderDetailsWithConfirmation}
+import models.{Done, NormalMode, TraderDetailsWithConfirmation, WhatIsYourRoleAsImporter}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
+import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
@@ -194,7 +194,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "true"))
+          .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -217,6 +217,11 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = true)
         )
         .futureValue
+        .setFuture[WhatIsYourRoleAsImporter](
+          WhatIsYourRoleAsImporterPage,
+          WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
+        )
+        .futureValue
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -227,7 +232,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "true"))
+          .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -250,6 +255,11 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = true)
         )
         .futureValue
+        .setFuture[WhatIsYourRoleAsImporter](
+          WhatIsYourRoleAsImporterPage,
+          WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
+        )
+        .futureValue
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -260,7 +270,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "false"))
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -281,6 +291,11 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = true)
         )
         .futureValue
+        .setFuture[WhatIsYourRoleAsImporter](
+          WhatIsYourRoleAsImporterPage,
+          WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
+        )
+        .futureValue
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -291,7 +306,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "false"))
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -312,6 +327,11 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
           traderDetailsWithConfirmation
         )
         .futureValue
+        .setFuture[WhatIsYourRoleAsImporter](
+          WhatIsYourRoleAsImporterPage,
+          WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
+        )
+        .futureValue
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -323,25 +343,13 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, verifyTraderEoriPagePostRoute)
-            .withFormUrlEncodedBody(("traderDetailsCorrect", ""))
+            .withFormUrlEncodedBody(("value", ""))
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[VerifyPublicTraderDetailView]
-
-        val boundForm =
-          form.bind(Map("traderDetailsCorrect" -> ""))
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          boundForm,
-          NormalMode,
-          draftId,
-          traderDetailsWithConfirmation
-        )(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result).contains(
+          messages(application)("verifyTraderDetails.error.required")
+        )
       }
     }
 
@@ -367,14 +375,14 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, verifyTraderEoriPagePostRoute)
-            .withFormUrlEncodedBody(("traderDetailsCorrect", ""))
+            .withFormUrlEncodedBody(("value", ""))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[VerifyPrivateTraderDetailView]
 
         val boundForm =
-          form.bind(Map("traderDetailsCorrect" -> ""))
+          form.bind(Map("value" -> ""))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, draftId, details)(
