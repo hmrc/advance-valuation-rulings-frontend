@@ -127,9 +127,9 @@ checkRegisteredDetails.error.required.agentForTrader.consent = Dewiswch ‘Iawn�
 checkRegisteredDetails.warning.individual = Dyma’r manylion sydd gennym ar gofnod. Dylai’r rhain fod yr un manylion a ddefnyddiwyd i gofrestru eich rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI).
 checkRegisteredDetails.warning.organisation = Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
 checkRegisteredDetails.warning.agent = Dyma’r manylion sydd gennym ar gofnod. Dylai’r rhain fod yr un manylion a ddefnyddiwyd i gofrestru eich rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI).
-checkRegisteredDetails.name.change.hidden = Newid enw busnes cofrestredig y sefydliad
-checkRegisteredDetails.address.change.hidden = Newid cyfeiriad busnes cofrestredig y sefydliad
-checkRegisteredDetails.eori.change.hidden = Newid rhif EORI cofrestredig y sefydliad
+checkRegisteredDetails.name.change.hidden = enw busnes cofrestredig y sefydliad
+checkRegisteredDetails.address.change.hidden = cyfeiriad busnes cofrestredig y sefydliad
+checkRegisteredDetails.eori.change.hidden = rhif EORI cofrestredig y sefydliad
 checkRegisteredDetails.private.title = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.checkYourAnswersLabel = Gwirio’r enw a’r cyfeiriad ar gyfer rhif EORI
 
@@ -181,10 +181,10 @@ applicationContactDetails.email.error.required = Nodwch eich cyfeiriad e-bost
 applicationContactDetails.email.error.format = Nodwch gyfeiriad e-bost yn y fformat cywir, megis enw@enghraifft.com
 applicationContactDetails.telephoneNumber.error.required = Nodwch eich rhif ffôn
 applicationContactDetails.telephoneNumber.error.format = Nodwch rif ffôn, megis 01632 960 001, 07700 900 982 neu +44 808 157 0192
-applicationContactDetails.name.change.hidden = Newid enw llawn yr ymgeisydd
-applicationContactDetails.email.change.hidden = Newid cyfeiriad yr ymgeisydd
-applicationContactDetails.phone.change.hidden = Newid rhif ffôn yr ymgeisydd
-applicationContactDetails.jobTitle.change.hidden = Newid teitl swydd yr ymgeisydd
+applicationContactDetails.name.change.hidden = enw llawn yr ymgeisydd
+applicationContactDetails.email.change.hidden = cyfeiriad yr ymgeisydd
+applicationContactDetails.phone.change.hidden = rhif ffôn yr ymgeisydd
+applicationContactDetails.jobTitle.change.hidden = teitl swydd yr ymgeisydd
 applicationContactDetails.jobTitle.error.required = Nodwch deitl eich swydd
 
 choosingMethod.title = Dulliau o brisio’ch nwyddau
@@ -218,7 +218,7 @@ valuationMethod.method6 = Dull 6 (dull ‘wrth gefn’)
 valuationMethod.method6.hint = Dyma’r dull olaf y gallwch roi cynnig arno. Gallwch ond ei ddefnyddio os na allwch ddefnyddio unrhyw ddull arall. Mae’n golygu addasu Dulliau 1 i 5 er mwyn ystyried amgylchiadau anarferol.
 valuationMethod.checkYourAnswersLabel = Y dull prisio arfaethedig
 valuationMethod.error.required = Dewiswch ddull i brisio’r nwyddau
-valuationMethod.change.hidden = Newid y dull prisio arfaethedig
+valuationMethod.change.hidden = y dull prisio arfaethedig
 
 isThereASaleInvolved.caption = Ynglŷn â’r nwyddau
 isThereASaleInvolved.title = Oes gwerthiant ar waith?
@@ -472,7 +472,7 @@ descriptionOfGoods.hint = Er enghraifft, cas ffôn clyfar silicôn
 descriptionOfGoods.checkYourAnswersLabel = Disgrifiad byr o’r nwyddau
 descriptionOfGoods.error.required = Nodwch ddisgrifiad byr o’r nwyddau
 descriptionOfGoods.error.length = Mae’n rhaid i ddisgrifiad byr o’r nwyddau fod yn 100 o gymeriadau neu lai
-descriptionOfGoods.change.hidden = Newid y disgrifiad byr o’r nwyddau
+descriptionOfGoods.change.hidden = y disgrifiad byr o’r nwyddau
 
 hasCommodityCode.caption = Ynglŷn â’r nwyddau
 hasCommodityCode.title = god nwyddau ar gyfer y nwyddau
@@ -482,7 +482,7 @@ hasCommodityCode.error.required = Dewiswch ‘Iawn’ os ydych yn gwybod y cod n
 hasCommodityCode.details.label = Help i ddod o hyd i’ch cod nwyddau
 hasCommodityCode.paragraph.1 = Mae cod nwyddau yn gyfeirnod sy’n cael ei gydnabod yn rhyngwladol. Bydd o gymorth i ni wrth adnabod y cynnyrch penodol rydych yn ei fewnforio. <br><br>{0}, os nad ydych yn ei wybod.
 hasCommodityCode.paragraph.1.link = Gallwch chwilio am y cod nwyddau ar gyfer eich nwyddau (yn agor tab newydd)
-hasCommodityCode.change.hidden = Newid p’un a oes gennych god nwyddau ar gyfer y nwyddau
+hasCommodityCode.change.hidden = p’un a oes gennych god nwyddau ar gyfer y nwyddau
 hasCommodityCode.question = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 
 contactPage.caption = Ynglŷn â’r ymgeisydd
@@ -513,7 +513,7 @@ haveTheGoodsBeenSubjectToLegalChallenges.para.1 = Gallai her gyfreithiol ymwneud
 haveTheGoodsBeenSubjectToLegalChallenges.para.2 = Mae darparu’r wybodaeth hon yn gallu helpu i adnabod nwyddau sydd â dyfarniadau tebyg.
 haveTheGoodsBeenSubjectToLegalChallenges.checkYourAnswersLabel = A yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol?
 haveTheGoodsBeenSubjectToLegalChallenges.error.required = Dewiswch ‘Iawn’ os yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol
-haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = Newid p’un a yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol
+haveTheGoodsBeenSubjectToLegalChallenges.change.hidden = p’un a yw’r nwyddau wedi bod yn destun unrhyw heriau cyfreithiol
 
 describeTheLegalChallenges.caption = Ynglŷn â’r nwyddau
 describeTheLegalChallenges.title = Disgrifiwch yr heriau cyfreithiol sy’n berthnasol i’r nwyddau
@@ -534,7 +534,7 @@ hasConfidentialInformation.paragraph.2 = Ni fyddwn yn cyhoeddi gwybodaeth gyfrin
 hasConfidentialInformation.paragraph.inset = Byddwch yn gallu uwchlwytho ffeiliau yn hwyrach yn y cais.
 hasConfidentialInformation.checkYourAnswersLabel = A ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau?
 hasConfidentialInformation.error.required = Dewiswch ‘Iawn’ os ydych am ychwanegu unrhyw wybodaeth gyfrinachol am y nwyddau
-hasConfidentialInformation.change.hidden = Newid p’un a ydych am ychwanegu gwybodaeth gyfrinachol am y nwyddau
+hasConfidentialInformation.change.hidden = p’un a ydych am ychwanegu gwybodaeth gyfrinachol am y nwyddau
 
 confidentialInformation.title = Disgrifiad o unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
 confidentialInformation.heading = Disgrifiad o unrhyw wybodaeth gyfrinachol yr hoffech ei hychwanegu am y nwyddau
@@ -560,8 +560,8 @@ doYouWantToUploadDocuments.bulletPoint.2 = copïau datganiadau mewnforio blaenor
 doYouWantToUploadDocuments.bulletPoint.3 = dadansoddiad o’r costau cynhyrchu
 doYouWantToUploadDocuments.checkYourAnswersLabel = A ydych eisiau uwchlwytho unrhyw ddogfennau ategol?
 doYouWantToUploadDocuments.error.required = Dewiswch ‘Iawn’ os hoffech uwchlwytho unrhyw ddogfennau ategol
-doYouWantToUploadDocuments.change.hidden = Newid p’un a ydych am uwchlwytho unrhyw ddogfennau ategol
-doYouWantToUploadDocuments.files.change.hidden = Newid y dogfennau ategol rydych wedi’u huwchlwytho
+doYouWantToUploadDocuments.change.hidden = p’un a ydych am uwchlwytho unrhyw ddogfennau ategol
+doYouWantToUploadDocuments.files.change.hidden = y dogfennau ategol rydych wedi’u huwchlwytho
 doYouWantToUploadDocuments.question = A ydych eisiau uwchlwytho unrhyw ddogfennau ategol?
 
 uploadLetterOfAuthority.title = Uwchlwytho’ch llythyr o awdurdod
@@ -584,7 +584,7 @@ verifyLetterOfAuthority.title = Llythyr o awdurdod wedi’i uwchlwytho
 verifyLetterOfAuthority.heading = Llythyr o awdurdod wedi’i uwchlwytho
 verifyLetterOfAuthority.caption = Ynglŷn â’r ymgeisydd
 verifyLetterOfAuthority.keepConfidential = Cadw’n gyfrinachol
-verifyLetterOfAuthority.hiddenText = Newid eich llythyr o awdurdod
+verifyLetterOfAuthority.hiddenText = eich llythyr o awdurdod
 
 uploadSupportingDocuments.caption = Ynglŷn â’r nwyddau
 uploadSupportingDocuments.title = Uwchlwytho dogfennau ategol
@@ -692,9 +692,9 @@ checkYourAnswersForAgents.heading = Gwirio’ch atebion cyn anfon eich cais
 checkYourAnswersForAgents.business.eori.number.label = Rhif EORI cofrestredig y sefydliad
 checkYourAnswersForAgents.business.name.label = Enw busnes cofrestredig y sefydliad
 checkYourAnswersForAgents.business.address.label = Cyfeiriad busnes cofrestredig y sefydliad
-checkYourAnswersForAgents.business.eori.number.hidden = Newid y rhif EORI cofrestredig ar gyfer sefydliad yr asiant
-checkYourAnswersForAgents.business.name.hidden = Newid yr enw busnes cofrestredig ar gyfer sefydliad yr asiant
-checkYourAnswersForAgents.business.address.hidden = Newid y cyfeiriad busnes cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.business.eori.number.hidden = y rhif EORI cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.business.name.hidden = yr enw busnes cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.business.address.hidden = y cyfeiriad busnes cofrestredig ar gyfer sefydliad yr asiant
 
 checkYourAnswersForAgents.company.org.heading = Ynglŷn â’r sefydliad
 checkYourAnswersForAgents.company.agent.heading = Ynglŷn â’r sefydliad yr ydych yn ei gynrychioli
@@ -735,9 +735,9 @@ agentForTraderCheckYourAnswers.heading = Gwirio’ch atebion
 agentForTraderCheckYourAnswers.trader.eori.number.label = Rhif EORI cofrestredig y masnachwr
 agentForTraderCheckYourAnswers.trader.name.label = Enw busnes cofrestredig y masnachwr
 agentForTraderCheckYourAnswers.trader.address.label = Cyfeiriad busnes cofrestredig y masnachwr
-agentForTraderCheckYourAnswers.trader.eori.number.hidden = Newid rhif EORI y masnachwra
-agentForTraderCheckYourAnswers.trader.name.hidden = Newid enw busnes cofrestredig y masnachwr
-agentForTraderCheckYourAnswers.trader.address.hidden = Newid cyfeiriad busnes cofrestredig y masnachwr
+agentForTraderCheckYourAnswers.trader.eori.number.hidden = rhif EORI y masnachwra
+agentForTraderCheckYourAnswers.trader.name.hidden = enw busnes cofrestredig y masnachwr
+agentForTraderCheckYourAnswers.trader.address.hidden = cyfeiriad busnes cofrestredig y masnachwr
 
 agentForTraderCheckYourAnswers.trader.heading = Ynglŷn â’r masnachwr
 
@@ -757,7 +757,7 @@ agentForTraderCheckYourAnswers.applicant.email.hidden = cyfeiriad e-bost yr Asia
 agentForTraderCheckYourAnswers.applicant.phone.label = Rhif ffôn yr asiant
 agentForTraderCheckYourAnswers.applicant.phone.hidden = rhif ffôn yr Asiant
 agentForTraderCheckYourAnswers.applicant.companyName.label = Enw cwmni’r asiant
-agentForTraderCheckYourAnswers.applicant.companyName.hidden = Newid enw cwmni’r asiant
+agentForTraderCheckYourAnswers.applicant.companyName.hidden = enw cwmni’r asiant
 agentForTraderCheckYourAnswers.applicant.jobTitle.label = Teitl swydd yr asiant
 agentForTraderCheckYourAnswers.applicant.jobTitle.hidden = teitl swydd yr asiant
 agentForTraderCheckYourAnswers.applicant.role.label = Disgrifiad o’r rôl
@@ -777,7 +777,7 @@ agentForTraderCheckYourAnswers.agreement.bulletPoint.2 = storio’r wybodaeth a 
 agentForTraderCheckYourAnswers.agreement.bulletPoint.3 = cysylltu â chi drwy e-bost
 agentForTraderCheckYourAnswers.button.continue = Derbyn a gwneud cais am ddyfarniad
 agentForTraderCheckYourAnswers.trader.loa.label = Llythyr o awdurdod
-agentForTraderCheckYourAnswers.trader.loa.hidden = Newid y llythyr o awdurdod
+agentForTraderCheckYourAnswers.trader.loa.hidden = y llythyr o awdurdod
 
 
 journeyRecovery.continue.title = Mae’n ddrwg gennym, ond mae problem gyda’r gwasanaeth
@@ -986,10 +986,10 @@ checkYourAnswersForAgents.agent.org.name.label = Enw llawn yr asiant
 checkYourAnswersForAgents.agent.org.email.label = Cyfeiriad e-bost yr asiant
 checkYourAnswersForAgents.agent.org.phone.label = Rhif ffôn yr asiant
 checkYourAnswersForAgents.agent.org.jobTitle.label = Teitl swydd yr asiant
-checkYourAnswersForAgents.agent.org.name.change.hidden = Newid enw llawn yr asiant
-checkYourAnswersForAgents.agent.org.email.change.hidden = Newid cyfeiriad e-bost yr asiant
-checkYourAnswersForAgents.agent.org.phone.change.hidden = Newid rhif ffôn yr asiant
-checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = Newid teitl swydd yr asiant
+checkYourAnswersForAgents.agent.org.name.change.hidden = enw llawn yr asiant
+checkYourAnswersForAgents.agent.org.email.change.hidden = cyfeiriad e-bost yr asiant
+checkYourAnswersForAgents.agent.org.phone.change.hidden = rhif ffôn yr asiant
+checkYourAnswersForAgents.agent.org.jobTitle.change.hidden = teitl swydd yr asiant
 
 checkYourAnswersForAgents.applicant.role.hidden = disgrifiad o’ch rôl
 checkYourAnswersForAgents.applicant.name.change.hidden = eich enw cyswllt
@@ -1067,7 +1067,7 @@ haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg ry
 haveYouReceivedADecision.error.required = Rhowch wybod i ni os ydych erioed wedi cael dyfarniad yn seiliedig ar ddull tebyg
 haveYouReceivedADecision.legend = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
 haveYouReceivedADecision.checkYourAnswersLabel = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
-haveYouReceivedADecision.change.hidden = Newid p’un a ydych wedi cael dyfarniad yn seiliedig ar ddull tebyg
+haveYouReceivedADecision.change.hidden = p’un a ydych wedi cael dyfarniad yn seiliedig ar ddull tebyg
 
 tellUsAboutYourRuling.heading = Ynghylch y dyfarniad blaenorol
 tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
