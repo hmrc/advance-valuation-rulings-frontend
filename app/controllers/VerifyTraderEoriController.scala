@@ -20,17 +20,21 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import play.api.Logging
+import play.api.{Logger, Logging}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import connectors.BackendConnector
 import controllers.actions._
+import controllers.common.TraderDetailsHelper
 import forms.VerifyTraderDetailsFormProvider
-import models.{DraftId, Mode}
-import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
+import models.{DraftId, Mode, TraderDetailsWithCountryCode, UserAnswers}
+import navigation.Navigator
+import pages.{CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page, VerifyTraderDetailsPage}
 import services.UserAnswersService
+import userrole.UserRoleProvider
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
 class VerifyTraderEoriController @Inject() (
@@ -39,19 +43,24 @@ class VerifyTraderEoriController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
-  formProvider: VerifyTraderDetailsFormProvider,
+  privateFormProvider: VerifyTraderDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   publicView: VerifyPublicTraderDetailView,
-  privateView: VerifyPrivateTraderDetailView
+  privateView: VerifyPrivateTraderDetailView,
+  userRoleProvider: UserRoleProvider,
+  navigator: Navigator,
+  implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
-    with Logging {
+    with Logging
+    with TraderDetailsHelper {
 
+  override implicit val logger: Logger              = Logger(this.getClass)
   private def checkForm(isChecked: Option[Boolean]) =
     isChecked match {
-      case Some(isChecked) => formProvider().fill(isChecked.toString)
-      case None            => formProvider()
+      case Some(isChecked) => privateFormProvider().fill(isChecked.toString)
+      case None            => privateFormProvider()
     }
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
@@ -83,21 +92,46 @@ class VerifyTraderEoriController @Inject() (
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        formProvider()
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              VerifyTraderDetailsPage.get() match {
-                case None                                                       => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
-                case Some(details) if details.consentToDisclosureOfPersonalData =>
-                  Future.successful(BadRequest(publicView(formWithErrors, mode, draftId, details)))
-                case Some(details)                                              =>
-                  Future.successful(BadRequest(privateView(formWithErrors, mode, draftId, details)))
-              },
-            value =>
-              VerifyTraderDetailsPage.get() match {
-                case None          => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
-                case Some(details) =>
+        VerifyTraderDetailsPage.get() match {
+          case Some(details) if details.consentToDisclosureOfPersonalData =>
+            val form =
+              userRoleProvider.getUserRole(request.userAnswers).getFormForCheckRegisteredDetails
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors =>
+                  getTraderDetails {
+                    (details: TraderDetailsWithCountryCode) =>
+                      Future.successful(
+                        BadRequest(
+                          userRoleProvider
+                            .getUserRole(request.userAnswers)
+                            .selectViewForCheckRegisteredDetails(
+                              formWithErrors,
+                              details,
+                              mode,
+                              draftId
+                            )
+                        )
+                      )
+                  },
+                value =>
+                  for {
+                    updatedAnswers <- CheckRegisteredDetailsPage.set(value)
+                    _              <- userAnswersService.set(updatedAnswers)
+                  } yield Redirect(
+                    navigator.nextPage(getNextPage(value, updatedAnswers), mode, updatedAnswers)
+                  )
+              )
+
+          case Some(details) =>
+            privateFormProvider()
+              .bindFromRequest()
+              .fold(
+                formWithErrors =>
+                  Future
+                    .successful(BadRequest(privateView(formWithErrors, mode, draftId, details))),
+                value => {
                   val continue = value.toBoolean
                   for {
                     updatedAnswers <- {
@@ -115,7 +149,16 @@ class VerifyTraderEoriController @Inject() (
                       routes.EORIBeUpToDateController.onPageLoad(draftId)
                     }
                   )
-              }
-          )
+                }
+              )
+          case None          => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
+        }
+    }
+
+  private def getNextPage(value: Boolean, userAnswers: UserAnswers): Page =
+    if (value) {
+      userRoleProvider.getUserRole(userAnswers).selectGetRegisteredDetailsPage()
+    } else {
+      EORIBeUpToDatePage
     }
 }
