@@ -63,7 +63,7 @@ trait Generators
     arbitrary[BigInt] suchThat (x => x < Int.MinValue)
 
   def nonNumerics: Gen[String] =
-    alphaStr suchThat (_.size > 0)
+    alphaStr suchThat (_.nonEmpty)
 
   def numericStrings(minLength: Int = 0): Gen[String] =
     numStr suchThat (_.size > minLength)
@@ -174,5 +174,13 @@ trait Generators
     invalidChar <- unsafeInputs
     validChars  <- listOfN(length - 1, unsafeInputs)
   } yield (validChars :+ invalidChar).mkString).suchThat(_.trim.nonEmpty)
+
+  def eoriGenerator: Gen[String] = {
+    val numOfEoriDigits = 12
+    for {
+      numericString <- numericStringsBetweenRange(numOfEoriDigits, numOfEoriDigits)
+      eori          <- "GB" + numericString
+    } yield eori
+  }
 
 }

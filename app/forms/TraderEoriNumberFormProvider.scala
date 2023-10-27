@@ -18,10 +18,7 @@ package forms
 
 import javax.inject.Inject
 
-import scala.util.matching.Regex
-
 import play.api.data.Form
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 
 import forms.mappings.Mappings
 
@@ -30,25 +27,7 @@ class TraderEoriNumberFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("provideTraderEori.error.required")
-        .verifying(validEORINumber)
+        .verifying(eoriCode())
     )
 
-  private val formatRegex: Regex = new Regex("^(?i)GB[0-9]{12}")
-
-  private val validEORINumber: Constraint[String] =
-    Constraint {
-      case s =>
-        s.replace(" ", "") match {
-          case formatRegex()                     => Valid
-          case s if s.length > 14                =>
-            Invalid(ValidationError("provideTraderEori.error.tooLong"))
-          case s if s.length < 14                =>
-            Invalid(ValidationError("provideTraderEori.error.tooShort"))
-          case s if !s.startsWith("GB")          =>
-            Invalid(ValidationError("provideTraderEori.error.notGB"))
-          case s if !s.forall(_.isLetterOrDigit) =>
-            Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
-          case _                                 => Invalid(ValidationError("provideTraderEori.error.default"))
-        }
-    }
 }

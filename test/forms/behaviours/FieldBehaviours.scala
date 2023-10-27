@@ -133,4 +133,43 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
       result.errors mustEqual tooLongPostcodeErrorKey
     }
   }
+
+  def eoriField(
+    form: Form[_],
+    fieldName: String,
+    emptyEoriErrorKey: Seq[FormError],
+    badLengthEoriErrorKey: Seq[FormError],
+    badCountryCodeErrorKey: Seq[FormError],
+    badCharactersErrorKey: Seq[FormError]
+  ): Unit = {
+
+    val validEori = "GB123456789012"
+
+    "bind when key is valid EORI" in {
+      val result = form.bind(Map(fieldName -> validEori)).apply(fieldName)
+      result.errors mustEqual Seq()
+    }
+
+    "not bind when key is blank EORI" in {
+      val result = form.bind(Map(fieldName -> "")).apply(fieldName)
+      result.errors mustEqual emptyEoriErrorKey
+    }
+
+    "not bind when key is EORI bad length" in {
+      val result = form.bind(Map(fieldName -> validEori.dropRight(1))).apply(fieldName)
+      result.errors mustEqual badLengthEoriErrorKey
+    }
+
+    "not bind when key is bad EORI country code" in {
+      val result = form.bind(Map(fieldName -> ("XY" + validEori.substring(2)))).apply(fieldName)
+      result.errors mustEqual badCountryCodeErrorKey
+    }
+
+    "not bind when key is bad EORI characters" in {
+      val result = form.bind(Map(fieldName -> (validEori.dropRight(1) + "£"))).apply(fieldName)
+      result.errors mustEqual badCharactersErrorKey
+    }
+
+  }
+
 }
