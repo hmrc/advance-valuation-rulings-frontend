@@ -92,34 +92,29 @@
 
         @if(letterOfAuthorityFileName.isDefined) {
             @if(numOfDocs == 3) {
-                <br/>
                 <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining.one")</p>
             } else if (numOfDocs != 4) {
-                <br/>
                 <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining", 4 - numOfDocs)</p>
             }
         } else {
             @if(numOfDocs == 4) {
-                <br/>
                 <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining.one")</p>
             } else if (numOfDocs != 5) {
-                <br/>
                 <p class="govuk-body">@messages("uploadAnotherSupportingDocument.remaining", 5 - numOfDocs)</p>
             }
         }
 
-        <br/>
 
         @subheading(messages("uploadAnotherSupportingDocument.uploadedDocuments"))
 
         <div class="govuk-form-group">
-            <dl class="govuk-summary-list">
+            <dl class="govuk-summary-list hmrc-list-with-actions">
             @attachments.zipWithIndex.map { case (attachment, index) =>
                 <div class="govuk-summary-list__row">
-                    <dd class="govuk-summary-list__value">
+                    <dt class="govuk-summary-list__key hmrc-summary-list__key govuk-!-font-weight-regular">
                         @attachment.file.fileName.getOrElse("")
-                    </dd>
-                    <dd>
+                    </dt>
+                    <dd class="govuk-summary-list__value">
                         @if(attachment.isThisFileConfidential.contains(true)) {
                             @messages("uploadAnotherSupportingDocument.keepConfidential")
                         }
@@ -135,17 +130,16 @@
             </dl>
         </div>
 
+
         @letterOfAuthorityFileName.map { filename =>
             @subheading(messages("uploadAnotherSupportingDocument.letterOfAuthority"))
 
-            <div class="govuk-form-group">
-                <dl class="govuk-summary-list">
-                    <div class="govuk-summary-list__row">
-                        <dd class="govuk-summary-list__value">
-                            @filename
-                        </dd>
-                    </div>
-                </dl>
+            <div class="govuk-form-group">                
+                <div class="govuk-body">
+                    @filename
+                </div>
+                <hr class="govuk-section-break govuk-section-break--visible" role="presentation">
+
             </div>
         }
 
