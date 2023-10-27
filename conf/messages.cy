@@ -1078,7 +1078,7 @@ tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
 tellUsAboutYourRuling.error.required = Rhowch wybod i ni am ddyfarniadau ar gyfer nwyddau tebyg
 tellUsAboutYourRuling.label = A allwch roi rhagor o wybodaeth i ni am y dyfarniad?
 tellUsAboutYourRuling.checkYourAnswersLabel = Ynghylch y dyfarniad blaenorol
-tellUsAboutYourRuling.change.hidden = details about the ruling
+tellUsAboutYourRuling.change.hidden = yr wybodaeth a gyflwynwyd gennych am y dyfarniad
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
 
@@ -1094,10 +1094,10 @@ aboutSimilarGoods.heading = Ynghylch y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.label = Allwch chi rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg?
 aboutSimilarGoods.error.required = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.checkYourAnswersLabel = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
-aboutSimilarGoods.change.hidden = Change the information on rulings using similar goods
+aboutSimilarGoods.change.hidden = yr wybodaeth am ddyfarniadau gan ddefnyddio nwyddau tebyg
 
 awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
 awareOfRuling.error.required = Rhowch wybod i ni os ydych yn ymwybodol o unrhyw ddyfarniadau eraill a ddefnyddiodd ddull tebyg
 awareOfRuling.checkYourAnswersLabel = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
-awareOfRuling.change.hidden = Change whether you are aware of any other rulings using a similar method
+awareOfRuling.change.hidden = a ydych yn ymwybodol o unrhyw ddyfarniadau eraill gan ddefnyddio dull tebyg
