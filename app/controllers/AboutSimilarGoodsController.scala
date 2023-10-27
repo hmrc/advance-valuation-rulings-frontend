@@ -56,21 +56,28 @@ class AboutSimilarGoodsController @Inject() (
         Ok(view(preparedForm, mode, draftId))
     }
 
-  def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
+  def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+            formWithErrors =>
+              if (saveDraft) {
+                Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+              } else {
+                Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
+              },
             value =>
               for {
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(AboutSimilarGoodsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(AboutSimilarGoodsPage, mode, updatedAnswers)
-              )
+              } yield saveDraft match {
+                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                case false =>
+                  Redirect(navigator.nextPage(AboutSimilarGoodsPage, mode, updatedAnswers))
+              }
           )
     }
 }
