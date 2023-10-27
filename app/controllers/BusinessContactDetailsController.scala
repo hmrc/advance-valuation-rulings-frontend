@@ -72,8 +72,12 @@ class BusinessContactDetailsController @Inject() (
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              Future
-                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName()))),
+              if (saveDraft) {
+                Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+              } else {
+                Future
+                  .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName())))
+              },
             value =>
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)

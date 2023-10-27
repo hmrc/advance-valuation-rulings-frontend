@@ -36,7 +36,8 @@ import views.html.{AboutSimilarGoodsView, TellUsAboutYourRulingView}
 class AboutSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val getRoute  = routes.AboutSimilarGoodsController.onPageLoad(NormalMode, draftId).url
-  lazy val postRoute = routes.AboutSimilarGoodsController.onSubmit(NormalMode, draftId).url
+  lazy val postRoute =
+    routes.AboutSimilarGoodsController.onSubmit(NormalMode, draftId, saveDraft = false).url
 
   val formProvider = new AboutSimilarGoodsFormProvider()
   val form         = formProvider()
