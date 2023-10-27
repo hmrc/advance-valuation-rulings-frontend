@@ -26,7 +26,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
@@ -36,7 +35,6 @@ import pages.{Page, VerifyTraderDetailsPage}
 import services.SubmissionService
 import userrole.UserRoleProvider
 import viewmodels.checkAnswers.summary.ApplicationSummaryService
-import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
@@ -44,9 +42,7 @@ class CheckYourAnswersController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView,
   submissionService: SubmissionService,
-  appConfig: FrontendAppConfig,
   userRoleProvider: UserRoleProvider,
   applicationRequestService: ApplicationRequestService,
   applicationSummaryService: ApplicationSummaryService,
@@ -65,20 +61,16 @@ class CheckYourAnswersController @Inject() (
           traderDetails =>
             val applicationSummary =
               applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
-            if (appConfig.agentOnBehalfOfTrader) {
-              Future.successful(
-                Ok(
-                  userRoleProvider
-                    .getUserRole(request.userAnswers)
-                    .selectViewForCheckYourAnswers(
-                      applicationSummary,
-                      draftId
-                    )
-                )
+            Future.successful(
+              Ok(
+                userRoleProvider
+                  .getUserRole(request.userAnswers)
+                  .selectViewForCheckYourAnswers(
+                    applicationSummary,
+                    draftId
+                  )
               )
-            } else {
-              Future.successful(Ok(view(applicationSummary, draftId)))
-            }
+            )
         }
     }
   def onSubmit(draftId: DraftId): Action[AnyContent]   =

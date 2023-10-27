@@ -16,11 +16,9 @@
 
 package viewmodels.checkAnswers.summary
 
-import play.api.Logger
 import play.api.i18n.Messages
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import models.{TraderDetailsWithCountryCode, UserAnswers}
 import models.AuthUserType._
 import userrole.UserRoleProvider
@@ -33,12 +31,8 @@ case class ApplicationSummary(
 )
 
 class ApplicationSummaryService @Inject() (
-  frontendAppConfig: FrontendAppConfig,
   userRoleProvider: UserRoleProvider
 ) {
-
-  private val logger = Logger(this.getClass)
-
   def getApplicationSummary(
     userAnswers: UserAnswers,
     traderDetailsWithCountryCode: TraderDetailsWithCountryCode

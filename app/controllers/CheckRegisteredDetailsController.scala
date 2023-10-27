@@ -25,16 +25,14 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import config.FrontendAppConfig
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import models._
 import navigation.Navigator
-import pages.{AccountHomePage, CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
+import pages.{CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
 import services.UserAnswersService
 import userrole.UserRoleProvider
-import views.html.CheckRegisteredDetailsView
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -45,9 +43,7 @@ class CheckRegisteredDetailsController @Inject() (
   requireData: DataRequiredAction,
   userRoleProvider: UserRoleProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckRegisteredDetailsView,
-  implicit val backendConnector: BackendConnector,
-  appConfig: FrontendAppConfig
+  implicit val backendConnector: BackendConnector
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
@@ -66,29 +62,18 @@ class CheckRegisteredDetailsController @Inject() (
 
         getTraderDetails {
           (details: TraderDetailsWithCountryCode) =>
-            if (appConfig.agentOnBehalfOfTrader) {
-              Future.successful(
-                Ok(
-                  userRoleProvider
-                    .getUserRole(request.userAnswers)
-                    .selectViewForCheckRegisteredDetails(
-                      processedForm,
-                      details,
-                      mode,
-                      draftId
-                    )
-                )
-              )
-            } else {
-              AccountHomePage.get() match {
-                case None               =>
-                  Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                case Some(authUserType) =>
-                  Future.successful(
-                    Ok(view(processedForm, details, mode, authUserType, draftId))
+            Future.successful(
+              Ok(
+                userRoleProvider
+                  .getUserRole(request.userAnswers)
+                  .selectViewForCheckRegisteredDetails(
+                    processedForm,
+                    details,
+                    mode,
+                    draftId
                   )
-              }
-            }
+              )
+            )
         }
     }
 
@@ -102,41 +87,26 @@ class CheckRegisteredDetailsController @Inject() (
             formWithErrors =>
               getTraderDetails {
                 (details: TraderDetailsWithCountryCode) =>
-                  if (appConfig.agentOnBehalfOfTrader) {
-                    Future.successful(
-                      BadRequest(
-                        userRoleProvider
-                          .getUserRole(request.userAnswers)
-                          .selectViewForCheckRegisteredDetails(
-                            formWithErrors,
-                            details,
-                            mode,
-                            draftId
-                          )
-                      )
-                    )
-                  } else {
-                    AccountHomePage.get() match {
-                      case None               =>
-                        Future.successful(Redirect(routes.UnauthorisedController.onPageLoad))
-                      case Some(authUserType) =>
-                        Future.successful(
-                          BadRequest(
-                            view(formWithErrors, details, mode, authUserType, draftId)
-                          )
+                  Future.successful(
+                    BadRequest(
+                      userRoleProvider
+                        .getUserRole(request.userAnswers)
+                        .selectViewForCheckRegisteredDetails(
+                          formWithErrors,
+                          details,
+                          mode,
+                          draftId
                         )
-                    }
-                  }
+                    )
+                  )
               },
             value =>
               for {
                 updatedAnswers <- CheckRegisteredDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(if (appConfig.agentOnBehalfOfTrader) {
+              } yield Redirect(
                 navigator.nextPage(getNextPage(value, updatedAnswers), mode, updatedAnswers)
-              } else {
-                navigator.nextPage(CheckRegisteredDetailsPage, mode, updatedAnswers)
-              })
+              )
           )
     }
 

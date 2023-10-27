@@ -22,12 +22,10 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import config.FrontendAppConfig
 import controllers.actions._
 import models.DraftId
-import pages.{AccountHomePage, VerifyTraderDetailsPage}
+import pages.VerifyTraderDetailsPage
 import userrole.UserRoleProvider
-import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateController @Inject() (
   override val messagesApi: MessagesApi,
@@ -35,32 +33,21 @@ class EORIBeUpToDateController @Inject() (
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
   val controllerComponents: MessagesControllerComponents,
-  userRoleProvider: UserRoleProvider,
-  view: EORIBeUpToDateView,
-  appConfig: FrontendAppConfig
+  userRoleProvider: UserRoleProvider
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
       implicit request =>
-        if (appConfig.agentOnBehalfOfTrader) {
-          val isPrivate = VerifyTraderDetailsPage.get() match {
-            case Some(details) => !details.consentToDisclosureOfPersonalData
-            case _             => true
-          }
-          Ok(
-            userRoleProvider
-              .getUserRole(request.userAnswers)
-              .selectViewForEoriBeUpToDate(draftId, isPrivate)
-          )
-        } else {
-          AccountHomePage.get() match {
-            case None               =>
-              Redirect(routes.UnauthorisedController.onPageLoad)
-            case Some(authUserType) =>
-              Ok(view(draftId, authUserType))
-          }
+        val isPrivate = VerifyTraderDetailsPage.get() match {
+          case Some(details) => !details.consentToDisclosureOfPersonalData
+          case _             => true
         }
+        Ok(
+          userRoleProvider
+            .getUserRole(request.userAnswers)
+            .selectViewForEoriBeUpToDate(draftId, isPrivate)
+        )
     }
 }

@@ -59,9 +59,6 @@ class CheckYourAnswersControllerSpec
     "must return OK and the correct view for a GET for a UserRole with the agent creds flag on" in
       new CheckYourAnswersControllerSpecSetup {
 
-        private val mockAppConfig = mock[FrontendAppConfig]
-        when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
-
         private val mockUserRoleProvider = mock[UserRoleProvider]
         private val mockUserRole         = mock[UserRole]
 
@@ -81,8 +78,7 @@ class CheckYourAnswersControllerSpec
           .overrides(
             bind[BackendConnector].toInstance(mockBackendConnector),
             bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-            bind[FrontendAppConfig].toInstance(mockAppConfig)
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
           )
           .build()
 

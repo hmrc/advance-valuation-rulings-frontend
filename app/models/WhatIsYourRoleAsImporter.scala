@@ -23,8 +23,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-import config.FrontendAppConfig
-
 sealed trait WhatIsYourRoleAsImporter
 
 object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
@@ -46,13 +44,10 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
     AgentOnBehalfOfTrader
   )
 
-  def filteredValues(appConfig: FrontendAppConfig): Seq[WhatIsYourRoleAsImporter] =
-    if (appConfig.agentOnBehalfOfTrader) values
-    else values.filterNot(_ == AgentOnBehalfOfTrader)
-  def options(appConfig: FrontendAppConfig, mode: Mode)(implicit
+  def options(mode: Mode)(implicit
     messages: Messages
   ): Seq[RadioItem] =
-    filteredValues(appConfig).zipWithIndex.map {
+    values.zipWithIndex.map {
       case (value, index) =>
         RadioItem(
           content = HtmlContent(

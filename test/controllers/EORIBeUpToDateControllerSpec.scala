@@ -56,9 +56,6 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with Model
   private val mockUserRoleProvider   = mock[UserRoleProvider]
   private val mockUserRole           = mock[UserRole]
   private val mockUserAnswersService = mock[UserAnswersService]
-  private val mockAppConfig          = mock[FrontendAppConfig]
-
-  when(mockAppConfig.agentOnBehalfOfTrader).thenReturn(true)
 
   private def setUpUserAnswersServiceMock(): Unit = {
     when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
@@ -176,8 +173,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with Model
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
-          bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-          bind[FrontendAppConfig].toInstance(mockAppConfig)
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
         )
         .build()
 
