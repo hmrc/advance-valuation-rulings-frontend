@@ -26,6 +26,6 @@ class VerifyTraderDetailsFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "traderDetailsCorrect" -> text("verifyTraderDetails.error.required")
+      "value" -> text("verifyTraderDetails.error.required")
     )
 }
