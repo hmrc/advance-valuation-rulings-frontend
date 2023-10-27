@@ -156,18 +156,18 @@ trait Constraints {
     Constraint("constraints.eoriFormat") {
       s =>
         s.replace(" ", "") match {
-          case eoriCodeRegex()                                                    => Valid
-          case s if s.length > eoriExpectedLength | s.length < eoriExpectedLength =>
+          case eoriCodeRegex()                      => Valid
+          case s if s.length != eoriExpectedLength  =>
             if (useExpandedBadLengthMessage) {
               Invalid(ValidationError("agentCompanyDetails.error.agentEori.badLength"))
             } else {
               Invalid(ValidationError("provideTraderEori.error.badLength"))
             }
-          case s if !s.toUpperCase.startsWith("GB")                               =>
+          case s if !s.toUpperCase.startsWith("GB") =>
             Invalid(ValidationError("provideTraderEori.error.notGB"))
-          case s if !s.forall(_.isLetterOrDigit)                                  =>
+          case s if !s.forall(_.isLetterOrDigit)    =>
             Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
-          case _                                                                  => Invalid(ValidationError("provideTraderEori.error.default"))
+          case _                                    => Invalid(ValidationError("provideTraderEori.error.default"))
         }
     }
 
