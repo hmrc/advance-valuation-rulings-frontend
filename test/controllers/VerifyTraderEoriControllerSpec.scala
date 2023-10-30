@@ -41,7 +41,6 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
     routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId).url
 
   private val formProvider = new VerifyTraderDetailsFormProvider()
-//  private val form         = formProvider()
 
   "VerifyTraderEoriController" - {
 
