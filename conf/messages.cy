@@ -1006,7 +1006,7 @@ deleteDraft.guidance = Os byddwch yn dileu’ch cais nawr, bydd unrhyw ddata yn 
 
 #PROVIDE TRADER EORI NUMBER
 provideTraderEori.heading=Rhowch rif EORI y masnachwr
-provideTraderEori.hint=Cod y wlad yw’r 2 lythyren gyntaf, megis GB neu XI. Dilynir hyn gan 12 digid, megis GB123456123456.
+provideTraderEori.hint=Cod y wlad yw’r 2 lythyren gyntaf, megis GB. Dilynir hyn gan 12 digid, megis GB123456123456.
 provideTraderEori.error.required=Nodwch rif EORI y masnachwr
 provideTraderEori.error.badLength=EORI number must contain 12 digits
 provideTraderEori.error.notGB=Gall cod y wlad ond bod yn god gwlad GB
