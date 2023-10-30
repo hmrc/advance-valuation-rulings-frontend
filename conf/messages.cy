@@ -301,7 +301,7 @@ whyIdenticalGoods.paragraph.1 = Cyn i chi roi cynnig ar Ddull 2, mae’n rhaid i
 whyIdenticalGoods.checkYourAnswersLabel = Y rheswm dros beidio â dewis Dull 1 i brisio’ch nwyddau
 whyIdenticalGoods.error.required = Nodwch reswm pam na all Dull 1 gael ei ddefnyddio
 whyIdenticalGoods.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dull 1 fod yn 8,167 o gymeriadau neu lai
-whyIdenticalGoods.change.hidden = your reason for not selecting Method 1 to value the goods
+whyIdenticalGoods.change.hidden = eich rheswm dros beidio â dewis Dull 1 i brisio’r nwyddau
 
 haveYouUsedMethodOneInPast.caption = Ynglŷn â’r nwyddau
 haveYouUsedMethodOneInPast.title = Rhowch dystiolaeth o ddatganiad Dull 1
@@ -384,7 +384,7 @@ explainWhyYouHaveNotSelectedMethodOneToThree.paragraph.2 = Esboniwch pam rydych 
 explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel = Rheswm dros beidio â dewis Dulliau 1-3 i brisio’ch nwyddau
 explainWhyYouHaveNotSelectedMethodOneToThree.error.required = Nodwch reswm pam na all Dull 1, 2, na 3 gael eu defnyddio
 explainWhyYouHaveNotSelectedMethodOneToThree.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dulliau 1 i 3 fod yn 8,167 o gymeriadau neu lai
-explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = your reason for not selecting Methods 1-3 to value the goods
+explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden = eich rheswm dros beidio â dewis Dulliau 1-3 i brisio’r nwyddau
 
 explainWhyYouChoseMethodFour.caption = Ynglŷn â’r nwyddau
 explainWhyYouChoseMethodFour.title = Esboniwch pam nad ydych wedi dewis Dull 4 i brisio’ch nwyddau
@@ -411,7 +411,7 @@ whyComputedValue.paragraph.2 = Esboniwch pam ydych o’r farn nad yw Dulliau 1-4
 whyComputedValue.checkYourAnswersLabel = Rheswm dros beidio â dewis Dulliau 1-4 i brisio’ch nwyddau
 whyComputedValue.error.required = Nodwch reswm pam na all Dull 1, 2, 3, na 4 gael eu defnyddio
 whyComputedValue.error.length = Mae’n rhaid i’r esboniad o pam nad ydych wedi defnyddio Dulliau 1 i 4 fod yn 8,167 o gymeriadau neu lai
-whyComputedValue.change.hidden = your reason for not selecting Methods 1-4 to value the goods
+whyComputedValue.change.hidden = eich rheswm dros beidio â dewis Dulliau 1-4 i brisio’r nwyddau
 
 explainReasonComputedValue.caption = Ynglŷn â’r nwyddau
 explainReasonComputedValue.title = Esboniwch pam rydych wedi dewis Dull 5 i brisio’ch nwyddau
