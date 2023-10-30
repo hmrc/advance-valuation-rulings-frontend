@@ -41,7 +41,6 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
     routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId).url
 
   private val formProvider = new VerifyTraderDetailsFormProvider()
-  private val form         = formProvider()
 
   "VerifyTraderEoriController" - {
 
@@ -67,7 +66,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual view(
-          form,
+          formProvider(Some(traderDetailsWithConfirmation)),
           NormalMode,
           draftId,
           traderDetailsWithConfirmation
@@ -100,7 +99,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual view(
-          form,
+          formProvider(Some(traderDetailsWithConfirmation)),
           NormalMode,
           draftId,
           traderDetailsWithConfirmation
@@ -137,7 +136,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual view(
-          formProvider().fill("true"),
+          formProvider(Some(traderDetailsWithConfirmation)).fill("true"),
           NormalMode,
           draftId,
           traderDetailsWithConfirmation
@@ -194,7 +193,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "true"))
+          .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -227,7 +226,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "true"))
+          .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -260,7 +259,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "false"))
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -291,7 +290,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(POST, verifyTraderEoriPagePostRoute)
-          .withFormUrlEncodedBody(("traderDetailsCorrect", "false"))
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -323,14 +322,14 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, verifyTraderEoriPagePostRoute)
-            .withFormUrlEncodedBody(("traderDetailsCorrect", ""))
+            .withFormUrlEncodedBody(("value", ""))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[VerifyPublicTraderDetailView]
 
         val boundForm =
-          form.bind(Map("traderDetailsCorrect" -> ""))
+          formProvider(Some(traderDetailsWithConfirmation)).bind(Map("value" -> ""))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
@@ -367,14 +366,14 @@ class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, verifyTraderEoriPagePostRoute)
-            .withFormUrlEncodedBody(("traderDetailsCorrect", ""))
+            .withFormUrlEncodedBody(("value", ""))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[VerifyPrivateTraderDetailView]
 
         val boundForm =
-          form.bind(Map("traderDetailsCorrect" -> ""))
+          formProvider(Some(details)).bind(Map("value" -> ""))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode, draftId, details)(

@@ -21,11 +21,20 @@ import javax.inject.Inject
 import play.api.data.Form
 
 import forms.mappings.Mappings
+import models.TraderDetailsWithConfirmation
 
-class VerifyTraderDetailsFormProvider @Inject() extends Mappings {
+class VerifyTraderDetailsFormProvider @Inject() (
+) extends Mappings {
 
-  def apply(): Form[String] =
-    Form(
-      "traderDetailsCorrect" -> text("verifyTraderDetails.error.required")
-    )
+  def apply(role: Option[TraderDetailsWithConfirmation]): Form[String] =
+    role match {
+      case Some(details) if details.consentToDisclosureOfPersonalData =>
+        Form(
+          "value" -> text("checkRegisteredDetails.error.required.agentForTrader.consent")
+        )
+      case Some(details)                                              =>
+        Form(
+          "value" -> text("verifyTraderDetails.error.required")
+        )
+    }
 }
