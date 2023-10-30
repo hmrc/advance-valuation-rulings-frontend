@@ -21,7 +21,7 @@ import javax.inject.Inject
 import play.api.data.Form
 
 import forms.mappings.Mappings
-import models.{TraderDetailsWithConfirmation, WhatIsYourRoleAsImporter}
+import models.TraderDetailsWithConfirmation
 
 class VerifyTraderDetailsFormProvider @Inject() (
 ) extends Mappings {
