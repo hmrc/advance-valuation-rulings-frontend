@@ -44,8 +44,8 @@
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
 @additionalScripts = {
-  <script src='@controllers.routes.Assets.versioned("javascripts/accessible-autocomplete.js")'></script>
-  <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
+  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/accessible-autocomplete.js")'></script>
+  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
 }
 
 @headBlock = {
