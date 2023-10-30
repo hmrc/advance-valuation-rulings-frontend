@@ -234,40 +234,42 @@ class ConstraintsSpec
   }
 
   "eoriCode" - {
-    val validEori          = "GB123456789012"
-    val parameterisedCases =
+    val shortBadLengthErrorMessage = "provideTraderEori.error.badLength"
+    val longBadLengthErrorMessage  = "agentCompanyDetails.error.agentEori.badLength"
+    val validEori                  = "GB123456789012"
+    val parameterisedCases         =
       Table("Valid EORIs", validEori, "gb123456789012", " g B 1 2345678901 2 ")
 
     "must return Valid for valid EORIs" in {
       forAll(parameterisedCases) {
         (eori: String) =>
-          val result = eoriCode().apply(eori)
+          val result = eoriCode(shortBadLengthErrorMessage).apply(eori)
           result mustEqual Valid
       }
     }
 
     "must return Invalid with the expanded bad length error message for an EORI with an incorrect length" in {
-      val result = eoriCode(true).apply(validEori.dropRight(1))
+      val result = eoriCode(longBadLengthErrorMessage).apply(validEori.dropRight(1))
       result mustEqual Invalid(ValidationError("agentCompanyDetails.error.agentEori.badLength"))
     }
 
     "must return Invalid for an EORI longer than the allowed length" in {
-      val result = eoriCode().apply(validEori + "1")
+      val result = eoriCode(shortBadLengthErrorMessage).apply(validEori + "1")
       result mustEqual Invalid(ValidationError("provideTraderEori.error.badLength"))
     }
 
     "must return Invalid for an EORI shorter than the allowed length" in {
-      val result = eoriCode().apply(validEori.dropRight(1))
+      val result = eoriCode(shortBadLengthErrorMessage).apply(validEori.dropRight(1))
       result mustEqual Invalid(ValidationError("provideTraderEori.error.badLength"))
     }
 
     "must return Invalid for an invalid country code" in {
-      val result = eoriCode().apply("XY" + validEori.substring(2))
+      val result = eoriCode(shortBadLengthErrorMessage).apply("XY" + validEori.substring(2))
       result mustEqual Invalid(ValidationError("provideTraderEori.error.notGB"))
     }
 
     "must return Invalid for an EORI containing invalid characters" in {
-      val result = eoriCode().apply(validEori.dropRight(1) + "£")
+      val result = eoriCode(shortBadLengthErrorMessage).apply(validEori.dropRight(1) + "£")
       result mustEqual Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
     }
 

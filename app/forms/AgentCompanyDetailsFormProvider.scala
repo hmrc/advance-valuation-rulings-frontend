@@ -29,7 +29,7 @@ class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[AgentCompanyDetails] = Form(
     mapping(
       "agentEori"            -> text("agentCompanyDetails.error.agentEori.required")
-        .verifying(eoriCode(true)),
+        .verifying(eoriCode("agentCompanyDetails.error.agentEori.badLength")),
       "agentCompanyName"     -> text("agentCompanyDetails.error.agentCompanyName.required"),
       "agentStreetAndNumber" -> text("agentCompanyDetails.error.agentStreetAndNumber.required"),
       "agentCity"            -> text("agentCompanyDetails.error.agentCity.required"),

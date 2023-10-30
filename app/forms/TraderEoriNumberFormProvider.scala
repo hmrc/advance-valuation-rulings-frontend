@@ -27,7 +27,7 @@ class TraderEoriNumberFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("provideTraderEori.error.required")
-        .verifying(eoriCode())
+        .verifying(eoriCode("provideTraderEori.error.badLength"))
     )
 
 }

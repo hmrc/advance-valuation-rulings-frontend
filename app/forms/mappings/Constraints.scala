@@ -152,17 +152,13 @@ trait Constraints {
   private val eoriCodeRegex: Regex = new Regex("^(?i)GB[0-9]{12}$")
   private val eoriExpectedLength   = 14
 
-  protected def eoriCode(useExpandedBadLengthMessage: Boolean = false): Constraint[String] =
+  protected def eoriCode(badLengthErrorMessage: String): Constraint[String] =
     Constraint("constraints.eoriFormat") {
       s =>
         s.replace(" ", "") match {
           case eoriCodeRegex()                      => Valid
           case s if s.length != eoriExpectedLength  =>
-            if (useExpandedBadLengthMessage) {
-              Invalid(ValidationError("agentCompanyDetails.error.agentEori.badLength"))
-            } else {
-              Invalid(ValidationError("provideTraderEori.error.badLength"))
-            }
+            Invalid(ValidationError(badLengthErrorMessage))
           case s if !s.toUpperCase.startsWith("GB") =>
             Invalid(ValidationError("provideTraderEori.error.notGB"))
           case s if !s.forall(_.isLetterOrDigit)    =>
