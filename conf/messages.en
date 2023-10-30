@@ -263,14 +263,13 @@ hasCommodityCode.change.hidden = Change whether you have a commodity code for th
 hasCommodityCode.question = Do you have a commodity code for the goods?
 
 #PROVIDE TRADER EORI NUMBER
-provideTraderEori.heading=Provide the trader''s EORI number
-provideTraderEori.p1=You must provide the Economic Operator Registration and Identification (EORI) number for the trader you are acting on behalf of. This must be a valid number starting with GB.
+provideTraderEori.heading=What is the trader''s EORI number?
+provideTraderEori.hint=The first 2 letters are the country code, like GB. This is followed by 12 digits, like GB123456123456.
 provideTraderEori.error.required=Enter the trader''s EORI number
-provideTraderEori.error.tooLong=EORI number is too long
-provideTraderEori.error.tooShort=EORI number is not long enough
-provideTraderEori.error.notGB=Enter EORI number beginning with GB
-provideTraderEori.error.specialCharacters=Enter an EORI number in the correct format, like GB123456789010
-provideTraderEori.error.default=Enter an EORI number in the correct format, like GB123456789010
+provideTraderEori.error.badLength=EORI number must contain 12 digits
+provideTraderEori.error.notGB=Country code can only be a GB country code
+provideTraderEori.error.specialCharacters=Enter an EORI number in the correct format, like GB123456123456
+provideTraderEori.error.default=Enter an EORI number in the correct format, like GB123456123456
 
 #TRADER DETAILS - COMMON
 traderDetails.common.searchAgain.link = Search again
@@ -984,6 +983,7 @@ cancelAreYouSure.inset.text = If you cancel now any data will be lost and you wi
 
 agentCompanyDetails.title = Your organisation’s contact details
 agentCompanyDetails.heading = Your organisation’s contact details
+agentCompanyDetails.caption = About the applicant
 agentCompanyDetails.paragraph = We will only use your organisation’s contact details if we need to get in touch about the application you are submitting.
 agentCompanyDetails.agentEori = Organisation’s registered EORI number starting with GB
 agentCompanyDetails.agentCompanyName = Organisation’s registered business name
@@ -993,8 +993,9 @@ agentCompanyDetails.agentCountry = Country
 agentCompanyDetails.agentPostalCode = Postcode
 
 agentCompanyDetails.checkYourAnswersLabel = agentCompanyDetails
-agentCompanyDetails.error.agentEori.required = Enter your company’s registered EORI number starting with GB
-agentCompanyDetails.error.agentCompanyName.required = Enter your company’s registered business name
+agentCompanyDetails.error.agentEori.required = Enter your organisation’s registered EORI number starting with GB
+agentCompanyDetails.error.agentEori.badLength = EORI number must start with GB and have 12 digits, like GB123456123456
+agentCompanyDetails.error.agentCompanyName.required = Enter your organisation’s registered business name
 agentCompanyDetails.error.agentStreetAndNumber.required = Enter the first line of your address
 agentCompanyDetails.error.agentCity.required = Enter a town or city
 agentCompanyDetails.error.agentCountry.required = Select a country

@@ -952,6 +952,7 @@ cancelAreYouSure.inset.text = Os byddwch yn canslo nawr, bydd unrhyw ddata yn ca
 
 agentCompanyDetails.title = Manylion cyswllt eich sefydliad
 agentCompanyDetails.heading = Manylion cyswllt eich sefydliad
+agentCompanyDetails.caption = Ynglŷn â’r ymgeisydd
 agentCompanyDetails.paragraph = Byddwn ond yn defnyddio manylion cyswllt eich sefydliad os oes angen i ni gysylltu â chi ynghylch y cais rydych yn ei gyflwyno.
 agentCompanyDetails.agentEori = Rhif EORI cofrestredig eich sefydliad, sy’n dechrau gyda GB
 agentCompanyDetails.agentCompanyName = Enw busnes cofrestredig y sefydliad
@@ -962,7 +963,8 @@ agentCompanyDetails.agentPostalCode = Cod post
 
 agentCompanyDetails.checkYourAnswersLabel = agentCompanyDetails
 agentCompanyDetails.error.agentEori.required = Nodwch rif EORI cofrestredig eich cwmni, sy’n dechrau gyda GB
-agentCompanyDetails.error.agentCompanyName.required = Nodwch enw busnes cofrestredig eich cwmni
+agentCompanyDetails.error.agentEori.badLength = Mae’n rhaid i’r rhif EORI fod yn 12 digid gyda ‘GB’ ar y dechrau, er enghraifft GB123456123456
+agentCompanyDetails.error.agentCompanyName.required = Nodwch enw busnes cofrestredig eich sefydliad
 agentCompanyDetails.error.agentStreetAndNumber.required = Nodwch linell gyntaf eich cyfeiriad
 agentCompanyDetails.error.agentCity.required = Nodwch dref neu ddinas
 agentCompanyDetails.error.agentCountry.required = Nodwch wlad
@@ -1004,11 +1006,10 @@ deleteDraft.guidance = Os byddwch yn dileu’ch cais nawr, bydd unrhyw ddata yn 
 
 #PROVIDE TRADER EORI NUMBER
 provideTraderEori.heading=Rhowch rif EORI y masnachwr
-provideTraderEori.p1=Mae’n rhaid i chi roi Rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI) y masnachwr yr ydych yn gweithredu ar ei ran Mae’n rhaid i hwn fod yn rhif dilys sy’n dechrau gyda GB.
+provideTraderEori.hint=Cod y wlad yw’r 2 lythyren gyntaf, megis GB neu XI. Dilynir hyn gan 12 digid, megis GB123456123456.
 provideTraderEori.error.required=Nodwch rif EORI y masnachwr
-provideTraderEori.error.tooLong=Mae’r rhif EORI yn rhy hir
-provideTraderEori.error.tooShort=Nid yw’r rhif EORI yn ddigon hir
-provideTraderEori.error.notGB=Nodwch y rhif EORI sy’n dechrau gyda GB
+provideTraderEori.error.badLength=EORI number must contain 12 digits
+provideTraderEori.error.notGB=Gall cod y wlad ond bod yn god gwlad GB
 provideTraderEori.error.specialCharacters=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
 provideTraderEori.error.default=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
 

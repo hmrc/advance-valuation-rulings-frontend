@@ -18,7 +18,9 @@ package forms.mappings
 
 import java.time.LocalDate
 
-import play.api.data.validation.{Constraint, Invalid, Valid}
+import scala.util.matching.Regex
+
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 
 trait Constraints {
 
@@ -147,12 +149,22 @@ trait Constraints {
       case _                                          => Invalid(errorKey, maximum)
     }
 
-  private val eoriCodeRegex = "^[a-zA-Z0-9]{1,17}"
-  private val eoriCodeError = "agentCompanyDetails.error.agentEori.format"
+  private val eoriCodeRegex: Regex = new Regex("^(?i)GB[0-9]{12}$")
+  private val eoriExpectedLength   = 14
 
-  val eoriCodeConstraint: Constraint[String] = Constraint("constraints.eoriFormat") {
-    case s: String if s.isEmpty                => Valid
-    case s: String if s.matches(eoriCodeRegex) => Valid
-    case _: String                             => Invalid(eoriCodeError)
-  }
+  protected def eoriCode(badLengthErrorMessage: String): Constraint[String] =
+    Constraint("constraints.eoriFormat") {
+      s =>
+        s.replace(" ", "") match {
+          case eoriCodeRegex()                      => Valid
+          case s if s.length != eoriExpectedLength  =>
+            Invalid(ValidationError(badLengthErrorMessage))
+          case s if !s.toUpperCase.startsWith("GB") =>
+            Invalid(ValidationError("provideTraderEori.error.notGB"))
+          case s if !s.forall(_.isLetterOrDigit)    =>
+            Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
+          case _                                    => Invalid(ValidationError("provideTraderEori.error.default"))
+        }
+    }
+
 }

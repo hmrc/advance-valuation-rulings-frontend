@@ -24,6 +24,7 @@
     govukInput: GovukInput,
     govukSelect: GovukSelect,
     saveButtons: SaveButtonsWithDraft,
+    caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink
@@ -41,6 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @caption(messages("agentCompanyDetails.caption"))
         @heading(messages("agentCompanyDetails.heading"))
         @paragraph(content = Html(messages("agentCompanyDetails.paragraph")))
 

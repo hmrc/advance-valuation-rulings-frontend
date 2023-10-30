@@ -20,7 +20,7 @@ import play.api.data.FormError
 
 import forms.behaviours.StringFieldBehaviours
 import generators.TraderDetailsGenerator
-import models.{Country, EoriNumber}
+import models.Country
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 
@@ -32,19 +32,25 @@ class AgentCompanyDetailsFormProviderSpec
 
   ".agentEori" - {
 
-    val fieldName   = "agentEori"
-    val requiredKey = "agentCompanyDetails.error.agentEori.required"
+    val fieldName        = "agentEori"
+    val requiredKey      = "agentCompanyDetails.error.agentEori.required"
+    val badLengthKey     = "agentCompanyDetails.error.agentEori.badLength"
+    val notGbKey         = "provideTraderEori.error.notGB"
+    val badCharactersKey = "provideTraderEori.error.specialCharacters"
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      arbitrary[EoriNumber].map(_.value)
+      eoriGenerator
     )
 
-    behave like mandatoryField(
+    behave like eoriField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      Seq(FormError(fieldName, requiredKey)),
+      Seq(FormError(fieldName, badLengthKey)),
+      Seq(FormError(fieldName, notGbKey)),
+      Seq(FormError(fieldName, badCharactersKey))
     )
   }
 
@@ -70,7 +76,6 @@ class AgentCompanyDetailsFormProviderSpec
 
     val fieldName   = "agentStreetAndNumber"
     val requiredKey = "agentCompanyDetails.error.agentStreetAndNumber.required"
-    val lengthKey   = "agentCompanyDetails.error.agentStreetAndNumber.length"
     val maxLength   = 70
 
     behave like fieldThatBindsValidData(
@@ -90,7 +95,6 @@ class AgentCompanyDetailsFormProviderSpec
 
     val fieldName   = "agentCity"
     val requiredKey = "agentCompanyDetails.error.agentCity.required"
-    val lengthKey   = "agentCompanyDetails.error.agentCity.length"
     val maxLength   = 35
 
     behave like fieldThatBindsValidData(

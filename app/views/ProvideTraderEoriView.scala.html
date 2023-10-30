@@ -23,8 +23,6 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     caption: Caption,
-    heading: Heading,
-    paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
     saveButtons: SaveButtonsWithDraft
 )
@@ -40,21 +38,18 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-
         @caption(messages("caption.applicant"))
-        @heading(messages("provideTraderEori.heading"))
-
-        @paragraph(Html(messages("provideTraderEori.p1")))
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
                 label = Label(
-                    content = Text(messages("provideTraderEori.heading")),
-                    classes = "govuk-visually-hidden"
+                    content = Text(messages("provideTraderEori.heading"))
                 )
+                .asPageHeading()
             )
             .withWidth(Full)
+            .withHint(Hint(content = HtmlContent(messages("provideTraderEori.hint"))))
         )
 
         @saveButtons(draftId, onSubmitAction())

@@ -18,7 +18,7 @@ package forms.mappings
 
 import java.time.LocalDate
 
-import play.api.data.validation.{Invalid, Valid}
+import play.api.data.validation.{Invalid, Valid, ValidationError}
 
 import generators.Generators
 import org.scalacheck.Gen
@@ -232,4 +232,48 @@ class ConstraintsSpec
       result mustEqual Invalid("error.mismatch")
     }
   }
+
+  "eoriCode" - {
+    val shortBadLengthErrorMessage = "provideTraderEori.error.badLength"
+    val longBadLengthErrorMessage  = "agentCompanyDetails.error.agentEori.badLength"
+    val validEori                  = "GB123456789012"
+    val parameterisedCases         =
+      Table("Valid EORIs", validEori, "gb123456789012", " g B 1 2345678901 2 ")
+
+    "must return Valid for valid EORIs" in {
+      forAll(parameterisedCases) {
+        (eori: String) =>
+          val result = eoriCode(shortBadLengthErrorMessage).apply(eori)
+          result mustEqual Valid
+      }
+    }
+
+    "must return Invalid with the expanded bad length error message for an EORI with an incorrect length" in {
+      val result = eoriCode(longBadLengthErrorMessage).apply(validEori.dropRight(1))
+      result mustEqual Invalid(ValidationError("agentCompanyDetails.error.agentEori.badLength"))
+    }
+
+    "must return Invalid for an EORI longer than the allowed length" in {
+      val result = eoriCode(shortBadLengthErrorMessage).apply(validEori + "1")
+      result mustEqual Invalid(ValidationError("provideTraderEori.error.badLength"))
+    }
+
+    "must return Invalid for an EORI shorter than the allowed length" in {
+      val result = eoriCode(shortBadLengthErrorMessage).apply(validEori.dropRight(1))
+      result mustEqual Invalid(ValidationError("provideTraderEori.error.badLength"))
+    }
+
+    "must return Invalid for an invalid country code" in {
+      val result = eoriCode(shortBadLengthErrorMessage).apply("XY" + validEori.substring(2))
+      result mustEqual Invalid(ValidationError("provideTraderEori.error.notGB"))
+    }
+
+    "must return Invalid for an EORI containing invalid characters" in {
+      val result = eoriCode(shortBadLengthErrorMessage).apply(validEori.dropRight(1) + "£")
+      result mustEqual Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
+    }
+
+    // The default case is not tested since it is only in place as a precaution.
+  }
+
 }
