@@ -97,9 +97,9 @@ checkYourAnswersForAgents.heading = Check your answers before sending your appli
 checkYourAnswersForAgents.business.eori.number.label = Company’s registered EORI number
 checkYourAnswersForAgents.business.name.label = Company’s registered business name
 checkYourAnswersForAgents.business.address.label = Company’s registered business address
-checkYourAnswersForAgents.business.eori.number.hidden = the agent’s organisation’s registered EORI number
-checkYourAnswersForAgents.business.name.hidden = the agent’s organisation’s registered business name
-checkYourAnswersForAgents.business.address.hidden = the agent’s organisation’s registered business address
+checkYourAnswersForAgents.business.eori.number.hidden = the company’s registered EORI number
+checkYourAnswersForAgents.business.name.hidden = the company’s registered business name
+checkYourAnswersForAgents.business.address.hidden = the company’s registered business address
 
 checkYourAnswersForAgents.company.org.heading = About the company
 checkYourAnswersForAgents.company.agent.heading = About the company you are representing
@@ -110,9 +110,9 @@ checkYourAnswersForAgents.applicant.agent.heading = About the agent
 checkYourAnswersForAgents.agent.eori.number.label = Agent’s company’s registered EORI number
 checkYourAnswersForAgents.agent.name.label = Agent’s company’s registered business name
 checkYourAnswersForAgents.agent.address.label = Agent’s company’s registered business address
-checkYourAnswersForAgents.agent.eori.number.hidden = Agent’s company’s registered EORI number
-checkYourAnswersForAgents.agent.name.hidden = Agent’s company’s registered business name
-checkYourAnswersForAgents.agent.address.hidden = Agent’s company’s registered business address
+checkYourAnswersForAgents.agent.eori.number.hidden = the agent’s organisation’s registered EORI number
+checkYourAnswersForAgents.agent.name.hidden = the agent’s organisation’s registered business name
+checkYourAnswersForAgents.agent.address.hidden = the agent’s organisation’s registered business address
 
 checkYourAnswersForAgents.applicant.name.label = Applicant’s full name
 checkYourAnswersForAgents.applicant.email.label = Applicant’s email address
