@@ -692,9 +692,9 @@ checkYourAnswersForAgents.heading = Gwirio’ch atebion cyn anfon eich cais
 checkYourAnswersForAgents.business.eori.number.label = Rhif EORI cofrestredig y sefydliad
 checkYourAnswersForAgents.business.name.label = Enw busnes cofrestredig y sefydliad
 checkYourAnswersForAgents.business.address.label = Cyfeiriad busnes cofrestredig y sefydliad
-checkYourAnswersForAgents.business.eori.number.hidden = y rhif EORI cofrestredig ar gyfer sefydliad yr asiant
-checkYourAnswersForAgents.business.name.hidden = yr enw busnes cofrestredig ar gyfer sefydliad yr asiant
-checkYourAnswersForAgents.business.address.hidden = y cyfeiriad busnes cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.business.eori.number.hidden = Rhif EORI cofrestredig y sefydliad
+checkYourAnswersForAgents.business.name.hidden = Enw busnes cofrestredig y sefydliad
+checkYourAnswersForAgents.business.address.hidden = Cyfeiriad busnes cofrestredig y sefydliad
 
 checkYourAnswersForAgents.company.org.heading = Ynglŷn â’r sefydliad
 checkYourAnswersForAgents.company.agent.heading = Ynglŷn â’r sefydliad yr ydych yn ei gynrychioli
@@ -705,9 +705,9 @@ checkYourAnswersForAgents.applicant.agent.heading = Ynglŷn â’r asiant
 checkYourAnswersForAgents.agent.eori.number.label =  Rhif EORI cofrestredig sefydliad yr asiant
 checkYourAnswersForAgents.agent.name.label =  Enw busnes cofrestredig sefydliad yr asiant
 checkYourAnswersForAgents.agent.address.label = Cyfeiriad busnes cofrestredig cwmni’r asiant
-checkYourAnswersForAgents.agent.eori.number.hidden = Rhif EORI cofrestredig cwmni’r asiant
-checkYourAnswersForAgents.agent.name.hidden = Enw busnes cofrestredig cwmni’r asiant
-checkYourAnswersForAgents.agent.address.hidden = Cyfeiriad busnes cofrestredig cwmni’r asiant
+checkYourAnswersForAgents.agent.eori.number.hidden = y rhif EORI cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.agent.name.hidden = yr enw busnes cofrestredig ar gyfer sefydliad yr asiant
+checkYourAnswersForAgents.agent.address.hidden = y cyfeiriad busnes cofrestredig ar gyfer sefydliad yr asiant
 
 checkYourAnswersForAgents.applicant.name.label = Enw llawn yr asiant
 checkYourAnswersForAgents.applicant.email.label = Cyfeiriad e-bost yr asiant
