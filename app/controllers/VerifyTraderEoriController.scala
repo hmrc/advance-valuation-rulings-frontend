@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
-import models.{DraftId, Mode}
+import models.{DraftId, Mode, TraderDetailsWithConfirmation}
 import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
 import services.UserAnswersService
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
@@ -48,10 +48,10 @@ class VerifyTraderEoriController @Inject() (
     with I18nSupport
     with Logging {
 
-  private def checkForm(isChecked: Option[Boolean]) =
+  private def checkForm(details: TraderDetailsWithConfirmation, isChecked: Option[Boolean]) =
     isChecked match {
-      case Some(isChecked) => formProvider().fill(isChecked.toString)
-      case None            => formProvider()
+      case Some(isChecked) => formProvider(Some(details)).fill(isChecked.toString)
+      case None            => formProvider(Some(details))
     }
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
@@ -63,9 +63,9 @@ class VerifyTraderEoriController @Inject() (
           case None                                                       =>
             traderDetailsNotFoundInSession(mode, draftId)
           case Some(details) if details.consentToDisclosureOfPersonalData =>
-            Ok(publicView(checkForm(checked), mode, draftId, details))
+            Ok(publicView(checkForm(details, checked), mode, draftId, details))
           case Some(details)                                              =>
-            Ok(privateView(checkForm(checked), mode, draftId, details))
+            Ok(privateView(checkForm(details, checked), mode, draftId, details))
         }
     }
 
@@ -83,7 +83,7 @@ class VerifyTraderEoriController @Inject() (
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async {
       implicit request =>
-        formProvider()
+        formProvider(VerifyTraderDetailsPage.get())
           .bindFromRequest()
           .fold(
             formWithErrors =>
