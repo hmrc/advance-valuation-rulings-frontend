@@ -263,12 +263,12 @@ hasCommodityCode.change.hidden = whether you have a commodity code for the goods
 hasCommodityCode.question = Do you have a commodity code for the goods?
 
 #PROVIDE TRADER EORI NUMBER
-provideTraderEori.heading=What is the trader''s EORI number?
-provideTraderEori.hint=The first 2 letters are the country code, like GB. This is followed by 12 digits, like GB123456123456.
+provideTraderEori.heading = What is the trader''s EORI number?
+provideTraderEori.hint = The first 2 letters are the country code, like GB. This is followed by 12 digits, like GB123456123456.
 provideTraderEori.error.required=Enter the trader''s EORI number
-provideTraderEori.error.badLength=EORI number must contain 12 digits
+provideTraderEori.error.badLength = EORI number must contain 12 digits
 provideTraderEori.error.notGB=Country code can only be a GB country code
-provideTraderEori.error.specialCharacters=Enter an EORI number in the correct format, like GB123456123456
+provideTraderEori.error.specialCharacters = Enter an EORI number in the correct format, like GB123456123456
 provideTraderEori.error.default=Enter an EORI number in the correct format, like GB123456123456
 
 #TRADER DETAILS - COMMON

@@ -227,7 +227,7 @@ isThereASaleInvolved.no.text = Na - bydd yn rhaid i chi ddewis dull gwahanol
 isThereASaleInvolved.no.hint = Dull 1: Gellir ond defnyddio’r gwerth trafodiad os oes gwerthiant dan sylw.
 isThereASaleInvolved.error.required = Dewiswch ‘Iawn’ os oes gwerthiant ar waith
 isThereASaleInvolved.checkYourAnswersLabel = Oes gwerthiant ar waith?
-isThereASaleInvolved.change.hidden = your response to whether a sale is involved
+isThereASaleInvolved.change.hidden = eich ymateb o ran a oes gwerthiant dan sylw
 
 isSaleBetweenRelatedParties.caption = Ynglŷn â’r nwyddau
 isSaleBetweenRelatedParties.title = A yw’r gwerthiant rhwng partïon cysylltiedig?
@@ -235,7 +235,7 @@ isSaleBetweenRelatedParties.heading = A yw’r gwerthiant rhwng partïon cysyllt
 isSaleBetweenRelatedParties.para = Mae ‘partïon cysylltiedig’ yn golygu bod perthynas neu ddiddordeb cyffredin rhwng 2 fusnes neu sefydliad yn barod.
 isSaleBetweenRelatedParties.checkYourAnswersLabel = A yw’r gwerthiant rhwng partïon cysylltiedig?
 isSaleBetweenRelatedParties.error.required = Dewiswch ‘Iawn’ os yw’r gwerthiant rhwng partïon cysylltiedig
-isSaleBetweenRelatedParties.change.hidden = your response to whether the sale is between related parties
+isSaleBetweenRelatedParties.change.hidden = eich ymateb o ran a yw’r gwerthiant rhwng partïon cysylltiedig
 
 explainHowPartiesAreRelated.caption = Ynglŷn â’r nwyddau
 explainHowPartiesAreRelated.title = Disgrifiwch beth yw’r cysylltiad rhwng y partïon
@@ -281,7 +281,7 @@ isTheSaleSubjectToConditions.bulletPoint.1 = pan fydd y gwerthwr yn gosod y pris
 isTheSaleSubjectToConditions.bulletPoint.2 = pan fydd y pris y byddwch yn ei godi ar y gwerthwr am nwyddau eraill yn pennu’r pris y byddwch yn ei dalu am y nwyddau a fewnforiwyd
 isTheSaleSubjectToConditions.bulletPoint.3 = pan fydd cytundeb rhyngoch chi a’r gwerthwr yn pennu’r pris y byddwch yn ei dalu ar gyfer y nwyddau a fewnforiwyd
 isTheSaleSubjectToConditions.question = A oes unrhyw beth a allai eich atal rhag prisio’r nwyddau?
-isTheSaleSubjectToConditions.change.hidden = your response to whether the sale is subject to conditions or circumstances which cannot be calculated
+isTheSaleSubjectToConditions.change.hidden = eich ymateb o ran a yw’r gwerthiant yn destun amodau neu amgylchiadau ni ellir eu cyfrifo
 
 describeTheConditions.caption = Ynglŷn â’r nwyddau
 describeTheConditions.title = Disgrifiwch yr amodau neu’r amgylchiadau na ellir eu cyfrifo
@@ -963,7 +963,7 @@ agentCompanyDetails.agentPostalCode = Cod post
 
 agentCompanyDetails.checkYourAnswersLabel = agentCompanyDetails
 agentCompanyDetails.error.agentEori.required = Nodwch rif EORI cofrestredig eich cwmni, sy’n dechrau gyda GB
-agentCompanyDetails.error.agentEori.badLength = Mae’n rhaid i’r rhif EORI fod yn 12 digid gyda ‘GB’ ar y dechrau, er enghraifft GB123456123456
+agentCompanyDetails.error.agentEori.badLength = Mae’n rhaid i’r rhif EORI fod yn 12 digid gyda GB ar y dechrau, er enghraifft GB123456123456
 agentCompanyDetails.error.agentCompanyName.required = Nodwch enw busnes cofrestredig eich sefydliad
 agentCompanyDetails.error.agentStreetAndNumber.required = Nodwch linell gyntaf eich cyfeiriad
 agentCompanyDetails.error.agentCity.required = Nodwch dref neu ddinas
@@ -1005,10 +1005,10 @@ deleteDraft.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’ch cais
 deleteDraft.guidance = Os byddwch yn dileu’ch cais nawr, bydd unrhyw ddata yn cael eu colli a bydd angen i chi wneud cais newydd.
 
 #PROVIDE TRADER EORI NUMBER
-provideTraderEori.heading=Rhowch rif EORI y masnachwr
-provideTraderEori.hint=Cod y wlad yw’r 2 lythyren gyntaf, megis GB. Dilynir hyn gan 12 digid, megis GB123456123456.
+provideTraderEori.heading = Beth yw rhif EORI y masnachwr?
+provideTraderEori.hint = Cod y wlad yw’r 2 lythyren gyntaf, megis GB. Dilynir hyn gan 12 digid, megis GB123456123456.
 provideTraderEori.error.required=Nodwch rif EORI y masnachwr
-provideTraderEori.error.badLength=EORI number must contain 12 digits
+provideTraderEori.error.badLength = Mae’n rhaid i’r rhif EORI gynnwys 12 digid
 provideTraderEori.error.notGB=Gall cod y wlad ond bod yn god gwlad GB
 provideTraderEori.error.specialCharacters=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
 provideTraderEori.error.default=Gall y cod gwlad EORI fod ar y ffurf ganlynol yn unig: GB wedi’i ddilyn gan 12 digid, megis GB123456123456
@@ -1101,4 +1101,4 @@ awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd w
 awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
 awareOfRuling.error.required = Rhowch wybod i ni os ydych yn ymwybodol o unrhyw ddyfarniadau eraill a ddefnyddiodd ddull tebyg
 awareOfRuling.checkYourAnswersLabel = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
-awareOfRuling.change.hidden = a ydych yn ymwybodol o unrhyw ddyfarniadau eraill gan ddefnyddio dull tebyg
+awareOfRuling.change.hidden = p’un a ydych yn ymwybodol o unrhyw ddyfarniadau eraill sy’n defnyddio dull tebyg
