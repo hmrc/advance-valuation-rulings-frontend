@@ -14,16 +14,18 @@
  * limitations under the License.
  *@
 
+@import views.html.helper.CSPNonce
+
 @this()
 
-@()
+@()(implicit request: RequestHeader)
 
 @*
 Taken from address-lookup-frontend.
 Kept the comment about override the onConfirm function because it is still relevant.
 Comments are not rendered in browser.
 *@
-<script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/location-autocomplete.min.js")'></script>
+<script @CSPNonce.attr type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/location-autocomplete.min.js")'></script>
 <script>
         openregisterLocationPicker({
             additionalSynonyms: [

@@ -16,7 +16,7 @@
 
 @this(govukSelect: GovukSelect, autoComplete: AutoComplete)
 
-@(form: Form[_], countries: Seq[(String, String)]=models.CountrySelectOptions.countries)(implicit messages: Messages)
+@(form: Form[_], countries: Seq[(String, String)]=models.CountrySelectOptions.countries)(implicit messages: Messages, request: RequestHeader)
 
  @govukSelect(
   Select(
