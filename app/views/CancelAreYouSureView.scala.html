@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import views.html.helper.CSPNonce
 
 @this(
         formHelper: FormWithCSRF,
@@ -39,7 +40,13 @@
         )
     }
 
-    <a href = "javascript:history.back()" class="govuk-link js-visible" id = "return_to_application">
+    <a href="#" class="govuk-link js-visible" id = "return_to_application">
         @messages("cancelAreYouSure.return")
     </a>
+
+    <script @CSPNonce.attr type="text/javascript">
+        document.getElementById("return_to_application").addEventListener("click", function() {
+            history.back();
+        });
+    </script>
 }

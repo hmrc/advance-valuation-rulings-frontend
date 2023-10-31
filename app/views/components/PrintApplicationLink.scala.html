@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.helper.CSPNonce
 
 @this(appConfig: FrontendAppConfig)
 
@@ -28,7 +29,13 @@
     <span class="govuk-body hidden-print">
         <img class="print-this__icon" src='@createLink("images/icon-print.svg")' alt="Print Icon" aria-hidden="true">
 
-        <a class="print-this__link" href="javascript:window.print()"
+        <a href="#" id="printLink" class="print-this__link"
            data-journey-click="print - click:Your application:Print your application">@messages("site.printApplication")</a>
+
+        <script @CSPNonce.attr type="text/javascript">
+            document.getElementById("printLink").addEventListener("click", function() {
+                window.print();
+            });
+        </script>
     </span>
 </div>
