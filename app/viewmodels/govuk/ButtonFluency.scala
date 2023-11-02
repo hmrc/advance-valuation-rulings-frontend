@@ -28,7 +28,8 @@ trait ButtonFluency {
     def apply(content: Content): Button =
       Button(
         element = Some("button"),
-        content = content
+        content = content,
+        preventDoubleClick = Some(true)
       )
   }
 
