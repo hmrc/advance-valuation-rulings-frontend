@@ -26,12 +26,12 @@ sealed trait RequiredInformation
 
 object RequiredInformation extends Enumerable.Implicits {
 
-  case object Option1 extends WithName("option1") with RequiredInformation
-  case object Option2 extends WithName("option2") with RequiredInformation
-  case object Option3 extends WithName("option3") with RequiredInformation
-  case object Option4 extends WithName("option4") with RequiredInformation
-  case object Option5 extends WithName("option5") with RequiredInformation
-  case object Option6 extends WithName("option6") with RequiredInformation
+  private case object Option1 extends WithName("option1") with RequiredInformation
+  private case object Option2 extends WithName("option2") with RequiredInformation
+  private case object Option3 extends WithName("option3") with RequiredInformation
+  private case object Option4 extends WithName("option4") with RequiredInformation
+  private case object Option5 extends WithName("option5") with RequiredInformation
+  private case object Option6 extends WithName("option6") with RequiredInformation
 
   val values: Seq[RequiredInformation] = Seq(
     Option1,

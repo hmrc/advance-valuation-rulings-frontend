@@ -7,7 +7,7 @@ import scoverage.ScoverageKeys
 lazy val appName: String = "advance-valuation-rulings-frontend"
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
+  .enablePlugins(PlayScala, SbtDistributablesPlugin)
   .disablePlugins(
     JUnitXmlReportPlugin
   ) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
@@ -17,7 +17,7 @@ lazy val root = (project in file("."))
   .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.10",
+    scalaVersion := "2.13.12",
     name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models._",
@@ -101,8 +101,5 @@ lazy val itSettings = Defaults.itSettings ++ Seq(
   fork := true
 )
 
-addCommandAlias(
-  "precommit",
-  ";coverage;scalafmt;test:scalafmt;it:scalafmt;test;it:test;coverageReport"
-)
+addCommandAlias("scalafmtAll", "all scalafmtSbt scalafmt Test/scalafmt IntegrationTest/scalafmt")
 addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle IntegrationTest/scalastyle")
