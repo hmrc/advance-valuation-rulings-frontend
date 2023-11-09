@@ -18,12 +18,14 @@ package models.requests
 
 import cats.data._
 import cats.implicits._
+
+import play.api.libs.json._
+
 import com.google.inject.Inject
+import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.UploadedFile.{Success, UploadDetails}
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
-import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import pages._
-import play.api.libs.json._
 
 case class GoodsDetails(
   goodsName: String,
