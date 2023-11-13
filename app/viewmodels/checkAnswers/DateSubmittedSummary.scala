@@ -18,21 +18,27 @@ package viewmodels.checkAnswers
 
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
+import com.ibm.icu.util.ULocale
 import models.requests._
 
 object DateSubmittedSummary {
   import viewmodels.govuk.summarylist._
   import viewmodels.implicits._
 
-  private val formatter = DateTimeFormatter
-    .ofPattern("dd MMMM yyyy")
-    .withZone(ZoneId.systemDefault())
-    .withLocale(Locale.UK)
+  private def formatter(implicit messages: Messages): DateTimeFormatter = {
+    val lang: ULocale = new ULocale(messages.lang.code)
+    val validLang: Boolean = ULocale.getAvailableLocales.contains(lang)
+    val locale: ULocale    = if (validLang) lang else ULocale.getDefault
+
+    DateTimeFormatter
+      .ofPattern("dd MMMM yyyy")
+      .withZone(ZoneId.systemDefault())
+      .withLocale(locale.toLocale)
+  }
 
   def row(application: Application)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
