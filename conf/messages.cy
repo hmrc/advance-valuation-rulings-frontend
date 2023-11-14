@@ -41,7 +41,7 @@ timeout.keepAlive = Parhau i fod wedi’ch mewngofnodi
 timeout.signOut = Allgofnodi
 
 error.browser.title.prefix = Gwall:
-error.message.prefix = Gwall
+error.message.prefix = Gwall:
 error.boolean = Rhowch ateb
 error.invalid_date = Rhowch ddyddiad cywir
 error.date.day_blank = Nodwch ddiwrnod

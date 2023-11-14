@@ -4,7 +4,7 @@ object AppDependencies {
   import play.core.PlayVersion
 
   val HmrcMongoPlayVersion              = "1.3.0"
-  val PlayFrontendHmrcVersion           = "7.26.0-play-28"
+  val PlayFrontendHmrcVersion           = "7.27.0-play-28"
   val PlayConditionalFormMappingVersion = "1.13.0-play-28"
   val BootstrapFrontendPlayVersion      = "7.23.0"
   val CatsVersion                       = "2.10.0"
