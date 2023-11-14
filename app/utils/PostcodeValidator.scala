@@ -17,8 +17,8 @@
 package utils
 
 object PostcodeValidator {
-  val regexString: String   = "^([A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$"
-  private val postcodeRegex = regexString.r
+  private val regexString: String = "^([A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$"
+  private val postcodeRegex       = regexString.r
 
   def validate(candidate: String): Boolean = {
     val postcode = candidate.trim.toUpperCase

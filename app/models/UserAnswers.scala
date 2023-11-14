@@ -92,7 +92,9 @@ final case class UserAnswers(
   ): Future[UserAnswers] =
     Future.fromTry(upsert(page, f, default))
 
-  def modify[A](page: Modifiable[A], f: A => A)(implicit format: Format[A]): Try[UserAnswers] =
+  private def modify[A](page: Modifiable[A], f: A => A)(implicit
+    format: Format[A]
+  ): Try[UserAnswers] =
     get[A](page) match {
       case Some(value) =>
         set[A](page, f(value))

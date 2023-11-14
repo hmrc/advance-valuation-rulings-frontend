@@ -20,13 +20,14 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import forms.AdaptMethodFormProvider
-import models.{DraftId, Mode}
+import models.{AdaptMethod, DraftId, Mode}
 import navigation.Navigator
 import pages.AdaptMethodPage
 import services.UserAnswersService
@@ -46,7 +47,7 @@ class AdaptMethodController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[AdaptMethod] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {

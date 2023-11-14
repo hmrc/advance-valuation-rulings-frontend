@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -46,7 +47,7 @@ class DescribeTheIdenticalGoodsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[String] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
@@ -73,11 +74,12 @@ class DescribeTheIdenticalGoodsController @Inject() (
                 updatedAnswers <-
                   Future.fromTry(request.userAnswers.set(DescribeTheIdenticalGoodsPage, value))
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield saveDraft match {
-                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                case false =>
+              } yield
+                if (saveDraft) {
+                  Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                } else {
                   Redirect(navigator.nextPage(DescribeTheIdenticalGoodsPage, mode, updatedAnswers))
-              }
+                }
           )
     }
 }

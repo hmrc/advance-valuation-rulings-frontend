@@ -33,7 +33,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
 
-  lazy val emailBaseUrl = servicesConfig.baseUrl("email")
+  lazy val emailBaseUrl: String = servicesConfig.baseUrl("email")
 
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
@@ -59,7 +59,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val createAuthTokenOnStart: Boolean    =
     configuration.get[Boolean]("create-internal-auth-token-on-start")
 
-  val arsSubscribeUrl = configuration
+  val arsSubscribeUrl: String = configuration
     .get[Service]("microservice.services.eoriCommonComponent")
     .baseUrl + "/customs-enrolment-services/ars/subscribe"
 

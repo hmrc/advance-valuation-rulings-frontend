@@ -142,7 +142,7 @@ trait Constraints {
   protected def optionalPostCodeMaxLength(errorKey: String): Constraint[Option[String]] =
     optionalMaxLength(postCodeMaxLength, errorKey)
 
-  protected def optionalMaxLength(maximum: Int, errorKey: String): Constraint[Option[String]] =
+  private def optionalMaxLength(maximum: Int, errorKey: String): Constraint[Option[String]] =
     Constraint {
       case None                                       => Valid
       case Some(str: String) if str.length <= maximum => Valid

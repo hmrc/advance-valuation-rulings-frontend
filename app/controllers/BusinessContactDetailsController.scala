@@ -82,9 +82,10 @@ class BusinessContactDetailsController @Inject() (
               for {
                 updatedAnswers <- BusinessContactDetailsPage.set(value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield saveDraft match {
-                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                case false =>
+              } yield
+                if (saveDraft) {
+                  Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                } else {
                   Redirect(
                     navigator.nextPage(
                       userRoleProvider
@@ -94,8 +95,7 @@ class BusinessContactDetailsController @Inject() (
                       updatedAnswers
                     )
                   )
-
-              }
+                }
           )
     }
 }
