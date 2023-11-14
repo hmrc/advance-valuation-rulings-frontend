@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.objectstore.client.Path
@@ -50,7 +51,7 @@ class RemoveSupportingDocumentController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[Boolean] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId, index: Index): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {

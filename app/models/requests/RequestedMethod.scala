@@ -70,7 +70,7 @@ object MethodOne {
   }
 }
 
-case class PreviousIdenticalGoods(val value: String) extends AnyVal
+case class PreviousIdenticalGoods(value: String) extends AnyVal
 object PreviousIdenticalGoods {
   implicit val format: Format[PreviousIdenticalGoods] = Json.valueFormat[PreviousIdenticalGoods]
 }
@@ -100,7 +100,7 @@ object MethodTwo {
   }
 }
 
-case class PreviousSimilarGoods(val value: String) extends AnyVal
+case class PreviousSimilarGoods(value: String) extends AnyVal
 object PreviousSimilarGoods {
   implicit val format: Format[PreviousSimilarGoods] = Json.valueFormat[PreviousSimilarGoods]
 }

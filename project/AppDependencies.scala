@@ -1,13 +1,13 @@
-import sbt._
+import sbt.*
 
 object AppDependencies {
   import play.core.PlayVersion
 
   val HmrcMongoPlayVersion              = "1.3.0"
-  val PlayFrontendHmrcVersion           = "7.23.0-play-28"
+  val PlayFrontendHmrcVersion           = "7.27.0-play-28"
   val PlayConditionalFormMappingVersion = "1.13.0-play-28"
-  val BootstrapFrontendPlayVersion      = "7.22.0"
-  val CatsVersion                       = "2.9.0"
+  val BootstrapFrontendPlayVersion      = "7.23.0"
+  val CatsVersion                       = "2.10.0"
 
   val ScalaTestVersion          = "3.2.10"
   val ScalaTestPlusVersion      = "3.2.10.0"
@@ -16,16 +16,16 @@ object AppDependencies {
   val PegdownVersion            = "1.6.0"
   val JsoupVersion              = "1.14.3"
   val MockitoVersion            = "3.11.2"
-  val ScalaCheckVersion         = "1.15.4"
+  val ScalaCheckVersion         = "1.17.0"
   val ScalaCheckRegexGenVersion = "0.1.2"
   val HmrcMongoTestPlayVersion  = "0.74.0"
   val FlexmarkVersion           = "0.62.2"
   val EnumeratumVersion         = "1.6.3"
-  val ObjectStoreVersion        = "1.1.0"
-  val InternalAuthVersion       = "1.6.0"
+  val ObjectStoreVersion        = "1.2.0"
+  val InternalAuthVersion       = "1.7.0"
   val LibPhoneNumberVersion     = "8.12.47"
 
-  val compile = Seq(
+  val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
     "uk.gov.hmrc"                  %% "play-frontend-hmrc"            % PlayFrontendHmrcVersion,
     "uk.gov.hmrc"                  %% "play-conditional-form-mapping" % PlayConditionalFormMappingVersion,
@@ -38,7 +38,7 @@ object AppDependencies {
     "com.googlecode.libphonenumber" % "libphonenumber"                % LibPhoneNumberVersion
   )
 
-  val test = Seq(
+  val test: Seq[ModuleID] = Seq(
     "org.scalatest"          %% "scalatest"               % ScalaTestVersion,
     "org.scalatestplus"      %% "scalacheck-1-15"         % ScalaTestPlusVersion,
     "org.scalatestplus"      %% "mockito-3-4"             % ScalaTestPlusVersion,

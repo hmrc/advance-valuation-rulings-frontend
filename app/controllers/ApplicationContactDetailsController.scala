@@ -20,25 +20,22 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import config.FrontendAppConfig
 import controllers.actions._
 import forms.ApplicationContactDetailsFormProvider
-import models.{DraftId, Mode}
+import models.{ApplicationContactDetails, DraftId, Mode}
 import navigation.Navigator
 import pages.ApplicationContactDetailsPage
 import services.UserAnswersService
-import userrole.UserRoleProvider
 import views.html.ApplicationContactDetailsView
 
 class ApplicationContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
-  userRoleProvider: UserRoleProvider,
-  appConfig: FrontendAppConfig,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
@@ -50,7 +47,7 @@ class ApplicationContactDetailsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[ApplicationContactDetails] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) {
@@ -77,13 +74,14 @@ class ApplicationContactDetailsController @Inject() (
                 updatedAnswers <-
                   request.userAnswers.setFuture(ApplicationContactDetailsPage, value)
                 _              <- userAnswersService.set(updatedAnswers)
-              } yield saveDraft match {
-                case true  => Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                case false =>
+              } yield
+                if (saveDraft) {
+                  Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
+                } else {
                   Redirect(
                     navigator.nextPage(ApplicationContactDetailsPage, mode, updatedAnswers)
                   )
-              }
+                }
           )
     }
 }

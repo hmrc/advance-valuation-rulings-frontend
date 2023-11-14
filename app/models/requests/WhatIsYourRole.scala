@@ -39,5 +39,5 @@ object WhatIsYourRole extends Enum[WhatIsYourRole] with PlayJsonEnum[WhatIsYourR
 
   case object AgentTrader extends WhatIsYourRole("AgentTrader")
 
-  case object UnansweredLegacySupport extends WhatIsYourRole("UnansweredLegacySupport")
+  private case object UnansweredLegacySupport extends WhatIsYourRole("UnansweredLegacySupport")
 }

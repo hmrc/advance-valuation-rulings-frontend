@@ -20,7 +20,6 @@ import play.api.i18n.Messages
 
 import com.google.inject.Inject
 import models.{TraderDetailsWithCountryCode, UserAnswers}
-import models.AuthUserType._
 import userrole.UserRoleProvider
 
 case class ApplicationSummary(

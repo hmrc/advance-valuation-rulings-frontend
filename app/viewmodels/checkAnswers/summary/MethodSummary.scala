@@ -42,7 +42,7 @@ object MethodSummary {
       case None          => MethodSummary(SummaryListViewModel(Seq.empty)) // Could be none
     }
 
-  protected def methodOne(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
+  private def methodOne(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
 
     val conditionsRows = userAnswers.get(IsTheSaleSubjectToConditionsPage) match {
       case Some(true)  =>
@@ -74,7 +74,7 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows ++ restrictionsRows ++ conditionsRows))
   }
 
-  protected def methodTwo(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
+  private def methodTwo(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
     val identicalGoodsRows =
       Seq(
         HaveYouUsedMethodOneInPastSummary.row(userAnswers),
@@ -89,7 +89,7 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows ++ identicalGoodsRows))
   }
 
-  protected def methodThree(
+  private def methodThree(
     userAnswers: UserAnswers
   )(implicit messages: Messages): MethodSummary = {
 
@@ -108,7 +108,7 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows))
   }
 
-  protected def methodFour(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
+  private def methodFour(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
 
     val rows = Seq(
       ValuationMethodSummary.row(userAnswers),
@@ -119,7 +119,7 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows))
   }
 
-  protected def methodFive(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
+  private def methodFive(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
     val rows = Seq(
       ValuationMethodSummary.row(userAnswers),
       WhyComputedValueSummary.row(userAnswers),
@@ -129,7 +129,7 @@ object MethodSummary {
     MethodSummary(SummaryListViewModel(rows))
   }
 
-  protected def methodSix(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
+  private def methodSix(userAnswers: UserAnswers)(implicit messages: Messages): MethodSummary = {
 
     val rows = Seq(
       ValuationMethodSummary.row(userAnswers),

@@ -18,18 +18,13 @@ package controllers
 
 import javax.inject.Inject
 
-import scala.concurrent.Await
-import scala.concurrent.duration.DurationInt
-
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import controllers.actions._
 import controllers.common.FileUploadHelper
 import models.{DraftId, Mode, UploadedFile}
-import models.requests.DataRequest
 import views.html.UploadInProgressView
 
 class UploadInProgressController @Inject() (

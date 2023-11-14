@@ -18,7 +18,7 @@ package models
 
 object CountrySelectOptions {
 
-  lazy val countries = locationCanonicalList
+  lazy val countries: Seq[(String, String)] = locationCanonicalList
 
   def countryCodeToCountry(code: String): String =
     countries

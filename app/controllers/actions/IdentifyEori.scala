@@ -20,8 +20,8 @@ import uk.gov.hmrc.auth.core.Enrolments
 
 object IdentifyEori {
 
-  val EnrolmentKey: String   = "HMRC-ATAR-ORG"
-  val EnrolmentIdKey: String = "EORINumber"
+  val EnrolmentKey: String           = "HMRC-ATAR-ORG"
+  private val EnrolmentIdKey: String = "EORINumber"
 
   def getEoriNumber(enrolments: Enrolments): Option[String] =
     for {
