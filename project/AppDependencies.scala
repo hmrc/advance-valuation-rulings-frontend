@@ -3,26 +3,25 @@ import sbt.*
 object AppDependencies {
   import play.core.PlayVersion
 
-  val HmrcMongoPlayVersion              = "1.3.0"
+  val HmrcMongoPlayVersion              = "1.4.0"
   val PlayFrontendHmrcVersion           = "7.27.0-play-28"
   val PlayConditionalFormMappingVersion = "1.13.0-play-28"
   val BootstrapFrontendPlayVersion      = "7.23.0"
   val CatsVersion                       = "2.10.0"
 
-  val ScalaTestVersion          = "3.2.10"
+  val ScalaTestVersion          = "3.2.17"
   val ScalaTestPlusVersion      = "3.2.10.0"
   val ScalaTestPlusPlayVersion  = "5.1.0"
-  val MockitoScalaVersion       = "1.16.42"
+  val MockitoScalaVersion       = "1.17.29"
   val PegdownVersion            = "1.6.0"
-  val JsoupVersion              = "1.14.3"
-  val MockitoVersion            = "3.11.2"
-  val ScalaCheckVersion         = "1.17.0"
+  val JsoupVersion              = "1.16.2"
+  val ScalaCheckVersion         = "3.2.17.0"
   val ScalaCheckRegexGenVersion = "0.1.2"
   val HmrcMongoTestPlayVersion  = "0.74.0"
-  val FlexmarkVersion           = "0.62.2"
+  val FlexmarkVersion           = "0.64.8"
   val EnumeratumVersion         = "1.6.3"
   val ObjectStoreVersion        = "1.2.0"
-  val InternalAuthVersion       = "1.7.0"
+  val InternalAuthVersion       = "1.8.0"
   val LibPhoneNumberVersion     = "8.12.47"
 
   val compile: Seq[ModuleID] = Seq(
@@ -40,14 +39,13 @@ object AppDependencies {
 
   val test: Seq[ModuleID] = Seq(
     "org.scalatest"          %% "scalatest"               % ScalaTestVersion,
-    "org.scalatestplus"      %% "scalacheck-1-15"         % ScalaTestPlusVersion,
     "org.scalatestplus"      %% "mockito-3-4"             % ScalaTestPlusVersion,
     "org.scalatestplus.play" %% "scalatestplus-play"      % ScalaTestPlusPlayVersion,
     "org.pegdown"             % "pegdown"                 % PegdownVersion,
     "org.jsoup"               % "jsoup"                   % JsoupVersion,
     "com.typesafe.play"      %% "play-test"               % PlayVersion.current,
     "org.mockito"            %% "mockito-scala"           % MockitoScalaVersion,
-    "org.scalacheck"         %% "scalacheck"              % ScalaCheckVersion,
+    "org.scalatestplus"      %% "scalacheck-1-17"         % ScalaCheckVersion,
     "wolfendale"             %% "scalacheck-gen-regexp"   % ScalaCheckRegexGenVersion,
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28" % HmrcMongoPlayVersion,
     "uk.gov.hmrc"            %% "bootstrap-test-play-28"  % BootstrapFrontendPlayVersion,
