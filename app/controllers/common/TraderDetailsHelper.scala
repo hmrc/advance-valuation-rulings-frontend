@@ -53,10 +53,14 @@ trait TraderDetailsHelper {
             case (Right(traderDetails), _)                             =>
               handleSuccess(traderDetails)
             case (Left(error), Some(nfRes)) if error.code == NOT_FOUND =>
-              logger.warn(s"Trader details not found. Error: $error")
+              logger.warn(
+                s"[TraderDetailsHelper][getTraderDetails] Trader details not found. Error: $error"
+              )
               nfRes
             case (Left(error), _)                                      =>
-              logger.error(s"Failed to get trader details from backend: $error")
+              logger.error(
+                s"[TraderDetailsHelper][getTraderDetails] Failed to get trader details from backend: $error"
+              )
               Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
           }
       }

@@ -22,6 +22,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 import play.api.Logger
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -55,7 +56,7 @@ class ProvideTraderEoriController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  private val form = formProvider()
+  private val form: Form[String] = formProvider()
 
   private implicit val logger: Logger = Logger(this.getClass)
 
@@ -94,7 +95,9 @@ class ProvideTraderEoriController @Inject() (
                   }
 
                 case Failure(error) =>
-                  logger.warn(s"Unable to store ProvideTraderEoriPage. Error: $error")
+                  logger.warn(
+                    s"[ProvideTraderEoriController][onSubmit] Unable to store ProvideTraderEoriPage. Error: $error"
+                  )
                   Future
                     .successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
               }
@@ -127,7 +130,7 @@ class ProvideTraderEoriController @Inject() (
                 }
               case Failure(error)         =>
                 logger.warn(
-                  s"Unable to store VerifyTraderDetailsPage. Error: $error"
+                  s"[ProvideTraderEoriController][proceed] Unable to store VerifyTraderDetailsPage. Error: $error"
                 )
                 Future.successful(
                   Redirect(

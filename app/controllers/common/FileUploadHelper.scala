@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import play.api.Configuration
+import play.api.{Configuration, Logger}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{AnyContent, RequestHeader, Result}
 import play.api.mvc.Results.{BadRequest, Ok, Redirect}
@@ -53,6 +53,8 @@ case class FileUploadHelper @Inject() (
   appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
     extends I18nSupport {
+
+  private implicit val logger: Logger = Logger(this.getClass)
 
   private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
 
@@ -89,6 +91,9 @@ case class FileUploadHelper @Inject() (
         case file: UploadedFile.Success   =>
           removeFile(mode, draftId, file.fileUrl.get, isLetterOfAuthority)
         case _: Failure                   =>
+          logger.error(
+            "[FileUploadHelper][onPageLoadWithFileStatus] Unexpected Error: Failure received when uploading file"
+          )
           Future.failed(
             new RuntimeException(
               "Unexpected Error: Failure received when uploading file"
@@ -259,7 +264,7 @@ case class FileUploadHelper @Inject() (
     draftId: DraftId,
     isLetterOfAuthority: Boolean,
     mode: Mode = NormalMode
-  ) =
+  ): String =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController
         .onPageLoad(mode, draftId, None, None, redirectedFromChangeButton = false)

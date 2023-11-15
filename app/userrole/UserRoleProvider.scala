@@ -18,6 +18,8 @@ package userrole
 
 import javax.inject.Inject
 
+import play.api.Logger
+
 import models.{UserAnswers, WhatIsYourRoleAsImporter}
 import pages.WhatIsYourRoleAsImporterPage
 
@@ -29,6 +31,8 @@ class UserRoleProvider @Inject() (
   agentForTrader: AgentForTrader
 ) {
 
+  private implicit val logger: Logger = Logger(this.getClass)
+
   def getUserRole(userAnswers: UserAnswers): UserRole =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
       case Some(WhatIsYourRoleAsImporter.EmployeeOfOrg)         =>
@@ -38,6 +42,9 @@ class UserRoleProvider @Inject() (
       case Some(WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader) =>
         agentForTrader
       case _                                                    =>
+        logger.error(
+          "[UserRoleProvider][getUserRole] WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole"
+        )
         throw new UnsupportedOperationException(
           "WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole"
         )

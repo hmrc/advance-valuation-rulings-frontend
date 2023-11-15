@@ -16,6 +16,8 @@
 
 package controllers
 
+import javax.inject.Inject
+
 import cats.data.Validated.{Invalid, Valid}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -25,7 +27,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import com.google.inject.Inject
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
@@ -81,7 +82,7 @@ class CheckYourAnswersController @Inject() (
             case Some(td) => redirectJourney(request, td.withoutConfirmation)
             case None     =>
               logger.error(
-                "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
+                "[CheckYourAnswersController][onSubmit] VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
               )
               throw new Exception(
                 "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
@@ -107,7 +108,8 @@ class CheckYourAnswersController @Inject() (
     ) match {
       case Invalid(errors: cats.data.NonEmptyList[Page]) =>
         logger.warn(
-          s"Failed to create application request: ${errors.toList.mkString(", ")}}"
+          s"[CheckYourAnswersController][redirectJourney] Failed to create application request: ${errors.toList
+              .mkString(", ")}}"
         )
         Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       case Valid(applicationRequest)                     =>

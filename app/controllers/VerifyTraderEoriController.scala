@@ -21,6 +21,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.api.Logging
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
@@ -48,7 +49,10 @@ class VerifyTraderEoriController @Inject() (
     with I18nSupport
     with Logging {
 
-  private def checkForm(details: TraderDetailsWithConfirmation, isChecked: Option[Boolean]) =
+  private def checkForm(
+    details: TraderDetailsWithConfirmation,
+    isChecked: Option[Boolean]
+  ): Form[String] =
     isChecked match {
       case Some(isChecked) => formProvider(Some(details)).fill(isChecked.toString)
       case None            => formProvider(Some(details))
@@ -70,7 +74,9 @@ class VerifyTraderEoriController @Inject() (
     }
 
   private def traderDetailsNotFoundInSession(mode: Mode, draftId: DraftId) = {
-    logger.warn("No trader details found in session")
+    logger.warn(
+      "[VerifyTraderEoriController][traderDetailsNotFoundInSession] No trader details found in session"
+    )
     Redirect(
       controllers.routes.JourneyRecoveryController.onPageLoad(
         continueUrl = Some(

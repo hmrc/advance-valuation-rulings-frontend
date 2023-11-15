@@ -54,7 +54,7 @@ class SubmissionService @Inject() (
 
   private def logError(applicationId: ApplicationId, message: String): Throwable => Done = {
     err: Throwable =>
-      logger.warn(s"$message for application $applicationId", err)
+      logger.warn(s"[SubmissionService][logError] $message for application $applicationId", err)
       Done
   }
 }

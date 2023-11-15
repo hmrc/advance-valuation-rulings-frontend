@@ -17,9 +17,11 @@
 package connectors
 
 import java.util.UUID
+import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status.OK
 import play.api.libs.json.Json
@@ -28,12 +30,11 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 
-import com.google.inject.Inject
 import config.FrontendAppConfig
 import models._
 import models.requests._
 
-@javax.inject.Singleton
+@Singleton
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
   httpClient: HttpClientV2
@@ -42,7 +43,9 @@ class BackendConnector @Inject() (
 
   type Result = Either[BackendError, TraderDetailsWithCountryCode]
 
-  private val backendUrl = config.advanceValuationRulingsBackendURL
+  private implicit val logger: Logger = Logger(this.getClass)
+
+  private val backendUrl: String = config.advanceValuationRulingsBackendURL
 
   def getTraderDetails(
     acknowledgementReference: AcknowledgementReference,
@@ -95,6 +98,7 @@ class BackendConnector @Inject() (
       case e: UpstreamErrorResponse => (e.reportAs, e.getMessage)
       case e: Throwable             => (Status.INTERNAL_SERVER_ERROR, e.getMessage)
     }
+    logger.error(s"[BackendConnector][onError] $code: $message")
     Left(BackendError(code, message))
   }
 }

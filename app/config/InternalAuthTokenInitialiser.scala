@@ -22,6 +22,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
 
 import play.api.{Configuration, Logging}
+import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
@@ -62,7 +63,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
     authTokenIsValid.flatMap {
       isValid =>
         if (isValid) {
-          logger.info("Auth token is already valid")
+          logger.info("[InternalAuthTokenInitialiser][ensureAuthToken] Auth token is already valid")
           Future.successful(())
         } else {
           createClientAuthToken()
@@ -70,7 +71,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
     }
 
   private def createClientAuthToken(): Future[Unit] = {
-    logger.info("Initialising auth token")
+    logger.info("[InternalAuthTokenInitialiser][createClientAuthToken] Initialising auth token")
     httpClient
       .post(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
       .withBody(
@@ -94,21 +95,26 @@ class InternalAuthTokenInitialiserImpl @Inject() (
       .execute
       .flatMap {
         response =>
-          if (response.status == 201) {
-            logger.info("Auth token initialised")
+          if (response.status == CREATED) {
+            logger.info(
+              "[InternalAuthTokenInitialiser][createClientAuthToken] Auth token initialised"
+            )
             Future.successful(())
           } else {
+            logger.error(
+              "[InternalAuthTokenInitialiser][createClientAuthToken] Unable to initialise internal-auth token"
+            )
             Future.failed(new RuntimeException("Unable to initialise internal-auth token"))
           }
       }
   }
 
   private def authTokenIsValid: Future[Boolean] = {
-    logger.info("Checking auth token")
+    logger.info("[InternalAuthTokenInitialiser][authTokenIsValid] Checking auth token")
     httpClient
       .get(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
       .setHeader("Authorization" -> authToken)
       .execute
-      .map(_.status == 200)
+      .map(_.status == OK)
   }
 }
