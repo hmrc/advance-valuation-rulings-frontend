@@ -24,14 +24,14 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.{AboutSimilarGoodsFormProvider, TellUsAboutYourRulingFormProvider}
+import forms.AboutSimilarGoodsFormProvider
 import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AboutSimilarGoodsPage, TellUsAboutYourRulingPage}
+import pages.AboutSimilarGoodsPage
 import services.UserAnswersService
-import views.html.{AboutSimilarGoodsView, TellUsAboutYourRulingView}
+import views.html.AboutSimilarGoodsView
 
 class AboutSimilarGoodsControllerSpec extends SpecBase with MockitoSugar {
 

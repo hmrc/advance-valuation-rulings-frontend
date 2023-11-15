@@ -23,14 +23,14 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import forms.{AwareOfRulingFormProvider, HaveYouReceivedADecisionFormProvider}
+import forms.AwareOfRulingFormProvider
 import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{AwareOfRulingPage, HaveYouReceivedADecisionPage}
+import pages.AwareOfRulingPage
 import services.UserAnswersService
-import views.html.{AwareOfRulingView, HaveYouReceivedADecisionView}
+import views.html.AwareOfRulingView
 
 class AwareOfRulingControllerSpec extends SpecBase with MockitoSugar {
 

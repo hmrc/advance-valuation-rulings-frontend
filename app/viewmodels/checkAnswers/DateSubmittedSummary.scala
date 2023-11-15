@@ -29,10 +29,16 @@ object DateSubmittedSummary {
   import viewmodels.govuk.summarylist._
   import viewmodels.implicits._
 
-  private val formatter = DateTimeFormatter
-    .ofPattern("dd MMMM yyyy")
-    .withZone(ZoneId.systemDefault())
-    .withLocale(Locale.UK)
+  private def formatter(implicit messages: Messages): DateTimeFormatter = {
+    val lang: Locale       = new Locale(messages.lang.code)
+    val validLang: Boolean = Locale.getAvailableLocales.contains(lang)
+    val locale: Locale     = if (validLang) lang else Locale.getDefault
+
+    DateTimeFormatter
+      .ofPattern("dd MMMM yyyy")
+      .withZone(ZoneId.systemDefault())
+      .withLocale(locale)
+  }
 
   def row(application: Application)(implicit messages: Messages): SummaryListRow =
     SummaryListRowViewModel(

@@ -25,14 +25,12 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import config.FrontendAppConfig
 import controllers.actions._
 import forms.ApplicationContactDetailsFormProvider
 import models.{ApplicationContactDetails, DraftId, Mode}
 import navigation.Navigator
 import pages.ApplicationContactDetailsPage
 import services.UserAnswersService
-import userrole.UserRoleProvider
 import views.html.ApplicationContactDetailsView
 
 class ApplicationContactDetailsController @Inject() (

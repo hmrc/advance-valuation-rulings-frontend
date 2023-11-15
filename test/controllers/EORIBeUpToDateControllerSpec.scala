@@ -26,7 +26,6 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import config.FrontendAppConfig
 import forms.EmployeeCheckRegisteredDetailsFormProvider
 import generators.ModelGenerators
 import models.{Done, TraderDetailsWithConfirmation, UserAnswers, WhatIsYourRoleAsImporter}

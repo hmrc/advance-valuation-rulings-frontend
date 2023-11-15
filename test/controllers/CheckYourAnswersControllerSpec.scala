@@ -26,7 +26,6 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import config.FrontendAppConfig
 import connectors.BackendConnector
 import models._
 import models.AuthUserType.IndividualTrader

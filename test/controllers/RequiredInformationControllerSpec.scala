@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import config.FrontendAppConfig
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers

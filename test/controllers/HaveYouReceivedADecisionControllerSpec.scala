@@ -18,14 +18,11 @@ package controllers
 
 import scala.concurrent.Future
 
-import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.test.Helpers.{route, running, GET}
 
 import base.SpecBase
-import controllers.ViewApplicationControllerSpec.hc
 import forms.HaveYouReceivedADecisionFormProvider
 import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any

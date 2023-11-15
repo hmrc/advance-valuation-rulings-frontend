@@ -27,7 +27,6 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 
 import base.SpecBase
-import config.FrontendAppConfig
 import connectors.BackendConnector
 import forms.EmployeeCheckRegisteredDetailsFormProvider
 import models._

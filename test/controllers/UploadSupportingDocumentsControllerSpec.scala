@@ -25,7 +25,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import base.SpecBase
-import config.FrontendAppConfig
 import controllers.common.FileUploadHelper
 import models.{DraftAttachment, NormalMode, UploadedFile}
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
