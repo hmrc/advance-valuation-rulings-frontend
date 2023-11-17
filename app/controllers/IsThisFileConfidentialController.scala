@@ -16,23 +16,21 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.Configuration
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
 import pages._
+import play.api.Configuration
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.AllDocuments
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.IsThisFileConfidentialView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class IsThisFileConfidentialController @Inject() (
   override val messagesApi: MessagesApi,
@@ -52,63 +50,61 @@ class IsThisFileConfidentialController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        lazy val isSuccessful =
-          UploadSupportingDocumentPage.get().exists(_.isSuccessful)
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      lazy val isSuccessful =
+        UploadSupportingDocumentPage.get().exists(_.isSuccessful)
 
-        if (isSuccessful) {
-          val preparedForm = IsThisFileConfidentialPage.fill(form)
-          val fileName     = UploadSupportingDocumentPage.get().get.fileName.get
-          Ok(view(preparedForm, mode, draftId, fileName))
-        } else {
-          Redirect(
-            routes.UploadSupportingDocumentsController
-              .onPageLoad(mode, request.userAnswers.draftId, None, None)
-          )
-        }
+      if (isSuccessful) {
+        val preparedForm = IsThisFileConfidentialPage.fill(form)
+        val fileName     = UploadSupportingDocumentPage.get().get.fileName.get
+        Ok(view(preparedForm, mode, draftId, fileName))
+      } else {
+        Redirect(
+          routes.UploadSupportingDocumentsController
+            .onPageLoad(mode, request.userAnswers.draftId, None, None)
+        )
+      }
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => {
-              val fileName = UploadSupportingDocumentPage.get() match {
-                case Some(file) =>
-                  file.fileName.get
-                case None       =>
-                  ""
-              }
-              Future.successful(BadRequest(view(formWithErrors, mode, draftId, fileName)))
-            },
-            value =>
-              UploadSupportingDocumentPage.get() match {
-                case Some(file: UploadedFile.Success) =>
-                  val allDocuments = AllDocuments.get().getOrElse(List.empty[DraftAttachment])
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => {
+            val fileName = UploadSupportingDocumentPage.get() match {
+              case Some(file) =>
+                file.fileName.get
+              case None       =>
+                ""
+            }
+            Future.successful(BadRequest(view(formWithErrors, mode, draftId, fileName)))
+          },
+          value =>
+            UploadSupportingDocumentPage.get() match {
+              case Some(file: UploadedFile.Success) =>
+                val allDocuments = AllDocuments.get().getOrElse(List.empty[DraftAttachment])
 
-                  val draft     = DraftAttachment(file, Some(value))
-                  val documents = allDocuments :+ draft
+                val draft     = DraftAttachment(file, Some(value))
+                val documents = allDocuments :+ draft
 
-                  for {
-                    ua <- AllDocuments.set(documents)
-                    ua <- ua.removeFuture(UploadSupportingDocumentPage)
-                    ua <- ua.removeFuture(IsThisFileConfidentialPage)
-                    _  <- userAnswersService.set(ua)
-                  } yield Redirect(
-                    navigator.nextPage(IsThisFileConfidentialPage, mode, ua)
+                for {
+                  ua <- AllDocuments.set(documents)
+                  ua <- ua.removeFuture(UploadSupportingDocumentPage)
+                  ua <- ua.removeFuture(IsThisFileConfidentialPage)
+                  _  <- userAnswersService.set(ua)
+                } yield Redirect(
+                  navigator.nextPage(IsThisFileConfidentialPage, mode, ua)
+                )
+
+              case _ =>
+                Future.successful(
+                  Redirect(
+                    routes.UploadSupportingDocumentsController
+                      .onPageLoad(mode, request.userAnswers.draftId, None, None)
                   )
-
-                case _ =>
-                  Future.successful(
-                    Redirect(
-                      routes.UploadSupportingDocumentsController
-                        .onPageLoad(mode, request.userAnswers.draftId, None, None)
-                    )
-                  )
-              }
-          )
+                )
+            }
+        )
     }
 }

@@ -16,23 +16,22 @@
 
 package controllers
 
-import play.api.Application
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.AdaptMethodFormProvider
 import models.{AdaptMethod, NormalMode}
-import org.scalatestplus.mockito.MockitoSugar
 import pages.AdaptMethodPage
+import play.api.Application
+import play.api.data.Form
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.AdaptMethodView
 
-class AdaptMethodControllerSpec extends SpecBase with MockitoSugar {
+class AdaptMethodControllerSpec extends SpecBase {
 
-  lazy val adaptMethodRoute = routes.AdaptMethodController.onPageLoad(NormalMode, draftId).url
+  lazy val adaptMethodRoute: String = routes.AdaptMethodController.onPageLoad(NormalMode, draftId).url
 
-  val formProvider = new AdaptMethodFormProvider()
-  val form         = formProvider()
+  val formProvider            = new AdaptMethodFormProvider()
+  val form: Form[AdaptMethod] = formProvider()
 
   "AdaptMethod Controller" - {
 

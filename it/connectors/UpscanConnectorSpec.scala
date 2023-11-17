@@ -1,16 +1,15 @@
 package connectors
 
+import com.github.tomakehurst.wiremock.client.WireMock._
+import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
-
-import com.github.tomakehurst.wiremock.client.WireMock._
-import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
 import utils.WireMockHelper
 
 class UpscanConnectorSpec

@@ -16,9 +16,8 @@
 
 package pages
 
-import play.api.libs.json.JsPath
-
 import models.AdaptMethod
+import play.api.libs.json.JsPath
 
 case object AdaptMethodPage extends QuestionPage[AdaptMethod] {
 

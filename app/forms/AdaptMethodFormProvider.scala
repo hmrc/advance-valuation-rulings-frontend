@@ -16,12 +16,11 @@
 
 package forms
 
-import javax.inject.Inject
-
-import play.api.data.Form
-
 import forms.mappings.Mappings
 import models.AdaptMethod
+import play.api.data.Form
+
+import javax.inject.Inject
 
 class AdaptMethodFormProvider @Inject() extends Mappings {
 

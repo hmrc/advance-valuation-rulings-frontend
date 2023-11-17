@@ -53,16 +53,15 @@ class ValuationMethodSpec extends PageBehaviours {
         }
 
         "when the method is different, delete data for method 1" in {
-          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method1))) {
-            method =>
-              val expectedResult =
-                UserAnswers("userId", DraftId(1), lastUpdated = fixedInstant)
-                  .unsafeSet(ValuationMethodPage)(method)
+          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method1))) { method =>
+            val expectedResult =
+              UserAnswers("userId", DraftId(1), lastUpdated = fixedInstant)
+                .unsafeSet(ValuationMethodPage)(method)
 
-              val result = userAnswers.set(ValuationMethodPage, method)
+            val result = userAnswers.set(ValuationMethodPage, method)
 
-              result.isSuccess mustEqual true
-              result.get.data mustEqual expectedResult.data
+            result.isSuccess mustEqual true
+            result.get.data mustEqual expectedResult.data
           }
         }
       }
@@ -97,16 +96,15 @@ class ValuationMethodSpec extends PageBehaviours {
         }
 
         "when the method is different, delete data for method 2" in {
-          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method2))) {
-            method =>
-              val expectedResult =
-                UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
-                  .unsafeSet(ValuationMethodPage)(method)
+          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method2))) { method =>
+            val expectedResult =
+              UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
+                .unsafeSet(ValuationMethodPage)(method)
 
-              val result = userAnswers.set(ValuationMethodPage, method)
+            val result = userAnswers.set(ValuationMethodPage, method)
 
-              result.isSuccess mustEqual true
-              result.get.data mustEqual expectedResult.data
+            result.isSuccess mustEqual true
+            result.get.data mustEqual expectedResult.data
           }
         }
       }
@@ -143,16 +141,15 @@ class ValuationMethodSpec extends PageBehaviours {
         }
 
         "when the method is different, delete data for method 3" in {
-          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method3))) {
-            method =>
-              val expectedResult =
-                UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
-                  .unsafeSet(ValuationMethodPage)(method)
+          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method3))) { method =>
+            val expectedResult =
+              UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
+                .unsafeSet(ValuationMethodPage)(method)
 
-              val result = userAnswers.set(ValuationMethodPage, method)
+            val result = userAnswers.set(ValuationMethodPage, method)
 
-              result.isSuccess mustEqual true
-              result.get.data mustEqual expectedResult.data
+            result.isSuccess mustEqual true
+            result.get.data mustEqual expectedResult.data
           }
         }
       }
@@ -188,16 +185,15 @@ class ValuationMethodSpec extends PageBehaviours {
         }
 
         "when the method is different, delete data for method 4" in {
-          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method4))) {
-            method =>
-              val expectedResult =
-                UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
-                  .unsafeSet(ValuationMethodPage)(method)
+          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method4))) { method =>
+            val expectedResult =
+              UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
+                .unsafeSet(ValuationMethodPage)(method)
 
-              val result = userAnswers.set(ValuationMethodPage, method)
+            val result = userAnswers.set(ValuationMethodPage, method)
 
-              result.isSuccess mustEqual true
-              result.get.data mustEqual expectedResult.data
+            result.isSuccess mustEqual true
+            result.get.data mustEqual expectedResult.data
           }
         }
       }
@@ -233,16 +229,15 @@ class ValuationMethodSpec extends PageBehaviours {
         }
 
         "when the method is different, delete data for method 5" in {
-          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method5))) {
-            method =>
-              val expectedResult =
-                UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
-                  .unsafeSet(ValuationMethodPage)(method)
+          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method5))) { method =>
+            val expectedResult =
+              UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
+                .unsafeSet(ValuationMethodPage)(method)
 
-              val result = userAnswers.set(ValuationMethodPage, method)
+            val result = userAnswers.set(ValuationMethodPage, method)
 
-              result.isSuccess mustEqual true
-              result.get.data mustEqual expectedResult.data
+            result.isSuccess mustEqual true
+            result.get.data mustEqual expectedResult.data
           }
         }
       }
@@ -279,16 +274,15 @@ class ValuationMethodSpec extends PageBehaviours {
         }
 
         "when the method is different, delete data for method 6" in {
-          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method6))) {
-            method =>
-              val expectedResult =
-                UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
-                  .unsafeSet(ValuationMethodPage)(method)
+          forAll(Gen.oneOf(ValuationMethod.values.filterNot(_ == ValuationMethod.Method6))) { method =>
+            val expectedResult =
+              UserAnswers("userId", DraftId(2), lastUpdated = fixedInstant)
+                .unsafeSet(ValuationMethodPage)(method)
 
-              val result = userAnswers.set(ValuationMethodPage, method)
+            val result = userAnswers.set(ValuationMethodPage, method)
 
-              result.isSuccess mustEqual true
-              result.get.data mustEqual expectedResult.data
+            result.isSuccess mustEqual true
+            result.get.data mustEqual expectedResult.data
           }
         }
       }

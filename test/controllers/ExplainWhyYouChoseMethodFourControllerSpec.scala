@@ -16,19 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.ExplainWhyYouChoseMethodFourFormProvider
+import models.NormalMode
+import pages.ExplainWhyYouChoseMethodFourPage
 import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.ExplainWhyYouChoseMethodFourFormProvider
-import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
-import pages.ExplainWhyYouChoseMethodFourPage
 import views.html.ExplainWhyYouChoseMethodFourView
 
-class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase with MockitoSugar {
+class ExplainWhyYouChoseMethodFourControllerSpec extends SpecBase {
 
   val formProvider = new ExplainWhyYouChoseMethodFourFormProvider()
   val form         = formProvider()

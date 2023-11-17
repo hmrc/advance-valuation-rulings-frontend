@@ -29,18 +29,17 @@ import viewmodels.implicits._
 object DescribeTheLegalChallengesSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DescribeTheLegalChallengesPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "describeTheLegalChallenges.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DescribeTheLegalChallengesController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("describeTheLegalChallenges.change.hidden"))
+    answers.get(DescribeTheLegalChallengesPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "describeTheLegalChallenges.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.DescribeTheLegalChallengesController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("describeTheLegalChallenges.change.hidden"))
         )
+      )
     }
 }

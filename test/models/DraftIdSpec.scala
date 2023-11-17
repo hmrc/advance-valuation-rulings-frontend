@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{Json, JsString, JsSuccess}
+import play.api.libs.json.{JsString, JsSuccess, Json}
 import play.api.mvc.PathBindable
 
 import generators.ApplicationRequestGenerator
@@ -39,25 +39,24 @@ class DraftIdSpec
 
     "must bind from a url" in {
 
-      forAll(arbitrary[String], arbitrary[DraftId]) {
-        (key, value) => pathBindable.bind(key, value.toString).value mustEqual value
+      forAll(arbitrary[String], arbitrary[DraftId]) { (key, value) =>
+        pathBindable.bind(key, value.toString).value mustEqual value
       }
     }
 
     "must unbind to a url" in {
 
-      forAll(arbitrary[String], arbitrary[DraftId]) {
-        (key, value) => pathBindable.unbind(key, value) mustEqual value.toString
+      forAll(arbitrary[String], arbitrary[DraftId]) { (key, value) =>
+        pathBindable.unbind(key, value) mustEqual value.toString
       }
     }
 
     "must serialise and deserialise to / from JSON" in {
 
-      forAll(arbitrary[DraftId]) {
-        draftId =>
-          val json = Json.toJson(draftId)
-          json mustEqual JsString(draftId.toString)
-          json.validate[DraftId] mustEqual JsSuccess(draftId)
+      forAll(arbitrary[DraftId]) { draftId =>
+        val json = Json.toJson(draftId)
+        json mustEqual JsString(draftId.toString)
+        json.validate[DraftId] mustEqual JsSuccess(draftId)
       }
     }
   }

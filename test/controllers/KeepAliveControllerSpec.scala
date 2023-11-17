@@ -16,21 +16,19 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.{never, times, verify, when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar._
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 
-class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class KeepAliveControllerSpec extends SpecBase {
 
   "keepAlive" - {
 
@@ -83,7 +81,7 @@ class KeepAliveControllerSpec extends SpecBase with MockitoSugar {
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockUserAnswersService, never()).keepAlive(any())(any())
+          verify(mockUserAnswersService, never).keepAlive(any())(any())
         }
       }
     }

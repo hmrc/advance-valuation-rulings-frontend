@@ -16,16 +16,15 @@
 
 package controllers
 
-import java.time.Instant
-import javax.inject.Inject
-
+import controllers.actions._
+import models.{DraftHasBeenSavedModel, DraftId}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
-import controllers.actions._
-import models.{DraftHasBeenSavedModel, DraftId}
 import views.html.DraftHasBeenSavedView
+
+import java.time.Instant
+import javax.inject.Inject
 
 class DraftHasBeenSavedController @Inject() (
   override val messagesApi: MessagesApi,
@@ -38,11 +37,10 @@ class DraftHasBeenSavedController @Inject() (
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId)) {
-      implicit request =>
-        val date: Instant = request.userAnswers.map(_.lastUpdated).get
+    (identify andThen getData(draftId)) { implicit request =>
+      val date: Instant = request.userAnswers.map(_.lastUpdated).get
 
-        Ok(view(model.get28DaysLater(date)))
+      Ok(view(model.get28DaysLater(date)))
     }
 
 }

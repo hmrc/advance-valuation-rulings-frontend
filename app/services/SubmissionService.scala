@@ -16,17 +16,15 @@
 
 package services
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import uk.gov.hmrc.http.HeaderCarrier
-
 import connectors.BackendConnector
 import logging.Logging
 import models.Done
 import models.requests.{ApplicationId, ApplicationRequest, ApplicationSubmissionResponse}
 import services.email.EmailService
+import uk.gov.hmrc.http.HeaderCarrier
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class SubmissionService @Inject() (
   backendConnector: BackendConnector,
@@ -52,9 +50,8 @@ class SubmissionService @Inject() (
                               .recover(logError(applicationId, "Failed to send an email")(_))
     } yield submissionResponse
 
-  private def logError(applicationId: ApplicationId, message: String): Throwable => Done = {
-    err: Throwable =>
-      logger.warn(s"$message for application $applicationId", err)
-      Done
+  private def logError(applicationId: ApplicationId, message: String): Throwable => Done = { err: Throwable =>
+    logger.warn(s"[SubmissionService][logError] $message for application $applicationId", err)
+    Done
   }
 }

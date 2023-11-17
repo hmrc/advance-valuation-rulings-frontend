@@ -16,16 +16,14 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions.{DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class KeepAliveController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -35,10 +33,9 @@ class KeepAliveController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController {
 
-  def keepAlive(draftId: DraftId): Action[AnyContent] = (identify andThen getData(draftId)).async {
-    implicit request =>
-      request.userAnswers
-        .map(answers => userAnswersService.keepAlive(draftId).map(_ => Ok))
-        .getOrElse(Future.successful(Ok))
+  def keepAlive(draftId: DraftId): Action[AnyContent] = (identify andThen getData(draftId)).async { implicit request =>
+    request.userAnswers
+      .map(answers => userAnswersService.keepAlive(draftId).map(_ => Ok))
+      .getOrElse(Future.successful(Ok))
   }
 }

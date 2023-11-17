@@ -24,28 +24,24 @@ trait PageGenerators {
   implicit lazy val arbitraryAgentCompanyDetailsPage: Arbitrary[AgentCompanyDetailsPage.type] =
     Arbitrary(AgentCompanyDetailsPage)
 
-  implicit lazy val arbitraryBusinessContactDetailsPage
-    : Arbitrary[BusinessContactDetailsPage.type] =
+  implicit lazy val arbitraryBusinessContactDetailsPage: Arbitrary[BusinessContactDetailsPage.type] =
     Arbitrary(BusinessContactDetailsPage)
 
-  implicit lazy val arbitraryWhatIsYourRoleAsImporterPage
-    : Arbitrary[WhatIsYourRoleAsImporterPage.type] =
+  implicit lazy val arbitraryWhatIsYourRoleAsImporterPage: Arbitrary[WhatIsYourRoleAsImporterPage.type] =
     Arbitrary(WhatIsYourRoleAsImporterPage)
 
   implicit lazy val arbitraryHaveYouUsedMethodOneForSimilarGoodsInPastPage
     : Arbitrary[HaveYouUsedMethodOneForSimilarGoodsInPastPage.type] =
     Arbitrary(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
 
-  implicit lazy val arbitraryDescribeTheSimilarGoodsPage
-    : Arbitrary[DescribeTheSimilarGoodsPage.type] =
+  implicit lazy val arbitraryDescribeTheSimilarGoodsPage: Arbitrary[DescribeTheSimilarGoodsPage.type] =
     Arbitrary(DescribeTheSimilarGoodsPage)
 
   implicit lazy val arbitraryExplainWhyYouHaveNotSelectedMethodOneToFivePage
     : Arbitrary[ExplainWhyYouHaveNotSelectedMethodOneToFivePage.type] =
     Arbitrary(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
 
-  implicit lazy val arbitraryExplainHowYouWillUseMethodSixPage
-    : Arbitrary[ExplainHowYouWillUseMethodSixPage.type] =
+  implicit lazy val arbitraryExplainHowYouWillUseMethodSixPage: Arbitrary[ExplainHowYouWillUseMethodSixPage.type] =
     Arbitrary(ExplainHowYouWillUseMethodSixPage)
 
   implicit lazy val arbitraryAdaptMethodPage: Arbitrary[AdaptMethodPage.type] =
@@ -55,12 +51,10 @@ trait PageGenerators {
     : Arbitrary[ExplainWhyYouHaveNotSelectedMethodOneToThreePage.type] =
     Arbitrary(ExplainWhyYouHaveNotSelectedMethodOneToThreePage)
 
-  implicit lazy val arbitraryExplainWhyYouChoseMethodFourPage
-    : Arbitrary[ExplainWhyYouChoseMethodFourPage.type] =
+  implicit lazy val arbitraryExplainWhyYouChoseMethodFourPage: Arbitrary[ExplainWhyYouChoseMethodFourPage.type] =
     Arbitrary(ExplainWhyYouChoseMethodFourPage)
 
-  implicit lazy val arbitraryDescribeTheIdenticalGoodsPage
-    : Arbitrary[DescribeTheIdenticalGoodsPage.type] =
+  implicit lazy val arbitraryDescribeTheIdenticalGoodsPage: Arbitrary[DescribeTheIdenticalGoodsPage.type] =
     Arbitrary(DescribeTheIdenticalGoodsPage)
 
   implicit lazy val arbitraryHaveTheGoodsBeenSubjectToLegalChallengesPage
@@ -70,42 +64,35 @@ trait PageGenerators {
   implicit lazy val arbitraryDescriptionOfGoodsPage: Arbitrary[DescriptionOfGoodsPage.type] =
     Arbitrary(DescriptionOfGoodsPage)
 
-  implicit lazy val arbitraryDescribeTheLegalChallengesPage
-    : Arbitrary[DescribeTheLegalChallengesPage.type] =
+  implicit lazy val arbitraryDescribeTheLegalChallengesPage: Arbitrary[DescribeTheLegalChallengesPage.type] =
     Arbitrary(DescribeTheLegalChallengesPage)
 
   implicit lazy val arbitraryIsThereASaleInvolvedPage: Arbitrary[IsThereASaleInvolvedPage.type] =
     Arbitrary(IsThereASaleInvolvedPage)
 
-  implicit lazy val arbitraryIsSaleBetweenRelatedPartiesPage
-    : Arbitrary[IsSaleBetweenRelatedPartiesPage.type] =
+  implicit lazy val arbitraryIsSaleBetweenRelatedPartiesPage: Arbitrary[IsSaleBetweenRelatedPartiesPage.type] =
     Arbitrary(IsSaleBetweenRelatedPartiesPage)
 
-  implicit lazy val arbitraryExplainHowPartiesAreRelatedPage
-    : Arbitrary[ExplainHowPartiesAreRelatedPage.type] =
+  implicit lazy val arbitraryExplainHowPartiesAreRelatedPage: Arbitrary[ExplainHowPartiesAreRelatedPage.type] =
     Arbitrary(ExplainHowPartiesAreRelatedPage)
 
-  implicit lazy val arbitraryIsTheSaleSubjectToConditionsPage
-    : Arbitrary[IsTheSaleSubjectToConditionsPage.type] =
+  implicit lazy val arbitraryIsTheSaleSubjectToConditionsPage: Arbitrary[IsTheSaleSubjectToConditionsPage.type] =
     Arbitrary(IsTheSaleSubjectToConditionsPage)
 
-  implicit lazy val arbitraryDescribeTheRestrictionsPage
-    : Arbitrary[DescribeTheRestrictionsPage.type] =
+  implicit lazy val arbitraryDescribeTheRestrictionsPage: Arbitrary[DescribeTheRestrictionsPage.type] =
     Arbitrary(DescribeTheRestrictionsPage)
 
   implicit lazy val arbitraryDescribeTheConditionsPage: Arbitrary[DescribeTheConditionsPage.type] =
     Arbitrary(DescribeTheConditionsPage)
 
-  implicit lazy val arbitraryAreThereRestrictionsOnTheGoodsPage
-    : Arbitrary[AreThereRestrictionsOnTheGoodsPage.type] =
+  implicit lazy val arbitraryAreThereRestrictionsOnTheGoodsPage: Arbitrary[AreThereRestrictionsOnTheGoodsPage.type] =
     Arbitrary(AreThereRestrictionsOnTheGoodsPage)
 
   implicit lazy val arbitraryWhyTransactionValueOfSimilarGoodsPage
     : Arbitrary[WhyTransactionValueOfSimilarGoodsPage.type] =
     Arbitrary(WhyTransactionValueOfSimilarGoodsPage)
 
-  implicit lazy val arbitraryHaveYouUsedMethodOneInPastPage
-    : Arbitrary[HaveYouUsedMethodOneInPastPage.type] =
+  implicit lazy val arbitraryHaveYouUsedMethodOneInPastPage: Arbitrary[HaveYouUsedMethodOneInPastPage.type] =
     Arbitrary(HaveYouUsedMethodOneInPastPage)
 
   implicit lazy val arbitraryWhyIdenticalGoodsPage: Arbitrary[WhyIdenticalGoodsPage.type] =
@@ -114,36 +101,28 @@ trait PageGenerators {
   implicit lazy val arbitraryWhyComputedValuePage: Arbitrary[WhyComputedValuePage.type] =
     Arbitrary(WhyComputedValuePage)
 
-  implicit lazy val arbitraryExplainReasonComputedValuePage
-    : Arbitrary[ExplainReasonComputedValuePage.type] =
+  implicit lazy val arbitraryExplainReasonComputedValuePage: Arbitrary[ExplainReasonComputedValuePage.type] =
     Arbitrary(ExplainReasonComputedValuePage)
 
-  implicit lazy val arbitraryUploadAnotherSupportingDocumentPage
-    : Arbitrary[UploadAnotherSupportingDocumentPage.type] =
+  implicit lazy val arbitraryUploadAnotherSupportingDocumentPage: Arbitrary[UploadAnotherSupportingDocumentPage.type] =
     Arbitrary(UploadAnotherSupportingDocumentPage)
 
-  implicit lazy val arbitraryIsThisFileConfidentialPage
-    : Arbitrary[IsThisFileConfidentialPage.type] =
+  implicit lazy val arbitraryIsThisFileConfidentialPage: Arbitrary[IsThisFileConfidentialPage.type] =
     Arbitrary(IsThisFileConfidentialPage)
 
-  implicit lazy val arbitraryDoYouWantToUploadDocumentsPage
-    : Arbitrary[DoYouWantToUploadDocumentsPage.type] =
+  implicit lazy val arbitraryDoYouWantToUploadDocumentsPage: Arbitrary[DoYouWantToUploadDocumentsPage.type] =
     Arbitrary(DoYouWantToUploadDocumentsPage)
 
-  implicit lazy val arbitraryApplicationContactDetailsPage
-    : Arbitrary[ApplicationContactDetailsPage.type] =
+  implicit lazy val arbitraryApplicationContactDetailsPage: Arbitrary[ApplicationContactDetailsPage.type] =
     Arbitrary(ApplicationContactDetailsPage)
 
-  implicit lazy val arbitraryCheckRegisteredDetailsPage
-    : Arbitrary[CheckRegisteredDetailsPage.type] =
+  implicit lazy val arbitraryCheckRegisteredDetailsPage: Arbitrary[CheckRegisteredDetailsPage.type] =
     Arbitrary(CheckRegisteredDetailsPage)
 
-  implicit lazy val arbitraryHasConfidentialInformationPage
-    : Arbitrary[HasConfidentialInformationPage.type] =
+  implicit lazy val arbitraryHasConfidentialInformationPage: Arbitrary[HasConfidentialInformationPage.type] =
     Arbitrary(HasConfidentialInformationPage)
 
-  implicit lazy val arbitraryConfidentialInformationPage
-    : Arbitrary[ConfidentialInformationPage.type] =
+  implicit lazy val arbitraryConfidentialInformationPage: Arbitrary[ConfidentialInformationPage.type] =
     Arbitrary(ConfidentialInformationPage)
 
   implicit lazy val arbitraryRequiredInformationPage: Arbitrary[RequiredInformationPage.type] =

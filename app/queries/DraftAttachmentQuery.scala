@@ -16,9 +16,8 @@
 
 package queries
 
-import play.api.libs.json.{__, JsPath}
-
 import models.{DraftAttachment, Index}
+import play.api.libs.json.{JsPath, __}
 
 final case class DraftAttachmentQuery(index: Index) extends Modifiable[DraftAttachment] {
   override def path: JsPath = __ \ "supportingDocuments" \ index.position

@@ -16,9 +16,10 @@
 
 package controllers.actions
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
-
+import base.SpecBase
+import com.google.inject.Inject
+import config.FrontendAppConfig
+import controllers.routes
 import play.api.mvc.{BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -27,10 +28,8 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
 
-import base.SpecBase
-import com.google.inject.Inject
-import config.FrontendAppConfig
-import controllers.routes
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionSpec extends SpecBase {
 

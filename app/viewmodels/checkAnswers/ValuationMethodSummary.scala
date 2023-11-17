@@ -27,20 +27,19 @@ import viewmodels.implicits._
 object ValuationMethodSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ValuationMethodPage).map {
-      answer =>
-        val value = ValueViewModel(messages(s"valuationMethod.$answer"))
+    answers.get(ValuationMethodPage).map { answer =>
+      val value = ValueViewModel(messages(s"valuationMethod.$answer"))
 
-        SummaryListRowViewModel(
-          key = "valuationMethod.checkYourAnswersLabel",
-          value = value,
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ValuationMethodController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("valuationMethod.change.hidden"))
+      SummaryListRowViewModel(
+        key = "valuationMethod.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ValuationMethodController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("valuationMethod.change.hidden"))
         )
+      )
     }
 }

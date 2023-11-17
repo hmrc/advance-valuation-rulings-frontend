@@ -16,16 +16,15 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import models.DraftId
 import pages.VerifyTraderDetailsPage
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import userrole.UserRoleProvider
+
+import javax.inject.Inject
 
 class EORIBeUpToDateController @Inject() (
   override val messagesApi: MessagesApi,
@@ -38,16 +37,15 @@ class EORIBeUpToDateController @Inject() (
     with I18nSupport {
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val isPrivate = VerifyTraderDetailsPage.get() match {
-          case Some(details) => !details.consentToDisclosureOfPersonalData
-          case _             => true
-        }
-        Ok(
-          userRoleProvider
-            .getUserRole(request.userAnswers)
-            .selectViewForEoriBeUpToDate(draftId, isPrivate)
-        )
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val isPrivate = VerifyTraderDetailsPage.get() match {
+        case Some(details) => !details.consentToDisclosureOfPersonalData
+        case _             => true
+      }
+      Ok(
+        userRoleProvider
+          .getUserRole(request.userAnswers)
+          .selectViewForEoriBeUpToDate(draftId, isPrivate)
+      )
     }
 }

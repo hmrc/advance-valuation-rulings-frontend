@@ -48,11 +48,10 @@ object EmailRequest {
       (__ \ "onSendUrl").readNullable[String] and
       (__ \ "tags").readNullable[Map[String, String]].map(_.getOrElse(Map.empty)))(
       EmailRequest.apply _
-    ).reads(json).flatMap {
-      sendEmailRequest =>
-        if (sendEmailRequest.to.isEmpty) {
-          JsError(__ \ "to", "recipients list is empty")
-        } else { JsSuccess(sendEmailRequest) }
+    ).reads(json).flatMap { sendEmailRequest =>
+      if (sendEmailRequest.to.isEmpty) {
+        JsError(__ \ "to", "recipients list is empty")
+      } else { JsSuccess(sendEmailRequest) }
     }
     def writes(o: EmailRequest): JsValue             = Json.writes[EmailRequest].writes(o)
   }

@@ -28,10 +28,9 @@ trait StringFieldBehaviours extends FieldBehaviours {
   ): Unit =
     s"not bind strings longer than $maxLength characters" in {
 
-      forAll(stringsLongerThan(maxLength) -> "longString") {
-        string =>
-          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
-          result.errors must contain only lengthError
+      forAll(stringsLongerThan(maxLength) -> "longString") { string =>
+        val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+        result.errors must contain only lengthError
       }
     }
 
@@ -43,10 +42,9 @@ trait StringFieldBehaviours extends FieldBehaviours {
   ): Unit =
     s"not bind strings longer than $maxLength characters" in {
 
-      forAll(numericStringsBetweenRange(maxLength + 1, Int.MaxValue) -> "aString") {
-        string =>
-          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
-          result.errors contains lengthError
+      forAll(numericStringsBetweenRange(maxLength + 1, Int.MaxValue) -> "aString") { string =>
+        val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+        result.errors contains lengthError
       }
     }
 
@@ -58,10 +56,9 @@ trait StringFieldBehaviours extends FieldBehaviours {
   ): Unit =
     s"not bind alpha strings longer than $maxLength characters" in {
 
-      forAll(alphaStringsWithMaxLength(maxLength)) {
-        string =>
-          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
-          result.errors must not contain lengthError
+      forAll(alphaStringsWithMaxLength(maxLength)) { string =>
+        val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+        result.errors must not contain lengthError
       }
     }
 
@@ -73,10 +70,9 @@ trait StringFieldBehaviours extends FieldBehaviours {
   ): Unit =
     s"not bind strings less than $minLength and more than $maxLength characters" in {
 
-      forAll(numericStringsBetweenRange(minLength, maxLength) -> "aString") {
-        string =>
-          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
-          result.errors mustBe empty
+      forAll(numericStringsBetweenRange(minLength, maxLength) -> "aString") { string =>
+        val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+        result.errors mustBe empty
       }
     }
 }

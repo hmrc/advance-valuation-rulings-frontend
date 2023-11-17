@@ -28,22 +28,21 @@ import viewmodels.implicits._
 object HasConfidentialInformationSummary {
 
   def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    userAnswers.get(HasConfidentialInformationPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+    userAnswers.get(HasConfidentialInformationPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "hasConfidentialInformation.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.HasConfidentialInformationController
-                .onPageLoad(CheckMode, userAnswers.draftId)
-                .url
-            )
-              .withVisuallyHiddenText(messages("hasConfidentialInformation.change.hidden"))
+      SummaryListRowViewModel(
+        key = "hasConfidentialInformation.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.HasConfidentialInformationController
+              .onPageLoad(CheckMode, userAnswers.draftId)
+              .url
           )
+            .withVisuallyHiddenText(messages("hasConfidentialInformation.change.hidden"))
         )
+      )
     }
 }

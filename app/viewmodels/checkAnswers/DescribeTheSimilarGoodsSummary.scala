@@ -29,18 +29,17 @@ import viewmodels.implicits._
 object DescribeTheSimilarGoodsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DescribeTheSimilarGoodsPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "describeTheSimilarGoods.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DescribeTheSimilarGoodsController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("describeTheSimilarGoods.change.hidden"))
+    answers.get(DescribeTheSimilarGoodsPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "describeTheSimilarGoods.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.DescribeTheSimilarGoodsController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("describeTheSimilarGoods.change.hidden"))
         )
+      )
     }
 }

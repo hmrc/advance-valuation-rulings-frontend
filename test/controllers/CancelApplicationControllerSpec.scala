@@ -16,23 +16,20 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import models.Done
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito
-import org.mockito.Mockito.{times, verify, when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar._
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.CancelAreYouSureView
 
-class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class CancelApplicationControllerSpec extends SpecBase {
 
   "CancelApplication Controller" - {
 
@@ -57,7 +54,7 @@ class CancelApplicationControllerSpec extends SpecBase with MockitoSugar {
 
       val mockUserAnswersService = mock[UserAnswersService]
 
-      Mockito.reset(mockUserAnswersService)
+      reset(mockUserAnswersService)
 
       when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
 

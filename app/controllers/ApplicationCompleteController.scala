@@ -16,18 +16,16 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.ExecutionContext
-
+import connectors.BackendConnector
+import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
-import connectors.BackendConnector
-import controllers.actions._
 import views.html.ApplicationCompleteView
+
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class ApplicationCompleteController @Inject() (
   override val messagesApi: MessagesApi,
@@ -40,14 +38,12 @@ class ApplicationCompleteController @Inject() (
     with I18nSupport {
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
-    identify.async {
-      implicit request =>
-        backendConnector
-          .getApplication(applicationId)
-          .map {
-            application =>
-              val isIndividual = request.affinityGroup == AffinityGroup.Individual
-              Ok(view(isIndividual, application.id.toString, application.contact.email))
-          }
+    identify.async { implicit request =>
+      backendConnector
+        .getApplication(applicationId)
+        .map { application =>
+          val isIndividual = request.affinityGroup == AffinityGroup.Individual
+          Ok(view(isIndividual, application.id.toString, application.contact.email))
+        }
     }
 }

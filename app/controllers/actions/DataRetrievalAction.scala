@@ -16,18 +16,16 @@
 
 package controllers.actions
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
+import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.{AuthUserType, DraftId}
+import pages.AccountHomePage
 import play.api.mvc.ActionTransformer
+import services.UserAnswersService
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import models.{AuthUserType, DraftId}
-import models.requests.{IdentifierRequest, OptionalDataRequest}
-import pages.AccountHomePage
-import services.UserAnswersService
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalAction @Inject() (
   draftId: DraftId,

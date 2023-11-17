@@ -16,18 +16,16 @@
 
 package controllers
 
-import play.api.Application
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.IsSaleBetweenRelatedPartiesFormProvider
 import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
 import pages.IsSaleBetweenRelatedPartiesPage
+import play.api.Application
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.IsSaleBetweenRelatedPartiesView
 
-class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase with MockitoSugar {
+class IsSaleBetweenRelatedPartiesControllerSpec extends SpecBase {
 
   val formProvider = new IsSaleBetweenRelatedPartiesFormProvider()
   val form         = formProvider()

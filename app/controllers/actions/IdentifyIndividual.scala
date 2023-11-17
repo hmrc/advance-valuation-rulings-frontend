@@ -16,23 +16,22 @@
 
 package controllers.actions
 
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.mvc._
-import play.api.mvc.Results._
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
-import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
-import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
-
-import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.actions.IdentifyEori.EnrolmentKey
 import controllers.routes
 import models.requests.IdentifierRequest
+import play.api.mvc.Results._
+import play.api.mvc._
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
+import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
+import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 trait IdentifyIndividualAction
     extends ActionBuilder[IdentifierRequest, AnyContent]

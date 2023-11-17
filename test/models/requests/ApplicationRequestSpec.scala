@@ -18,15 +18,13 @@ package models.requests
 
 import cats.data.NonEmptyList
 import cats.data.Validated._
+
 import scala.util.Try
-
-import play.api.libs.json.{Json, JsResult, JsSuccess}
-
+import play.api.libs.json.{JsResult, JsSuccess, Json}
 import generators._
 import models._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.{mock, when}
 import org.scalacheck.Arbitrary
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -105,11 +103,10 @@ class ApplicationRequestSpec
     }
 
     "form an isomorphism" in {
-      forAll {
-        (applicationRequest: ApplicationRequest) =>
-          val writesResult = ApplicationRequest.format.writes(applicationRequest)
-          val readsResult  = ApplicationRequest.format.reads(writesResult)
-          readsResult should be(JsSuccess(applicationRequest))
+      forAll { (applicationRequest: ApplicationRequest) =>
+        val writesResult = ApplicationRequest.format.writes(applicationRequest)
+        val readsResult  = ApplicationRequest.format.reads(writesResult)
+        readsResult should be(JsSuccess(applicationRequest))
       }
     }
 

@@ -16,17 +16,16 @@
 
 package models
 
-import java.time.{Instant, ZoneId}
-import java.time.format.DateTimeFormatter
-import java.util.Locale
-
+import controllers.routes
+import models.requests._
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 
-import controllers.routes
-import models.requests._
+import java.time.format.DateTimeFormatter
+import java.time.{Instant, ZoneId}
+import java.util.Locale
 
 final case class ApplicationForAccountHome(
   id: String,
@@ -63,8 +62,7 @@ object ApplicationForAccountHome {
       id = applicationSummary.id.toString,
       goodsName = applicationSummary.goodsName,
       date = applicationSummary.dateSubmitted,
-      statusTag =
-        Tag(content = Text(messages("accountHome.status.submitted")), classes = "govuk-tag--blue"),
+      statusTag = Tag(content = Text(messages("accountHome.status.submitted")), classes = "govuk-tag--blue"),
       actions = Seq(
         ActionItem(
           href = routes.ViewApplicationController.onPageLoad(applicationSummary.id.toString).url,
@@ -80,8 +78,7 @@ object ApplicationForAccountHome {
       id = draftSummary.id.toString,
       goodsName = draftSummary.goodsName.getOrElse(""),
       date = draftSummary.lastUpdated,
-      statusTag =
-        Tag(content = Text(messages("accountHome.status.draft")), classes = "govuk-tag--yellow"),
+      statusTag = Tag(content = Text(messages("accountHome.status.draft")), classes = "govuk-tag--yellow"),
       actions = Seq(
         ActionItem(
           href = continueCall.url,

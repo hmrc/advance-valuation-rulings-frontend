@@ -16,7 +16,7 @@
 
 package generators
 
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 
 import models._
 import org.scalacheck.Arbitrary
@@ -25,8 +25,7 @@ import pages._
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 
-  implicit lazy val arbitraryAgentCompanyDetailsUserAnswersEntry
-    : Arbitrary[(AgentCompanyDetailsPage.type, JsValue)] =
+  implicit lazy val arbitraryAgentCompanyDetailsUserAnswersEntry: Arbitrary[(AgentCompanyDetailsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[AgentCompanyDetailsPage.type]
@@ -88,8 +87,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryAdaptMethodUserAnswersEntry
-    : Arbitrary[(AdaptMethodPage.type, JsValue)] =
+  implicit lazy val arbitraryAdaptMethodUserAnswersEntry: Arbitrary[(AdaptMethodPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[AdaptMethodPage.type]
@@ -133,8 +131,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryDescriptionOfGoodsUserAnswersEntry
-    : Arbitrary[(DescriptionOfGoodsPage.type, JsValue)] =
+  implicit lazy val arbitraryDescriptionOfGoodsUserAnswersEntry: Arbitrary[(DescriptionOfGoodsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[DescriptionOfGoodsPage.type]
@@ -151,8 +148,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryIsThereASaleInvolvedUserAnswersEntry
-    : Arbitrary[(IsThereASaleInvolvedPage.type, JsValue)] =
+  implicit lazy val arbitraryIsThereASaleInvolvedUserAnswersEntry: Arbitrary[(IsThereASaleInvolvedPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[IsThereASaleInvolvedPage.type]
@@ -232,8 +228,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryWhyIdenticalGoodsUserAnswersEntry
-    : Arbitrary[(WhyIdenticalGoodsPage.type, JsValue)] =
+  implicit lazy val arbitraryWhyIdenticalGoodsUserAnswersEntry: Arbitrary[(WhyIdenticalGoodsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[WhyIdenticalGoodsPage.type]
@@ -241,8 +236,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryWhyComputedValueUserAnswersEntry
-    : Arbitrary[(WhyComputedValuePage.type, JsValue)] =
+  implicit lazy val arbitraryWhyComputedValueUserAnswersEntry: Arbitrary[(WhyComputedValuePage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[WhyComputedValuePage.type]
@@ -322,8 +316,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryRequiredInformationUserAnswersEntry
-    : Arbitrary[(RequiredInformationPage.type, JsValue)] =
+  implicit lazy val arbitraryRequiredInformationUserAnswersEntry: Arbitrary[(RequiredInformationPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[RequiredInformationPage.type]
@@ -331,8 +324,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryImportGoodsUserAnswersEntry
-    : Arbitrary[(ImportGoodsPage.type, JsValue)] =
+  implicit lazy val arbitraryImportGoodsUserAnswersEntry: Arbitrary[(ImportGoodsPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ImportGoodsPage.type]
@@ -340,8 +332,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryHasCommodityCodeUserAnswersEntry
-    : Arbitrary[(HasCommodityCodePage.type, JsValue)] =
+  implicit lazy val arbitraryHasCommodityCodeUserAnswersEntry: Arbitrary[(HasCommodityCodePage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[HasCommodityCodePage.type]
@@ -349,8 +340,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryCommodityCodeUserAnswersEntry
-    : Arbitrary[(CommodityCodePage.type, JsValue)] =
+  implicit lazy val arbitraryCommodityCodeUserAnswersEntry: Arbitrary[(CommodityCodePage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[CommodityCodePage.type]
@@ -358,8 +348,7 @@ trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
       } yield (page, value)
     }
 
-  implicit lazy val arbitraryValuationMethodUserAnswersEntry
-    : Arbitrary[(ValuationMethodPage.type, JsValue)] =
+  implicit lazy val arbitraryValuationMethodUserAnswersEntry: Arbitrary[(ValuationMethodPage.type, JsValue)] =
     Arbitrary {
       for {
         page  <- arbitrary[ValuationMethodPage.type]

@@ -7,9 +7,7 @@ import models.{CounterId, CounterWrapper}
 import org.mongodb.scala.model.{Filters, FindOneAndUpdateOptions, Updates}
 import utils.BaseIntegrationSpec
 
-class CounterRepositorySpec
-    extends BaseIntegrationSpec
-    with DefaultPlayMongoRepositorySupport[CounterWrapper] {
+class CounterRepositorySpec extends BaseIntegrationSpec with DefaultPlayMongoRepositorySupport[CounterWrapper] {
 
   override def beforeEach(): Unit = {
     super.beforeEach()

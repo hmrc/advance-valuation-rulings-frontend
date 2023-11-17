@@ -16,25 +16,23 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import connectors.BackendConnector
 import forms.TraderEoriNumberFormProvider
 import models.{BackendError, Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar.{mock, when}
 import pages.ProvideTraderEoriPage
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.{InvalidTraderEoriView, ProvideTraderEoriView}
 
-class ProvideTraderEoriControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class ProvideTraderEoriControllerSpec extends SpecBase {
 
   private lazy val provideTraderEoriPageRoute     =
     routes.ProvideTraderEoriController.onPageLoad(NormalMode, draftId).url

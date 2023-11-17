@@ -16,12 +16,11 @@
 
 package forms.mappings
 
-import java.time.LocalDate
-
-import scala.util.{Failure, Success, Try}
-
 import play.api.data.FormError
 import play.api.data.format.Formatter
+
+import java.time.LocalDate
+import scala.util.{Failure, Success, Try}
 
 private[mappings] class LocalDateFormatter(
   invalidKey: String,
@@ -69,8 +68,8 @@ private[mappings] class LocalDateFormatter(
 
   override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
 
-    val fields = fieldKeys.map {
-      field => field -> data.get(s"$key.$field").filter(_.nonEmpty)
+    val fields = fieldKeys.map { field =>
+      field -> data.get(s"$key.$field").filter(_.nonEmpty)
     }.toMap
 
     lazy val missingFields = fields

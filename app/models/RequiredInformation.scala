@@ -19,7 +19,6 @@ package models
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-
 import viewmodels.govuk.checkbox._
 
 sealed trait RequiredInformation
@@ -43,20 +42,19 @@ object RequiredInformation extends Enumerable.Implicits {
   )
 
   def checkboxItems(authUserType: AuthUserType)(implicit messages: Messages): Seq[CheckboxItem] =
-    values.zipWithIndex.map {
-      case (value, index) =>
-        val suffix = authUserType match {
-          case AuthUserType.IndividualTrader      => "individual"
-          case AuthUserType.OrganisationAssistant => "organisation"
-          case AuthUserType.OrganisationAdmin     => "organisation"
-          case AuthUserType.Agent                 => "organisation"
-        }
-        CheckboxItemViewModel(
-          content = Text(messages(s"requiredInformation.${value.toString}.$suffix")),
-          fieldId = "value",
-          index = index,
-          value = value.toString
-        )
+    values.zipWithIndex.map { case (value, index) =>
+      val suffix = authUserType match {
+        case AuthUserType.IndividualTrader      => "individual"
+        case AuthUserType.OrganisationAssistant => "organisation"
+        case AuthUserType.OrganisationAdmin     => "organisation"
+        case AuthUserType.Agent                 => "organisation"
+      }
+      CheckboxItemViewModel(
+        content = Text(messages(s"requiredInformation.${value.toString}.$suffix")),
+        fieldId = "value",
+        index = index,
+        value = value.toString
+      )
     }
 
   implicit val enumerable: Enumerable[RequiredInformation] =

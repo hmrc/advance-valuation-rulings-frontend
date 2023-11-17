@@ -16,63 +16,58 @@
 
 package forms.mappings
 
-import java.time.LocalDate
-
-import scala.util.matching.Regex
-
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+
+import java.time.LocalDate
+import scala.util.matching.Regex
 
 trait Constraints {
 
   protected def firstError[A](constraints: Constraint[A]*): Constraint[A] =
-    Constraint {
-      input =>
-        constraints
-          .map(_.apply(input))
-          .find(_ != Valid)
-          .getOrElse(Valid)
+    Constraint { input =>
+      constraints
+        .map(_.apply(input))
+        .find(_ != Valid)
+        .getOrElse(Valid)
     }
 
   protected def minimumValue[A](minimum: A, errorKey: String)(implicit
     ev: Ordering[A]
   ): Constraint[A] =
-    Constraint {
-      input =>
-        import ev._
+    Constraint { input =>
+      import ev._
 
-        if (input >= minimum) {
-          Valid
-        } else {
-          Invalid(errorKey, minimum)
-        }
+      if (input >= minimum) {
+        Valid
+      } else {
+        Invalid(errorKey, minimum)
+      }
     }
 
   protected def maximumValue[A](maximum: A, errorKey: String)(implicit
     ev: Ordering[A]
   ): Constraint[A] =
-    Constraint {
-      input =>
-        import ev._
+    Constraint { input =>
+      import ev._
 
-        if (input <= maximum) {
-          Valid
-        } else {
-          Invalid(errorKey, maximum)
-        }
+      if (input <= maximum) {
+        Valid
+      } else {
+        Invalid(errorKey, maximum)
+      }
     }
 
   protected def inRange[A](minimum: A, maximum: A, errorKey: String)(implicit
     ev: Ordering[A]
   ): Constraint[A] =
-    Constraint {
-      input =>
-        import ev._
+    Constraint { input =>
+      import ev._
 
-        if (input >= minimum && input <= maximum) {
-          Valid
-        } else {
-          Invalid(errorKey, minimum, maximum)
-        }
+      if (input >= minimum && input <= maximum) {
+        Valid
+      } else {
+        Invalid(errorKey, minimum, maximum)
+      }
     }
 
   protected def regexp(regex: String, errorKey: String): Constraint[String] =
@@ -153,18 +148,17 @@ trait Constraints {
   private val eoriExpectedLength   = 14
 
   protected def eoriCode(badLengthErrorMessage: String): Constraint[String] =
-    Constraint("constraints.eoriFormat") {
-      s =>
-        s.replace(" ", "") match {
-          case eoriCodeRegex()                      => Valid
-          case s if s.length != eoriExpectedLength  =>
-            Invalid(ValidationError(badLengthErrorMessage))
-          case s if !s.toUpperCase.startsWith("GB") =>
-            Invalid(ValidationError("provideTraderEori.error.notGB"))
-          case s if !s.forall(_.isLetterOrDigit)    =>
-            Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
-          case _                                    => Invalid(ValidationError("provideTraderEori.error.default"))
-        }
+    Constraint("constraints.eoriFormat") { s =>
+      s.replace(" ", "") match {
+        case eoriCodeRegex()                      => Valid
+        case s if s.length != eoriExpectedLength  =>
+          Invalid(ValidationError(badLengthErrorMessage))
+        case s if !s.toUpperCase.startsWith("GB") =>
+          Invalid(ValidationError("provideTraderEori.error.notGB"))
+        case s if !s.forall(_.isLetterOrDigit)    =>
+          Invalid(ValidationError("provideTraderEori.error.specialCharacters"))
+        case _                                    => Invalid(ValidationError("provideTraderEori.error.default"))
+      }
     }
 
 }

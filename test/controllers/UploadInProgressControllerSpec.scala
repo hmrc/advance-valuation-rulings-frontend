@@ -16,39 +16,31 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
+import base.SpecBase
+import controllers.common.FileUploadHelper
+import models.upscan.UpscanInitiateResponse
+import models.{NormalMode, UploadedFile, UserAnswers}
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.MockitoSugar.{mock, reset, when}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.prop.TableDrivenPropertyChecks
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import controllers.common.FileUploadHelper
-import models.{NormalMode, UploadedFile, UserAnswers}
-import models.upscan.UpscanInitiateResponse
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.reset
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatestplus.mockito.MockitoSugar
-import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import services.UserAnswersService
 import services.fileupload.FileService
 import userrole.{UserRole, UserRoleProvider}
 import views.html.{UploadInProgressView, UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
-class UploadInProgressControllerSpec
-    extends SpecBase
-    with MockitoSugar
-    with BeforeAndAfterEach
-    with TableDrivenPropertyChecks {
+import java.time.Instant
+import scala.concurrent.Future
+
+class UploadInProgressControllerSpec extends SpecBase with BeforeAndAfterEach with TableDrivenPropertyChecks {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -178,46 +170,45 @@ class UploadInProgressControllerSpec
   }
 
   private def testFallbackPageIsShown(file: UploadedFile): Unit =
-    forAll(parameterisedCases) {
-      (isLetterOfAuthority: Boolean) =>
-        val userAnswers = getUserAnswers(file, isLetterOfAuthority)
-        setMockUserRole(userAnswers)
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[FileService].toInstance(mockFileService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider),
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          )
-          .build()
-
-        lazy val redirectPath: String = getRedirectPath(isLetterOfAuthority)
-
-        when(
-          mockFileService.initiate(
-            eqTo(draftId),
-            eqTo(redirectPath),
-            eqTo(isLetterOfAuthority)
-          )(any())
+    forAll(parameterisedCases) { (isLetterOfAuthority: Boolean) =>
+      val userAnswers = getUserAnswers(file, isLetterOfAuthority)
+      setMockUserRole(userAnswers)
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[FileService].toInstance(mockFileService),
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider),
+          bind[UserAnswersService].toInstance(mockUserAnswersService)
         )
-          .thenReturn(Future.successful(upscanInitiateResponse))
+        .build()
 
-        val request = FakeRequest(
-          POST,
-          controllers.routes.UploadInProgressController
-            .checkProgress(draftId, Some("otherReference"), isLetterOfAuthority)
-            .url
-        )
+      lazy val redirectPath: String = getRedirectPath(isLetterOfAuthority)
 
-        val expectedContent = expectedContentForView(isLetterOfAuthority, application, request)
+      when(
+        mockFileService.initiate(
+          eqTo(draftId),
+          eqTo(redirectPath),
+          eqTo(isLetterOfAuthority)
+        )(any())
+      )
+        .thenReturn(Future.successful(upscanInitiateResponse))
 
-        val result = route(application, request).value
+      val request = FakeRequest(
+        POST,
+        controllers.routes.UploadInProgressController
+          .checkProgress(draftId, Some("otherReference"), isLetterOfAuthority)
+          .url
+      )
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual expectedContent
+      val expectedContent = expectedContentForView(isLetterOfAuthority, application, request)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual expectedContent
     }
 
   private val expectedSupportedDocumentLimit = 3
-  private def setUpUserRoleProviderMock()    = {
+  private def setUpUserRoleProviderMock() = {
     when(mockUserRole.getMaxSupportingDocuments).thenReturn(expectedSupportedDocumentLimit)
     when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
       .thenReturn(mockUserRole)
@@ -325,33 +316,32 @@ class UploadInProgressControllerSpec
       "when there is a failed file" - {
 
         "Parameterised: must redirect back to the page with the relevant error code" in {
-          forAll(parameterisedCases) {
-            (isLetterOfAuthority: Boolean) =>
-              val userAnswers = getUserAnswers(failedFile, isLetterOfAuthority)
+          forAll(parameterisedCases) { (isLetterOfAuthority: Boolean) =>
+            val userAnswers = getUserAnswers(failedFile, isLetterOfAuthority)
 
-              val application = applicationBuilder(userAnswers = Some(userAnswers))
-                .overrides(
-                  bind[FileService].toInstance(mockFileService)
-                )
-                .build()
-
-              lazy val redirectPath: String = getRedirectPath(isLetterOfAuthority)
-
-              when(
-                mockFileService.initiate(
-                  eqTo(draftId),
-                  eqTo(redirectPath),
-                  eqTo(isLetterOfAuthority)
-                )(any())
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(
+                bind[FileService].toInstance(mockFileService)
               )
-                .thenReturn(Future.successful(upscanInitiateResponse))
+              .build()
 
-              val expectedUrl = expectedUrlForView(isLetterOfAuthority)
+            lazy val redirectPath: String = getRedirectPath(isLetterOfAuthority)
 
-              val result = route(application, getPostRequest(isLetterOfAuthority)).value
+            when(
+              mockFileService.initiate(
+                eqTo(draftId),
+                eqTo(redirectPath),
+                eqTo(isLetterOfAuthority)
+              )(any())
+            )
+              .thenReturn(Future.successful(upscanInitiateResponse))
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result).value mustEqual expectedUrl
+            val expectedUrl = expectedUrlForView(isLetterOfAuthority)
+
+            val result = route(application, getPostRequest(isLetterOfAuthority)).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result).value mustEqual expectedUrl
           }
         }
       }

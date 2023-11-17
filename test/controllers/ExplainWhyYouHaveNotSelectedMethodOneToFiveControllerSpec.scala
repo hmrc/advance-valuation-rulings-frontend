@@ -16,19 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider
+import models.NormalMode
+import pages.ExplainWhyYouHaveNotSelectedMethodOneToFivePage
 import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider
-import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
-import pages.ExplainWhyYouHaveNotSelectedMethodOneToFivePage
 import views.html.ExplainWhyYouHaveNotSelectedMethodOneToFiveView
 
-class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase with MockitoSugar {
+class ExplainWhyYouHaveNotSelectedMethodOneToFiveControllerSpec extends SpecBase {
 
   val formProvider = new ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider()
   val form         = formProvider()

@@ -16,27 +16,25 @@
 
 package controllers
 
-import scala.concurrent.Future
-
+import base.SpecBase
+import forms.BusinessContactDetailsFormProvider
+import models.AuthUserType.IndividualTrader
+import models.{BusinessContactDetails, Done, NormalMode, WhatIsYourRoleAsImporter}
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar.{mock, when}
+import pages.{AccountHomePage, BusinessContactDetailsPage}
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.BusinessContactDetailsFormProvider
-import models.{BusinessContactDetails, Done, NormalMode, WhatIsYourRoleAsImporter}
-import models.AuthUserType.IndividualTrader
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.{AccountHomePage, BusinessContactDetailsPage}
 import services.UserAnswersService
 import views.html.BusinessContactDetailsView
 
-class BusinessContactDetailsControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class BusinessContactDetailsControllerSpec extends SpecBase {
 
   private val formProvider = new BusinessContactDetailsFormProvider()
   private val defaultForm  = formProvider(false)

@@ -16,18 +16,16 @@
 
 package controllers
 
-import play.api.Application
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.HaveYouUsedMethodOneInPastFormProvider
 import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
 import pages.HaveYouUsedMethodOneInPastPage
+import play.api.Application
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.HaveYouUsedMethodOneInPastView
 
-class HaveYouUsedMethodOneInPastControllerSpec extends SpecBase with MockitoSugar {
+class HaveYouUsedMethodOneInPastControllerSpec extends SpecBase {
 
   val formProvider = new HaveYouUsedMethodOneInPastFormProvider()
   val form         = formProvider()

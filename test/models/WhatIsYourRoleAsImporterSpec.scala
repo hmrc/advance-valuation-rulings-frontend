@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{JsError, Json, JsString}
+import play.api.libs.json.{JsError, JsString, Json}
 
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -25,11 +25,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class WhatIsYourRoleAsImporterSpec
-    extends AnyFreeSpec
-    with Matchers
-    with ScalaCheckPropertyChecks
-    with OptionValues {
+class WhatIsYourRoleAsImporterSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   "WhatIsYourRoleAsImporter" - {
 
@@ -37,12 +33,11 @@ class WhatIsYourRoleAsImporterSpec
 
       val gen = Gen.oneOf(WhatIsYourRoleAsImporter.values.toSeq)
 
-      forAll(gen) {
-        whatIsYourRoleAsImporter =>
-          JsString(whatIsYourRoleAsImporter.toString)
-            .validate[WhatIsYourRoleAsImporter]
-            .asOpt
-            .value mustEqual whatIsYourRoleAsImporter
+      forAll(gen) { whatIsYourRoleAsImporter =>
+        JsString(whatIsYourRoleAsImporter.toString)
+          .validate[WhatIsYourRoleAsImporter]
+          .asOpt
+          .value mustEqual whatIsYourRoleAsImporter
       }
     }
 
@@ -51,11 +46,10 @@ class WhatIsYourRoleAsImporterSpec
       val gen =
         arbitrary[String] suchThat (!WhatIsYourRoleAsImporter.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-          JsString(invalidValue).validate[WhatIsYourRoleAsImporter] mustEqual JsError(
-            "error.invalid"
-          )
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[WhatIsYourRoleAsImporter] mustEqual JsError(
+          "error.invalid"
+        )
       }
     }
 
@@ -63,11 +57,10 @@ class WhatIsYourRoleAsImporterSpec
 
       val gen = Gen.oneOf(WhatIsYourRoleAsImporter.values.toSeq)
 
-      forAll(gen) {
-        whatIsYourRoleAsImporter =>
-          Json.toJson(whatIsYourRoleAsImporter) mustEqual JsString(
-            whatIsYourRoleAsImporter.toString
-          )
+      forAll(gen) { whatIsYourRoleAsImporter =>
+        Json.toJson(whatIsYourRoleAsImporter) mustEqual JsString(
+          whatIsYourRoleAsImporter.toString
+        )
       }
     }
   }

@@ -16,16 +16,14 @@
 
 package controllers.callback
 
-import javax.inject.{Inject, Singleton}
-
 import cats.implicits._
-import scala.concurrent.ExecutionContext
-
+import models.{DraftId, UploadedFile}
 import play.api.mvc.{Action, MessagesControllerComponents}
+import services.fileupload.FileService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import models.{DraftId, UploadedFile}
-import services.fileupload.FileService
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class UploadCallbackController @Inject() (
@@ -38,7 +36,7 @@ class UploadCallbackController @Inject() (
     draftId: DraftId,
     isLetterOfAuthority: Boolean
   ): Action[UploadedFile] =
-    Action.async(parse.json[UploadedFile]) {
-      implicit request => fileService.update(draftId, request.body, isLetterOfAuthority).as(Ok)
+    Action.async(parse.json[UploadedFile]) { implicit request =>
+      fileService.update(draftId, request.body, isLetterOfAuthority).as(Ok)
     }
 }

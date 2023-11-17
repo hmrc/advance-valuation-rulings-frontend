@@ -16,24 +16,22 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
-
 import base.SpecBase
 import forms.VerifyTraderDetailsFormProvider
 import models.{Done, NormalMode, TraderDetailsWithConfirmation}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar.{mock, when}
 import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
 
-class VerifyTraderEoriControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class VerifyTraderEoriControllerSpec extends SpecBase {
 
   private lazy val verifyTraderEoriPageRoute     =
     routes.VerifyTraderEoriController.onPageLoad(NormalMode, draftId).url

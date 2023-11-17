@@ -16,7 +16,7 @@
 
 package models.requests
 
-import play.api.libs.json.{JsError, Json, JsString}
+import play.api.libs.json.{JsError, JsString, Json}
 
 import models._
 import org.scalacheck.Arbitrary.arbitrary
@@ -26,11 +26,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class AdaptMethodSpec
-    extends AnyFreeSpec
-    with Matchers
-    with ScalaCheckPropertyChecks
-    with OptionValues {
+class AdaptMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   "AdaptMethod" - {
 
@@ -38,9 +34,8 @@ class AdaptMethodSpec
 
       val gen = Gen.oneOf(AdaptMethod.values.toSeq)
 
-      forAll(gen) {
-        adaptMethod =>
-          JsString(adaptMethod.toString).validate[AdaptMethod].asOpt.value mustEqual adaptMethod
+      forAll(gen) { adaptMethod =>
+        JsString(adaptMethod.toString).validate[AdaptMethod].asOpt.value mustEqual adaptMethod
       }
     }
 
@@ -48,9 +43,8 @@ class AdaptMethodSpec
 
       val gen = arbitrary[String] suchThat (!AdaptMethod.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-          JsString(invalidValue).validate[AdaptMethod] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[AdaptMethod] mustEqual JsError("error.invalid")
       }
     }
 
@@ -58,8 +52,8 @@ class AdaptMethodSpec
 
       val gen = Gen.oneOf(AdaptMethod.values.toSeq)
 
-      forAll(gen) {
-        adaptMethod => Json.toJson(adaptMethod) mustEqual JsString(adaptMethod.toString)
+      forAll(gen) { adaptMethod =>
+        Json.toJson(adaptMethod) mustEqual JsString(adaptMethod.toString)
       }
     }
   }

@@ -28,22 +28,21 @@ import viewmodels.implicits._
 object IsSaleBetweenRelatedPartiesSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(IsSaleBetweenRelatedPartiesPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+    answers.get(IsSaleBetweenRelatedPartiesPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "isSaleBetweenRelatedParties.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.IsSaleBetweenRelatedPartiesController
-                .onPageLoad(CheckMode, answers.draftId)
-                .url
-            )
-              .withVisuallyHiddenText(messages("isSaleBetweenRelatedParties.change.hidden"))
+      SummaryListRowViewModel(
+        key = "isSaleBetweenRelatedParties.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.IsSaleBetweenRelatedPartiesController
+              .onPageLoad(CheckMode, answers.draftId)
+              .url
           )
+            .withVisuallyHiddenText(messages("isSaleBetweenRelatedParties.change.hidden"))
         )
+      )
     }
 }

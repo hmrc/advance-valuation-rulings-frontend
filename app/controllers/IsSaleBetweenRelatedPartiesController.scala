@@ -16,22 +16,20 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.IsSaleBetweenRelatedPartiesFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.IsSaleBetweenRelatedPartiesPage
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.IsSaleBetweenRelatedPartiesView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class IsSaleBetweenRelatedPartiesController @Inject() (
   override val messagesApi: MessagesApi,
@@ -50,28 +48,26 @@ class IsSaleBetweenRelatedPartiesController @Inject() (
   val form: Form[Boolean] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val preparedForm = IsSaleBetweenRelatedPartiesPage.fill(form)
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val preparedForm = IsSaleBetweenRelatedPartiesPage.fill(form)
 
-        Ok(view(preparedForm, mode, draftId))
+      Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(IsSaleBetweenRelatedPartiesPage, value))
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(IsSaleBetweenRelatedPartiesPage, mode, updatedAnswers)
-              )
-          )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(IsSaleBetweenRelatedPartiesPage, value))
+              _              <- userAnswersService.set(updatedAnswers)
+            } yield Redirect(
+              navigator.nextPage(IsSaleBetweenRelatedPartiesPage, mode, updatedAnswers)
+            )
+        )
     }
 }

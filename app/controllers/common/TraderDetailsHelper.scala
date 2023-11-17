@@ -16,18 +16,17 @@
 
 package controllers.common
 
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.Logger
-import play.api.http.Status.NOT_FOUND
-import play.api.mvc.{AnyContent, Result}
-import play.api.mvc.Results.Redirect
-import uk.gov.hmrc.http.HeaderCarrier
-
 import connectors.BackendConnector
 import controllers.routes
-import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode}
 import models.requests.DataRequest
+import models.{AcknowledgementReference, EoriNumber, TraderDetailsWithCountryCode}
+import play.api.Logger
+import play.api.http.Status.NOT_FOUND
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{AnyContent, Result}
+import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.concurrent.{ExecutionContext, Future}
 
 trait TraderDetailsHelper {
 
@@ -47,17 +46,20 @@ trait TraderDetailsHelper {
         AcknowledgementReference(request.userAnswers.draftId),
         eori.getOrElse(EoriNumber(request.eoriNumber))
       )
-      .flatMap {
-        r =>
-          (r, notFound) match {
-            case (Right(traderDetails), _)                             =>
-              handleSuccess(traderDetails)
-            case (Left(error), Some(nfRes)) if error.code == NOT_FOUND =>
-              logger.warn(s"Trader details not found. Error: $error")
-              nfRes
-            case (Left(error), _)                                      =>
-              logger.error(s"Failed to get trader details from backend: $error")
-              Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-          }
+      .flatMap { r =>
+        (r, notFound) match {
+          case (Right(traderDetails), _)                             =>
+            handleSuccess(traderDetails)
+          case (Left(error), Some(nfRes)) if error.code == NOT_FOUND =>
+            logger.warn(
+              s"[TraderDetailsHelper][getTraderDetails] Trader details not found. Error: $error"
+            )
+            nfRes
+          case (Left(error), _)                                      =>
+            logger.error(
+              s"[TraderDetailsHelper][getTraderDetails] Failed to get trader details from backend: $error"
+            )
+            Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+        }
       }
 }

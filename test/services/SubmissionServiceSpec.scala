@@ -16,22 +16,21 @@
 
 package services
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.http.HeaderCarrier
-
 import base.SpecBase
 import connectors.BackendConnector
 import models.Done
 import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar
+import org.mockito.MockitoSugar._
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import services.email.EmailService
+import uk.gov.hmrc.http.HeaderCarrier
 
-class SubmissionServiceSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class SubmissionServiceSpec extends SpecBase {
 
   private val mockBackendConnector   = mock[BackendConnector]
   private val mockEmailService       = mock[EmailService]

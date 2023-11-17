@@ -16,24 +16,21 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
+import base.SpecBase
+import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
+import models.{NormalMode, UploadedFile, UserAnswers}
+import pages.{UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout, redirectLocation, route, status, writeableOf_AnyContentAsEmpty, GET}
-
-import base.SpecBase
-import models.{NormalMode, UploadedFile, UserAnswers}
-import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
-import org.scalatestplus.mockito.MockitoSugar
-import pages.{UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, redirectLocation, route, status, writeableOf_AnyContentAsEmpty}
 import views.html.VerifyLetterOfAuthorityView
 
-class VerifyLetterOfAuthorityControllerSpec extends SpecBase with MockitoSugar {
+import java.time.Instant
+import scala.concurrent.Future
+
+class VerifyLetterOfAuthorityControllerSpec extends SpecBase {
 
   private lazy val verifyLetterOfAuthorityRoute =
     routes.VerifyLetterOfAuthorityController.onPageLoad(NormalMode, draftId).url

@@ -16,9 +16,8 @@
 
 package pages
 
-import play.api.libs.json.JsPath
-
 import models.WhatIsYourRoleAsImporter
+import play.api.libs.json.JsPath
 
 case object WhatIsYourRoleAsImporterPage extends QuestionPage[WhatIsYourRoleAsImporter] {
 

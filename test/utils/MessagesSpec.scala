@@ -49,9 +49,8 @@ class MessagesSpec extends SpecBase {
       if (missingWelshKeys.nonEmpty) {
         val failureText = missingWelshKeys.foldLeft(
           s"There are ${missingWelshKeys.size} missing Welsh translations:"
-        ) {
-          case (failureString, key) =>
-            failureString + s"\n$key:${englishMessages(key)}"
+        ) { case (failureString, key) =>
+          failureString + s"\n$key:${englishMessages(key)}"
         }
 
         fail(failureText)
@@ -80,20 +79,18 @@ class MessagesSpec extends SpecBase {
     assertCorrectUseOfQuotes("Welsh", welshMessages)
 
   private def assertNonEmptyNonTemporaryValues(label: String, messages: Map[String, String]) =
-    messages.foreach {
-      case (key: String, value: String) =>
-        withClue(s"In $label, there is an empty value for the key:[$key][$value]") {
-          value.trim.isEmpty mustBe false
-        }
+    messages.foreach { case (key: String, value: String) =>
+      withClue(s"In $label, there is an empty value for the key:[$key][$value]") {
+        value.trim.isEmpty mustBe false
+      }
     }
 
   private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]) =
-    messages.foreach {
-      case (key: String, value: String) =>
-        withClue(s"In $label, there is an unescaped or invalid quote:[$key][$value]") {
-          MatchSingleQuoteOnly.findFirstIn(value).isDefined mustBe false
-          MatchBacktickQuoteOnly.findFirstIn(value).isDefined mustBe false
-        }
+    messages.foreach { case (key: String, value: String) =>
+      withClue(s"In $label, there is an unescaped or invalid quote:[$key][$value]") {
+        MatchSingleQuoteOnly.findFirstIn(value).isDefined mustBe false
+        MatchBacktickQuoteOnly.findFirstIn(value).isDefined mustBe false
+      }
     }
 
   val MatchSingleQuoteOnly: Regex   = """\w+'{1}\w+""".r

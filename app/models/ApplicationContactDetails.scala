@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.{__, OFormat, OWrites, Reads}
+import play.api.libs.json.{OFormat, OWrites, Reads, __}
 
 case class ApplicationContactDetails(name: String, email: String, phone: String, jobTitle: String)
 

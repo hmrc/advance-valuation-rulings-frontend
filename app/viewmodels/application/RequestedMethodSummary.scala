@@ -76,12 +76,11 @@ object RequestedMethodSummary {
       )
     )
 
-    val relatedPartiesRow = method.saleBetweenRelatedParties.map {
-      info =>
-        SummaryListRowViewModel(
-          key = "explainHowPartiesAreRelated.checkYourAnswersLabel",
-          value = ValueViewModel(info)
-        )
+    val relatedPartiesRow = method.saleBetweenRelatedParties.map { info =>
+      SummaryListRowViewModel(
+        key = "explainHowPartiesAreRelated.checkYourAnswersLabel",
+        value = ValueViewModel(info)
+      )
     }
 
     val restrictionsUseResaleRow = Some(
@@ -91,12 +90,11 @@ object RequestedMethodSummary {
       )
     )
 
-    val restrictionsRow = method.goodsRestrictions.map {
-      restrictions =>
-        SummaryListRowViewModel(
-          key = "describeTheRestrictions.checkYourAnswersLabel",
-          value = ValueViewModel(restrictions)
-        )
+    val restrictionsRow = method.goodsRestrictions.map { restrictions =>
+      SummaryListRowViewModel(
+        key = "describeTheRestrictions.checkYourAnswersLabel",
+        value = ValueViewModel(restrictions)
+      )
     }
 
     val subjectToConditionsRow = Some(
@@ -106,12 +104,11 @@ object RequestedMethodSummary {
       )
     )
 
-    val conditionsRow = method.saleConditions.map {
-      conditions =>
-        SummaryListRowViewModel(
-          key = "describeTheConditions.checkYourAnswersLabel",
-          value = ValueViewModel(conditions)
-        )
+    val conditionsRow = method.saleConditions.map { conditions =>
+      SummaryListRowViewModel(
+        key = "describeTheConditions.checkYourAnswersLabel",
+        value = ValueViewModel(conditions)
+      )
     }
 
     Seq(

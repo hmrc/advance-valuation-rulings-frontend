@@ -16,16 +16,14 @@
 
 package controllers
 
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.ValuationMethodFormProvider
 import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.ChoosingMethodView
 
-class ChoosingMethodControllerSpec extends SpecBase with MockitoSugar {
+class ChoosingMethodControllerSpec extends SpecBase {
 
   lazy val choosingMethodRoute =
     routes.ChoosingMethodController.onPageLoad(draftId).url

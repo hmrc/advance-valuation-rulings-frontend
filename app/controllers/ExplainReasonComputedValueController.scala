@@ -16,22 +16,20 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.ExplainReasonComputedValueFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainReasonComputedValuePage
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ExplainReasonComputedValueView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class ExplainReasonComputedValueController @Inject() (
   override val messagesApi: MessagesApi,
@@ -50,36 +48,34 @@ class ExplainReasonComputedValueController @Inject() (
   val form: Form[String] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val preparedForm = ExplainReasonComputedValuePage.fill(form)
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val preparedForm = ExplainReasonComputedValuePage.fill(form)
 
-        Ok(view(preparedForm, mode, draftId))
+      Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            if (saveDraft) {
+              Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+            } else {
+              Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
+            },
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(ExplainReasonComputedValuePage, value))
+              _              <- userAnswersService.set(updatedAnswers)
+            } yield
               if (saveDraft) {
-                Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+                Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
               } else {
-                Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
-              },
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(ExplainReasonComputedValuePage, value))
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield
-                if (saveDraft) {
-                  Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                } else {
-                  Redirect(navigator.nextPage(ExplainReasonComputedValuePage, mode, updatedAnswers))
-                }
-          )
+                Redirect(navigator.nextPage(ExplainReasonComputedValuePage, mode, updatedAnswers))
+              }
+        )
     }
 }

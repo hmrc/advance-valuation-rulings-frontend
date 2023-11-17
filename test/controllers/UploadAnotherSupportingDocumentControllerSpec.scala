@@ -16,26 +16,23 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
+import base.SpecBase
+import forms.UploadAnotherSupportingDocumentFormProvider
+import models._
+import navigation.{FakeNavigator, Navigator}
+import pages.UploadLetterOfAuthorityPage
 import play.api.Configuration
 import play.api.inject.bind
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.UploadAnotherSupportingDocumentFormProvider
-import models._
-import navigation.{FakeNavigator, Navigator}
-import org.scalatestplus.mockito.MockitoSugar
-import pages.UploadLetterOfAuthorityPage
 import queries.DraftAttachmentAt
 import views.html.UploadAnotherSupportingDocumentView
 
-class UploadAnotherSupportingDocumentControllerSpec extends SpecBase with MockitoSugar {
+import java.time.Instant
+import scala.concurrent.Future
+
+class UploadAnotherSupportingDocumentControllerSpec extends SpecBase {
 
   private val formProvider = new UploadAnotherSupportingDocumentFormProvider(
     Configuration("upscan.maxFiles" -> 5)

@@ -16,23 +16,21 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
-import scala.concurrent.Future
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc._
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.FileUploadHelper
 import controllers.routes.UploadAnotherSupportingDocumentController
 import models._
 import models.requests.DataRequest
 import pages._
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc._
 import queries.AllDocuments
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import userrole.UserRoleProvider
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.Future
 @Singleton
 class UploadSupportingDocumentsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -51,21 +49,20 @@ class UploadSupportingDocumentsController @Inject() (
     errorCode: Option[String],
     key: Option[String]
   ): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val numberOfAttachments = AllDocuments.get().getOrElse(List.empty).length
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      val numberOfAttachments = AllDocuments.get().getOrElse(List.empty).length
 
-        if (
-          numberOfAttachments >= userRoleProvider
-            .getUserRole(request.userAnswers)
-            .getMaxSupportingDocuments
-        ) {
-          Future.successful(
-            Redirect(UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId))
-          )
-        } else {
-          loadUsingFileUploadHelper(mode, draftId, errorCode, key, request)
-        }
+      if (
+        numberOfAttachments >= userRoleProvider
+          .getUserRole(request.userAnswers)
+          .getMaxSupportingDocuments
+      ) {
+        Future.successful(
+          Redirect(UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId))
+        )
+      } else {
+        loadUsingFileUploadHelper(mode, draftId, errorCode, key, request)
+      }
 
     }
 

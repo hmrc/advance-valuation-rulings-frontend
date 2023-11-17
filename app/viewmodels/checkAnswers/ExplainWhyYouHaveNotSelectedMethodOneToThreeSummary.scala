@@ -29,22 +29,21 @@ import viewmodels.implicits._
 object ExplainWhyYouHaveNotSelectedMethodOneToThreeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController
-                .onPageLoad(CheckMode, answers.draftId)
-                .url
-            )
-              .withVisuallyHiddenText(
-                messages("explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden")
-              )
+    answers.get(ExplainWhyYouHaveNotSelectedMethodOneToThreePage).map { answer =>
+      SummaryListRowViewModel(
+        key = "explainWhyYouHaveNotSelectedMethodOneToThree.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController
+              .onPageLoad(CheckMode, answers.draftId)
+              .url
           )
+            .withVisuallyHiddenText(
+              messages("explainWhyYouHaveNotSelectedMethodOneToThree.change.hidden")
+            )
         )
+      )
     }
 }

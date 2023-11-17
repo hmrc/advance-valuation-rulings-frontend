@@ -27,21 +27,20 @@ import viewmodels.implicits._
 
 object AwareOfRulingSummary {
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AwareOfRulingPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+    answers.get(AwareOfRulingPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "awareOfRuling.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.AwareOfRulingController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("awareOfRuling.change.hidden"))
+      SummaryListRowViewModel(
+        key = "awareOfRuling.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.AwareOfRulingController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("awareOfRuling.change.hidden"))
         )
+      )
 
     }
 }

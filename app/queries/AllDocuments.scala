@@ -15,10 +15,9 @@
  */
 
 package queries
-import play.api.libs.json.{__, JsPath}
-
 import models.{DraftAttachment, Index}
 import pages.QuestionPage
+import play.api.libs.json.{JsPath, __}
 
 case object AllDocuments extends QuestionPage[List[DraftAttachment]] {
   override def path: JsPath = __ \ "supportingDocuments"

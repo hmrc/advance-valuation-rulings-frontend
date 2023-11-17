@@ -28,10 +28,7 @@ import org.scalatest.concurrent.PatienceConfiguration.Timeout
 import org.scalatest.time.{Seconds, Span}
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
-class InternalAuthInitialiserSpec
-    extends BaseIntegrationSpec
-    with IntegrationPatience
-    with WireMockHelper {
+class InternalAuthInitialiserSpec extends BaseIntegrationSpec with IntegrationPatience with WireMockHelper {
 
   override def beforeAll(): Unit = {
     super.beforeAll()

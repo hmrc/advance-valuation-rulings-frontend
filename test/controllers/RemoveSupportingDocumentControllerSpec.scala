@@ -16,15 +16,6 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.objectstore.client.Path
-import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-
 import base.SpecBase
 import forms.RemoveSupportingDocumentFormProvider
 import models.{Done, DraftAttachment, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
@@ -32,12 +23,19 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.{never, times, verify, when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito._
 import pages._
+import play.api.inject.bind
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import queries.AllDocuments
 import services.UserAnswersService
+import uk.gov.hmrc.objectstore.client.Path
+import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import views.html.RemoveSupportingDocumentView
+
+import scala.concurrent.Future
 
 class RemoveSupportingDocumentControllerSpec extends SpecBase {
 
@@ -137,8 +135,8 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
-    verify(mockUserAnswersService, never()).set(userAnswersCaptor.capture())(any())
-    verify(osClient, never()).deleteObject(eqTo(Path.File("downloadUrl")), any())(any())
+    verify(mockUserAnswersService, never).set(userAnswersCaptor.capture())(any())
+    verify(osClient, never).deleteObject(eqTo(Path.File("downloadUrl")), any())(any())
   }
 
   "does not call object store if the file does not exist" in new SpecSetup {
@@ -158,7 +156,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
-    verify(osClient, never()).deleteObject(any(), any())(any())
+    verify(osClient, never).deleteObject(any(), any())(any())
   }
 
   "does not call object store if the file has no download url" in new SpecSetup {
@@ -183,7 +181,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual onwardRoute.url
 
-    verify(osClient, never()).deleteObject(any(), any())(any())
+    verify(osClient, never).deleteObject(any(), any())(any())
   }
 
   "must redirect to Journey Recovery page when there are no user answers" in new SpecSetup {
@@ -198,7 +196,7 @@ class RemoveSupportingDocumentControllerSpec extends SpecBase {
   }
 }
 
-trait SpecSetup extends MockitoSugar {
+trait SpecSetup {
   import java.time.Instant
   val fileName       = "fileName"
   val onwardRoute    = Call("GET", "/foo")
@@ -227,7 +225,7 @@ trait SpecSetup extends MockitoSugar {
   val userAnswersCaptor: ArgumentCaptor[UserAnswers] =
     ArgumentCaptor.forClass(classOf[UserAnswers])
 
-  val mockNavigator          = mock[Navigator]
-  val mockUserAnswersService = mock[UserAnswersService]
-  val osClient               = mock[PlayObjectStoreClient]
+  val mockNavigator          = mock(classOf[Navigator])
+  val mockUserAnswersService = mock(classOf[UserAnswersService])
+  val osClient               = mock(classOf[PlayObjectStoreClient])
 }

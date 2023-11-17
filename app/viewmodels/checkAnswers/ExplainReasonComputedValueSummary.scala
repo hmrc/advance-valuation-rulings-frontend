@@ -29,18 +29,17 @@ import viewmodels.implicits._
 object ExplainReasonComputedValueSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExplainReasonComputedValuePage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "explainReasonComputedValue.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ExplainReasonComputedValueController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("explainReasonComputedValue.change.hidden"))
+    answers.get(ExplainReasonComputedValuePage).map { answer =>
+      SummaryListRowViewModel(
+        key = "explainReasonComputedValue.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ExplainReasonComputedValueController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("explainReasonComputedValue.change.hidden"))
         )
+      )
     }
 }

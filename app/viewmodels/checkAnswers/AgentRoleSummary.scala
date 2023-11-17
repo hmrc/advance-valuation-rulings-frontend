@@ -28,15 +28,14 @@ import viewmodels.implicits._
 object AgentRoleSummary {
 
   def row(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
-    userAnswer.get(WhatIsYourRoleAsImporterPage).map {
-      role =>
-        Seq(
-          SummaryListRowViewModel(
-            key = "checkYourAnswersForAgents.applicant.role.label",
-            value = ValueViewModel(
-              HtmlFormat.escape(messages(s"whatIsYourRoleAsImporter.$role")).toString
-            )
+    userAnswer.get(WhatIsYourRoleAsImporterPage).map { role =>
+      Seq(
+        SummaryListRowViewModel(
+          key = "checkYourAnswersForAgents.applicant.role.label",
+          value = ValueViewModel(
+            HtmlFormat.escape(messages(s"whatIsYourRoleAsImporter.$role")).toString
           )
         )
+      )
     }
 }

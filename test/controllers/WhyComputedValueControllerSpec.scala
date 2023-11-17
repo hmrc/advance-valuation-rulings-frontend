@@ -16,19 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.WhyComputedValueFormProvider
+import models.NormalMode
+import pages.WhyComputedValuePage
 import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.WhyComputedValueFormProvider
-import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
-import pages.WhyComputedValuePage
 import views.html.WhyComputedValueView
 
-class WhyComputedValueControllerSpec extends SpecBase with MockitoSugar {
+class WhyComputedValueControllerSpec extends SpecBase {
 
   val formProvider = new WhyComputedValueFormProvider()
   val form         = formProvider()

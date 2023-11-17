@@ -46,15 +46,14 @@ object ValuationMethod extends Enumerable.Implicits {
     Method6
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
-      RadioItem(
-        content = HtmlContent(
-          Html(s"${messages(s"valuationMethod.${value.toString}")}")
-        ),
-        value = Some(value.toString),
-        id = Some(s"value_$index")
-      )
+  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map { case (value, index) =>
+    RadioItem(
+      content = HtmlContent(
+        Html(s"${messages(s"valuationMethod.${value.toString}")}")
+      ),
+      value = Some(value.toString),
+      id = Some(s"value_$index")
+    )
   }
 
   implicit val enumerable: Enumerable[ValuationMethod] =

@@ -16,18 +16,16 @@
 
 package controllers
 
-import play.api.Application
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.IsThereASaleInvolvedFormProvider
 import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
 import pages.IsThereASaleInvolvedPage
+import play.api.Application
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.IsThereASaleInvolvedView
 
-class IsThereASaleInvolvedControllerSpec extends SpecBase with MockitoSugar {
+class IsThereASaleInvolvedControllerSpec extends SpecBase {
 
   val formProvider = new IsThereASaleInvolvedFormProvider()
   val form         = formProvider()

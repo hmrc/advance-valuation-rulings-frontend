@@ -16,19 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.DescribeTheIdenticalGoodsFormProvider
+import models.NormalMode
+import pages.DescribeTheIdenticalGoodsPage
 import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.DescribeTheIdenticalGoodsFormProvider
-import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
-import pages.DescribeTheIdenticalGoodsPage
 import views.html.DescribeTheIdenticalGoodsView
 
-class DescribeTheIdenticalGoodsControllerSpec extends SpecBase with MockitoSugar {
+class DescribeTheIdenticalGoodsControllerSpec extends SpecBase {
 
   val formProvider = new DescribeTheIdenticalGoodsFormProvider()
   val form         = formProvider()

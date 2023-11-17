@@ -16,22 +16,20 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.AgentCompanyDetailsFormProvider
 import models.{AgentCompanyDetails, DraftId, Mode}
 import navigation.Navigator
 import pages.AgentCompanyDetailsPage
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AgentCompanyDetailsView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class AgentCompanyDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -50,38 +48,36 @@ class AgentCompanyDetailsController @Inject() (
   val form: Form[AgentCompanyDetails] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val preparedForm = AgentCompanyDetailsPage.fill(form)
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val preparedForm = AgentCompanyDetailsPage.fill(form)
 
-        Ok(view(preparedForm, mode, draftId))
+      Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            if (saveDraft) {
+              Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+            } else {
+              Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
+            },
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(AgentCompanyDetailsPage, value))
+              _              <- userAnswersService.set(updatedAnswers)
+            } yield
               if (saveDraft) {
-                Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+                Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
               } else {
-                Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
-              },
-            value =>
-              for {
-                updatedAnswers <-
-                  Future.fromTry(request.userAnswers.set(AgentCompanyDetailsPage, value))
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield
-                if (saveDraft) {
-                  Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                } else {
-                  Redirect(
-                    navigator.nextPage(AgentCompanyDetailsPage, mode, updatedAnswers)
-                  )
-                }
-          )
+                Redirect(
+                  navigator.nextPage(AgentCompanyDetailsPage, mode, updatedAnswers)
+                )
+              }
+        )
     }
 }

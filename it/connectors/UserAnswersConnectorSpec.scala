@@ -1,15 +1,14 @@
 package connectors
 
-import java.time.Instant
-
+import com.github.tomakehurst.wiremock.client.WireMock._
+import models.requests.{DraftSummary, DraftSummaryResponse}
+import models.{DraftId, UserAnswers}
+import org.scalatest.OptionValues
 import play.api.Configuration
 import play.api.libs.json.Json
-
-import com.github.tomakehurst.wiremock.client.WireMock._
-import models.{DraftId, UserAnswers}
-import models.requests.{DraftSummary, DraftSummaryResponse}
-import org.scalatest.OptionValues
 import utils.{BaseIntegrationSpec, WireMockHelper}
+
+import java.time.Instant
 
 class UserAnswersConnectorSpec extends BaseIntegrationSpec with WireMockHelper with OptionValues {
 

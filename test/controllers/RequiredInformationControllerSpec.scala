@@ -16,25 +16,23 @@
 
 package controllers
 
+import base.SpecBase
+import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models.requests.DataRequest
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar.{mock, when}
+import pages.WhatIsYourRoleAsImporterPage
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-
-import base.SpecBase
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
-import models.requests.DataRequest
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.WhatIsYourRoleAsImporterPage
 import userrole.{UserRole, UserRoleProvider}
 import views.html.{AgentForOrgRequiredInformationView, IndividualInformationRequiredView}
 
-class RequiredInformationControllerSpec extends SpecBase with MockitoSugar {
+class RequiredInformationControllerSpec extends SpecBase {
 
   lazy val requiredInformationRoute =
     routes.RequiredInformationController.onPageLoad(draftId).url

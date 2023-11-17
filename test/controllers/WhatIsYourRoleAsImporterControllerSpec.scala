@@ -16,12 +16,6 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import audit.AuditService
 import base.SpecBase
 import forms.WhatIsYourRoleAsImporterFormProvider
@@ -29,13 +23,17 @@ import models._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar.{reset, times, verify, verifyZeroInteractions, when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar._
 import pages.{AccountHomePage, AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
-class WhatIsYourRoleAsImporterControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
   private val mockAuditService: AuditService = mock[AuditService]
 

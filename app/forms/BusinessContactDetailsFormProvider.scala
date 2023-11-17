@@ -16,18 +16,16 @@
 
 package forms
 
-import javax.inject.Inject
-
-import scala.util.Try
-
-import play.api.data.{Form, Mapping}
-import play.api.data.Forms._
-import play.api.data.validation.Constraints
-
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.BusinessContactDetailsFormProvider._
 import forms.mappings.Mappings
 import models.BusinessContactDetails
+import play.api.data.Forms._
+import play.api.data.validation.Constraints
+import play.api.data.{Form, Mapping}
+
+import javax.inject.Inject
+import scala.util.Try
 
 class BusinessContactDetailsFormProvider @Inject() extends Mappings {
 
@@ -58,11 +56,10 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
       Constraints.pattern(Validation.simpleCharactersInputPattern, error = jobTitleFormatError)
     )
 
-  private val defaultMap = mapping(nameMapping, emailMapping, phoneMapping, jobTitleMapping)(
-    (name, email, phone, jobTitle) =>
+  private val defaultMap =
+    mapping(nameMapping, emailMapping, phoneMapping, jobTitleMapping)((name, email, phone, jobTitle) =>
       BusinessContactDetails.apply(name, email, phone, None, jobTitle)
-  )(
-    (businessContactDetails: BusinessContactDetails) =>
+    )((businessContactDetails: BusinessContactDetails) =>
       Some(
         (
           businessContactDetails.name,
@@ -71,23 +68,22 @@ class BusinessContactDetailsFormProvider @Inject() extends Mappings {
           businessContactDetails.jobTitle
         )
       )
-  )
+    )
 
   private val companyNameIncMap =
     mapping(nameMapping, emailMapping, phoneMapping, companyNameMapping, jobTitleMapping)(
       (name, email, phone, companyName, jobTitle) =>
         BusinessContactDetails.apply(name, email, phone, Some(companyName), jobTitle)
-    )(
-      (businessContactDetails: BusinessContactDetails) =>
-        Some(
-          (
-            businessContactDetails.name,
-            businessContactDetails.email,
-            businessContactDetails.phone,
-            businessContactDetails.companyName.getOrElse(""),
-            businessContactDetails.jobTitle
-          )
+    )((businessContactDetails: BusinessContactDetails) =>
+      Some(
+        (
+          businessContactDetails.name,
+          businessContactDetails.email,
+          businessContactDetails.phone,
+          businessContactDetails.companyName.getOrElse(""),
+          businessContactDetails.jobTitle
         )
+      )
     )
 
   def apply(includeCompanyName: Boolean): Form[BusinessContactDetails] =

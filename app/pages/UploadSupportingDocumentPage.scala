@@ -16,9 +16,8 @@
 
 package pages
 
-import play.api.libs.json.JsPath
-
 import models.UploadedFile
+import play.api.libs.json.JsPath
 
 case object UploadSupportingDocumentPage extends QuestionPage[UploadedFile] {
 

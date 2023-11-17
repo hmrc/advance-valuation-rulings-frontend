@@ -30,13 +30,9 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
   val MessagePrefix = "whatIsYourRoleAsImporter"
 
   case object EmployeeOfOrg extends WithName("employeeOfOrg") with WhatIsYourRoleAsImporter
-  case object AgentOnBehalfOfOrg
-      extends WithName("agentOnBehalfOfOrg")
-      with WhatIsYourRoleAsImporter
+  case object AgentOnBehalfOfOrg extends WithName("agentOnBehalfOfOrg") with WhatIsYourRoleAsImporter
 
-  case object AgentOnBehalfOfTrader
-      extends WithName("agentOnBehalfOfTrader")
-      with WhatIsYourRoleAsImporter
+  case object AgentOnBehalfOfTrader extends WithName("agentOnBehalfOfTrader") with WhatIsYourRoleAsImporter
 
   val values: Seq[WhatIsYourRoleAsImporter] = Seq(
     EmployeeOfOrg,
@@ -47,17 +43,16 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
   def options(mode: Mode)(implicit
     messages: Messages
   ): Seq[RadioItem] =
-    values.zipWithIndex.map {
-      case (value, index) =>
-        RadioItem(
-          content = HtmlContent(
-            Html(s"<b>${messages(s"$MessagePrefix.${value.toString}")}</b>")
-          ),
-          value = Some(value.toString),
-          id = Some(s"value_$index"),
-          hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint")))),
-          disabled = mode == ReadOnlyMode
-        )
+    values.zipWithIndex.map { case (value, index) =>
+      RadioItem(
+        content = HtmlContent(
+          Html(s"<b>${messages(s"$MessagePrefix.${value.toString}")}</b>")
+        ),
+        value = Some(value.toString),
+        id = Some(s"value_$index"),
+        hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint")))),
+        disabled = mode == ReadOnlyMode
+      )
     }
 
   implicit val enumerable: Enumerable[WhatIsYourRoleAsImporter] =

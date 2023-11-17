@@ -27,20 +27,19 @@ import viewmodels.implicits._
 object HasCommodityCodeSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(HasCommodityCodePage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+    answers.get(HasCommodityCodePage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "hasCommodityCode.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.HasCommodityCodeController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("hasCommodityCode.change.hidden"))
+      SummaryListRowViewModel(
+        key = "hasCommodityCode.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.HasCommodityCodeController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("hasCommodityCode.change.hidden"))
         )
+      )
     }
 }

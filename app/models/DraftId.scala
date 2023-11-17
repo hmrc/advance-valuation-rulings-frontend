@@ -16,10 +16,10 @@
 
 package models
 
-import scala.util.Try
-
 import play.api.libs.json._
 import play.api.mvc.PathBindable
+
+import scala.util.Try
 
 final case class DraftId(value: Long) {
   override val toString: String = s"DRAFT%09d".format(value)

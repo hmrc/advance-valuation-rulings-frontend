@@ -16,19 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.ExplainHowYouWillUseMethodSixFormProvider
+import models.NormalMode
+import pages.ExplainHowYouWillUseMethodSixPage
 import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.ExplainHowYouWillUseMethodSixFormProvider
-import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
-import pages.ExplainHowYouWillUseMethodSixPage
 import views.html.ExplainHowYouWillUseMethodSixView
 
-class ExplainHowYouWillUseMethodSixControllerSpec extends SpecBase with MockitoSugar {
+class ExplainHowYouWillUseMethodSixControllerSpec extends SpecBase {
 
   val formProvider = new ExplainHowYouWillUseMethodSixFormProvider()
   val form         = formProvider()

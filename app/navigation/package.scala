@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import play.api.mvc.Call
-
 import models.AuthUserType
 import models.AuthUserType._
+import play.api.mvc.Call
 
 package object navigation {
 

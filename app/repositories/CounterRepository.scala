@@ -16,18 +16,16 @@
 
 package repositories
 
-import javax.inject.{Inject, Singleton}
-
-import scala.annotation.nowarn
-import scala.concurrent.{ExecutionContext, Future}
-import scala.jdk.CollectionConverters._
-
-import uk.gov.hmrc.mongo.MongoComponent
-import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
-
 import models.{CounterId, CounterWrapper}
 import org.mongodb.scala.MongoBulkWriteException
 import org.mongodb.scala.model._
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+
+import javax.inject.{Inject, Singleton}
+import scala.annotation.nowarn
+import scala.concurrent.{ExecutionContext, Future}
+import scala.jdk.CollectionConverters._
 
 @Singleton
 class CounterRepository @Inject() (
@@ -55,23 +53,22 @@ class CounterRepository @Inject() (
     collection
       .find(byId(CounterId.DraftId))
       .headOption()
-      .flatMap(_.map {
-        draftId =>
-          if (draftId.index < startingIndex) {
-            collection
-              .findOneAndUpdate(
-                filter = byId(CounterId.DraftId),
-                update = Updates.set("index", startingIndex),
-                options = FindOneAndUpdateOptions()
-                  .upsert(true)
-                  .bypassDocumentValidation(false)
-                  .returnDocument(ReturnDocument.AFTER)
-              )
-              .toFuture()
-              .map(_ => ())
-          } else {
-            Future.successful(())
-          }
+      .flatMap(_.map { draftId =>
+        if (draftId.index < startingIndex) {
+          collection
+            .findOneAndUpdate(
+              filter = byId(CounterId.DraftId),
+              update = Updates.set("index", startingIndex),
+              options = FindOneAndUpdateOptions()
+                .upsert(true)
+                .bypassDocumentValidation(false)
+                .returnDocument(ReturnDocument.AFTER)
+            )
+            .toFuture()
+            .map(_ => ())
+        } else {
+          Future.successful(())
+        }
       }.getOrElse(Future.successful(())))
 
   @nowarn
@@ -84,8 +81,7 @@ class CounterRepository @Inject() (
       .toFuture()
       .map(_ => ())
       .recoverWith {
-        case e: MongoBulkWriteException
-            if e.getWriteErrors.asScala.forall(x => x.getCode == duplicateErrorCode) =>
+        case e: MongoBulkWriteException if e.getWriteErrors.asScala.forall(x => x.getCode == duplicateErrorCode) =>
           ensureDraftIdIsCorrect()
       }
 

@@ -61,12 +61,11 @@ object GoodsDetailsSummary {
       )
     )
 
-    val similarRulingMethodInfoRow = goodsDetails.similarRulingMethodInfo.map {
-      info =>
-        SummaryListRowViewModel(
-          key = "tellUsAboutYourRuling.checkYourAnswersLabel",
-          value = ValueViewModel(info)
-        )
+    val similarRulingMethodInfoRow = goodsDetails.similarRulingMethodInfo.map { info =>
+      SummaryListRowViewModel(
+        key = "tellUsAboutYourRuling.checkYourAnswersLabel",
+        value = ValueViewModel(info)
+      )
     }
 
     val similarRulingGoodsQuestionRow = Some(
@@ -76,12 +75,11 @@ object GoodsDetailsSummary {
       )
     )
 
-    val similarRulingGoodsInfoRow = goodsDetails.similarRulingGoodsInfo.map {
-      info =>
-        SummaryListRowViewModel(
-          key = "aboutSimilarGoods.checkYourAnswersLabel",
-          value = ValueViewModel(info)
-        )
+    val similarRulingGoodsInfoRow = goodsDetails.similarRulingGoodsInfo.map { info =>
+      SummaryListRowViewModel(
+        key = "aboutSimilarGoods.checkYourAnswersLabel",
+        value = ValueViewModel(info)
+      )
     }
 
     val commodityCodeQuestionRow = Some(
@@ -91,12 +89,11 @@ object GoodsDetailsSummary {
       )
     )
 
-    val commodityCodeRow = goodsDetails.envisagedCommodityCode.map {
-      commodityCode =>
-        SummaryListRowViewModel(
-          key = "commodityCode.checkYourAnswersLabel",
-          value = ValueViewModel(commodityCode)
-        )
+    val commodityCodeRow = goodsDetails.envisagedCommodityCode.map { commodityCode =>
+      SummaryListRowViewModel(
+        key = "commodityCode.checkYourAnswersLabel",
+        value = ValueViewModel(commodityCode)
+      )
     }
 
     val legalChallengesQuestionRow = Some(
@@ -106,12 +103,11 @@ object GoodsDetailsSummary {
       )
     )
 
-    val legalChallengeRow = goodsDetails.knownLegalProceedings.map {
-      challenge =>
-        SummaryListRowViewModel(
-          key = "describeTheLegalChallenges.checkYourAnswersLabel",
-          value = ValueViewModel(challenge)
-        )
+    val legalChallengeRow = goodsDetails.knownLegalProceedings.map { challenge =>
+      SummaryListRowViewModel(
+        key = "describeTheLegalChallenges.checkYourAnswersLabel",
+        value = ValueViewModel(challenge)
+      )
     }
 
     val confidentialInformationQuestionRow = Some(
@@ -122,12 +118,11 @@ object GoodsDetailsSummary {
     )
 
     val confidentialInformationRow: Option[SummaryListRow] =
-      goodsDetails.confidentialInformation.map {
-        info =>
-          SummaryListRowViewModel(
-            key = "confidentialInformation.checkYourAnswersLabel",
-            value = ValueViewModel(info)
-          )
+      goodsDetails.confidentialInformation.map { info =>
+        SummaryListRowViewModel(
+          key = "confidentialInformation.checkYourAnswersLabel",
+          value = ValueViewModel(info)
+        )
       }
 
     val uploadSupportingDocumentsQuestionRow = Some(
@@ -145,11 +140,10 @@ object GoodsDetailsSummary {
     )
 
     val attachmentRowContent = attachments
-      .map(
-        file =>
-          s"${file.name} ${if (file.privacy == Confidential)
-              s"<strong>- ${messages("uploadAnotherSupportingDocument.keepConfidential")}</strong>"
-            else ""}"
+      .map(file =>
+        s"${file.name} ${if (file.privacy == Confidential)
+          s"<strong>- ${messages("uploadAnotherSupportingDocument.keepConfidential")}</strong>"
+        else ""}"
       )
       .mkString("<br/>")
 

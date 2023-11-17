@@ -48,25 +48,24 @@ package object models {
           Reads
             .optionNoError(Reads.at[JsValue](JsPath(first :: Nil)))
             .reads(oldValue)
-            .flatMap {
-              opt =>
-                opt
-                  .map(JsSuccess(_))
-                  .getOrElse {
-                    second match {
-                      case _: KeyPathNode     =>
-                        JsSuccess(Json.obj())
-                      case _: IdxPathNode     =>
-                        JsSuccess(Json.arr())
-                      case _: RecursiveSearch =>
-                        JsError("recursive search is not supported")
-                    }
+            .flatMap { opt =>
+              opt
+                .map(JsSuccess(_))
+                .getOrElse {
+                  second match {
+                    case _: KeyPathNode     =>
+                      JsSuccess(Json.obj())
+                    case _: IdxPathNode     =>
+                      JsSuccess(Json.arr())
+                    case _: RecursiveSearch =>
+                      JsError("recursive search is not supported")
                   }
-                  .flatMap {
-                    _.set(JsPath(second :: rest), value).flatMap {
-                      newValue => oldValue.set(JsPath(first :: Nil), newValue)
-                    }
+                }
+                .flatMap {
+                  _.set(JsPath(second :: rest), value).flatMap { newValue =>
+                    oldValue.set(JsPath(first :: Nil), newValue)
                   }
+                }
             }
       }
 
@@ -138,25 +137,24 @@ package object models {
           Reads
             .optionNoError(Reads.at[JsValue](JsPath(first :: Nil)))
             .reads(oldValue)
-            .flatMap {
-              opt: Option[JsValue] =>
-                opt
-                  .map(JsSuccess(_))
-                  .getOrElse {
-                    second match {
-                      case _: KeyPathNode     =>
-                        JsSuccess(Json.obj())
-                      case _: IdxPathNode     =>
-                        JsSuccess(Json.arr())
-                      case _: RecursiveSearch =>
-                        JsError("recursive search is not supported")
-                    }
+            .flatMap { opt: Option[JsValue] =>
+              opt
+                .map(JsSuccess(_))
+                .getOrElse {
+                  second match {
+                    case _: KeyPathNode     =>
+                      JsSuccess(Json.obj())
+                    case _: IdxPathNode     =>
+                      JsSuccess(Json.arr())
+                    case _: RecursiveSearch =>
+                      JsError("recursive search is not supported")
                   }
-                  .flatMap {
-                    _.remove(JsPath(second :: rest)).flatMap {
-                      newValue => oldValue.set(JsPath(first :: Nil), newValue)
-                    }
+                }
+                .flatMap {
+                  _.remove(JsPath(second :: rest)).flatMap { newValue =>
+                    oldValue.set(JsPath(first :: Nil), newValue)
                   }
+                }
             }
         case (path, _)                                                                 => JsError("unsupported path: " ++ path.toString)
       }

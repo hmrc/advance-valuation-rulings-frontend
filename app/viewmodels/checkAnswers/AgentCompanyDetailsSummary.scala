@@ -30,25 +30,24 @@ import viewmodels.implicits._
 object AgentCompanyDetailsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AgentCompanyDetailsPage).map {
-      answer =>
-        val value = HtmlFormat.escape(answer.agentEori).toString +
-          "<br/>" + HtmlFormat.escape(answer.agentCompanyName).toString +
-          "<br/>" + HtmlFormat.escape(answer.agentStreetAndNumber).toString +
-          "<br/>" + HtmlFormat.escape(answer.agentCity).toString +
-          "<br/>" + HtmlFormat.escape(answer.agentCountry.name).toString +
-          "<br/>" + HtmlFormat.escape(answer.agentPostalCode.getOrElse("")).toString
+    answers.get(AgentCompanyDetailsPage).map { answer =>
+      val value = HtmlFormat.escape(answer.agentEori).toString +
+        "<br/>" + HtmlFormat.escape(answer.agentCompanyName).toString +
+        "<br/>" + HtmlFormat.escape(answer.agentStreetAndNumber).toString +
+        "<br/>" + HtmlFormat.escape(answer.agentCity).toString +
+        "<br/>" + HtmlFormat.escape(answer.agentCountry.name).toString +
+        "<br/>" + HtmlFormat.escape(answer.agentPostalCode.getOrElse("")).toString
 
-        SummaryListRowViewModel(
-          key = "agentCompanyDetails.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.AgentCompanyDetailsController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("agentCompanyDetails.change.hidden"))
+      SummaryListRowViewModel(
+        key = "agentCompanyDetails.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.AgentCompanyDetailsController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("agentCompanyDetails.change.hidden"))
         )
+      )
     }
 }

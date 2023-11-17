@@ -29,18 +29,17 @@ import viewmodels.implicits._
 object DescribeTheConditionsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(DescribeTheConditionsPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "describeTheConditions.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DescribeTheConditionsController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("describeTheConditions.change.hidden"))
+    answers.get(DescribeTheConditionsPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "describeTheConditions.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.DescribeTheConditionsController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("describeTheConditions.change.hidden"))
         )
+      )
     }
 }

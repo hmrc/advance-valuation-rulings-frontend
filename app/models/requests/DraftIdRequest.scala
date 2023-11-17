@@ -16,10 +16,9 @@
 
 package models.requests
 
+import models.{DraftId, UserAnswers}
 import play.api.mvc.{Request, WrappedRequest}
 import uk.gov.hmrc.auth.core.AffinityGroup
-
-import models.{DraftId, UserAnswers}
 
 case class DraftIdRequest[A](
   request: Request[A],

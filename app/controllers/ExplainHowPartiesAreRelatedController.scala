@@ -16,22 +16,20 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.ExplainHowPartiesAreRelatedFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ExplainHowPartiesAreRelatedPage
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ExplainHowPartiesAreRelatedView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class ExplainHowPartiesAreRelatedController @Inject() (
   override val messagesApi: MessagesApi,
@@ -50,37 +48,35 @@ class ExplainHowPartiesAreRelatedController @Inject() (
   val form: Form[String] = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val preparedForm = ExplainHowPartiesAreRelatedPage.fill(form)
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val preparedForm = ExplainHowPartiesAreRelatedPage.fill(form)
 
-        Ok(view(preparedForm, mode, draftId))
+      Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            if (saveDraft) {
+              Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+            } else {
+              Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
+            },
+          value =>
+            for {
+              updatedAnswers <- ExplainHowPartiesAreRelatedPage.set(value)
+              _              <- userAnswersService.set(updatedAnswers)
+            } yield
               if (saveDraft) {
-                Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+                Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
               } else {
-                Future.successful(BadRequest(view(formWithErrors, mode, draftId)))
-              },
-            value =>
-              for {
-                updatedAnswers <- ExplainHowPartiesAreRelatedPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield
-                if (saveDraft) {
-                  Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                } else {
-                  Redirect(
-                    navigator.nextPage(ExplainHowPartiesAreRelatedPage, mode, updatedAnswers)
-                  )
-                }
-          )
+                Redirect(
+                  navigator.nextPage(ExplainHowPartiesAreRelatedPage, mode, updatedAnswers)
+                )
+              }
+        )
     }
 }

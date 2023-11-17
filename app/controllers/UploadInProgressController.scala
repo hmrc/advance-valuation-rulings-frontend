@@ -16,16 +16,15 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import controllers.common.FileUploadHelper
 import models.{DraftId, Mode, UploadedFile}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.UploadInProgressView
+
+import javax.inject.Inject
 
 class UploadInProgressController @Inject() (
   override val messagesApi: MessagesApi,
@@ -44,8 +43,8 @@ class UploadInProgressController @Inject() (
     key: Option[String],
     isLetterOfAuthority: Boolean
   ): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(mode, draftId, key, isLetterOfAuthority))
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      Ok(view(mode, draftId, key, isLetterOfAuthority))
     }
 
   def checkProgress(
@@ -54,38 +53,37 @@ class UploadInProgressController @Inject() (
     key: Option[String],
     isLetterOfAuthority: Boolean
   ): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val answers = request.userAnswers
-        helper
-          .checkForStatus(answers, isLetterOfAuthority)
-          .map {
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      val answers = request.userAnswers
+      helper
+        .checkForStatus(answers, isLetterOfAuthority)
+        .map {
 
-            case file: UploadedFile.Initiated =>
-              if (key.contains(file.reference)) {
-                helper.showInProgressPage(draftId, key, isLetterOfAuthority)
-              } else {
-                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
-              }
+          case file: UploadedFile.Initiated =>
+            if (key.contains(file.reference)) {
+              helper.showInProgressPage(draftId, key, isLetterOfAuthority)
+            } else {
+              helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
+            }
 
-            case file: UploadedFile.Success =>
-              if (key.contains(file.reference)) {
-                helper.continue(mode, answers, isLetterOfAuthority)
-              } else {
-                helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
-              }
+          case file: UploadedFile.Success =>
+            if (key.contains(file.reference)) {
+              helper.continue(mode, answers, isLetterOfAuthority)
+            } else {
+              helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
+            }
 
-            case file: UploadedFile.Failure =>
-              helper.redirectWithError(
-                draftId,
-                key,
-                file.failureDetails.failureReason.toString,
-                isLetterOfAuthority,
-                mode
-              )
+          case file: UploadedFile.Failure =>
+            helper.redirectWithError(
+              draftId,
+              key,
+              file.failureDetails.failureReason.toString,
+              isLetterOfAuthority,
+              mode
+            )
 
-          }
-          .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority))
+        }
+        .getOrElse(helper.showFallbackPage(mode, draftId, isLetterOfAuthority))
     }
 
 }

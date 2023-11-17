@@ -196,37 +196,36 @@ class RequestedMethodSummarySpec extends AnyFreeSpec with Matchers with ScalaChe
 
       "for method 6" in {
 
-        forAll(Gen.oneOf(AdaptedMethod.values)) {
-          adaptedMethod =>
-            val adaptMethod = adaptedMethod match {
-              case AdaptedMethod.MethodOne   => AdaptMethod.Method1
-              case AdaptedMethod.MethodTwo   => AdaptMethod.Method2
-              case AdaptedMethod.MethodThree => AdaptMethod.Method3
-              case AdaptedMethod.MethodFour  => AdaptMethod.Method4
-              case AdaptedMethod.MethodFive  => AdaptMethod.Method5
-              case AdaptedMethod.Unable      => AdaptMethod.NoOtherMethod
-            }
+        forAll(Gen.oneOf(AdaptedMethod.values)) { adaptedMethod =>
+          val adaptMethod = adaptedMethod match {
+            case AdaptedMethod.MethodOne   => AdaptMethod.Method1
+            case AdaptedMethod.MethodTwo   => AdaptMethod.Method2
+            case AdaptedMethod.MethodThree => AdaptMethod.Method3
+            case AdaptedMethod.MethodFour  => AdaptMethod.Method4
+            case AdaptedMethod.MethodFive  => AdaptMethod.Method5
+            case AdaptedMethod.Unable      => AdaptMethod.NoOtherMethod
+          }
 
-            val method = MethodSix("why", adaptedMethod, "valuation")
+          val method = MethodSix("why", adaptedMethod, "valuation")
 
-            RequestedMethodSummary.rows(method) must contain theSameElementsInOrderAs Seq(
-              SummaryListRow(
-                Key(Text(m("valuationMethod.checkYourAnswersLabel"))),
-                Value(Text(m(s"valuationMethod.${Method6.toString}")))
-              ),
-              SummaryListRow(
-                Key(Text(m("explainWhyYouHaveNotSelectedMethodOneToFive.checkYourAnswersLabel"))),
-                Value(Text(method.whyNotOtherMethods))
-              ),
-              SummaryListRow(
-                Key(Text(m("adaptMethod.checkYourAnswersLabel"))),
-                Value(Text(m(s"adaptMethod.$adaptMethod")))
-              ),
-              SummaryListRow(
-                Key(Text(m("explainHowYouWillUseMethodSix.checkYourAnswersLabel"))),
-                Value(Text(method.valuationDescription))
-              )
+          RequestedMethodSummary.rows(method) must contain theSameElementsInOrderAs Seq(
+            SummaryListRow(
+              Key(Text(m("valuationMethod.checkYourAnswersLabel"))),
+              Value(Text(m(s"valuationMethod.${Method6.toString}")))
+            ),
+            SummaryListRow(
+              Key(Text(m("explainWhyYouHaveNotSelectedMethodOneToFive.checkYourAnswersLabel"))),
+              Value(Text(method.whyNotOtherMethods))
+            ),
+            SummaryListRow(
+              Key(Text(m("adaptMethod.checkYourAnswersLabel"))),
+              Value(Text(m(s"adaptMethod.$adaptMethod")))
+            ),
+            SummaryListRow(
+              Key(Text(m("explainHowYouWillUseMethodSix.checkYourAnswersLabel"))),
+              Value(Text(method.valuationDescription))
             )
+          )
         }
       }
     }

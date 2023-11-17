@@ -16,17 +16,16 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ContactPagePage
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ContactPageView
+
+import javax.inject.Inject
 
 class ContactPageController @Inject() (
   override val messagesApi: MessagesApi,
@@ -43,10 +42,9 @@ class ContactPageController @Inject() (
     (identify andThen getData(draftId))(implicit request => Ok(view(mode, draftId)))
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        Redirect(
-          navigator.nextPage(ContactPagePage, mode, request.userAnswers)
-        )
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      Redirect(
+        navigator.nextPage(ContactPagePage, mode, request.userAnswers)
+      )
     }
 }

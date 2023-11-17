@@ -16,16 +16,15 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.FileUploadHelper
 import models._
 import pages._
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class UploadLetterOfAuthorityController @Inject() (
@@ -47,26 +46,25 @@ class UploadLetterOfAuthorityController @Inject() (
     key: Option[String],
     redirectedFromChangeButton: Boolean = false
   ): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val answers    = request.userAnswers
-        val fileStatus = answers.get(UploadLetterOfAuthorityPage)
-        if (redirectedFromChangeButton) {
-          helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
-        } else {
-          fileStatus match {
-            case Some(_: UploadedFile.Success) =>
-              helper.continue(mode, answers, isLetterOfAuthority)
-            case _                             =>
-              helper.onPageLoadWithFileStatus(
-                mode,
-                draftId,
-                errorCode,
-                key,
-                fileStatus,
-                isLetterOfAuthority
-              )
-          }
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      val answers    = request.userAnswers
+      val fileStatus = answers.get(UploadLetterOfAuthorityPage)
+      if (redirectedFromChangeButton) {
+        helper.showFallbackPage(mode, draftId, isLetterOfAuthority)
+      } else {
+        fileStatus match {
+          case Some(_: UploadedFile.Success) =>
+            helper.continue(mode, answers, isLetterOfAuthority)
+          case _                             =>
+            helper.onPageLoadWithFileStatus(
+              mode,
+              draftId,
+              errorCode,
+              key,
+              fileStatus,
+              isLetterOfAuthority
+            )
         }
+      }
     }
 }

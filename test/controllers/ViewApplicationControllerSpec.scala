@@ -16,29 +16,26 @@
 
 package controllers
 
-import java.time.{Clock, Instant, ZoneOffset}
-
-import scala.collection.immutable.List.from
-import scala.concurrent.Future
-
-import play.api.i18n.Messages
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.http.HeaderCarrier
-
 import base.SpecBase
 import connectors.BackendConnector
 import generators.Generators
 import models._
 import models.requests._
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar.{mock, when}
+import play.api.i18n.Messages
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
 
-class ViewApplicationControllerSpec extends SpecBase with MockitoSugar {
+import java.time.{Clock, Instant, ZoneOffset}
+import scala.collection.immutable.List.from
+import scala.concurrent.Future
+
+class ViewApplicationControllerSpec extends SpecBase {
   import ViewApplicationControllerSpec._
   "ViewApplication Controller" - {
 
