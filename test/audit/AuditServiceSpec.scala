@@ -16,27 +16,24 @@
 
 package audit
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.{AffinityGroup, User}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
 import base.SpecBase
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader, EmployeeOfOrg}
 import models.events.{RoleIndicatorEvent, UserTypeEvent}
 import models.requests.{DataRequest, IdentifierRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.{times, verify}
-import org.mockito.MockitoSugar.reset
+import org.mockito.MockitoSugar.{mock, reset, times, verify}
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatestplus.mockito.MockitoSugar
+import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.{AffinityGroup, User}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with MockitoSugar {
+import scala.concurrent.ExecutionContext.Implicits.global
 
-  private val mockAuditConnector  = mock[AuditConnector]
+class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks {
+
+  private val mockAuditConnector = mock[AuditConnector]
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuditConnector)
@@ -88,19 +85,18 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks with Mock
     )
 
     "must send AgentIndicatorEvent to auditConnector" in {
-      importerRoles.foreach {
-        importerRole =>
-          val event = RoleIndicatorEvent(
-            dataRequest.userId,
-            dataRequest.eoriNumber,
-            dataRequest.affinityGroup,
-            dataRequest.credentialRole,
-            importerRole
-          )
-          new AuditService(mockAuditConnector).sendRoleIndicatorEvent(importerRole)
+      importerRoles.foreach { importerRole =>
+        val event = RoleIndicatorEvent(
+          dataRequest.userId,
+          dataRequest.eoriNumber,
+          dataRequest.affinityGroup,
+          dataRequest.credentialRole,
+          importerRole
+        )
+        new AuditService(mockAuditConnector).sendRoleIndicatorEvent(importerRole)
 
-          verify(mockAuditConnector, times(1))
-            .sendExplicitAudit(eqTo("IndicatesRole"), eqTo(event))(any(), any(), any())
+        verify(mockAuditConnector, times(1))
+          .sendExplicitAudit(eqTo("IndicatesRole"), eqTo(event))(any(), any(), any())
       }
     }
   }

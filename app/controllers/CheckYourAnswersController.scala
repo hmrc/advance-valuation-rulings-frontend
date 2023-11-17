@@ -16,26 +16,24 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import cats.data.Validated.{Invalid, Valid}
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.Logger
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
-import models.{DraftId, TraderDetailsWithCountryCode}
 import models.requests._
+import models.{DraftId, TraderDetailsWithCountryCode}
 import pages.{Page, VerifyTraderDetailsPage}
+import play.api.Logger
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SubmissionService
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import userrole.UserRoleProvider
 import viewmodels.checkAnswers.summary.ApplicationSummaryService
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
@@ -56,43 +54,40 @@ class CheckYourAnswersController @Inject() (
   private implicit val logger: Logger = Logger(this.getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        getTraderDetails {
-          traderDetails =>
-            val applicationSummary =
-              applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
-            Future.successful(
-              Ok(
-                userRoleProvider
-                  .getUserRole(request.userAnswers)
-                  .selectViewForCheckYourAnswers(
-                    applicationSummary,
-                    draftId
-                  )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      getTraderDetails { traderDetails =>
+        val applicationSummary =
+          applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
+        Future.successful(
+          Ok(
+            userRoleProvider
+              .getUserRole(request.userAnswers)
+              .selectViewForCheckYourAnswers(
+                applicationSummary,
+                draftId
               )
-            )
-        }
+          )
+        )
+      }
     }
   def onSubmit(draftId: DraftId): Action[AnyContent]   =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        if (userRoleProvider.getUserRole(request.userAnswers).sourceFromUA) {
-          request.userAnswers.get(VerifyTraderDetailsPage) match {
-            case Some(td) => redirectJourney(request, td.withoutConfirmation)
-            case None     =>
-              logger.error(
-                "[CheckYourAnswersController][onSubmit] VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
-              )
-              throw new Exception(
-                "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
-              )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      if (userRoleProvider.getUserRole(request.userAnswers).sourceFromUA) {
+        request.userAnswers.get(VerifyTraderDetailsPage) match {
+          case Some(td) => redirectJourney(request, td.withoutConfirmation)
+          case None     =>
+            logger.error(
+              "[CheckYourAnswersController][onSubmit] VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
+            )
+            throw new Exception(
+              "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
+            )
 
-          }
-
-        } else {
-          getTraderDetails({ traderDetails => redirectJourney(request, traderDetails) })
         }
+
+      } else {
+        getTraderDetails(traderDetails => redirectJourney(request, traderDetails))
+      }
 
     }
 
@@ -109,18 +104,17 @@ class CheckYourAnswersController @Inject() (
       case Invalid(errors: cats.data.NonEmptyList[Page]) =>
         logger.warn(
           s"[CheckYourAnswersController][redirectJourney] Failed to create application request: ${errors.toList
-              .mkString(", ")}}"
+            .mkString(", ")}}"
         )
         Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       case Valid(applicationRequest)                     =>
         submissionService
           .submitApplication(applicationRequest, request.userId)
-          .map {
-            response =>
-              Redirect(
-                routes.ApplicationCompleteController
-                  .onPageLoad(response.applicationId.toString)
-              )
+          .map { response =>
+            Redirect(
+              routes.ApplicationCompleteController
+                .onPageLoad(response.applicationId.toString)
+            )
           }
     }
 

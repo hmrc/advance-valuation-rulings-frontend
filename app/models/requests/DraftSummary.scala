@@ -16,11 +16,10 @@
 
 package models.requests
 
-import java.time.Instant
-
+import models.DraftId
 import play.api.libs.json.{Json, OFormat}
 
-import models.DraftId
+import java.time.Instant
 
 final case class DraftSummary(
   id: DraftId,

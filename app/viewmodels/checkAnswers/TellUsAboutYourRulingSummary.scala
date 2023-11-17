@@ -27,21 +27,20 @@ import viewmodels.implicits._
 
 object TellUsAboutYourRulingSummary {
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TellUsAboutYourRulingPage).map {
-      answer =>
-        val value = answer
+    answers.get(TellUsAboutYourRulingPage).map { answer =>
+      val value = answer
 
-        SummaryListRowViewModel(
-          key = "tellUsAboutYourRuling.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.TellUsAboutYourRulingController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("tellUsAboutYourRuling.change.hidden"))
+      SummaryListRowViewModel(
+        key = "tellUsAboutYourRuling.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.TellUsAboutYourRulingController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("tellUsAboutYourRuling.change.hidden"))
         )
+      )
 
     }
 }

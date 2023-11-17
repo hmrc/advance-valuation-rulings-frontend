@@ -16,27 +16,26 @@
 
 package services.email
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
-import play.api.test.Helpers.OK
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-
 import base.SpecBase
 import connectors.EmailConnector
 import models.requests.{Email, EmailRequest}
-import org.mockito.{Mockito, MockitoSugar}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.MockitoSugar._
 import org.scalatest.BeforeAndAfterEach
+import play.api.test.Helpers.OK
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class EmailServiceSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class EmailServiceSpec extends SpecBase with BeforeAndAfterEach {
 
   private val mockEmailConnector         = mock[EmailConnector]
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockEmailConnector)
+    reset(mockEmailConnector)
     super.beforeEach()
   }
 

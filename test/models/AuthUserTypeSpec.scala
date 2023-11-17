@@ -56,11 +56,10 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
 
     val credentialRoles = Table("credentialRole", Admin, Assistant, User)
     "returns Agent for `Agent` Affinity Group" in {
-      forAll(credentialRoles) {
-        credentialRole =>
-          val result = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
+      forAll(credentialRoles) { credentialRole =>
+        val result = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
 
-          result mustBe Some(AuthUserType.Agent)
+        result mustBe Some(AuthUserType.Agent)
       }
     }
 
@@ -78,15 +77,14 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
     )
 
     "serialises to Json" in {
-      forAll(scenarios) {
-        (authUserType, expectedJson) => Json.toJson(authUserType) mustEqual expectedJson
+      forAll(scenarios) { (authUserType, expectedJson) =>
+        Json.toJson(authUserType) mustEqual expectedJson
       }
     }
 
     "deserialises from Json" in {
-      forAll(scenarios) {
-        (authUserType, expectedJson) =>
-          Json.fromJson[AuthUserType](expectedJson) mustEqual JsSuccess(authUserType)
+      forAll(scenarios) { (authUserType, expectedJson) =>
+        Json.fromJson[AuthUserType](expectedJson) mustEqual JsSuccess(authUserType)
       }
     }
   }

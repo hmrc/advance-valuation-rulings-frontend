@@ -387,25 +387,24 @@ class RequestedMethodSpec
     }
 
     "return valid for method six with all answers" in {
-      forAll(arbitraryAdaptMethod.arbitrary) {
-        adaptMethod =>
-          val userAnswers = (for {
-            ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method6)
-            ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, randomString)
-            ua <- ua.set(AdaptMethodPage, adaptMethod)
-            ua <- ua.set(ExplainHowYouWillUseMethodSixPage, randomString)
+      forAll(arbitraryAdaptMethod.arbitrary) { adaptMethod =>
+        val userAnswers = (for {
+          ua <- emptyUserAnswers.set(ValuationMethodPage, ValuationMethod.Method6)
+          ua <- ua.set(ExplainWhyYouHaveNotSelectedMethodOneToFivePage, randomString)
+          ua <- ua.set(AdaptMethodPage, adaptMethod)
+          ua <- ua.set(ExplainHowYouWillUseMethodSixPage, randomString)
 
-          } yield ua).success.get
+        } yield ua).success.get
 
-          val result = RequestedMethod(userAnswers)
+        val result = RequestedMethod(userAnswers)
 
-          result shouldBe Valid(
-            MethodSix(
-              randomString,
-              AdaptedMethod(adaptMethod),
-              randomString
-            )
+        result shouldBe Valid(
+          MethodSix(
+            randomString,
+            AdaptedMethod(adaptMethod),
+            randomString
           )
+        )
       }
     }
 

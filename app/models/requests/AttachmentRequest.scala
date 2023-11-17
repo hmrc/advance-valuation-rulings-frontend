@@ -18,12 +18,10 @@ package models.requests
 
 import cats.data.{Validated, ValidatedNel}
 import cats.implicits._
-
-import play.api.libs.json.{Json, OFormat}
-
-import models.{DraftAttachment, Index, UploadedFile, UserAnswers}
 import models.UploadedFile._
+import models.{DraftAttachment, Index, UploadedFile, UserAnswers}
 import pages._
+import play.api.libs.json.{Json, OFormat}
 import queries.{AllDocuments, DraftAttachmentAt}
 
 final case class AttachmentRequest(
@@ -44,24 +42,22 @@ object AttachmentRequest {
       case true =>
         answers
           .validated(AllDocuments)
-          .andThen(_.zipWithIndex.traverse {
-            case (document, i) =>
-              val validatedPrivacy = checkFilePrivacy(document, i)
-              val validatedFile    = checkFile(document, i)
+          .andThen(_.zipWithIndex.traverse { case (document, i) =>
+            val validatedPrivacy = checkFilePrivacy(document, i)
+            val validatedFile    = checkFile(document, i)
 
-              (validatedFile, validatedPrivacy).mapN {
-                case (Success(_, downloadUrl, uploadDetails), isConfidential) =>
-                  AttachmentRequest(
-                    name = uploadDetails.fileName,
-                    description = None,
-                    url = downloadUrl,
-                    privacy =
-                      if (isConfidential) Privacy.Confidential
-                      else Privacy.Public,
-                    mimeType = uploadDetails.fileMimeType,
-                    size = uploadDetails.size
-                  )
-              }
+            (validatedFile, validatedPrivacy).mapN { case (Success(_, downloadUrl, uploadDetails), isConfidential) =>
+              AttachmentRequest(
+                name = uploadDetails.fileName,
+                description = None,
+                url = downloadUrl,
+                privacy =
+                  if (isConfidential) Privacy.Confidential
+                  else Privacy.Public,
+                mimeType = uploadDetails.fileMimeType,
+                size = uploadDetails.size
+              )
+            }
           })
 
       case false =>

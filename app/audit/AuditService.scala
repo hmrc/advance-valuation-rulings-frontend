@@ -16,16 +16,14 @@
 
 package audit
 
-import javax.inject.{Inject, Singleton}
-
-import scala.concurrent.ExecutionContext
-
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
 import models.WhatIsYourRoleAsImporter
 import models.events.{RoleIndicatorEvent, UserTypeEvent}
 import models.requests.{DataRequest, IdentifierRequest}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class AuditService @Inject() (auditConnector: AuditConnector) {

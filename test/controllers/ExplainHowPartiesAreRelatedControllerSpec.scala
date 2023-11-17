@@ -16,24 +16,23 @@
 
 package controllers
 
-import play.api.Application
-import play.api.mvc.Call
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.ExplainHowPartiesAreRelatedFormProvider
 import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
 import pages.ExplainHowPartiesAreRelatedPage
+import play.api.Application
+import play.api.data.Form
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.ExplainHowPartiesAreRelatedView
 
-class ExplainHowPartiesAreRelatedControllerSpec extends SpecBase with MockitoSugar {
+class ExplainHowPartiesAreRelatedControllerSpec extends SpecBase {
 
-  val formProvider = new ExplainHowPartiesAreRelatedFormProvider()
-  val form         = formProvider()
+  val formProvider       = new ExplainHowPartiesAreRelatedFormProvider()
+  val form: Form[String] = formProvider()
 
-  lazy val explainHowPartiesAreRelatedRoute =
+  lazy val explainHowPartiesAreRelatedRoute: String =
     routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode, draftId).url
 
   lazy val saveDraftRoute: String =

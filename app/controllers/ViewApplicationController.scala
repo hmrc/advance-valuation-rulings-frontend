@@ -16,21 +16,19 @@
 
 package controllers
 
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import javax.inject.Inject
-
-import scala.concurrent.ExecutionContext
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import connectors.BackendConnector
 import controllers.actions._
 import models.requests.Application
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
+
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class ViewApplicationController @Inject() (
   override val messagesApi: MessagesApi,
@@ -44,14 +42,12 @@ class ViewApplicationController @Inject() (
   import ViewApplicationController._
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
-    identify.async {
-      implicit request =>
-        backendConnector.getApplication(applicationId).map {
-          application: Application =>
-            val viewModel   = ApplicationViewModel(application)
-            val lastUpdated = formatter.format(application.lastUpdated)
-            Ok(view(viewModel, applicationId, lastUpdated))
-        }
+    identify.async { implicit request =>
+      backendConnector.getApplication(applicationId).map { application: Application =>
+        val viewModel   = ApplicationViewModel(application)
+        val lastUpdated = formatter.format(application.lastUpdated)
+        Ok(view(viewModel, applicationId, lastUpdated))
+      }
     }
 }
 

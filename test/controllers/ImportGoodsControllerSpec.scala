@@ -16,24 +16,22 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.ImportGoodsFormProvider
 import models.{Done, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar.{mock, when}
 import pages.ImportGoodsPage
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.ImportGoodsView
 
-class ImportGoodsControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class ImportGoodsControllerSpec extends SpecBase {
 
   val formProvider = new ImportGoodsFormProvider()
   val form         = formProvider()

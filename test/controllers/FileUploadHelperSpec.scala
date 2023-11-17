@@ -16,50 +16,46 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
-import play.api.{Application, Configuration}
+import base.SpecBase
+import com.typesafe.config.Config
+import config.FrontendAppConfig
+import controllers.common.FileUploadHelper
+import models.requests.DataRequest
+import models.upscan.UpscanInitiateResponse
+import models.{Done, DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
+import navigation.Navigator
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.IdiomaticMockito.{DoSomethingOps, returned}
+import org.mockito.MockitoSugar._
+import org.mockito.stubbing.ScalaOngoingStubbing
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+import org.scalatest.prop.Tables.Table
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import play.api.http.HttpEntity
 import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
 import play.api.inject.bind
 import play.api.mvc.{AnyContent, Cookie, ResponseHeader, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.{Application, Configuration}
 import play.twirl.api.HtmlFormat
+import services.UserAnswersService
+import services.fileupload.FileService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.Path
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-
-import base.SpecBase
-import com.typesafe.config.Config
-import config.FrontendAppConfig
-import controllers.common.FileUploadHelper
-import models.{Done, DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
-import models.requests.DataRequest
-import models.upscan.UpscanInitiateResponse
-import navigation.Navigator
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.IdiomaticMockito.{returned, DoSomethingOps}
-import org.mockito.Mockito.{times, verify}
-import org.mockito.MockitoSugar.{reset, spy, when}
-import org.mockito.stubbing.ScalaOngoingStubbing
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import org.scalatest.prop.TableDrivenPropertyChecks.forAll
-import org.scalatest.prop.Tables.Table
-import org.scalatestplus.mockito.MockitoSugar
-import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
-import services.UserAnswersService
-import services.fileupload.FileService
 import userrole.{UserRole, UserRoleProvider}
 import views.html.{UploadLetterOfAuthorityView, UploadSupportingDocumentsView}
 
-class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+import java.time.Instant
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -664,38 +660,32 @@ class FileUploadHelperSpec extends SpecBase with MockitoSugar with BeforeAndAfte
       (
         "Quarantine",
         UploadedFile.FailureReason.Quarantine,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.quarantine")(messagesProvider)
+        (messagesProvider: MessagesProvider) => Messages.apply("fileUpload.error.quarantine")(messagesProvider)
       ),
       (
         "Rejected",
         UploadedFile.FailureReason.Rejected,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.rejected")(messagesProvider)
+        (messagesProvider: MessagesProvider) => Messages.apply("fileUpload.error.rejected")(messagesProvider)
       ),
       (
         "Duplicate",
         UploadedFile.FailureReason.Duplicate,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.duplicate")(messagesProvider)
+        (messagesProvider: MessagesProvider) => Messages.apply("fileUpload.error.duplicate")(messagesProvider)
       ),
       (
         "Unknown",
         UploadedFile.FailureReason.Unknown,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.unknown")(messagesProvider)
+        (messagesProvider: MessagesProvider) => Messages.apply("fileUpload.error.unknown")(messagesProvider)
       ),
       (
         "InvalidArgument",
         UploadedFile.FailureReason.InvalidArgument,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
+        (messagesProvider: MessagesProvider) => Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
       ),
       (
         "EntityTooSmall",
         UploadedFile.FailureReason.EntityTooSmall,
-        (messagesProvider: MessagesProvider) =>
-          Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
+        (messagesProvider: MessagesProvider) => Messages.apply("fileUpload.error.invalidargument")(messagesProvider)
       ),
       (
         "EntityTooLarge",

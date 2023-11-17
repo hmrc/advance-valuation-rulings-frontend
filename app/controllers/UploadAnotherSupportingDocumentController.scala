@@ -16,21 +16,19 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.Navigator
 import pages.{UploadAnotherSupportingDocumentPage, UploadLetterOfAuthorityPage}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.AllDocuments
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.UploadAnotherSupportingDocumentView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class UploadAnotherSupportingDocumentController @Inject() (
   override val messagesApi: MessagesApi,
@@ -46,40 +44,38 @@ class UploadAnotherSupportingDocumentController @Inject() (
     with I18nSupport {
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val attachments = AllDocuments.get().getOrElse(List.empty)
-        val form        = formProvider(attachments)
-        val loaFileName = getLetterOfAuthorityFileName(request.userAnswers)
-        Ok(view(attachments, form, mode, draftId, loaFileName))
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val attachments = AllDocuments.get().getOrElse(List.empty)
+      val form        = formProvider(attachments)
+      val loaFileName = getLetterOfAuthorityFileName(request.userAnswers)
+      Ok(view(attachments, form, mode, draftId, loaFileName))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val attachments = AllDocuments.get().getOrElse(List.empty)
-        formProvider(attachments)
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              Future.successful(
-                BadRequest(
-                  view(
-                    attachments,
-                    formWithErrors,
-                    mode,
-                    draftId,
-                    getLetterOfAuthorityFileName(request.userAnswers)
-                  )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      val attachments = AllDocuments.get().getOrElse(List.empty)
+      formProvider(attachments)
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future.successful(
+              BadRequest(
+                view(
+                  attachments,
+                  formWithErrors,
+                  mode,
+                  draftId,
+                  getLetterOfAuthorityFileName(request.userAnswers)
                 )
-              ),
-            value =>
-              for {
-                answers <- UploadAnotherSupportingDocumentPage.set(value)
-              } yield Redirect {
-                navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
-              }
-          )
+              )
+            ),
+          value =>
+            for {
+              answers <- UploadAnotherSupportingDocumentPage.set(value)
+            } yield Redirect {
+              navigator.nextPage(UploadAnotherSupportingDocumentPage, mode, answers)
+            }
+        )
     }
 
   private def getLetterOfAuthorityFileName(userAnswers: UserAnswers): Option[String] = {

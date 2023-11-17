@@ -30,24 +30,23 @@ import viewmodels.implicits._
 object AdaptMethodSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AdaptMethodPage).map {
-      answer =>
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"adaptMethod.$answer"))
-          )
+    answers.get(AdaptMethodPage).map { answer =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"adaptMethod.$answer"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key = "adaptMethod.checkYourAnswersLabel",
-          value = value,
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.AdaptMethodController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("adaptMethod.change.hidden"))
+      SummaryListRowViewModel(
+        key = "adaptMethod.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.AdaptMethodController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("adaptMethod.change.hidden"))
         )
+      )
     }
 }

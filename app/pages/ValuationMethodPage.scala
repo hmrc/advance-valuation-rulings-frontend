@@ -16,11 +16,10 @@
 
 package pages
 
-import scala.util.Try
-
+import models.{UserAnswers, ValuationMethod}
 import play.api.libs.json.JsPath
 
-import models.{UserAnswers, ValuationMethod}
+import scala.util.Try
 
 case object ValuationMethodPage extends QuestionPage[ValuationMethod] {
 

@@ -16,12 +16,11 @@
 
 package forms
 
-import javax.inject.Inject
-
-import play.api.data.Form
-
 import forms.mappings.Mappings
 import models.WhatIsYourRoleAsImporter
+import play.api.data.Form
+
+import javax.inject.Inject
 
 class WhatIsYourRoleAsImporterFormProvider @Inject() extends Mappings {
 

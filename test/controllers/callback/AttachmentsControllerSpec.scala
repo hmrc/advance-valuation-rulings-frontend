@@ -16,36 +16,29 @@
 
 package controllers.callback
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.objectstore.client.{Md5Hash, Object, ObjectMetadata, Path}
-import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-
+import akka.NotUsed
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
+import uk.gov.hmrc.objectstore.client.{Md5Hash, Object, ObjectMetadata, Path}
 
-class AttachmentsControllerSpec
-    extends AnyFreeSpec
-    with Matchers
-    with ScalaFutures
-    with OptionValues
-    with MockitoSugar {
+import java.time.Instant
+import scala.concurrent.Future
 
-  private val mockObjectStoreClient = mock[PlayObjectStoreClient]
+class AttachmentsControllerSpec extends AnyFreeSpec with Matchers with ScalaFutures with OptionValues {
+
+  val mockObjectStoreClient: PlayObjectStoreClient = mock(classOf[PlayObjectStoreClient])
 
   private lazy val app = GuiceApplicationBuilder()
     .overrides(
@@ -59,8 +52,8 @@ class AttachmentsControllerSpec
 
     "must return a stream of the object from object store when the item exists" in {
 
-      val bytes                            = ByteString.fromString("Hello, World!")
-      val o: Object[Source[ByteString, _]] = Object(
+      val bytes                                  = ByteString.fromString("Hello, World!")
+      val o: Object[Source[ByteString, NotUsed]] = Object(
         location = Path.Directory("some").file("location"),
         content = Source.single(bytes),
         metadata = ObjectMetadata(
@@ -72,7 +65,7 @@ class AttachmentsControllerSpec
         )
       )
 
-      when(mockObjectStoreClient.getObject[Source[ByteString, _]](any(), any())(any(), any()))
+      when(mockObjectStoreClient.getObject[Source[ByteString, NotUsed]](any(), any())(any(), any()))
         .thenReturn(Future.successful(Some(o)))
 
       val request = FakeRequest(routes.AttachmentsController.get("some/location"))

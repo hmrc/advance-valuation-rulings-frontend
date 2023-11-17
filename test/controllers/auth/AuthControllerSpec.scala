@@ -16,13 +16,12 @@
 
 package controllers.auth
 
-import java.net.URLEncoder
-
+import base.SpecBase
+import config.FrontendAppConfig
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-import base.SpecBase
-import config.FrontendAppConfig
+import java.net.URLEncoder
 
 class AuthControllerSpec extends SpecBase {
 

@@ -18,12 +18,10 @@ package models.requests
 
 import cats.data.{NonEmptyList, ValidatedNel}
 import cats.implicits._
-
-import play.api.libs.json._
-
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models.{AdaptMethod, UserAnswers, ValuationMethod}
 import pages._
+import play.api.libs.json._
 
 sealed trait RequestedMethod
 
@@ -42,31 +40,26 @@ object MethodOne {
 
     val betweenParties: ValidatedNel[Page, Option[String]] = userAnswers
       .validated(IsSaleBetweenRelatedPartiesPage)
-      .andThen(
-        answer =>
-          if (answer) userAnswers.validated(ExplainHowPartiesAreRelatedPage).map(_.some)
-          else None.validNel
+      .andThen(answer =>
+        if (answer) userAnswers.validated(ExplainHowPartiesAreRelatedPage).map(_.some)
+        else None.validNel
       )
 
     val restrictions = userAnswers
       .validated(AreThereRestrictionsOnTheGoodsPage)
-      .andThen(
-        answer =>
-          if (answer) userAnswers.validated(DescribeTheRestrictionsPage).map(_.some)
-          else None.validNel
+      .andThen(answer =>
+        if (answer) userAnswers.validated(DescribeTheRestrictionsPage).map(_.some)
+        else None.validNel
       )
 
     val subjectToConditions = userAnswers
       .validated(IsTheSaleSubjectToConditionsPage)
-      .andThen(
-        answer =>
-          if (answer) userAnswers.validated(DescribeTheConditionsPage).map(_.some)
-          else None.validNel
+      .andThen(answer =>
+        if (answer) userAnswers.validated(DescribeTheConditionsPage).map(_.some)
+        else None.validNel
       )
 
-    saleInvolved.andThen(
-      _ => (betweenParties, restrictions, subjectToConditions).mapN(MethodOne.apply)
-    )
+    saleInvolved.andThen(_ => (betweenParties, restrictions, subjectToConditions).mapN(MethodOne.apply))
   }
 }
 
@@ -90,12 +83,11 @@ object MethodTwo {
     val describeTheIdenticalGoods = userAnswers.validated(DescribeTheIdenticalGoodsPage)
 
     (whyTransactionValue, usedMethod, describeTheIdenticalGoods)
-      .mapN(
-        (why, _, describe) =>
-          MethodTwo(
-            why,
-            PreviousIdenticalGoods(describe)
-          )
+      .mapN((why, _, describe) =>
+        MethodTwo(
+          why,
+          PreviousIdenticalGoods(describe)
+        )
       )
   }
 }
@@ -199,8 +191,7 @@ object MethodSix {
 object RequestedMethod {
   private[models] val jsonConfig                = JsonConfiguration(
     discriminator = "type",
-    typeNaming =
-      JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
+    typeNaming = JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
   )
   implicit val format: OFormat[RequestedMethod] =
     Json.configured(jsonConfig).format[RequestedMethod]

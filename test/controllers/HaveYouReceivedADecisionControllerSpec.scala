@@ -16,23 +16,21 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.HaveYouReceivedADecisionFormProvider
 import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar.{mock, when}
 import pages.HaveYouReceivedADecisionPage
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.HaveYouReceivedADecisionView
 
-class HaveYouReceivedADecisionControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class HaveYouReceivedADecisionControllerSpec extends SpecBase {
 
   lazy val getRoute  = routes.HaveYouReceivedADecisionController.onPageLoad(NormalMode, draftId).url
   lazy val postRoute = routes.HaveYouReceivedADecisionController.onSubmit(NormalMode, draftId).url

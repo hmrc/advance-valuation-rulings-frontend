@@ -16,16 +16,6 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.data.Form
-import play.api.i18n.Messages
-import play.api.inject.bind
-import play.api.mvc.AnyContent
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import play.twirl.api.HtmlFormat
-
 import base.SpecBase
 import connectors.BackendConnector
 import forms.EmployeeCheckRegisteredDetailsFormProvider
@@ -34,17 +24,22 @@ import models.requests.DataRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, same}
-import org.mockito.Mockito.when
+import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatestplus.mockito.MockitoSugar
 import pages.{AgentForTraderCheckRegisteredDetailsPage, CheckRegisteredDetailsPage, WhatIsYourRoleAsImporterPage}
+import play.api.data.Form
+import play.api.i18n.Messages
+import play.api.inject.bind
+import play.api.mvc.AnyContent
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 import services.UserAnswersService
 import userrole.{UserRole, UserRoleProvider}
 
-class CheckRegisteredDetailsControllerSpec
-    extends SpecBase
-    with MockitoSugar
-    with TableDrivenPropertyChecks {
+import scala.concurrent.Future
+
+class CheckRegisteredDetailsControllerSpec extends SpecBase with TableDrivenPropertyChecks {
 
   private lazy val checkRegisteredDetailsRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId).url
@@ -115,56 +110,55 @@ class CheckRegisteredDetailsControllerSpec
     setUpUserRoleProviderMock()
     setUpViewMockForUserRole()
 
-    forAll(consentToDisclosureOfPersonalDataScenarios) {
-      consentValue =>
-        s"must return OK and the correct view for a GET when consentToDisclosureOfPersonalData is $consentValue" in {
+    forAll(consentToDisclosureOfPersonalDataScenarios) { consentValue =>
+      s"must return OK and the correct view for a GET when consentToDisclosureOfPersonalData is $consentValue" in {
 
-          val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+        val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[BackendConnector].toInstance(mockBackendConnector),
+            bind[UserAnswersService].toInstance(mockUserAnswersService),
+            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, checkRegisteredDetailsRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+        }
+      }
+
+      s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
+
+        val previousUserAnswers = userAnswersAsIndividualTrader
+          .set(
+            CheckRegisteredDetailsPage,
+            consentValue
+          )
+          .success
+          .value
+
+        setUpUserAnswersServiceMock(previousUserAnswers)
+
+        val application =
+          applicationBuilder(userAnswers = Some(previousUserAnswers))
             .overrides(
-              bind[BackendConnector].toInstance(mockBackendConnector),
               bind[UserAnswersService].toInstance(mockUserAnswersService),
+              bind[BackendConnector].toInstance(mockBackendConnector),
               bind[UserRoleProvider].toInstance(mockUserRoleProvider)
             )
             .build()
 
-          running(application) {
-            val request = FakeRequest(GET, checkRegisteredDetailsRoute)
+        running(application) {
+          val request = FakeRequest(GET, checkRegisteredDetailsRoute)
 
-            val result = route(application, request).value
+          val result = route(application, request).value
 
-            status(result) mustEqual OK
-          }
+          status(result) mustEqual OK
         }
-
-        s"must return correct view for a GET when question has been answered previously and consentToDisclosureOfPersonalData is $consentValue" in {
-
-          val previousUserAnswers = userAnswersAsIndividualTrader
-            .set(
-              CheckRegisteredDetailsPage,
-              consentValue
-            )
-            .success
-            .value
-
-          setUpUserAnswersServiceMock(previousUserAnswers)
-
-          val application =
-            applicationBuilder(userAnswers = Some(previousUserAnswers))
-              .overrides(
-                bind[UserAnswersService].toInstance(mockUserAnswersService),
-                bind[BackendConnector].toInstance(mockBackendConnector),
-                bind[UserRoleProvider].toInstance(mockUserRoleProvider)
-              )
-              .build()
-
-          running(application) {
-            val request = FakeRequest(GET, checkRegisteredDetailsRoute)
-
-            val result = route(application, request).value
-
-            status(result) mustEqual OK
-          }
-        }
+      }
     }
 
     "must redirect to the next page when valid data is submitted" in {

@@ -16,26 +16,24 @@
 
 package services
 
-import scala.concurrent.Future
-
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.HeaderCarrier
-
 import connectors.UserAnswersConnector
-import models.{Done, DraftId, UserAnswers}
 import models.requests.DraftSummaryResponse
-import org.mockito.{Mockito, MockitoSugar}
+import models.{Done, DraftId, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import org.mockito.MockitoSugar._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.concurrent.Future
 
 class UserAnswersServiceSpec
     extends AnyFreeSpec
     with Matchers
-    with MockitoSugar
     with BeforeAndAfterEach
     with ScalaFutures
     with OptionValues {
@@ -45,7 +43,7 @@ class UserAnswersServiceSpec
   private val mockUserAnswersConnector = mock[UserAnswersConnector]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockUserAnswersConnector)
+    reset(mockUserAnswersConnector)
     super.beforeEach()
   }
 

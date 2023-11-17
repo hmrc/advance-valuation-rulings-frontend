@@ -16,37 +16,30 @@
 
 package controllers.actions
 
+import base.SpecBase
+import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.{DraftId, UserAnswers}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar.{mock, reset, when}
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.prop.TableDrivenPropertyChecks
+import pages.AccountHomePage
+import play.api.test.FakeRequest
+import services.UserAnswersService
+import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
+import uk.gov.hmrc.auth.core.{Admin, Assistant, User}
+
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.{Admin, Assistant, User}
-import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
+class DataRetrievalActionSpec extends SpecBase with BeforeAndAfterEach with TableDrivenPropertyChecks {
 
-import base.SpecBase
-import models.{DraftId, UserAnswers}
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import models.requests.{IdentifierRequest, OptionalDataRequest}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito
-import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatestplus.mockito.MockitoSugar
-import pages.AccountHomePage
-import services.UserAnswersService
-
-class DataRetrievalActionSpec
-    extends SpecBase
-    with MockitoSugar
-    with BeforeAndAfterEach
-    with TableDrivenPropertyChecks {
-
-  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockUserAnswersService)
+    reset(mockUserAnswersService)
     super.beforeEach()
   }
 
@@ -85,33 +78,32 @@ class DataRetrievalActionSpec
         (Organisation, Option(Assistant), OrganisationAssistant)
       )
 
-      forAll(scenarios) {
-        (affinityGroup, credentialRole, expectedAuthUserType) =>
-          s"must add the AuthUserType $expectedAuthUserType to UserAnswers for $affinityGroup and $credentialRole" in {
-            when(mockUserAnswersService.get(any())(any())) thenReturn Future(
-              Option(UserAnswers(userAnswersId, draftId))
-            )
+      forAll(scenarios) { (affinityGroup, credentialRole, expectedAuthUserType) =>
+        s"must add the AuthUserType $expectedAuthUserType to UserAnswers for $affinityGroup and $credentialRole" in {
+          when(mockUserAnswersService.get(any())(any())) thenReturn Future(
+            Option(UserAnswers(userAnswersId, draftId))
+          )
 
-            val action = new Harness(draftId)
+          val action = new Harness(draftId)
 
-            val result =
-              action
-                .callTransform(
-                  IdentifierRequest(
-                    FakeRequest(),
-                    userAnswersId,
-                    EoriNumber,
-                    affinityGroup,
-                    credentialRole
-                  )
+          val result =
+            action
+              .callTransform(
+                IdentifierRequest(
+                  FakeRequest(),
+                  userAnswersId,
+                  EoriNumber,
+                  affinityGroup,
+                  credentialRole
                 )
-                .futureValue
+              )
+              .futureValue
 
-            val resultUserType = result.userAnswers.value.get(AccountHomePage)
+          val resultUserType = result.userAnswers.value.get(AccountHomePage)
 
-            resultUserType mustBe defined
-            resultUserType.value mustBe expectedAuthUserType
-          }
+          resultUserType mustBe defined
+          resultUserType.value mustBe expectedAuthUserType
+        }
       }
     }
   }

@@ -101,7 +101,9 @@ package userrole {
           )
 
         case None =>
-          logger.error("VerifyTraderDetailsPage needs to be answered(getApplicationSummary)")
+          logger.error(
+            "[AgentForTrader][getApplicationSummary] VerifyTraderDetailsPage needs to be answered(getApplicationSummary)"
+          )
           throw new Exception("VerifyTraderDetailsPage needs to be answered(getApplicationSummary)")
 
       }

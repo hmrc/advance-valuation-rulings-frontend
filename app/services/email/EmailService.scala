@@ -16,15 +16,13 @@
 
 package services.email
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import uk.gov.hmrc.http.HeaderCarrier
-
 import connectors.EmailConnector
 import models.Done
 import models.requests.{Email, EmailRequest}
+import uk.gov.hmrc.http.HeaderCarrier
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class EmailService @Inject() (emailConnector: EmailConnector)(implicit ec: ExecutionContext) {
 

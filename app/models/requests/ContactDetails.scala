@@ -17,12 +17,10 @@
 package models.requests
 
 import cats.data._
-
-import play.api.libs.json._
-
 import com.google.inject.Inject
 import models._
 import pages._
+import play.api.libs.json._
 import userrole.UserRoleProvider
 
 case class CompanyContactDetails(

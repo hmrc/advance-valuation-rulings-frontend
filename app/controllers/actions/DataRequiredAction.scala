@@ -16,19 +16,16 @@
 
 package controllers.actions
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.mvc.{ActionRefiner, Result}
-import play.api.mvc.Results.Redirect
-
 import controllers.routes
 import models.requests.{DataRequest, OptionalDataRequest}
 import pages.AccountHomePage
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{ActionRefiner, Result}
 
-class DataRequiredActionImpl @Inject() (implicit val executionContext: ExecutionContext)
-    extends DataRequiredAction {
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
+
+class DataRequiredActionImpl @Inject() (implicit val executionContext: ExecutionContext) extends DataRequiredAction {
 
   override protected def refine[A](
     request: OptionalDataRequest[A]

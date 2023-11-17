@@ -16,40 +16,35 @@
 
 package controllers
 
-import scala.concurrent.Future
-
+import base.SpecBase
+import connectors.BackendConnector
+import models.AuthUserType.IndividualTrader
+import models._
+import models.requests._
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar.{mock, reset, when}
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.{BeforeAndAfterEach, TryValues}
+import pages._
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.{AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-
-import base.SpecBase
-import connectors.BackendConnector
-import models._
-import models.AuthUserType.IndividualTrader
-import models.requests._
-import org.mockito.{Mockito, MockitoSugar}
-import org.mockito.ArgumentMatchers.any
-import org.scalatest.{BeforeAndAfterEach, TryValues}
-import org.scalatest.concurrent.ScalaFutures
-import pages._
 import services.SubmissionService
 import userrole.{UserRole, UserRoleProvider}
 import viewmodels.checkAnswers.summary.{ApplicationSummary, _}
 import viewmodels.govuk.SummaryListFluency
 
-class CheckYourAnswersControllerSpec
-    extends SpecBase
-    with SummaryListFluency
-    with MockitoSugar
-    with BeforeAndAfterEach {
+import scala.concurrent.Future
+
+class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency with BeforeAndAfterEach {
 
   private val mockSubmissionService = mock[SubmissionService]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockSubmissionService)
+    reset(mockSubmissionService)
     super.beforeEach()
   }
 
@@ -179,7 +174,7 @@ class CheckYourAnswersControllerSpec
     }
 }
 
-trait CheckYourAnswersControllerSpecSetup extends MockitoSugar with TryValues with ScalaFutures {
+trait CheckYourAnswersControllerSpecSetup extends TryValues with ScalaFutures {
   val userAnswersId: String    = "id"
   val DraftIdSequence          = 123456789L
   val draftId: DraftId         = DraftId(DraftIdSequence)

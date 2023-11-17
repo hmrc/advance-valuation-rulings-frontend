@@ -16,18 +16,17 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import controllers.routes.{JourneyRecoveryController, UploadLetterOfAuthorityController}
 import models._
 import navigation.Navigator
 import pages.{UploadLetterOfAuthorityPage, VerifyLetterOfAuthorityPage}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.VerifyLetterOfAuthorityView
+
+import javax.inject.Inject
 
 class VerifyLetterOfAuthorityController @Inject() (
   override val messagesApi: MessagesApi,
@@ -41,32 +40,30 @@ class VerifyLetterOfAuthorityController @Inject() (
     with I18nSupport {
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        UploadLetterOfAuthorityPage.get() match {
-          case Some(attachment) =>
-            attachment.fileName match {
-              case Some(_) =>
-                Ok(view(attachment, draftId, mode))
-              case None    =>
-                Redirect(
-                  UploadLetterOfAuthorityController.onPageLoad(
-                    mode,
-                    draftId,
-                    None,
-                    None,
-                    redirectedFromChangeButton = false
-                  )
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      UploadLetterOfAuthorityPage.get() match {
+        case Some(attachment) =>
+          attachment.fileName match {
+            case Some(_) =>
+              Ok(view(attachment, draftId, mode))
+            case None    =>
+              Redirect(
+                UploadLetterOfAuthorityController.onPageLoad(
+                  mode,
+                  draftId,
+                  None,
+                  None,
+                  redirectedFromChangeButton = false
                 )
-            }
-          case None             => Redirect(JourneyRecoveryController.onPageLoad())
-        }
+              )
+          }
+        case None             => Redirect(JourneyRecoveryController.onPageLoad())
+      }
 
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        Redirect(navigator.nextPage(VerifyLetterOfAuthorityPage, mode, request.userAnswers))
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      Redirect(navigator.nextPage(VerifyLetterOfAuthorityPage, mode, request.userAnswers))
     }
 }

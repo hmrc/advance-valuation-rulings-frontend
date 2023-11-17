@@ -27,21 +27,20 @@ import viewmodels.implicits._
 
 object HaveYouReceivedADecisionSummary {
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(HaveYouReceivedADecisionPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+    answers.get(HaveYouReceivedADecisionPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "haveYouReceivedADecision.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.HaveYouReceivedADecisionController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("haveYouReceivedADecision.change.hidden"))
+      SummaryListRowViewModel(
+        key = "haveYouReceivedADecision.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.HaveYouReceivedADecisionController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("haveYouReceivedADecision.change.hidden"))
         )
+      )
 
     }
 }

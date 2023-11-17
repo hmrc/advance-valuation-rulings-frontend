@@ -60,14 +60,13 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   Await.result(initialised, 30.seconds)
 
   private def ensureAuthToken(): Future[Unit] =
-    authTokenIsValid.flatMap {
-      isValid =>
-        if (isValid) {
-          logger.info("[InternalAuthTokenInitialiser][ensureAuthToken] Auth token is already valid")
-          Future.successful(())
-        } else {
-          createClientAuthToken()
-        }
+    authTokenIsValid.flatMap { isValid =>
+      if (isValid) {
+        logger.info("[InternalAuthTokenInitialiser][ensureAuthToken] Auth token is already valid")
+        Future.successful(())
+      } else {
+        createClientAuthToken()
+      }
     }
 
   private def createClientAuthToken(): Future[Unit] = {
@@ -93,19 +92,18 @@ class InternalAuthTokenInitialiserImpl @Inject() (
         )
       )
       .execute
-      .flatMap {
-        response =>
-          if (response.status == CREATED) {
-            logger.info(
-              "[InternalAuthTokenInitialiser][createClientAuthToken] Auth token initialised"
-            )
-            Future.successful(())
-          } else {
-            logger.error(
-              "[InternalAuthTokenInitialiser][createClientAuthToken] Unable to initialise internal-auth token"
-            )
-            Future.failed(new RuntimeException("Unable to initialise internal-auth token"))
-          }
+      .flatMap { response =>
+        if (response.status == CREATED) {
+          logger.info(
+            "[InternalAuthTokenInitialiser][createClientAuthToken] Auth token initialised"
+          )
+          Future.successful(())
+        } else {
+          logger.error(
+            "[InternalAuthTokenInitialiser][createClientAuthToken] Unable to initialise internal-auth token"
+          )
+          Future.failed(new RuntimeException("Unable to initialise internal-auth token"))
+        }
       }
   }
 

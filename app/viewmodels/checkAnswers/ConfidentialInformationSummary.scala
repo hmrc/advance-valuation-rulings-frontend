@@ -29,18 +29,17 @@ import viewmodels.implicits._
 object ConfidentialInformationSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ConfidentialInformationPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "confidentialInformation.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ConfidentialInformationController.onPageLoad(CheckMode, answers.draftId).url
-            )
-              .withVisuallyHiddenText(messages("confidentialInformation.change.hidden"))
+    answers.get(ConfidentialInformationPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "confidentialInformation.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ConfidentialInformationController.onPageLoad(CheckMode, answers.draftId).url
           )
+            .withVisuallyHiddenText(messages("confidentialInformation.change.hidden"))
         )
+      )
     }
 }

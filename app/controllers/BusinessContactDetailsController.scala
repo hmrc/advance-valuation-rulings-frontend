@@ -16,24 +16,22 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import config.FrontendAppConfig
 import controllers.actions._
 import forms.BusinessContactDetailsFormProvider
-import models.{DraftId, Mode}
 import models.requests.DataRequest
+import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.BusinessContactDetailsPage
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import userrole.UserRoleProvider
 import views.html.BusinessContactDetailsView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class BusinessContactDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -57,45 +55,43 @@ class BusinessContactDetailsController @Inject() (
       .contactDetailsIncludeCompanyName
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val form         = formProvider(includeCompanyName())
-        val preparedForm = BusinessContactDetailsPage.fill(form)
-        Ok(view(preparedForm, mode, draftId, includeCompanyName()))
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val form         = formProvider(includeCompanyName())
+      val preparedForm = BusinessContactDetailsPage.fill(form)
+      Ok(view(preparedForm, mode, draftId, includeCompanyName()))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId, saveDraft: Boolean): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val form = formProvider(includeCompanyName())
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      val form = formProvider(includeCompanyName())
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            if (saveDraft) {
+              Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+            } else {
+              Future
+                .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName())))
+            },
+          value =>
+            for {
+              updatedAnswers <- BusinessContactDetailsPage.set(value)
+              _              <- userAnswersService.set(updatedAnswers)
+            } yield
               if (saveDraft) {
-                Future.successful(Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId)))
+                Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
               } else {
-                Future
-                  .successful(BadRequest(view(formWithErrors, mode, draftId, includeCompanyName())))
-              },
-            value =>
-              for {
-                updatedAnswers <- BusinessContactDetailsPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield
-                if (saveDraft) {
-                  Redirect(routes.DraftHasBeenSavedController.onPageLoad(draftId))
-                } else {
-                  Redirect(
-                    navigator.nextPage(
-                      userRoleProvider
-                        .getUserRole(updatedAnswers)
-                        .selectBusinessContactDetailsPage(),
-                      mode,
-                      updatedAnswers
-                    )
+                Redirect(
+                  navigator.nextPage(
+                    userRoleProvider
+                      .getUserRole(updatedAnswers)
+                      .selectBusinessContactDetailsPage(),
+                    mode,
+                    updatedAnswers
                   )
-                }
-          )
+                )
+              }
+        )
     }
 }

@@ -16,26 +16,24 @@
 
 package services.fileupload
 
-import java.net.URL
-import javax.inject.{Inject, Singleton}
-
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.control.NoStackTrace
-
-import play.api.Configuration
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.objectstore.client.{Md5Hash, Path}
-import uk.gov.hmrc.objectstore.client.config.ObjectStoreClientConfig
-import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-
 import config.Service
 import connectors.UpscanConnector
-import models.{Done, DraftId, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
+import models.{Done, DraftId, UploadedFile, UserAnswers}
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
+import play.api.Configuration
 import queries.AllDocuments
 import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.objectstore.client.config.ObjectStoreClientConfig
+import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
+import uk.gov.hmrc.objectstore.client.{Md5Hash, Path}
+
+import java.net.URL
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NoStackTrace
 
 @Singleton
 class FileService @Inject() (
@@ -149,9 +147,7 @@ class FileService @Inject() (
 
 object FileService {
 
-  final case class NoUserAnswersFoundException(draftId: DraftId)
-      extends Exception
-      with NoStackTrace {
+  final case class NoUserAnswersFoundException(draftId: DraftId) extends Exception with NoStackTrace {
     override def getMessage: String = s"No user answers found for $draftId"
   }
 }

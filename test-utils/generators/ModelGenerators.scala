@@ -64,8 +64,7 @@ trait ModelGenerators {
       )
     }
 
-  implicit lazy val arbitraryTraderDetailsWithConfirmation
-    : Arbitrary[TraderDetailsWithConfirmation] =
+  implicit lazy val arbitraryTraderDetailsWithConfirmation: Arbitrary[TraderDetailsWithConfirmation] =
     Arbitrary {
       for {
         eoriNo       <- arbitrary[String]

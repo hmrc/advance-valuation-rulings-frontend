@@ -58,18 +58,16 @@ class BackendConnector @Inject() (
       .get(url"$backendUrl/trader-details/${acknowledgementReference.value}/${eoriNumber.value}")
       .setHeader("X-Correlation-ID" -> UUID.randomUUID().toString)
       .execute[HttpResponse]
-      .map {
-        response =>
-          response.status match {
-            case OK =>
-              Right(response.json.as[TraderDetailsWithCountryCode])
-            case _  =>
-              Left(BackendError(response.status, response.body))
-          }
+      .map { response =>
+        response.status match {
+          case OK =>
+            Right(response.json.as[TraderDetailsWithCountryCode])
+          case _  =>
+            Left(BackendError(response.status, response.body))
+        }
       }
-      .recover {
-        case e: Throwable =>
-          onError(e)
+      .recover { case e: Throwable =>
+        onError(e)
       }
 
   def submitApplication(applicationRequest: ApplicationRequest)(implicit

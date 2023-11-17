@@ -15,12 +15,11 @@
  */
 
 package config
-import java.time.{Clock, ZoneOffset}
-
-import play.api.{Configuration, Environment}
-import play.api.inject.{bind => binding, Binding}
-
 import controllers.actions._
+import play.api.inject.{Binding, bind => binding}
+import play.api.{Configuration, Environment}
+
+import java.time.{Clock, ZoneOffset}
 
 class Module extends play.api.inject.Module {
 

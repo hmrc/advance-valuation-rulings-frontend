@@ -16,17 +16,15 @@
 
 package models
 
-import java.time.Instant
-
 import cats.data.{Validated, ValidatedNel}
-import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
-
+import pages._
 import play.api.libs.json._
+import queries.{Gettable, Modifiable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import pages._
-import queries.{Gettable, Modifiable}
+import java.time.Instant
+import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
   userId: String,
@@ -65,10 +63,9 @@ final case class UserAnswers(
         Failure(JsResultException(errors))
     }
 
-    updatedData.flatMap {
-      d =>
-        val updatedAnswers = copy(data = d)
-        page.cleanup(Some(value), updatedAnswers)
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      page.cleanup(Some(value), updatedAnswers)
     }
   }
 
@@ -116,10 +113,9 @@ final case class UserAnswers(
         Success(data)
     }
 
-    updatedData.flatMap {
-      d =>
-        val updatedAnswers = copy(data = d)
-        page.cleanup(None, updatedAnswers)
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      page.cleanup(None, updatedAnswers)
     }
   }
 

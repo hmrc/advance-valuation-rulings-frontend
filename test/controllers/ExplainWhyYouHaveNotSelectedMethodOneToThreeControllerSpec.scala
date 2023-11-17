@@ -16,21 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider
+import models.NormalMode
+import pages.ExplainWhyYouHaveNotSelectedMethodOneToThreePage
 import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider
-import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
-import pages.ExplainWhyYouHaveNotSelectedMethodOneToThreePage
 import views.html.ExplainWhyYouHaveNotSelectedMethodOneToThreeView
 
-class ExplainWhyYouHaveNotSelectedMethodOneToThreeControllerSpec
-    extends SpecBase
-    with MockitoSugar {
+class ExplainWhyYouHaveNotSelectedMethodOneToThreeControllerSpec extends SpecBase {
 
   val formProvider = new ExplainWhyYouHaveNotSelectedMethodOneToThreeFormProvider()
   val form         = formProvider()

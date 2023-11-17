@@ -16,18 +16,16 @@
 
 package controllers
 
-import play.api.Application
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.HasConfidentialInformationFormProvider
 import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
 import pages.HasConfidentialInformationPage
+import play.api.Application
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.HasConfidentialInformationView
 
-class HasConfidentialInformationControllerSpec extends SpecBase with MockitoSugar {
+class HasConfidentialInformationControllerSpec extends SpecBase {
 
   val formProvider = new HasConfidentialInformationFormProvider()
   val form         = formProvider()

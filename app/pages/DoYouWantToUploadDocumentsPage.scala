@@ -16,12 +16,11 @@
 
 package pages
 
-import scala.util.Try
-
-import play.api.libs.json.JsPath
-
 import models.UserAnswers
+import play.api.libs.json.JsPath
 import queries.AllDocuments
+
+import scala.util.Try
 
 case object DoYouWantToUploadDocumentsPage extends QuestionPage[Boolean] {
 

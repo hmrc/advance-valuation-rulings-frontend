@@ -16,20 +16,18 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.Future
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.ValuationMethodFormProvider
 import models.{DraftId, Mode}
 import navigation.Navigator
 import pages.ChoosingMethodPage
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ChoosingMethodView
+
+import javax.inject.Inject
+import scala.concurrent.Future
 
 class ChoosingMethodController @Inject() (
   override val messagesApi: MessagesApi,
@@ -44,17 +42,16 @@ class ChoosingMethodController @Inject() (
     with I18nSupport {
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(formProvider(), mode, draftId))
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      Ok(view(formProvider(), mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        Future.successful(
-          Redirect(
-            navigator.nextPage(ChoosingMethodPage, mode, request.userAnswers)
-          )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      Future.successful(
+        Redirect(
+          navigator.nextPage(ChoosingMethodPage, mode, request.userAnswers)
         )
+      )
     }
 }

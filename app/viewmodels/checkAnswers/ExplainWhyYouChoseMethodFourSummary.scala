@@ -29,21 +29,20 @@ import viewmodels.implicits._
 object ExplainWhyYouChoseMethodFourSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExplainWhyYouChoseMethodFourPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "explainWhyYouChoseMethodFour.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ExplainWhyYouChoseMethodFourController
-                .onPageLoad(CheckMode, answers.draftId)
-                .url
-            )
-              .withVisuallyHiddenText(messages("explainWhyYouChoseMethodFour.change.hidden"))
+    answers.get(ExplainWhyYouChoseMethodFourPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "explainWhyYouChoseMethodFour.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ExplainWhyYouChoseMethodFourController
+              .onPageLoad(CheckMode, answers.draftId)
+              .url
           )
+            .withVisuallyHiddenText(messages("explainWhyYouChoseMethodFour.change.hidden"))
         )
+      )
     }
 
 }

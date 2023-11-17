@@ -16,30 +16,23 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup
-
 import base.SpecBase
 import connectors.BackendConnector
 import generators.ApplicationGenerator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.{verify, when}
-import org.mockito.MockitoSugar.{reset, times}
+import org.mockito.MockitoSugar._
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.ApplicationCompleteView
 
-class ApplicationCompleteControllerSpec
-    extends SpecBase
-    with MockitoSugar
-    with ApplicationGenerator
-    with TableDrivenPropertyChecks {
+import scala.concurrent.Future
+
+class ApplicationCompleteControllerSpec extends SpecBase with ApplicationGenerator with TableDrivenPropertyChecks {
 
   private val mockBackendConnector = mock[BackendConnector]
 
@@ -57,45 +50,43 @@ class ApplicationCompleteControllerSpec
       (AffinityGroup.Agent, applicationBuilderAsAgent(), false)
     )
 
-    forAll(affinityGroupScenarios) {
-      (affinityGroup, applicationBuilder, isIndividual) =>
-        s"must return OK and the correct view for a GET when affinity group is $affinityGroup" in {
+    forAll(affinityGroupScenarios) { (affinityGroup, applicationBuilder, isIndividual) =>
+      s"must return OK and the correct view for a GET when affinity group is $affinityGroup" in {
 
-          ScalaCheckPropertyChecks.forAll(arbitraryApplication.arbitrary) {
-            rulingsApplication =>
-              val applicationId = rulingsApplication.id.toString
-              val email         = rulingsApplication.contact.email
-              val application   = applicationBuilder
-                .overrides(bind[BackendConnector].toInstance(mockBackendConnector))
-                .build()
+        ScalaCheckPropertyChecks.forAll(arbitraryApplication.arbitrary) { rulingsApplication =>
+          val applicationId = rulingsApplication.id.toString
+          val email         = rulingsApplication.contact.email
+          val application   = applicationBuilder
+            .overrides(bind[BackendConnector].toInstance(mockBackendConnector))
+            .build()
 
-              when(mockBackendConnector.getApplication(any())(any()))
-                .thenReturn(Future.successful(rulingsApplication))
+          when(mockBackendConnector.getApplication(any())(any()))
+            .thenReturn(Future.successful(rulingsApplication))
 
-              running(application) {
-                val request =
-                  FakeRequest(
-                    GET,
-                    routes.ApplicationCompleteController.onPageLoad(applicationId).url
-                  )
+          running(application) {
+            val request =
+              FakeRequest(
+                GET,
+                routes.ApplicationCompleteController.onPageLoad(applicationId).url
+              )
 
-                val result = route(application, request).value
-                val view   = application.injector.instanceOf[ApplicationCompleteView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ApplicationCompleteView]
 
-                status(result) mustEqual OK
-                contentAsString(result) mustEqual view(
-                  isIndividual,
-                  applicationId,
-                  email
-                )(
-                  request,
-                  messages(application)
-                ).toString
-              }
-
-              verify(mockBackendConnector, times(1)).getApplication(eqTo(applicationId))(any())
+            status(result) mustEqual OK
+            contentAsString(result) mustEqual view(
+              isIndividual,
+              applicationId,
+              email
+            )(
+              request,
+              messages(application)
+            ).toString
           }
+
+          verify(mockBackendConnector, times(1)).getApplication(eqTo(applicationId))(any())
         }
+      }
     }
   }
 }

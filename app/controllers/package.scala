@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import scala.concurrent.Future
-
+import models.UserAnswers
+import models.requests.DataRequest
 import play.api.data.Form
 import play.api.libs.json._
 
-import models.UserAnswers
-import models.requests.DataRequest
+import scala.concurrent.Future
 
 package object controllers {
   implicit class ModifiableOps[A: Format](page: queries.Modifiable[A]) {

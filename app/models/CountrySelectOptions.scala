@@ -22,9 +22,8 @@ object CountrySelectOptions {
 
   def countryCodeToCountry(code: String): String =
     countries
-      .filter {
-        case (_, countryCode) =>
-          countryCode == s"country:$code" || countryCode == s"territory:$code"
+      .filter { case (_, countryCode) =>
+        countryCode == s"country:$code" || countryCode == s"territory:$code"
       }
       .map(_._1)
       .headOption

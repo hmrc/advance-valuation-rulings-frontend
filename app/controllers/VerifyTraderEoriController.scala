@@ -16,23 +16,21 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.Logging
-import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.VerifyTraderDetailsFormProvider
 import models.{DraftId, Mode, TraderDetailsWithConfirmation}
 import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
+import play.api.Logging
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{VerifyPrivateTraderDetailView, VerifyPublicTraderDetailView}
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class VerifyTraderEoriController @Inject() (
   override val messagesApi: MessagesApi,
@@ -59,18 +57,17 @@ class VerifyTraderEoriController @Inject() (
     }
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val checked = CheckRegisteredDetailsPage.get()
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val checked = CheckRegisteredDetailsPage.get()
 
-        VerifyTraderDetailsPage.get() match {
-          case None                                                       =>
-            traderDetailsNotFoundInSession(mode, draftId)
-          case Some(details) if details.consentToDisclosureOfPersonalData =>
-            Ok(publicView(checkForm(details, checked), mode, draftId, details))
-          case Some(details)                                              =>
-            Ok(privateView(checkForm(details, checked), mode, draftId, details))
-        }
+      VerifyTraderDetailsPage.get() match {
+        case None                                                       =>
+          traderDetailsNotFoundInSession(mode, draftId)
+        case Some(details) if details.consentToDisclosureOfPersonalData =>
+          Ok(publicView(checkForm(details, checked), mode, draftId, details))
+        case Some(details)                                              =>
+          Ok(privateView(checkForm(details, checked), mode, draftId, details))
+      }
     }
 
   private def traderDetailsNotFoundInSession(mode: Mode, draftId: DraftId) = {
@@ -87,41 +84,40 @@ class VerifyTraderEoriController @Inject() (
   }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        formProvider(VerifyTraderDetailsPage.get())
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              VerifyTraderDetailsPage.get() match {
-                case None                                                       => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
-                case Some(details) if details.consentToDisclosureOfPersonalData =>
-                  Future.successful(BadRequest(publicView(formWithErrors, mode, draftId, details)))
-                case Some(details)                                              =>
-                  Future.successful(BadRequest(privateView(formWithErrors, mode, draftId, details)))
-              },
-            value =>
-              VerifyTraderDetailsPage.get() match {
-                case None          => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
-                case Some(details) =>
-                  val continue = value.toBoolean
-                  for {
-                    updatedAnswers <- {
-                      VerifyTraderDetailsPage
-                        .set(details.copy(confirmation = Some(continue)))
-                      CheckRegisteredDetailsPage
-                        .set(continue)
-                    }
-                    _              <- userAnswersService.set(updatedAnswers)
-                  } yield Redirect(
-                    if (continue) {
-                      routes.UploadLetterOfAuthorityController
-                        .onPageLoad(mode, draftId, None, None, redirectedFromChangeButton = false)
-                    } else {
-                      routes.EORIBeUpToDateController.onPageLoad(draftId)
-                    }
-                  )
-              }
-          )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      formProvider(VerifyTraderDetailsPage.get())
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            VerifyTraderDetailsPage.get() match {
+              case None                                                       => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
+              case Some(details) if details.consentToDisclosureOfPersonalData =>
+                Future.successful(BadRequest(publicView(formWithErrors, mode, draftId, details)))
+              case Some(details)                                              =>
+                Future.successful(BadRequest(privateView(formWithErrors, mode, draftId, details)))
+            },
+          value =>
+            VerifyTraderDetailsPage.get() match {
+              case None          => Future.successful(traderDetailsNotFoundInSession(mode, draftId))
+              case Some(details) =>
+                val continue = value.toBoolean
+                for {
+                  updatedAnswers <- {
+                    VerifyTraderDetailsPage
+                      .set(details.copy(confirmation = Some(continue)))
+                    CheckRegisteredDetailsPage
+                      .set(continue)
+                  }
+                  _              <- userAnswersService.set(updatedAnswers)
+                } yield Redirect(
+                  if (continue) {
+                    routes.UploadLetterOfAuthorityController
+                      .onPageLoad(mode, draftId, None, None, redirectedFromChangeButton = false)
+                  } else {
+                    routes.EORIBeUpToDateController.onPageLoad(draftId)
+                  }
+                )
+            }
+        )
     }
 }

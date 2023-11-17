@@ -16,9 +16,8 @@
 
 package pages
 
-import play.api.libs.json.JsPath
-
 import models.TraderDetailsWithConfirmation
+import play.api.libs.json.JsPath
 
 case object VerifyTraderDetailsPage extends QuestionPage[TraderDetailsWithConfirmation] {
 

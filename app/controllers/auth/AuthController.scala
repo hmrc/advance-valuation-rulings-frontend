@@ -16,18 +16,16 @@
 
 package controllers.auth
 
-import javax.inject.Inject
-
-import scala.annotation.nowarn
-import scala.concurrent.ExecutionContext
-
+import config.FrontendAppConfig
+import controllers.actions.IdentifierAction
+import models.requests.IdentifierRequest
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import config.FrontendAppConfig
-import controllers.actions.IdentifierAction
-import models.requests.IdentifierRequest
+import javax.inject.Inject
+import scala.annotation.nowarn
+import scala.concurrent.ExecutionContext
 
 @nowarn("cat=unused")
 class AuthController @Inject() (
@@ -38,15 +36,13 @@ class AuthController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] = identify(
-    implicit request => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
-  )
+  def signOut(): Action[AnyContent]         =
+    identify(implicit request => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
 
-  def signOutNoSurvey(): Action[AnyContent] = identify {
-    implicit request: IdentifierRequest[AnyContent] =>
-      Redirect(
-        config.signOutUrl,
-        Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url))
-      )
+  def signOutNoSurvey(): Action[AnyContent] = identify { implicit request: IdentifierRequest[AnyContent] =>
+    Redirect(
+      config.signOutUrl,
+      Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url))
+    )
   }
 }

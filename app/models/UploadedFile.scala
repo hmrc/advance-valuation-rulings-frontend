@@ -16,12 +16,11 @@
 
 package models
 
-import java.time.Instant
-
+import enumeratum.EnumEntry.Uppercase
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import play.api.libs.json._
 
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
-import enumeratum.EnumEntry.Uppercase
+import java.time.Instant
 
 sealed abstract class UploadedFile extends Product with Serializable {
 

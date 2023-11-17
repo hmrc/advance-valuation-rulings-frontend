@@ -16,24 +16,22 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import audit.AuditService
 import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{DraftId, Mode, ReadOnlyMode}
 import models.WhatIsYourRoleAsImporter._
 import models.requests.DataRequest
+import models.{DraftId, Mode, ReadOnlyMode}
 import navigation.Navigator
 import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhatIsYourRoleAsImporterView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class WhatIsYourRoleAsImporterController @Inject() (
   override val messagesApi: MessagesApi,
@@ -53,28 +51,26 @@ class WhatIsYourRoleAsImporterController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        val preparedForm          = WhatIsYourRoleAsImporterPage.fill(form)
-        val whatIsYourRoleAnswers = request.userAnswers.get(WhatIsYourRoleAsImporterPage)
-        // If this page has already been answered then the mode should be read only.
-        val modeForView           = whatIsYourRoleAnswers.map(_ => ReadOnlyMode).getOrElse(mode)
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      val preparedForm          = WhatIsYourRoleAsImporterPage.fill(form)
+      val whatIsYourRoleAnswers = request.userAnswers.get(WhatIsYourRoleAsImporterPage)
+      // If this page has already been answered then the mode should be read only.
+      val modeForView           = whatIsYourRoleAnswers.map(_ => ReadOnlyMode).getOrElse(mode)
 
-        Ok(view(preparedForm, modeForView, draftId))
+      Ok(view(preparedForm, modeForView, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        mode match {
-          case ReadOnlyMode =>
-            Future.successful(
-              Redirect(
-                navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, request.userAnswers)
-              )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      mode match {
+        case ReadOnlyMode =>
+          Future.successful(
+            Redirect(
+              navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, request.userAnswers)
             )
-          case _            => updateUserAnswersSubmit(mode, draftId)
-        }
+          )
+        case _            => updateUserAnswersSubmit(mode, draftId)
+      }
     }
 
   private def updateUserAnswersSubmit(mode: Mode, draftId: DraftId)(implicit

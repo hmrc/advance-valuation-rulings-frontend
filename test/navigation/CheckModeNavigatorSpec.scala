@@ -16,17 +16,16 @@
 
 package navigation
 
-import java.time.Instant
-
-import play.api.libs.json.Writes
-
 import base.SpecBase
 import controllers.routes
 import models._
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.mock
 import pages._
+import play.api.libs.json.Writes
 import queries._
 import userrole.UserRoleProvider
+
+import java.time.Instant
 
 class CheckModeNavigatorSpec extends SpecBase {
 

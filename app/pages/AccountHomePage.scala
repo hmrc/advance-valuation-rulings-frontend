@@ -16,9 +16,8 @@
 
 package pages
 
-import play.api.libs.json.JsPath
-
 import models.AuthUserType
+import play.api.libs.json.JsPath
 
 case object AccountHomePage extends QuestionPage[AuthUserType] {
 

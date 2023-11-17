@@ -18,14 +18,12 @@ package models.requests
 
 import cats.data._
 import cats.implicits._
-
-import play.api.libs.json._
-
 import com.google.inject.Inject
-import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import models.UploadedFile.{Success, UploadDetails}
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg
+import models.{AgentCompanyDetails, DraftId, TraderDetailsWithCountryCode, UserAnswers}
 import pages._
+import play.api.libs.json._
 
 case class GoodsDetails(
   goodsName: String,
@@ -69,17 +67,16 @@ object GoodsDetails {
       methodInfo <- userAnswers.get(TellUsAboutYourRulingPage)
     } yield methodInfo
 
-    goodsDescription.map(
-      description =>
-        GoodsDetails(
-          goodsName = description,
-          goodsDescription = description,
-          envisagedCommodityCode = envisagedCommodityCode,
-          knownLegalProceedings = knownLegalProceedings,
-          confidentialInformation = confidentialInformation,
-          similarRulingGoodsInfo = similarRulingGoodsInfo,
-          similarRulingMethodInfo = similarRulingMethodInfo
-        )
+    goodsDescription.map(description =>
+      GoodsDetails(
+        goodsName = description,
+        goodsDescription = description,
+        envisagedCommodityCode = envisagedCommodityCode,
+        knownLegalProceedings = knownLegalProceedings,
+        confidentialInformation = confidentialInformation,
+        similarRulingGoodsInfo = similarRulingGoodsInfo,
+        similarRulingMethodInfo = similarRulingMethodInfo
+      )
     )
   }
 }
@@ -132,19 +129,18 @@ object TraderDetail {
       .validated(CheckRegisteredDetailsPage)
       .ensure(NonEmptyList.one(CheckRegisteredDetailsPage))(_ == true)
 
-    registeredDetails.map(
-      _ =>
-        TraderDetail(
-          eori = crd.EORINo,
-          businessName = crd.CDSFullName,
-          addressLine1 = crd.CDSEstablishmentAddress.streetAndNumber,
-          addressLine2 = Some(crd.CDSEstablishmentAddress.city),
-          addressLine3 = None,
-          postcode = crd.CDSEstablishmentAddress.postalCode.getOrElse(""),
-          countryCode = crd.CDSEstablishmentAddress.countryCode,
-          phoneNumber = crd.contactInformation.flatMap(_.telephoneNumber),
-          isPrivate = Some(!crd.consentToDisclosureOfPersonalData)
-        )
+    registeredDetails.map(_ =>
+      TraderDetail(
+        eori = crd.EORINo,
+        businessName = crd.CDSFullName,
+        addressLine1 = crd.CDSEstablishmentAddress.streetAndNumber,
+        addressLine2 = Some(crd.CDSEstablishmentAddress.city),
+        addressLine3 = None,
+        postcode = crd.CDSEstablishmentAddress.postalCode.getOrElse(""),
+        countryCode = crd.CDSEstablishmentAddress.countryCode,
+        phoneNumber = crd.contactInformation.flatMap(_.telephoneNumber),
+        isPrivate = Some(!crd.consentToDisclosureOfPersonalData)
+      )
     )
   }
 }
@@ -164,8 +160,7 @@ case class ApplicationRequest(
 object ApplicationRequest {
   private[models] val jsonConfig = JsonConfiguration(
     discriminator = "type",
-    typeNaming =
-      JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
+    typeNaming = JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
   )
 
   implicit val format: OFormat[ApplicationRequest] =
@@ -219,8 +214,8 @@ class ApplicationRequestService @Inject() (
       )
       .leftMap( // Removing duplicates whilst retaining order
         ps =>
-          ps.tail.foldLeft(NonEmptyList.of(ps.head))(
-            (acc, next) => if (acc.exists(p => p == next)) acc else acc :+ next
+          ps.tail.foldLeft(NonEmptyList.of(ps.head))((acc, next) =>
+            if (acc.exists(p => p == next)) acc else acc :+ next
           )
       )
   }

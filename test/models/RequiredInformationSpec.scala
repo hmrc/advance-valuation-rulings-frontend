@@ -17,7 +17,7 @@
 package models
 
 import play.api.i18n.Messages
-import play.api.libs.json.{JsError, Json, JsString}
+import play.api.libs.json.{JsError, JsString, Json}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 
 import base.SpecBase
@@ -33,12 +33,11 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
 
       val gen = arbitrary[RequiredInformation]
 
-      forAll(gen) {
-        requiredInformation =>
-          JsString(requiredInformation.toString)
-            .validate[RequiredInformation]
-            .asOpt
-            .value mustEqual requiredInformation
+      forAll(gen) { requiredInformation =>
+        JsString(requiredInformation.toString)
+          .validate[RequiredInformation]
+          .asOpt
+          .value mustEqual requiredInformation
       }
     }
 
@@ -88,9 +87,8 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
 
       val gen = arbitrary[String] suchThat (!RequiredInformation.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-          JsString(invalidValue).validate[RequiredInformation] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[RequiredInformation] mustEqual JsError("error.invalid")
       }
     }
 
@@ -98,9 +96,8 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
 
       val gen = arbitrary[RequiredInformation]
 
-      forAll(gen) {
-        requiredInformation =>
-          Json.toJson(requiredInformation) mustEqual JsString(requiredInformation.toString)
+      forAll(gen) { requiredInformation =>
+        Json.toJson(requiredInformation) mustEqual JsString(requiredInformation.toString)
       }
     }
   }

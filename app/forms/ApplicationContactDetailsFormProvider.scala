@@ -16,18 +16,16 @@
 
 package forms
 
-import javax.inject.Inject
-
-import scala.util.Try
-
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.data.validation.Constraints
-
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import forms.ApplicationContactDetailsFormProvider._
 import forms.mappings.Mappings
 import models.ApplicationContactDetails
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.data.validation.Constraints
+
+import javax.inject.Inject
+import scala.util.Try
 
 class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
 
@@ -53,16 +51,15 @@ class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
             Constraints
               .pattern(Validation.simpleCharactersInputPattern, error = jobTitleFormatError)
           )
-      )(ApplicationContactDetails.apply)(
-        (applicationContactDetails: ApplicationContactDetails) =>
-          Some(
-            (
-              applicationContactDetails.name,
-              applicationContactDetails.email,
-              applicationContactDetails.phone,
-              applicationContactDetails.jobTitle
-            )
+      )(ApplicationContactDetails.apply)((applicationContactDetails: ApplicationContactDetails) =>
+        Some(
+          (
+            applicationContactDetails.name,
+            applicationContactDetails.email,
+            applicationContactDetails.phone,
+            applicationContactDetails.jobTitle
           )
+        )
       )
     )
 }

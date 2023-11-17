@@ -16,11 +16,10 @@
 
 package controllers
 
+import base.SpecBase
 import play.api.http.Status.OK
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty, GET}
-
-import base.SpecBase
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
 import views.html.YourApplicationHasBeenCancelledView
 
 class YourApplicationHasBeenCancelledControllerSpec extends SpecBase {

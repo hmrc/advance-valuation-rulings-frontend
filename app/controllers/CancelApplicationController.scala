@@ -16,17 +16,16 @@
 
 package controllers
 
-import scala.concurrent.ExecutionContext
-
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import models.DraftId
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CancelAreYouSureView
+
+import scala.concurrent.ExecutionContext
 
 class CancelApplicationController @Inject() (
   override val messagesApi: MessagesApi,
@@ -45,10 +44,9 @@ class CancelApplicationController @Inject() (
     (identify andThen getData(draftId) andThen requireData)(implicit request => Ok(view(draftId)))
 
   def confirmCancel(draftId: DraftId): Action[AnyContent] =
-    identify.async {
-      implicit request =>
-        for {
-          _ <- userAnswersService.clear(draftId)
-        } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
+    identify.async { implicit request =>
+      for {
+        _ <- userAnswersService.clear(draftId)
+      } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
     }
 }

@@ -17,11 +17,9 @@
 package models.requests
 
 import cats.data.Validated._
-
 import generators._
 import models._
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks

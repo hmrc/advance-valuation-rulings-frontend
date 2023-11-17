@@ -16,33 +16,26 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
+import base.SpecBase
+import controllers.common.FileUploadHelper
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
+import models.{DraftAttachment, NormalMode, UploadedFile}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.MockitoSugar.{mock, reset, when}
+import org.scalatest.BeforeAndAfterEach
+import pages._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import controllers.common.FileUploadHelper
-import models.{DraftAttachment, NormalMode, UploadedFile}
-import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.reset
-import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
-import pages._
 import queries.AllDocuments
 import services.fileupload.FileService
 import userrole.{UserRole, UserRoleProvider}
 
-class UploadSupportingDocumentsControllerSpec
-    extends SpecBase
-    with MockitoSugar
-    with BeforeAndAfterEach {
+import java.time.Instant
+import scala.concurrent.Future
+
+class UploadSupportingDocumentsControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     super.beforeEach()

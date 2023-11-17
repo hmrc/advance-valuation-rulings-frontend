@@ -16,30 +16,27 @@
 
 package controllers
 
-import java.time.{Clock, Instant, ZoneOffset}
-
-import scala.concurrent.Future
-
+import audit.AuditService
+import base.SpecBase
+import connectors.BackendConnector
+import models.AuthUserType.IndividualTrader
+import models.requests._
+import models.{ApplicationForAccountHome, Done, DraftId, NormalMode, UserAnswers}
+import navigation.Navigator
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.MockitoSugar.{mock, reset, times, verify, when}
+import pages.AccountHomePage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import audit.AuditService
-import base.SpecBase
-import connectors.BackendConnector
-import models.{ApplicationForAccountHome, Done, DraftId, NormalMode, UserAnswers}
-import models.AuthUserType.IndividualTrader
-import models.requests._
-import navigation.Navigator
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.MockitoSugar.{reset, times, verify, when}
-import org.scalatestplus.mockito.MockitoSugar
-import pages.AccountHomePage
 import services.UserAnswersService
 import views.html.AccountHomeView
 
-class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
+import java.time.{Clock, Instant, ZoneOffset}
+import scala.concurrent.Future
+
+class AccountHomeControllerSpec extends SpecBase {
 
   private val mockBackEndConnector   = mock[BackendConnector]
   private val mockAuditService       = mock[AuditService]
@@ -155,14 +152,13 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val view      = application.injector.instanceOf[AccountHomeView]
         val navigator = application.injector.instanceOf[Navigator]
 
-        val draftsForAccountHome = draftSummaries.map {
-          draftSummary =>
-            val userAnswers =
-              userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-            ApplicationForAccountHome(
-              draftSummary,
-              navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
-            )(messages(application))
+        val draftsForAccountHome = draftSummaries.map { draftSummary =>
+          val userAnswers =
+            userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
+          ApplicationForAccountHome(
+            draftSummary,
+            navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
+          )(messages(application))
         }
 
         status(result) mustEqual OK
@@ -211,14 +207,13 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val appsForAccountHome: Seq[ApplicationForAccountHome] =
           for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
 
-        val draftsForAccountHome = draftSummaries.map {
-          draftSummary =>
-            val userAnswers =
-              userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-            ApplicationForAccountHome(
-              draftSummary,
-              navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
-            )(messages(application))
+        val draftsForAccountHome                               = draftSummaries.map { draftSummary =>
+          val userAnswers =
+            userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
+          ApplicationForAccountHome(
+            draftSummary,
+            navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
+          )(messages(application))
         }
 
         val viewModels = (appsForAccountHome ++ draftsForAccountHome).sortBy(_.date).reverse
@@ -284,14 +279,13 @@ class AccountHomeControllerSpec extends SpecBase with MockitoSugar {
         val appsForAccountHome: Seq[ApplicationForAccountHome] =
           for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
 
-        val draftsForAccountHome = draftSummaries.map {
-          draftSummary =>
-            val userAnswers =
-              userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
-            ApplicationForAccountHome(
-              draftSummary,
-              navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
-            )(messages(application))
+        val draftsForAccountHome                               = draftSummaries.map { draftSummary =>
+          val userAnswers =
+            userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
+          ApplicationForAccountHome(
+            draftSummary,
+            navigator.nextPage(AccountHomePage, NormalMode, userAnswers)
+          )(messages(application))
         }
 
         val viewModels = (appsForAccountHome ++ draftsForAccountHome).sortBy(_.date).reverse

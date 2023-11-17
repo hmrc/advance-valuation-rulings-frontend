@@ -16,27 +16,24 @@
 
 package controllers
 
-import java.time.Instant
-
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
 import models.{Done, DraftAttachment, NormalMode, UploadedFile}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar.{mock, verify, when}
 import pages._
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import queries.AllDocuments
 import services.UserAnswersService
 import views.html.IsThisFileConfidentialView
 
-class IsThisFileConfidentialControllerSpec extends SpecBase with MockitoSugar {
+import java.time.Instant
+import scala.concurrent.Future
+
+class IsThisFileConfidentialControllerSpec extends SpecBase {
 
   private val formProvider = new IsThisFileConfidentialFormProvider()
   private val form         = formProvider()

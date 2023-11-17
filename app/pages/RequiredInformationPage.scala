@@ -16,9 +16,8 @@
 
 package pages
 
-import play.api.libs.json.JsPath
-
 import models.RequiredInformation
+import play.api.libs.json.JsPath
 
 case object RequiredInformationPage extends QuestionPage[Set[RequiredInformation]] {
 

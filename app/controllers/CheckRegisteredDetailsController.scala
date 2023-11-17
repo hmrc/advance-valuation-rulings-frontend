@@ -16,23 +16,21 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.Logger
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import connectors.BackendConnector
 import controllers.actions._
 import controllers.common.TraderDetailsHelper
 import models._
 import navigation.Navigator
 import pages.{CheckRegisteredDetailsPage, EORIBeUpToDatePage, Page}
+import play.api.Logger
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import userrole.UserRoleProvider
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class CheckRegisteredDetailsController @Inject() (
   override val messagesApi: MessagesApi,
@@ -52,62 +50,58 @@ class CheckRegisteredDetailsController @Inject() (
   private implicit val logger: Logger = Logger(this.getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val form          = getFormForRole(request.userAnswers)
-        val processedForm = CheckRegisteredDetailsPage.get() match {
-          case Some(value) => form.fill(value)
-          case None        => form
-        }
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      val form          = getFormForRole(request.userAnswers)
+      val processedForm = CheckRegisteredDetailsPage.get() match {
+        case Some(value) => form.fill(value)
+        case None        => form
+      }
 
-        getTraderDetails {
-          (details: TraderDetailsWithCountryCode) =>
-            Future.successful(
-              Ok(
-                userRoleProvider
-                  .getUserRole(request.userAnswers)
-                  .selectViewForCheckRegisteredDetails(
-                    processedForm,
-                    details,
-                    mode,
-                    draftId
-                  )
+      getTraderDetails { (details: TraderDetailsWithCountryCode) =>
+        Future.successful(
+          Ok(
+            userRoleProvider
+              .getUserRole(request.userAnswers)
+              .selectViewForCheckRegisteredDetails(
+                processedForm,
+                details,
+                mode,
+                draftId
               )
-            )
-        }
+          )
+        )
+      }
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        val form = getFormForRole(request.userAnswers)
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              getTraderDetails {
-                (details: TraderDetailsWithCountryCode) =>
-                  Future.successful(
-                    BadRequest(
-                      userRoleProvider
-                        .getUserRole(request.userAnswers)
-                        .selectViewForCheckRegisteredDetails(
-                          formWithErrors,
-                          details,
-                          mode,
-                          draftId
-                        )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      val form = getFormForRole(request.userAnswers)
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            getTraderDetails { (details: TraderDetailsWithCountryCode) =>
+              Future.successful(
+                BadRequest(
+                  userRoleProvider
+                    .getUserRole(request.userAnswers)
+                    .selectViewForCheckRegisteredDetails(
+                      formWithErrors,
+                      details,
+                      mode,
+                      draftId
                     )
-                  )
-              },
-            value =>
-              for {
-                updatedAnswers <- CheckRegisteredDetailsPage.set(value)
-                _              <- userAnswersService.set(updatedAnswers)
-              } yield Redirect(
-                navigator.nextPage(getNextPage(value, updatedAnswers), mode, updatedAnswers)
+                )
               )
-          )
+            },
+          value =>
+            for {
+              updatedAnswers <- CheckRegisteredDetailsPage.set(value)
+              _              <- userAnswersService.set(updatedAnswers)
+            } yield Redirect(
+              navigator.nextPage(getNextPage(value, updatedAnswers), mode, updatedAnswers)
+            )
+        )
     }
 
   private def getNextPage(value: Boolean, userAnswers: UserAnswers): Page =

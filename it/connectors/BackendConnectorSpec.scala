@@ -92,22 +92,21 @@ class BackendConnectorSpec
         arbitraryEoriNumberGen.arbitrary,
         arbitraryAcknowledgementReferenceGen.arbitrary,
         arbitrary5xxBackendError.arbitrary
-      ) {
-        (eoriNumber, acknowledgementReference, backendError) =>
-          val expectedResponse = Json.stringify(Json.toJson(backendError))
+      ) { (eoriNumber, acknowledgementReference, backendError) =>
+        val expectedResponse = Json.stringify(Json.toJson(backendError))
 
-          stub(
-            GET,
-            traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
-            backendError.code,
-            expectedResponse
-          )
+        stub(
+          GET,
+          traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
+          backendError.code,
+          expectedResponse
+        )
 
-          val result =
-            connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue.left.value
+        val result =
+          connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue.left.value
 
-          result.code mustBe backendError.code
-          result.message must include(expectedResponse)
+        result.code mustBe backendError.code
+        result.message must include(expectedResponse)
       }
     }
 
@@ -116,22 +115,21 @@ class BackendConnectorSpec
         arbitraryEoriNumberGen.arbitrary,
         arbitraryAcknowledgementReferenceGen.arbitrary,
         arbitrary4xxBackendError.arbitrary
-      ) {
-        (eoriNumber, acknowledgementReference, backendError) =>
-          val expectedResponse = Json.stringify(Json.toJson(backendError))
+      ) { (eoriNumber, acknowledgementReference, backendError) =>
+        val expectedResponse = Json.stringify(Json.toJson(backendError))
 
-          stub(
-            GET,
-            traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
-            backendError.code,
-            expectedResponse
-          )
+        stub(
+          GET,
+          traderDetailsRequestUrl(acknowledgementReference, eoriNumber),
+          backendError.code,
+          expectedResponse
+        )
 
-          val result =
-            connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue.left.value
+        val result =
+          connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue.left.value
 
-          result.code mustBe backendError.code
-          result.message must include(expectedResponse)
+        result.code mustBe backendError.code
+        result.message must include(expectedResponse)
       }
     }
   }
@@ -230,29 +228,27 @@ class BackendConnectorSpec
 
     "must get an application from the backend" in {
 
-      forAll(arbitrary[Application], minSuccessful(1)) {
-        application =>
-          wireMockServer.stubFor(
-            get(urlEqualTo(s"/advance-valuation-rulings/applications/${application.id.toString}"))
-              .willReturn(ok(Json.toJson(application).toString))
-          )
+      forAll(arbitrary[Application], minSuccessful(1)) { application =>
+        wireMockServer.stubFor(
+          get(urlEqualTo(s"/advance-valuation-rulings/applications/${application.id.toString}"))
+            .willReturn(ok(Json.toJson(application).toString))
+        )
 
-          val result = connector.getApplication(application.id.toString).futureValue
+        val result = connector.getApplication(application.id.toString).futureValue
 
-          result mustEqual application
+        result mustEqual application
       }
     }
 
     "must return a failed future when an error is returned" in {
 
-      forAll(arbitrary[Application], minSuccessful(1)) {
-        application =>
-          wireMockServer.stubFor(
-            get(urlEqualTo(s"/advance-valuation-rulings/applications${application.id.toString}"))
-              .willReturn(serverError())
-          )
+      forAll(arbitrary[Application], minSuccessful(1)) { application =>
+        wireMockServer.stubFor(
+          get(urlEqualTo(s"/advance-valuation-rulings/applications${application.id.toString}"))
+            .willReturn(serverError())
+        )
 
-          connector.getApplication(application.id.toString).failed.futureValue
+        connector.getApplication(application.id.toString).failed.futureValue
       }
     }
   }

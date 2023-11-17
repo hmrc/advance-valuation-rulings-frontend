@@ -16,7 +16,7 @@
 
 package models.requests
 
-import play.api.libs.json.{Json, JsString, JsSuccess}
+import play.api.libs.json.{JsString, JsSuccess, Json}
 import play.api.mvc.PathBindable
 
 import generators.ModelGenerators
@@ -39,25 +39,24 @@ class ApplicationIdSpec
 
     "must bind from a url" in {
 
-      forAll(arbitrary[String], applicationIdGen) {
-        (key, value) => pathBindable.bind(key, value.toString).value mustEqual value
+      forAll(arbitrary[String], applicationIdGen) { (key, value) =>
+        pathBindable.bind(key, value.toString).value mustEqual value
       }
     }
 
     "must unbind to a url" in {
 
-      forAll(arbitrary[String], applicationIdGen) {
-        (key, value) => pathBindable.unbind(key, value) mustEqual value.toString
+      forAll(arbitrary[String], applicationIdGen) { (key, value) =>
+        pathBindable.unbind(key, value) mustEqual value.toString
       }
     }
 
     "must serialise and deserialise to / from JSON" in {
 
-      forAll(applicationIdGen) {
-        applicationId =>
-          val json = Json.toJson(applicationId)
-          json mustEqual JsString(applicationId.toString)
-          json.validate[ApplicationId] mustEqual JsSuccess(applicationId)
+      forAll(applicationIdGen) { applicationId =>
+        val json = Json.toJson(applicationId)
+        json mustEqual JsString(applicationId.toString)
+        json.validate[ApplicationId] mustEqual JsSuccess(applicationId)
       }
     }
   }

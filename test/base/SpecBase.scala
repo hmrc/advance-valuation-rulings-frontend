@@ -16,31 +16,29 @@
 
 package base
 
-import scala.concurrent.Future
-
+import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
+import controllers.actions._
+import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models._
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
+import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-
-import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
-import controllers.actions._
-import models.{CDSEstablishmentAddress, ContactInformation, CounterId, Done, DraftId, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UserAnswers, WhatIsYourRoleAsImporter}
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
-import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import repositories.CounterRepository
 import services.UserAnswersService
+
+import scala.concurrent.Future
 
 trait SpecBase
     extends AnyFreeSpec
@@ -183,6 +181,6 @@ trait SpecBase
       .build()
 
   }
-  def onwardRoute: Call = Call("GET", "/foo")
+  def onwardRoute: Call      = Call("GET", "/foo")
 
 }

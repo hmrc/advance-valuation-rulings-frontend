@@ -16,15 +16,14 @@
 
 package controllers.actions
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.mvc.ActionTransformer
-
-import models.{DraftId, UserAnswers}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.{DraftId, UserAnswers}
 import org.mockito.MockitoSugar.mock
+import play.api.mvc.ActionTransformer
 import services.UserAnswersService
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDataRetrievalActionProvider(dataToReturn: Option[UserAnswers])
     extends DataRetrievalActionProvider(mock[UserAnswersService]) {

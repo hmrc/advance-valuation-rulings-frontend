@@ -29,20 +29,19 @@ import viewmodels.implicits._
 object ExplainHowPartiesAreRelatedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExplainHowPartiesAreRelatedPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "explainHowPartiesAreRelated.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ExplainHowPartiesAreRelatedController
-                .onPageLoad(CheckMode, answers.draftId)
-                .url
-            )
-              .withVisuallyHiddenText(messages("explainHowPartiesAreRelated.change.hidden"))
+    answers.get(ExplainHowPartiesAreRelatedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "explainHowPartiesAreRelated.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ExplainHowPartiesAreRelatedController
+              .onPageLoad(CheckMode, answers.draftId)
+              .url
           )
+            .withVisuallyHiddenText(messages("explainHowPartiesAreRelated.change.hidden"))
         )
+      )
     }
 }

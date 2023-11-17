@@ -43,18 +43,16 @@ class PostcodeValidatorSpec extends SpecBase {
 
   "PostcodeValidator" - {
 
-    invalidPostcodes.foreach {
-      postcode =>
-        s"validating invalid post code '$postcode' should be false" in {
-          PostcodeValidator.validate(postcode) mustEqual false
-        }
+    invalidPostcodes.foreach { postcode =>
+      s"validating invalid post code '$postcode' should be false" in {
+        PostcodeValidator.validate(postcode) mustEqual false
+      }
     }
 
-    validPostcodes.foreach {
-      postcode =>
-        s"validating valid post code '$postcode' should be true" in {
-          PostcodeValidator.validate(postcode) mustEqual true
-        }
+    validPostcodes.foreach { postcode =>
+      s"validating valid post code '$postcode' should be true" in {
+        PostcodeValidator.validate(postcode) mustEqual true
+      }
     }
 
   }

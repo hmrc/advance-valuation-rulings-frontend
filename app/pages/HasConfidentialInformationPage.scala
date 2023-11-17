@@ -16,11 +16,10 @@
 
 package pages
 
-import scala.util.Try
-
+import models.UserAnswers
 import play.api.libs.json.JsPath
 
-import models.UserAnswers
+import scala.util.Try
 
 case object HasConfidentialInformationPage extends QuestionPage[Boolean] {
 

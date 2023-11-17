@@ -29,20 +29,19 @@ import viewmodels.implicits._
 object ExplainHowYouWillUseMethodSixSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExplainHowYouWillUseMethodSixPage).map {
-      answer =>
-        SummaryListRowViewModel(
-          key = "explainHowYouWillUseMethodSix.checkYourAnswersLabel",
-          value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.ExplainHowYouWillUseMethodSixController
-                .onPageLoad(CheckMode, answers.draftId)
-                .url
-            )
-              .withVisuallyHiddenText(messages("explainHowYouWillUseMethodSix.change.hidden"))
+    answers.get(ExplainHowYouWillUseMethodSixPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "explainHowYouWillUseMethodSix.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(answer.replace("\n", "<br/>"))),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ExplainHowYouWillUseMethodSixController
+              .onPageLoad(CheckMode, answers.draftId)
+              .url
           )
+            .withVisuallyHiddenText(messages("explainHowYouWillUseMethodSix.change.hidden"))
         )
+      )
     }
 }

@@ -31,55 +31,52 @@ import viewmodels.implicits._
 object DoYouWantToUploadDocumentsSummary {
 
   def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    userAnswers.get(DoYouWantToUploadDocumentsPage).map {
-      answer =>
-        val value = if (answer) "site.yes" else "site.no"
+    userAnswers.get(DoYouWantToUploadDocumentsPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        SummaryListRowViewModel(
-          key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
-          value = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.DoYouWantToUploadDocumentsController
-                .onPageLoad(CheckMode, userAnswers.draftId)
-                .url
-            )
-              .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
+      SummaryListRowViewModel(
+        key = "doYouWantToUploadDocuments.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.DoYouWantToUploadDocumentsController
+              .onPageLoad(CheckMode, userAnswers.draftId)
+              .url
           )
+            .withVisuallyHiddenText(messages("doYouWantToUploadDocuments.change.hidden"))
         )
+      )
     }
 }
 
 object UploadedDocumentsSummary {
 
   def row(userAnswers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    userAnswers.get(AllDocuments).map {
-      attachments =>
-        SummaryListRowViewModel(
-          key = "uploadSupportingDocuments.checkYourAnswersLabel",
-          value = ValueViewModel(
-            HtmlContent(
-              Html(
-                attachments
-                  .map {
-                    attachment =>
-                      attachment.file.fileName
-                        .map(fileName => HtmlFormat.escape(fileName).body)
-                        .getOrElse("")
-                  }
-                  .mkString("<br>")
-              )
+    userAnswers.get(AllDocuments).map { attachments =>
+      SummaryListRowViewModel(
+        key = "uploadSupportingDocuments.checkYourAnswersLabel",
+        value = ValueViewModel(
+          HtmlContent(
+            Html(
+              attachments
+                .map { attachment =>
+                  attachment.file.fileName
+                    .map(fileName => HtmlFormat.escape(fileName).body)
+                    .getOrElse("")
+                }
+                .mkString("<br>")
             )
-          ),
-          actions = Seq(
-            ActionItemViewModel(
-              "site.change",
-              routes.UploadAnotherSupportingDocumentController
-                .onPageLoad(CheckMode, userAnswers.draftId)
-                .url
-            ).withVisuallyHiddenText(messages("doYouWantToUploadDocuments.files.change.hidden"))
           )
+        ),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.UploadAnotherSupportingDocumentController
+              .onPageLoad(CheckMode, userAnswers.draftId)
+              .url
+          ).withVisuallyHiddenText(messages("doYouWantToUploadDocuments.files.change.hidden"))
         )
+      )
     }
 }

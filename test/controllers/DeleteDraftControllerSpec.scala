@@ -16,24 +16,22 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.DeleteDraftFormProvider
 import models.Done
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.Mockito.{never, times, verify, when}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar._
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.DeleteDraftView
 
-class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class DeleteDraftControllerSpec extends SpecBase {
 
   private val formProvider = new DeleteDraftFormProvider()
   private val form         = formProvider()
@@ -114,7 +112,7 @@ class DeleteDraftControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
-        verify(mockUserAnswersService, never()).clear(eqTo(userAnswersAsIndividualTrader.draftId))(
+        verify(mockUserAnswersService, never).clear(eqTo(userAnswersAsIndividualTrader.draftId))(
           any()
         )
       }

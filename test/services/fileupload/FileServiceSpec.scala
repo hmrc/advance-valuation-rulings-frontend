@@ -16,38 +16,34 @@
 
 package services.fileupload
 
-import java.time.{LocalDateTime, ZoneOffset}
-
-import scala.concurrent.Future
-
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
-import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-
 import connectors.UpscanConnector
-import models.{Done, DraftAttachment, DraftId, NormalMode, UploadedFile, UserAnswers}
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
+import models.{Done, DraftAttachment, DraftId, NormalMode, UploadedFile, UserAnswers}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._
-import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
 import pages.{QuestionPage, UploadSupportingDocumentPage}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import queries.AllDocuments
 import services.UserAnswersService
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
+import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
+
+import java.time.{LocalDateTime, ZoneOffset}
+import scala.concurrent.Future
 
 class FileServiceSpec
     extends AnyFreeSpec
     with Matchers
     with ScalaFutures
     with OptionValues
-    with MockitoSugar
     with BeforeAndAfterEach
     with TryValues {
 
@@ -107,7 +103,7 @@ class FileServiceSpec
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-            .callback(DraftId(0), isLetterOfAuthority = false)}",
+          .callback(DraftId(0), isLetterOfAuthority = false)}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,
@@ -143,7 +139,7 @@ class FileServiceSpec
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-            .callback(DraftId(0), isLetterOfAuthority = false)}",
+          .callback(DraftId(0), isLetterOfAuthority = false)}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,

@@ -16,7 +16,7 @@
 
 package generators
 
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 
 import models.UserAnswers
 import org.scalacheck.{Arbitrary, Gen}
@@ -85,9 +85,8 @@ trait UserAnswersGenerator extends TryValues {
       } yield UserAnswers(
         userId = id,
         draftId = DraftId(draftId),
-        data = data.foldLeft(Json.obj()) {
-          case (obj, (path, value)) =>
-            obj.setObject(path.path, value).get
+        data = data.foldLeft(Json.obj()) { case (obj, (path, value)) =>
+          obj.setObject(path.path, value).get
         }
       )
     }

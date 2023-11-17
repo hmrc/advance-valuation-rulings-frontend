@@ -16,22 +16,20 @@
 
 package controllers
 
-import javax.inject.Inject
-
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import controllers.actions._
 import forms.DeleteDraftFormProvider
 import models.{DraftId, NormalMode}
 import navigation.Navigator
 import pages.DeleteDraftPage
+import play.api.data.Form
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DeleteDraftView
+
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class DeleteDraftController @Inject() (
   override val messagesApi: MessagesApi,
@@ -50,32 +48,30 @@ class DeleteDraftController @Inject() (
   val form: Form[Boolean] = formProvider()
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request => Ok(view(form, draftId))
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      Ok(view(form, draftId))
     }
 
   def onSubmit(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async {
-      implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, draftId))),
-            value =>
-              if (value) {
-                userAnswersService.clear(draftId).map {
-                  _ =>
-                    Redirect(
-                      navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)
-                    )
-                }
-              } else {
-                Future.successful(
-                  Redirect(
-                    navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)
-                  )
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, draftId))),
+          value =>
+            if (value) {
+              userAnswersService.clear(draftId).map { _ =>
+                Redirect(
+                  navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)
                 )
               }
-          )
+            } else {
+              Future.successful(
+                Redirect(
+                  navigator.nextPage(DeleteDraftPage, NormalMode, request.userAnswers)
+                )
+              )
+            }
+        )
     }
 }

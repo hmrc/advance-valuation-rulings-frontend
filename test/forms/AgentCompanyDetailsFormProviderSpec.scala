@@ -24,9 +24,7 @@ import models.Country
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 
-class AgentCompanyDetailsFormProviderSpec
-    extends StringFieldBehaviours
-    with TraderDetailsGenerator {
+class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours with TraderDetailsGenerator {
 
   val form = new AgentCompanyDetailsFormProvider()()
 
@@ -134,10 +132,9 @@ class AgentCompanyDetailsFormProviderSpec
           .suchThat(_.nonEmpty)
           .suchThat(x => !Country.allCountries.map(_.code).contains(x))
 
-      forAll(invalidAnswers) {
-        answer =>
-          val result = form.bind(Map("agentCountry" -> answer)).apply(fieldName)
-          result.errors must contain only FormError(fieldName, requiredKey)
+      forAll(invalidAnswers) { answer =>
+        val result = form.bind(Map("agentCountry" -> answer)).apply(fieldName)
+        result.errors must contain only FormError(fieldName, requiredKey)
       }
     }
   }

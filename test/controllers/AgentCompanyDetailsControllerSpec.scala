@@ -16,19 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.AgentCompanyDetailsFormProvider
+import models.{AgentCompanyDetails, Country, NormalMode}
+import pages.AgentCompanyDetailsPage
 import play.api.Application
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.AgentCompanyDetailsFormProvider
-import models.{AgentCompanyDetails, Country, NormalMode}
-import org.scalatestplus.mockito.MockitoSugar
-import pages.AgentCompanyDetailsPage
 import views.html.AgentCompanyDetailsView
 
-class AgentCompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
+class AgentCompanyDetailsControllerSpec extends SpecBase {
 
   private val formProvider = new AgentCompanyDetailsFormProvider()
   private val form         = formProvider()

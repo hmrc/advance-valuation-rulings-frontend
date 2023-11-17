@@ -16,31 +16,29 @@
 
 package controllers
 
-import scala.concurrent.Future
-
+import base.SpecBase
+import forms.EmployeeCheckRegisteredDetailsFormProvider
+import generators.ModelGenerators
+import models.requests.DataRequest
+import models.{Done, TraderDetailsWithConfirmation, UserAnswers, WhatIsYourRoleAsImporter}
+import navigation.{FakeNavigator, Navigator}
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalacheck.Arbitrary
+import pages.{VerifyTraderDetailsPage, WhatIsYourRoleAsImporterPage}
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-
-import base.SpecBase
-import forms.EmployeeCheckRegisteredDetailsFormProvider
-import generators.ModelGenerators
-import models.{Done, TraderDetailsWithConfirmation, UserAnswers, WhatIsYourRoleAsImporter}
-import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalacheck.Arbitrary
-import org.scalatestplus.mockito.MockitoSugar
-import pages.{VerifyTraderDetailsPage, WhatIsYourRoleAsImporterPage}
 import services.UserAnswersService
 import userrole.{UserRole, UserRoleProvider}
 
-class EORIBeUpToDateControllerSpec extends SpecBase with MockitoSugar with ModelGenerators {
+import scala.concurrent.Future
+
+class EORIBeUpToDateControllerSpec extends SpecBase with ModelGenerators {
 
   private lazy val checkRegisteredDetailRoute =
     routes.CheckRegisteredDetailsController.onPageLoad(models.NormalMode, draftId).url

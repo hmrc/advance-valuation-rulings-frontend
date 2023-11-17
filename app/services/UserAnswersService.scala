@@ -16,15 +16,13 @@
 
 package services
 
-import javax.inject.Inject
-
-import scala.concurrent.Future
-
+import connectors.UserAnswersConnector
+import models.requests.DraftSummaryResponse
+import models.{Done, DraftId, UserAnswers}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import connectors.UserAnswersConnector
-import models.{Done, DraftId, UserAnswers}
-import models.requests.DraftSummaryResponse
+import javax.inject.Inject
+import scala.concurrent.Future
 
 class UserAnswersService @Inject() (userAnswersConnector: UserAnswersConnector) {
 

@@ -16,16 +16,15 @@
 
 package controllers
 
-import javax.inject.Inject
-
+import controllers.actions._
+import models.DraftId
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
-import controllers.actions._
-import models.DraftId
 import userrole.UserRoleProvider
+
+import javax.inject.Inject
 
 class RequiredInformationController @Inject() (
   override val messagesApi: MessagesApi,
@@ -40,16 +39,15 @@ class RequiredInformationController @Inject() (
   private val logger: Logger = play.api.Logger(getClass)
 
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData) {
-      implicit request =>
-        logger.info(
-          "[RequiredInformationController][onPageLoad] Redirecting to correct view based on user role answer"
-        )
+    (identify andThen getData(draftId) andThen requireData) { implicit request =>
+      logger.info(
+        "[RequiredInformationController][onPageLoad] Redirecting to correct view based on user role answer"
+      )
 
-        val view = userRoleProvider
-          .getUserRole(request.userAnswers)
-          .selectViewForRequiredInformation(draftId)
-        Ok(view)
+      val view = userRoleProvider
+        .getUserRole(request.userAnswers)
+        .selectViewForRequiredInformation(draftId)
+      Ok(view)
 
     }
 

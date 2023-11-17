@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
+import com.google.inject.Inject
+import models.requests.DataRequest
+import models.{DraftId, Mode, TraderDetailsWithCountryCode}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-
-import com.google.inject.Inject
-import models.{DraftId, Mode, TraderDetailsWithCountryCode}
-import models.requests.DataRequest
 package userrole {
 
   import cats.data.ValidatedNel
-
-  import play.api.mvc.Call
-  import play.twirl.api.HtmlFormat
-
   import controllers.routes
   import controllers.routes.ApplicationContactDetailsController
   import forms.EmployeeCheckRegisteredDetailsFormProvider
-  import models.{ApplicationContactDetails, NormalMode, UserAnswers}
   import models.requests.ContactDetails
+  import models.{ApplicationContactDetails, NormalMode, UserAnswers}
   import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage, Page, ValuationMethodPage}
+  import play.api.mvc.Call
+  import play.twirl.api.HtmlFormat
   import viewmodels.checkAnswers.summary._
   import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 

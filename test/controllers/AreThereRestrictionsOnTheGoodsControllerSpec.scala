@@ -16,18 +16,16 @@
 
 package controllers
 
-import play.api.Application
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.AreThereRestrictionsOnTheGoodsFormProvider
 import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
 import pages.AreThereRestrictionsOnTheGoodsPage
+import play.api.Application
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.AreThereRestrictionsOnTheGoodsView
 
-class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase with MockitoSugar {
+class AreThereRestrictionsOnTheGoodsControllerSpec extends SpecBase {
 
   val formProvider = new AreThereRestrictionsOnTheGoodsFormProvider()
   val form         = formProvider()

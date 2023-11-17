@@ -16,9 +16,9 @@
 
 package models.requests
 
-import java.time.Instant
-
 import play.api.libs.json.{Json, OFormat}
+
+import java.time.Instant
 
 final case class Application(
   id: ApplicationId,

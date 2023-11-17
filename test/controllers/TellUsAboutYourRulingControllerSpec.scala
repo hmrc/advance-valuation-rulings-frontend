@@ -16,24 +16,22 @@
 
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.http.Status.OK
-import play.api.inject.bind
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.TellUsAboutYourRulingFormProvider
 import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar.{mock, when}
 import pages.TellUsAboutYourRulingPage
+import play.api.http.Status.OK
+import play.api.inject.bind
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.TellUsAboutYourRulingView
 
-class TellUsAboutYourRulingControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class TellUsAboutYourRulingControllerSpec extends SpecBase {
 
   lazy val getRoute  = routes.TellUsAboutYourRulingController.onPageLoad(NormalMode, draftId).url
   lazy val postRoute = routes.TellUsAboutYourRulingController.onSubmit(NormalMode, draftId).url

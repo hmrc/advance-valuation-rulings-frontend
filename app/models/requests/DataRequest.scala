@@ -16,10 +16,9 @@
 
 package models.requests
 
+import models.UserAnswers
 import play.api.mvc.{Request, WrappedRequest}
 import uk.gov.hmrc.auth.core.{AffinityGroup, CredentialRole}
-
-import models.UserAnswers
 
 case class OptionalDataRequest[A](
   request: Request[A],

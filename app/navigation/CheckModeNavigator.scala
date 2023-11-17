@@ -16,12 +16,11 @@
 
 package navigation
 
-import play.api.mvc.Call
-
 import controllers.routes._
-import models.{CheckMode, _}
 import models.ValuationMethod._
+import models.{CheckMode, _}
 import pages._
+import play.api.mvc.Call
 import queries.AllDocuments
 
 object CheckModeNavigator {

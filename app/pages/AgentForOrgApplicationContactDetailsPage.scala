@@ -16,12 +16,10 @@
 
 package pages
 
+import models.ApplicationContactDetails
 import play.api.libs.json.JsPath
 
-import models.ApplicationContactDetails
-
-case object AgentForOrgApplicationContactDetailsPage
-    extends QuestionPage[ApplicationContactDetails] {
+case object AgentForOrgApplicationContactDetailsPage extends QuestionPage[ApplicationContactDetails] {
 
   override def path: JsPath = JsPath \ toString
 

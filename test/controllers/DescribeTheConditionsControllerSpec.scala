@@ -16,19 +16,17 @@
 
 package controllers
 
+import base.SpecBase
+import forms.DescribeTheConditionsFormProvider
+import models.NormalMode
+import pages.DescribeTheConditionsPage
 import play.api.Application
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
-import base.SpecBase
-import forms.DescribeTheConditionsFormProvider
-import models.NormalMode
-import org.scalatestplus.mockito.MockitoSugar
-import pages.DescribeTheConditionsPage
 import views.html.DescribeTheConditionsView
 
-class DescribeTheConditionsControllerSpec extends SpecBase with MockitoSugar {
+class DescribeTheConditionsControllerSpec extends SpecBase {
 
   val formProvider = new DescribeTheConditionsFormProvider()
   val form         = formProvider()

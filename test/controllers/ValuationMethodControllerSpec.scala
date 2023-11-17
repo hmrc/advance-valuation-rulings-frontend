@@ -16,18 +16,16 @@
 
 package controllers
 
-import play.api.Application
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-
 import base.SpecBase
 import forms.ValuationMethodFormProvider
 import models.{NormalMode, ValuationMethod}
-import org.scalatestplus.mockito.MockitoSugar
 import pages.ValuationMethodPage
+import play.api.Application
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import views.html.ValuationMethodView
 
-class ValuationMethodControllerSpec extends SpecBase with MockitoSugar {
+class ValuationMethodControllerSpec extends SpecBase {
 
   lazy val valuationMethodRoute =
     routes.ValuationMethodController.onPageLoad(NormalMode, draftId).url

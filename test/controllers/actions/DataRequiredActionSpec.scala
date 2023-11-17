@@ -16,22 +16,20 @@
 
 package controllers.actions
 
-import scala.annotation.nowarn
-import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.mvc.Result
-import play.api.mvc.Results.Redirect
-import play.api.test.{FakeRequest, Helpers}
-import play.api.test.Helpers.GET
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
-
 import base.SpecBase
 import controllers.routes
 import models.DraftId
 import models.requests.{DataRequest, OptionalDataRequest}
-import org.mockito.Mockito
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.{mock, reset}
+import play.api.mvc.Result
+import play.api.mvc.Results.Redirect
+import play.api.test.Helpers.GET
+import play.api.test.{FakeRequest, Helpers}
 import services.UserAnswersService
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
+
+import scala.annotation.nowarn
+import scala.concurrent.{ExecutionContext, Future}
 
 @nowarn("cat=deprecation")
 class DataRequiredActionSpec extends SpecBase {
@@ -39,7 +37,7 @@ class DataRequiredActionSpec extends SpecBase {
   private val mockUserAnswersService = mock[UserAnswersService]
 
   override def beforeEach(): Unit = {
-    Mockito.reset(mockUserAnswersService)
+    reset(mockUserAnswersService)
     super.beforeEach()
   }
 
@@ -71,12 +69,11 @@ class DataRequiredActionSpec extends SpecBase {
           val result =
             sut.callRefine(OptionalDataRequest(req, "userId", "eoriNumber", Individual, None, None))
 
-          whenReady(result) {
-            re =>
-              re.isLeft mustBe true
-              re.left.get mustBe Redirect(
-                routes.YourApplicationHasBeenCancelledController.onPageLoad()
-              )
+          whenReady(result) { re =>
+            re.isLeft mustBe true
+            re.left.get mustBe Redirect(
+              routes.YourApplicationHasBeenCancelledController.onPageLoad()
+            )
           }
 
         }
@@ -89,12 +86,11 @@ class DataRequiredActionSpec extends SpecBase {
           val result =
             sut.callRefine(OptionalDataRequest(req, "userId", "eoriNumber", Individual, None, None))
 
-          whenReady(result) {
-            re =>
-              re.isLeft mustBe true
-              re.left.get mustBe Redirect(
-                routes.JourneyRecoveryController.onPageLoad()
-              )
+          whenReady(result) { re =>
+            re.isLeft mustBe true
+            re.left.get mustBe Redirect(
+              routes.JourneyRecoveryController.onPageLoad()
+            )
           }
 
         }

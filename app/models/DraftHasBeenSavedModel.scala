@@ -16,9 +16,9 @@
 
 package models
 
-import java.time.{Instant, ZoneId}
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.time.{Instant, ZoneId}
 import java.util.Locale
 case class DraftHasBeenSavedModel() {
 
