@@ -38,16 +38,21 @@
 
 @searchLink = {
     @link(
-            id = "search_for_commodity_code",
-            text = messages("hasCommodityCode.paragraph.1.link"),
-            call = Call("GET", config.findCommodityCodeUrl)
-        )
-    }
+        id = "search_for_commodity_code",
+        text = messages("hasCommodityCode.linkText"),
+        call = Call("GET", config.findCommodityCodeUrl)
+    )
+}
 
-@detailsContent = @{Html(
-                    messages("hasCommodityCode.paragraph.1",
-                    searchLink)
-                )}
+@detailsContent = {
+    <p class="govuk-body">
+         @messages("hasCommodityCode.paragraph.1")
+    </p>
+    <p class="govuk-body">
+        @messages("hasCommodityCode.youCan") @searchLink @messages("hasCommodityCode.ifYouDontKnowIt")
+    </p>
+}
+
 
 @radiosContent = {
     <p class="govuk-body" id="value-hint">@detailsContent</p>
