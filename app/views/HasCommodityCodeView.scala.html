@@ -46,10 +46,10 @@
 
 @detailsContent = {
     <p class="govuk-body">
-         @messages("hasCommodityCode.paragraph.1")
+        @paragraph(Html(messages("hasCommodityCode.paragraph.1")))
     </p>
     <p class="govuk-body">
-        @messages("hasCommodityCode.youCan") @searchLink @messages("hasCommodityCode.ifYouDontKnowIt")
+        @paragraph(Html(messages("hasCommodityCode.paragraph.2", searchLink)))
     </p>
 }
 
