@@ -27,10 +27,10 @@ import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SubmissionService
+import services.checkAnswers.ApplicationSummaryService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import userrole.UserRoleProvider
-import viewmodels.checkAnswers.summary.ApplicationSummaryService
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

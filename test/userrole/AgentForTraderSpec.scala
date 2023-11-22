@@ -16,22 +16,21 @@
 
 package userrole
 
-import java.time.Instant
-
+import base.SpecBase
+import forms.AgentForTraderCheckRegisteredDetailsFormProvider
+import models.requests.DataRequest
+import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UploadedFile}
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalatest.matchers.must.Matchers
+import pages.{AgentForTraderCheckRegisteredDetailsPage, AgentForTraderContactDetailsPage, BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
-
-import base.SpecBase
-import forms.AgentForTraderCheckRegisteredDetailsFormProvider
-import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithConfirmation, TraderDetailsWithCountryCode, UploadedFile}
-import models.requests.DataRequest
-import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.matchers.must.Matchers
-import pages.{BusinessContactDetailsPage, UploadLetterOfAuthorityPage, VerifyTraderDetailsPage}
 import viewmodels.checkAnswers.summary._
 import views.html._
+
+import java.time.Instant
 
 class AgentForTraderSpec extends SpecBase with Matchers {
 
@@ -108,6 +107,40 @@ class AgentForTraderSpec extends SpecBase with Matchers {
         )
       applicantSummary mustBe agentSummary
       eoriDetailsSummary mustBe traderEoriDetailsSummary
+    }
+
+    "should throw exception when no data" in {
+      val loaFilename = "totally_legit_authority_filename"
+      val ua          = emptyUserAnswers
+        .setFuture(
+          UploadLetterOfAuthorityPage,
+          UploadedFile.Success.apply(
+            "",
+            "",
+            UploadedFile.UploadDetails.apply(loaFilename, "", Instant.now(), "", 1L)
+          )
+        )
+        .futureValue
+
+      val agentSummary             = mock[AgentSummary]
+      val traderEoriDetailsSummary = mock[TraderEoriDetailsSummary]
+
+      when(agentSummaryCreator.summaryRows(ua)(mockMessages)).thenReturn(agentSummary)
+      when(
+        traderEoriDetailsSummaryCreator.summaryRows(
+          traderDetailsWithCountryCode,
+          draftId,
+          loaFilename
+        )(mockMessages)
+      ).thenReturn(traderEoriDetailsSummary)
+
+      val exception = intercept[Exception] {
+        agentForTrader.getApplicationSummary(ua, traderDetailsWithCountryCode)(
+          mockMessages
+        )
+      }
+
+      exception.getMessage mustBe "VerifyTraderDetailsPage needs to be answered(getApplicationSummary)"
     }
 
     "should return the correct ContactDetails for Application Request" in {
@@ -270,6 +303,7 @@ class AgentForTraderSpec extends SpecBase with Matchers {
           .url
       }
     }
+
     "getContactDetailsJourney should return" - {
       "should return BusinessContactDetails page" in {
 
@@ -281,5 +315,18 @@ class AgentForTraderSpec extends SpecBase with Matchers {
 
       }
     }
+
+    "sourceFromUA" in {
+      agentForTrader.sourceFromUA mustBe true
+    }
+
+    "selectGetRegisteredDetailsPage" in {
+      agentForTrader.selectGetRegisteredDetailsPage() mustBe AgentForTraderCheckRegisteredDetailsPage
+    }
+
+    "selectBusinessContactDetailsPage" in {
+      agentForTrader.selectBusinessContactDetailsPage() mustBe AgentForTraderContactDetailsPage
+    }
+
   }
 }

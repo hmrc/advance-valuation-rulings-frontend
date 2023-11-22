@@ -16,10 +16,9 @@
 
 package forms
 
-import play.api.data.FormError
-
 import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
+import play.api.data.FormError
 
 class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase {
 
@@ -41,6 +40,19 @@ class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase 
         form,
         fieldName,
         numericStringsBetweenRange(minLength, maxLength)
+      )
+
+      behave like onlyNumericField(
+        form,
+        fieldName,
+        lengthError = FormError(fieldName, invalidNumericKey, Seq())
+      )
+
+      behave like numericStringWithMinLength(
+        form,
+        fieldName,
+        minLength = minLength,
+        lengthError = FormError(fieldName, minLengthKey, Seq(minLength))
       )
 
       behave like numericStringWithMaxLength(

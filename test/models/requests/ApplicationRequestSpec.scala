@@ -16,476 +16,28 @@
 
 package models.requests
 
+import base.SpecBase
 import cats.data.NonEmptyList
 import cats.data.Validated._
-
-import scala.util.Try
-import play.api.libs.json.{JsResult, JsSuccess, Json}
 import generators._
-import models._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
+import models._
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalacheck.Arbitrary
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.{ApplicationContactDetailsPage, _}
+import play.api.libs.json.{JsResult, JsSuccess, Json}
 
-class ApplicationRequestSpec
-    extends AnyWordSpec
-    with Matchers
-    with ScalaCheckPropertyChecks
-    with ApplicationRequestGenerator {
+import scala.util.Try
 
-  import ApplicationRequestSpec._
+class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with ApplicationRequestGenerator {
 
-  "ApplicationRequest" should {
-
-    val contactDetailsService     = mock[ContactDetailsService]
-    val applicationRequestService = new ApplicationRequestService(contactDetailsService)
-
-    "be able to deserialize successful body" when {
-      "when the user is an individual" in {
-        val result: JsResult[ApplicationRequest] =
-          ApplicationRequest.format.reads(Json.parse(individualTraderJson))
-
-        result.isSuccess shouldBe true
-
-        result shouldBe JsSuccess(
-          ApplicationRequest(
-            draftId = draftId,
-            trader = eoriDetails,
-            agent = None,
-            contact = contact,
-            requestedMethod = requestedMethod,
-            goodsDetails,
-            attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
-            letterOfAuthority = None
-          )
-        )
-      }
-
-      "when the user is an agent acting on behalf of an organisation" in {
-
-        val result = ApplicationRequest.format.reads(Json.parse(agentJson))
-
-        result.isSuccess shouldBe true
-        result.get       shouldBe
-          ApplicationRequest(
-            draftId = draftId,
-            trader = eoriDetails,
-            agent = Some(agentEoriDetails),
-            contact = contact,
-            requestedMethod = requestedMethod,
-            goodsDetails,
-            attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.AgentOrg,
-            letterOfAuthority = None
-          )
-      }
-    }
-
-    "should be able to write body" in {
-      ApplicationRequest.format.writes(
-        ApplicationRequest(
-          draftId = draftId,
-          trader = eoriDetails,
-          agent = None,
-          contact = contact,
-          requestedMethod = requestedMethod,
-          goodsDetails = goodsDetails,
-          attachments = Seq.empty,
-          whatIsYourRole = WhatIsYourRole.EmployeeOrg,
-          letterOfAuthority = None
-        )
-      ) shouldBe Json.parse(individualTraderJson)
-    }
-
-    "form an isomorphism" in {
-      forAll { (applicationRequest: ApplicationRequest) =>
-        val writesResult = ApplicationRequest.format.writes(applicationRequest)
-        val readsResult  = ApplicationRequest.format.reads(writesResult)
-        readsResult should be(JsSuccess(applicationRequest))
-      }
-    }
-
-    "when the user is an individual" when {
-      "return valid when built from correctly structured userAnswers" in {
-        val ua = emptyUserAnswers
-
-        val userAnswers = (for {
-          ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
-          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
-          ua <- ua.set(HasCommodityCodePage, false)
-          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-          ua <- ua.set(HasConfidentialInformationPage, false)
-          ua <- ua.set(
-                  CheckRegisteredDetailsPage,
-                  true
-                )
-          ua <- ua.set(
-                  ApplicationContactDetailsPage,
-                  ApplicationContactDetails(
-                    name = contactName,
-                    email = contactEmail,
-                    phone = contactPhone,
-                    jobTitle = contactJobTitle
-                  )
-                )
-          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
-          ua <- ua.set(IsThereASaleInvolvedPage, true)
-          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
-          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-
-        } yield ua).success.get
-
-        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Valid(
-          ApplicationRequest(
-            draftId = draftId,
-            trader = traderDetails,
-            agent = None,
-            contact = contact,
-            requestedMethod = MethodOne(
-              Some("explainHowPartiesAreRelated"),
-              Some("describeTheRestrictions"),
-              None
-            ),
-            goodsDetails = goodsDetailsNoDetails,
-            attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
-            letterOfAuthority = None
-          )
-        )
-      }
-
-      "return invalid when user states registered details are incorrect" in {
-        val ua = emptyUserAnswers
-
-        val userAnswers = (for {
-          ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
-          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
-          ua <- ua.set(HasCommodityCodePage, false)
-          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-          ua <- ua.set(HasConfidentialInformationPage, false)
-          ua <- ua.set(CheckRegisteredDetailsPage, false)
-          ua <- ua.set(
-                  ApplicationContactDetailsPage,
-                  ApplicationContactDetails(
-                    name = contactName,
-                    email = contactEmail,
-                    phone = contactPhone,
-                    jobTitle = contactJobTitle
-                  )
-                )
-          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
-          ua <- ua.set(IsThereASaleInvolvedPage, true)
-          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
-          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-        } yield ua).success.get
-
-        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
-
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Invalid(
-          NonEmptyList.of(
-            CheckRegisteredDetailsPage
-          )
-        )
-      }
-
-      "return invalid for an Individual when built from empty userAnswers" in {
-
-        val anwsersWithLogin: Try[UserAnswers] =
-          emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader)
-        when(contactDetailsService.apply(anwsersWithLogin.get))
-          .thenReturn(Invalid(NonEmptyList.of(ApplicationContactDetailsPage)))
-
-        val result = applicationRequestService(
-          anwsersWithLogin.success.get,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Invalid(
-          NonEmptyList.of(
-            CheckRegisteredDetailsPage,
-            ApplicationContactDetailsPage,
-            ValuationMethodPage,
-            DescriptionOfGoodsPage,
-            DoYouWantToUploadDocumentsPage
-          )
-        )
-      }
-    }
-
-    "when the user is an organisation user" when {
-      "return valid when built from correctly structured userAnswers" in {
-        val ua = emptyUserAnswers
-
-        val userAnswers = (for {
-          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationUser)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
-          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
-          ua <- ua.set(HasCommodityCodePage, false)
-          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-          ua <- ua.set(HasConfidentialInformationPage, false)
-          ua <- ua.set(
-                  CheckRegisteredDetailsPage,
-                  true
-                )
-          ua <- ua.set(
-                  ApplicationContactDetailsPage,
-                  ApplicationContactDetails(
-                    name = contactName,
-                    email = contactEmail,
-                    phone = contactPhone,
-                    jobTitle = contactJobTitle
-                  )
-                )
-          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
-          ua <- ua.set(IsThereASaleInvolvedPage, true)
-          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
-          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-        } yield ua).success.get
-
-        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
-
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Valid(
-          ApplicationRequest(
-            draftId = draftId,
-            trader = traderDetails,
-            agent = None,
-            contact = contact,
-            requestedMethod = MethodOne(
-              Some("explainHowPartiesAreRelated"),
-              Some("describeTheRestrictions"),
-              None
-            ),
-            goodsDetails = goodsDetailsNoDetails,
-            attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
-            letterOfAuthority = None
-          )
-        )
-      }
-
-      "return invalid when only answered is an employee on behalf of an org" in {
-        val userAnswers = (for {
-          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationUser)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-        } yield ua).get
-
-        when(contactDetailsService.apply(userAnswers))
-          .thenReturn(Invalid(NonEmptyList.of(ApplicationContactDetailsPage)))
-
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Invalid(
-          NonEmptyList.of(
-            CheckRegisteredDetailsPage,
-            ApplicationContactDetailsPage,
-            ValuationMethodPage,
-            DescriptionOfGoodsPage,
-            DoYouWantToUploadDocumentsPage
-          )
-        )
-      }
-    }
-
-    "when the user is an agent acting on behalf of an organisation" when {
-      "return valid when built from correctly structured userAnswers" in {
-        val ua = emptyUserAnswers
-
-        val userAnswers = (for {
-          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
-          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
-          ua <- ua.set(HasCommodityCodePage, false)
-          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-          ua <- ua.set(HasConfidentialInformationPage, false)
-          ua <- ua.set(
-                  CheckRegisteredDetailsPage,
-                  true
-                )
-          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
-          ua <- ua.set(IsThereASaleInvolvedPage, true)
-          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
-          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
-          ua <- ua.set(
-                  BusinessContactDetailsPage,
-                  BusinessContactDetails(
-                    name = contactName,
-                    email = contactEmail,
-                    phone = contactPhone,
-                    companyName = None,
-                    jobTitle = contactJobTitle
-                  )
-                )
-          ua <- ua.set(
-                  AgentCompanyDetailsPage,
-                  AgentCompanyDetails(
-                    agentEoriDetails.eori,
-                    agentEoriDetails.businessName,
-                    agentEoriDetails.addressLine1,
-                    agentEoriDetails.addressLine2.getOrElse(""),
-                    country,
-                    Some(agentEoriDetails.postcode)
-                  )
-                )
-        } yield ua).success.get
-
-        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Valid(
-          ApplicationRequest(
-            draftId = draftId,
-            trader = traderDetails,
-            agent = Some(agentEoriDetails),
-            contact = contact,
-            requestedMethod = MethodOne(
-              Some("explainHowPartiesAreRelated"),
-              Some("describeTheRestrictions"),
-              None
-            ),
-            goodsDetails = goodsDetailsNoDetails,
-            attachments = Seq.empty,
-            whatIsYourRole = WhatIsYourRole.AgentOrg,
-            letterOfAuthority = None
-          )
-        )
-      }
-
-      "return invalid when missing is the sale subject to conditions" in {
-        val ua = emptyUserAnswers
-
-        val userAnswers = (for {
-          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
-          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
-          ua <- ua.set(HasCommodityCodePage, false)
-          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
-          ua <- ua.set(HasConfidentialInformationPage, false)
-          ua <- ua.set(
-                  CheckRegisteredDetailsPage,
-                  true
-                )
-          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
-          ua <- ua.set(IsThereASaleInvolvedPage, true)
-          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
-          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
-          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
-          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
-          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
-          ua <- ua.set(
-                  BusinessContactDetailsPage,
-                  BusinessContactDetails(
-                    name = contactName,
-                    email = contactEmail,
-                    phone = contactPhone,
-                    companyName = None,
-                    jobTitle = contactJobTitle
-                  )
-                )
-          ua <- ua.set(
-                  AgentCompanyDetailsPage,
-                  AgentCompanyDetails(
-                    agentEoriDetails.eori,
-                    agentEoriDetails.businessName,
-                    agentEoriDetails.addressLine1,
-                    agentEoriDetails.addressLine2.getOrElse(""),
-                    country,
-                    Some(agentEoriDetails.postcode)
-                  )
-                )
-        } yield ua).success.get
-
-        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Invalid(
-          NonEmptyList.one(IsTheSaleSubjectToConditionsPage)
-        )
-      }
-
-      "return invalid when only page answered is the agent on behalf of an org" in {
-        val userAnswers = (for {
-          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant)
-          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
-        } yield ua).get
-        when(contactDetailsService.apply(userAnswers))
-          .thenReturn(Invalid(NonEmptyList.of(BusinessContactDetailsPage)))
-
-        val result = applicationRequestService(
-          userAnswers,
-          traderDetailsWithCountryCode
-        )
-
-        result shouldBe Invalid(
-          NonEmptyList.of(
-            CheckRegisteredDetailsPage,
-            AgentCompanyDetailsPage,
-            BusinessContactDetailsPage,
-            ValuationMethodPage,
-            DescriptionOfGoodsPage,
-            DoYouWantToUploadDocumentsPage
-          )
-        )
-      }
-
-    }
-  }
-}
-
-object ApplicationRequestSpec extends Generators {
   val eori                  = "Trader EORI"
   val businessName          = "Trader business name"
   val addressLine1          = "Trader address line 1"
   val addressLine2          = "Trader address line 2"
   val addressLine3          = "Trader address line 3"
   val postcode              = "Trader postcode"
-  val countryCode           = "Trader country code"
-  val phoneNumber           = "1234567890"
   val contactName           = "contact name"
   val contactEmail          = "contact email"
   val contactPhone          = "contact phone"
@@ -501,37 +53,7 @@ object ApplicationRequestSpec extends Generators {
 
   val randomBoolean: Boolean = Arbitrary.arbitrary[Boolean].sample.getOrElse(true)
 
-  val draftId: DraftId = DraftId(1)
-
-  val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
-
   val country: Country = Country("GB", "United Kingdom")
-
-  val contactInformation: ContactInformation = ContactInformation(
-    personOfContact = Some("Test Person"),
-    sepCorrAddrIndicator = Some(false),
-    streetAndNumber = Some("Test Street 1"),
-    city = Some("Test City"),
-    postalCode = Some("Test Postal Code"),
-    countryCode = Some("GB"),
-    telephoneNumber = Some("Test Telephone Number"),
-    faxNumber = Some("Test Fax Number"),
-    emailAddress = Some("Test Email Address"),
-    emailVerificationTimestamp = Some("2000-01-31T23:59:59Z")
-  )
-
-  val traderDetailsWithCountryCode: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
-    EORINo = "GB123456789012345",
-    consentToDisclosureOfPersonalData = true,
-    CDSFullName = "Test Name",
-    CDSEstablishmentAddress = CDSEstablishmentAddress(
-      streetAndNumber = "Test Street 1",
-      city = "Test City",
-      countryCode = "GB",
-      postalCode = Some("Test Postal Code")
-    ),
-    contactInformation = Some(contactInformation)
-  )
 
   val traderDetails: TraderDetail = TraderDetail(
     eori = traderDetailsWithCountryCode.EORINo,
@@ -683,4 +205,441 @@ object ApplicationRequestSpec extends Generators {
        |"attachments": [],
        |"whatIsYourRole" : "${WhatIsYourRole.AgentOrg}"
     }""".stripMargin
+
+  "ApplicationRequest" - {
+
+    val contactDetailsService     = mock[ContactDetailsService]
+    val applicationRequestService = new ApplicationRequestService(contactDetailsService)
+
+    "be able to deserialize successful body" - {
+      "when the user is an individual" in {
+        val result: JsResult[ApplicationRequest] =
+          ApplicationRequest.format.reads(Json.parse(individualTraderJson))
+
+        result.isSuccess mustBe true
+
+        result mustBe JsSuccess(
+          ApplicationRequest(
+            draftId = draftId,
+            trader = eoriDetails,
+            agent = None,
+            contact = contact,
+            requestedMethod = requestedMethod,
+            goodsDetails,
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
+          )
+        )
+      }
+
+      "when the user is an agent acting on behalf of an organisation" in {
+
+        val result = ApplicationRequest.format.reads(Json.parse(agentJson))
+
+        result.isSuccess mustBe true
+        result.get mustBe
+          ApplicationRequest(
+            draftId = draftId,
+            trader = eoriDetails,
+            agent = Some(agentEoriDetails),
+            contact = contact,
+            requestedMethod = requestedMethod,
+            goodsDetails,
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.AgentOrg,
+            letterOfAuthority = None
+          )
+      }
+    }
+
+    "should be able to write body" in {
+      ApplicationRequest.format.writes(
+        ApplicationRequest(
+          draftId = draftId,
+          trader = eoriDetails,
+          agent = None,
+          contact = contact,
+          requestedMethod = requestedMethod,
+          goodsDetails = goodsDetails,
+          attachments = Seq.empty,
+          whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+          letterOfAuthority = None
+        )
+      ) mustBe Json.parse(individualTraderJson)
+    }
+
+    "form an isomorphism" in {
+      forAll { (applicationRequest: ApplicationRequest) =>
+        val writesResult = ApplicationRequest.format.writes(applicationRequest)
+        val readsResult  = ApplicationRequest.format.reads(writesResult)
+        readsResult must be(JsSuccess(applicationRequest))
+      }
+    }
+
+    "when the user is an individual" - {
+      "return valid when built from correctly structured userAnswers" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(
+                  CheckRegisteredDetailsPage,
+                  true
+                )
+          ua <- ua.set(
+                  ApplicationContactDetailsPage,
+                  ApplicationContactDetails(
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    jobTitle = contactJobTitle
+                  )
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+
+        } yield ua).success.get
+
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
+        val result = applicationRequestService(
+          userAnswers,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Valid(
+          ApplicationRequest(
+            draftId = draftId,
+            trader = traderDetails,
+            agent = None,
+            contact = contact,
+            requestedMethod = MethodOne(
+              Some("explainHowPartiesAreRelated"),
+              Some("describeTheRestrictions"),
+              None
+            ),
+            goodsDetails = goodsDetailsNoDetails,
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
+          )
+        )
+      }
+
+      "return invalid when user states registered details are incorrect" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.IndividualTrader)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(CheckRegisteredDetailsPage, false)
+          ua <- ua.set(
+                  ApplicationContactDetailsPage,
+                  ApplicationContactDetails(
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    jobTitle = contactJobTitle
+                  )
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+        } yield ua).success.get
+
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
+
+        val result = applicationRequestService(
+          userAnswers,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage
+          )
+        )
+      }
+
+      "return invalid for an Individual when built from empty userAnswers" in {
+
+        val anwsersWithLogin: Try[UserAnswers] =
+          emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader)
+        when(contactDetailsService.apply(anwsersWithLogin.get))
+          .thenReturn(Invalid(NonEmptyList.of(ApplicationContactDetailsPage)))
+
+        val result = applicationRequestService(
+          anwsersWithLogin.success.get,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage,
+            ApplicationContactDetailsPage,
+            ValuationMethodPage,
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
+          )
+        )
+      }
+    }
+
+    "when the user is an admin of an organisation" - {
+      "return valid when built from correctly structured userAnswers" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationUser)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(
+                  CheckRegisteredDetailsPage,
+                  true
+                )
+          ua <- ua.set(
+                  ApplicationContactDetailsPage,
+                  ApplicationContactDetails(
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    jobTitle = contactJobTitle
+                  )
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+        } yield ua).success.get
+
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
+
+        val result = applicationRequestService(
+          userAnswers,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Valid(
+          ApplicationRequest(
+            draftId = draftId,
+            trader = traderDetails,
+            agent = None,
+            contact = contact,
+            requestedMethod = MethodOne(
+              Some("explainHowPartiesAreRelated"),
+              Some("describeTheRestrictions"),
+              None
+            ),
+            goodsDetails = goodsDetailsNoDetails,
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.EmployeeOrg,
+            letterOfAuthority = None
+          )
+        )
+      }
+
+      "return invalid when only answered is an employee on behalf of an org" in {
+        val userAnswers = (for {
+          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationUser)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
+        } yield ua).get
+
+        when(contactDetailsService.apply(userAnswers))
+          .thenReturn(Invalid(NonEmptyList.of(ApplicationContactDetailsPage)))
+
+        val result = applicationRequestService(
+          userAnswers,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage,
+            ApplicationContactDetailsPage,
+            ValuationMethodPage,
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
+          )
+        )
+      }
+    }
+
+    "when the user is an agent acting on behalf of an organisation" - {
+      "return valid when built from correctly structured userAnswers" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(
+                  CheckRegisteredDetailsPage,
+                  true
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(IsTheSaleSubjectToConditionsPage, false)
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg)
+          ua <- ua.set(
+                  BusinessContactDetailsPage,
+                  BusinessContactDetails(
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    companyName = None,
+                    jobTitle = contactJobTitle
+                  )
+                )
+          ua <- ua.set(
+                  AgentCompanyDetailsPage,
+                  AgentCompanyDetails(
+                    agentEoriDetails.eori,
+                    agentEoriDetails.businessName,
+                    agentEoriDetails.addressLine1,
+                    agentEoriDetails.addressLine2.getOrElse(""),
+                    country,
+                    Some(agentEoriDetails.postcode)
+                  )
+                )
+        } yield ua).success.get
+
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
+        val result = applicationRequestService(
+          userAnswers,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Valid(
+          ApplicationRequest(
+            draftId = draftId,
+            trader = traderDetails,
+            agent = Some(agentEoriDetails),
+            contact = contact,
+            requestedMethod = MethodOne(
+              Some("explainHowPartiesAreRelated"),
+              Some("describeTheRestrictions"),
+              None
+            ),
+            goodsDetails = goodsDetailsNoDetails,
+            attachments = Seq.empty,
+            whatIsYourRole = WhatIsYourRole.AgentOrg,
+            letterOfAuthority = None
+          )
+        )
+      }
+
+      "return invalid when missing is the sale subject to conditions" in {
+        val ua = emptyUserAnswers
+
+        val userAnswers = (for {
+          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAssistant)
+          ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
+          ua <- ua.set(HasCommodityCodePage, false)
+          ua <- ua.set(HaveTheGoodsBeenSubjectToLegalChallengesPage, false)
+          ua <- ua.set(HasConfidentialInformationPage, false)
+          ua <- ua.set(
+                  CheckRegisteredDetailsPage,
+                  true
+                )
+          ua <- ua.set(ValuationMethodPage, ValuationMethod.Method1)
+          ua <- ua.set(IsThereASaleInvolvedPage, true)
+          ua <- ua.set(IsSaleBetweenRelatedPartiesPage, true)
+          ua <- ua.set(ExplainHowPartiesAreRelatedPage, "explainHowPartiesAreRelated")
+          ua <- ua.set(AreThereRestrictionsOnTheGoodsPage, true)
+          ua <- ua.set(DescribeTheRestrictionsPage, "describeTheRestrictions")
+          ua <- ua.set(DoYouWantToUploadDocumentsPage, false)
+          ua <- ua.set(
+                  BusinessContactDetailsPage,
+                  BusinessContactDetails(
+                    name = contactName,
+                    email = contactEmail,
+                    phone = contactPhone,
+                    companyName = None,
+                    jobTitle = contactJobTitle
+                  )
+                )
+          ua <- ua.set(
+                  AgentCompanyDetailsPage,
+                  AgentCompanyDetails(
+                    agentEoriDetails.eori,
+                    agentEoriDetails.businessName,
+                    agentEoriDetails.addressLine1,
+                    agentEoriDetails.addressLine2.getOrElse(""),
+                    country,
+                    Some(agentEoriDetails.postcode)
+                  )
+                )
+        } yield ua).success.get
+
+        when(contactDetailsService.apply(userAnswers)).thenReturn(Valid(contact))
+        val result = applicationRequestService(
+          userAnswers,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Invalid(
+          NonEmptyList.one(IsTheSaleSubjectToConditionsPage)
+        )
+      }
+
+      "return invalid when only page answered is the agent on behalf of an org" in {
+        val userAnswers = (for {
+          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAssistant)
+          ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
+        } yield ua).get
+        when(contactDetailsService.apply(userAnswers))
+          .thenReturn(Invalid(NonEmptyList.of(BusinessContactDetailsPage)))
+
+        val result = applicationRequestService(
+          userAnswers,
+          traderDetailsWithCountryCode
+        )
+
+        result mustBe Invalid(
+          NonEmptyList.of(
+            CheckRegisteredDetailsPage,
+            AgentCompanyDetailsPage,
+            BusinessContactDetailsPage,
+            ValuationMethodPage,
+            DescriptionOfGoodsPage,
+            DoYouWantToUploadDocumentsPage
+          )
+        )
+      }
+
+    }
+  }
 }

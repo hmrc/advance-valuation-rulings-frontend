@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-import models.AuthUserType
-import models.AuthUserType._
-import play.api.mvc.Call
+package config
 
-package object navigation {
+import base.SpecBase
+import models.Done
 
-  def resolveAuthUserType(authUserType: AuthUserType)(
-    isTrader: Call,
-    isEmployee: Call,
-    isAgent: Call
-  ): Call =
-    authUserType match {
-      case IndividualTrader      => isTrader
-      case OrganisationUser      => isEmployee
-      case OrganisationAssistant => isAgent
-      case Agent                 => isAgent
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+
+class NoOpInternalAuthTokenInitialiserSpec extends SpecBase {
+
+  "NoOpInternalAuthTokenInitialiser" - {
+    "initialised method" - {
+      "should return Done" in {
+        val initialiser = new NoOpInternalAuthTokenInitialiser()
+        val result      = Await.result(initialiser.initialised, 2.seconds)
+
+        result must be(Done)
+      }
     }
+  }
 }

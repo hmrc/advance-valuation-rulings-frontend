@@ -16,10 +16,10 @@
 
 package pages
 
-import scala.util.Success
-
 import models.{DraftId, UserAnswers}
 import pages.behaviours.PageBehaviours
+
+import scala.util.Success
 
 class HaveYouUsedMethodOneInPastPageSpec extends PageBehaviours {
 

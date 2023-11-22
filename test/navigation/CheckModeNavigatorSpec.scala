@@ -18,10 +18,12 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
+import controllers.routes.CheckRegisteredDetailsController
 import models._
 import org.mockito.MockitoSugar.mock
 import pages._
 import play.api.libs.json.Writes
+import play.api.mvc.Call
 import queries._
 import userrole.UserRoleProvider
 
@@ -29,12 +31,12 @@ import java.time.Instant
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val userRoleProvider              = mock[UserRoleProvider]
-  val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
-  val navigator                     = new Navigator(userRoleProvider)
-  val checkYourAnswers              = routes.CheckYourAnswersController.onPageLoad(draftId)
+  val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
+  val EmptyUserAnswers: UserAnswers      = userAnswersAsIndividualTrader
+  val navigator: Navigator               = new Navigator(userRoleProvider)
+  val checkYourAnswers: Call             = routes.CheckYourAnswersController.onPageLoad(draftId)
 
-  private val successfulFile = UploadedFile.Success(
+  private val successfulFile: UploadedFile.Success = UploadedFile.Success(
     reference = "reference",
     downloadUrl = "downloadUrl",
     uploadDetails = UploadedFile.UploadDetails(
@@ -771,6 +773,15 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe checkYourAnswers
           }
 
+          "navigate to CheckRegisteredDetails when No answers for CheckRegisteredDetailsPage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              CheckRegisteredDetailsPage,
+              CheckMode,
+              userAnswers
+            ) mustBe CheckRegisteredDetailsController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
           "and navigate to EORI Be Up To Date when No" in {
             val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, false)
             navigator.nextPage(
@@ -810,6 +821,18 @@ class CheckModeNavigatorSpec extends SpecBase {
             )
           }
 
+          "navigate to HasConfidentialInformation when No answers for HasConfidentialInformationPage page" in {
+            val userAnswers = userAnswersWith(CheckRegisteredDetailsPage, true)
+            navigator.nextPage(
+              HasConfidentialInformationPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.HasConfidentialInformationController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
+          }
+
           "and navigate to CheckYourAnswers when No" in {
             val userAnswers = userAnswersWith(HasConfidentialInformationPage, false)
             navigator.nextPage(
@@ -828,6 +851,18 @@ class CheckModeNavigatorSpec extends SpecBase {
               CheckMode,
               userAnswers
             ) mustBe routes.DescribeTheLegalChallengesController.onPageLoad(
+              mode = CheckMode,
+              draftId = draftId
+            )
+          }
+
+          "navigate to HaveTheGoodsBeenSubjectToLegalChallenges when No answers for HaveTheGoodsBeenSubjectToLegalChallengesPage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              HaveTheGoodsBeenSubjectToLegalChallengesPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
               mode = CheckMode,
               draftId = draftId
             )
@@ -853,6 +888,15 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.CommodityCodeController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
 
+          "navigate to HasCommodityCode when No answers for HasCommodityCodePage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              HasCommodityCodePage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.HasCommodityCodeController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
           "and navigate to DoYouWantToUploadSupportingDocuments when No" in {
             val userAnswers = userAnswersWith(HasCommodityCodePage, false)
             navigator.nextPage(
@@ -875,6 +919,18 @@ class CheckModeNavigatorSpec extends SpecBase {
               draftId,
               None,
               None
+            )
+          }
+
+          "navigate to HasCommodityCode when No answers for HasCommodityCodePage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              DoYouWantToUploadDocumentsPage,
+              CheckMode,
+              userAnswers
+            ) mustBe controllers.routes.DoYouWantToUploadDocumentsController.onPageLoad(
+              CheckMode,
+              draftId
             )
           }
 
@@ -1010,6 +1066,7 @@ class CheckModeNavigatorSpec extends SpecBase {
       }
 
       "Other pages" - {
+
         "should navigate to CheckYourAnswers page" in {
           val userAnswers =
             userAnswersWith(ConfidentialInformationPage, "top secret")
@@ -1018,6 +1075,106 @@ class CheckModeNavigatorSpec extends SpecBase {
             CheckMode,
             userAnswers
           ) mustBe checkYourAnswers
+        }
+
+        "TellUsAboutYourRulingPage" - {
+
+          "navigate to TellUsAboutYourRuling when there is an answer" in {
+            val userAnswers = userAnswersWith(TellUsAboutYourRulingPage, "test")
+            navigator.nextPage(
+              TellUsAboutYourRulingPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.AwareOfRulingController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
+          "navigate to HasCommodityCode when No answers for HasCommodityCodePage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              TellUsAboutYourRulingPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.TellUsAboutYourRulingController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+        }
+
+        "HaveYouReceivedADecisionPage" - {
+          "navigate to TellUsAboutYourRulingController when Yes" in {
+            val userAnswers = userAnswersWith(HaveYouReceivedADecisionPage, true)
+            navigator.nextPage(
+              HaveYouReceivedADecisionPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.TellUsAboutYourRulingController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
+          "navigate to HaveYouReceivedADecisionController when No answers for HasConfidentialInformationPage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              HaveYouReceivedADecisionPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.HaveYouReceivedADecisionController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
+          "and navigate to AwareOfRulingController when No" in {
+            val userAnswers = userAnswersWith(HaveYouReceivedADecisionPage, false)
+            navigator.nextPage(
+              HaveYouReceivedADecisionPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.AwareOfRulingController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+        }
+
+        "AwareOfRulingPage" - {
+          "navigate to TellUsAboutYourRulingController when Yes" in {
+            val userAnswers = userAnswersWith(AwareOfRulingPage, true)
+            navigator.nextPage(
+              AwareOfRulingPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.AboutSimilarGoodsController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
+          "navigate to HaveYouReceivedADecisionController when No answers for HasConfidentialInformationPage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              AwareOfRulingPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.AwareOfRulingController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
+          "and navigate to AwareOfRulingController when No" in {
+            val userAnswers = userAnswersWith(AwareOfRulingPage, false)
+            navigator.nextPage(
+              AwareOfRulingPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.HasCommodityCodeController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+        }
+
+        "AboutSimilarGoodsPage" - {
+
+          "navigate to HasCommodityCode when there is an answer" in {
+            val userAnswers = userAnswersWith(AboutSimilarGoodsPage, "test")
+            navigator.nextPage(
+              AboutSimilarGoodsPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.HasCommodityCodeController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
+
+          "navigate to HasCommodityCode when No answers for HasCommodityCodePage page" in {
+            val userAnswers = userAnswersWith(HasConfidentialInformationPage, true)
+            navigator.nextPage(
+              AboutSimilarGoodsPage,
+              CheckMode,
+              userAnswers
+            ) mustBe routes.AboutSimilarGoodsController.onPageLoad(mode = CheckMode, draftId = draftId)
+          }
         }
       }
     }

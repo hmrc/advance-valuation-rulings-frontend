@@ -16,16 +16,15 @@
 
 package viewmodels.checkAnswers.summary
 
-import scala.util.Try
-
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
-
 import base.SpecBase
 import generators.Generators
 import models.UserAnswers
 import pages._
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
 import viewmodels.implicits._
+
+import scala.util.Try
 
 class DetailsSummarySpec extends DetailsSummaryFixtureSpec {
 

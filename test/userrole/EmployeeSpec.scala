@@ -16,18 +16,17 @@
 
 package userrole
 
+import base.SpecBase
+import forms.EmployeeCheckRegisteredDetailsFormProvider
+import models.requests.DataRequest
+import models.{ApplicationContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalatest.matchers.must.Matchers
+import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
-
-import base.SpecBase
-import forms.EmployeeCheckRegisteredDetailsFormProvider
-import models.{ApplicationContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
-import models.requests.DataRequest
-import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.matchers.must.Matchers
-import pages.ApplicationContactDetailsPage
 import viewmodels.checkAnswers.summary._
 import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
 
@@ -226,4 +225,9 @@ class EmployeeSpec extends SpecBase with Matchers {
 
     }
   }
+
+  "selectGetRegisteredDetailsPage" in {
+    employee.selectGetRegisteredDetailsPage() mustBe CheckRegisteredDetailsPage
+  }
+
 }

@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
-package viewmodels
+package models
 
-abstract class WithName(name: String) {
-  override val toString: String = name
+import base.SpecBase
+
+class ModeSpec extends SpecBase {
+
+  "Mode" - {
+    "return a normal type" in {
+      Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
+    }
+
+    "return a check mode type" in {
+      Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
+    }
+
+    "return a read-only mode type" in {
+      Mode.jsLiteral.to(ReadOnlyMode) mustBe "ReadOnlyMode"
+    }
+  }
+
 }

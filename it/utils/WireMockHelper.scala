@@ -1,18 +1,17 @@
 package utils
 
-import java.net.ServerSocket
-
-import scala.jdk.CollectionConverters._
-import scala.util.Using
-
-import com.github.tomakehurst.wiremock.{WireMockServer, client}
-import com.github.tomakehurst.wiremock.client.{MappingBuilder, ResponseDefinitionBuilder, WireMock}
 import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.{MappingBuilder, ResponseDefinitionBuilder, WireMock}
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.http.{HttpHeader, HttpHeaders, RequestMethod}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import com.github.tomakehurst.wiremock.{WireMockServer, client}
 import org.openqa.selenium.InvalidArgumentException
 import utils.WireMockHelper.{MappingBuilderExt, ResponseDefinitionBuilderExt, wireMockPort}
+
+import java.net.ServerSocket
+import scala.jdk.CollectionConverters._
+import scala.util.Using
 
 trait WireMockHelper {
   val wireMockServer = new WireMockServer(wireMockConfig.port(wireMockPort))

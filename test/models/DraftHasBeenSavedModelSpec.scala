@@ -16,9 +16,9 @@
 
 package models
 
-import java.time.{Clock, Instant, ZoneId}
-
 import base.SpecBase
+
+import java.time.{Clock, Instant, ZoneId}
 
 class DraftHasBeenSavedModelSpec extends SpecBase {
 

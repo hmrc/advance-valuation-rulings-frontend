@@ -16,9 +16,8 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.StringFieldBehaviours
+import play.api.data.FormError
 
 class ConfidentialInformationFormProviderSpec extends StringFieldBehaviours {
 

@@ -21,6 +21,7 @@ import forms.ConfidentialInformationFormProvider
 import models.NormalMode
 import pages.ConfidentialInformationPage
 import play.api.Application
+import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -28,10 +29,10 @@ import views.html.ConfidentialInformationView
 
 class ConfidentialInformationControllerSpec extends SpecBase {
 
-  val formProvider = new ConfidentialInformationFormProvider()
-  val form         = formProvider()
+  val formProvider       = new ConfidentialInformationFormProvider()
+  val form: Form[String] = formProvider()
 
-  lazy val confidentialInformationRoute =
+  lazy val confidentialInformationRoute: String =
     routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId).url
 
   lazy val saveDraftRoute: String =
@@ -57,6 +58,7 @@ class ConfidentialInformationControllerSpec extends SpecBase {
           "POST",
           s"/advance-valuation-ruling/$draftId/save-as-draft"
         ).url
+        ()
       }
     }
     "must return OK and the correct view for a GET" in {

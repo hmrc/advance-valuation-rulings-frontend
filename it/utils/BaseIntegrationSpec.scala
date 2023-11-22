@@ -1,25 +1,23 @@
 package utils
 
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
-
-import scala.concurrent.ExecutionContext
-
+import akka.actor.ActorSystem
+import config.FrontendAppConfig
+import models.{AcknowledgementReference, EoriNumber}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, EitherValues}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 
-import akka.actor.ActorSystem
-import config.FrontendAppConfig
-import models.{AcknowledgementReference, EoriNumber}
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, EitherValues}
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import scala.concurrent.ExecutionContext
 
 trait BaseIntegrationSpec
     extends AnyFreeSpec

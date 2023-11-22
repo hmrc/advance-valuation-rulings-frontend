@@ -16,12 +16,11 @@
 
 package forms.mappings
 
-import play.api.data.{Form, FormError}
-
 import models.Enumerable
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.data.{Form, FormError}
 
 object MappingsSpec {
 
@@ -116,34 +115,6 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
     "must unbind" in {
       val result = testForm.fill(true)
       result.apply("value").value.value mustEqual "true"
-    }
-  }
-
-  "int" - {
-
-    val testForm: Form[Int] =
-      Form(
-        "value" -> int()
-      )
-
-    "must bind a valid integer" in {
-      val result = testForm.bind(Map("value" -> "1"))
-      result.get mustEqual 1
-    }
-
-    "must not bind an empty value" in {
-      val result = testForm.bind(Map("value" -> ""))
-      result.errors must contain(FormError("value", "error.required"))
-    }
-
-    "must not bind an empty map" in {
-      val result = testForm.bind(Map.empty[String, String])
-      result.errors must contain(FormError("value", "error.required"))
-    }
-
-    "must unbind a valid value" in {
-      val result = testForm.fill(123)
-      result.apply("value").value.value mustEqual "123"
     }
   }
 

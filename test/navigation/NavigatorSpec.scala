@@ -16,21 +16,21 @@
 
 package navigation
 
-import java.time.Instant
-import play.api.libs.json.Writes
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import base.SpecBase
 import controllers.routes
 import controllers.routes.ApplicationContactDetailsController
-import models._
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
+import models._
 import org.mockito.MockitoSugar.{mock, when}
 import pages._
-import play.api.mvc.Call
+import play.api.libs.json.Writes
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import queries._
 import userrole.{UserRole, UserRoleProvider}
+
+import java.time.Instant
 
 class NavigatorSpec extends SpecBase {
 
@@ -57,7 +57,7 @@ class NavigatorSpec extends SpecBase {
 
     "/ must navigate to AccountHome" in {
 
-      def redirectRoute: Call = routes.AccountHomeController.onPageLoad()
+      def redirectRoute = routes.AccountHomeController.onPageLoad()
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
@@ -190,7 +190,7 @@ class NavigatorSpec extends SpecBase {
 
       "WhatIsYourRoleAsImporterPage" - {
 
-        "must navigate to RequiredInformationPage page" in {
+        "must navigate to RequiredInformationPage page when valid answer" in {
           val userAnswers =
             userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
           navigator.nextPage(
@@ -198,7 +198,16 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.RequiredInformationController.onPageLoad(draftId)
+        }
 
+        "must navigate to WhatIsYourRoleAsImporterController page when no answer" in {
+          val userAnswers =
+            userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            WhatIsYourRoleAsImporterPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -318,7 +327,7 @@ class NavigatorSpec extends SpecBase {
 
       "WhyTransactionValueOfSimilarGoods page" - {
 
-        "must navigate to HaveYouUsedMethodOneInPast page" in {
+        "must navigate to HaveYouUsedMethodOneInPast page when valid answer" in {
           val userAnswers =
             userAnswersWith(WhyTransactionValueOfSimilarGoodsPage, "bananas")
           navigator.nextPage(
@@ -329,7 +338,19 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             draftId
           )
+        }
 
+        "must navigate to WhyTransactionValueOfSimilarGoodsController page when invalid answer" in {
+          val userAnswers =
+            userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            WhyTransactionValueOfSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WhyTransactionValueOfSimilarGoodsController.onPageLoad(
+            NormalMode,
+            draftId
+          )
         }
       }
 
@@ -342,6 +363,15 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             ans
           ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "must navigate to describeTheIdenticalGoods Page when no answer" in {
+          val ans = userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            HaveYouUsedMethodOneInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.HaveYouUsedMethodOneInPastController.onPageLoad(NormalMode, draftId)
         }
 
         "must navigate to ValuationMethod Page when False" in {
@@ -365,6 +395,15 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode, draftId)
         }
 
+        "must navigate to HaveYouUsedMethodOneForSimilarGoodsInPastController Page when no answer" in {
+          val ans = userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            HaveYouUsedMethodOneForSimilarGoodsInPastPage,
+            NormalMode,
+            ans
+          ) mustBe routes.HaveYouUsedMethodOneForSimilarGoodsInPastController.onPageLoad(NormalMode, draftId)
+        }
+
         "must navigate to ValuationMethod Page when False" in {
           val ans = userAnswersWith(HaveYouUsedMethodOneForSimilarGoodsInPastPage, false)
           navigator.nextPage(
@@ -377,7 +416,7 @@ class NavigatorSpec extends SpecBase {
       }
 
       "DescribeTheSimilarGoods page" - {
-        "must navigate to WillYouCompareToSimilarGoods Page" in {
+        "must navigate to WillYouCompareToSimilarGoods Page when valid answer" in {
           val userAnswers =
             userAnswersWith(DescribeTheSimilarGoodsPage, "similar goods")
           navigator.nextPage(
@@ -386,10 +425,20 @@ class NavigatorSpec extends SpecBase {
             userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
+
+        "must navigate to DescribeTheSimilarGoodsController Page when no answer" in {
+          val userAnswers =
+            userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            DescribeTheSimilarGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescribeTheSimilarGoodsController.onPageLoad(NormalMode, draftId)
+        }
       }
 
       "DescribeTheIdenticalGoods page" - {
-        "must navigate to DescriptionOfGoods Page" in {
+        "must navigate to DescriptionOfGoods Page when valid answer" in {
           val userAnswers =
             userAnswersWith(DescribeTheIdenticalGoodsPage, "describe goods")
           navigator.nextPage(
@@ -398,10 +447,20 @@ class NavigatorSpec extends SpecBase {
             userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
+
+        "must navigate to DescriptionOfGoods Page when no answer" in {
+          val userAnswers =
+            userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            DescribeTheIdenticalGoodsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescribeTheIdenticalGoodsController.onPageLoad(NormalMode, draftId)
+        }
       }
 
       "ExplainWhyYouHaveNotSelectedMethodOneToThree page" - {
-        "must navigate to ExplainWhyYouChoseMethodFour Page" in {
+        "must navigate to ExplainWhyYouChoseMethodFour Page when valid answer" in {
           val userAnswers =
             userAnswersWith(ExplainWhyYouHaveNotSelectedMethodOneToThreePage, "explain method four")
           navigator.nextPage(
@@ -410,10 +469,20 @@ class NavigatorSpec extends SpecBase {
             userAnswers
           ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, draftId)
         }
+
+        "must navigate to ExplainWhyYouHaveNotSelectedMethodOneToThreeController Page when no answer" in {
+          val userAnswers =
+            userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainWhyYouHaveNotSelectedMethodOneToThreeController.onPageLoad(NormalMode, draftId)
+        }
       }
 
       "ExplainWhyYouChoseMethodFour page" - {
-        "must navigate to DescriptionOfGoods Page" in {
+        "must navigate to DescriptionOfGoods Page when valid answers" in {
           val userAnswers =
             userAnswersWith(ExplainWhyYouChoseMethodFourPage, "explain method four")
           navigator.nextPage(
@@ -421,6 +490,16 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "must navigate to DescriptionOfGoods Page when invalid answers" in {
+          val userAnswers =
+            userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            ExplainWhyYouChoseMethodFourPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainWhyYouChoseMethodFourController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -453,30 +532,6 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "hasCommodityCodePage" - {
-        "navigate to CommodityCode page when True" in {
-          val userAnswers = userAnswersWith(HasCommodityCodePage, true)
-          navigator.nextPage(
-            HasCommodityCodePage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode, draftId)
-        }
-
-        "and navigate to HaveTheGoodsBeenSubjectToLegalChallenges when False" in {
-          val userAnswers = userAnswersWith(HasCommodityCodePage, false)
-          navigator.nextPage(
-            HasCommodityCodePage,
-            NormalMode,
-            userAnswers
-          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
-            NormalMode,
-            draftId
-          )
-        }
-
-      }
-
       "HaveTheGoodsBeenSubjectToLegalChallenges page" - {
         "navigate to DescribeTheLegalChallenges when Yes" in {
           val userAnswers = userAnswersWith(HaveTheGoodsBeenSubjectToLegalChallengesPage, true)
@@ -495,6 +550,16 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.HasConfidentialInformationController.onPageLoad(NormalMode, draftId)
+        }
+
+        "and navigate to HaveTheGoodsBeenSubjectToLegalChallengesController when no answer for HaveTheGoodsBeenSubjectToLegalChallengesPage" in {
+          val userAnswers =
+            userAnswersWith(HasCommodityCodePage, false)
+          navigator.nextPage(
+            HaveTheGoodsBeenSubjectToLegalChallengesPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -526,6 +591,15 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.ConfidentialInformationController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate to HasConfidentialInformationController when no valid answer" in {
+          val userAnswers = userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            HasConfidentialInformationPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.HasConfidentialInformationController.onPageLoad(NormalMode, draftId)
         }
 
         "when no" - {
@@ -615,6 +689,18 @@ class NavigatorSpec extends SpecBase {
           ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
         }
 
+        "navigate to Page from UserRole when no answer provided" in {
+          val userAnswers = userAnswersAsIndividualTrader
+            .setFuture(HasCommodityCodePage, value = true)
+            .futureValue
+
+          navigator.nextPage(
+            CheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.CheckRegisteredDetailsController.onPageLoad(NormalMode, draftId)
+        }
+
         "and navigate to EORIBeUpToDatePage when No" in {
           val userAnswers = userAnswersAsIndividualTrader
             .setFuture(CheckRegisteredDetailsPage, value = false)
@@ -639,37 +725,95 @@ class NavigatorSpec extends SpecBase {
         }
       }
 
-      "AgentCompanyDetailsPage must" in {
-        val userAnswers =
-          userAnswersWith(
-            AgentCompanyDetailsPage,
-            AgentCompanyDetails(
-              "Eori",
-              "name",
-              "streetAndNumber",
-              "agentCity",
-              Country("GB", "United Kingdom"),
-              Some("AB1 2CD")
-            )
-          )
-        navigator.nextPage(
-          AgentCompanyDetailsPage,
-          NormalMode,
-          userAnswers
-        ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
+      "AgentForOrgCheckRegisteredDetailsPage must navigate to" - {
+
+        "BusinessContactDetailsController page" in {
+          navigator.nextPage(
+            AgentForOrgCheckRegisteredDetailsPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+          ) mustBe routes.BusinessContactDetailsController.onPageLoad(NormalMode, draftId)
+        }
       }
 
-      "ApplicationContactDetailsPage must" in {
-        val userAnswers =
-          userAnswersWith(
+      "AgentForOrgApplicationContactDetailsPage must navigate to" - {
+
+        "AgentCompanyDetailsController page" in {
+          navigator.nextPage(
+            AgentForOrgApplicationContactDetailsPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+          ) mustBe routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "ProvideTraderEoriPage must navigate to" - {
+
+        "VerifyTraderEoriController page" in {
+          navigator.nextPage(
+            ProvideTraderEoriPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+          ) mustBe routes.VerifyTraderEoriController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "AgentCompanyDetailsPage" - {
+        "must navigate to ChoosingMethodController when have valid answer" in {
+          val userAnswers =
+            userAnswersWith(
+              AgentCompanyDetailsPage,
+              AgentCompanyDetails(
+                "Eori",
+                "name",
+                "streetAndNumber",
+                "agentCity",
+                Country("GB", "United Kingdom"),
+                Some("AB1 2CD")
+              )
+            )
+
+          navigator.nextPage(
+            AgentCompanyDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
+        }
+
+        "must navigate to AgentCompanyDetailsController when no answer" in {
+          val userAnswers = userAnswersWith(HasCommodityCodePage, true)
+
+          navigator.nextPage(
+            AgentCompanyDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.AgentCompanyDetailsController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "ApplicationContactDetailsPage" - {
+        "must navigate to ChoosingMethodController when have valid answer" in {
+          val userAnswers =
+            userAnswersWith(
+              ApplicationContactDetailsPage,
+              ApplicationContactDetails("name", "email", "phone", "jobTitle")
+            )
+          navigator.nextPage(
             ApplicationContactDetailsPage,
-            ApplicationContactDetails("name", "email", "phone", "jobTitle")
-          )
-        navigator.nextPage(
-          ApplicationContactDetailsPage,
-          NormalMode,
-          userAnswers
-        ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ChoosingMethodController.onPageLoad(draftId)
+        }
+
+        "must navigate to AgentCompanyDetailsController when no answer for ApplicationContactDetailsPage" in {
+          val userAnswers = userAnswersWith(HasCommodityCodePage, true)
+
+          navigator.nextPage(
+            ApplicationContactDetailsPage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ApplicationContactDetailsController.onPageLoad(NormalMode, draftId)
+        }
       }
 
       "DoYouWantToUploadDocumentsPage must" - {
@@ -908,6 +1052,15 @@ class NavigatorSpec extends SpecBase {
             userAnswersAsIndividualTrader.set(IsThereASaleInvolvedPage, true).success.value
           ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, draftId)
         }
+
+        "navigate to IsSaleBetweenRelatedParties page when no answer" in {
+          navigator.nextPage(
+            IsThereASaleInvolvedPage,
+            NormalMode,
+            userAnswersAsIndividualTrader.set(HasCommodityCodePage, true).success.value
+          ) mustBe routes.IsThereASaleInvolvedController.onPageLoad(NormalMode, draftId)
+        }
+
         "navigate to valuationMethod page when no" in {
           navigator.nextPage(
             IsThereASaleInvolvedPage,
@@ -928,6 +1081,18 @@ class NavigatorSpec extends SpecBase {
               .value
           ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode, draftId)
         }
+
+        "navigate to ExplainHowPartiesAreRelated page when no answer" in {
+          navigator.nextPage(
+            IsSaleBetweenRelatedPartiesPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+              .set(HasCommodityCodePage, true)
+              .success
+              .value
+          ) mustBe routes.IsSaleBetweenRelatedPartiesController.onPageLoad(NormalMode, draftId)
+        }
+
         "navigate to restrictions page when no" in {
           navigator.nextPage(
             IsSaleBetweenRelatedPartiesPage,
@@ -941,7 +1106,7 @@ class NavigatorSpec extends SpecBase {
       }
 
       "ExplainHowPartiesAreRelated page must" - {
-        "navigate to 'restrictions' page" in {
+        "navigate to AreThereRestrictionsOnTheGoodsController page when valid answer" in {
           navigator.nextPage(
             ExplainHowPartiesAreRelatedPage,
             NormalMode,
@@ -950,6 +1115,41 @@ class NavigatorSpec extends SpecBase {
               .success
               .value
           ) mustBe routes.AreThereRestrictionsOnTheGoodsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate to AreThereRestrictionsOnTheGoodsController page when no answer" in {
+          navigator.nextPage(
+            ExplainHowPartiesAreRelatedPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+              .set(HasCommodityCodePage, true)
+              .success
+              .value
+          ) mustBe routes.ExplainHowPartiesAreRelatedController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "DescriptionOfGoods page must" - {
+        "navigate to HaveYouReceivedADecision page when has answer for DescriptionOfGoodsPage" in {
+          navigator.nextPage(
+            DescriptionOfGoodsPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+              .set(DescriptionOfGoodsPage, "explain")
+              .success
+              .value
+          ) mustBe routes.HaveYouReceivedADecisionController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate to DescriptionOfGoodsController page when no answer for DescriptionOfGoodsPage" in {
+          navigator.nextPage(
+            DescriptionOfGoodsPage,
+            NormalMode,
+            userAnswersAsIndividualTrader
+              .set(DescribeTheConditionsPage, "explain")
+              .success
+              .value
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
         }
       }
 
@@ -961,15 +1161,42 @@ class NavigatorSpec extends SpecBase {
             userAnswersWith(HasCommodityCodePage, true)
           ) mustBe routes.CommodityCodeController.onPageLoad(NormalMode, draftId)
         }
+
+        "navigate to CommodityCode when no" in {
+          navigator.nextPage(
+            HasCommodityCodePage,
+            NormalMode,
+            userAnswersWith(HasCommodityCodePage, false)
+          ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate to CommodityCodeController when no answer for HasCommodityCodePage" in {
+          navigator.nextPage(
+            HasCommodityCodePage,
+            NormalMode,
+            userAnswersWith(HasConfidentialInformationPage, false)
+          ) mustBe routes.HasCommodityCodeController.onPageLoad(NormalMode, draftId)
+        }
       }
 
-      "CommodityCode must" - {
-        "navigate to WhatCountryAreGoodsFrom when set" in {
+      "CommodityCodePage must" - {
+        "navigate to WhatCountryAreGoodsFrom when valid answer" in {
           navigator.nextPage(
             CommodityCodePage,
             NormalMode,
             userAnswersWith(CommodityCodePage, "1234567890")
           ) mustBe routes.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(
+            NormalMode,
+            draftId
+          )
+        }
+
+        "navigate to WhatCountryAreGoodsFrom when no answer" in {
+          navigator.nextPage(
+            CommodityCodePage,
+            NormalMode,
+            userAnswersWith(HasCommodityCodePage, true)
+          ) mustBe routes.CommodityCodeController.onPageLoad(
             NormalMode,
             draftId
           )
@@ -1084,10 +1311,39 @@ class NavigatorSpec extends SpecBase {
       }
 
       "whyComputedValue Page must" - {
-        "navigate go to explainReasonComputedValuePage" in {
+        "navigate go to explainReasonComputedValuePage when valid answer" in {
           val userAnswers = userAnswersWith(WhyComputedValuePage, "banana")
           navigator.nextPage(
             WhyComputedValuePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate go to explainReasonComputedValuePage when invalid answer" in {
+          val userAnswers = userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            WhyComputedValuePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.WhyComputedValueController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "ExplainReasonComputedValuePage must" - {
+        "navigate go to explainReasonComputedValuePage when valid answer" in {
+          val userAnswers = userAnswersWith(ExplainReasonComputedValuePage, "banana")
+          navigator.nextPage(
+            ExplainReasonComputedValuePage,
+            NormalMode,
+            userAnswers
+          ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
+        }
+
+        "navigate go to explainReasonComputedValuePage when invalid answer" in {
+          val userAnswers = userAnswersWith(HasCommodityCodePage, true)
+          navigator.nextPage(
+            ExplainReasonComputedValuePage,
             NormalMode,
             userAnswers
           ) mustBe routes.ExplainReasonComputedValueController.onPageLoad(NormalMode, draftId)

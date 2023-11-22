@@ -16,15 +16,14 @@
 
 package forms
 
-import play.api.data.{Form, FormError}
-
-import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{Assertion, OptionValues}
+import play.api.data.{Form, FormError}
 
 trait FormSpec extends AnyFreeSpec with Matchers with OptionValues {
 
-  def checkForError(form: Form[_], data: Map[String, String], expectedErrors: Seq[FormError]) =
+  def checkForError(form: Form[_], data: Map[String, String], expectedErrors: Seq[FormError]): Assertion =
     form
       .bind(data)
       .fold(
@@ -36,7 +35,7 @@ trait FormSpec extends AnyFreeSpec with Matchers with OptionValues {
         form => fail("Expected a validation error when binding the form, but it was bound successfully.")
       )
 
-  def error(key: String, value: String, args: Any*) = Seq(FormError(key, value, args))
+  def error(key: String, value: String, args: Any*): Seq[FormError] = Seq(FormError(key, value, args))
 
-  lazy val emptyForm = Map[String, String]()
+  lazy val emptyForm: Map[String, String] = Map[String, String]()
 }

@@ -31,7 +31,7 @@ class VerifyTraderDetailsFormProvider @Inject() (
         Form(
           "value" -> text("checkRegisteredDetails.error.required.agentForTrader.consent")
         )
-      case Some(details)                                              =>
+      case _                                                          =>
         Form(
           "value" -> text("verifyTraderDetails.error.required")
         )

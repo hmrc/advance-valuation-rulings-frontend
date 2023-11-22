@@ -16,14 +16,12 @@
 
 package models.requests
 
+import base.SpecBase
 import play.api.libs.json.Json
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import org.scalatestplus.play.PlaySpec
+class EmailRequestSpec extends SpecBase {
 
-class EmailRequestSpec extends PlaySpec {
-
-  "EmailRequest" must {
+  "EmailRequest" - {
     "read json to an EmailRequest model" in {
       val emailRequestJson = Json.parse("""{
           |"to": ["test@email.com"],
@@ -36,7 +34,7 @@ class EmailRequestSpec extends PlaySpec {
           |}
           |""".stripMargin)
 
-      emailRequestJson.as[EmailRequest] shouldBe EmailRequest(
+      emailRequestJson.as[EmailRequest] mustBe EmailRequest(
         List(Email("test@email.com")),
         "test-template-id",
         Map("testparam" -> "testparamvalue"),

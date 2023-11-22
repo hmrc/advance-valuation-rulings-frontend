@@ -16,19 +16,18 @@
 
 package userrole
 
+import base.SpecBase
+import controllers.routes.CheckRegisteredDetailsController
+import forms.AgentForOrgCheckRegisteredDetailsFormProvider
+import models.requests.DataRequest
+import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, WhatIsYourRoleAsImporter}
+import org.mockito.MockitoSugar.{mock, when}
+import org.scalatest.matchers.must.Matchers
+import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage, BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
-
-import base.SpecBase
-import controllers.routes.CheckRegisteredDetailsController
-import forms.AgentForOrgCheckRegisteredDetailsFormProvider
-import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, WhatIsYourRoleAsImporter}
-import models.requests.DataRequest
-import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.matchers.must.Matchers
-import pages.{BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
 import viewmodels.checkAnswers.summary._
 import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgCheckYourAnswersView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
 
@@ -223,9 +222,9 @@ class AgentForOrgSpec extends SpecBase with Matchers {
         .url
     }
   }
+
   "getContactDetailsJourney should return" - {
     "should return BusinessContactDetails page" in {
-
       agentForOrg
         .getContactDetailsJourney(draftId)
         .url mustBe controllers.routes.BusinessContactDetailsController
@@ -234,4 +233,21 @@ class AgentForOrgSpec extends SpecBase with Matchers {
 
     }
   }
+
+  "sourceFromUA" in {
+    agentForOrg.sourceFromUA mustBe false
+  }
+
+  "contactDetailsIncludeCompanyName" in {
+    agentForOrg.contactDetailsIncludeCompanyName mustBe false
+  }
+
+  "selectBusinessContactDetailsPage" in {
+    agentForOrg.selectBusinessContactDetailsPage() mustBe AgentForOrgApplicationContactDetailsPage
+  }
+
+  "selectGetRegisteredDetailsPage" in {
+    agentForOrg.selectGetRegisteredDetailsPage() mustBe AgentForOrgCheckRegisteredDetailsPage
+  }
+
 }

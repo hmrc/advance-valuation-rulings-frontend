@@ -16,10 +16,9 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.OptionFieldBehaviours
 import models.WhatIsYourRoleAsImporter
+import play.api.data.FormError
 
 class WhatIsYourRoleAsImporterFormProviderSpec extends OptionFieldBehaviours {
 

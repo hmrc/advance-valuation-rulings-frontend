@@ -27,9 +27,7 @@ import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgEORIBeUpToD
 package userrole {
 
   import cats.data.ValidatedNel
-
   import play.twirl.api.HtmlFormat
-
   import controllers.routes.{BusinessContactDetailsController, CheckRegisteredDetailsController}
   import forms.AgentForOrgCheckRegisteredDetailsFormProvider
   import models.{BusinessContactDetails, NormalMode, UserAnswers}

@@ -16,12 +16,6 @@
 
 package viewmodels.application
 
-import play.api.i18n.Messages
-import play.api.test.Helpers.stubMessages
-import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryListRow, Value}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
-
 import models.AdaptMethod
 import models.ValuationMethod._
 import models.requests._
@@ -29,6 +23,11 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.i18n.Messages
+import play.api.test.Helpers.stubMessages
+import uk.gov.hmrc.govukfrontend.views.Aliases.{SummaryListRow, Value}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 class RequestedMethodSummarySpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks {
 

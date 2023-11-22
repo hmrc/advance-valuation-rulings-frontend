@@ -16,11 +16,11 @@
 
 package config
 
-import javax.inject.{Inject, Singleton}
+import models.Done
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.DurationInt
-
 import play.api.{Configuration, Logging}
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json.Json
@@ -29,12 +29,12 @@ import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.client.HttpClientV2
 
 abstract class InternalAuthTokenInitialiser {
-  val initialised: Future[Unit]
+  val initialised: Future[Done]
 }
 
 @Singleton
 class NoOpInternalAuthTokenInitialiser @Inject() () extends InternalAuthTokenInitialiser {
-  override val initialised: Future[Unit] = Future.successful(())
+  override val initialised: Future[Done] = Future.successful(Done)
 }
 
 @Singleton
@@ -54,22 +54,22 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private val appName: String =
     configuration.get[String]("appName")
 
-  override val initialised: Future[Unit] =
+  override val initialised: Future[Done] =
     ensureAuthToken()
 
   Await.result(initialised, 30.seconds)
 
-  private def ensureAuthToken(): Future[Unit] =
+  private def ensureAuthToken(): Future[Done] =
     authTokenIsValid.flatMap { isValid =>
       if (isValid) {
         logger.info("[InternalAuthTokenInitialiser][ensureAuthToken] Auth token is already valid")
-        Future.successful(())
+        Future.successful(Done)
       } else {
         createClientAuthToken()
       }
     }
 
-  private def createClientAuthToken(): Future[Unit] = {
+  private def createClientAuthToken(): Future[Done] = {
     logger.info("[InternalAuthTokenInitialiser][createClientAuthToken] Initialising auth token")
     httpClient
       .post(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
@@ -97,7 +97,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
           logger.info(
             "[InternalAuthTokenInitialiser][createClientAuthToken] Auth token initialised"
           )
-          Future.successful(())
+          Future.successful(Done)
         } else {
           logger.error(
             "[InternalAuthTokenInitialiser][createClientAuthToken] Unable to initialise internal-auth token"

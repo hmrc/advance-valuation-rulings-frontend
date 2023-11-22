@@ -41,8 +41,8 @@ class TraderDetailsHelperSpec extends SpecBase {
 
   private class Harness extends TraderDetailsHelper {}
 
-  implicit val mockConnector = mock[BackendConnector]
-  implicit val logger        = Logger("test")
+  implicit val mockConnector: BackendConnector = mock[BackendConnector]
+  implicit val logger: Logger                  = Logger("test")
 
   private def buildRequest(): DataRequest[AnyContent] = {
     val userId  = "userId"

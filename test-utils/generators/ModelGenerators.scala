@@ -18,8 +18,8 @@ package generators
 
 import models._
 import models.requests.ApplicationId
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
 
@@ -105,12 +105,12 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryWhatIsYourRoleAsImporter: Arbitrary[WhatIsYourRoleAsImporter] =
     Arbitrary {
-      Gen.oneOf(WhatIsYourRoleAsImporter.values.toSeq)
+      Gen.oneOf(WhatIsYourRoleAsImporter.values)
     }
 
   implicit lazy val arbitraryAdaptMethod: Arbitrary[AdaptMethod] =
     Arbitrary {
-      Gen.oneOf(AdaptMethod.values.toSeq)
+      Gen.oneOf(AdaptMethod.values)
     }
 
   implicit lazy val arbitraryRequiredInformation: Arbitrary[RequiredInformation] =
@@ -120,7 +120,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryValuationMethod: Arbitrary[ValuationMethod] =
     Arbitrary {
-      Gen.oneOf(ValuationMethod.values.toSeq)
+      Gen.oneOf(ValuationMethod.values)
     }
 
   implicit lazy val applicationIdGen: Gen[ApplicationId] =

@@ -16,17 +16,16 @@
 
 package viewmodels
 
-import java.time.{Clock, Instant, ZoneOffset}
-
+import base.SpecBase
+import generators.Generators
+import models.ValuationMethod.Method3
+import models._
+import models.requests._
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
-import base.SpecBase
-import generators.Generators
-import models._
-import models.ValuationMethod.Method3
-import models.requests._
+import java.time.{Clock, Instant, ZoneOffset}
 
 class ApplicationViewModelSpec extends SpecBase {
   import ApplicationViewModelSpec._

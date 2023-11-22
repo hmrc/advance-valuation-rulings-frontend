@@ -16,14 +16,13 @@
 
 package models
 
-import play.api.libs.json.{JsError, JsString, Json}
-
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.{JsError, JsString, Json}
 
 class WhatIsYourRoleAsImporterSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
@@ -31,7 +30,7 @@ class WhatIsYourRoleAsImporterSpec extends AnyFreeSpec with Matchers with ScalaC
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(WhatIsYourRoleAsImporter.values.toSeq)
+      val gen = Gen.oneOf(WhatIsYourRoleAsImporter.values)
 
       forAll(gen) { whatIsYourRoleAsImporter =>
         JsString(whatIsYourRoleAsImporter.toString)
@@ -55,7 +54,7 @@ class WhatIsYourRoleAsImporterSpec extends AnyFreeSpec with Matchers with ScalaC
 
     "must serialise" in {
 
-      val gen = Gen.oneOf(WhatIsYourRoleAsImporter.values.toSeq)
+      val gen = Gen.oneOf(WhatIsYourRoleAsImporter.values)
 
       forAll(gen) { whatIsYourRoleAsImporter =>
         Json.toJson(whatIsYourRoleAsImporter) mustEqual JsString(

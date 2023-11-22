@@ -48,6 +48,33 @@ trait StringFieldBehaviours extends FieldBehaviours {
       }
     }
 
+  def numericStringWithMinLength(
+    form: Form[_],
+    fieldName: String,
+    minLength: Int,
+    lengthError: FormError
+  ): Unit =
+    s"not bind strings less than $minLength characters" in {
+
+      forAll(numericStringsBetweenRange(Int.MinValue, minLength - 1) -> "aString") { string =>
+        val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+        result.errors contains lengthError
+      }
+    }
+
+  def onlyNumericField(
+    form: Form[_],
+    fieldName: String,
+    lengthError: FormError
+  ): Unit =
+    s"not bind strings that should be numeric only" in {
+
+      forAll(nonEmptyString -> "aString") { string =>
+        val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+        result.errors contains lengthError
+      }
+    }
+
   def alphaStringWithMaxLength(
     form: Form[_],
     fieldName: String,

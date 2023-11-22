@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import play.api.libs.json.Writes
-
 import models.UserAnswers
 import org.scalatest.TryValues._
+import play.api.libs.json.Writes
 import queries.Modifiable
 
 package object pages {

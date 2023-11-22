@@ -30,7 +30,6 @@ import services.UserAnswersService
 import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 import uk.gov.hmrc.auth.core.{Assistant, User}
 
-import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -104,5 +103,29 @@ class DataRetrievalActionSpec extends SpecBase with BeforeAndAfterEach with Tabl
         }
       }
     }
+
+    "when invalid request" - {
+
+      s"must throw exception" in {
+        val action = new Harness(draftId)
+
+        val result = intercept[RuntimeException] {
+          action
+            .callTransform(
+              IdentifierRequest(
+                FakeRequest(),
+                userAnswersId,
+                EoriNumber,
+                Organisation,
+                None
+              )
+            )
+            .futureValue
+        }
+
+        result.getMessage mustBe "Auth user type could not be created from request"
+      }
+    }
+
   }
 }

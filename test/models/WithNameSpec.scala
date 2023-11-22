@@ -28,5 +28,9 @@ class WithNameSpec extends AnyFreeSpec with Matchers {
     "must return the correct string" in {
       Foo.toString mustEqual "bar"
     }
+
+    "must return the correct string2" in {
+      Foo.toString mustEqual new WithName("bar").toString
+    }
   }
 }

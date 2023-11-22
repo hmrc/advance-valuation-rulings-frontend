@@ -16,9 +16,8 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.StringFieldBehaviours
+import play.api.data.FormError
 
 class DescribeTheLegalChallengesFormProviderSpec extends StringFieldBehaviours {
   val expected  = "describeTheLegalChallenges.error.required"

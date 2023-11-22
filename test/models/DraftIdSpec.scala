@@ -16,22 +16,22 @@
 
 package models
 
-import play.api.libs.json.{JsString, JsSuccess, Json}
-import play.api.mvc.PathBindable
-
 import generators.ApplicationRequestGenerator
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest.EitherValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{EitherValues, OptionValues}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.{JsString, JsSuccess, Json}
+import play.api.mvc.PathBindable
 
 class DraftIdSpec
     extends AnyFreeSpec
     with Matchers
     with ScalaCheckPropertyChecks
     with ApplicationRequestGenerator
-    with EitherValues {
+    with EitherValues
+    with OptionValues {
 
   "a draft Id" - {
 
@@ -42,6 +42,10 @@ class DraftIdSpec
       forAll(arbitrary[String], arbitrary[DraftId]) { (key, value) =>
         pathBindable.bind(key, value.toString).value mustEqual value
       }
+    }
+
+    "must not bind from a url" in {
+      pathBindable.bind("key", "test").left.value mustEqual "Invalid draft Id"
     }
 
     "must unbind to a url" in {
@@ -58,6 +62,17 @@ class DraftIdSpec
         json mustEqual JsString(draftId.toString)
         json.validate[DraftId] mustEqual JsSuccess(draftId)
       }
+    }
+  }
+
+  "fromString" - {
+    "must return a DraftId when given a valid string" in {
+      val draftId = DraftId.fromString("DRAFT123456789").value
+      draftId mustBe a[DraftId]
+    }
+
+    "must throw an exception when given an invalid string" in {
+      DraftId.fromString("123456789") mustBe None
     }
   }
 }

@@ -16,11 +16,11 @@
 
 package pages
 
-import java.time.Instant
-
 import models.{DraftAttachment, DraftId, Index, UploadedFile, UserAnswers}
 import pages.behaviours.PageBehaviours
 import queries.{AllDocuments, DraftAttachmentAt}
+
+import java.time.Instant
 
 class DoYouWantToUploadDocumentsPageSpec extends PageBehaviours {
 

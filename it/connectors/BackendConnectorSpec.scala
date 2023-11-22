@@ -1,18 +1,17 @@
 package connectors
 
-import java.time.Instant
-
-import play.api.http.Status
-import play.api.libs.json.Json
-
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.RequestMethod._
 import generators.{ApplicationGenerator, TraderDetailsGenerator, UserAnswersGenerator}
-import models.{AcknowledgementReference, DraftId, EoriNumber, TraderDetailsWithCountryCode}
 import models.requests._
+import models.{AcknowledgementReference, DraftId, EoriNumber, TraderDetailsWithCountryCode}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.OptionValues
+import play.api.http.Status
+import play.api.libs.json.Json
 import utils.{BaseIntegrationSpec, WireMockHelper}
+
+import java.time.Instant
 
 class BackendConnectorSpec
     extends BaseIntegrationSpec
@@ -59,7 +58,7 @@ class BackendConnectorSpec
           val result = connector.getTraderDetails(acknowledgementReference, eoriNumber).futureValue
 
           result.isLeft mustBe true
-          result.left.get.code mustBe 500
+          result.left.value.code mustBe 500
       }
     }
 
