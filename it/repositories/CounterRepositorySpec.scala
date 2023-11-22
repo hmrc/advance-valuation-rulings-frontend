@@ -1,10 +1,9 @@
 package repositories
 
-import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
-
 import com.codahale.metrics.SharedMetricRegistries
 import models.{CounterId, CounterWrapper}
 import org.mongodb.scala.model.{Filters, FindOneAndUpdateOptions, Updates}
+import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 import utils.BaseIntegrationSpec
 
 class CounterRepositorySpec extends BaseIntegrationSpec with DefaultPlayMongoRepositorySupport[CounterWrapper] {
@@ -15,8 +14,8 @@ class CounterRepositorySpec extends BaseIntegrationSpec with DefaultPlayMongoRep
     repository.seed.futureValue
   }
 
-  override protected def checkTtlIndex = false
-  override protected val repository    = new CounterRepository(mongoComponent)
+  override protected def checkTtlIndex: Boolean             = false
+  override protected val repository: CounterMongoRepository = new CounterMongoRepository(mongoComponent)
 
   "on startup" - {
 

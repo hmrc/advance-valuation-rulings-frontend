@@ -16,16 +16,14 @@
 
 package controllers.callback
 
+import base.SpecBase
 import models.{Done, DraftId, UploadedFile}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{mock, verify, when}
-import org.scalatest.OptionValues
-import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
+import play.api.Application
 import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -34,11 +32,11 @@ import services.fileupload.FileService
 import java.time.Instant
 import scala.concurrent.Future
 
-class UploadCallbackControllerSpec extends AnyFreeSpec with Matchers with ScalaFutures with OptionValues {
+class UploadCallbackControllerSpec extends AnyFreeSpec with SpecBase {
 
-  private val mockFileService = mock[FileService]
+  private val mockFileService: FileService = mock[FileService]
 
-  private lazy val app = GuiceApplicationBuilder()
+  private lazy val app: Application = applicationBuilder()
     .overrides(
       bind[FileService].toInstance(mockFileService)
     )

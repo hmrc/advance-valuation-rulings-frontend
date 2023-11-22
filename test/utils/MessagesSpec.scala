@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-import scala.reflect.ClassTag
-import scala.util.matching.Regex
-
-import play.api.i18n.MessagesApi
-import play.api.test.Helpers.baseApplicationBuilder.injector
+package utils
 
 import base.SpecBase
+import play.api.i18n.MessagesApi
+
+import scala.util.matching.Regex
 
 class MessagesSpec extends SpecBase {
 
-  def inject[T](implicit evidence: ClassTag[T]): T = injector().instanceOf[T]
-
-  implicit lazy val realMessagesApi: MessagesApi = inject[MessagesApi]
+  implicit lazy val realMessagesApi: MessagesApi = messagesApi(applicationBuilder().build())
 
   private lazy val defaultMessages: Map[String, String] = getExpectedMessages("default")
 

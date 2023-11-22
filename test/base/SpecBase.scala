@@ -116,8 +116,11 @@ trait SpecBase
   val traderDetailsWithConfirmation: TraderDetailsWithConfirmation =
     TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
 
+  def messagesApi(app: Application): MessagesApi =
+    app.injector.instanceOf[MessagesApi]
+
   def messages(app: Application): Messages =
-    app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+    messagesApi(app).preferred(FakeRequest())
 
   val mockDraftIdRepo: CounterRepository =
     mock[CounterRepository]

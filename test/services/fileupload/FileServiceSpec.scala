@@ -16,6 +16,7 @@
 
 package services.fileupload
 
+import base.SpecBase
 import connectors.UpscanConnector
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import models.{Done, DraftAttachment, DraftId, NormalMode, UploadedFile, UserAnswers}
@@ -23,11 +24,9 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
-import pages.{QuestionPage, UploadSupportingDocumentPage}
+import pages.UploadSupportingDocumentPage
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import queries.AllDocuments
@@ -39,24 +38,18 @@ import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
 import java.time.{LocalDateTime, ZoneOffset}
 import scala.concurrent.Future
 
-class FileServiceSpec
-    extends AnyFreeSpec
-    with Matchers
-    with ScalaFutures
-    with OptionValues
-    with BeforeAndAfterEach
-    with TryValues {
+class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockUpscanConnector, mockUserAnswersService, mockObjectStoreClient)
   }
 
-  private val mockUpscanConnector    = mock[UpscanConnector]
-  private val mockUserAnswersService = mock[UserAnswersService]
-  private val mockObjectStoreClient  = mock[PlayObjectStoreClient]
+  private val mockUpscanConnector: UpscanConnector         = mock[UpscanConnector]
+  private val mockUserAnswersService: UserAnswersService   = mock[UserAnswersService]
+  private val mockObjectStoreClient: PlayObjectStoreClient = mock[PlayObjectStoreClient]
 
-  private lazy val app = GuiceApplicationBuilder()
+  private lazy val app: GuiceApplicationBuilder = applicationBuilder()
     .configure(
       "host"                                                              -> "host",
       "microservice.services.advance-valuation-rulings-frontend.protocol" -> "http",
@@ -71,15 +64,15 @@ class FileServiceSpec
       bind[PlayObjectStoreClient].toInstance(mockObjectStoreClient)
     )
 
-  private lazy val service = app.injector().instanceOf[FileService]
+  private lazy val service: FileService = app.injector().instanceOf[FileService]
 
-  private val redirectPath: String             = controllers.routes.UploadSupportingDocumentsController
+  private val redirectPath: String = controllers.routes.UploadSupportingDocumentsController
     .onPageLoad(NormalMode, DraftId(0), None, None)
     .url
-  private val page: QuestionPage[UploadedFile] = UploadSupportingDocumentPage
-  private implicit val hc: HeaderCarrier       = HeaderCarrier()
 
-  private val response = UpscanInitiateResponse(
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  private val response: UpscanInitiateResponse = UpscanInitiateResponse(
     reference = "reference",
     uploadRequest = UpscanInitiateResponse.UploadRequest(
       href = "foobar",
