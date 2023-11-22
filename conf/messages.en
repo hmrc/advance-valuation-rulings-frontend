@@ -257,8 +257,9 @@ hasCommodityCode.caption = About the goods
 hasCommodityCode.checkYourAnswersLabel = Do you have a commodity code for the goods?
 hasCommodityCode.error.required = Select yes if you know the commodity code
 hasCommodityCode.details.label = Help finding your commodity code
-hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing. <br><br>You can {0} if you don’t know it.
-hasCommodityCode.paragraph.1.link = look up the commodity code for your goods (opens in new tab)
+hasCommodityCode.paragraph.1 = A commodity code is an internationally recognised reference number. It will help us identify the specific product you are importing.
+hasCommodityCode.paragraph.2 = You can {0} if you don’t know it
+hasCommodityCode.linkText = look up the commodity code for your goods (opens in new tab)
 hasCommodityCode.change.hidden = whether you have a commodity code for the goods
 hasCommodityCode.question = Do you have a commodity code for the goods?
 

@@ -480,8 +480,9 @@ hasCommodityCode.heading = god nwyddau ar gyfer y nwyddau
 hasCommodityCode.checkYourAnswersLabel = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 hasCommodityCode.error.required = Dewiswch ‘Iawn’ os ydych yn gwybod y cod nwyddau
 hasCommodityCode.details.label = Help i ddod o hyd i’ch cod nwyddau
-hasCommodityCode.paragraph.1 = Mae cod nwyddau yn gyfeirnod sy’n cael ei gydnabod yn rhyngwladol. Bydd o gymorth i ni wrth adnabod y cynnyrch penodol rydych yn ei fewnforio. <br><br>{0}, os nad ydych yn ei wybod.
-hasCommodityCode.paragraph.1.link = Gallwch chwilio am y cod nwyddau ar gyfer eich nwyddau (yn agor tab newydd)
+hasCommodityCode.paragraph.1 = Mae cod nwyddau yn gyfeirnod sy’n cael ei gydnabod yn rhyngwladol. Bydd o gymorth i ni wrth adnabod y cynnyrch penodol rydych yn ei fewnforio.
+hasCommodityCode.paragraph.2 = Gallwch {0} os nad ydych yn ei wybod.
+hasCommodityCode.linkText = chwilio am y cod nwyddau ar gyfer eich nwyddau (yn agor tab newydd)
 hasCommodityCode.change.hidden = p’un a oes gennych god nwyddau ar gyfer y nwyddau
 hasCommodityCode.question = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 
