@@ -20,14 +20,12 @@ import akka.NotUsed
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
+import base.SpecBase
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{mock, when}
-import org.scalatest.OptionValues
-import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
+import play.api.Application
 import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
@@ -36,11 +34,11 @@ import uk.gov.hmrc.objectstore.client.{Md5Hash, Object, ObjectMetadata, Path}
 import java.time.Instant
 import scala.concurrent.Future
 
-class AttachmentsControllerSpec extends AnyFreeSpec with Matchers with ScalaFutures with OptionValues {
+class AttachmentsControllerSpec extends AnyFreeSpec with SpecBase {
 
   val mockObjectStoreClient: PlayObjectStoreClient = mock(classOf[PlayObjectStoreClient])
 
-  private lazy val app = GuiceApplicationBuilder()
+  private lazy val app: Application = applicationBuilder()
     .overrides(
       bind[PlayObjectStoreClient].toInstance(mockObjectStoreClient)
     )

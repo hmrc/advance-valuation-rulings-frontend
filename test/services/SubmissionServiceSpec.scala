@@ -23,8 +23,8 @@ import models.requests._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._
+import play.api.Application
 import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import services.email.EmailService
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -32,22 +32,21 @@ import scala.concurrent.Future
 
 class SubmissionServiceSpec extends SpecBase {
 
-  private val mockBackendConnector   = mock[BackendConnector]
-  private val mockEmailService       = mock[EmailService]
-  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockBackendConnector: BackendConnector     = mock[BackendConnector]
+  private val mockEmailService: EmailService             = mock[EmailService]
+  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
 
-  private val app =
-    GuiceApplicationBuilder()
-      .overrides(
-        bind[BackendConnector].toInstance(mockBackendConnector),
-        bind[UserAnswersService].toInstance(mockUserAnswersService),
-        bind[EmailService].toInstance(mockEmailService)
-      )
-      .build()
+  private val app: Application = applicationBuilder()
+    .overrides(
+      bind[BackendConnector].toInstance(mockBackendConnector),
+      bind[UserAnswersService].toInstance(mockUserAnswersService),
+      bind[EmailService].toInstance(mockEmailService)
+    )
+    .build()
 
-  private val service = app.injector.instanceOf[SubmissionService]
+  private val service: SubmissionService = app.injector.instanceOf[SubmissionService]
 
-  private val applicationRequest = ApplicationRequest(
+  private val applicationRequest: ApplicationRequest = ApplicationRequest(
     draftId = draftId,
     trader = TraderDetail("eori", "name", "line1", None, None, "postcode", "GB", None, Some(false)),
     agent = None,

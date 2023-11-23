@@ -16,8 +16,10 @@
 
 package repositories
 
+import com.google.inject.ImplementedBy
 import models.{CounterId, CounterWrapper}
 import org.mongodb.scala.MongoBulkWriteException
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model._
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
@@ -27,8 +29,17 @@ import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 import scala.jdk.CollectionConverters._
 
+@ImplementedBy(classOf[CounterMongoRepository])
+trait CounterRepository {
+  def ensureDraftIdIsCorrect(): Future[Unit]
+
+  def seed: Future[Unit]
+
+  def nextId(id: CounterId): Future[Long]
+}
+
 @Singleton
-class CounterRepository @Inject() (
+class CounterMongoRepository @Inject() (
   mongoComponent: MongoComponent
 )(implicit ec: ExecutionContext)
     extends PlayMongoRepository[CounterWrapper](
@@ -36,10 +47,11 @@ class CounterRepository @Inject() (
       mongoComponent = mongoComponent,
       domainFormat = CounterWrapper.format,
       indexes = Nil
-    ) {
+    )
+    with CounterRepository {
 
-  private val duplicateErrorCode  = 11000
-  private def byId(id: CounterId) = Filters.eq("_id", id.toString)
+  private val duplicateErrorCode: Int   = 11000
+  private def byId(id: CounterId): Bson = Filters.eq("_id", id.toString)
 
   override lazy val requiresTtlIndex: Boolean = false
 
@@ -49,7 +61,7 @@ class CounterRepository @Inject() (
     CounterWrapper(CounterId.DraftId, startingIndex)
   )
 
-  def ensureDraftIdIsCorrect(): Future[Unit] =
+  override def ensureDraftIdIsCorrect(): Future[Unit] =
     collection
       .find(byId(CounterId.DraftId))
       .headOption()
@@ -75,7 +87,7 @@ class CounterRepository @Inject() (
   private val seedDatabase =
     seed // Eagerly call seed to ensure records are created on startup if needed
 
-  def seed: Future[Unit] =
+  override def seed: Future[Unit] =
     collection
       .insertMany(seeds)
       .toFuture()
@@ -85,7 +97,7 @@ class CounterRepository @Inject() (
           ensureDraftIdIsCorrect()
       }
 
-  def nextId(id: CounterId): Future[Long] =
+  override def nextId(id: CounterId): Future[Long] =
     collection
       .findOneAndUpdate(
         filter = byId(id),
