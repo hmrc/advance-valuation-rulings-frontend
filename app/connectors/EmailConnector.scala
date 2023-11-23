@@ -23,10 +23,8 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-@nowarn("cat=deprecation")
 class EmailConnector @Inject() (
   httpClient: HttpClientV2,
   appConfig: FrontendAppConfig

@@ -181,7 +181,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {
       val emptyAnswers           = UserAnswers(userAnswersId, draftId)
-        .set(AccountHomePage, AuthUserType.OrganisationAdmin)
+        .set(AccountHomePage, AuthUserType.OrganisationUser)
         .success
         .value
       val mockUserAnswersService = mock[UserAnswersService]

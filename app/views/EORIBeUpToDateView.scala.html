@@ -51,7 +51,7 @@
 @layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title")), draftId = Some(draftId)) {
 
     @caption(messages("eoriBeUpToDate.caption"))
-    @if(Set(OrganisationAdmin, OrganisationAssistant, Agent).exists(_ == authUserType)) {
+    @if(Set(OrganisationUser, OrganisationAssistant, Agent).exists(_ == authUserType)) {
         @heading(messages("eoriBeUpToDate.heading.org"))
         @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
         @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))

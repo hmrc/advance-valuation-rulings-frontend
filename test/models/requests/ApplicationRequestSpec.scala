@@ -237,12 +237,12 @@ class ApplicationRequestSpec
       }
     }
 
-    "when the user is an admin of an organisation" when {
+    "when the user is an organisation user" when {
       "return valid when built from correctly structured userAnswers" in {
         val ua = emptyUserAnswers
 
         val userAnswers = (for {
-          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationAdmin)
+          ua <- ua.set(AccountHomePage, AuthUserType.OrganisationUser)
           ua <- ua.set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
           ua <- ua.set(DescriptionOfGoodsPage, goodsDescription)
           ua <- ua.set(HasCommodityCodePage, false)
@@ -299,7 +299,7 @@ class ApplicationRequestSpec
 
       "return invalid when only answered is an employee on behalf of an org" in {
         val userAnswers = (for {
-          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationAdmin)
+          ua <- emptyUserAnswers.set(AccountHomePage, AuthUserType.OrganisationUser)
           ua <- ua.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
         } yield ua).get
 

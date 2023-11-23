@@ -952,7 +952,7 @@ class CheckModeNavigatorSpec extends SpecBase {
 
           "CheckYourAnswersForAgents page when No is selected and the user is not an OrganisationAdmin" in {
             val userAnswers =
-              userAnswersAsOrgAdmin.set(UploadAnotherSupportingDocumentPage, false).get
+              userAnswersAsOrgUser.set(UploadAnotherSupportingDocumentPage, false).get
             navigator.nextPage(
               UploadAnotherSupportingDocumentPage,
               CheckMode,

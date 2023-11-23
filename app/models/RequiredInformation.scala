@@ -46,7 +46,7 @@ object RequiredInformation extends Enumerable.Implicits {
       val suffix = authUserType match {
         case AuthUserType.IndividualTrader      => "individual"
         case AuthUserType.OrganisationAssistant => "organisation"
-        case AuthUserType.OrganisationAdmin     => "organisation"
+        case AuthUserType.OrganisationUser      => "organisation"
         case AuthUserType.Agent                 => "organisation"
       }
       CheckboxItemViewModel(

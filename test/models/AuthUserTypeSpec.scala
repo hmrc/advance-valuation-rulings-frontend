@@ -16,21 +16,18 @@
 
 package models
 
-import scala.annotation.nowarn
-
 import play.api.libs.json._
-import uk.gov.hmrc.auth.core.{Admin, AffinityGroup, Assistant, User}
+import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, User}
 
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-@nowarn("cat=deprecation")
 class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropertyChecks {
 
   "AuthUserType" - {
 
-    "identifies an Invididual Trader" in {
+    "identifies an Individual Trader" in {
       val result = AuthUserType(AffinityGroup.Individual, None)
 
       result mustBe Some(AuthUserType.IndividualTrader)
@@ -42,19 +39,13 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
       result mustBe Some(AuthUserType.OrganisationAssistant)
     }
 
-    "identifies an Organisation Admin with the Admin Credential Role" in {
-      val result = AuthUserType(AffinityGroup.Organisation, Some(Admin))
-
-      result mustBe Some(AuthUserType.OrganisationAdmin)
-    }
-
-    "identifies an Organisation Admin with the User Credential Role" in {
+    "identifies an Organisation User with the User Credential Role" in {
       val result = AuthUserType(AffinityGroup.Organisation, Some(User))
 
-      result mustBe Some(AuthUserType.OrganisationAdmin)
+      result mustBe Some(AuthUserType.OrganisationUser)
     }
 
-    val credentialRoles = Table("credentialRole", Admin, Assistant, User)
+    val credentialRoles = Table("credentialRole", Assistant, User)
     "returns Agent for `Agent` Affinity Group" in {
       forAll(credentialRoles) { credentialRole =>
         val result = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
@@ -73,7 +64,7 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
       ("authUserType", "expectedJson"),
       (AuthUserType.IndividualTrader, JsString("IndividualTrader")),
       (AuthUserType.OrganisationAssistant, JsString("OrganisationAssistant")),
-      (AuthUserType.OrganisationAdmin, JsString("OrganisationAdmin"))
+      (AuthUserType.OrganisationUser, JsString("OrganisationUser"))
     )
 
     "serialises to Json" in {

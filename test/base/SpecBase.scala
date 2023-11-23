@@ -18,7 +18,7 @@ package base
 
 import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models._
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
@@ -74,9 +74,9 @@ trait SpecBase
       .setFuture(AccountHomePage, IndividualTrader)
       .futureValue
 
-  val userAnswersAsOrgAdmin: UserAnswers =
+  val userAnswersAsOrgUser: UserAnswers =
     emptyUserAnswers
-      .setFuture(AccountHomePage, OrganisationAdmin)
+      .setFuture(AccountHomePage, OrganisationUser)
       .futureValue
 
   val userAnswersAsOrgAssistant: UserAnswers = emptyUserAnswers

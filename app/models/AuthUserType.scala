@@ -28,9 +28,8 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
   val values: IndexedSeq[AuthUserType] = findValues
 
   case object IndividualTrader extends AuthUserType("IndividualTrader")
-
-  case object OrganisationAdmin extends AuthUserType("OrganisationAdmin") // org + user/admin
-  case object OrganisationAssistant extends AuthUserType("OrganisationAssistant") // org + assistant
+  case object OrganisationUser extends AuthUserType("OrganisationUser")
+  case object OrganisationAssistant extends AuthUserType("OrganisationAssistant")
 
   case object Agent extends AuthUserType("Agent")
 
@@ -45,12 +44,10 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
       case _                          => None // impossible
     }
 
-  @nowarn("cat=deprecation")
-  private def fromCredentialRole(credentialRole: Option[CredentialRole]) =
+  private def fromCredentialRole(credentialRole: Option[CredentialRole]): Option[AuthUserType] =
     credentialRole match {
       case Some(Assistant) => Some(OrganisationAssistant)
-      case Some(Admin)     => Some(OrganisationAdmin)
-      case Some(User)      => Some(OrganisationAdmin)
+      case Some(User)      => Some(OrganisationUser)
       case _               => None
     }
 
