@@ -2,8 +2,6 @@
 ->         /advance-valuation-ruling                    app.Routes
 ->         /                                            health.Routes
 
-GET        /admin/metrics                               @com.kenshoo.play.metrics.MetricsController.metrics
-
 # upload file notification callback
 + nocsrf
 POST       /upscan-callback/:draftId                    controllers.callback.UploadCallbackController.callback(draftId: DraftId, isLetterOfAuthority: Boolean)
