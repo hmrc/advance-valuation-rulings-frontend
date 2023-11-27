@@ -17,7 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
-import models.AuthUserType.{IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import models.{DraftId, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -28,7 +28,7 @@ import pages.AccountHomePage
 import play.api.test.FakeRequest
 import services.UserAnswersService
 import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
-import uk.gov.hmrc.auth.core.{Admin, Assistant, User}
+import uk.gov.hmrc.auth.core.{Assistant, User}
 
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -69,12 +69,10 @@ class DataRetrievalActionSpec extends SpecBase with BeforeAndAfterEach with Tabl
 
     "when there is data in the cache" - {
 
-      @nowarn("cat=deprecation")
       val scenarios = Table(
         ("affinityGroup", "credentialRole", "expectedAuthUserType"),
         (Individual, None, IndividualTrader),
-        (Organisation, Option(User), OrganisationAdmin),
-        (Organisation, Option(Admin), OrganisationAdmin),
+        (Organisation, Option(User), OrganisationUser),
         (Organisation, Option(Assistant), OrganisationAssistant)
       )
 

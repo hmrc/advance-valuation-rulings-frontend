@@ -30,6 +30,7 @@ import play.api.mvc.Results._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import java.time.Instant
@@ -56,8 +57,8 @@ class TraderDetailsHelperSpec extends SpecBase {
     )
   }
 
-  implicit val request = buildRequest()
-  implicit val hc      = HeaderCarrierConverter.fromRequest(request)
+  implicit val request: DataRequest[AnyContent] = buildRequest()
+  implicit val hc: HeaderCarrier                = HeaderCarrierConverter.fromRequest(request)
 
   override def beforeEach(): Unit = {
     reset(mockConnector)

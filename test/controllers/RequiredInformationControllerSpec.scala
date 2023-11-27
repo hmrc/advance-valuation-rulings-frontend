@@ -60,7 +60,7 @@ class RequiredInformationControllerSpec extends SpecBase {
       }
     }
     "must return OK and the correct view for non individual user type" in {
-      val ua = userAnswersAsOrgAdmin.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg).get
+      val ua = userAnswersAsOrgUser.set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfOrg).get
 
       val application =
         applicationBuilder(userAnswers = Some(ua)).build()
@@ -93,10 +93,10 @@ class RequiredInformationControllerSpec extends SpecBase {
           any[Messages]
         )
       ).thenReturn(expectedView)
-      when(userRoleProvider.getUserRole(userAnswersAsOrgAdmin)).thenReturn(userRole)
+      when(userRoleProvider.getUserRole(userAnswersAsOrgUser)).thenReturn(userRole)
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswersAsOrgAdmin))
+        applicationBuilder(userAnswers = Some(userAnswersAsOrgUser))
           .overrides(
             bind[UserRoleProvider].toInstance(userRoleProvider)
           )

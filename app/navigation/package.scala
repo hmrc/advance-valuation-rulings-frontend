@@ -27,7 +27,7 @@ package object navigation {
   ): Call =
     authUserType match {
       case IndividualTrader      => isTrader
-      case OrganisationAdmin     => isEmployee
+      case OrganisationUser      => isEmployee
       case OrganisationAssistant => isAgent
       case Agent                 => isAgent
     }

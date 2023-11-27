@@ -17,19 +17,18 @@
 package navigation
 
 import java.time.Instant
-
 import play.api.libs.json.Writes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
 import base.SpecBase
 import controllers.routes
 import controllers.routes.ApplicationContactDetailsController
 import models._
-import models.AuthUserType.{Agent, IndividualTrader, OrganisationAdmin, OrganisationAssistant}
+import models.AuthUserType.{Agent, IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import org.mockito.MockitoSugar.{mock, when}
 import pages._
+import play.api.mvc.Call
 import queries._
 import userrole.{UserRole, UserRoleProvider}
 
@@ -58,7 +57,7 @@ class NavigatorSpec extends SpecBase {
 
     "/ must navigate to AccountHome" in {
 
-      def redirectRoute = routes.AccountHomeController.onPageLoad()
+      def redirectRoute: Call = routes.AccountHomeController.onPageLoad()
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
@@ -105,12 +104,12 @@ class NavigatorSpec extends SpecBase {
           .onPageLoad(NormalMode, draftId)
       }
 
-      "should navigate to RequiredInformation page for an OrganisationAdmin" in {
+      "should navigate to RequiredInformation page for an OrganisationUser" in {
 
         navigator.nextPage(
           AccountHomePage,
           NormalMode,
-          userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationAdmin).futureValue
+          userAnswersAsIndividualTrader.setFuture(AccountHomePage, OrganisationUser).futureValue
         ) mustBe routes.WhatIsYourRoleAsImporterController
           .onPageLoad(NormalMode, draftId)
       }
@@ -766,7 +765,7 @@ class NavigatorSpec extends SpecBase {
 
         "CheckYourAnswersForAgents page when No is selected and the user is an OrganisationAdmin" in {
           val userAnswers =
-            userAnswersAsOrgAdmin.set(UploadAnotherSupportingDocumentPage, false).get
+            userAnswersAsOrgUser.set(UploadAnotherSupportingDocumentPage, false).get
           navigator.nextPage(
             UploadAnotherSupportingDocumentPage,
             NormalMode,

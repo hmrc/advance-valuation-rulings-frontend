@@ -51,7 +51,7 @@ class VerifyLetterOfAuthorityControllerSpec extends SpecBase {
 
     "must return OK and the correct view for page load" in {
 
-      val ua: UserAnswers = userAnswersAsOrgAdmin
+      val ua: UserAnswers = userAnswersAsOrgUser
         .set(UploadLetterOfAuthorityPage, uploadedFile)
         .success
         .value

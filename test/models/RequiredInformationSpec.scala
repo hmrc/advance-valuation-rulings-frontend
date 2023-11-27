@@ -59,7 +59,7 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
 
       implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
-      val result  = RequiredInformation.checkboxItems(AuthUserType.OrganisationAdmin)(m)
+      val result  = RequiredInformation.checkboxItems(AuthUserType.OrganisationUser)(m)
       val content = result.map(_.content)
       content must contain(Text("requiredInformation.option1.organisation"))
       content must contain(Text("requiredInformation.option2.organisation"))
