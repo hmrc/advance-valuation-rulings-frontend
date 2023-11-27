@@ -3,7 +3,7 @@ import sbt.*
 object AppDependencies {
 
   val hmrcMongoVersion = "1.5.0"
-  val bootstrapVersion = "8.0.0"
+  val bootstrapVersion = "7.23.0"
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
