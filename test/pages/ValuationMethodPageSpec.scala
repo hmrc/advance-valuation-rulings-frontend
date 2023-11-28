@@ -16,13 +16,13 @@
 
 package pages
 
-import java.time.Instant
-
 import models.{AdaptMethod, DraftId, UserAnswers, ValuationMethod}
 import org.scalacheck.Gen
 import pages.behaviours.PageBehaviours
 
-class ValuationMethodSpec extends PageBehaviours {
+import java.time.Instant
+
+class ValuationMethodPageSpec extends PageBehaviours {
   private val fixedInstant = Instant.now()
 
   "ValuationMethodPage" - {

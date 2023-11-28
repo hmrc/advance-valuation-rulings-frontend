@@ -16,12 +16,11 @@
 
 package models
 
-import java.time.{LocalDateTime, ZoneOffset}
-
-import play.api.libs.json.Json
-
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.libs.json.Json
+
+import java.time.{LocalDateTime, ZoneOffset}
 
 class UploadedFileSpec extends AnyFreeSpec with Matchers {
 

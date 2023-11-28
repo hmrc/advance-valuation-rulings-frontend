@@ -57,19 +57,6 @@ trait Constraints {
       }
     }
 
-  protected def inRange[A](minimum: A, maximum: A, errorKey: String)(implicit
-    ev: Ordering[A]
-  ): Constraint[A] =
-    Constraint { input =>
-      import ev._
-
-      if (input >= minimum && input <= maximum) {
-        Valid
-      } else {
-        Invalid(errorKey, minimum, maximum)
-      }
-    }
-
   protected def regexp(regex: String, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.matches(regex) =>
@@ -110,14 +97,6 @@ trait Constraints {
         Valid
     }
 
-  protected def nonEmptySet(errorKey: String): Constraint[Set[_]] =
-    Constraint {
-      case set if set.nonEmpty =>
-        Valid
-      case _                   =>
-        Invalid(errorKey)
-    }
-
   protected def numericString(errorKey: String): Constraint[String] =
     Constraint {
       case str if str.filterNot(_.isWhitespace).forall(_.isDigit) =>
@@ -131,18 +110,6 @@ trait Constraints {
 
   protected def setEquals[A](expected: Set[_], errorKey: String): Constraint[Set[_]] =
     Constraint(set => if (set == expected) Valid else Invalid(errorKey))
-
-  private val postCodeMaxLength = 9
-
-  protected def optionalPostCodeMaxLength(errorKey: String): Constraint[Option[String]] =
-    optionalMaxLength(postCodeMaxLength, errorKey)
-
-  private def optionalMaxLength(maximum: Int, errorKey: String): Constraint[Option[String]] =
-    Constraint {
-      case None                                       => Valid
-      case Some(str: String) if str.length <= maximum => Valid
-      case _                                          => Invalid(errorKey, maximum)
-    }
 
   private val eoriCodeRegex: Regex = new Regex("^(?i)GB[0-9]{12}$")
   private val eoriExpectedLength   = 14

@@ -27,7 +27,7 @@ import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.{BeforeAndAfterEach, OptionValues, TryValues}
+import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
 import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
@@ -45,6 +45,7 @@ trait SpecBase
     with Matchers
     with TryValues
     with OptionValues
+    with EitherValues
     with ScalaFutures
     with IntegrationPatience
     with BeforeAndAfterEach {
@@ -59,7 +60,7 @@ trait SpecBase
   val StreetAndNumber = "1 Somewhere"
   val City            = "London"
   val countryCode     = "GB"
-  val country         = "United Kingdom"
+  val countryAsString = "United Kingdom"
   val Postcode        = "A12 2AB"
   val phoneNumber     = "01234567890"
 
@@ -136,7 +137,6 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[IdentifyIndividualAction].to[FakeIdentifyIndividualAction],
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),
@@ -150,7 +150,6 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeAgentIdentifierAction],
-        bind[IdentifyAgentAction].to[FakeIdentifyAgentAction],
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),
@@ -164,7 +163,6 @@ trait SpecBase
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeOrgIdentifierAction],
-        bind[IdentifyAgentAction].to[FakeIdentifyOrgAction],
         bind[DataRetrievalActionProvider].toInstance(
           new FakeDataRetrievalActionProvider(userAnswers)
         ),

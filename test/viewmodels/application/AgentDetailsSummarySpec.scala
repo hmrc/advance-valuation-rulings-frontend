@@ -16,16 +16,15 @@
 
 package viewmodels.application
 
+import models.requests.TraderDetail
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
-
-import models.requests.TraderDetail
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
 
 class AgentDetailsSummarySpec extends AnyFreeSpec with Matchers {
 

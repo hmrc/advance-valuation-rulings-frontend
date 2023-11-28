@@ -16,22 +16,16 @@
 
 package models.requests
 
-import java.time.Instant
-
+import base.SpecBase
 import cats.data.NonEmptyList
 import cats.data.Validated.{Invalid, Valid}
-
-import models.{DraftAttachment, DraftId, Index, UploadedFile, UserAnswers}
-import org.scalatest.{OptionValues, TryValues}
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.wordspec.AnyWordSpec
+import models.{DraftAttachment, Index, UploadedFile}
 import pages._
 import queries.{AllDocuments, DraftAttachmentAt}
 
-class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues with OptionValues {
+import java.time.Instant
 
-  private val draftId: DraftId              = DraftId(1)
-  private val emptyUserAnswers: UserAnswers = UserAnswers("a", draftId)
+class AttachmentRequestSpec extends SpecBase {
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
@@ -53,7 +47,7 @@ class AttachmentRequestSpec extends AnyWordSpec with Matchers with TryValues wit
     )
   )
 
-  ".apply" must {
+  ".apply" - {
 
     "return an empty sequence when the user doesn't want to add any attachments" in {
 

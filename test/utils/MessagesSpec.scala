@@ -63,26 +63,26 @@ class MessagesSpec extends SpecBase {
     }
   }
 
-  private def assertNonEmptyValuesForDefaultMessages() =
+  private def assertNonEmptyValuesForDefaultMessages(): Unit =
     assertNonEmptyNonTemporaryValues("Default", defaultMessages)
 
-  private def assertNonEmptyValuesForWelshMessages() =
+  private def assertNonEmptyValuesForWelshMessages(): Unit =
     assertNonEmptyNonTemporaryValues("Welsh", welshMessages)
 
-  private def assertCorrectUseOfQuotesForDefaultMessages() =
+  private def assertCorrectUseOfQuotesForDefaultMessages(): Unit =
     assertCorrectUseOfQuotes("Default", defaultMessages)
 
-  private def assertCorrectUseOfQuotesForWelshMessages() =
+  private def assertCorrectUseOfQuotesForWelshMessages(): Unit =
     assertCorrectUseOfQuotes("Welsh", welshMessages)
 
-  private def assertNonEmptyNonTemporaryValues(label: String, messages: Map[String, String]) =
+  private def assertNonEmptyNonTemporaryValues(label: String, messages: Map[String, String]): Unit =
     messages.foreach { case (key: String, value: String) =>
       withClue(s"In $label, there is an empty value for the key:[$key][$value]") {
         value.trim.isEmpty mustBe false
       }
     }
 
-  private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]) =
+  private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]): Unit =
     messages.foreach { case (key: String, value: String) =>
       withClue(s"In $label, there is an unescaped or invalid quote:[$key][$value]") {
         MatchSingleQuoteOnly.findFirstIn(value).isDefined mustBe false

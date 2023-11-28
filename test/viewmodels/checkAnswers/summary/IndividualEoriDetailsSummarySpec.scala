@@ -16,12 +16,11 @@
 
 package viewmodels.checkAnswers.summary
 
+import base.SpecBase
+import models.{CDSEstablishmentAddress, DraftId, TraderDetailsWithCountryCode}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Text, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
-
-import base.SpecBase
-import models.{CDSEstablishmentAddress, DraftId, TraderDetailsWithCountryCode}
 
 class IndividualEoriDetailsSummarySpec extends SpecBase {
 
@@ -75,7 +74,7 @@ class IndividualEoriDetailsSummarySpec extends SpecBase {
         rows must contain(
           (
             Key(Text("checkYourAnswers.eori.address.label")),
-            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$country"))
+            Value(HtmlContent(s"$StreetAndNumber<br>$City<br>$Postcode<br>$countryAsString"))
           )
         )
       }

@@ -16,8 +16,6 @@
 
 package models.requests
 
-import play.api.libs.json.{JsError, JsString, Json}
-
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -25,6 +23,7 @@ import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.{JsError, JsString, Json}
 
 class AdaptMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
@@ -32,7 +31,7 @@ class AdaptMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(AdaptMethod.values.toSeq)
+      val gen = Gen.oneOf(AdaptMethod.values)
 
       forAll(gen) { adaptMethod =>
         JsString(adaptMethod.toString).validate[AdaptMethod].asOpt.value mustEqual adaptMethod
@@ -50,7 +49,7 @@ class AdaptMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "must serialise" in {
 
-      val gen = Gen.oneOf(AdaptMethod.values.toSeq)
+      val gen = Gen.oneOf(AdaptMethod.values)
 
       forAll(gen) { adaptMethod =>
         Json.toJson(adaptMethod) mustEqual JsString(adaptMethod.toString)

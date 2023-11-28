@@ -16,12 +16,11 @@
 
 package models
 
-import play.api.mvc.PathBindable
-
 import base.SpecBase
 import org.scalacheck.Gen
 import org.scalatest.EitherValues
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.mvc.PathBindable
 
 class IndexSpec extends SpecBase with EitherValues with ScalaCheckPropertyChecks {
 

@@ -16,25 +16,19 @@
 
 package models.requests
 
+import base.SpecBase
 import cats.data.NonEmptyList
 import cats.data.Validated._
-
 import generators._
 import models._
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 
-class RequestedMethodSpec
-    extends AnyWordSpec
-    with Matchers
-    with ScalaCheckPropertyChecks
-    with ApplicationRequestGenerator {
+class RequestedMethodSpec extends SpecBase with ScalaCheckPropertyChecks with ApplicationRequestGenerator {
 
   import RequestedMethodSpec._
 
-  "RequestedMethod" should {
+  "RequestedMethod" - {
 
     "return valid for method one - shortest path" in {
       val userAnswers = (for {
@@ -47,7 +41,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Valid(
+      result mustBe Valid(
         MethodOne(
           None,
           None,
@@ -70,7 +64,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Valid(
+      result mustBe Valid(
         MethodOne(
           Some("explainHowPartiesAreRelated"),
           Some("describeTheRestrictions"),
@@ -87,7 +81,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.of(
           IsThereASaleInvolvedPage
         )
@@ -105,7 +99,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.of(
           ExplainHowPartiesAreRelatedPage,
           DescribeTheRestrictionsPage,
@@ -120,7 +114,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.of(
           IsThereASaleInvolvedPage
         )
@@ -137,7 +131,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Valid(
+      result mustBe Valid(
         MethodTwo(
           randomString,
           PreviousIdenticalGoods(randomString)
@@ -154,7 +148,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(
           WhyIdenticalGoodsPage
         )
@@ -171,7 +165,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(
           HaveYouUsedMethodOneInPastPage
         )
@@ -184,7 +178,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.of(
           WhyIdenticalGoodsPage,
           HaveYouUsedMethodOneInPastPage,
@@ -203,7 +197,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Valid(
+      result mustBe Valid(
         MethodThree(
           randomString,
           PreviousSimilarGoods(randomString)
@@ -221,7 +215,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
       )
     }
@@ -235,7 +229,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(HaveYouUsedMethodOneForSimilarGoodsInPastPage)
       )
     }
@@ -249,7 +243,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(DescribeTheSimilarGoodsPage)
       )
     }
@@ -261,7 +255,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.of(
           WhyTransactionValueOfSimilarGoodsPage,
           HaveYouUsedMethodOneForSimilarGoodsInPastPage,
@@ -279,7 +273,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Valid(
+      result mustBe Valid(
         MethodFour(
           randomString,
           randomString
@@ -295,7 +289,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(ExplainWhyYouHaveNotSelectedMethodOneToThreePage)
       )
     }
@@ -308,7 +302,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(ExplainWhyYouChoseMethodFourPage)
       )
     }
@@ -320,7 +314,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList(
           ExplainWhyYouHaveNotSelectedMethodOneToThreePage,
           List(ExplainWhyYouChoseMethodFourPage)
@@ -337,7 +331,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Valid(
+      result mustBe Valid(
         MethodFive(
           randomString,
           randomString
@@ -353,7 +347,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(WhyComputedValuePage)
       )
     }
@@ -366,7 +360,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(ExplainReasonComputedValuePage)
       )
     }
@@ -378,7 +372,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList(
           WhyComputedValuePage,
           List(ExplainReasonComputedValuePage)
@@ -398,7 +392,7 @@ class RequestedMethodSpec
 
         val result = RequestedMethod(userAnswers)
 
-        result shouldBe Valid(
+        result mustBe Valid(
           MethodSix(
             randomString,
             AdaptedMethod(adaptMethod),
@@ -417,7 +411,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(ExplainWhyYouHaveNotSelectedMethodOneToFivePage)
       )
     }
@@ -431,7 +425,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(AdaptMethodPage)
       )
     }
@@ -445,7 +439,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(ExplainHowYouWillUseMethodSixPage)
       )
     }
@@ -457,7 +451,7 @@ class RequestedMethodSpec
 
       val result = RequestedMethod(userAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList(
           ExplainWhyYouHaveNotSelectedMethodOneToFivePage,
           List(AdaptMethodPage, ExplainHowYouWillUseMethodSixPage)
@@ -468,7 +462,7 @@ class RequestedMethodSpec
     "return invalid for empty UserAnswers" in {
       val result = RequestedMethod(emptyUserAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(ValuationMethodPage)
       )
     }

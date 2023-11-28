@@ -16,15 +16,14 @@
 
 package viewmodels.application
 
+import models.requests.{Attachment, GoodsDetails, Privacy}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
 import uk.gov.hmrc.govukfrontend.views.Aliases.SummaryListRow
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, Value}
-
-import models.requests.{Attachment, GoodsDetails, Privacy}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
 
 class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
 

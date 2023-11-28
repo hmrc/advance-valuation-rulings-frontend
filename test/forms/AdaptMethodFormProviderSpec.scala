@@ -16,10 +16,9 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.OptionFieldBehaviours
 import models.AdaptMethod
+import play.api.data.FormError
 
 class AdaptMethodFormProviderSpec extends OptionFieldBehaviours {
 

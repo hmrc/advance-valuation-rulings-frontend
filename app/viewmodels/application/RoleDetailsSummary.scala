@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package viewmodels
+package viewmodels.application
 
+import models.requests.WhatIsYourRole
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
-import models.requests.{Application, WhatIsYourRole}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object RoleDetailsSummary {
   def rowRoleDescription(
-    application: Application
+    whatIsYourRoleResponse: Option[WhatIsYourRole]
   )(implicit messages: Messages): Option[SummaryListRow] =
-    application.whatIsYourRoleResponse match {
+    whatIsYourRoleResponse match {
       case Some(WhatIsYourRole.AgentOrg)    =>
         Some(
           SummaryListRowViewModel(

@@ -25,10 +25,8 @@ import pages.{AgentForTraderCheckRegisteredDetailsPage, Page}
 
 package userrole {
   import cats.data.ValidatedNel
-
   import play.api.mvc.Call
   import play.twirl.api.HtmlFormat
-
   import controllers.routes.{BusinessContactDetailsController, ProvideTraderEoriController}
   import forms.AgentForTraderCheckRegisteredDetailsFormProvider
   import logging.Logging

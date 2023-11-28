@@ -16,10 +16,9 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.StringFieldBehaviours
 import org.scalacheck.Gen
+import play.api.data.FormError
 
 class ApplicationContactDetailsFormProviderSpec extends StringFieldBehaviours {
 

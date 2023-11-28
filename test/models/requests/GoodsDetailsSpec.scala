@@ -16,25 +16,19 @@
 
 package models.requests
 
+import base.SpecBase
 import cats.data.NonEmptyList
 import cats.data.Validated._
-
 import generators._
 import models.{DraftId, UserAnswers}
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 
-class GoodsDetailsSpec
-    extends AnyWordSpec
-    with Matchers
-    with ScalaCheckPropertyChecks
-    with ApplicationRequestGenerator {
+class GoodsDetailsSpec extends SpecBase with ScalaCheckPropertyChecks with ApplicationRequestGenerator {
 
   import GoodsDetailsSpec._
 
-  "GoodsDetails" should {
+  "GoodsDetails" - {
     "succeed when all fields set" in {
       val ua = emptyUserAnswers
 
@@ -54,7 +48,7 @@ class GoodsDetailsSpec
 
       val result = GoodsDetails(userAnswers)
 
-      result shouldBe Valid(
+      result mustBe Valid(
         GoodsDetails(
           goodsName = randomString,
           goodsDescription = randomString,
@@ -70,7 +64,7 @@ class GoodsDetailsSpec
     "return invalid for empty UserAnswers" in {
       val result = GoodsDetails(emptyUserAnswers)
 
-      result shouldBe Invalid(
+      result mustBe Invalid(
         NonEmptyList.one(
           DescriptionOfGoodsPage
         )

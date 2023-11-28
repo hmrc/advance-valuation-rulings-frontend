@@ -16,12 +16,11 @@
 
 package models
 
-import play.api.libs.json._
-import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, User}
-
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
+import play.api.libs.json._
+import uk.gov.hmrc.auth.core.{AffinityGroup, Assistant, User}
 
 class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropertyChecks {
 

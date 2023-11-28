@@ -21,8 +21,8 @@ import controllers.routes
 import models.DraftId
 import models.requests.{DataRequest, OptionalDataRequest}
 import org.mockito.MockitoSugar.{mock, reset}
-import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
+import play.api.mvc.{ControllerComponents, Result}
 import play.api.test.Helpers.GET
 import play.api.test.{FakeRequest, Helpers}
 import services.UserAnswersService
@@ -41,8 +41,8 @@ class DataRequiredActionSpec extends SpecBase {
     super.beforeEach()
   }
 
-  implicit val ec = mock[ExecutionContext]
-  val cc          = Helpers.stubControllerComponents()
+  implicit val ec: ExecutionContext = mock[ExecutionContext]
+  val cc: ControllerComponents      = Helpers.stubControllerComponents()
 
   class Harness(draftId: DraftId) extends DataRequiredActionImpl {
     def callRefine[A](req: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =
@@ -71,7 +71,7 @@ class DataRequiredActionSpec extends SpecBase {
 
           whenReady(result) { re =>
             re.isLeft mustBe true
-            re.left.get mustBe Redirect(
+            re.left.value mustBe Redirect(
               routes.YourApplicationHasBeenCancelledController.onPageLoad()
             )
           }
@@ -88,7 +88,7 @@ class DataRequiredActionSpec extends SpecBase {
 
           whenReady(result) { re =>
             re.isLeft mustBe true
-            re.left.get mustBe Redirect(
+            re.left.value mustBe Redirect(
               routes.JourneyRecoveryController.onPageLoad()
             )
           }

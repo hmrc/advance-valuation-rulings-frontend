@@ -26,14 +26,10 @@ import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
 sealed trait ApplicantSummary {
-  def removeActions(): ApplicantSummary
   def rows: SummaryList
 }
 
-case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummary {
-  def removeActions(): IndividualApplicantSummary =
-    IndividualApplicantSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
-}
+case class IndividualApplicantSummary(rows: SummaryList) extends ApplicantSummary
 
 class IndividualApplicantSummaryCreator {
   def summaryRows(
@@ -44,11 +40,7 @@ class IndividualApplicantSummaryCreator {
   }
 }
 
-case class AgentSummary(rows: SummaryList) extends ApplicantSummary {
-
-  def removeActions(): AgentSummary =
-    AgentSummary(SummaryListViewModel(rows.rows.map(_.copy(actions = None))))
-}
+case class AgentSummary(rows: SummaryList) extends ApplicantSummary
 
 class AgentSummaryCreator {
   def summaryRows(userAnswers: UserAnswers)(implicit messages: Messages): AgentSummary = {

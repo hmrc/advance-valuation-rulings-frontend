@@ -16,17 +16,16 @@
 
 package pages.behaviours
 
-import play.api.libs.json._
-
 import generators.Generators
 import models.UserAnswers
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest.{OptionValues, TryValues}
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.{OptionValues, TryValues}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.QuestionPage
+import play.api.libs.json._
 
 trait PageBehaviours
     extends AnyFreeSpec

@@ -16,15 +16,14 @@
 
 package generators
 
+import models._
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.{Arbitrary, Gen}
+import play.api.http.Status
+import wolfendale.scalacheck.regexp.RegexpGen
+
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-
-import play.api.http.Status
-
-import models._
-import org.scalacheck.{Arbitrary, Gen}
-import org.scalacheck.Arbitrary.arbitrary
-import wolfendale.scalacheck.regexp.RegexpGen
 
 trait TraderDetailsGenerator extends Generators {
 

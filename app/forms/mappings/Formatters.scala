@@ -21,8 +21,6 @@ import play.api.data.FormError
 import play.api.data.format.Formatter
 import utils.PostcodeValidator
 
-import scala.util.control.Exception.nonFatalCatch
-
 trait Formatters {
 
   private[mappings] def commodityCodeFormatter(
@@ -78,36 +76,6 @@ trait Formatters {
           }
 
       def unbind(key: String, value: Boolean): Map[String, String] = Map(key -> value.toString)
-    }
-
-  private[mappings] def intFormatter(
-    requiredKey: String,
-    wholeNumberKey: String,
-    nonNumericKey: String,
-    args: Seq[String] = Seq.empty
-  ): Formatter[Int] =
-    new Formatter[Int] {
-
-      val decimalRegexp = """^-?(\d*\.\d*)$"""
-
-      private val baseFormatter = stringFormatter(requiredKey, args)
-
-      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Int] =
-        baseFormatter
-          .bind(key, data)
-          .map(_.replace(",", ""))
-          .flatMap {
-            case s if s.matches(decimalRegexp) =>
-              Left(Seq(FormError(key, wholeNumberKey, args)))
-            case s                             =>
-              nonFatalCatch
-                .either(s.toInt)
-                .left
-                .map(_ => Seq(FormError(key, nonNumericKey, args)))
-          }
-
-      override def unbind(key: String, value: Int): Map[String, String] =
-        baseFormatter.unbind(key, value.toString)
     }
 
   private[mappings] def enumerableFormatter[A](

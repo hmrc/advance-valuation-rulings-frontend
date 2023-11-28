@@ -34,68 +34,39 @@ class UserRoleProviderSpec extends AnyFreeSpec with Matchers {
 
   "UserRoleProvider.getUserRole" - {
     "should return an Employee when the WhatIsYourRoleAsImporterPage answer is EmployeeOfOrg" in {
-      // GIVEN
-      // the user select employee of org in WhatIsYourRoleAsImporterPage
       val userAnswersForEmployee =
         userAnswers.set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg).get
 
-      // WHEN
-      // UserRoleProvider.getUserRole() is called
       val actualRole = userRoleProvider.getUserRole(userAnswersForEmployee)
 
-      // THEN
-      // role returned should be employeeRole
       actualRole mustBe employeeRole
-
     }
 
     "should return an AgentForOrgRole when the WhatIsYourRoleAsImporterPage answer is AgentForOrg" in {
-      // GIVEN
-      // the user select employee of org in WhatIsYourRoleAsImporterPage
       val userAnswersForEmployee =
         userAnswers
           .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
           .get
 
-      // WHEN
-      // UserRoleProvider.getUserRole() is called
       val actualRole = userRoleProvider.getUserRole(userAnswersForEmployee)
 
-      // THEN
-      // role returned should be employeeRole
       actualRole mustBe agentForOrg
-
     }
 
     "should return an AgentForTraderRole when the WhatIsYourRoleAsImporterPage answer is AgentForTrader" in {
-      // GIVEN
-      // the user select employee of org in WhatIsYourRoleAsImporterPage
       val userAnswersForEmployee =
         userAnswers
           .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader)
           .get
 
-      // WHEN
-      // UserRoleProvider.getUserRole() is called
       val actualRole = userRoleProvider.getUserRole(userAnswersForEmployee)
 
-      // THEN
-      // role returned should be employeeRole
       actualRole mustBe agentForTrader
-
     }
 
     "should throw an exception when the WhatIsYourRoleAsImporterPage has not been answered" in {
       assertThrows[UnsupportedOperationException] {
-        // GIVEN
-        // WhatIsYourRoleAsImporterPage is not set
-
-        // WHEN
-        // UserRoleProvider.getUserRole() is called
         userRoleProvider.getUserRole(userAnswers)
-
-        // THEN
-        // role returned should be employeeRole
       }
 
     }

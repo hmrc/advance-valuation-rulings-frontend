@@ -34,9 +34,7 @@ class Module extends play.api.inject.Module {
     Seq(
       binding[DataRequiredAction].to[DataRequiredActionImpl].eagerly(),
       binding[Clock].to(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)),
-      binding[IdentifierAction].to[AuthenticatedIdentifierAction].eagerly(),
-      binding[IdentifyIndividualAction].to[IdentifyIndividual].eagerly(),
-      binding[IdentifyAgentAction].to[IdentifyAgent].eagerly()
+      binding[IdentifierAction].to[AuthenticatedIdentifierAction].eagerly()
     ) ++ authTokenInitialiserBindings
   }
 }

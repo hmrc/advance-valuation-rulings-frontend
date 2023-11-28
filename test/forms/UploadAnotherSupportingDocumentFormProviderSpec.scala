@@ -16,13 +16,12 @@
 
 package forms
 
-import java.time.Instant
-
+import forms.behaviours.BooleanFieldBehaviours
+import models.{DraftAttachment, UploadedFile}
 import play.api.Configuration
 import play.api.data.FormError
 
-import forms.behaviours.BooleanFieldBehaviours
-import models.{DraftAttachment, UploadedFile}
+import java.time.Instant
 
 class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehaviours {
 

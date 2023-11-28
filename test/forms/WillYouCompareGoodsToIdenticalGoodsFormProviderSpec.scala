@@ -16,9 +16,8 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
 class WillYouCompareGoodsToIdenticalGoodsFormProviderSpec extends BooleanFieldBehaviours {
 

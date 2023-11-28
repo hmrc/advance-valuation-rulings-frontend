@@ -24,8 +24,8 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{mock, reset, when}
-import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.{Assertion, BeforeAndAfterEach}
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import play.api.Application
 import play.api.inject.bind
@@ -69,6 +69,7 @@ class UploadInProgressControllerSpec extends SpecBase with BeforeAndAfterEach wi
       .thenReturn(mockUserRole)
 
     when(mockUserRole.getMaxSupportingDocuments).thenReturn(3)
+    ()
   }
 
   private val fileUrl        = "some/path/for/the/download/url"
@@ -126,7 +127,7 @@ class UploadInProgressControllerSpec extends SpecBase with BeforeAndAfterEach wi
   private def getRedirectPath(isLetterOfAuthority: Boolean): String =
     if (isLetterOfAuthority) {
       controllers.routes.UploadLetterOfAuthorityController
-        .onPageLoad(NormalMode, draftId, None, None, false)
+        .onPageLoad(NormalMode, draftId, None, None, redirectedFromChangeButton = false)
         .url
     } else {
       controllers.routes.UploadSupportingDocumentsController
@@ -163,13 +164,15 @@ class UploadInProgressControllerSpec extends SpecBase with BeforeAndAfterEach wi
     val key       = Some(reference)
 
     if (isLetterOfAuthority) {
-      routes.UploadLetterOfAuthorityController.onPageLoad(mode, id, errorCode, key, false).url
+      routes.UploadLetterOfAuthorityController
+        .onPageLoad(mode, id, errorCode, key, redirectedFromChangeButton = false)
+        .url
     } else {
       routes.UploadSupportingDocumentsController.onPageLoad(mode, id, errorCode, key).url
     }
   }
 
-  private def testFallbackPageIsShown(file: UploadedFile): Unit =
+  private def testFallbackPageIsShown(file: UploadedFile): Assertion =
     forAll(parameterisedCases) { (isLetterOfAuthority: Boolean) =>
       val userAnswers = getUserAnswers(file, isLetterOfAuthority)
       setMockUserRole(userAnswers)
@@ -208,11 +211,6 @@ class UploadInProgressControllerSpec extends SpecBase with BeforeAndAfterEach wi
     }
 
   private val expectedSupportedDocumentLimit = 3
-  private def setUpUserRoleProviderMock() = {
-    when(mockUserRole.getMaxSupportingDocuments).thenReturn(expectedSupportedDocumentLimit)
-    when(mockUserRoleProvider.getUserRole(any[UserAnswers]))
-      .thenReturn(mockUserRole)
-  }
 
   "UploadInProgress Controller" - {
 

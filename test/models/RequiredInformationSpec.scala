@@ -16,14 +16,13 @@
 
 package models
 
-import play.api.i18n.Messages
-import play.api.libs.json.{JsError, JsString, Json}
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-
 import base.SpecBase
 import generators.ModelGenerators
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.i18n.Messages
+import play.api.libs.json.{JsError, JsString, Json}
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 
 class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
 

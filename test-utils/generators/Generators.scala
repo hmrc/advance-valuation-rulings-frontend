@@ -16,11 +16,11 @@
 
 package generators
 
-import java.time._
-
-import org.scalacheck.{Gen, Shrink}
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
+import org.scalacheck.{Gen, Shrink}
+
+import java.time._
 
 trait Generators extends UserAnswersGenerator with PageGenerators with ModelGenerators with UserAnswersEntryGenerators {
 
@@ -62,7 +62,7 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     alphaStr suchThat (_.nonEmpty)
 
   def numericStrings(minLength: Int = 0): Gen[String] =
-    numStr suchThat (_.size > minLength)
+    numStr suchThat (_.length > minLength)
 
   def decimals: Gen[String] =
     arbitrary[BigDecimal]

@@ -16,36 +16,9 @@
 
 package viewmodels.checkAnswers.summary
 
-import play.api.i18n.Messages
-
-import com.google.inject.Inject
-import models.{TraderDetailsWithCountryCode, UserAnswers}
-import userrole.UserRoleProvider
-
 case class ApplicationSummary(
   eoriDetails: EoriDetailsSummary,
   applicant: ApplicantSummary,
   details: DetailsSummary,
   method: MethodSummary
 )
-
-class ApplicationSummaryService @Inject() (
-  userRoleProvider: UserRoleProvider
-) {
-  def getApplicationSummary(
-    userAnswers: UserAnswers,
-    traderDetailsWithCountryCode: TraderDetailsWithCountryCode
-  )(implicit
-    messages: Messages
-  ): ApplicationSummary = {
-    val (applicant, company) = userRoleProvider
-      .getUserRole(userAnswers)
-      .getApplicationSummary(userAnswers, traderDetailsWithCountryCode)
-    ApplicationSummary(
-      eoriDetails = company,
-      applicant = applicant,
-      details = DetailsSummary(userAnswers),
-      method = MethodSummary(userAnswers)
-    )
-  }
-}

@@ -16,8 +16,6 @@
 
 package models.requests
 
-import play.api.libs.json.{JsError, JsString, Json}
-
 import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
@@ -25,6 +23,7 @@ import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.{JsError, JsString, Json}
 
 class ValuationMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
@@ -32,7 +31,7 @@ class ValuationMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
 
     "must deserialise valid values" in {
 
-      val gen = Gen.oneOf(ValuationMethod.values.toSeq)
+      val gen = Gen.oneOf(ValuationMethod.values)
 
       forAll(gen) { valuationMethod =>
         JsString(valuationMethod.toString)
@@ -53,7 +52,7 @@ class ValuationMethodSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
 
     "must serialise" in {
 
-      val gen = Gen.oneOf(ValuationMethod.values.toSeq)
+      val gen = Gen.oneOf(ValuationMethod.values)
 
       forAll(gen) { valuationMethod =>
         Json.toJson(valuationMethod) mustEqual JsString(valuationMethod.toString)

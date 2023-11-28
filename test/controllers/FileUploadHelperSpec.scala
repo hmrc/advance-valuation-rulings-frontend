@@ -30,10 +30,9 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.IdiomaticMockito.{DoSomethingOps, returned}
 import org.mockito.MockitoSugar._
 import org.mockito.stubbing.ScalaOngoingStubbing
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
 import org.scalatest.prop.Tables.Table
+import org.scalatest.{Assertion, BeforeAndAfterEach}
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import play.api.http.HttpEntity
 import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
@@ -177,7 +176,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
       userAnswers.set(UploadSupportingDocumentPage, initiatedUploadedFile).success.value
     }
 
-  private def setMockLetterOfAuthorityView(): Unit =
+  private def setMockLetterOfAuthorityView(): Unit = {
     when(
       mockLetterOfAuthorityView
         .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None))(
@@ -186,8 +185,10 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
         )
     )
       .thenReturn(HtmlFormat.raw(expectedViewText))
+    ()
+  }
 
-  private def setErrorMockLetterOfAuthorityView(): Unit =
+  private def setErrorMockLetterOfAuthorityView(): Unit = {
     when(
       mockLetterOfAuthorityView
         .apply(eqTo(draftId), any(), eqTo(Some(errorMessage)))(
@@ -196,9 +197,11 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
         )
     )
       .thenReturn(HtmlFormat.raw(expectedErrorViewText))
+    ()
+  }
 
   private def setMockSupportingDocumentsView(
-  ): Unit =
+  ): Unit = {
     when(
       mockSupportingDocumentsView
         .apply(eqTo(draftId), eqTo(Some(upscanInitiateResponse)), eqTo(None), any())(
@@ -207,11 +210,15 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
         )
     )
       .thenReturn(HtmlFormat.raw(expectedViewText))
+    ()
+  }
 
-  private def setMockConfiguration(): Unit =
+  private def setMockConfiguration(): Unit = {
     when(mockConfiguration.underlying).thenReturn(mockConfig)
+    ()
+  }
 
-  private def setMockFileService(isLetterOfAuthority: Boolean): Unit =
+  private def setMockFileService(isLetterOfAuthority: Boolean): Unit = {
     when(
       mockFileService.initiate(
         draftId,
@@ -220,6 +227,8 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
       )(headerCarrier)
     )
       .thenReturn(Future.successful(upscanInitiateResponse))
+    ()
+  }
 
   private def setMockUserRole(userAnswers: UserAnswers): Unit = {
     when(mockUserAnswersService.get(any())(any()))
@@ -229,6 +238,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
       .thenReturn(mockUserRole)
 
     when(mockUserRole.getMaxSupportingDocuments).thenReturn(3)
+    ()
   }
 
   "Check for status" - {
@@ -240,6 +250,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
 
       val result = getFileUploadHelper.checkForStatus(updatedUserAnswers, isLetterOfAuthority)
       result.get mustEqual initiatedUploadedFile
+      ()
     }
 
     "Check for status for letter of authority" in {
@@ -347,6 +358,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
           draftId,
           mode
         )
+        ()
       }
     }
 
@@ -369,7 +381,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
 
   "Redirect with error" - {
 
-    def testRedirectWithError(isLetterOfAuthority: Boolean): Unit = {
+    def testRedirectWithError(isLetterOfAuthority: Boolean): Assertion = {
       val key       = "a key"
       val errorCode = "an error code"
 
@@ -413,7 +425,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
 
   "Show fallback page" - {
 
-    def testShowFallbackPage(isLetterOfAuthority: Boolean): Unit = {
+    def testShowFallbackPage(isLetterOfAuthority: Boolean): Assertion = {
       val result = getFileUploadHelper
         .showFallbackPage(
           mode,
@@ -582,7 +594,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
         isLetterOfAuthority
       )(mock[DataRequest[AnyContent]], headerCarrier)
 
-      result.failed.futureValue shouldBe a[RuntimeException]
+      result.failed.futureValue mustBe a[RuntimeException]
     }
   }
 
@@ -628,21 +640,23 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
   }
 
   "when there is a failed file" - {
-    def injectView(application: Application) =
+    def injectView(application: Application): UploadLetterOfAuthorityView =
       application.injector.instanceOf[UploadLetterOfAuthorityView]
 
-    def mockFileServiceInitiate(): Unit =
+    def mockFileServiceInitiate(): Unit = {
       when(
         mockFileService.initiate(eqTo(draftId), eqTo(getRedirectPath()), eqTo(true))(
           any()
         )
       ).thenReturn(Future.successful(upscanInitiateResponse))
+      ()
+    }
 
     def checkBadRequest(
       errCode: String,
       errMessage: MessagesProvider => String,
       application: Application
-    ) = {
+    ): Assertion = {
       val request =
         FakeRequest(GET, getRedirectPath(errorCode = Some(errCode)))
       val result  = route(application, request).value

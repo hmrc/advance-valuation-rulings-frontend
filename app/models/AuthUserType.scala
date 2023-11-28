@@ -20,8 +20,6 @@ import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models.requests.IdentifierRequest
 import uk.gov.hmrc.auth.core._
 
-import scala.annotation.nowarn
-
 sealed abstract class AuthUserType(override val entryName: String) extends EnumEntry
 
 object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {

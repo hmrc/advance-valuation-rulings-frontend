@@ -16,25 +16,20 @@
 
 package models.requests
 
+import base.SpecBase
 import cats.data.Validated._
 import generators._
 import models._
 import org.mockito.MockitoSugar.{mock, when}
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 import userrole.{UserRole, UserRoleProvider}
 
-class ContactDetailsSpec
-    extends AnyWordSpec
-    with Matchers
-    with ScalaCheckPropertyChecks
-    with ApplicationRequestGenerator {
+class ContactDetailsSpec extends SpecBase with ScalaCheckPropertyChecks with ApplicationRequestGenerator {
 
   import ContactDetailsSpec._
 
-  "ContactDetails" should {
+  "ContactDetails" - {
 
     val mockUserRoleProvider = mock[UserRoleProvider]
     val userRole             = mock[UserRole]
@@ -56,7 +51,7 @@ class ContactDetailsSpec
         .thenReturn(Valid(contactDetails))
 
       val result = contactDetailsService(userAnswers)
-      result shouldBe Valid(contactDetails)
+      result mustBe Valid(contactDetails)
     }
   }
 }

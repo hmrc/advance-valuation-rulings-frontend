@@ -18,7 +18,6 @@ package controllers
 
 import base.SpecBase
 import controllers.common.FileUploadHelper
-import models.upscan.UpscanInitiateResponse
 import models.{NormalMode, UploadedFile}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -26,12 +25,10 @@ import org.mockito.MockitoSugar._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import pages._
-import play.api.Application
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.fileupload.FileService
-import views.html.UploadLetterOfAuthorityView
 
 import java.time.Instant
 import scala.concurrent.Future
@@ -43,52 +40,10 @@ class UploadLetterOfAuthorityControllerSpec extends SpecBase with BeforeAndAfter
     reset(mockFileService, mockFileUploadHelper)
   }
 
-  private val maximumFileSizeMB: Long              = 5
-  private val page                                 = UploadLetterOfAuthorityPage
-  private def injectView(application: Application) =
-    application.injector.instanceOf[UploadLetterOfAuthorityView]
+  private val isLetterOfAuthority: Boolean = true
 
-  private val isLetterOfAuthority = true
-
-  private val mockFileService      = mock[FileService]
-  private val mockFileUploadHelper = mock[FileUploadHelper]
-
-  private def getRedirectPath(
-    errorCode: Option[String] = None,
-    key: Option[String] = None
-  ): String =
-    controllers.routes.UploadLetterOfAuthorityController
-      .onPageLoad(NormalMode, draftId, errorCode, key, false)
-      .url
-
-  private def mockFileServiceInitiate(): Unit =
-    when(
-      mockFileService.initiate(eqTo(draftId), eqTo(getRedirectPath()), eqTo(true))(
-        any()
-      )
-    ).thenReturn(Future.successful(upscanInitiateResponse))
-
-  private def verifyFileServiceInitiate(): Unit =
-    verify(mockFileService).initiate(
-      eqTo(draftId),
-      eqTo(getRedirectPath()),
-      eqTo(true)
-    )(any())
-
-  private def verifyFileServiceInitiateZeroTimes(): Unit =
-    verify(mockFileService, times(0))
-      .initiate(eqTo(draftId), eqTo(getRedirectPath()), eqTo(true))(any())
-
-  private val upscanInitiateResponse = UpscanInitiateResponse(
-    reference = "reference",
-    uploadRequest = UpscanInitiateResponse.UploadRequest(
-      href = "href",
-      fields = Map(
-        "field1" -> "value1",
-        "field2" -> "value2"
-      )
-    )
-  )
+  private val mockFileService: FileService           = mock[FileService]
+  private val mockFileUploadHelper: FileUploadHelper = mock[FileUploadHelper]
 
   private val initiatedFile =
     UploadedFile.Initiated("reference")

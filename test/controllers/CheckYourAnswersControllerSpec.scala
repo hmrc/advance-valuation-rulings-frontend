@@ -33,8 +33,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SubmissionService
+import services.checkAnswers.ApplicationSummaryService
 import userrole.{UserRole, UserRoleProvider}
-import viewmodels.checkAnswers.summary.{ApplicationSummary, _}
+import viewmodels.checkAnswers.summary.ApplicationSummary
 import viewmodels.govuk.SummaryListFluency
 
 import scala.concurrent.Future
@@ -116,14 +117,14 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
         private val applicationId = ApplicationId(1)
         private val response      = ApplicationSubmissionResponse(applicationId)
 
-        when(mockSubmissionService.submitApplication(any(), any())(any()))
+        when(this.mockSubmissionService.submitApplication(any(), any())(any()))
           .thenReturn(Future.successful(response))
         when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
           .thenReturn(Future.successful(Right(traderDetailsWithCountryCode)))
 
         private val application = applicationBuilder(Option(fullUserAnswers))
           .overrides(
-            bind[SubmissionService].toInstance(mockSubmissionService),
+            bind[SubmissionService].toInstance(this.mockSubmissionService),
             bind[BackendConnector].toInstance(mockBackendConnector),
             bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService)
           )
@@ -148,14 +149,14 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
       private val applicationId = ApplicationId(1)
       private val response      = ApplicationSubmissionResponse(applicationId)
 
-      when(mockSubmissionService.submitApplication(any(), any())(any()))
+      when(this.mockSubmissionService.submitApplication(any(), any())(any()))
         .thenReturn(Future.successful(response))
       when(mockBackendConnector.getTraderDetails(any(), any())(any(), any()))
         .thenReturn(Future.successful(Left(BackendError(500, "error"))))
 
       private val application = applicationBuilderAsOrg(Option(fullUserAnswers))
         .overrides(
-          bind[SubmissionService].toInstance(mockSubmissionService),
+          bind[SubmissionService].toInstance(this.mockSubmissionService),
           bind[BackendConnector].toInstance(mockBackendConnector)
         )
         .build()

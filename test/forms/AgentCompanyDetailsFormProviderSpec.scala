@@ -16,13 +16,12 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.StringFieldBehaviours
 import generators.TraderDetailsGenerator
 import models.Country
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
+import play.api.data.FormError
 
 class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours with TraderDetailsGenerator {
 
@@ -133,7 +132,7 @@ class AgentCompanyDetailsFormProviderSpec extends StringFieldBehaviours with Tra
           .suchThat(x => !Country.allCountries.map(_.code).contains(x))
 
       forAll(invalidAnswers) { answer =>
-        val result = form.bind(Map("agentCountry" -> answer)).apply(fieldName)
+        val result = form.bind(Map("country" -> answer)).apply(fieldName)
         result.errors must contain only FormError(fieldName, requiredKey)
       }
     }

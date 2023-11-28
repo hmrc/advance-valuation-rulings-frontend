@@ -16,11 +16,11 @@
 
 package generators
 
-import java.time.{LocalDate, ZoneOffset}
-
 import models.requests._
-import org.scalacheck._
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck._
+
+import java.time.{LocalDate, ZoneOffset}
 
 trait ApplicationGenerator extends ApplicationRequestGenerator {
 

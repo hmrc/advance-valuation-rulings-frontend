@@ -26,15 +26,10 @@ import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
 sealed trait EoriDetailsSummary {
-  def removeActions(): EoriDetailsSummary
   def rows: SummaryList
 }
 
-case class IndividualEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary {
-  def removeActions(): EoriDetailsSummary = IndividualEoriDetailsSummary(
-    SummaryListViewModel(rows.rows.map(_.copy(actions = None)))
-  )
-}
+case class IndividualEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary
 
 class IndividualEoriDetailsSummaryCreator {
   def summaryRows(
@@ -50,12 +45,7 @@ class IndividualEoriDetailsSummaryCreator {
   }
 }
 
-case class BusinessEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary {
-
-  def removeActions(): EoriDetailsSummary = BusinessEoriDetailsSummary(
-    SummaryListViewModel(rows.rows.map(_.copy(actions = None)))
-  )
-}
+case class BusinessEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary
 
 class BusinessEoriDetailsSummaryCreator {
   def summaryRows(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
@@ -67,11 +57,8 @@ class BusinessEoriDetailsSummaryCreator {
   }
 }
 
-case class TraderEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary {
-  def removeActions(): EoriDetailsSummary = TraderEoriDetailsSummary(
-    SummaryListViewModel(rows.rows.map(_.copy(actions = None)))
-  )
-}
+case class TraderEoriDetailsSummary(rows: SummaryList) extends EoriDetailsSummary
+
 class TraderEoriDetailsSummaryCreator {
   def summaryRows(
     details: TraderDetailsWithCountryCode,

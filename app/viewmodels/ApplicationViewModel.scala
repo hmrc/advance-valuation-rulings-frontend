@@ -40,7 +40,7 @@ object ApplicationViewModel {
     val dateSubmitted   = DateSubmittedSummary.row(application)
     val goodsDetails    = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
     val methodDetails   = RequestedMethodSummary.rows(application.requestedMethod)
-    val roleDescription = RoleDetailsSummary.rowRoleDescription(application)
+    val roleDescription = RoleDetailsSummary.rowRoleDescription(application.whatIsYourRoleResponse)
 
     val agentDetails =
       if (isAgentForTrader(application)) {

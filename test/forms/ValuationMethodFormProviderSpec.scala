@@ -16,10 +16,9 @@
 
 package forms
 
-import play.api.data.FormError
-
 import forms.behaviours.OptionFieldBehaviours
 import models.ValuationMethod
+import play.api.data.FormError
 
 class ValuationMethodFormProviderSpec extends OptionFieldBehaviours {
 

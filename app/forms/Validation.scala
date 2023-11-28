@@ -25,15 +25,4 @@ object Validation {
   val simpleCharactersInputPattern: Regex = "[A-Za-zÀ-ÖØ-öø-ÿĀ-ňŊ-ſ'’ -]+".r.anchored
   val emailPattern: Regex                 = """^\S+@\S+$""".r
 
-  def phoneFormat(phoneNumber: String): Boolean = {
-    val number             = phoneNumber
-      .replace("+", "")
-      .replace(" ", "")
-      .replace("-", "")
-    val containsOnlyDigits = number.forall(_.isDigit)
-    val isShortEnough      = number.length <= phoneNumberMaxLength
-    val isNotEmpty         = number.nonEmpty
-    containsOnlyDigits && isShortEnough && isNotEmpty
-  }
-
 }

@@ -59,6 +59,7 @@ class EORIBeUpToDateControllerSpec extends SpecBase with ModelGenerators {
     when(mockUserAnswersService.get(any())(any())) thenReturn Future.successful(
       Some(userAnswersAsIndividualTrader)
     )
+    ()
   }
 
   private def setUpUserRoleProviderMock() = {

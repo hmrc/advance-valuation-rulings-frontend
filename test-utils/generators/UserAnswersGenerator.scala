@@ -16,13 +16,12 @@
 
 package generators
 
-import play.api.libs.json.{JsValue, Json}
-
 import models.UserAnswers
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.TryValues
 import pages._
+import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersGenerator extends TryValues {
   self: Generators =>

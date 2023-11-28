@@ -26,7 +26,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.freespec.AnyFreeSpec
-import pages.UploadSupportingDocumentPage
+import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import queries.AllDocuments
@@ -120,7 +120,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
       actualAnswers.get(UploadSupportingDocumentPage).value mustEqual UploadedFile.Initiated(
         "reference"
       )
-      actualAnswers.get(AllDocuments) mustEqual None
+      actualAnswers.get(AllDocuments) must be(None)
     }
 
     "fail when there are no user answers for that draft" in {
@@ -188,7 +188,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
         val updatedFile = uploadedFile.copy(downloadUrl = "drafts/DRAFT000000000/foobar")
 
         val expectedAnswers = userAnswers
-          .set(UploadSupportingDocumentPage, updatedFile)
+          .set(UploadLetterOfAuthorityPage, updatedFile)
           .success
           .value
 
@@ -198,7 +198,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
-        service.update(DraftId(0), uploadedFile, isLetterOfAuthority = false).futureValue
+        service.update(DraftId(0), uploadedFile, isLetterOfAuthority = true).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
