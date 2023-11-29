@@ -30,7 +30,6 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
   private implicit val m: Messages = stubMessages()
   private val goods                =
     GoodsDetails(
-      "name",
       "description",
       Some("commodity code"),
       Some("legal proceedings"),
@@ -55,7 +54,6 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
     "must contain only description when optional values are missing" in {
 
       val goods = GoodsDetails(
-        "name",
         "description",
         None,
         None,
@@ -67,7 +65,7 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
       GoodsDetailsSummary.rows(goods, Nil) must contain theSameElementsInOrderAs Seq(
         SummaryListRow(
           Key(Text(m("descriptionOfGoods.checkYourAnswersLabel"))),
-          Value(Text(goods.goodsName))
+          Value(Text(goods.goodsDescription))
         ),
         SummaryListRow(
           Key(Text(m("haveYouReceivedADecision.checkYourAnswersLabel"))),
@@ -102,7 +100,7 @@ class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
       GoodsDetailsSummary.rows(goods, attachments) must contain theSameElementsInOrderAs Seq(
         SummaryListRow(
           Key(Text(m("descriptionOfGoods.checkYourAnswersLabel"))),
-          Value(Text(goods.goodsName))
+          Value(Text(goods.goodsDescription))
         ),
         SummaryListRow(
           Key(Text(m("haveYouReceivedADecision.checkYourAnswersLabel"))),

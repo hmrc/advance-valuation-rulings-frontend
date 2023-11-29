@@ -23,7 +23,7 @@ import java.time.Instant
 
 final case class DraftSummary(
   id: DraftId,
-  goodsName: Option[String],
+  goodsDescription: Option[String],
   lastUpdated: Instant,
   eoriNumber: Option[String]
 )

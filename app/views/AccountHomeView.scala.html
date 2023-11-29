@@ -36,7 +36,7 @@
 
 @theRows = @{for(app <- applications) yield Seq(
                     TableRow(content = Text(app.id), format = Some("text")),
-                    TableRow(content = Text(if (app.goodsName.trim.isEmpty) messages("accountHome.noDescription") else app.goodsName), format = Some("text")),
+                    TableRow(content = Text(if (app.goodsDescription.trim.isEmpty) messages("accountHome.noDescription") else app.goodsDescription), format = Some("text")),
                     TableRow(content = Text(
                         app.dateString(messages.lang)
                     ), format = Some("text")),
@@ -63,7 +63,7 @@
                         content = Text(messages("accountHome.reference"))
                     ),
                     HeadCell(
-                        content = Text(messages("accountHome.goodsName"))
+                        content = Text(messages("accountHome.goodsDescription"))
                     ),
                     HeadCell(
                         content = Text(messages("accountHome.date"))

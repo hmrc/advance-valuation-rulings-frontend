@@ -51,9 +51,11 @@ object AttachmentRequest {
                 name = uploadDetails.fileName,
                 description = None,
                 url = downloadUrl,
-                privacy =
-                  if (isConfidential) Privacy.Confidential
-                  else Privacy.Public,
+                privacy = if (isConfidential) {
+                  Privacy.Confidential
+                } else {
+                  Privacy.Public
+                },
                 mimeType = uploadDetails.fileMimeType,
                 size = uploadDetails.size
               )

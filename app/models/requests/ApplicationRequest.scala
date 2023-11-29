@@ -26,7 +26,6 @@ import pages._
 import play.api.libs.json._
 
 case class GoodsDetails(
-  goodsName: String,
   goodsDescription: String,
   envisagedCommodityCode: Option[String],
   knownLegalProceedings: Option[String],
@@ -69,7 +68,6 @@ object GoodsDetails {
 
     goodsDescription.map(description =>
       GoodsDetails(
-        goodsName = description,
         goodsDescription = description,
         envisagedCommodityCode = envisagedCommodityCode,
         knownLegalProceedings = knownLegalProceedings,

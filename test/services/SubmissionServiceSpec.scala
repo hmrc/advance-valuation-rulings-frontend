@@ -52,7 +52,7 @@ class SubmissionServiceSpec extends SpecBase {
     agent = None,
     contact = ContactDetails("name", "email", None, None, None),
     requestedMethod = MethodOne(None, None, None),
-    goodsDetails = GoodsDetails("name", "description", None, None, None, None, None),
+    goodsDetails = GoodsDetails("description", None, None, None, None, None),
     attachments = Nil,
     whatIsYourRole = WhatIsYourRole.EmployeeOrg,
     letterOfAuthority = None

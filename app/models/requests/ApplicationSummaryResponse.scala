@@ -36,7 +36,7 @@ object ApplicationSummaryResponse {
 
 final case class ApplicationSummary(
   id: ApplicationId,
-  goodsName: String,
+  goodsDescription: String,
   dateSubmitted: Instant,
   eoriNumber: String
 )

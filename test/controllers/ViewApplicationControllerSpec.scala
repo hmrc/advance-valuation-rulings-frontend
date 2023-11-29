@@ -110,7 +110,6 @@ object ViewApplicationControllerSpec extends Generators {
   )
 
   val goodsDetails: GoodsDetails = GoodsDetails(
-    goodsName = randomString,
     goodsDescription = randomString,
     envisagedCommodityCode = Some(randomString),
     knownLegalProceedings = Some(randomString),
