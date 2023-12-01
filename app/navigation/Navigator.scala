@@ -490,7 +490,9 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
         if (value) {
           userRoleProvider.getUserRole(userAnswers).getContactDetailsJourney(userAnswers.draftId)
 
-        } else EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
+        } else {
+          EORIBeUpToDateController.onPageLoad(userAnswers.draftId)
+        }
     }
 
   private def applicationContactDetailsPage(userAnswers: UserAnswers): Call =

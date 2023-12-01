@@ -50,7 +50,6 @@ class GoodsDetailsSpec extends SpecBase with ScalaCheckPropertyChecks with Appli
 
       result mustBe Valid(
         GoodsDetails(
-          goodsName = randomString,
           goodsDescription = randomString,
           envisagedCommodityCode = Some(randomString),
           knownLegalProceedings = Some(randomString),

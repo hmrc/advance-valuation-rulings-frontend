@@ -108,7 +108,7 @@ class ApplicationViewModelSpec extends SpecBase {
         result.details.rows mustBe Seq(
           SummaryListRow(
             Key(Text("descriptionOfGoods.checkYourAnswersLabel")),
-            Value(Text(goodsDetails.goodsName))
+            Value(Text(goodsDetails.goodsDescription))
           ),
           SummaryListRow(
             Key(Text("haveYouReceivedADecision.checkYourAnswersLabel")),
@@ -394,7 +394,6 @@ object ApplicationViewModelSpec extends Generators {
   )
 
   val goodsDetails: GoodsDetails = GoodsDetails(
-    goodsName = "goods name",
     goodsDescription = "goods description",
     envisagedCommodityCode = Some("commodity code"),
     knownLegalProceedings = Some("legal"),

@@ -50,7 +50,7 @@ object GoodsDetailsSummary {
     val descriptionRow = Some(
       SummaryListRowViewModel(
         key = "descriptionOfGoods.checkYourAnswersLabel",
-        value = ValueViewModel(goodsDetails.goodsName)
+        value = ValueViewModel(goodsDetails.goodsDescription)
       )
     )
 
@@ -141,9 +141,11 @@ object GoodsDetailsSummary {
 
     val attachmentRowContent = attachments
       .map(file =>
-        s"${file.name} ${if (file.privacy == Confidential)
+        s"${file.name} ${if (file.privacy == Confidential) {
           s"<strong>- ${messages("uploadAnotherSupportingDocument.keepConfidential")}</strong>"
-        else ""}"
+        } else {
+          ""
+        }}"
       )
       .mkString("<br/>")
 

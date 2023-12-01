@@ -29,7 +29,7 @@ import java.util.Locale
 
 final case class ApplicationForAccountHome(
   id: String,
-  goodsName: String,
+  goodsDescription: String,
   date: Instant,
   statusTag: Tag,
   actions: Seq[ActionItem]
@@ -60,7 +60,7 @@ object ApplicationForAccountHome {
   ): ApplicationForAccountHome =
     ApplicationForAccountHome(
       id = applicationSummary.id.toString,
-      goodsName = applicationSummary.goodsName,
+      goodsDescription = applicationSummary.goodsDescription,
       date = applicationSummary.dateSubmitted,
       statusTag = Tag(content = Text(messages("accountHome.status.submitted")), classes = "govuk-tag--blue"),
       actions = Seq(
@@ -76,7 +76,7 @@ object ApplicationForAccountHome {
   ): ApplicationForAccountHome =
     ApplicationForAccountHome(
       id = draftSummary.id.toString,
-      goodsName = draftSummary.goodsName.getOrElse(""),
+      goodsDescription = draftSummary.goodsDescription.getOrElse(""),
       date = draftSummary.lastUpdated,
       statusTag = Tag(content = Text(messages("accountHome.status.draft")), classes = "govuk-tag--yellow"),
       actions = Seq(

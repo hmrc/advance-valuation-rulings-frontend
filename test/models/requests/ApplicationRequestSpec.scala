@@ -25,7 +25,7 @@ import models._
 import org.mockito.MockitoSugar.{mock, when}
 import org.scalacheck.Arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.{ApplicationContactDetailsPage, _}
+import pages._
 import play.api.libs.json.{JsResult, JsSuccess, Json}
 
 import scala.util.Try
@@ -105,7 +105,6 @@ class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with
   )
 
   val goodsDetails: GoodsDetails = GoodsDetails(
-    goodsName = goodsDescription,
     goodsDescription = goodsDescription,
     envisagedCommodityCode = Some(goodsCommodityCode),
     knownLegalProceedings = Some(goodsLegalProceedings),
@@ -115,7 +114,6 @@ class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with
   )
 
   val goodsDetailsNoDetails: GoodsDetails = GoodsDetails(
-    goodsName = goodsDescription,
     goodsDescription = goodsDescription,
     envisagedCommodityCode = None,
     knownLegalProceedings = None,
@@ -149,7 +147,6 @@ class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with
        |  "type" : "MethodThree"
        |},
        |"goodsDetails": {
-       |  "goodsName": "$goodsDescription",
        |  "goodsDescription": "$goodsDescription",
        |  "envisagedCommodityCode": "$goodsCommodityCode",
        |  "knownLegalProceedings": "$goodsLegalProceedings",
@@ -194,7 +191,6 @@ class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with
        |  "type" : "MethodThree"
        |},
        |"goodsDetails": {
-       |  "goodsName": "$goodsDescription",
        |  "goodsDescription": "$goodsDescription",
        |  "envisagedCommodityCode": "$goodsCommodityCode",
        |  "knownLegalProceedings": "$goodsLegalProceedings",

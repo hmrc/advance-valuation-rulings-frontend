@@ -41,22 +41,31 @@ object MethodOne {
     val betweenParties: ValidatedNel[Page, Option[String]] = userAnswers
       .validated(IsSaleBetweenRelatedPartiesPage)
       .andThen(answer =>
-        if (answer) userAnswers.validated(ExplainHowPartiesAreRelatedPage).map(_.some)
-        else None.validNel
+        if (answer) {
+          userAnswers.validated(ExplainHowPartiesAreRelatedPage).map(_.some)
+        } else {
+          None.validNel
+        }
       )
 
     val restrictions = userAnswers
       .validated(AreThereRestrictionsOnTheGoodsPage)
       .andThen(answer =>
-        if (answer) userAnswers.validated(DescribeTheRestrictionsPage).map(_.some)
-        else None.validNel
+        if (answer) {
+          userAnswers.validated(DescribeTheRestrictionsPage).map(_.some)
+        } else {
+          None.validNel
+        }
       )
 
     val subjectToConditions = userAnswers
       .validated(IsTheSaleSubjectToConditionsPage)
       .andThen(answer =>
-        if (answer) userAnswers.validated(DescribeTheConditionsPage).map(_.some)
-        else None.validNel
+        if (answer) {
+          userAnswers.validated(DescribeTheConditionsPage).map(_.some)
+        } else {
+          None.validNel
+        }
       )
 
     saleInvolved.andThen(_ => (betweenParties, restrictions, subjectToConditions).mapN(MethodOne.apply))
