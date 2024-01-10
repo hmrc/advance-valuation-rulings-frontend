@@ -24,7 +24,7 @@ trait ViewBehaviours extends ViewSpecBase {
   val expectTimeoutDialog: Boolean = true
 
   protected def normalPage(
-    view: () => HtmlFormat.Appendable,
+    view: HtmlFormat.Appendable,
     messageKeyPrefix: String,
     messageKeySuffix: String,
     messageHeadingArgs: Any*
@@ -36,33 +36,46 @@ trait ViewBehaviours extends ViewSpecBase {
 
       "rendered" - {
         "have the correct banner title" in {
-          val doc         = asDocument(view())
+          val doc         = asDocument(view)
           val bannerTitle = doc.getElementsByClass("hmrc-header__service-name")
           bannerTitle.text mustBe messages(applicationBuilder().build())("service.name")
         }
 
         "display the correct browser title" in {
-          val doc = asDocument(view())
+          val doc = asDocument(view)
           assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix")
         }
 
         "display the correct page title" in {
-          val doc = asDocument(view())
+          val doc = asDocument(view)
           assertPageTitleEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
         }
 
         "display the correct guidance" in {
-          val doc = asDocument(view())
+          val doc = asDocument(view)
           for (key <- expectedGuidanceKeys)
             assertContainsText(doc, messages(applicationBuilder().build())(s"$messageKeyPrefix.$key"))
         }
+
         "contain a timeout dialog" in {
-          val timeoutElm = asDocument(view()).select("meta[name=\"hmrc-timeout-dialog\"]")
+          val timeoutElm = asDocument(view).select("meta[name=\"hmrc-timeout-dialog\"]")
           if (expectTimeoutDialog) {
             assert(timeoutElm.size == 1)
           } else {
             assert(timeoutElm.size == 0)
           }
+        }
+      }
+    }
+
+  def pageWithExpectedMessages(view: HtmlFormat.Appendable, checks: Seq[(String, String)]): Unit =
+    checks.foreach { case (cssSelector, message) =>
+      s"element with cssSelector '$cssSelector'" - {
+
+        s"have message '$message'" in {
+          val doc  = asDocument(view)
+          val elem = doc.select(cssSelector)
+          elem.first.text() mustBe message
         }
       }
     }

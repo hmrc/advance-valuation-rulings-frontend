@@ -29,25 +29,27 @@ class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours {
   val view: AgentForOrgEORIBeUpToDateView =
     app.injector.instanceOf[AgentForOrgEORIBeUpToDateView]
 
-  val viewViaApply: () => HtmlFormat.Appendable  =
-    () => view(DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: () => HtmlFormat.Appendable =
-    () => view.render(DraftId(1L), fakeRequest, messages)
-  val viewViaF: () => HtmlFormat.Appendable      =
-    () => view.f(DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  =
+    view(DraftId(1L))(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable =
+    view.render(DraftId(1L), fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      =
+    view.f(DraftId(1L))(fakeRequest, messages)
 
   "AcceptItemInformationList view" - {
-    def test(method: String, view: () => HtmlFormat.Appendable): Unit =
+    def test(method: String, view: HtmlFormat.Appendable): Unit =
       s"$method" - {
         behave like normalPage(view, messageKeyPrefix, messageKeySuffix)()
       }
 
-    val input: Seq[(String, () => HtmlFormat.Appendable)] = Seq(
+    val input: Seq[(String, HtmlFormat.Appendable)] = Seq(
       (".apply", viewViaApply),
       (".render", viewViaRender),
       (".f", viewViaF)
     )
 
-    input.foreach(args => (test _).tupled(args))
+    input.foreach { case (method, view) =>
+      test(method, view)
+    }
   }
 }
