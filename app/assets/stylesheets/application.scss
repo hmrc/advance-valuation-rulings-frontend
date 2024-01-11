@@ -1,10 +1,10 @@
 @import 'partials/_view_application';
 
 .js-visible {
-  display: none !important;
+    display: none !important;
 }
 .js-enabled .js-visible {
-  display: inline-block !important;
+    display: inline-block !important;
 }
 
 .wrappable {
@@ -12,6 +12,9 @@
     word-break: break-word;
 }
 
+.responsive-table-wrapper {
+    overflow: auto;
+}
 
 @media(min-width: 40.0625em) {
     .segmented-commodity-code span {

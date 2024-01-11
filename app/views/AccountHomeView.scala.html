@@ -31,9 +31,6 @@
 
 @(applications: Seq[ApplicationForAccountHome])(implicit request: Request[_], messages: Messages)
 
-
-
-
 @theRows = @{for(app <- applications) yield Seq(
                     TableRow(content = Text(app.id), format = Some("text")),
                     TableRow(content = Text(if (app.goodsDescription.trim.isEmpty) messages("accountHome.noDescription") else app.goodsDescription), format = Some("text")),
@@ -52,6 +49,7 @@
                         }.mkString("")
                     })
                 )}
+
 @appsTable = @{
 
     table(
@@ -87,12 +85,19 @@
 
     <h1 class="govuk-heading-l">@messages("accountHome.heading")</h1>
 
-    @{if(applications.isEmpty) para(Html(messages("accountHome.para"))) }
+    @if(applications.isEmpty) {
+        @para(Html(messages("accountHome.para")))
+    }
 
     @formHelper(action = routes.AccountHomeController.startApplication()) {
         @govukButton(
              ButtonViewModel(messages("accountHome.button.text"))
         )
     }
-    @{if(applications.nonEmpty) appsTable }
+
+    @if(applications.nonEmpty) {
+        <div class="responsive-table-wrapper">
+            @appsTable
+        </div>
+    }
 }
