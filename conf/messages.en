@@ -1066,8 +1066,8 @@ haveYouReceivedADecision.legend = Have you ever received a ruling based on a sim
 haveYouReceivedADecision.checkYourAnswersLabel = Have you ever received a ruling based on a similar method?
 haveYouReceivedADecision.change.hidden = whether you have ever received a ruling based on a similar method
 
-tellUsAboutYourRuling.title = Can you provide more information about the previous ruling?
-tellUsAboutYourRuling.heading = Can you provide more information about the previous ruling?
+tellUsAboutYourRuling.title = About the previous ruling
+tellUsAboutYourRuling.heading = About the previous ruling
 tellUsAboutYourRuling.para = Examples of information can include:
 tellUsAboutYourRuling.bulletPoint.1 = ruling reference numbers - this can be found on ruling decision letters from HMRC
 tellUsAboutYourRuling.bulletPoint.2 = if the ruling has been cancelled or annulled - you will need to tell us why
