@@ -32,8 +32,7 @@
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.TellUsAboutYourRulingController.onSubmit(NormalMode, draftId)
-}
+@onSubmitAction(saveDraft: Boolean = true) = @{ routes.TellUsAboutYourRulingController.onSubmit(NormalMode, draftId) }
 
 @content = {
             @paragraph(Html(messages("tellUsAboutYourRuling.para")))
@@ -45,9 +44,10 @@
                     Html(messages("tellUsAboutYourRuling.bulletPoint.4"))
                 ),
             "govuk-list govuk-list--bullet",
-            )}
+            )
+}
 
-@layout(pageTitle = title(form, messages("tellUsAboutYourRuling.heading")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("tellUsAboutYourRuling.title")), draftId = Some(draftId)) {
 
     @formHelper(action = onSubmitAction(saveDraft = false)) {
 
@@ -56,9 +56,8 @@
         }
 
         @caption(messages("caption.goods"))
-        @heading(messages("tellUsAboutYourRuling.heading"))
 
-        <br></br>
+        @heading(messages("tellUsAboutYourRuling.heading"))
 
         @content
 

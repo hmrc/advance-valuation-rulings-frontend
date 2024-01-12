@@ -39,25 +39,27 @@ class AgentForOrgCheckYourAnswersViewSpec extends ViewBehaviours {
   val view: AgentForOrgCheckYourAnswersView =
     app.injector.instanceOf[AgentForOrgCheckYourAnswersView]
 
-  val viewViaApply: () => HtmlFormat.Appendable  =
-    () => view(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: () => HtmlFormat.Appendable =
-    () => view.render(testApplicationSummary, DraftId(1L), fakeRequest, messages)
-  val viewViaF: () => HtmlFormat.Appendable      =
-    () => view.f(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  =
+    view(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable =
+    view.render(testApplicationSummary, DraftId(1L), fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      =
+    view.f(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
 
   "AcceptItemInformationList view" - {
-    def test(method: String, view: () => HtmlFormat.Appendable): Unit =
+    def test(method: String, view: HtmlFormat.Appendable): Unit =
       s"$method" - {
         behave like normalPage(view, messageKeyPrefix, "")()
       }
 
-    val input: Seq[(String, () => HtmlFormat.Appendable)] = Seq(
+    val input: Seq[(String, HtmlFormat.Appendable)] = Seq(
       (".apply", viewViaApply),
       (".render", viewViaRender),
       (".f", viewViaF)
     )
 
-    input.foreach(args => (test _).tupled(args))
+    input.foreach { case (method, view) =>
+      test(method, view)
+    }
   }
 }
