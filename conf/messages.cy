@@ -1078,9 +1078,9 @@ tellUsAboutYourRuling.bulletPoint.1 = cyfeirnodau dyfarniadau – gallwch ddod o
 tellUsAboutYourRuling.bulletPoint.2 = os yw’r dyfarniad wedi cael ei ganslo neu ei ddiddymu – bydd angen i chi esbonio pam
 tellUsAboutYourRuling.bulletPoint.3 = y dyddiad y cafodd y dyfarniad ei roi
 tellUsAboutYourRuling.bulletPoint.4 = dyddiad dod i ben ar gyfer y dyfarniad
-tellUsAboutYourRuling.error.required = Rhowch wybod i ni am ddyfarniadau ar gyfer nwyddau tebyg
+tellUsAboutYourRuling.error.required = Nodwch wybodaeth am y dyfarniad blaenorol
 tellUsAboutYourRuling.label = A allwch roi rhagor o wybodaeth am y dyfarniad blaenorol?
-tellUsAboutYourRuling.checkYourAnswersLabel = Nodwch wybodaeth am y dyfarniad blaenorol
+tellUsAboutYourRuling.checkYourAnswersLabel = Ynghylch y dyfarniad blaenorol
 tellUsAboutYourRuling.change.hidden = yr wybodaeth a gyflwynwyd gennych am y dyfarniad
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
