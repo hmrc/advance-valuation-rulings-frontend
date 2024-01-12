@@ -1071,8 +1071,8 @@ haveYouReceivedADecision.legend = A ydych erioed wedi cael dyfarniad ar sail dul
 haveYouReceivedADecision.checkYourAnswersLabel = A ydych erioed wedi cael dyfarniad ar sail dull tebyg?
 haveYouReceivedADecision.change.hidden = p’un a ydych wedi cael dyfarniad yn seiliedig ar ddull tebyg
 
-tellUsAboutYourRuling.title = Ynghylch y dyfarniad blaenorol
-tellUsAboutYourRuling.heading = Ynghylch y dyfarniad blaenorol
+tellUsAboutYourRuling.title = A allwch roi rhagor o wybodaeth am y dyfarniad blaenorol?
+tellUsAboutYourRuling.heading = A allwch roi rhagor o wybodaeth am y dyfarniad blaenorol?
 tellUsAboutYourRuling.para = Gall enghreifftiau o wybodaeth gynnwys:
 tellUsAboutYourRuling.bulletPoint.1 = cyfeirnodau dyfarniadau – gallwch ddod o hyd i’r rhain ar y llythyrau penderfyniad dyfarnu gan CThEF
 tellUsAboutYourRuling.bulletPoint.2 = os yw’r dyfarniad wedi cael ei ganslo neu ei ddiddymu – bydd angen i chi esbonio pam
