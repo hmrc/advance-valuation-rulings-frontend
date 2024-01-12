@@ -65,6 +65,7 @@ class TellUsAboutYourRulingViewSpec extends ViewBehaviours {
 
       val expectedContent =
         Seq(
+          Selectors.h1           -> "Can you provide more information about the previous ruling?",
           Selectors.p(1)         -> "Examples of information can include:",
           Selectors.bullet(1)    -> "ruling reference numbers - this can be found on ruling decision letters from HMRC",
           Selectors.bullet(2)    -> "if the ruling has been cancelled or annulled - you will need to tell us why",

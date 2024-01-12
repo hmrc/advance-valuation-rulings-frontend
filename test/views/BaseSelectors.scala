@@ -18,6 +18,7 @@ package views
 
 trait BaseSelectors {
 
+  val h1                    = "h1"
   val p: Int => String      = i => s"main p:nth-of-type($i)"
   val bullet: Int => String = i => s"main ul.govuk-list.govuk-list--bullet li:nth-of-type($i)"
 }
