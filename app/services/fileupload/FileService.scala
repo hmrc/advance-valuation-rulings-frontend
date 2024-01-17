@@ -16,12 +16,11 @@
 
 package services.fileupload
 
-import config.Service
+import config.FrontendAppConfig
 import connectors.UpscanConnector
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import models.{Done, DraftId, UploadedFile, UserAnswers}
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
-import play.api.Configuration
 import queries.AllDocuments
 import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
@@ -37,18 +36,17 @@ import scala.util.control.NoStackTrace
 
 @Singleton
 class FileService @Inject() (
-  configuration: Configuration,
+  frontendAppConfig: FrontendAppConfig,
   upscanConnector: UpscanConnector,
   userAnswersService: UserAnswersService,
   objectStoreClient: PlayObjectStoreClient,
   objectStoreConfig: ObjectStoreClientConfig
 )(implicit ec: ExecutionContext) {
 
-  private val host: String            = configuration.get[String]("host")
-  private val callbackBaseUrl: String =
-    configuration.get[Service]("microservice.services.advance-valuation-rulings-frontend")
-  private val minimumFileSize: Long   = configuration.underlying.getBytes("upscan.minFileSize")
-  private val maximumFileSize: Long   = configuration.underlying.getBytes("upscan.maxFileSize")
+  private val host: String            = frontendAppConfig.host
+  private val callbackBaseUrl: String = frontendAppConfig.callbackBaseUrl
+  private val minimumFileSize: Long   = frontendAppConfig.minimumFileSize
+  private val maximumFileSize: Long   = frontendAppConfig.maxFileSize
 
   def initiate(draftId: DraftId, redirectPath: String, isLetterOfAuthority: Boolean)(implicit
     hc: HeaderCarrier

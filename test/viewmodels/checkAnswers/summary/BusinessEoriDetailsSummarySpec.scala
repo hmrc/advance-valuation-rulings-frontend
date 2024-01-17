@@ -25,18 +25,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 
 class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
 
-  private val registeredDetails: TraderDetailsWithCountryCode = TraderDetailsWithCountryCode(
-    EORINo = EoriNumber,
-    consentToDisclosureOfPersonalData = true,
-    CDSFullName = RegisteredName,
-    CDSEstablishmentAddress = CDSEstablishmentAddress(
-      streetAndNumber = StreetAndNumber,
-      city = City,
-      countryCode = countryCode,
-      postalCode = Some(Postcode)
-    ),
-    contactInformation = None
-  )
+  private val registeredDetails: TraderDetailsWithCountryCode =
+    TraderDetailsWithCountryCode(
+      EORINo = EoriNumber,
+      consentToDisclosureOfPersonalData = true,
+      CDSFullName = RegisteredName,
+      CDSEstablishmentAddress = CDSEstablishmentAddress(
+        streetAndNumber = StreetAndNumber,
+        city = City,
+        countryCode = countryCode,
+        postalCode = Some(Postcode)
+      ),
+      contactInformation = None
+    )
 
   "IndividualEoriDetailsSummary" - {
     implicit val m: Messages = play.api.test.Helpers.stubMessages()

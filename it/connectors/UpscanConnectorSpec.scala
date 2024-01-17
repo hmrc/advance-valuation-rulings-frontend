@@ -36,12 +36,13 @@ class UpscanConnectorSpec
     resetWireMock()
   }
 
-  private lazy val app = GuiceApplicationBuilder()
-    .configure(
-      "appName"                                    -> "app",
-      "microservice.services.upscan-initiate.port" -> wireMockServer.port()
-    )
-    .build()
+  private lazy val app =
+    GuiceApplicationBuilder()
+      .configure(
+        "appName"                                    -> "app",
+        "microservice.services.upscan-initiate.port" -> wireMockServer.port()
+      )
+      .build()
 
   private lazy val connector = app.injector.instanceOf[UpscanConnector]
 

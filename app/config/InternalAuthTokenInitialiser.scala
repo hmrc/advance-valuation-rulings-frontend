@@ -17,16 +17,16 @@
 package config
 
 import models.Done
-
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.concurrent.duration.DurationInt
-import play.api.{Configuration, Logging}
+import play.api.Logging
 import play.api.http.Status.{CREATED, OK}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 abstract class InternalAuthTokenInitialiser {
   val initialised: Future[Done]
@@ -39,20 +39,11 @@ class NoOpInternalAuthTokenInitialiser @Inject() () extends InternalAuthTokenIni
 
 @Singleton
 class InternalAuthTokenInitialiserImpl @Inject() (
-  configuration: Configuration,
+  config: FrontendAppConfig,
   httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
     extends InternalAuthTokenInitialiser
     with Logging {
-
-  private val internalAuthService: Service =
-    configuration.get[Service]("microservice.services.internal-auth")
-
-  private val authToken: String =
-    configuration.get[String]("internal-auth.token")
-
-  private val appName: String =
-    configuration.get[String]("appName")
 
   override val initialised: Future[Done] =
     ensureAuthToken()
@@ -72,11 +63,11 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private def createClientAuthToken(): Future[Done] = {
     logger.info("[InternalAuthTokenInitialiser][createClientAuthToken] Initialising auth token")
     httpClient
-      .post(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
+      .post(url"${config.internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
       .withBody(
         Json.obj(
-          "token"       -> authToken,
-          "principal"   -> appName,
+          "token"       -> config.internalAuthToken,
+          "principal"   -> config.appName,
           "permissions" -> Seq(
             Json.obj(
               "resourceType"     -> "object-store",
@@ -110,8 +101,8 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private def authTokenIsValid: Future[Boolean] = {
     logger.info("[InternalAuthTokenInitialiser][authTokenIsValid] Checking auth token")
     httpClient
-      .get(url"${internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
-      .setHeader("Authorization" -> authToken)
+      .get(url"${config.internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
+      .setHeader("Authorization" -> config.internalAuthToken)
       .execute
       .map(_.status == OK)
   }
