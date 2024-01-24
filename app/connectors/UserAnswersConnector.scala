@@ -19,7 +19,6 @@ package connectors
 import config.FrontendAppConfig
 import models.requests.DraftSummaryResponse
 import models.{Done, DraftId, UserAnswers}
-import play.api.Configuration
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
@@ -29,14 +28,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UserAnswersConnector @Inject() (
   config: FrontendAppConfig,
-  configuration: Configuration,
   httpClient: HttpClientV2
 )(implicit
   ec: ExecutionContext
 ) {
 
-  private val backendUrl        = config.advanceValuationRulingsBackendURL
-  private val internalAuthToken = configuration.get[String]("internal-auth.token")
+  private val backendUrl = config.advanceValuationRulingsBackendURL
 
   def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
@@ -48,7 +45,7 @@ class UserAnswersConnector @Inject() (
   def setInternal(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(url"$backendUrl/internal/user-answers")
-      .setHeader("Authorization" -> internalAuthToken)
+      .setHeader("Authorization" -> config.internalAuthToken)
       .withBody(Json.toJson(answers))
       .execute[HttpResponse]
       .map(_ => Done)
@@ -61,7 +58,7 @@ class UserAnswersConnector @Inject() (
   def getInternal(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
     httpClient
       .get(url"$backendUrl/internal/user-answers/${draftId.toString}")
-      .setHeader("Authorization" -> internalAuthToken)
+      .setHeader("Authorization" -> config.internalAuthToken)
       .execute[Option[UserAnswers]]
 
   def clear(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =

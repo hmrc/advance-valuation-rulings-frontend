@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import models.requests.{DraftSummary, DraftSummaryResponse}
 import models.{DraftId, UserAnswers}
 import org.scalatest.OptionValues
-import play.api.Configuration
 import play.api.libs.json.Json
 import utils.{BaseIntegrationSpec, WireMockHelper}
 
@@ -27,11 +26,7 @@ class UserAnswersConnectorSpec extends BaseIntegrationSpec with WireMockHelper w
     resetWireMock()
   }
 
-  private val configuration = Configuration(
-    "internal-auth.token" -> "authToken"
-  )
-
-  private val connector = new UserAnswersConnector(appConfig, configuration, httpClient)
+  private val connector = new UserAnswersConnector(appConfig, httpClient)
 
   private val draftId = DraftId(0)
   private val answers = UserAnswers(

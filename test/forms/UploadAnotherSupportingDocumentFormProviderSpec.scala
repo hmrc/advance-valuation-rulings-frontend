@@ -16,9 +16,10 @@
 
 package forms
 
+import config.FrontendAppConfig
 import forms.behaviours.BooleanFieldBehaviours
 import models.{DraftAttachment, UploadedFile}
-import play.api.Configuration
+import org.mockito.MockitoSugar.{mock, when}
 import play.api.data.FormError
 
 import java.time.Instant
@@ -28,11 +29,12 @@ class UploadAnotherSupportingDocumentFormProviderSpec extends BooleanFieldBehavi
   private val requiredKey = "uploadAnotherSupportingDocument.error.required"
   private val invalidKey  = "error.boolean"
 
-  private val configuration = Configuration(
-    "upscan.maxFiles" -> 1
-  )
+  private val mockFrontendAppConfig = mock[FrontendAppConfig]
 
-  val formProvider = new UploadAnotherSupportingDocumentFormProvider(configuration)
+  when(mockFrontendAppConfig.maxFiles)
+    .thenReturn(1)
+
+  val formProvider = new UploadAnotherSupportingDocumentFormProvider(mockFrontendAppConfig)
 
   ".value" - {
 

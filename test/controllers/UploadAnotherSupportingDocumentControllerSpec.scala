@@ -17,11 +17,12 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.{FakeNavigator, Navigator}
+import org.mockito.MockitoSugar.{mock, when}
 import pages.UploadLetterOfAuthorityPage
-import play.api.Configuration
 import play.api.inject.bind
 import play.api.mvc.Result
 import play.api.test.FakeRequest
@@ -34,10 +35,14 @@ import scala.concurrent.Future
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase {
 
-  private val formProvider = new UploadAnotherSupportingDocumentFormProvider(
-    Configuration("upscan.maxFiles" -> 5)
-  )
-  private val form         = formProvider(Seq.empty)
+  private val mockFrontendAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+
+  when(mockFrontendAppConfig.maxFiles)
+    .thenReturn(5)
+
+  val formProvider = new UploadAnotherSupportingDocumentFormProvider(mockFrontendAppConfig)
+
+  private val form = formProvider(Seq.empty)
 
   private lazy val uploadAnotherSupportingDocumentRoute =
     routes.UploadAnotherSupportingDocumentController.onPageLoad(NormalMode, draftId).url

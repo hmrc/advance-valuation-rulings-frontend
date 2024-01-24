@@ -38,10 +38,18 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${URLEncoder.encode(host + request.uri, "UTF-8")}"
 
+  val internalAuthToken = configuration.get[String]("internal-auth.token")
+
+  val internalAuthService: Service =
+    configuration.get[Service]("microservice.services.internal-auth")
+
+  val upscanInitiateService: Service = configuration.get[Service]("microservice.services.upscan-initiate")
+
+  val callbackBaseUrl: String = configuration.get[Service]("microservice.services.advance-valuation-rulings-frontend")
+
   val loginUrl: String             = configuration.get[String]("urls.login")
   val loginContinueUrl: String     = configuration.get[String]("urls.loginContinue")
   val signOutUrl: String           = configuration.get[String]("urls.signOut")
-  val searchUrl: String            = configuration.get[String]("urls.search")
   val findCommodityCodeUrl: String = configuration.get[String]("urls.findCommodityCode")
   val contactEmail: String         = configuration.get[String]("urls.contactAddress")
 
@@ -52,20 +60,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val generalInformationUrl: String  = configuration.get[String]("urls.generalInformation")
   val helpAndSupportUrl: String      = configuration.get[String]("urls.helpAndSupport")
 
-  val importingGoodsGuideUrl: String     = configuration.get[String]("urls.importingGoodsGuide")
-  val importedGoodsValueGuideUrl: String = configuration.get[String]("urls.importedGoodsValueGuide")
-  val applyForATRGuideUrl: String        = configuration.get[String]("urls.applyForATRGuide")
-  val overviewForMethodsUrl: String      = configuration.get[String]("urls.overviewForMethods")
-  val createAuthTokenOnStart: Boolean    =
-    configuration.get[Boolean]("create-internal-auth-token-on-start")
+  val overviewForMethodsUrl: String = configuration.get[String]("urls.overviewForMethods")
 
-  val arsSubscribeUrl: String = configuration
-    .get[Service]("microservice.services.eoriCommonComponent")
-    .baseUrl + "/customs-enrolment-services/ars/subscribe"
-
-  val tribunalAppealLink: String           = configuration.get[String]("urls.tribunalAppeal")
-  val tradeSanctionsInformationUrl: String =
-    configuration.get[String]("urls.tradeSanctionsInformation")
+  val arsSubscribeUrl: String =
+    configuration.get[String]("eori-common-component.host") + "/customs-enrolment-services/ars/subscribe"
 
   val fillInAnEnquiryFormUrl: String      = configuration.get[String]("urls.fillInAnEnquiryForm")
   val importAndExportEnquiriesUrl: String =
@@ -77,28 +75,23 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val advanceValuationRulingServiceEmailUrl: String =
     configuration.get[String]("urls.advanceValuationRulingServiceEmail")
 
-  private val exitSurveyBaseUrl: String =
-    configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
-  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
+  private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
 
-  def languageMap: Map[String, Lang] = Map(
-    "en" -> Lang("en"),
-    "cy" -> Lang("cy")
-  )
+  val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
+
+  def languageMap: Map[String, Lang] =
+    Map(
+      "en" -> Lang("en"),
+      "cy" -> Lang("cy")
+    )
 
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-
-  val maximumFileSizeBytes: Long = configuration.underlying.getBytes("upscan.maxFileSize")
-  val maximumFilesAllowed: Int   = configuration.get[Int]("upscan.maxFiles")
+  val minimumFileSize: Long = configuration.underlying.getBytes("upscan.minFileSize")
+  val maxFiles: Int         = configuration.get[Int]("upscan.maxFiles")
+  val maxFileSize: Long     = configuration.underlying.getBytes("upscan.maxFileSize")
 
   val advanceValuationRulingsBackendURL: String =
     s"${servicesConfig.baseUrl("advance-valuation-rulings-backend")}/advance-valuation-rulings"
-
-  lazy val initiateV2Url: String =
-    configuration
-      .get[Service]("microservice.services.upscan-initiate")
-      .baseUrl + "/upscan/v2/initiate"
 }

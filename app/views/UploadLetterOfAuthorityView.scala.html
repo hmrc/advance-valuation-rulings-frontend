@@ -101,7 +101,7 @@
 
   @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.2")))
   @list(Seq(
-    Html(messages("uploadLetterOfAuthority.bulletPoint.5", appConfig.maximumFileSizeBytes / 1000000L)),
+    Html(messages("uploadLetterOfAuthority.bulletPoint.5", appConfig.maxFileSize / 1000000L)),
     Html(messages("uploadLetterOfAuthority.bulletPoint.6"))
   ),
     "govuk-list govuk-list--bullet",

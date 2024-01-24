@@ -66,19 +66,21 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
   private lazy val service: FileService = app.injector().instanceOf[FileService]
 
-  private val redirectPath: String = controllers.routes.UploadSupportingDocumentsController
-    .onPageLoad(NormalMode, DraftId(0), None, None)
-    .url
+  private val redirectPath: String =
+    controllers.routes.UploadSupportingDocumentsController
+      .onPageLoad(NormalMode, DraftId(0), None, None)
+      .url
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  private val response: UpscanInitiateResponse = UpscanInitiateResponse(
-    reference = "reference",
-    uploadRequest = UpscanInitiateResponse.UploadRequest(
-      href = "foobar",
-      fields = Map("foo" -> "bar")
+  private val response: UpscanInitiateResponse =
+    UpscanInitiateResponse(
+      reference = "reference",
+      uploadRequest = UpscanInitiateResponse.UploadRequest(
+        href = "foobar",
+        fields = Map("foo" -> "bar")
+      )
     )
-  )
 
   "initiate" - {
 
@@ -89,9 +91,10 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
       val userAnswers = UserAnswers("userId", DraftId(0))
 
-      val expectedPath = controllers.routes.UploadSupportingDocumentsController
-        .onPageLoad(NormalMode, DraftId(0), None, None)
-        .url
+      val expectedPath =
+        controllers.routes.UploadSupportingDocumentsController
+          .onPageLoad(NormalMode, DraftId(0), None, None)
+          .url
       val expectedUrl  = s"host$expectedPath"
 
       val expectedRequest = UpscanInitiateRequest(

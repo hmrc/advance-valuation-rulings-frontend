@@ -16,9 +16,8 @@
 
 package connectors
 
-import config.Service
+import config.FrontendAppConfig
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
-import play.api.Configuration
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -30,17 +29,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class UpscanConnector @Inject() (
   httpClient: HttpClientV2,
-  configuration: Configuration
+  config: FrontendAppConfig
 )(implicit ec: ExecutionContext) {
-
-  private val upscanInitiateService: Service =
-    configuration.get[Service]("microservice.services.upscan-initiate")
 
   def initiate(
     request: UpscanInitiateRequest
   )(implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] =
     httpClient
-      .post(url"$upscanInitiateService/upscan/v2/initiate")
+      .post(url"${config.upscanInitiateService}/upscan/v2/initiate")
       .withBody(Json.toJson(request))
       .execute[UpscanInitiateResponse]
 }

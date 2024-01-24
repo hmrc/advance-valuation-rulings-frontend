@@ -23,10 +23,10 @@ import models.requests.DataRequest
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import navigation.Navigator
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
+import play.api.Logger
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.Results.{BadRequest, Ok, Redirect}
 import play.api.mvc.{AnyContent, RequestHeader, Result}
-import play.api.{Configuration, Logger}
 import services.UserAnswersService
 import services.fileupload.FileService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -44,7 +44,6 @@ case class FileUploadHelper @Inject() (
   letterOfAuthorityView: UploadLetterOfAuthorityView,
   fileService: FileService,
   navigator: Navigator,
-  configuration: Configuration,
   userAnswersService: UserAnswersService,
   osClient: PlayObjectStoreClient,
   userRoleProvider: UserRoleProvider,
@@ -54,7 +53,7 @@ case class FileUploadHelper @Inject() (
 
   private implicit val logger: Logger = Logger(this.getClass)
 
-  private val maxFileSize: Long = configuration.underlying.getBytes("upscan.maxFileSize") / 1000000L
+  private val maxFileSize: Long = appConfig.maxFileSize / 1000000L
 
   def onPageLoadWithFileStatus(
     mode: Mode,
