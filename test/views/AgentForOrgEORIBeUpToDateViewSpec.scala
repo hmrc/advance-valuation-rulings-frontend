@@ -21,7 +21,7 @@ import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AgentForOrgEORIBeUpToDateView
 
-class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours {
+class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours with BaseSelectors {
 
   val messageKeyPrefix = "eoriBeUpToDate"
   val messageKeySuffix = "org"
@@ -36,20 +36,21 @@ class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours {
   val viewViaF: HtmlFormat.Appendable      =
     view.f(DraftId(1L))(fakeRequest, messages)
 
-  "AcceptItemInformationList view" - {
-    def test(method: String, view: HtmlFormat.Appendable): Unit =
-      s"$method" - {
-        behave like normalPage(view, messageKeyPrefix, messageKeySuffix)()
-      }
+  "AgentForOrgEORIBeUpToDateView" - {
+    normalPage(messageKeyPrefix, messageKeySuffix)()
 
-    val input: Seq[(String, HtmlFormat.Appendable)] = Seq(
-      (".apply", viewViaApply),
-      (".render", viewViaRender),
-      (".f", viewViaF)
-    )
+    "should have correct additional content" - {
 
-    input.foreach { case (method, view) =>
-      test(method, view)
+      val expectedContent =
+        Seq(
+          h2        -> "About the applicant",
+          p(1)         -> "To update the name or address we have on record, the organisation will need to report a change of circumstances.",
+          p(2)      -> "For an EORI number starting with GB, the organisation can either:",
+          bullet(1) -> "fill in an enquiry form (opens in new tab)",
+          bullet(2) -> "contact import and export: general enquiries (opens in new tab)"
+        )
+
+      behave like pageWithExpectedMessages(viewViaApply, expectedContent)
     }
   }
 }

@@ -22,56 +22,40 @@ import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.TellUsAboutYourRulingView
 
-class TellUsAboutYourRulingViewSpec extends ViewBehaviours {
+class TellUsAboutYourRulingViewSpec extends ViewBehaviours with BaseSelectors {
 
   private val messageKeyPrefix = "tellUsAboutYourRuling"
 
   private val form: TellUsAboutYourRulingFormProvider =
     app.injector.instanceOf[TellUsAboutYourRulingFormProvider]
 
-  private val view: TellUsAboutYourRulingView =
+  val view: TellUsAboutYourRulingView =
     app.injector.instanceOf[TellUsAboutYourRulingView]
 
-  private val viewViaApply: HtmlFormat.Appendable  =
+  val viewViaApply: HtmlFormat.Appendable  =
     view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  private val viewViaRender: HtmlFormat.Appendable =
+  val viewViaRender: HtmlFormat.Appendable =
     view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  private val viewViaF: HtmlFormat.Appendable      =
+  val viewViaF: HtmlFormat.Appendable      =
     view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
 
   "TellUsAboutYourRulingView" - {
 
-    def test(method: String, view: HtmlFormat.Appendable): Unit =
-      s"$method" - {
-        behave like normalPage(view, messageKeyPrefix, "")()
-      }
+    behave like normalPage(messageKeyPrefix, "")()
 
-    val input: Seq[(String, HtmlFormat.Appendable)] =
-      Seq(
-        ".apply"  -> viewViaApply,
-        ".render" -> viewViaRender,
-        ".f"      -> viewViaF
-      )
+    "should have correct additional content" - {
 
-    input.foreach { case (method, view) =>
-      test(method, view)
-    }
-
-    object Selectors extends BaseSelectors {
       val textBoxLabel = "#main-content > div > div > form > div > div > label"
-    }
 
-    "view should have correct content" - {
-
-      val expectedContent =
+      val expectedContent: Seq[(Object, String)] =
         Seq(
-          Selectors.h1           -> "About the previous ruling",
-          Selectors.p(1)         -> "Examples of information can include:",
-          Selectors.bullet(1)    -> "ruling reference numbers - this can be found on ruling decision letters from HMRC",
-          Selectors.bullet(2)    -> "if the ruling has been cancelled or annulled - you will need to tell us why",
-          Selectors.bullet(3)    -> "the date the ruling was granted",
-          Selectors.bullet(4)    -> "the expiry date for the ruling",
-          Selectors.textBoxLabel -> "Can you provide more information about the previous ruling?"
+          h2           -> "About the goods",
+          p(1)         -> "Examples of information can include",
+          bullet(1)    -> "ruling reference numbers - this can be found on ruling decision letters from HMRC",
+          bullet(2)    -> "if the ruling has been cancelled or annulled - you will need to tell us why",
+          bullet(3)    -> "the date the ruling was granted",
+          bullet(4)    -> "the expiry date for the ruling",
+          textBoxLabel -> "Can you provide more information about the previous ruling?"
         )
 
       behave like pageWithExpectedMessages(viewViaApply, expectedContent)

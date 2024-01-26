@@ -23,59 +23,81 @@ trait ViewBehaviours extends ViewSpecBase {
 
   val expectTimeoutDialog: Boolean = true
 
-  protected def normalPage(
-    view: HtmlFormat.Appendable,
-    messageKeyPrefix: String,
-    messageKeySuffix: String,
-    messageHeadingArgs: Any*
-  )(
+  val viewViaApply: HtmlFormat.Appendable
+  val viewViaRender: HtmlFormat.Appendable
+  val viewViaF: HtmlFormat.Appendable
+
+  def normalPage(messageKeyPrefix: String, messageKeySuffix: String, messageHeadingArgs: Any*)(
     expectedGuidanceKeys: String*
   ): Unit =
     "behave like a normal page" - {
-      val suffix = if (messageKeySuffix.isEmpty) "" else s".$messageKeySuffix"
+      Seq(".apply", ".render", ".f").foreach {
+        case byMethod @ ".apply"  =>
+          pageByMethod(viewViaApply, messageKeyPrefix, messageKeySuffix, messageHeadingArgs: _*)(byMethod)
+        case byMethod @ ".render" =>
+          pageByMethod(viewViaRender, messageKeyPrefix, messageKeySuffix, messageHeadingArgs: _*)(byMethod)
+        case byMethod @ ".f"      =>
+          pageByMethod(viewViaF, messageKeyPrefix, messageKeySuffix, messageHeadingArgs: _*)(byMethod)
+      }
 
-      "rendered" - {
-        "have the correct banner title" in {
-          val doc         = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name")
-          bannerTitle.text mustBe messages(applicationBuilder().build())("service.name")
-        }
+      "have the correct banner title" in {
+        val doc         = asDocument(viewViaApply)
+        val bannerTitle = doc.getElementsByClass("hmrc-header__service-name")
+        bannerTitle.text mustBe messages(applicationBuilder().build())("service.name")
+      }
 
-        "display the correct browser title" in {
-          val doc = asDocument(view)
-          assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix")
-        }
+      "display the correct guidance" in {
+        val doc = asDocument(viewViaApply)
+        for (key <- expectedGuidanceKeys)
+          assertContainsText(doc, messages(applicationBuilder().build())(s"$messageKeyPrefix.$key"))
+      }
 
-        "display the correct page title" in {
-          val doc = asDocument(view)
-          assertPageTitleEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
-        }
-
-        "display the correct guidance" in {
-          val doc = asDocument(view)
-          for (key <- expectedGuidanceKeys)
-            assertContainsText(doc, messages(applicationBuilder().build())(s"$messageKeyPrefix.$key"))
-        }
-
-        "contain a timeout dialog" in {
-          val timeoutElm = asDocument(view).select("meta[name=\"hmrc-timeout-dialog\"]")
-          if (expectTimeoutDialog) {
-            assert(timeoutElm.size == 1)
-          } else {
-            assert(timeoutElm.size == 0)
-          }
+      "contain a timeout dialog" in {
+        val timeoutElm = asDocument(viewViaApply).select("meta[name=\"hmrc-timeout-dialog\"]")
+        if (expectTimeoutDialog) {
+          assert(timeoutElm.size == 1)
+        } else {
+          assert(timeoutElm.size == 0)
         }
       }
     }
 
-  def pageWithExpectedMessages(view: HtmlFormat.Appendable, checks: Seq[(String, String)]): Unit =
+  protected def pageByMethod(
+    view: HtmlFormat.Appendable,
+    messageKeyPrefix: String,
+    messageKeySuffix: String,
+    messageHeadingArgs: Any*
+  )(byMethod: String = ""): Unit = {
+
+    val suffix = if (messageKeySuffix.isEmpty) "" else s".$messageKeySuffix"
+
+    val renderMethod = if (byMethod.nonEmpty) {
+      s"when rendered - using $byMethod"
+    } else {
+      "when rendered"
+    }
+
+    s"$renderMethod" - {
+
+      "display the correct browser title" in {
+        val doc = asDocument(view)
+        assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix")
+      }
+
+      "display the correct page heading (h1)" in {
+        val doc = asDocument(view)
+        assertPageTitleEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
+      }
+    }
+  }
+
+  def pageWithExpectedMessages(view: HtmlFormat.Appendable, checks: Seq[(Object, String)]): Unit =
     checks.foreach { case (cssSelector, message) =>
       s"element with cssSelector '$cssSelector'" - {
-
         s"have message '$message'" in {
           val doc  = asDocument(view)
-          val elem = doc.select(cssSelector)
-          elem.first.text() mustBe message
+          val elem = doc.select(cssSelector.toString)
+          assertElementHasText(elem.first(), message)
         }
       }
     }

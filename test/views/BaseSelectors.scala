@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,23 @@
 package views
 
 trait BaseSelectors {
+  def selectElementByNumber(i: Int, element: String): String =
+    if (i > 0) {
+      s"$element:nth-of-type($i)"
+    } else {
+      s"$element:nth-of-type(1)"
+    }
 
-  val h1                    = "h1"
-  val subheading            = "h2"
-  val p: Int => String      = i => s"main p:nth-of-type($i)"
-  val bullet: Int => String = i => s"main ul.govuk-list.govuk-list--bullet li:nth-of-type($i)"
+  def h2(i: Int = 0): String                       = selectElementByNumber(i, "main h2")
+  def p(i: Int = 0): String                        = selectElementByNumber(i, "main p")
+  def bullet(i: Int = 0, inGroup: Int = 1): String =
+    selectElementByNumber(i, s"main ul.govuk-list.govuk-list--bullet:nth-of-type($inGroup) li")
+  def dl(i: Int = 0, inGroup: Int = 1): String     =
+    selectElementByNumber(i, s"main dl.govuk-summary-list:nth-of-type($inGroup) dd")
+
+  val h1: String     = "h1"
+  val h2: String     = h2()
+  val p: String      = p()
+  val bullet: String = bullet()
+
 }
