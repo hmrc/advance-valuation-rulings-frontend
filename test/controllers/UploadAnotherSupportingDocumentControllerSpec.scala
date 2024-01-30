@@ -20,7 +20,8 @@ import base.SpecBase
 import config.FrontendAppConfig
 import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.MockitoSugar.{mock, when}
 import pages.UploadLetterOfAuthorityPage
 import play.api.inject.bind

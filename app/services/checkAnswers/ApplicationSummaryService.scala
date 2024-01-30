@@ -31,9 +31,11 @@ class ApplicationSummaryService @Inject() (
   )(implicit
     messages: Messages
   ): ApplicationSummary = {
+
     val (applicant, company) = userRoleProvider
       .getUserRole(userAnswers)
       .getApplicationSummary(userAnswers, traderDetailsWithCountryCode)
+
     ApplicationSummary(
       eoriDetails = company,
       applicant = applicant,

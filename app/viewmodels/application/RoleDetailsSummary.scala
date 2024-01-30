@@ -17,7 +17,9 @@
 package viewmodels.application
 
 import models.requests.WhatIsYourRole
+import models.{CheckMode, DraftId}
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.ActionItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -48,6 +50,7 @@ object RoleDetailsSummary {
             value = ValueViewModel(messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader"))
           )
         )
-      case _                                => None
+      case _                                =>
+        None
     }
 }

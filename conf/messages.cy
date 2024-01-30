@@ -1104,3 +1104,9 @@ awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defn
 awareOfRuling.error.required = Rhowch wybod i ni os ydych yn ymwybodol o unrhyw ddyfarniadau eraill a ddefnyddiodd ddull tebyg
 awareOfRuling.checkYourAnswersLabel = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.change.hidden = p’un a ydych yn ymwybodol o unrhyw ddyfarniadau eraill sy’n defnyddio dull tebyg
+
+changeYourRoleImporter.title = Newid eich rôl fel mewnforiwr
+changeYourRoleImporter.heading = Newid eich rôl fel mewnforiwr
+changeYourRoleImporter.p1 = Os byddwch yn newid eich rôl fel mewnforiwr, byddwch yn colli’r holl wybodaeth rydych wedi’i hychwanegu at y cais hwn.
+changeYourRoleImporter.label = A ydych am newid eich rôl fel mewnforiwr?
+changeYourRoleImporter.error.required = Dewiswch ‘Iawn’ os ydych am newid eich rôl fel mewnforiwr

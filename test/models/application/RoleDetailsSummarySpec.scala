@@ -27,7 +27,9 @@ class RoleDetailsSummarySpec extends SpecBase {
   implicit val messages: Messages = messages(applicationBuilder().build())
 
   "RoleDetailsSummary object" - {
+
     "rowRoleDescription method" - {
+
       "should return the correct role description for AgentOrg" in {
         val result = RoleDetailsSummary.rowRoleDescription(Some(WhatIsYourRole.AgentOrg))
 

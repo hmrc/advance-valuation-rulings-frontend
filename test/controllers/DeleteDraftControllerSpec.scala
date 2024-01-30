@@ -19,7 +19,8 @@ package controllers
 import base.SpecBase
 import forms.DeleteDraftFormProvider
 import models.Done
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._

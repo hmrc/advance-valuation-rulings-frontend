@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package models
+package pages
 
-import play.api.mvc.JavascriptLiteral
+import models.UserAnswers
+import play.api.libs.json.JsPath
 
-sealed trait Mode
+import scala.util.Try
 
-case object CheckMode extends Mode
-case object NormalMode extends Mode
-case object UnchangedMode extends Mode
+case object ChangeYourRoleImporterPage extends QuestionPage[Boolean] {
 
-object Mode {
+  override def path: JsPath = JsPath \ toString
 
-  implicit val jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
-    override def to(value: Mode): String = value match {
-      case NormalMode    => "NormalMode"
-      case CheckMode     => "CheckMode"
-      case UnchangedMode => "UnchangedMode"
-    }
-  }
+  override def toString: String = "changeYourRoleImporter"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    super.cleanup(value, userAnswers)
 }

@@ -26,7 +26,7 @@
     heading: Heading,
     para: Paragraph,
     details: DetailsDrop,
-    saveButtons: SaveButtons,
+    button: SubmitButton,
     config: FrontendAppConfig,
     legend: LegendH2
 )
@@ -69,6 +69,6 @@
             )
         )
 
-        @saveButtons(draftId)
+        @button("site.saveAndContinue", routes.WhatIsYourRoleAsImporterController.onSubmit(mode, draftId) ,Some("continue-button"))
     }
 }

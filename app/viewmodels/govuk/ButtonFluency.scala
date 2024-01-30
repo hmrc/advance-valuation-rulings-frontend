@@ -55,10 +55,10 @@ trait ButtonFluency {
     def withAttribute(attribute: (String, String)): Button =
       button.copy(attributes = button.attributes + attribute)
 
-    def withId(id: String): Button =
-      withAttribute("id" -> id)
+    def withId(id: Option[String]): Button =
+      button.copy(id = id)
 
-    def disabled(): Button         =
+    def disabled(): Button =
       button.copy(disabled = true)
 
     def preventingDoubleClick(): Button =

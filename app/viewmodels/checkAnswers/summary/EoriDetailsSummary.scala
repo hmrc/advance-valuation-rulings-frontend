@@ -39,7 +39,7 @@ class IndividualEoriDetailsSummaryCreator {
   )(implicit
     messages: Messages
   ): EoriDetailsSummary = {
-    val roleRow = AgentRoleSummary.row(userAnswers).orEmpty
+    val roleRow = AgentRoleSummary.row(userAnswers, draftId).orEmpty
     val rows    = CheckRegisteredDetailsSummary.rows(details, draftId).orEmpty
     IndividualEoriDetailsSummary(SummaryListViewModel(roleRow ++ rows))
   }

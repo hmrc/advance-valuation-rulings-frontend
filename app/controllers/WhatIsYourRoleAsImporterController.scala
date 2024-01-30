@@ -21,9 +21,9 @@ import controllers.actions._
 import forms.WhatIsYourRoleAsImporterFormProvider
 import models.WhatIsYourRoleAsImporter._
 import models.requests.DataRequest
-import models.{DraftId, Mode, ReadOnlyMode}
-import navigation.Navigator
-import pages.{AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
+import models.{CheckMode, DraftId, Mode, NormalMode, WhatIsYourRoleAsImporter}
+import navigation.{Navigator, UnchangedModeNavigator}
+import pages.{ChangeYourRoleImporterPage, DraftWhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporterPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -37,6 +37,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
   override val messagesApi: MessagesApi,
   userAnswersService: UserAnswersService,
   navigator: Navigator,
+  unchangedModeNavigator: UnchangedModeNavigator,
   identify: IdentifierAction,
   getData: DataRetrievalActionProvider,
   requireData: DataRequiredAction,
@@ -50,55 +51,70 @@ class WhatIsYourRoleAsImporterController @Inject() (
 
   private val form = formProvider()
 
+  private[controllers] def onSubmitNavigationLogic(
+    formValue: WhatIsYourRoleAsImporter,
+    mode: Mode
+  )(implicit
+    request: DataRequest[AnyContent]
+  ) = {
+
+    val whatIsYourRoleAnswers = request.userAnswers.get(WhatIsYourRoleAsImporterPage)
+
+    (formValue, mode, whatIsYourRoleAnswers) match {
+      case (formAnswer, CheckMode, Some(role)) if formAnswer == role  =>
+        for {
+          ua <- request.userAnswers.setFuture(WhatIsYourRoleAsImporterPage, formValue)
+          _  <- userAnswersService.set(ua)
+        } yield Redirect(
+          unchangedModeNavigator.nextPage(WhatIsYourRoleAsImporterPage, ua)
+        )
+      case (_, NormalMode, None)                                      =>
+        for {
+          ua <- request.userAnswers.setFuture(WhatIsYourRoleAsImporterPage, formValue)
+          _  <- userAnswersService.set(ua)
+        } yield Redirect(
+          navigator.nextPage(WhatIsYourRoleAsImporterPage, NormalMode, ua)
+        )
+      case (formAnswer, NormalMode, Some(role)) if formAnswer == role =>
+        for {
+          ua <- request.userAnswers.setFuture(WhatIsYourRoleAsImporterPage, formValue)
+          _  <- userAnswersService.set(ua)
+        } yield Redirect(
+          navigator.nextPage(WhatIsYourRoleAsImporterPage, NormalMode, ua)
+        )
+      case (formAnswer, NormalMode, Some(role)) if formAnswer != role =>
+        for {
+          ua             <- request.userAnswers.setFuture(DraftWhatIsYourRoleAsImporterPage, formValue)
+          updatedAnswers <- ua.removeFuture(ChangeYourRoleImporterPage)
+          _              <- userAnswersService.set(updatedAnswers)
+        } yield Redirect(
+          navigator.nextPage(ChangeYourRoleImporterPage, NormalMode, updatedAnswers)
+        )
+      case _                                                          =>
+        auditService.sendRoleIndicatorEvent(formValue)
+        for {
+          ua             <- request.userAnswers.setFuture(DraftWhatIsYourRoleAsImporterPage, formValue)
+          updatedAnswers <- ua.removeFuture(ChangeYourRoleImporterPage)
+          _              <- userAnswersService.set(updatedAnswers)
+        } yield Redirect(
+          navigator.nextPage(DraftWhatIsYourRoleAsImporterPage, CheckMode, updatedAnswers)
+        )
+    }
+  }
+
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) { implicit request =>
-      val preparedForm          = WhatIsYourRoleAsImporterPage.fill(form)
-      val whatIsYourRoleAnswers = request.userAnswers.get(WhatIsYourRoleAsImporterPage)
-      // If this page has already been answered then the mode should be read only.
-      val modeForView           = whatIsYourRoleAnswers.map(_ => ReadOnlyMode).getOrElse(mode)
-
-      Ok(view(preparedForm, modeForView, draftId))
+      val preparedForm = WhatIsYourRoleAsImporterPage.fill(form)
+      Ok(view(preparedForm, mode, draftId))
     }
 
   def onSubmit(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async { implicit request =>
-      mode match {
-        case ReadOnlyMode =>
-          Future.successful(
-            Redirect(
-              navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, request.userAnswers)
-            )
-          )
-        case _            => updateUserAnswersSubmit(mode, draftId)
-      }
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, draftId))),
+          value => onSubmitNavigationLogic(value, mode)
+        )
     }
-
-  private def updateUserAnswersSubmit(mode: Mode, draftId: DraftId)(implicit
-    request: DataRequest[AnyContent]
-  ) =
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors =>
-          Future.successful(
-            BadRequest(view(formWithErrors, mode, draftId))
-          ),
-        value => {
-          auditService.sendRoleIndicatorEvent(value)
-          for {
-            ua <- value match {
-                    case EmployeeOfOrg         => AgentCompanyDetailsPage.remove()
-                    case AgentOnBehalfOfOrg    =>
-                      Future.successful(request.userAnswers)
-                    case AgentOnBehalfOfTrader =>
-                      Future.successful(request.userAnswers)
-                  }
-            ua <- ua.setFuture(WhatIsYourRoleAsImporterPage, value)
-            _  <- userAnswersService.set(ua)
-          } yield Redirect(
-            navigator.nextPage(WhatIsYourRoleAsImporterPage, mode, ua)
-          )
-        }
-      )
-
 }

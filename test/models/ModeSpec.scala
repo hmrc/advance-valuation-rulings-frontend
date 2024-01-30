@@ -29,8 +29,8 @@ class ModeSpec extends SpecBase {
       Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
     }
 
-    "return a read-only mode type" in {
-      Mode.jsLiteral.to(ReadOnlyMode) mustBe "ReadOnlyMode"
+    "return a unchanged mode type" in {
+      Mode.jsLiteral.to(UnchangedMode) mustBe "UnchangedMode"
     }
   }
 

@@ -25,7 +25,7 @@ import models.{DraftId, TraderDetailsWithCountryCode}
 import pages.{Page, VerifyTraderDetailsPage}
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.SubmissionService
 import services.checkAnswers.ApplicationSummaryService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -53,11 +53,20 @@ class CheckYourAnswersController @Inject() (
 
   private implicit val logger: Logger = Logger(this.getClass)
 
-  def onPageLoad(draftId: DraftId): Action[AnyContent] =
-    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
-      getTraderDetails { traderDetails =>
-        val applicationSummary =
-          applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
+  private def renderPageWhenApplicationIsCompleted(traderDetails: TraderDetailsWithCountryCode, draftId: DraftId)(
+    implicit
+    request: DataRequest[AnyContent],
+    hc: HeaderCarrier
+  ): Future[Result] =
+    applicationRequestService(request.userAnswers, traderDetails) match {
+      case Invalid(errors: cats.data.NonEmptyList[Page]) =>
+        logger.warn(
+          s"[CheckYourAnswersController][redirectJourney] Failed to create application request: " +
+            s"${errors.toList.mkString(", ")}"
+        )
+        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      case Valid(applicationRequest)                     =>
+        val applicationSummary = applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
         Future.successful(
           Ok(
             userRoleProvider
@@ -68,9 +77,16 @@ class CheckYourAnswersController @Inject() (
               )
           )
         )
+    }
+
+  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+    (identify andThen getData(draftId) andThen requireData).async { implicit request =>
+      getTraderDetails { traderDetails =>
+        renderPageWhenApplicationIsCompleted(traderDetails, draftId)
       }
     }
-  def onSubmit(draftId: DraftId): Action[AnyContent]   =
+
+  def onSubmit(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async { implicit request =>
       if (userRoleProvider.getUserRole(request.userAnswers).sourceFromUA) {
         request.userAnswers.get(VerifyTraderDetailsPage) match {
@@ -82,13 +98,10 @@ class CheckYourAnswersController @Inject() (
             throw new Exception(
               "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
             )
-
         }
-
       } else {
         getTraderDetails(traderDetails => redirectJourney(request, traderDetails))
       }
-
     }
 
   private def redirectJourney(

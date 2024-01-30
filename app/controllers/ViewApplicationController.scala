@@ -21,6 +21,7 @@ import controllers.actions._
 import models.requests.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.UserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.ApplicationViewModel
 import views.html.ViewApplicationView
@@ -35,6 +36,7 @@ class ViewApplicationController @Inject() (
   identify: IdentifierAction,
   backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
+  userAnswersService: UserAnswersService,
   view: ViewApplicationView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController

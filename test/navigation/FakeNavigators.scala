@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package models
+package navigation
 
-import play.api.mvc.JavascriptLiteral
+import models.{Mode, UserAnswers}
+import org.mockito.MockitoSugar.mock
+import pages._
+import play.api.mvc.Call
+import userrole.UserRoleProvider
 
-sealed trait Mode
+object FakeNavigators {
 
-case object CheckMode extends Mode
-case object NormalMode extends Mode
-case object UnchangedMode extends Mode
+  val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
 
-object Mode {
+  val unchangedModeNavigator: UnchangedModeNavigator = new UnchangedModeNavigator
 
-  implicit val jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
-    override def to(value: Mode): String = value match {
-      case NormalMode    => "NormalMode"
-      case CheckMode     => "CheckMode"
-      case UnchangedMode => "UnchangedMode"
-    }
+  class FakeNavigator(desiredRoute: Call) extends Navigator(userRoleProvider, unchangedModeNavigator) {
+
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+      desiredRoute
   }
 }

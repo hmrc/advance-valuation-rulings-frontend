@@ -31,10 +31,11 @@ import java.time.Instant
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
-  val EmptyUserAnswers: UserAnswers      = userAnswersAsIndividualTrader
-  val navigator: Navigator               = new Navigator(userRoleProvider)
-  val checkYourAnswers: Call             = routes.CheckYourAnswersController.onPageLoad(draftId)
+  val userRoleProvider: UserRoleProvider             = mock[UserRoleProvider]
+  val EmptyUserAnswers: UserAnswers                  = userAnswersAsIndividualTrader
+  val unchangedModeNavigator: UnchangedModeNavigator = new UnchangedModeNavigator
+  val navigator: Navigator                           = new Navigator(userRoleProvider, unchangedModeNavigator)
+  val checkYourAnswers: Call                         = routes.CheckYourAnswersController.onPageLoad(draftId)
 
   private val successfulFile: UploadedFile.Success = UploadedFile.Success(
     reference = "reference",

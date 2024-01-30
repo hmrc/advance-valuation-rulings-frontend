@@ -16,24 +16,33 @@
 
 package viewmodels.checkAnswers
 
+import models.{CheckMode, DraftId, UserAnswers}
+import pages.WhatIsYourRoleAsImporterPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.govukfrontend.views.Aliases.ActionItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
-import models.UserAnswers
-import pages.WhatIsYourRoleAsImporterPage
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object AgentRoleSummary {
 
-  def row(userAnswer: UserAnswers)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
+  def row(userAnswer: UserAnswers, draftId: DraftId)(implicit messages: Messages): Option[Seq[SummaryListRow]] =
     userAnswer.get(WhatIsYourRoleAsImporterPage).map { role =>
       Seq(
         SummaryListRowViewModel(
           key = "checkYourAnswersForAgents.applicant.role.label",
           value = ValueViewModel(
             HtmlFormat.escape(messages(s"whatIsYourRoleAsImporter.$role")).toString
+          ),
+          actions = List(
+            ActionItem(
+              href = controllers.routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId = draftId).url,
+              content = messages("site.change"),
+              visuallyHiddenText = Some(messages("site.change")),
+              classes = "",
+              attributes = Map("id" -> "change-role")
+            )
           )
         )
       )

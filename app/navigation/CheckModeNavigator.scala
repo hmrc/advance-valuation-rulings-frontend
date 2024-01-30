@@ -305,7 +305,34 @@ object CheckModeNavigator {
     userAnswers.get(ExplainHowYouWillUseMethodSixPage) match {
       case None    =>
         ExplainHowYouWillUseMethodSixController.onPageLoad(CheckMode, userAnswers.draftId)
-      case Some(_) => CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
+      case Some(_) =>
+        CheckYourAnswersController.onPageLoad(draftId = userAnswers.draftId)
+    }
+
+  private def whatisYourRoleAsImporter(userAnswers: UserAnswers): Call =
+    userAnswers.get(WhatIsYourRoleAsImporterPage) match {
+      case None    =>
+        WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(_) =>
+        ChangeYourRoleImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+    }
+
+  private def draftWhatIsYourRoleAsImporter(userAnswers: UserAnswers): Call =
+    userAnswers.get(DraftWhatIsYourRoleAsImporterPage) match {
+      case None    =>
+        WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(_) =>
+        ChangeYourRoleImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+    }
+
+  private def changeYourRoleImporterPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ChangeYourRoleImporterPage) match {
+      case None        =>
+        ChangeYourRoleImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+      case Some(true)  =>
+        RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case Some(false) =>
+        WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId = userAnswers.draftId)
     }
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call =
@@ -323,10 +350,13 @@ object CheckModeNavigator {
       case UploadAnotherSupportingDocumentPage          => uploadAnotherSupportingDocument(userAnswers)
       case RemoveSupportingDocumentPage(_)              => removeSupportingDocumentPage(userAnswers)
 
-      case TellUsAboutYourRulingPage    => tellUsAboutYourRuling(userAnswers)
-      case HaveYouReceivedADecisionPage => haveYouReceivedADecision(userAnswers)
-      case AwareOfRulingPage            => awareOfRulingsWithSimilarMethod(userAnswers)
-      case AboutSimilarGoodsPage        => aboutSimilarGoods(userAnswers)
+      case TellUsAboutYourRulingPage         => tellUsAboutYourRuling(userAnswers)
+      case HaveYouReceivedADecisionPage      => haveYouReceivedADecision(userAnswers)
+      case AwareOfRulingPage                 => awareOfRulingsWithSimilarMethod(userAnswers)
+      case AboutSimilarGoodsPage             => aboutSimilarGoods(userAnswers)
+      case WhatIsYourRoleAsImporterPage      => whatisYourRoleAsImporter(userAnswers)
+      case DraftWhatIsYourRoleAsImporterPage => draftWhatIsYourRoleAsImporter(userAnswers)
+      case ChangeYourRoleImporterPage        => changeYourRoleImporterPage(userAnswers)
 
       // agent
       case UploadLetterOfAuthorityPage => uploadLetterOfAuthority(userAnswers)
