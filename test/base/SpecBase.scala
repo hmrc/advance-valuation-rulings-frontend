@@ -39,6 +39,8 @@ import play.api.mvc._
 import play.api.test.FakeRequest
 import repositories.CounterRepository
 import services.UserAnswersService
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.summary.{ApplicationSummary, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.Future
@@ -119,6 +121,15 @@ trait SpecBase
 
   val traderDetailsWithConfirmation: TraderDetailsWithConfirmation =
     TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
+
+  val testEoriDetailsSummary: IndividualEoriDetailsSummary = IndividualEoriDetailsSummary(SummaryList())
+  val testApplicantSummary: IndividualApplicantSummary     = IndividualApplicantSummary(SummaryList())
+  val testDetailsSummary: DetailsSummary                   = DetailsSummary(SummaryList())
+  val testMethodSummary: MethodSummary                     = MethodSummary(SummaryList())
+
+  // Use the instances to create an instance of ApplicationSummary
+  val testApplicationSummary: ApplicationSummary =
+    ApplicationSummary(testEoriDetailsSummary, testApplicantSummary, testDetailsSummary, testMethodSummary)
 
   def messagesApi(app: Application): MessagesApi =
     app.injector.instanceOf[MessagesApi]

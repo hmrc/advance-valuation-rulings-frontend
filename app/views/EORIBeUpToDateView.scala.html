@@ -48,26 +48,30 @@
   )
 }
 
-@layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title")), draftId = Some(draftId)) {
+@layout(pageTitle = titleNoForm(
+    messages(
+        if (Set(OrganisationUser, OrganisationAssistant, Agent).exists(_ == authUserType)) "eoriBeUpToDate.title.org" else "eoriBeUpToDate.title"
+    )),
+    draftId = Some(draftId)) {
 
-    @caption(messages("eoriBeUpToDate.caption"))
-    @if(Set(OrganisationUser, OrganisationAssistant, Agent).exists(_ == authUserType)) {
-        @heading(messages("eoriBeUpToDate.heading.org"))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))
-    } else {
-        @heading(messages("eoriBeUpToDate.heading"))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
-        @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
-    }
+        @caption(messages("eoriBeUpToDate.caption"))
+        @if(Set(OrganisationUser, OrganisationAssistant, Agent).exists(_ == authUserType)) {
+            @heading(messages("eoriBeUpToDate.heading.org"))
+            @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
+            @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))
+        } else {
+            @heading(messages("eoriBeUpToDate.heading"))
+            @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
+            @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
+        }
 
-    @bulletList(
-      Seq(
-        Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
-        Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
-      ),
-      "govuk-list govuk-list--bullet govuk-list--spaced",
-    )
+        @bulletList(
+          Seq(
+            Html(messages("eoriBeUpToDate.bulletPoint.1", fillInAnEnquiryLink)),
+            Html(messages("eoriBeUpToDate.bulletPoint.2", importAndExportEnquiriesLink)),
+          ),
+          "govuk-list govuk-list--bullet govuk-list--spaced",
+        )
 
-    @cancelApplicationLink(draftId)
+        @cancelApplicationLink(draftId)
 }

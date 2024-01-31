@@ -263,6 +263,7 @@ hasCommodityCode.change.hidden = whether you have a commodity code for the goods
 hasCommodityCode.question = Do you have a commodity code for the goods?
 
 #PROVIDE TRADER EORI NUMBER
+provideTraderEori.title = What is the trader''s EORI number?
 provideTraderEori.heading = What is the trader''s EORI number?
 provideTraderEori.hint = The first 2 letters are the country code, like GB. This is followed by 12 digits, like GB123456123456.
 provideTraderEori.error.required=Enter the trader''s EORI number
@@ -286,6 +287,7 @@ traderDetails.public.h2.question.yes=Yes, these details are for the trader I am 
 traderDetails.public.h2.question.no=No, these details are incorrect
 
 #TRADER DETAILS - PRIVATE
+traderDetails.private.title=The registration details for EORI number {0} are private
 traderDetails.private.heading=The registration details for EORI number {0} are private
 traderDetails.private.p1=The business this number is registered to has not consented to their name and address being shared.
 traderDetails.private.p2=If you need more information, contact the business directly.
@@ -294,6 +296,7 @@ traderDetails.private.h3.proceed=Do you want to proceed?
 verifyTraderDetails.error.required=Select if you want to proceed with the application
 
 #INVALID EORI
+invalidTraderEori.title = EORI number {0} is invalid
 invalidTraderEori.heading = EORI number {0} is invalid
 invalidTraderEori.p1 = The EORI number you have provided does not match any business on our records.
 invalidTraderEori.p2 = You will need to contact the trader directly to clarify their EORI number.
@@ -409,10 +412,10 @@ checkRegisteredDetails.title.agentTrader = Check the trader’s EORI details
 checkRegisteredDetails.heading.employeeOrg = Check your EORI details
 checkRegisteredDetails.heading.agentOrg = Check the organisation’s EORI details
 checkRegisteredDetails.heading.agentTrader = Check the trader’s EORI details
-checkRegisteredDetails.heading.1 = Check the name and address for EORI number {0}
+checkRegisteredDetails.heading = Check the name and address for EORI number {0}
 checkRegisteredDetails.heading.2 = Registered business name
 checkRegisteredDetails.heading.3 = Registered business address
-checkRegisteredDetails.private.heading.1 = The registration details for EORI number {0} are private
+checkRegisteredDetails.private.heading = The registration details for EORI number {0} are private
 checkRegisteredDetails.subheading.1 = EORI registration details
 checkRegisteredDetails.subheading.2 = Are the name and address details correct?
 checkRegisteredDetails.private.subheading.2 = Do you want to proceed?
@@ -465,7 +468,9 @@ eoriBeUpToDate.title.agentOnBehalfOfTrader = The trader’s EORI details must be
 eoriBeUpToDate.caption = About the applicant
 eoriBeUpToDate.heading = Your EORI number details must be correct to use this service
 eoriBeUpToDate.heading.org = The organisation’s EORI details must be correct to use this service
+eoriBeUpToDate.title.agentOnBehalfOfTrader.public = The trader’s EORI details must be correct to use this service
 eoriBeUpToDate.heading.agentOnBehalfOfTrader.public = The trader’s EORI details must be correct to use this service
+eoriBeUpToDate.title.agentOnBehalfOfTrader.private = You cannot continue with this application
 eoriBeUpToDate.heading.agentOnBehalfOfTrader.private = You cannot continue with this application
 eoriBeUpToDate.paragraph.1 = You will need to report a change of circumstances to update the details we have on record.
 eoriBeUpToDate.paragraph.2 = For an EORI number starting with GB, you can either:
@@ -940,13 +945,7 @@ viewApplication.dateSubmitted = Date submitted
 
 viewApplication.aboutTheGoods.heading = About the goods
 viewApplication.reference = Your application reference number is
-viewApplication.hmrc = HM Revenue & Customs 
-
-
-viewRuling.title = Your ruling documents for {0}
-viewRuling.heading = Your ruling documents for {0}
-viewRuling.subHeading.1 = Your ruling cover letter
-viewRuling.subHeading.2 = Your ruling certificate
+viewApplication.hmrc = HM Revenue & Customs
 
 businessContactDetails.title = Your contact details
 businessContactDetails.heading = Your contact details
@@ -1057,6 +1056,7 @@ uploadInProgress.heading = Uploading your document
 uploadInProgress.p1 = Select the check progress button to continue with your application.
 uploadInProgress.button = Check progress
 
+haveYouReceivedADecision.title = Previous rulings based on similar methods
 haveYouReceivedADecision.heading = Previous rulings based on similar methods
 haveYouReceivedADecision.para.1 = This must be a ruling decision from Great Britain (England, Scotland and Wales). It does not need to be related to your current application.
 haveYouReceivedADecision.para.2 = Telling us about similar rulings you have received will help us process your current application.
@@ -1079,20 +1079,21 @@ tellUsAboutYourRuling.change.hidden = the information you submitted about the ru
 
 textCount.tooLong = Description of rulings must be 8,000 characters or less
 
+aboutSimilarGoods.title = About the rulings for similar goods
+aboutSimilarGoods.heading = About the rulings for similar goods
 aboutSimilarGoods.para.1 = These can be:
 aboutSimilarGoods.para.2 = Include as much information as possible, such as:
-
 aboutSimilarGoods.bulletPoint.1 = ruling decisions for similar goods that were issued by other countries - they do not have to be rulings issued to you
 aboutSimilarGoods.bulletPoint.2 = ruling decisions for similar goods that were issued to other companies in your ogranisation
 aboutSimilarGoods.bulletPoint.3 = ruling reference number
 aboutSimilarGoods.bulletPoint.4 = start and expiry dates of the rulings
 aboutSimilarGoods.bulletPoint.5 = current status for the rulings
-aboutSimilarGoods.heading = About the rulings for similar goods
 aboutSimilarGoods.label = Can you tell us about the rulings for similar goods?
 aboutSimilarGoods.error.required = Tell us about the rulings for similar goods
 aboutSimilarGoods.checkYourAnswersLabel = Tell us about the rulings for similar goods
 aboutSimilarGoods.change.hidden = the information on rulings using similar goods
 
+awareOfRuling.title = Are you aware of any other rulings that have used a similar method?
 awareOfRuling.heading = Are you aware of any other rulings that have used a similar method?
 awareOfRuling.para = Telling us about other rulings that have used a similar method will help the caseworker process your application.
 awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method

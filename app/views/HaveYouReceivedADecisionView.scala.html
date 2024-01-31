@@ -49,7 +49,7 @@ link: Link
     )
 }
 
-@layout(pageTitle = title(form, messages("haveYouReceivedADecision.heading")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("haveYouReceivedADecision.title")), draftId = Some(draftId)) {
 
     @formHelper(action = controllers.routes.HaveYouReceivedADecisionController.onSubmit(mode, draftId)) {
 

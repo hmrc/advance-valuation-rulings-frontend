@@ -20,15 +20,18 @@ import base.SpecBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.scalatest.Assertion
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 
-trait ViewSpecBase extends SpecBase {
+import scala.jdk.CollectionConverters._
 
-  lazy val app: Application = applicationBuilder().build()
+trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
+
+  override lazy val app: Application = applicationBuilder().build()
 
   def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -36,8 +39,15 @@ trait ViewSpecBase extends SpecBase {
 
   def asDocument(html: Html): Document = Jsoup.parse(html.toString())
 
-  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String): Assertion = {
-    val title       = messages(expectedMessageKey)
+  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: Any*)(
+    isError: Boolean = false
+  ): Assertion = {
+    val errorPrefix = if (isError) {
+      messages("error.browser.title.prefix") + " "
+    } else {
+      ""
+    }
+    val title       = errorPrefix + messages(expectedMessageKey, args: _*)
     val serviceName = messages("service.name")
     val suffix      = "GOV.UK"
     val fullTitle   = s"$title - $serviceName - $suffix"
@@ -53,17 +63,17 @@ trait ViewSpecBase extends SpecBase {
     assert(elements.first().html().replace("\n", "") == expectedValue)
   }
 
-  def assertPageTitleEqualsMessage(doc: Document, expectedMessageKey: String, args: Any*): Any = {
+  def assertPageHeadingEqualsMessage(doc: Document, expectedMessageKey: String, args: Any*): Any = {
     val headers = doc.getElementsByTag("h1")
     headers.size() match {
       case 0                                    => ()
       case 1 if headers.select("label").isEmpty =>
         headers.first
           .ownText()
-          .replaceAll("\u00a0", " ") mustBe messages(applicationBuilder().build())(expectedMessageKey, args: _*)
+          .replaceAll("\u00a0", " ") mustBe messages(app)(expectedMessageKey, args: _*)
           .replaceAll("&nbsp;", " ")
       case 1                                    =>
-        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(applicationBuilder().build())(
+        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(app)(
           expectedMessageKey,
           args: _*
         )
@@ -75,13 +85,19 @@ trait ViewSpecBase extends SpecBase {
   def assertContainsText(doc: Document, text: String): Assertion =
     assert(doc.toString.contains(text), "\n\ntext " + text + " was not rendered on the page.\n")
 
+  def assertNotContainsText(doc: Document, text: String): Assertion =
+    assert(!doc.toString.contains(text), "\n\ntext " + text + " was not rendered on the page.\n")
+
   def assertElementHasText(element: Element, text: String): Assertion =
     assert(element.text.contains(text), "\n\ntext " + text + " was not rendered in the element.\n")
 
-  def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit =
-    for (key <- expectedMessageKeys) assertContainsText(doc, messages(applicationBuilder().build())(key))
+  def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit      =
+    for (key <- expectedMessageKeys) assertContainsText(doc, messages(app)(key))
 
-  def assertRenderedById(doc: Document, id: String): Assertion                  =
+  def assertNotContainingMessages(doc: Document, expectedMessageKeys: String*): Unit =
+    for (key <- expectedMessageKeys) assertNotContainsText(doc, messages(app)(key))
+
+  def assertRenderedById(doc: Document, id: String): Assertion                       =
     assert(doc.getElementById(id) != null, "\n\nElement " + id + " was not rendered on the page.\n")
 
   def assertNotRenderedById(doc: Document, id: String): Assertion =
@@ -92,6 +108,31 @@ trait ViewSpecBase extends SpecBase {
 
   def assertNotRenderedByCssSelector(doc: Document, cssSelector: String): Assertion =
     assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
+
+  def assertRenderedByTagWithAttributes(doc: Document, tagName: String, attributes: (String, String)*): Assertion = {
+    val elements = doc.getElementsByTag(tagName)
+    assert(elements.size() != 0, s"\n\nElement $tagName was not rendered on the page.\n")
+
+    val found = elements.asScala.exists { element =>
+      val allAttributesMatch = attributes.forall { case (name, value) =>
+        val attrValue = element.attr(name)
+        attrValue == value
+      }
+      allAttributesMatch
+    }
+
+    assert(found, s"\n\nNo $tagName element with the specified attributes was found.\n")
+  }
+
+  def assertNotRenderedByTagWithAttributes(doc: Document, tagName: String, attributes: (String, String)*): Assertion = {
+    val elements = doc.getElementsByTag(tagName)
+
+    val notFound = elements.asScala.forall { element =>
+      attributes.exists { case (name, value) => element.attr(name) != value }
+    }
+
+    assert(notFound, s"\n\nElement $tagName element with the specified attributes was found, but should be missing.\n")
+  }
 
   def assertContainsLabel(
     doc: Document,

@@ -43,13 +43,13 @@ trait ViewBehaviours extends ViewSpecBase {
       "have the correct banner title" in {
         val doc         = asDocument(viewViaApply)
         val bannerTitle = doc.getElementsByClass("hmrc-header__service-name")
-        bannerTitle.text mustBe messages(applicationBuilder().build())("service.name")
+        bannerTitle.text mustBe messages(app)("service.name")
       }
 
       "display the correct guidance" in {
         val doc = asDocument(viewViaApply)
         for (key <- expectedGuidanceKeys)
-          assertContainsText(doc, messages(applicationBuilder().build())(s"$messageKeyPrefix.$key"))
+          assertContainsText(doc, messages(app)(s"$messageKeyPrefix.$key"))
       }
 
       "contain a timeout dialog" in {
@@ -67,7 +67,7 @@ trait ViewBehaviours extends ViewSpecBase {
     messageKeyPrefix: String,
     messageKeySuffix: String,
     messageHeadingArgs: Any*
-  )(byMethod: String = ""): Unit = {
+  )(byMethod: String = "", isError: Boolean = false): Unit = {
 
     val suffix = if (messageKeySuffix.isEmpty) "" else s".$messageKeySuffix"
 
@@ -81,24 +81,24 @@ trait ViewBehaviours extends ViewSpecBase {
 
       "display the correct browser title" in {
         val doc = asDocument(view)
-        assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix")
+        assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix", messageHeadingArgs: _*)(isError)
       }
 
       "display the correct page heading (h1)" in {
         val doc = asDocument(view)
-        assertPageTitleEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
+        assertPageHeadingEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
       }
     }
   }
 
-  def pageWithExpectedMessages(view: HtmlFormat.Appendable, checks: Seq[(Object, String)]): Unit =
-    checks.foreach { case (cssSelector, message) =>
-      s"element with cssSelector '$cssSelector'" - {
-        s"have message '$message'" in {
-          val doc  = asDocument(view)
-          val elem = doc.select(cssSelector.toString)
-          assertElementHasText(elem.first(), message)
-        }
-      }
-    }
+  def pageByMethodWithAssertions(
+    view: HtmlFormat.Appendable,
+    messageKeyPrefix: String,
+    messageKeySuffix: String,
+    messageHeadingArgs: Any*
+  )(byMethod: String = "", isError: Boolean = false)(assertions: => Unit): Unit = {
+    pageByMethod(view, messageKeyPrefix: String, messageKeySuffix: String, messageHeadingArgs: _*)(byMethod, isError)
+    assertions
+  }
+
 }

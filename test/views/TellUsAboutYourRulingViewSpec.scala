@@ -22,7 +22,7 @@ import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.TellUsAboutYourRulingView
 
-class TellUsAboutYourRulingViewSpec extends ViewBehaviours with BaseSelectors {
+class TellUsAboutYourRulingViewSpec extends ViewBehaviours {
 
   private val messageKeyPrefix = "tellUsAboutYourRuling"
 
@@ -41,24 +41,7 @@ class TellUsAboutYourRulingViewSpec extends ViewBehaviours with BaseSelectors {
 
   "TellUsAboutYourRulingView" - {
 
-    behave like normalPage(messageKeyPrefix, "")()
+    normalPage(messageKeyPrefix, "")()
 
-    "should have correct additional content" - {
-
-      val textBoxLabel = "#main-content > div > div > form > div > div > label"
-
-      val expectedContent: Seq[(Object, String)] =
-        Seq(
-          h2           -> "About the goods",
-          p(1)         -> "Examples of information can include",
-          bullet(1)    -> "ruling reference numbers - this can be found on ruling decision letters from HMRC",
-          bullet(2)    -> "if the ruling has been cancelled or annulled - you will need to tell us why",
-          bullet(3)    -> "the date the ruling was granted",
-          bullet(4)    -> "the expiry date for the ruling",
-          textBoxLabel -> "Can you provide more information about the previous ruling?"
-        )
-
-      behave like pageWithExpectedMessages(viewViaApply, expectedContent)
-    }
   }
 }

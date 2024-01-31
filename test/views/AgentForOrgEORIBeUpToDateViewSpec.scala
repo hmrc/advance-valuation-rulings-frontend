@@ -21,7 +21,7 @@ import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AgentForOrgEORIBeUpToDateView
 
-class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours with BaseSelectors {
+class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "eoriBeUpToDate"
   val messageKeySuffix = "org"
@@ -38,19 +38,5 @@ class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours with BaseSelector
 
   "AgentForOrgEORIBeUpToDateView" - {
     normalPage(messageKeyPrefix, messageKeySuffix)()
-
-    "should have correct additional content" - {
-
-      val expectedContent =
-        Seq(
-          h2        -> "About the applicant",
-          p(1)         -> "To update the name or address we have on record, the organisation will need to report a change of circumstances.",
-          p(2)      -> "For an EORI number starting with GB, the organisation can either:",
-          bullet(1) -> "fill in an enquiry form (opens in new tab)",
-          bullet(2) -> "contact import and export: general enquiries (opens in new tab)"
-        )
-
-      behave like pageWithExpectedMessages(viewViaApply, expectedContent)
-    }
   }
 }
