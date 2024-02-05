@@ -25,6 +25,7 @@ import models._
 import org.mockito.MockitoSugar.{mock, when}
 import pages._
 import play.api.libs.json.Writes
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import queries._
@@ -57,7 +58,7 @@ class NavigatorSpec extends SpecBase {
 
     "/ must navigate to AccountHome" in {
 
-      def redirectRoute = routes.AccountHomeController.onPageLoad()
+      def redirectRoute: Call = routes.AccountHomeController.onPageLoad()
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()

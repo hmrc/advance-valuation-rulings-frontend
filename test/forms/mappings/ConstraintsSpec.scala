@@ -21,7 +21,7 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.data.validation.{Invalid, Valid, ValidationError}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError, ValidationResult}
 
 import java.time.LocalDate
 
@@ -123,6 +123,35 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
     "must return Invalid for a string longer than the allowed length" in {
       val result = maxLength(10, "error.length")("a" * 11)
       result mustEqual Invalid("error.length", 10)
+    }
+  }
+
+  "numericAndCorrectLength" - {
+    val commodityCodeMinimumLength = 4
+    val commodityCodeMaximumLength = 10
+
+    "must return Valid for numeric commodity code of correct length" in {
+      val result: ValidationResult =
+        numericAndCorrectLength(commodityCodeMinimumLength, commodityCodeMaximumLength)("33446")
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a numeric commodity code with exceeded length" in {
+      val result: ValidationResult =
+        numericAndCorrectLength(commodityCodeMinimumLength, commodityCodeMaximumLength)("12345678910")
+      result mustEqual Invalid("commodityCode.error.length")
+    }
+
+    "must return Invalid for a numeric commodity code with lower length" in {
+      val result: ValidationResult =
+        numericAndCorrectLength(commodityCodeMinimumLength, commodityCodeMaximumLength)("123")
+      result mustEqual Invalid("commodityCode.error.length")
+    }
+
+    "must return Invalid for a non numeric string" in {
+      val result: ValidationResult =
+        numericAndCorrectLength(commodityCodeMinimumLength, commodityCodeMaximumLength)("123h")
+      result mustEqual Invalid("commodityCode.error.nonNumeric")
     }
   }
 

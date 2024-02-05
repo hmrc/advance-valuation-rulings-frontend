@@ -501,9 +501,8 @@ commodityCode.hint.pt.2 = 7115
 commodityCode.hint.pt.3 = 00
 commodityCode.checkYourAnswersLabel = Cod nwyddau
 commodityCode.error.required = Nodwch y cod nwyddau
-commodityCode.error.nonNumeric = Gall y cod nwyddau dim ond cynnwys digidau
-commodityCode.error.length.max = Mae’n rhaid i’r cod nwyddau fod rhwng 4 a 10 digid
-commodityCode.error.length.min = Mae’n rhaid i’r cod nwyddau fod rhwng 4 a 10 digid
+commodityCode.error.nonNumeric = Mae’n rhaid i’r cod nwyddau gynnwys rhifau 0-9 yn unig
+commodityCode.error.length = Mae’n rhaid i’r cod nwyddau fod rhwng 4 a 10 digid
 commodityCode.change.hidden = y cod nwyddau rydych wedi’i roi
 
 haveTheGoodsBeenSubjectToLegalChallenges.caption = Ynglŷn â’r nwyddau

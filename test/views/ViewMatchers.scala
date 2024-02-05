@@ -148,20 +148,26 @@ object ViewMatchers {
   }
 
   class ChildMatcherBuilder(tag: String) {
-    def containingText(text: String)              = new ElementContainsChildWithTextMatcher(tag, text)
-    def withAttribute(key: String, value: String) = new ElementContainsChildWithAttributeMatcher(tag, key, value)
+    def containingText(text: String): ElementContainsChildWithTextMatcher                   =
+      new ElementContainsChildWithTextMatcher(tag, text)
+    def withAttribute(key: String, value: String): ElementContainsChildWithAttributeMatcher =
+      new ElementContainsChildWithAttributeMatcher(tag, key, value)
   }
 
-  def containElementWithClass(className: String)              = new ContainElementWithClassMatcher(className)
-  def containElementWithID(id: String)                        = new ContainElementWithIDMatcher(id)
-  def containElementWithAttribute(key: String, value: String) = new ContainElementWithAttribute(key, value)
-  def containElementWithTag(tag: String)                      = new ContainElementWithTagMatcher(tag)
-  def containText(text: String)                               = new ElementContainsTextMatcher(text)
-  def containHtml(text: String)                               = new ElementContainsHtmlMatcher(text)
-  def haveSize(size: Int)                                     = new ElementsHasSizeMatcher(size)
-  def haveAttribute(key: String, value: String)               = new ElementHasAttributeValueMatcher(key, value)
-  def haveAttribute(key: String)                              = new ElementHasAttributeMatcher(key)
-  def haveTag(tag: String)                                    = new ElementTagMatcher(tag)
-  def haveChildCount(count: Int)                              = new ElementHasChildCountMatcher(count)
-  def haveChild(tag: String)                                  = new ChildMatcherBuilder(tag)
+  def containElementWithClass(className: String): ContainElementWithClassMatcher           = new ContainElementWithClassMatcher(
+    className
+  )
+  def containElementWithID(id: String): ContainElementWithIDMatcher                        = new ContainElementWithIDMatcher(id)
+  def containElementWithAttribute(key: String, value: String): ContainElementWithAttribute =
+    new ContainElementWithAttribute(key, value)
+  def containElementWithTag(tag: String): ContainElementWithTagMatcher                     = new ContainElementWithTagMatcher(tag)
+  def containText(text: String): ElementContainsTextMatcher                                = new ElementContainsTextMatcher(text)
+  def containHtml(text: String): ElementContainsHtmlMatcher                                = new ElementContainsHtmlMatcher(text)
+  def haveSize(size: Int): ElementsHasSizeMatcher                                          = new ElementsHasSizeMatcher(size)
+  def haveAttribute(key: String, value: String): ElementHasAttributeValueMatcher           =
+    new ElementHasAttributeValueMatcher(key, value)
+  def haveAttribute(key: String): ElementHasAttributeMatcher                               = new ElementHasAttributeMatcher(key)
+  def haveTag(tag: String): ElementTagMatcher                                              = new ElementTagMatcher(tag)
+  def haveChildCount(count: Int): ElementHasChildCountMatcher                              = new ElementHasChildCountMatcher(count)
+  def haveChild(tag: String): ChildMatcherBuilder                                          = new ChildMatcherBuilder(tag)
 }

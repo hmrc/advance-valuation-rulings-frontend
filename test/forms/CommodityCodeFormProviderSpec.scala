@@ -23,8 +23,7 @@ import play.api.data.FormError
 class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase {
 
   val requiredKey       = "commodityCode.error.required"
-  val minLengthKey      = "commodityCode.error.length.min"
-  val maxLengthKey      = "commodityCode.error.length.max"
+  val lengthKey         = "commodityCode.error.length"
   val minLength         = 4
   val maxLength         = 10
   val invalidNumericKey = "commodityCode.error.nonNumeric"
@@ -52,14 +51,14 @@ class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase 
         form,
         fieldName,
         minLength = minLength,
-        lengthError = FormError(fieldName, minLengthKey, Seq(minLength))
+        lengthError = FormError(fieldName, lengthKey, Seq(minLength))
       )
 
       behave like numericStringWithMaxLength(
         form,
         fieldName,
         maxLength = maxLength,
-        lengthError = FormError(fieldName, maxLengthKey, Seq(maxLength))
+        lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
       )
 
       behave like fieldWithRange(
@@ -78,7 +77,7 @@ class CommodityCodeFormProviderSpec extends StringFieldBehaviours with SpecBase 
       behave like commodityCodeField(
         form,
         fieldName,
-        Seq(FormError(fieldName, maxLengthKey, Seq(maxLength)))
+        Seq(FormError(fieldName, lengthKey))
       )
     }
   }

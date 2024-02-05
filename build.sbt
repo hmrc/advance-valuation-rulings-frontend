@@ -1,9 +1,10 @@
-import sbt.Def
+import uk.gov.hmrc.DefaultBuildSettings._
 import scoverage.ScoverageKeys
-import uk.gov.hmrc.DefaultBuildSettings.addTestReportOption
-import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 lazy val appName: String = "advance-valuation-rulings-frontend"
+
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "2.13.12"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
@@ -13,10 +14,8 @@ lazy val root = (project in file("."))
   .settings(inConfig(Test)(testSettings))
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(itSettings))
-  .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.12",
     name := appName,
     play.sbt.routes.RoutesKeys.routesImport ++= Seq(
       "models._",
