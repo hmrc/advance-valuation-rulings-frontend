@@ -17,12 +17,7 @@
 package services
 
 import models.UserAnswers
-import models.requests.DataRequest
 import pages._
-import play.api.mvc.AnyContent
-import queries.Modifiable
-
-import javax.inject.Inject
 
 class DeleteAllUserAnswersService {
 
@@ -77,6 +72,7 @@ class DeleteAllUserAnswersService {
       UploadAnotherSupportingDocumentPage,
       UploadLetterOfAuthorityPage,
       UploadSupportingDocumentPage,
+      ValuationMethodPage, //Note: if the user answers for ValuationMethodPage are removed it will remove AdaptMethodPage
       VerifyLetterOfAuthorityPage,
       VerifyTraderDetailsPage,
       WhatIsYourRoleAsImporterPage,

@@ -18,6 +18,7 @@ package services
 
 import base.SpecBase
 import models.AdaptMethod.Method1
+import models.ValuationMethod
 import models.AuthUserType.IndividualTrader
 import models.UserAnswers
 import pages._
@@ -30,7 +31,7 @@ class DeleteAllUserAnswersServiceSpec extends SpecBase {
 
     ".deleteAllUserAnswers" - {
 
-      "should return" in {
+      "should delete all useranswers" in {
 
         val useranswers: UserAnswers =
           emptyUserAnswers
@@ -47,77 +48,156 @@ class DeleteAllUserAnswersServiceSpec extends SpecBase {
 
         service.deleteAllUserAnswers(useranswers) mustBe Some(emptyUserAnswers)
       }
+    }
 
-      ".deleteAllUserAnswersExcept" - {
+    ".deleteAllUserAnswersExcept" - {
 
-        "when given some pages to exclude" - {
+      "when given some pages to exclude" - {
 
-          "should return the excluded useranswers" in {
+        "should return the excluded useranswers" in {
 
-            val useranswers: UserAnswers =
+          val useranswers: UserAnswers =
+            emptyUserAnswers
+              .setFuture(AboutSimilarGoodsPage, "foo")
+              .futureValue
+              .setFuture(AccountHomePage, IndividualTrader)
+              .futureValue
+              .setFuture(AdaptMethodPage, Method1)
+              .futureValue
+              .setFuture(AgentForOrgCheckRegisteredDetailsPage, true)
+              .futureValue
+              .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
+              .futureValue
+
+          val actual =
+            service.deleteAllUserAnswersExcept(
+              useranswers,
+              Seq(AboutSimilarGoodsPage, AdaptMethodPage, AgentForTraderCheckRegisteredDetailsPage)
+            )
+
+          val expected =
+            Some(
               emptyUserAnswers
                 .setFuture(AboutSimilarGoodsPage, "foo")
                 .futureValue
-                .setFuture(AccountHomePage, IndividualTrader)
-                .futureValue
-                .setFuture(AdaptMethodPage, Method1)
-                .futureValue
-                .setFuture(AgentForOrgCheckRegisteredDetailsPage, true)
-                .futureValue
                 .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
                 .futureValue
+            )
 
-            val actual =
-              service.deleteAllUserAnswersExcept(
-                useranswers,
-                Seq(AboutSimilarGoodsPage, AdaptMethodPage, AgentForTraderCheckRegisteredDetailsPage)
-              )
-
-            val expected =
-              Some(
-                emptyUserAnswers
-                  .setFuture(AboutSimilarGoodsPage, "foo")
-                  .futureValue
-                  .setFuture(AdaptMethodPage, Method1)
-                  .futureValue
-                  .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
-                  .futureValue
-              )
-
-            actual mustBe expected
-          }
+          actual mustBe expected
         }
+      }
 
-        "when given No pages to exclude" - {
+      "when given No pages to exclude" - {
 
-          "should return empty useranswers" in {
+        "should return empty useranswers" in {
 
-            val useranswers: UserAnswers =
+          val useranswers: UserAnswers =
+            emptyUserAnswers
+              .setFuture(AboutSimilarGoodsPage, "foo")
+              .futureValue
+              .setFuture(AccountHomePage, IndividualTrader)
+              .futureValue
+              .setFuture(AdaptMethodPage, Method1)
+              .futureValue
+              .setFuture(AgentForOrgCheckRegisteredDetailsPage, true)
+              .futureValue
+              .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
+              .futureValue
+
+          val actual =
+            service.deleteAllUserAnswersExcept(
+              useranswers,
+              Seq()
+            )
+
+          val expected =
+            Some(emptyUserAnswers)
+
+          actual mustBe expected
+        }
+      }
+
+      "when given AdaptMethodPage & ValuationMethodPage to exclude be excluded" - {
+
+        "should return the excluded useranswers" in {
+
+          val useranswers: UserAnswers =
+            emptyUserAnswers
+              .setFuture(AboutSimilarGoodsPage, "foo")
+              .futureValue
+              .setFuture(AccountHomePage, IndividualTrader)
+              .futureValue
+              .setFuture(AdaptMethodPage, Method1)
+              .futureValue
+              .setFuture(ValuationMethodPage, ValuationMethod.Method1)
+              .futureValue
+              .setFuture(AgentForOrgCheckRegisteredDetailsPage, true)
+              .futureValue
+              .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
+              .futureValue
+
+          val actual =
+            service.deleteAllUserAnswersExcept(
+              useranswers,
+              Seq(AboutSimilarGoodsPage, AdaptMethodPage, ValuationMethodPage, AgentForTraderCheckRegisteredDetailsPage)
+            )
+
+          val expected =
+            Some(
               emptyUserAnswers
                 .setFuture(AboutSimilarGoodsPage, "foo")
                 .futureValue
-                .setFuture(AccountHomePage, IndividualTrader)
+                .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
                 .futureValue
                 .setFuture(AdaptMethodPage, Method1)
                 .futureValue
-                .setFuture(AgentForOrgCheckRegisteredDetailsPage, true)
+                .setFuture(ValuationMethodPage, ValuationMethod.Method1)
+                .futureValue
+            )
+
+          actual mustBe expected
+        }
+      }
+
+      "when given AdaptMethodPage excluded, while ValuationMethodPage is NOT excluded" - {
+
+        "should delete all answers including AdaptMethodPage useranswers" in {
+
+          val useranswers: UserAnswers =
+            emptyUserAnswers
+              .setFuture(AboutSimilarGoodsPage, "foo")
+              .futureValue
+              .setFuture(AccountHomePage, IndividualTrader)
+              .futureValue
+              .setFuture(AdaptMethodPage, Method1)
+              .futureValue
+              .setFuture(ValuationMethodPage, ValuationMethod.Method1)
+              .futureValue
+              .setFuture(AgentForOrgCheckRegisteredDetailsPage, true)
+              .futureValue
+              .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
+              .futureValue
+
+          val actual =
+            service.deleteAllUserAnswersExcept(
+              useranswers,
+              Seq(AboutSimilarGoodsPage, AdaptMethodPage, AgentForTraderCheckRegisteredDetailsPage)
+            )
+
+          val expected =
+            Some(
+              emptyUserAnswers
+                .setFuture(AboutSimilarGoodsPage, "foo")
                 .futureValue
                 .setFuture(AgentForTraderCheckRegisteredDetailsPage, false)
                 .futureValue
+            )
 
-            val actual =
-              service.deleteAllUserAnswersExcept(
-                useranswers,
-                Seq()
-              )
-
-            val expected =
-              Some(emptyUserAnswers)
-
-            actual mustBe expected
-          }
+          actual mustBe expected
         }
       }
     }
+
   }
 }
