@@ -23,11 +23,12 @@ import javax.inject.Inject
 
 class CommodityCodeFormProvider @Inject() extends Mappings {
 
+  private val commodityCodeMinimumLength = 4
+  private val commodityCodeMaximumLength = 10
+
   def apply(): Form[String] =
     Form(
       "value" -> commodityCode("commodityCode.error.required")
-        .verifying(numericString("commodityCode.error.nonNumeric"))
-        .verifying(minLength(4, "commodityCode.error.length.min"))
-        .verifying(maxLength(10, "commodityCode.error.length.max"))
+        .verifying(numericAndCorrectLength(commodityCodeMinimumLength, commodityCodeMaximumLength))
     )
 }

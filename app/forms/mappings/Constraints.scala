@@ -81,6 +81,25 @@ trait Constraints {
         Invalid(errorKey, minimum)
     }
 
+  protected def numericAndCorrectLength(minimum: Int, maximum: Int): Constraint[String] =
+    Constraint { str =>
+      if (isNumeric(str)) {
+        if (hasCorrectLength(str, minimum, maximum)) {
+          Valid
+        } else {
+          Invalid("commodityCode.error.length")
+        }
+      } else {
+        Invalid("commodityCode.error.nonNumeric")
+      }
+    }
+
+  private def isNumeric(str: String): Boolean =
+    str.replaceAll("\\s", "").forall(_.isDigit)
+
+  private def hasCorrectLength(str: String, minimum: Int, maximum: Int): Boolean =
+    (minimum to maximum).contains(str.length)
+
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
     Constraint {
       case date if date.isAfter(maximum) =>

@@ -246,9 +246,8 @@ commodityCode.hint.pt.2 = 7115
 commodityCode.hint.pt.3 = 00
 commodityCode.checkYourAnswersLabel = Commodity code
 commodityCode.error.required = Enter a commodity code
-commodityCode.error.nonNumeric = Commodity code can only include digits
-commodityCode.error.length.max = Commodity code must be between 4 and 10 digits
-commodityCode.error.length.min = Commodity code must be between 4 and 10 digits
+commodityCode.error.nonNumeric = Commodity code must only include numbers 0-9
+commodityCode.error.length = Commodity code must be between 4 and 10 digits
 commodityCode.change.hidden = the commodity code you provided
 
 hasCommodityCode.title = Commodity code for the goods

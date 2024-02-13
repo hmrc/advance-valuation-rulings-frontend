@@ -37,7 +37,7 @@ final case class TraderDetailsWithConfirmation(
 }
 
 object TraderDetailsWithConfirmation {
-  def apply(details: TraderDetailsWithCountryCode) =
+  def apply(details: TraderDetailsWithCountryCode): TraderDetailsWithConfirmation =
     new TraderDetailsWithConfirmation(
       details.EORINo,
       details.consentToDisclosureOfPersonalData,
