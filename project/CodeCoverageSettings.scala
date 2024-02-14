@@ -4,8 +4,6 @@ import scoverage.ScoverageKeys.*
 object CodeCoverageSettings {
   private val excludedPackages: Seq[String] = Seq(
     "<empty>",
-    "Reverse.*",
-    ".*handlers.*",
     ".*components.*",
     ".*Routes.*",
     ".*viewmodels.govuk.*"

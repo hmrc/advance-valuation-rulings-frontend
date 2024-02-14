@@ -17,24 +17,22 @@
 package views
 
 import forms.ConfidentialInformationFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ConfidentialInformationView
 
 class ConfidentialInformationViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "confidentialInformation"
+  private val form: ConfidentialInformationFormProvider = app.injector.instanceOf[ConfidentialInformationFormProvider]
 
-  val form: ConfidentialInformationFormProvider = app.injector.instanceOf[ConfidentialInformationFormProvider]
+  private val view: ConfidentialInformationView = app.injector.instanceOf[ConfidentialInformationView]
 
-  val view: ConfidentialInformationView = app.injector.instanceOf[ConfidentialInformationView]
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-
-  "WhyTransactionValueOfSimilarGoodsView" - {
-    normalPage(messageKeyPrefix, "")()
+  "ConfidentialInformationView" - {
+    normalPage("confidentialInformation")()
   }
 }

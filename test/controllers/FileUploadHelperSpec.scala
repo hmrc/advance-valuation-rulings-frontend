@@ -101,16 +101,6 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
   private val page                    = UploadLetterOfAuthorityPage
   private val appName                 = "App name"
 
-  private val upscanInitiateResponse               = UpscanInitiateResponse(
-    reference = "reference",
-    uploadRequest = UpscanInitiateResponse.UploadRequest(
-      href = "href",
-      fields = Map(
-        "field1" -> "value1",
-        "field2" -> "value2"
-      )
-    )
-  )
   private val successfulFile: UploadedFile.Success = UploadedFile.Success(
     reference = "reference",
     downloadUrl = "downloadUrl",

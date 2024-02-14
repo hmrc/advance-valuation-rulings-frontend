@@ -17,24 +17,22 @@
 package views
 
 import forms.WhatIsYourRoleAsImporterFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.WhatIsYourRoleAsImporterView
 
 class WhatIsYourRoleAsImporterViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "whatIsYourRoleAsImporter"
+  private val form: WhatIsYourRoleAsImporterFormProvider = app.injector.instanceOf[WhatIsYourRoleAsImporterFormProvider]
 
-  val form: WhatIsYourRoleAsImporterFormProvider = app.injector.instanceOf[WhatIsYourRoleAsImporterFormProvider]
+  private val view: WhatIsYourRoleAsImporterView = app.injector.instanceOf[WhatIsYourRoleAsImporterView]
 
-  val view: WhatIsYourRoleAsImporterView = app.injector.instanceOf[WhatIsYourRoleAsImporterView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "WhatIsYourRoleAsImporterView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("whatIsYourRoleAsImporter")()
   }
 }

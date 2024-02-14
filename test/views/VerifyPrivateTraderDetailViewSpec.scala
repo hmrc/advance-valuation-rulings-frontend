@@ -17,29 +17,27 @@
 package views
 
 import forms.VerifyTraderDetailsFormProvider
-import models.{DraftId, NormalMode, TraderDetailsWithConfirmation}
+import models.{NormalMode, TraderDetailsWithConfirmation}
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.VerifyPrivateTraderDetailView
 
 class VerifyPrivateTraderDetailViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "traderDetails.private"
+  private val details: TraderDetailsWithConfirmation = TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
 
-  val role: TraderDetailsWithConfirmation = TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
+  private val form: VerifyTraderDetailsFormProvider = app.injector.instanceOf[VerifyTraderDetailsFormProvider]
 
-  val form: VerifyTraderDetailsFormProvider = app.injector.instanceOf[VerifyTraderDetailsFormProvider]
-
-  val view: VerifyPrivateTraderDetailView = app.injector.instanceOf[VerifyPrivateTraderDetailView]
+  private val view: VerifyPrivateTraderDetailView = app.injector.instanceOf[VerifyPrivateTraderDetailView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(form.apply(Some(role)), NormalMode, DraftId(1L), role)(fakeRequest, messages)
+    view.apply(form.apply(Some(details)), NormalMode, draftId, details)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(form.apply(Some(role)), NormalMode, DraftId(1L), role, fakeRequest, messages)
+    view.render(form.apply(Some(details)), NormalMode, draftId, details, fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(form.apply(Some(role)), NormalMode, DraftId(1L), role)(fakeRequest, messages)
+    view.f(form.apply(Some(details)), NormalMode, draftId, details)(fakeRequest, messages)
 
   "VerifyPrivateTraderDetailView" - {
-    normalPage(messageKeyPrefix, "", role.EORINo)()
+    normalPage("traderDetails.private")(details.EORINo)
   }
 }

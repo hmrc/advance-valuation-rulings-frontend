@@ -17,24 +17,22 @@
 package views
 
 import forms.ImportGoodsFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ImportGoodsView
 
 class ImportGoodsViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "importGoods"
+  private val form: ImportGoodsFormProvider = app.injector.instanceOf[ImportGoodsFormProvider]
 
-  val form: ImportGoodsFormProvider = app.injector.instanceOf[ImportGoodsFormProvider]
+  private val view: ImportGoodsView = app.injector.instanceOf[ImportGoodsView]
 
-  val view: ImportGoodsView = app.injector.instanceOf[ImportGoodsView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "ImportGoodsView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("importGoods")()
   }
 }

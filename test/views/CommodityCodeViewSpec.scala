@@ -17,24 +17,22 @@
 package views
 
 import forms.CommodityCodeFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.CommodityCodeView
 
 class CommodityCodeViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "commodityCode"
+  private val form: CommodityCodeFormProvider = app.injector.instanceOf[CommodityCodeFormProvider]
 
-  val form: CommodityCodeFormProvider = app.injector.instanceOf[CommodityCodeFormProvider]
+  private val view: CommodityCodeView = app.injector.instanceOf[CommodityCodeView]
 
-  val view: CommodityCodeView = app.injector.instanceOf[CommodityCodeView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "CommodityCodeView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("commodityCode")()
   }
 }

@@ -16,24 +16,22 @@
 
 package views
 
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.UploadInProgressView
 
 class UploadInProgressViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "uploadInProgress"
-
-  val view: UploadInProgressView = app.injector.instanceOf[UploadInProgressView]
+  private val view: UploadInProgressView = app.injector.instanceOf[UploadInProgressView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(NormalMode, DraftId(1L), Some("key"), isLetterOfAuthority = false)(messages, fakeRequest)
+    view.apply(NormalMode, draftId, Some("key"), isLetterOfAuthority = false)(messages, fakeRequest)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(NormalMode, DraftId(1L), Some("key"), isLetterOfAuthority = false, messages, fakeRequest)
-  val viewViaF: HtmlFormat.Appendable      = view.f(NormalMode, DraftId(1L), Some("key"), false)(messages, fakeRequest)
+    view.render(NormalMode, draftId, Some("key"), isLetterOfAuthority = false, messages, fakeRequest)
+  val viewViaF: HtmlFormat.Appendable      = view.f(NormalMode, draftId, Some("key"), false)(messages, fakeRequest)
 
   "UploadInProgressView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("uploadInProgress")()
   }
 }

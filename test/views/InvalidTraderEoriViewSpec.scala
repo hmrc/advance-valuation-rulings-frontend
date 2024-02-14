@@ -16,22 +16,20 @@
 
 package views
 
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.InvalidTraderEoriView
 
 class InvalidTraderEoriViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "invalidTraderEori"
+  private val view: InvalidTraderEoriView = app.injector.instanceOf[InvalidTraderEoriView]
 
-  val view: InvalidTraderEoriView = app.injector.instanceOf[InvalidTraderEoriView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(NormalMode, DraftId(1L), EoriNumber)(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(NormalMode, DraftId(1L), EoriNumber, fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(NormalMode, DraftId(1L), EoriNumber)(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(NormalMode, draftId, EoriNumber)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(NormalMode, draftId, EoriNumber, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(NormalMode, draftId, EoriNumber)(fakeRequest, messages)
 
   "InvalidTraderEoriView" - {
-    normalPage(messageKeyPrefix, "", EoriNumber)()
+    normalPage("invalidTraderEori")(EoriNumber)
   }
 }

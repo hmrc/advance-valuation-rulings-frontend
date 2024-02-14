@@ -23,17 +23,15 @@ import views.html.ApplicationCompleteView
 
 class ApplicationCompleteViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "applicationComplete"
-
-  val view: ApplicationCompleteView = app.injector.instanceOf[ApplicationCompleteView]
+  private val view: ApplicationCompleteView = app.injector.instanceOf[ApplicationCompleteView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(isIndividual = true, ApplicationId(1L).toString, ContactEmail)(fakeRequest, messages)
+    view.apply(isIndividual = true, ApplicationId(1L).toString, ContactEmail)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
     view.render(isIndividual = true, ApplicationId(1L).toString, ContactEmail, fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      = view.f(true, ApplicationId(1L).toString, ContactEmail)(fakeRequest, messages)
 
   "ApplicationCompleteView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("applicationComplete")()
   }
 }

@@ -17,24 +17,22 @@
 package views
 
 import forms.HaveYouReceivedADecisionFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.HaveYouReceivedADecisionView
 
 class HaveYouReceivedADecisionViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "haveYouReceivedADecision"
+  private val form: HaveYouReceivedADecisionFormProvider = app.injector.instanceOf[HaveYouReceivedADecisionFormProvider]
 
-  val form: HaveYouReceivedADecisionFormProvider = app.injector.instanceOf[HaveYouReceivedADecisionFormProvider]
+  private val view: HaveYouReceivedADecisionView = app.injector.instanceOf[HaveYouReceivedADecisionView]
 
-  val view: HaveYouReceivedADecisionView = app.injector.instanceOf[HaveYouReceivedADecisionView]
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-
-  "HaveYouReceivedADecision" - {
-    normalPage(messageKeyPrefix, "")()
+  "HaveYouReceivedADecisionView" - {
+    normalPage("haveYouReceivedADecision")()
   }
 }

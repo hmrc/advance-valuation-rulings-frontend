@@ -17,26 +17,24 @@
 package views
 
 import forms.HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.HaveYouUsedMethodOneForSimilarGoodsInPastView
 
 class HaveYouUsedMethodOneForSimilarGoodsInPastViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "haveYouUsedMethodOneForSimilarGoodsInPast"
-
-  val form: HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider =
+  private val form: HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider =
     app.injector.instanceOf[HaveYouUsedMethodOneForSimilarGoodsInPastFormProvider]
 
-  val view: HaveYouUsedMethodOneForSimilarGoodsInPastView =
+  private val view: HaveYouUsedMethodOneForSimilarGoodsInPastView =
     app.injector.instanceOf[HaveYouUsedMethodOneForSimilarGoodsInPastView]
 
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "HaveYouUsedMethodOneForSimilarGoodsInPastView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("haveYouUsedMethodOneForSimilarGoodsInPast")()
   }
 }

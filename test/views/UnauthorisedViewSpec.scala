@@ -22,15 +22,13 @@ import views.html.UnauthorisedView
 
 class UnauthorisedViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "unauthorised"
+  private val view: UnauthorisedView = app.injector.instanceOf[UnauthorisedView]
 
-  val view: UnauthorisedView = app.injector.instanceOf[UnauthorisedView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view()(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply()(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable = view.render(fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      = view.f()(fakeRequest, messages)
 
   "UnauthorisedView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("unauthorised")()
   }
 }

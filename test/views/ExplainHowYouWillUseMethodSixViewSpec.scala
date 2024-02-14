@@ -17,25 +17,23 @@
 package views
 
 import forms.ExplainHowYouWillUseMethodSixFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ExplainHowYouWillUseMethodSixView
 
 class ExplainHowYouWillUseMethodSixViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "explainHowYouWillUseMethodSix"
-
-  val form: ExplainHowYouWillUseMethodSixFormProvider =
+  private val form: ExplainHowYouWillUseMethodSixFormProvider =
     app.injector.instanceOf[ExplainHowYouWillUseMethodSixFormProvider]
 
-  val view: ExplainHowYouWillUseMethodSixView = app.injector.instanceOf[ExplainHowYouWillUseMethodSixView]
+  private val view: ExplainHowYouWillUseMethodSixView = app.injector.instanceOf[ExplainHowYouWillUseMethodSixView]
 
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
-  "WhyTransactionValueOfSimilarGoodsView" - {
-    normalPage(messageKeyPrefix, "")()
+  "ExplainHowYouWillUseMethodSixView" - {
+    normalPage("explainHowYouWillUseMethodSix")()
   }
 }

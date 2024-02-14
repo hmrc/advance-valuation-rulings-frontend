@@ -17,26 +17,24 @@
 package views
 
 import forms.ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ExplainWhyYouHaveNotSelectedMethodOneToFiveView
 
 class ExplainWhyYouHaveNotSelectedMethodOneToFiveViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "explainWhyYouHaveNotSelectedMethodOneToFive"
-
-  val form: ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider =
+  private val form: ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider =
     app.injector.instanceOf[ExplainWhyYouHaveNotSelectedMethodOneToFiveFormProvider]
 
-  val view: ExplainWhyYouHaveNotSelectedMethodOneToFiveView =
+  private val view: ExplainWhyYouHaveNotSelectedMethodOneToFiveView =
     app.injector.instanceOf[ExplainWhyYouHaveNotSelectedMethodOneToFiveView]
 
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "ExplainWhyYouHaveNotSelectedMethodOneToFiveView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("explainWhyYouHaveNotSelectedMethodOneToFive")()
   }
 }

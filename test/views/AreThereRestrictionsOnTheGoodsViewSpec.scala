@@ -17,25 +17,23 @@
 package views
 
 import forms.AreThereRestrictionsOnTheGoodsFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AreThereRestrictionsOnTheGoodsView
 
 class AreThereRestrictionsOnTheGoodsViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "areThereRestrictionsOnTheGoods"
-
-  val form: AreThereRestrictionsOnTheGoodsFormProvider =
+  private val form: AreThereRestrictionsOnTheGoodsFormProvider =
     app.injector.instanceOf[AreThereRestrictionsOnTheGoodsFormProvider]
 
-  val view: AreThereRestrictionsOnTheGoodsView = app.injector.instanceOf[AreThereRestrictionsOnTheGoodsView]
+  private val view: AreThereRestrictionsOnTheGoodsView = app.injector.instanceOf[AreThereRestrictionsOnTheGoodsView]
 
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "AreThereRestrictionsOnTheGoodsView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("areThereRestrictionsOnTheGoods")()
   }
 }

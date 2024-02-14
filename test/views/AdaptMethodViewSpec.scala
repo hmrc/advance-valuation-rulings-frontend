@@ -17,24 +17,22 @@
 package views
 
 import forms.AdaptMethodFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AdaptMethodView
 
 class AdaptMethodViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "adaptMethod"
+  private val form: AdaptMethodFormProvider = app.injector.instanceOf[AdaptMethodFormProvider]
 
-  val form: AdaptMethodFormProvider = app.injector.instanceOf[AdaptMethodFormProvider]
+  private val view: AdaptMethodView = app.injector.instanceOf[AdaptMethodView]
 
-  val view: AdaptMethodView = app.injector.instanceOf[AdaptMethodView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "AdaptMethodView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("adaptMethod")()
   }
 }

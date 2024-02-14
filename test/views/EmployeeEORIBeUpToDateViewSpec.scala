@@ -16,22 +16,19 @@
 
 package views
 
-import models.DraftId
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.EmployeeEORIBeUpToDateView
 
 class EmployeeEORIBeUpToDateViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "eoriBeUpToDate"
+  private val view: EmployeeEORIBeUpToDateView = app.injector.instanceOf[EmployeeEORIBeUpToDateView]
 
-  val view: EmployeeEORIBeUpToDateView = app.injector.instanceOf[EmployeeEORIBeUpToDateView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(draftId)(fakeRequest, messages)
 
   "EmployeeEORIBeUpToDateView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("eoriBeUpToDate")()
   }
 }

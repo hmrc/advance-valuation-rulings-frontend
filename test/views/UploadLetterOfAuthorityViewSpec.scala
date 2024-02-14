@@ -16,57 +16,43 @@
 
 package views
 
-import models.DraftId
-import models.upscan.UpscanInitiateResponse
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.UploadLetterOfAuthorityView
 
 class UploadLetterOfAuthorityViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "uploadLetterOfAuthority"
+  private val view: UploadLetterOfAuthorityView = app.injector.instanceOf[UploadLetterOfAuthorityView]
 
-  val upscanInitiateResponse: UpscanInitiateResponse = UpscanInitiateResponse(
-    reference = "reference",
-    uploadRequest = UpscanInitiateResponse.UploadRequest(
-      href = "href",
-      fields = Map(
-        "field1" -> "value1",
-        "field2" -> "value2"
-      )
-    )
-  )
-
-  val view: UploadLetterOfAuthorityView = app.injector.instanceOf[UploadLetterOfAuthorityView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(DraftId(1L), Some(upscanInitiateResponse), None)(messages, fakeRequest)
+  val viewViaApply: HtmlFormat.Appendable  =
+    view.apply(draftId, Some(upscanInitiateResponse), None)(messages, fakeRequest)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(DraftId(1L), Some(upscanInitiateResponse), None, messages, fakeRequest)
-  val viewViaF: HtmlFormat.Appendable      = view.f(DraftId(1L), Some(upscanInitiateResponse), None)(messages, fakeRequest)
+    view.render(draftId, Some(upscanInitiateResponse), None, messages, fakeRequest)
+  val viewViaF: HtmlFormat.Appendable      = view.f(draftId, Some(upscanInitiateResponse), None)(messages, fakeRequest)
 
   "UploadLetterOfAuthorityView" - {
-    normalPage(messageKeyPrefix, "")()
-  }
+    normalPage("uploadLetterOfAuthority")()
 
-  "when upscan does not return an UpscanInitiateResponse" - {
-    val viewAlternate: HtmlFormat.Appendable = view(DraftId(1L), None, None)(messages, fakeRequest)
+    "when upscan does not return an UpscanInitiateResponse" - {
+      val viewAlternate: HtmlFormat.Appendable = view.apply(draftId, None, Some("upscan-error"))(messages, fakeRequest)
 
-    pageByMethodWithAssertions(viewAlternate, messageKeyPrefix, "")() {
-      "does not contain upscan responses in upload form" in {
-        assertNotRenderedByTagWithAttributes(
-          asDocument(viewAlternate),
-          "input",
-          "type"  -> "hidden",
-          "name"  -> "field1",
-          "value" -> "value1"
-        )
-        assertNotRenderedByTagWithAttributes(
-          asDocument(viewAlternate),
-          "input",
-          "type"  -> "hidden",
-          "name"  -> "field2",
-          "value" -> "value2"
-        )
+      renderPageWithAssertions(viewAlternate, "uploadLetterOfAuthority", isError = true, runGenericViewTests = true)() {
+        "have no upscan responses in the upload form related to uploaded files" in {
+          assertNotRenderedByTagWithAttributes(
+            asDocument(viewAlternate),
+            "input",
+            "type"  -> "hidden",
+            "name"  -> "field1",
+            "value" -> "value1"
+          )
+          assertNotRenderedByTagWithAttributes(
+            asDocument(viewAlternate),
+            "input",
+            "type"  -> "hidden",
+            "name"  -> "field2",
+            "value" -> "value2"
+          )
+        }
       }
     }
   }

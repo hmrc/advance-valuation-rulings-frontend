@@ -16,22 +16,19 @@
 
 package views
 
-import models.DraftId
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.CancelAreYouSureView
 
 class CancelAreYouSureViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "cancelAreYouSure"
+  private val view: CancelAreYouSureView = app.injector.instanceOf[CancelAreYouSureView]
 
-  val view: CancelAreYouSureView = app.injector.instanceOf[CancelAreYouSureView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(draftId)(fakeRequest, messages)
 
   "CancelAreYouSureView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("cancelAreYouSure")()
   }
 }

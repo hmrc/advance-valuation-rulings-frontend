@@ -17,24 +17,22 @@
 package views
 
 import forms.ValuationMethodFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ChoosingMethodView
 
 class ChoosingMethodViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "choosingMethod"
+  private val form: ValuationMethodFormProvider = app.injector.instanceOf[ValuationMethodFormProvider]
 
-  val form: ValuationMethodFormProvider = app.injector.instanceOf[ValuationMethodFormProvider]
+  private val view: ChoosingMethodView = app.injector.instanceOf[ChoosingMethodView]
 
-  val view: ChoosingMethodView = app.injector.instanceOf[ChoosingMethodView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "ChoosingMethodView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("choosingMethod")()
   }
 }

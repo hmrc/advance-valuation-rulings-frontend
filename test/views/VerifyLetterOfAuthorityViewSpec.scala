@@ -16,7 +16,7 @@
 
 package views
 
-import models.{DraftId, NormalMode, TraderDetailsWithConfirmation, UploadedFile}
+import models.{NormalMode, UploadedFile}
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.VerifyLetterOfAuthorityView
@@ -25,11 +25,7 @@ import java.time.Instant
 
 class VerifyLetterOfAuthorityViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "verifyLetterOfAuthority"
-
-  val role: TraderDetailsWithConfirmation = TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
-
-  val attachment: UploadedFile.Success = UploadedFile.Success(
+  private val attachment: UploadedFile.Success = UploadedFile.Success(
     reference = "reference",
     downloadUrl = "downloadUrl",
     uploadDetails = UploadedFile.UploadDetails(
@@ -41,13 +37,13 @@ class VerifyLetterOfAuthorityViewSpec extends ViewBehaviours {
     )
   )
 
-  val view: VerifyLetterOfAuthorityView = app.injector.instanceOf[VerifyLetterOfAuthorityView]
+  private val view: VerifyLetterOfAuthorityView = app.injector.instanceOf[VerifyLetterOfAuthorityView]
 
-  val viewViaApply: HtmlFormat.Appendable  = view(attachment, DraftId(1L), NormalMode)(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(attachment, DraftId(1L), NormalMode, fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(attachment, DraftId(1L), NormalMode)(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(attachment, draftId, NormalMode)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(attachment, draftId, NormalMode, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(attachment, draftId, NormalMode)(fakeRequest, messages)
 
   "VerifyLetterOfAuthorityView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("verifyLetterOfAuthority")()
   }
 }

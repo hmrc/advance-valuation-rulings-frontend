@@ -17,24 +17,23 @@
 package views
 
 import forms.HasConfidentialInformationFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.HasConfidentialInformationView
 
 class HasConfidentialInformationViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "hasConfidentialInformation"
+  private val form: HasConfidentialInformationFormProvider =
+    app.injector.instanceOf[HasConfidentialInformationFormProvider]
 
-  val form: HasConfidentialInformationFormProvider = app.injector.instanceOf[HasConfidentialInformationFormProvider]
+  private val view: HasConfidentialInformationView = app.injector.instanceOf[HasConfidentialInformationView]
 
-  val view: HasConfidentialInformationView = app.injector.instanceOf[HasConfidentialInformationView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "HasConfidentialInformationView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("hasConfidentialInformation")()
   }
 }

@@ -17,7 +17,7 @@
 package views
 
 import forms.UploadAnotherSupportingDocumentFormProvider
-import models.{DraftAttachment, DraftId, NormalMode, UploadedFile}
+import models.{DraftAttachment, NormalMode, UploadedFile}
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.UploadAnotherSupportingDocumentView
@@ -26,9 +26,7 @@ import java.time.Instant
 
 class UploadAnotherSupportingDocumentViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "uploadAnotherSupportingDocument"
-
-  val form: UploadAnotherSupportingDocumentFormProvider =
+  private val form: UploadAnotherSupportingDocumentFormProvider =
     app.injector.instanceOf[UploadAnotherSupportingDocumentFormProvider]
 
   val successfulFile: UploadedFile.Success = UploadedFile.Success(
@@ -43,79 +41,69 @@ class UploadAnotherSupportingDocumentViewSpec extends ViewBehaviours {
     )
   )
 
-  val singleAttachment: Seq[DraftAttachment] = Seq(
+  private def attachments(numOfDocs: Int): Seq[DraftAttachment] = Seq.fill(numOfDocs)(
     DraftAttachment(successfulFile, isThisFileConfidential = Some(false))
   )
 
-  val attachments: Seq[DraftAttachment] = Seq(
-    DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-    DraftAttachment(successfulFile, isThisFileConfidential = Some(false))
-  )
-
-  val maxAttachments: Seq[DraftAttachment] = Seq(
-    DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-    DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-    DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-    DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-    DraftAttachment(successfulFile, isThisFileConfidential = Some(false))
-  )
-
-  val view: UploadAnotherSupportingDocumentView = app.injector.instanceOf[UploadAnotherSupportingDocumentView]
+  private val view: UploadAnotherSupportingDocumentView = app.injector.instanceOf[UploadAnotherSupportingDocumentView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(attachments, form.apply(attachments), NormalMode, DraftId(1L), None)(fakeRequest, messages)
+    view.apply(attachments(2), form.apply(attachments(2)), NormalMode, draftId, None)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(attachments, form.apply(attachments), NormalMode, DraftId(1L), None, fakeRequest, messages)
+    view.render(attachments(2), form.apply(attachments(2)), NormalMode, draftId, None, fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(attachments, form.apply(attachments), NormalMode, DraftId(1L), None)(fakeRequest, messages)
+    view.f(attachments(2), form.apply(attachments(2)), NormalMode, draftId, None)(fakeRequest, messages)
 
   "UploadAnotherSupportingDocumentView" - {
     "when no letter of authority has been uploaded yet" - {
-      "information shows how many uploaded files have been uploaded" - {
-        normalPage(messageKeyPrefix, "many", attachments.length.toString)()
+      "must show how many files have been uploaded" - {
+        normalPage("uploadAnotherSupportingDocument", Some("many"))(attachments(2).length.toString)
       }
-      "and there has been a single document uploaded" - {
+      "must show a single document has been uploaded" - {
         val viewAlternate: HtmlFormat.Appendable =
-          view(singleAttachment, form.apply(singleAttachment), NormalMode, DraftId(1L), None)(fakeRequest, messages)
-        pageByMethod(viewAlternate, messageKeyPrefix, "one")()
+          view.apply(attachments(1), form.apply(attachments(1)), NormalMode, draftId, None)(fakeRequest, messages)
+        renderPage(viewAlternate, "uploadAnotherSupportingDocument", Some("one"))()
       }
-      "and the maximum documents (not including letter of authority) have been uploaded" - {
+      "must show the maximum amount of documents (not including letter of authority) have been uploaded" - {
+        val maxAttachments: Int                  = 5
         val viewAlternate: HtmlFormat.Appendable =
-          view(maxAttachments, form.apply(maxAttachments), NormalMode, DraftId(1L), None)(fakeRequest, messages)
-        pageByMethod(viewAlternate, messageKeyPrefix, "max")()
+          view.apply(attachments(maxAttachments), form.apply(attachments(maxAttachments)), NormalMode, draftId, None)(
+            fakeRequest,
+            messages
+          )
+        renderPage(viewAlternate, "uploadAnotherSupportingDocument", Some("max"))()
       }
-
     }
+
     "when a letter of authority has been uploaded" - {
-      "information shows how many uploaded files have been uploaded" - {
+      "must show how many files have been uploaded" - {
         val viewAlternate: HtmlFormat.Appendable =
-          view(attachments, form.apply(singleAttachment), NormalMode, DraftId(1L), Some("letterOfAuthority.file"))(
+          view.apply(attachments(2), form.apply(attachments(1)), NormalMode, draftId, Some("letterOfAuthority.file"))(
             fakeRequest,
             messages
           )
-        pageByMethod(viewAlternate, s"$messageKeyPrefix.agentForTrader", "many", attachments.length.toString)()
-      }
-      "and there has been a single document uploaded" - {
-        val viewAlternate: HtmlFormat.Appendable =
-          view(singleAttachment, form.apply(singleAttachment), NormalMode, DraftId(1L), Some("letterOfAuthority.file"))(
-            fakeRequest,
-            messages
-          )
-        pageByMethod(viewAlternate, s"$messageKeyPrefix.agentForTrader", "one")()
-      }
-      "and the maximum documents (including letter of authority) have been uploaded" - {
-        val maxAttachments: Seq[DraftAttachment] = Seq(
-          DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-          DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-          DraftAttachment(successfulFile, isThisFileConfidential = Some(false)),
-          DraftAttachment(successfulFile, isThisFileConfidential = Some(false))
+        renderPage(viewAlternate, "uploadAnotherSupportingDocument.agentForTrader", Some("many"))(
+          attachments(2).length.toString
         )
+      }
+      "must show a single document has been uploaded" - {
         val viewAlternate: HtmlFormat.Appendable =
-          view(maxAttachments, form.apply(maxAttachments), NormalMode, DraftId(1L), Some("letterOfAuthority.file"))(
+          view.apply(attachments(1), form.apply(attachments(1)), NormalMode, draftId, Some("letterOfAuthority.file"))(
             fakeRequest,
             messages
           )
-        pageByMethod(viewAlternate, messageKeyPrefix, "max")()
+        renderPage(viewAlternate, "uploadAnotherSupportingDocument.agentForTrader", Some("one"))()
+      }
+      "must show the maximum amount of documents (including letter of authority) have been uploaded" - {
+        val maxAttachments: Int                  = 4
+        val viewAlternate: HtmlFormat.Appendable = view.apply(
+          attachments(maxAttachments),
+          form.apply(attachments(maxAttachments)),
+          NormalMode,
+          draftId,
+          Some("letterOfAuthority.file")
+        )(fakeRequest, messages)
+        renderPage(viewAlternate, "uploadAnotherSupportingDocument", Some("max"))()
       }
     }
   }

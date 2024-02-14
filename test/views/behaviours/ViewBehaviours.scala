@@ -21,60 +21,39 @@ import views.ViewSpecBase
 
 trait ViewBehaviours extends ViewSpecBase {
 
-  val expectTimeoutDialog: Boolean = true
-
   val viewViaApply: HtmlFormat.Appendable
   val viewViaRender: HtmlFormat.Appendable
   val viewViaF: HtmlFormat.Appendable
 
-  def normalPage(messageKeyPrefix: String, messageKeySuffix: String, messageHeadingArgs: Any*)(
-    expectedGuidanceKeys: String*
+  protected def normalPage(messageKeyPrefix: String, messageKeySuffix: Option[String] = None)(
+    messageHeadingArgs: Any*
   ): Unit =
-    "behave like a normal page" - {
-      Seq(".apply", ".render", ".f").foreach {
-        case byMethod @ ".apply"  =>
-          pageByMethod(viewViaApply, messageKeyPrefix, messageKeySuffix, messageHeadingArgs: _*)(byMethod)
-        case byMethod @ ".render" =>
-          pageByMethod(viewViaRender, messageKeyPrefix, messageKeySuffix, messageHeadingArgs: _*)(byMethod)
-        case byMethod @ ".f"      =>
-          pageByMethod(viewViaF, messageKeyPrefix, messageKeySuffix, messageHeadingArgs: _*)(byMethod)
+    "must behave like a normal page" - {
+      Seq((".apply", viewViaApply), (".render", viewViaRender), (".f", viewViaF)).foreach { case (method, view) =>
+        renderPage(view, messageKeyPrefix, messageKeySuffix, method)(messageHeadingArgs: _*)
       }
 
-      "have the correct banner title" in {
+      "and have the correct banner title" in {
         val doc         = asDocument(viewViaApply)
         val bannerTitle = doc.getElementsByClass("hmrc-header__service-name")
-        bannerTitle.text mustBe messages(app)("service.name")
-      }
-
-      "display the correct guidance" in {
-        val doc = asDocument(viewViaApply)
-        for (key <- expectedGuidanceKeys)
-          assertContainsText(doc, messages(app)(s"$messageKeyPrefix.$key"))
-      }
-
-      "contain a timeout dialog" in {
-        val timeoutElm = asDocument(viewViaApply).select("meta[name=\"hmrc-timeout-dialog\"]")
-        if (expectTimeoutDialog) {
-          assert(timeoutElm.size == 1)
-        } else {
-          assert(timeoutElm.size == 0)
-        }
+        bannerTitle.text mustBe messages("service.name")
       }
     }
 
-  protected def pageByMethod(
+  protected def renderPage(
     view: HtmlFormat.Appendable,
     messageKeyPrefix: String,
-    messageKeySuffix: String,
-    messageHeadingArgs: Any*
-  )(byMethod: String = "", isError: Boolean = false): Unit = {
+    messageKeySuffix: Option[String] = None,
+    method: String = "",
+    isError: Boolean = false
+  )(messageHeadingArgs: Any*): Unit = {
 
-    val suffix = if (messageKeySuffix.isEmpty) "" else s".$messageKeySuffix"
+    val suffix = if (messageKeySuffix.isEmpty) "" else s".${messageKeySuffix.value}"
 
-    val renderMethod = if (byMethod.nonEmpty) {
-      s"when rendered - using $byMethod"
+    val renderMethod = if (method.nonEmpty) {
+      s"when rendered - using $method"
     } else {
-      "when rendered"
+      "when rendered - using .apply"
     }
 
     s"$renderMethod" - {
@@ -91,14 +70,23 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageByMethodWithAssertions(
+  protected def renderPageWithAssertions(
     view: HtmlFormat.Appendable,
     messageKeyPrefix: String,
-    messageKeySuffix: String,
-    messageHeadingArgs: Any*
-  )(byMethod: String = "", isError: Boolean = false)(assertions: => Unit): Unit = {
-    pageByMethod(view, messageKeyPrefix: String, messageKeySuffix: String, messageHeadingArgs: _*)(byMethod, isError)
-    assertions
-  }
+    messageKeySuffix: Option[String] = None,
+    method: String = "",
+    isError: Boolean = false,
+    runGenericViewTests: Boolean = false
+  )(messageHeadingArgs: Any*)(assertions: => Unit): Unit = {
+    val additionalTests = if (runGenericViewTests) {
+      renderPage(view, messageKeyPrefix, messageKeySuffix, method, isError)(messageHeadingArgs: _*)
+      "additionally "
+    } else {
+      ""
+    }
 
+    s"${additionalTests}the rendered page must" - {
+      assertions
+    }
+  }
 }

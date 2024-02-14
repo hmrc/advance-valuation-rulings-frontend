@@ -22,15 +22,13 @@ import views.html.DraftHasBeenSavedView
 
 class DraftHasBeenSavedViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "draftHasBeenSaved"
+  private val view: DraftHasBeenSavedView = app.injector.instanceOf[DraftHasBeenSavedView]
 
-  val view: DraftHasBeenSavedView = app.injector.instanceOf[DraftHasBeenSavedView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view("26 January 2024")(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply("26 January 2024")(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable = view.render("26 January 2024", fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      = view.f("26 January 2024")(fakeRequest, messages)
 
   "DraftHasBeenSavedView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("draftHasBeenSaved")()
   }
 }

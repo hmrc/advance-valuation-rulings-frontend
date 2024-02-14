@@ -21,6 +21,7 @@ import controllers.actions._
 import handlers.ErrorHandler
 import models.AuthUserType.{IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models._
+import models.upscan.UpscanInitiateResponse
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
@@ -33,15 +34,15 @@ import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
 import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc._
 import play.api.test.FakeRequest
 import repositories.CounterRepository
 import services.UserAnswersService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.summary.{ApplicationSummary, DetailsSummary, IndividualApplicantSummary, IndividualEoriDetailsSummary, MethodSummary}
 import uk.gov.hmrc.http.client.HttpClientV2
+import viewmodels.checkAnswers.summary._
 
 import scala.concurrent.Future
 
@@ -127,9 +128,19 @@ trait SpecBase
   val testDetailsSummary: DetailsSummary                   = DetailsSummary(SummaryList())
   val testMethodSummary: MethodSummary                     = MethodSummary(SummaryList())
 
-  // Use the instances to create an instance of ApplicationSummary
   val testApplicationSummary: ApplicationSummary =
     ApplicationSummary(testEoriDetailsSummary, testApplicantSummary, testDetailsSummary, testMethodSummary)
+
+  val upscanInitiateResponse: UpscanInitiateResponse = UpscanInitiateResponse(
+    reference = "reference",
+    uploadRequest = UpscanInitiateResponse.UploadRequest(
+      href = "href",
+      fields = Map(
+        "field1" -> "value1",
+        "field2" -> "value2"
+      )
+    )
+  )
 
   def messagesApi(app: Application): MessagesApi =
     app.injector.instanceOf[MessagesApi]

@@ -17,77 +17,61 @@
 package views
 
 import forms.VerifyTraderDetailsFormProvider
-import models.{DraftId, NormalMode, TraderDetailsWithConfirmation}
+import models.{NormalMode, TraderDetailsWithConfirmation}
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.VerifyPublicTraderDetailView
 
 class VerifyPublicTraderDetailViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "checkRegisteredDetails"
+  private val details: TraderDetailsWithConfirmation = TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
 
-  val role: TraderDetailsWithConfirmation = TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
+  private val doesNotConsentToDisclosureOfPersonalData: TraderDetailsWithConfirmation =
+    details.copy(consentToDisclosureOfPersonalData = false)
+  private val emptyCDSFullName: TraderDetailsWithConfirmation                         = details.copy(CDSFullName = "")
 
-  val doesNotConsentToDisclosureOfPersonalData: TraderDetailsWithConfirmation =
-    role.copy(consentToDisclosureOfPersonalData = false)
+  private val form: VerifyTraderDetailsFormProvider = app.injector.instanceOf[VerifyTraderDetailsFormProvider]
 
-  val emptyCDSFullName: TraderDetailsWithConfirmation =
-    role.copy(CDSFullName = "")
-
-  val form: VerifyTraderDetailsFormProvider = app.injector.instanceOf[VerifyTraderDetailsFormProvider]
-
-  val view: VerifyPublicTraderDetailView = app.injector.instanceOf[VerifyPublicTraderDetailView]
+  private val view: VerifyPublicTraderDetailView = app.injector.instanceOf[VerifyPublicTraderDetailView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(form.apply(Some(role)), NormalMode, DraftId(1L), role)(fakeRequest, messages)
+    view.apply(form.apply(Some(details)), NormalMode, draftId, details)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(form.apply(Some(role)), NormalMode, DraftId(1L), role, fakeRequest, messages)
+    view.render(form.apply(Some(details)), NormalMode, draftId, details, fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(form.apply(Some(role)), NormalMode, DraftId(1L), role)(fakeRequest, messages)
+    view.f(form.apply(Some(details)), NormalMode, draftId, details)(fakeRequest, messages)
 
   "VerifyPublicTraderDetailView" - {
-    normalPage(messageKeyPrefix, "agentTrader")()
-  }
+    normalPage("checkRegisteredDetails", Some("agentTrader"))()
 
-  "the trader does not consent to disclosure of personal data" - {
-    val viewAlternate =
-      view(
+    "when the trader does not consent to disclosure of personal data" - {
+      val viewAlternate: HtmlFormat.Appendable = view.apply(
         form.apply(Some(doesNotConsentToDisclosureOfPersonalData)),
         NormalMode,
-        DraftId(1L),
+        draftId,
         doesNotConsentToDisclosureOfPersonalData
       )(fakeRequest, messages)
 
-    pageByMethodWithAssertions(
-      viewAlternate,
-      s"$messageKeyPrefix.private",
-      "",
-      doesNotConsentToDisclosureOfPersonalData.EORINo
-    )() {
-      "contains the correct advisory paragraph" in {
-        assertContainsMessages(asDocument(viewAlternate), messages("checkRegisteredDetails.private.paragraph.1"))
+      renderPageWithAssertions(viewAlternate, "checkRegisteredDetails.private", runGenericViewTests = true)(
+        doesNotConsentToDisclosureOfPersonalData.EORINo
+      ) {
+        "display the correct advisory paragraph" in {
+          assertContainsMessages(asDocument(viewAlternate), messages("checkRegisteredDetails.private.paragraph.1"))
+        }
       }
     }
-  }
 
-  "when CDSFullName is an empty string" - {
-    val viewAlternate =
-      view(form.apply(Some(emptyCDSFullName)), NormalMode, DraftId(1L), emptyCDSFullName)(
-        fakeRequest,
-        messages
-      )
+    "when CDSFullName is an empty string" - {
+      val viewAlternate: HtmlFormat.Appendable =
+        view.apply(form.apply(Some(emptyCDSFullName)), NormalMode, draftId, emptyCDSFullName)(fakeRequest, messages)
 
-    pageByMethodWithAssertions(
-      viewAlternate,
-      messageKeyPrefix,
-      "agentTrader",
-      emptyCDSFullName.EORINo
-    )() {
-      "the page does not contain the registered business name on the form" in {
-        assertNotContainingMessages(
-          asDocument(viewAlternate),
-          messages("checkRegisteredDetails.heading.2")
-        )
+      renderPageWithAssertions(viewAlternate, "checkRegisteredDetails", Some("agentTrader"))(emptyCDSFullName.EORINo) {
+        "not contain the registered business name on the form" in {
+          assertNotContainingMessages(
+            asDocument(viewAlternate),
+            messages("checkRegisteredDetails.heading.2")
+          )
+        }
       }
     }
   }

@@ -17,24 +17,23 @@
 package views
 
 import forms.DoYouWantToUploadDocumentsFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.DoYouWantToUploadDocumentsView
 
 class DoYouWantToUploadDocumentsViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "doYouWantToUploadDocuments"
+  private val form: DoYouWantToUploadDocumentsFormProvider =
+    app.injector.instanceOf[DoYouWantToUploadDocumentsFormProvider]
 
-  val form: DoYouWantToUploadDocumentsFormProvider = app.injector.instanceOf[DoYouWantToUploadDocumentsFormProvider]
+  private val view: DoYouWantToUploadDocumentsView = app.injector.instanceOf[DoYouWantToUploadDocumentsView]
 
-  val view: DoYouWantToUploadDocumentsView = app.injector.instanceOf[DoYouWantToUploadDocumentsView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "DoYouWantToUploadDocumentsView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("doYouWantToUploadDocuments")()
   }
 }

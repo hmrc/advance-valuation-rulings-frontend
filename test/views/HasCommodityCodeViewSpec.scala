@@ -17,24 +17,22 @@
 package views
 
 import forms.HasCommodityCodeFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.HasCommodityCodeView
 
 class HasCommodityCodeViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "hasCommodityCode"
+  private val form: HasCommodityCodeFormProvider = app.injector.instanceOf[HasCommodityCodeFormProvider]
 
-  val form: HasCommodityCodeFormProvider = app.injector.instanceOf[HasCommodityCodeFormProvider]
+  private val view: HasCommodityCodeView = app.injector.instanceOf[HasCommodityCodeView]
 
-  val view: HasCommodityCodeView = app.injector.instanceOf[HasCommodityCodeView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "HasCommodityCodeView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("hasCommodityCode")()
   }
 }

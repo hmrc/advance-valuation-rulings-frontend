@@ -17,24 +17,22 @@
 package views
 
 import forms.TraderEoriNumberFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ProvideTraderEoriView
 
 class ProvideTraderEoriViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "provideTraderEori"
+  private val form: TraderEoriNumberFormProvider = app.injector.instanceOf[TraderEoriNumberFormProvider]
 
-  val form: TraderEoriNumberFormProvider = app.injector.instanceOf[TraderEoriNumberFormProvider]
+  private val view: ProvideTraderEoriView = app.injector.instanceOf[ProvideTraderEoriView]
 
-  val view: ProvideTraderEoriView = app.injector.instanceOf[ProvideTraderEoriView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "ProvideTraderEoriView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("provideTraderEori")()
   }
 }

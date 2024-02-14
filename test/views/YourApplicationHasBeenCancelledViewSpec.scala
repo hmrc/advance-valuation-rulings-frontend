@@ -22,15 +22,13 @@ import views.html.YourApplicationHasBeenCancelledView
 
 class YourApplicationHasBeenCancelledViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "yourApplicationHasBeenCancelled"
+  private val view: YourApplicationHasBeenCancelledView = app.injector.instanceOf[YourApplicationHasBeenCancelledView]
 
-  val view: YourApplicationHasBeenCancelledView = app.injector.instanceOf[YourApplicationHasBeenCancelledView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view()(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply()(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable = view.render(fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      = view.f()(fakeRequest, messages)
 
-  "AgentForOrgCheckYourAnswersView" - {
-    normalPage(messageKeyPrefix, "")()
+  "YourApplicationHasBeenCancelledView" - {
+    normalPage("yourApplicationHasBeenCancelled")()
   }
 }

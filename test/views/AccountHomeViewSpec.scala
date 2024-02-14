@@ -26,31 +26,28 @@ import java.time.Instant
 
 class AccountHomeViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "accountHome"
-
-  val applications: Seq[ApplicationForAccountHome] = Seq(
+  private val applications: Seq[ApplicationForAccountHome] = Seq(
     ApplicationForAccountHome(ApplicationSummary(ApplicationId(1L), "GoodsDescription", Instant.now(), EoriNumber))
   )
 
-  val view: AccountHomeView = app.injector.instanceOf[AccountHomeView]
+  private val view: AccountHomeView = app.injector.instanceOf[AccountHomeView]
 
-  val viewViaApply: HtmlFormat.Appendable  = view(applications)(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(applications)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable = view.render(applications, fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      = view.f(applications)(fakeRequest, messages)
 
   "AccountHomeView" - {
-    normalPage(messageKeyPrefix, "")()
-  }
+    normalPage("accountHome")()
 
-  "when applications are empty" - {
+    "when there are no registered applications" - {
 
-    val viewAlternate = view(Seq.empty)(fakeRequest, messages)
+      val viewAlternate: HtmlFormat.Appendable = view.apply(Seq.empty)(fakeRequest, messages)
 
-    pageByMethodWithAssertions(viewAlternate, messageKeyPrefix, "")() {
-      "prompts that no applications have been started" in {
-        assertContainsMessages(asDocument(viewAlternate), messages("accountHome.para"))
+      renderPageWithAssertions(viewAlternate, "accountHome")() {
+        "prompt that no applications have been started" in {
+          assertContainsMessages(asDocument(viewAlternate), messages("accountHome.para"))
+        }
       }
     }
-
   }
 }

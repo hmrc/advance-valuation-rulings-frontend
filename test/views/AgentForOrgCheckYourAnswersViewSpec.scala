@@ -16,27 +16,23 @@
 
 package views
 
-import models.DraftId
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AgentForOrgCheckYourAnswersView
 
 class AgentForOrgCheckYourAnswersViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "checkYourAnswersForAgents"
-
-  val view: AgentForOrgCheckYourAnswersView =
+  private val view: AgentForOrgCheckYourAnswersView =
     app.injector.instanceOf[AgentForOrgCheckYourAnswersView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
+    view.apply(testApplicationSummary, draftId)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(testApplicationSummary, DraftId(1L), fakeRequest, messages)
+    view.render(testApplicationSummary, draftId, fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
+    view.f(testApplicationSummary, draftId)(fakeRequest, messages)
 
   "AgentForOrgCheckYourAnswersView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("checkYourAnswersForAgents")()
   }
-
 }

@@ -33,7 +33,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
 
   override lazy val app: Application = applicationBuilder().build()
 
-  def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   implicit val messages: Messages = app.injector.instanceOf[play.api.i18n.MessagesApi].preferred(fakeRequest)
 
@@ -68,15 +68,10 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
     headers.size() match {
       case 0                                    => ()
       case 1 if headers.select("label").isEmpty =>
-        headers.first
-          .ownText()
-          .replaceAll("\u00a0", " ") mustBe messages(app)(expectedMessageKey, args: _*)
+        headers.first.ownText().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args: _*)
           .replaceAll("&nbsp;", " ")
       case 1                                    =>
-        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(app)(
-          expectedMessageKey,
-          args: _*
-        )
+        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args: _*)
           .replaceAll("&nbsp;", " ")
       case _                                    => throw new RuntimeException(s"Pages should only have (at most) one h1 element. Found ${headers.size}")
     }
@@ -86,43 +81,13 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
     assert(doc.toString.contains(text), "\n\ntext " + text + " was not rendered on the page.\n")
 
   def assertNotContainsText(doc: Document, text: String): Assertion =
-    assert(!doc.toString.contains(text), "\n\ntext " + text + " was not rendered on the page.\n")
-
-  def assertElementHasText(element: Element, text: String): Assertion =
-    assert(element.text.contains(text), "\n\ntext " + text + " was not rendered in the element.\n")
+    assert(!doc.toString.contains(text), "\n\ntext " + text + " was rendered on the page.\n")
 
   def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit      =
-    for (key <- expectedMessageKeys) assertContainsText(doc, messages(app)(key))
+    for (key <- expectedMessageKeys) assertContainsText(doc, messages(key))
 
   def assertNotContainingMessages(doc: Document, expectedMessageKeys: String*): Unit =
-    for (key <- expectedMessageKeys) assertNotContainsText(doc, messages(app)(key))
-
-  def assertRenderedById(doc: Document, id: String): Assertion                       =
-    assert(doc.getElementById(id) != null, "\n\nElement " + id + " was not rendered on the page.\n")
-
-  def assertNotRenderedById(doc: Document, id: String): Assertion =
-    assert(doc.getElementById(id) == null, "\n\nElement " + id + " was rendered on the page.\n")
-
-  def assertRenderedByCssSelector(doc: Document, cssSelector: String): Assertion =
-    assert(!doc.select(cssSelector).isEmpty, "Element " + cssSelector + " was not rendered on the page.")
-
-  def assertNotRenderedByCssSelector(doc: Document, cssSelector: String): Assertion =
-    assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
-
-  def assertRenderedByTagWithAttributes(doc: Document, tagName: String, attributes: (String, String)*): Assertion = {
-    val elements = doc.getElementsByTag(tagName)
-    assert(elements.size() != 0, s"\n\nElement $tagName was not rendered on the page.\n")
-
-    val found = elements.asScala.exists { element =>
-      val allAttributesMatch = attributes.forall { case (name, value) =>
-        val attrValue = element.attr(name)
-        attrValue == value
-      }
-      allAttributesMatch
-    }
-
-    assert(found, s"\n\nNo $tagName element with the specified attributes was found.\n")
-  }
+    for (key <- expectedMessageKeys) assertNotContainsText(doc, messages(key))
 
   def assertNotRenderedByTagWithAttributes(doc: Document, tagName: String, attributes: (String, String)*): Assertion = {
     val elements = doc.getElementsByTag(tagName)
@@ -144,7 +109,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
     assert(labels.size == 1, s"\n\nLabel for $forElement was not rendered on the page.")
     val label  = labels.first
 
-    def assertLabel(label: Element, expectedText: String, forElement: String) =
+    def assertLabel(label: Element, expectedText: String, forElement: String): Assertion =
       assert(label.text() == expectedText, s"\n\nLabel for $forElement was not $expectedText")
 
     expectedHintText match {
@@ -161,31 +126,4 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
   def assertElementHasClass(doc: Document, id: String, expectedClass: String): Assertion =
     assert(doc.getElementById(id).hasClass(expectedClass), s"\n\nElement $id does not have class $expectedClass")
 
-  def assertContainsRadioButton(
-    doc: Document,
-    id: String,
-    name: String,
-    value: String,
-    isChecked: Boolean
-  ): Assertion = {
-    assertRenderedById(doc, id)
-    val radio = doc.getElementById(id)
-    assert(radio.attr("name") == name, s"\n\nElement $id does not have name $name")
-    assert(radio.attr("value") == value, s"\n\nElement $id does not have value $value")
-    if (isChecked) {
-      assert(radio.attr("checked") == "checked", s"\n\nElement $id is not checked")
-    } else {
-      assert(!radio.hasAttr("checked") && radio.attr("checked") != "checked", s"\n\nElement $id is checked")
-    }
-  }
-
-  def assertLinkContainsHref(doc: Document, id: String, href: String): Assertion = {
-    assert(doc.getElementById(id) != null, s"\n\nElement $id is not present")
-    assert(doc.getElementById(id).attr("href").contains(href))
-  }
-
-  def assertLinkContainsHrefAndText(doc: Document, id: String, href: String, linkText: String): Assertion = {
-    assertLinkContainsHref(doc, id, href)
-    assertContainsText(doc, linkText)
-  }
 }

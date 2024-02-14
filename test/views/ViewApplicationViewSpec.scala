@@ -16,47 +16,37 @@
 
 package views
 
-import controllers.ViewApplicationControllerSpec.{applicationId, applicationRequest}
+import generators.ApplicationGenerator
 import models.requests._
 import play.twirl.api.HtmlFormat
 import viewmodels.ApplicationViewModel
 import views.behaviours.ViewBehaviours
 import views.html.ViewApplicationView
 
-import java.time.{Clock, Instant, ZoneOffset}
-import scala.collection.immutable.List.from
+import java.time.Instant
 
-class ViewApplicationViewSpec extends ViewBehaviours {
+class ViewApplicationViewSpec extends ViewBehaviours with ApplicationGenerator {
 
-  val messageKeyPrefix = "viewApplication"
+  private val application: Application = arbitraryApplication.arbitrary.sample.value
 
-  val ruling: Application =
-    Application(
-      id = applicationId,
-      lastUpdated = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC)),
-      created = Instant.now(Clock.fixed(Instant.parse("2018-08-22T10:00:00Z"), ZoneOffset.UTC)),
-      trader = applicationRequest.trader,
-      agent = applicationRequest.agent,
-      contact = applicationRequest.contact,
-      requestedMethod = applicationRequest.requestedMethod,
-      goodsDetails = applicationRequest.goodsDetails,
-      attachments = from(Nil),
-      whatIsYourRoleResponse = Some(WhatIsYourRole.AgentTrader),
-      letterOfAuthority = Some(
-        Attachment(0x4L, "bob", None, "the location", Privacy.Public, "application/jpg", 4532L)
-      )
-    )
+  private val view: ViewApplicationView = app.injector.instanceOf[ViewApplicationView]
 
-  val view: ViewApplicationView = app.injector.instanceOf[ViewApplicationView]
-
-  val viewViaApply: HtmlFormat.Appendable  =
-    view(ApplicationViewModel(ruling), ApplicationId(1L).toString, Instant.now.toString)(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable =
-    view.render(ApplicationViewModel(ruling), ApplicationId(1L).toString, Instant.now.toString, fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(
+    ApplicationViewModel(application),
+    ApplicationId(1L).toString,
+    Instant.now.toString
+  )(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(
+    ApplicationViewModel(application),
+    ApplicationId(1L).toString,
+    Instant.now.toString,
+    fakeRequest,
+    messages
+  )
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(ApplicationViewModel(ruling), ApplicationId(1L).toString, Instant.now.toString)(fakeRequest, messages)
+    view.f(ApplicationViewModel(application), ApplicationId(1L).toString, Instant.now.toString)(fakeRequest, messages)
 
   "ViewApplicationView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("viewApplication")()
   }
 }

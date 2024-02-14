@@ -22,15 +22,13 @@ import views.html.auth.SignedOutView
 
 class SignedOutViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "signedOut"
+  private val view: SignedOutView = app.injector.instanceOf[SignedOutView]
 
-  val view: SignedOutView = app.injector.instanceOf[SignedOutView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view()(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply()(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable = view.render(fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      = view.f()(fakeRequest, messages)
 
   "SignedOutView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("signedOut")()
   }
 }

@@ -17,24 +17,21 @@
 package views
 
 import forms.DeleteDraftFormProvider
-import models.DraftId
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.DeleteDraftView
 
 class DeleteDraftViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "deleteDraft"
+  private val form: DeleteDraftFormProvider = app.injector.instanceOf[DeleteDraftFormProvider]
 
-  val form: DeleteDraftFormProvider = app.injector.instanceOf[DeleteDraftFormProvider]
+  private val view: DeleteDraftView = app.injector.instanceOf[DeleteDraftView]
 
-  val view: DeleteDraftView = app.injector.instanceOf[DeleteDraftView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), draftId)(fakeRequest, messages)
 
   "DeleteDraftView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("deleteDraft")()
   }
 }

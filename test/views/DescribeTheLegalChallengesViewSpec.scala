@@ -17,24 +17,23 @@
 package views
 
 import forms.DescribeTheLegalChallengesFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.DescribeTheLegalChallengesView
 
 class DescribeTheLegalChallengesViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "describeTheLegalChallenges"
+  private val form: DescribeTheLegalChallengesFormProvider =
+    app.injector.instanceOf[DescribeTheLegalChallengesFormProvider]
 
-  val form: DescribeTheLegalChallengesFormProvider = app.injector.instanceOf[DescribeTheLegalChallengesFormProvider]
+  private val view: DescribeTheLegalChallengesView = app.injector.instanceOf[DescribeTheLegalChallengesView]
 
-  val view: DescribeTheLegalChallengesView = app.injector.instanceOf[DescribeTheLegalChallengesView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "DescribeTheLegalChallengesView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("describeTheLegalChallenges")()
   }
 }

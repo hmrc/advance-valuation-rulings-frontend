@@ -16,22 +16,20 @@
 
 package views
 
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ContactPageView
 
 class ContactPageViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "contactPage"
+  private val view: ContactPageView = app.injector.instanceOf[ContactPageView]
 
-  val view: ContactPageView = app.injector.instanceOf[ContactPageView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(NormalMode, draftId)(fakeRequest, messages)
 
   "ContactPageView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("contactPage")()
   }
 }

@@ -17,45 +17,39 @@
 package views
 
 import forms.BusinessContactDetailsFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.BusinessContactDetailsView
 
 class BusinessContactDetailsViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "businessContactDetails"
+  private val form: BusinessContactDetailsFormProvider = app.injector.instanceOf[BusinessContactDetailsFormProvider]
 
-  val form: BusinessContactDetailsFormProvider = app.injector.instanceOf[BusinessContactDetailsFormProvider]
-
-  val view: BusinessContactDetailsView = app.injector.instanceOf[BusinessContactDetailsView]
+  private val view: BusinessContactDetailsView = app.injector.instanceOf[BusinessContactDetailsView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(form.apply(false), NormalMode, DraftId(1L), includeCompanyName = false)(fakeRequest, messages)
+    view.apply(form.apply(false), NormalMode, draftId, includeCompanyName = false)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(form.apply(false), NormalMode, DraftId(1L), includeCompanyName = false, fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(false), NormalMode, DraftId(1L), false)(fakeRequest, messages)
+    view.render(form.apply(false), NormalMode, draftId, includeCompanyName = false, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(false), NormalMode, draftId, false)(fakeRequest, messages)
 
   "BusinessContactDetailsView" - {
-    normalPage(messageKeyPrefix, "")()
-  }
+    normalPage("businessContactDetails")()
 
-  "when an agent acts on behalf of a trader" - {
+    "when an agent acts on behalf of a trader" - {
+      val viewAlternate: HtmlFormat.Appendable =
+        view.apply(form.apply(true), NormalMode, draftId, includeCompanyName = true)(fakeRequest, messages)
 
-    val viewAlternate =
-      view(form.apply(true), NormalMode, DraftId(1L), includeCompanyName = true)(fakeRequest, messages)
-
-    pageByMethodWithAssertions(viewAlternate, messageKeyPrefix, "")() {
-      "contains the correct heading" in {
-        assertContainsMessages(asDocument(viewAlternate), messages("businessContactDetails.paragraph.agentTrader"))
+      renderPageWithAssertions(viewAlternate, "businessContactDetails")() {
+        "display a paragraph informing how the details will be used" in {
+          assertContainsMessages(asDocument(viewAlternate), messages("businessContactDetails.paragraph.agentTrader"))
+        }
+        "display an additional input field to enter the businesses name" in {
+          assertContainsLabel(asDocument(viewAlternate), "companyName", "Registered business name")
+          assertElementHasClass(asDocument(viewAlternate), "companyName", "govuk-input")
+        }
       }
-      "contains additional input field for the businesses name" in {
-        assertContainsLabel(asDocument(viewAlternate), "companyName", "Registered business name")
-        assertElementHasClass(asDocument(viewAlternate), "companyName", "govuk-input")
-      }
-
     }
-
   }
-
 }

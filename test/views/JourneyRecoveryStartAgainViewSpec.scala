@@ -22,15 +22,13 @@ import views.html.JourneyRecoveryStartAgainView
 
 class JourneyRecoveryStartAgainViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "journeyRecovery.startAgain"
+  private val view: JourneyRecoveryStartAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
 
-  val view: JourneyRecoveryStartAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view()(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply()(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable = view.render(fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      = view.f()(fakeRequest, messages)
 
   "JourneyRecoveryStartAgainView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("journeyRecovery.startAgain")()
   }
 }

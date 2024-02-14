@@ -17,24 +17,23 @@
 package views
 
 import forms.IsSaleBetweenRelatedPartiesFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.IsSaleBetweenRelatedPartiesView
 
 class IsSaleBetweenRelatedPartiesViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "isSaleBetweenRelatedParties"
+  private val form: IsSaleBetweenRelatedPartiesFormProvider =
+    app.injector.instanceOf[IsSaleBetweenRelatedPartiesFormProvider]
 
-  val form: IsSaleBetweenRelatedPartiesFormProvider = app.injector.instanceOf[IsSaleBetweenRelatedPartiesFormProvider]
+  private val view: IsSaleBetweenRelatedPartiesView = app.injector.instanceOf[IsSaleBetweenRelatedPartiesView]
 
-  val view: IsSaleBetweenRelatedPartiesView = app.injector.instanceOf[IsSaleBetweenRelatedPartiesView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "IsSaleBetweenRelatedPartiesView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("isSaleBetweenRelatedParties")()
   }
 }

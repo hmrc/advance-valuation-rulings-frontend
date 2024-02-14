@@ -16,62 +16,50 @@
 
 package views
 
-import forms.WhyComputedValueFormProvider
-import models.DraftId
-import models.upscan.UpscanInitiateResponse
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.UploadSupportingDocumentsView
 
 class UploadSupportingDocumentsViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "uploadSupportingDocuments"
-
-  val upscanInitiateResponse: UpscanInitiateResponse = UpscanInitiateResponse(
-    reference = "reference",
-    uploadRequest = UpscanInitiateResponse.UploadRequest(
-      href = "href",
-      fields = Map(
-        "field1" -> "value1",
-        "field2" -> "value2"
-      )
-    )
-  )
-
-  val form: WhyComputedValueFormProvider = app.injector.instanceOf[WhyComputedValueFormProvider]
-
-  val view: UploadSupportingDocumentsView = app.injector.instanceOf[UploadSupportingDocumentsView]
+  private val view: UploadSupportingDocumentsView = app.injector.instanceOf[UploadSupportingDocumentsView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(DraftId(1L), Some(upscanInitiateResponse), None, 3)(messages, fakeRequest) //diff
+    view.apply(draftId, Some(upscanInitiateResponse), None, 3)(messages, fakeRequest)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(DraftId(1L), Some(upscanInitiateResponse), None, 3, messages, fakeRequest)
+    view.render(draftId, Some(upscanInitiateResponse), None, 3, messages, fakeRequest)
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(DraftId(1L), Some(upscanInitiateResponse), None, 3)(messages, fakeRequest)
+    view.f(draftId, Some(upscanInitiateResponse), None, 3)(messages, fakeRequest)
 
   "UploadSupportingDocumentsView" - {
-    normalPage(messageKeyPrefix, "")()
-  }
+    normalPage("uploadSupportingDocuments")()
 
-  "when upscan does not return an UpscanInitiateResponse" - {
-    val viewAlternate: HtmlFormat.Appendable = view(DraftId(1L), None, Some("upscan-error"), 3)(messages, fakeRequest)
+    "when upscan does not return an UpscanInitiateResponse" - {
+      val viewAlternate: HtmlFormat.Appendable =
+        view.apply(draftId, None, Some("upscan-error"), 3)(messages, fakeRequest)
 
-    pageByMethodWithAssertions(viewAlternate, messageKeyPrefix, "")(isError = true) {
-      "does not contain upscan responses in upload form" in {
-        assertNotRenderedByTagWithAttributes(
-          asDocument(viewAlternate),
-          "input",
-          "type"  -> "hidden",
-          "name"  -> "field1",
-          "value" -> "value1"
-        )
-        assertNotRenderedByTagWithAttributes(
-          asDocument(viewAlternate),
-          "input",
-          "type"  -> "hidden",
-          "name"  -> "field2",
-          "value" -> "value2"
-        )
+      renderPageWithAssertions(
+        viewAlternate,
+        "uploadSupportingDocuments",
+        isError = true,
+        runGenericViewTests = true
+      )() {
+        "have no upscan responses in the upload form related to uploaded files" in {
+          assertNotRenderedByTagWithAttributes(
+            asDocument(viewAlternate),
+            "input",
+            "type"  -> "hidden",
+            "name"  -> "field1",
+            "value" -> "value1"
+          )
+          assertNotRenderedByTagWithAttributes(
+            asDocument(viewAlternate),
+            "input",
+            "type"  -> "hidden",
+            "name"  -> "field2",
+            "value" -> "value2"
+          )
+        }
       }
     }
   }

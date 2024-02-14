@@ -16,22 +16,20 @@
 
 package views
 
-import models.DraftId
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AgentForTraderRequiredInformationView
 
 class AgentForTraderRequiredInformationViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "requiredInformation"
+  private val view: AgentForTraderRequiredInformationView =
+    app.injector.instanceOf[AgentForTraderRequiredInformationView]
 
-  val view: AgentForTraderRequiredInformationView = app.injector.instanceOf[AgentForTraderRequiredInformationView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(draftId)(fakeRequest, messages)
 
   "AgentForTraderRequiredInformationView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("requiredInformation")()
   }
 }

@@ -17,26 +17,24 @@
 package views
 
 import forms.IsThisFileConfidentialFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.IsThisFileConfidentialView
 
 class IsThisFileConfidentialViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "isThisFileConfidential"
+  private val form: IsThisFileConfidentialFormProvider = app.injector.instanceOf[IsThisFileConfidentialFormProvider]
 
-  val form: IsThisFileConfidentialFormProvider = app.injector.instanceOf[IsThisFileConfidentialFormProvider]
-
-  val view: IsThisFileConfidentialView = app.injector.instanceOf[IsThisFileConfidentialView]
+  private val view: IsThisFileConfidentialView = app.injector.instanceOf[IsThisFileConfidentialView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(form.apply(), NormalMode, DraftId(1L), "fileName")(fakeRequest, messages)
+    view.apply(form.apply(), NormalMode, draftId, "fileName")(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(form.apply(), NormalMode, DraftId(1L), "fileName", fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L), "fileName")(fakeRequest, messages)
+    view.render(form.apply(), NormalMode, draftId, "fileName", fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId, "fileName")(fakeRequest, messages)
 
   "IsThisFileConfidentialView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("isThisFileConfidential")()
   }
 }

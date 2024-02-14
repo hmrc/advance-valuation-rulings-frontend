@@ -17,24 +17,22 @@
 package views
 
 import forms.WhyComputedValueFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.WhyComputedValueView
 
 class WhyComputedValueViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "whyComputedValue"
+  private val form: WhyComputedValueFormProvider = app.injector.instanceOf[WhyComputedValueFormProvider]
 
-  val form: WhyComputedValueFormProvider = app.injector.instanceOf[WhyComputedValueFormProvider]
+  private val view: WhyComputedValueView = app.injector.instanceOf[WhyComputedValueView]
 
-  val view: WhyComputedValueView = app.injector.instanceOf[WhyComputedValueView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "WhyComputedValueView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("whyComputedValue")()
   }
 }

@@ -17,25 +17,22 @@
 package views
 
 import forms.ValuationMethodFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.ValuationMethodView
 
 class ValuationMethodViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "valuationMethod"
+  private val form: ValuationMethodFormProvider = app.injector.instanceOf[ValuationMethodFormProvider]
 
-  val form: ValuationMethodFormProvider = app.injector.instanceOf[ValuationMethodFormProvider]
+  private val view: ValuationMethodView = app.injector.instanceOf[ValuationMethodView]
 
-  val view: ValuationMethodView = app.injector.instanceOf[ValuationMethodView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "ValuationMethodView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("valuationMethod")()
   }
-
 }

@@ -14,34 +14,24 @@
  * limitations under the License.
  */
 
-package views
+package views.templates
 
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
-import views.html.ErrorTemplateView
+import views.html.templates.ErrorTemplateView
 
 class ErrorTemplateViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "aboutSimilarGoods"
+  private val sampleMessagePrefix = "aboutSimilarGoods"
+  private val sampleTitle         = "About the rulings for similar goods"
 
-  val view: ErrorTemplateView = app.injector.instanceOf[ErrorTemplateView]
+  private val view: ErrorTemplateView = app.injector.instanceOf[ErrorTemplateView]
 
-  val viewViaApply: HtmlFormat.Appendable  =
-    view("About the rulings for similar goods", "About the rulings for similar goods", "message")(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(
-    "About the rulings for similar goods",
-    "About the rulings for similar goods",
-    "message",
-    fakeRequest,
-    messages
-  )
-  val viewViaF: HtmlFormat.Appendable      =
-    view.f("About the rulings for similar goods", "About the rulings for similar goods", "message")(
-      fakeRequest,
-      messages
-    )
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(sampleTitle, sampleTitle, "message")(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(sampleTitle, sampleTitle, "message", fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(sampleTitle, sampleTitle, "message")(fakeRequest, messages)
 
   "ErrorTemplateView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage(sampleMessagePrefix)()
   }
 }

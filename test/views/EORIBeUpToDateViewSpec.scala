@@ -17,28 +17,25 @@
 package views
 
 import models.AuthUserType.{IndividualTrader, OrganisationUser}
-import models.DraftId
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.EORIBeUpToDateView
 
 class EORIBeUpToDateViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "eoriBeUpToDate"
+  private val view: EORIBeUpToDateView = app.injector.instanceOf[EORIBeUpToDateView]
 
-  val view: EORIBeUpToDateView = app.injector.instanceOf[EORIBeUpToDateView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(DraftId(1L), IndividualTrader)(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(DraftId(1L), IndividualTrader, fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(DraftId(1L), IndividualTrader)(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(draftId, IndividualTrader)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(draftId, IndividualTrader, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(draftId, IndividualTrader)(fakeRequest, messages)
 
   "EORIBeUpToDateView" - {
-    normalPage(messageKeyPrefix, "")()
-  }
+    normalPage("eoriBeUpToDate")()
 
-  "when not an Individual Trader" - {
-    val viewAlternate: HtmlFormat.Appendable = view(DraftId(1L), OrganisationUser)(fakeRequest, messages)
+    "when not an Individual Trader" - {
+      val viewAlternate: HtmlFormat.Appendable = view.apply(draftId, OrganisationUser)(fakeRequest, messages)
 
-    pageByMethod(viewAlternate, messageKeyPrefix, "org")()
+      renderPage(viewAlternate, "eoriBeUpToDate", Some("org"))()
+    }
   }
 }

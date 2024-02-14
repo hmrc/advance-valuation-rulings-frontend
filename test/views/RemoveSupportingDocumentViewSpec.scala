@@ -17,27 +17,25 @@
 package views
 
 import forms.RemoveSupportingDocumentFormProvider
-import models.{DraftId, Index, NormalMode}
+import models.{Index, NormalMode}
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.RemoveSupportingDocumentView
 
 class RemoveSupportingDocumentViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "removeSupportingDocument"
+  private val form: RemoveSupportingDocumentFormProvider = app.injector.instanceOf[RemoveSupportingDocumentFormProvider]
 
-  val form: RemoveSupportingDocumentFormProvider = app.injector.instanceOf[RemoveSupportingDocumentFormProvider]
-
-  val view: RemoveSupportingDocumentView = app.injector.instanceOf[RemoveSupportingDocumentView]
+  private val view: RemoveSupportingDocumentView = app.injector.instanceOf[RemoveSupportingDocumentView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(form.apply(), NormalMode, DraftId(1L), Index(0), "file")(fakeRequest, messages)
+    view.apply(form.apply(), NormalMode, draftId, Index(0), "file")(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(form.apply(), NormalMode, DraftId(1L), Index(0), "file", fakeRequest, messages)
+    view.render(form.apply(), NormalMode, draftId, Index(0), "file", fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(form.apply(), NormalMode, DraftId(1L), Index(0), "file")(fakeRequest, messages)
+    view.f(form.apply(), NormalMode, draftId, Index(0), "file")(fakeRequest, messages)
 
   "RemoveSupportingDocumentView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("removeSupportingDocument")()
   }
 }

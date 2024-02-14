@@ -17,24 +17,22 @@
 package views
 
 import forms.DescribeTheRestrictionsFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.DescribeTheRestrictionsView
 
 class DescribeTheRestrictionsViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "describeTheRestrictions"
+  private val form: DescribeTheRestrictionsFormProvider = app.injector.instanceOf[DescribeTheRestrictionsFormProvider]
 
-  val form: DescribeTheRestrictionsFormProvider = app.injector.instanceOf[DescribeTheRestrictionsFormProvider]
+  private val view: DescribeTheRestrictionsView = app.injector.instanceOf[DescribeTheRestrictionsView]
 
-  val view: DescribeTheRestrictionsView = app.injector.instanceOf[DescribeTheRestrictionsView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "DescribeTheRestrictionsView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("describeTheRestrictions")()
   }
 }

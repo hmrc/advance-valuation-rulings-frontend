@@ -17,24 +17,22 @@
 package views
 
 import forms.AwareOfRulingFormProvider
-import models.{DraftId, NormalMode}
+import models.NormalMode
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AwareOfRulingView
 
 class AwareOfRulingViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "awareOfRuling"
+  private val form: AwareOfRulingFormProvider = app.injector.instanceOf[AwareOfRulingFormProvider]
 
-  val form: AwareOfRulingFormProvider = app.injector.instanceOf[AwareOfRulingFormProvider]
+  private val view: AwareOfRulingView = app.injector.instanceOf[AwareOfRulingView]
 
-  val view: AwareOfRulingView = app.injector.instanceOf[AwareOfRulingView]
-
-  val viewViaApply: HtmlFormat.Appendable  = view(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, DraftId(1L))(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), NormalMode, draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), NormalMode, draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), NormalMode, draftId)(fakeRequest, messages)
 
   "AwareOfRulingView" - {
-    normalPage(messageKeyPrefix, "")()
+    normalPage("awareOfRuling")()
   }
 }
