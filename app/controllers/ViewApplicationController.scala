@@ -36,7 +36,6 @@ class ViewApplicationController @Inject() (
   identify: IdentifierAction,
   backendConnector: BackendConnector,
   val controllerComponents: MessagesControllerComponents,
-  userAnswersService: UserAnswersService,
   view: ViewApplicationView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
