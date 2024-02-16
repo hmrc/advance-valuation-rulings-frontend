@@ -21,7 +21,8 @@ import connectors.BackendConnector
 import forms.EmployeeCheckRegisteredDetailsFormProvider
 import models._
 import models.requests.DataRequest
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, same}
 import org.mockito.MockitoSugar.{mock, when}

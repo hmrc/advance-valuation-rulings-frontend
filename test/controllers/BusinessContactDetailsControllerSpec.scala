@@ -20,7 +20,8 @@ import base.SpecBase
 import forms.BusinessContactDetailsFormProvider
 import models.AuthUserType.IndividualTrader
 import models.{BusinessContactDetails, Done, NormalMode, WhatIsYourRoleAsImporter}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import pages.{AccountHomePage, BusinessContactDetailsPage}

@@ -31,7 +31,6 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
 
   case object EmployeeOfOrg extends WithName("employeeOfOrg") with WhatIsYourRoleAsImporter
   case object AgentOnBehalfOfOrg extends WithName("agentOnBehalfOfOrg") with WhatIsYourRoleAsImporter
-
   case object AgentOnBehalfOfTrader extends WithName("agentOnBehalfOfTrader") with WhatIsYourRoleAsImporter
 
   val values: Seq[WhatIsYourRoleAsImporter] = Seq(
@@ -50,8 +49,7 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
         ),
         value = Some(value.toString),
         id = Some(s"value_$index"),
-        hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint")))),
-        disabled = mode == ReadOnlyMode
+        hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint"))))
       )
     }
 

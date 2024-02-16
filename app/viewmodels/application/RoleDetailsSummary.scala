@@ -48,6 +48,7 @@ object RoleDetailsSummary {
             value = ValueViewModel(messages("whatIsYourRoleAsImporter.agentOnBehalfOfTrader"))
           )
         )
-      case _                                => None
+      case _                                =>
+        None
     }
 }

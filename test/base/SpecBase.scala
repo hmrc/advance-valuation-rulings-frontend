@@ -16,11 +16,13 @@
 
 package base
 
-import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
+import config.{FrontendAppConfig, InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
+import handlers.ErrorHandler
 import models.AuthUserType.{IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models._
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{mock, when}
@@ -31,12 +33,13 @@ import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
 import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Call
+import play.api.inject.{Injector, bind}
+import play.api.mvc._
 import play.api.test.FakeRequest
 import repositories.CounterRepository
 import services.UserAnswersService
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.Future
 
@@ -143,6 +146,7 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+
   protected def applicationBuilderAsAgent(
     userAnswers: Option[UserAnswers] = None
   ): GuiceApplicationBuilder =
@@ -156,6 +160,7 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+
   protected def applicationBuilderAsOrg(
     userAnswers: Option[UserAnswers] = None
   ): GuiceApplicationBuilder =
@@ -182,6 +187,27 @@ trait SpecBase
       .build()
 
   }
-  def onwardRoute: Call      = Call("GET", "/foo")
 
+  def onwardRoute: Call = Call("GET", "/foo")
+
+  lazy val injector: Injector = applicationBuilder().injector
+
+  implicit lazy val frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+
+  lazy val httpV2: HttpClientV2 = injector.instanceOf[HttpClientV2]
+
+  lazy val messagesControllerComponents: MessagesControllerComponents =
+    injector.instanceOf[MessagesControllerComponents]
+
+  lazy val playBodyParsers: PlayBodyParsers =
+    injector.instanceOf[MessagesControllerComponents].parsers
+
+  implicit lazy val messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
+
+  def messagesHelper(fakeRequest: FakeRequest[AnyContentAsEmpty.type]): Messages =
+    messagesApi.preferred(fakeRequest)
+
+  implicit lazy val errorHandler: ErrorHandler = injector.instanceOf[ErrorHandler]
+
+  lazy val dataRequiredAction: DataRequiredActionImpl = injector.instanceOf[DataRequiredActionImpl]
 }

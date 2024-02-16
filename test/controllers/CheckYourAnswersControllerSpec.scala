@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import cats.data.Validated.Valid
 import connectors.BackendConnector
 import models.AuthUserType.IndividualTrader
 import models._
@@ -51,51 +52,51 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
   "Check Your Answers Controller" - {
 
-    "must return OK and the correct view for a GET for a UserRole with the agent creds flag on" in
-      new CheckYourAnswersControllerSpecSetup {
+    "must return OK and the correct view for a GET for a UserRole with the agent creds flag on" in new CheckYourAnswersControllerSpecSetup {
 
-        private val mockUserRoleProvider = mock[UserRoleProvider]
-        private val mockUserRole         = mock[UserRole]
+      private val mockUserRoleProvider = mock[UserRoleProvider]
+      private val mockUserRole         = mock[UserRole]
 
-        private val expectedText = "Expected"
-        private val expectedView = HtmlFormat.raw(expectedText)
+      private val expectedText = "Expected"
+      private val expectedView = HtmlFormat.raw(expectedText)
 
-        when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
-        when(
-          mockUserRole.selectViewForCheckYourAnswers(any[ApplicationSummary], any[DraftId])(
-            any[DataRequest[AnyContent]],
-            any[Messages]
+      when(mockUserRoleProvider.getUserRole(any())).thenReturn(mockUserRole)
+      when(
+        mockUserRole.selectViewForCheckYourAnswers(any[ApplicationSummary], any[DraftId])(
+          any[DataRequest[AnyContent]],
+          any[Messages]
+        )
+      )
+        .thenReturn(expectedView)
+
+      private val application = applicationBuilder(userAnswers = Option(userAnswers))
+        .overrides(
+          bind[BackendConnector].toInstance(mockBackendConnector),
+          bind[ApplicationRequestService].toInstance(mockApplicationRequestService),
+          bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService),
+          bind[UserRoleProvider].toInstance(mockUserRoleProvider)
+        )
+        .build()
+
+      when(
+        mockBackendConnector.getTraderDetails(any(), any())(any(), any())
+      ) thenReturn Future
+        .successful(
+          Right(
+            traderDetailsWithCountryCode
           )
         )
-          .thenReturn(expectedView)
 
-        private val application = applicationBuilder(userAnswers = Option(userAnswers))
-          .overrides(
-            bind[BackendConnector].toInstance(mockBackendConnector),
-            bind[ApplicationSummaryService].toInstance(mockApplicationSummaryService),
-            bind[UserRoleProvider].toInstance(mockUserRoleProvider)
-          )
-          .build()
+      running(application) {
+        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(draftId).url)
 
-        when(
-          mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-        ) thenReturn Future
-          .successful(
-            Right(
-              traderDetailsWithCountryCode
-            )
-          )
+        val result = route(application, request).value
 
-        running(application) {
-          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(draftId).url)
-
-          val result = route(application, request).value
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual expectedText
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual expectedText
       }
+    }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in
       new CheckYourAnswersControllerSpecSetup {
@@ -186,6 +187,7 @@ trait CheckYourAnswersControllerSpecSetup extends TryValues with ScalaFutures {
   val mockSubmissionService: SubmissionService                 = mock[SubmissionService]
   val mockBackendConnector: BackendConnector                   = mock[BackendConnector]
   val mockApplicationSummaryService: ApplicationSummaryService = mock[ApplicationSummaryService]
+  val mockApplicationRequestService: ApplicationRequestService = mock[ApplicationRequestService]
 
   val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
@@ -213,7 +215,8 @@ trait CheckYourAnswersControllerSpecSetup extends TryValues with ScalaFutures {
     contactInformation = Some(contactInformation)
   )
 
-  val appSummary: ApplicationSummary = mock[ApplicationSummary]
+  val appSummary: ApplicationSummary            = mock[ApplicationSummary]
+  val appApplicationRequest: ApplicationRequest = mock[ApplicationRequest]
 
   when(
     mockApplicationSummaryService.getApplicationSummary(
@@ -221,6 +224,13 @@ trait CheckYourAnswersControllerSpecSetup extends TryValues with ScalaFutures {
       any[TraderDetailsWithCountryCode]
     )(any[Messages])
   ).thenReturn(appSummary)
+
+  when(
+    mockApplicationRequestService.apply(
+      any[UserAnswers],
+      any[TraderDetailsWithCountryCode]
+    )
+  ).thenReturn(Valid(appApplicationRequest))
 
   val fullUserAnswers: UserAnswers = (for {
     ua <- userAnswers.set(DescriptionOfGoodsPage, "DescriptionOfGoodsPage")

@@ -185,7 +185,7 @@ POST       /:draftId/any-legal-challenges                                       
 GET        /:draftId/change-any-legal-challenges                                    controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-any-legal-challenges                                    controllers.HaveTheGoodsBeenSubjectToLegalChallengesController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
-GET        /application-complete                                          controllers.ApplicationCompleteController.onPageLoad(draftId: String)
+GET        /application-complete                                                   controllers.ApplicationCompleteController.onPageLoad(draftId: String)
 
 GET        /:draftId/explain-why-method-4                                          controllers.ExplainWhyYouChoseMethodFourController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/explain-why-method-4                                          controllers.ExplainWhyYouChoseMethodFourController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)
@@ -226,7 +226,11 @@ GET        /:draftId/describe-role-importer                        controllers.W
 POST       /:draftId/describe-role-importer                        controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
 GET        /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
 POST       /:draftId/change-describe-role-importer                 controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
-POST       /:draftId/read-only-describe-role-importer              controllers.WhatIsYourRoleAsImporterController.onSubmit(mode: Mode = ReadOnlyMode, draftId: DraftId)
+
+GET        /:draftId/change-role-importer                          controllers.ChangeYourRoleImporterController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
+POST       /:draftId/change-role-importer                          controllers.ChangeYourRoleImporterController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)
+GET        /:draftId/change-role-importer-check                    controllers.ChangeYourRoleImporterController.onPageLoad(mode: Mode = CheckMode, draftId: DraftId)
+POST       /:draftId/change-role-importer-check                    controllers.ChangeYourRoleImporterController.onSubmit(mode: Mode = CheckMode, draftId: DraftId)
 
 GET        /:draftId/was-there-a-previous-decision                 controllers.HaveYouReceivedADecisionController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/was-there-a-previous-decision                 controllers.HaveYouReceivedADecisionController.onSubmit(mode: Mode = NormalMode, draftId: DraftId)

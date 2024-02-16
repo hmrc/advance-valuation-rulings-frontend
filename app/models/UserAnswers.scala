@@ -149,8 +149,6 @@ object UserAnswers {
     )(unlift(UserAnswers.unapply))
   }
 
-  val mongoFormat: OFormat[UserAnswers] = OFormat(mongoReads, mongoWrites)
-
   private val reads: Reads[UserAnswers] = {
 
     import play.api.libs.functional.syntax._

@@ -1098,3 +1098,9 @@ awareOfRuling.para = Telling us about other rulings that have used a similar met
 awareOfRuling.error.required = Tell us if you are aware of any other rulings that used a similar method
 awareOfRuling.checkYourAnswersLabel = Are you aware of any other rulings that have used a similar method?
 awareOfRuling.change.hidden = whether you are aware of any other rulings using a similar method
+
+changeYourRoleImporter.title = Change your role as importer
+changeYourRoleImporter.heading = Change your role as importer
+changeYourRoleImporter.p1 = If you change your role as an importer you will lose all information you have added to this application.
+changeYourRoleImporter.label = Do you want to change your role as an importer?
+changeYourRoleImporter.error.required = Select yes if you want to change your role as an importer

@@ -19,7 +19,8 @@ package controllers
 import base.SpecBase
 import forms.RemoveSupportingDocumentFormProvider
 import models.{Done, DraftAttachment, DraftId, Index, NormalMode, UploadedFile, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo

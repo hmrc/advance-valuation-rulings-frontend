@@ -19,7 +19,8 @@ package controllers
 import base.SpecBase
 import forms.IsThisFileConfidentialFormProvider
 import models.{Done, DraftAttachment, NormalMode, UploadedFile}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.MockitoSugar.{mock, verify, when}
 import pages._

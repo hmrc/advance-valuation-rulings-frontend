@@ -26,7 +26,7 @@ import userrole.UserRoleProvider
 
 import javax.inject.Inject
 
-class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
+class Navigator @Inject() (userRoleProvider: UserRoleProvider, unchangedModeNavigator: UnchangedModeNavigator) {
 
   private def routes: Page => UserAnswers => Call = {
     case AccountHomePage                                  => startApplicationRouting
@@ -44,6 +44,7 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
     case ConfidentialInformationPage                      => confidentialInformationPage
     case ImportGoodsPage                                  => importGoodsPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
+    case ChangeYourRoleImporterPage                       => changeYourRoleImporterPageRoute
     case TellUsAboutYourRulingPage                        => tellUsAboutYourRuling
     case HaveYouReceivedADecisionPage                     => haveYouReceivedADecision
     case AwareOfRulingPage                                => awareOfRulingsWithSimilarMethod
@@ -450,6 +451,21 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
       case None    => WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(_) => RequiredInformationController.onPageLoad(userAnswers.draftId)
+
+    }
+
+  private def changeYourRoleImporterPageRoute(userAnswers: UserAnswers): Call =
+    (userAnswers.get(ChangeYourRoleImporterPage), userAnswers.get(WhatIsYourRoleAsImporterPage)) match {
+      case (None, None)          =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case (Some(_), None)       =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case (Some(true), Some(_)) =>
+        RequiredInformationController.onPageLoad(userAnswers.draftId)
+      case (Some(false), _)      =>
+        WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, userAnswers.draftId)
+      case _                     =>
+        ChangeYourRoleImporterController.onPageLoad(NormalMode, userAnswers.draftId)
     }
 
   private def tellUsAboutYourRuling(userAnswers: UserAnswers): Call =
@@ -513,11 +529,14 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider) {
   private def verifyLetterOfAuthorityPage(userAnswers: UserAnswers): Call =
     BusinessContactDetailsController.onPageLoad(NormalMode, userAnswers.draftId)
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case CheckMode =>
-      CheckModeNavigator.nextPage(page, userAnswers)
-    case _         =>
-      routes(page)(userAnswers)
-  }
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    mode match {
+      case CheckMode     =>
+        CheckModeNavigator.nextPage(page, userAnswers)
+      case UnchangedMode =>
+        unchangedModeNavigator.nextPage(page, userAnswers)
+      case _             =>
+        routes(page)(userAnswers)
+    }
 
 }

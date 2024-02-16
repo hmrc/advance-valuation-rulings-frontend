@@ -20,7 +20,8 @@ import base.SpecBase
 import connectors.BackendConnector
 import forms.TraderEoriNumberFormProvider
 import models.{BackendError, Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import pages.ProvideTraderEoriPage

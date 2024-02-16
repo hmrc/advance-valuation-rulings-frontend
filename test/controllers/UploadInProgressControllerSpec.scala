@@ -20,7 +20,8 @@ import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.upscan.UpscanInitiateResponse
 import models.{NormalMode, UploadedFile, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar.{mock, reset, when}

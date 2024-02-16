@@ -18,9 +18,13 @@ package controllers
 
 import audit.AuditService
 import base.SpecBase
+import controllers.actions.FakeIdentifierAction
 import forms.WhatIsYourRoleAsImporterFormProvider
+import models.AuthUserType.IndividualTrader
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models._
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.mockito.MockitoSugar._
@@ -31,7 +35,7 @@ import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
@@ -47,6 +51,13 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
   private val formProvider = new WhatIsYourRoleAsImporterFormProvider()
   private val form         = formProvider()
+
+  object FakeIdentifierAction extends FakeIdentifierAction(playBodyParsers)
+
+  val whatIsYourRoleAsImporterView                                       = injector.instanceOf[WhatIsYourRoleAsImporterView]
+  val whatIsYourRoleAsImporterForm: WhatIsYourRoleAsImporterFormProvider = new WhatIsYourRoleAsImporterFormProvider()
+
+  implicit lazy val ec: ExecutionContext = injector.instanceOf[ExecutionContext]
 
   "WhatIsYourRoleAsImporter Controller" - {
 
@@ -90,11 +101,12 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(WhatIsYourRoleAsImporter.values.head),
-          ReadOnlyMode,
-          draftId
-        )(request, messages(application)).toString
+        contentAsString(result) mustEqual
+          view(
+            form = form.fill(WhatIsYourRoleAsImporter.values.head),
+            mode = NormalMode,
+            draftId = draftId
+          )(request, messages(application)).toString
       }
     }
 
@@ -146,47 +158,20 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
           .value
 
       verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
-      verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
-    }
-
-    "must redirect to the next page without modifying user answers when in read only mode" in {
-      val mockUserAnswersService = mock[UserAnswersService]
-
-      val application =
-        applicationBuilderAsAgent(userAnswers = Some(userAnswersAsIndividualTrader))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[UserAnswersService].toInstance(mockUserAnswersService),
-            bind[AuditService].to(mockAuditService)
-          )
-          .build()
-
-      running(application) {
-        val request =
-          FakeRequest(
-            POST,
-            routes.WhatIsYourRoleAsImporterController.onSubmit(ReadOnlyMode, draftId).url
-          )
-            .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg.toString))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
-      }
-
-      verifyZeroInteractions(mockUserAnswersService)
-      verifyZeroInteractions(mockAuditService)
     }
 
     "must remove answer for AgentCompanyDetails when answered as Employee" in {
-      val emptyAnswers           = UserAnswers(userAnswersId, draftId)
-        .set(AccountHomePage, AuthUserType.OrganisationUser)
-        .success
-        .value
+
+      val emptyAnswers =
+        UserAnswers(userAnswersId, draftId)
+          .set(AccountHomePage, AuthUserType.OrganisationUser)
+          .success
+          .value
+
       val mockUserAnswersService = mock[UserAnswersService]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
       val userAnswers = emptyAnswers
         .set(
           AgentCompanyDetailsPage,
@@ -220,14 +205,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
       }
-
-      val expectedUserAnswers = emptyAnswers
-        .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
-        .success
-        .value
-
-      verify(mockUserAnswersService, times(1)).set(eqTo(expectedUserAnswers))(any())
-      verify(mockAuditService, times(1)).sendRoleIndicatorEvent(any())(any(), any(), any())
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
@@ -276,6 +253,227 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
       }
 
       verifyZeroInteractions(mockAuditService)
+    }
+
+    ".onSubmitNavigationLogic" - {
+
+      "NormalMode" - {
+
+        "when the user enters any role and there is no previously answered role stored in request.useranswers" - {
+
+          "redirect to the RequiredInformation page" in {
+
+            val mockUserAnswersService = mock[UserAnswersService]
+
+            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+            val userAnswers =
+              emptyUserAnswers
+                .set(AccountHomePage, IndividualTrader)
+                .success
+                .value
+
+            val application =
+              applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+                .overrides(
+                  bind[UserAnswersService].toInstance(mockUserAnswersService),
+                  bind[AuditService].to(mockAuditService)
+                )
+                .build()
+
+            val routeToTest =
+              routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
+
+            running(application) {
+              val request =
+                FakeRequest(POST, routeToTest)
+                  .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.EmployeeOfOrg.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual controllers.routes.RequiredInformationController
+                .onPageLoad(draftId)
+                .url
+            }
+          }
+        }
+
+        "when the user enters any role == a previously answered role stored in request.useranswers" - {
+
+          "redirect to the RequiredInformation page" in {
+
+            val mockUserAnswersService = mock[UserAnswersService]
+
+            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+            val userAnswers =
+              emptyUserAnswers
+                .set(AccountHomePage, IndividualTrader)
+                .success
+                .value
+                .set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+                .success
+                .value
+
+            val application =
+              applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+                .overrides(
+                  bind[UserAnswersService].toInstance(mockUserAnswersService),
+                  bind[AuditService].to(mockAuditService)
+                )
+                .build()
+
+            val routeToTest =
+              routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
+
+            running(application) {
+              val request =
+                FakeRequest(POST, routeToTest)
+                  .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.EmployeeOfOrg.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual controllers.routes.RequiredInformationController
+                .onPageLoad(draftId)
+                .url
+            }
+          }
+        }
+
+        "when the user enters any role != a previously answered role stored in request.useranswers" - {
+
+          "redirect to the RequiredInformation page" in {
+
+            val mockUserAnswersService = mock[UserAnswersService]
+
+            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+            val userAnswers =
+              emptyUserAnswers
+                .set(AccountHomePage, IndividualTrader)
+                .success
+                .value
+                .set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+                .success
+                .value
+
+            val application =
+              applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+                .overrides(
+                  bind[UserAnswersService].toInstance(mockUserAnswersService),
+                  bind[AuditService].to(mockAuditService)
+                )
+                .build()
+
+            val routeToTest =
+              routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId).url
+
+            running(application) {
+              val request =
+                FakeRequest(POST, routeToTest)
+                  .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual controllers.routes.ChangeYourRoleImporterController
+                .onPageLoad(NormalMode, draftId)
+                .url
+            }
+          }
+        }
+      }
+
+      "CheckMode" - {
+
+        "when the user enters a role == role stored in request.useranswers" - {
+
+          "redirect to the CheckYourAnswers page" in {
+
+            val mockUserAnswersService = mock[UserAnswersService]
+
+            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+            val userAnswers =
+              emptyUserAnswers
+                .set(AccountHomePage, IndividualTrader)
+                .success
+                .value
+                .set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+                .success
+                .value
+
+            val application =
+              applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+                .overrides(
+                  bind[UserAnswersService].toInstance(mockUserAnswersService),
+                  bind[AuditService].to(mockAuditService)
+                )
+                .build()
+
+            val routeToTest =
+              routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
+
+            running(application) {
+              val request =
+                FakeRequest(POST, routeToTest)
+                  .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.EmployeeOfOrg.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual controllers.routes.CheckYourAnswersController
+                .onPageLoad(draftId)
+                .url
+            }
+          }
+        }
+
+        "when the user enters any role != a previously answered role stored in request.useranswers" - {
+
+          "redirect to the RequiredInformation page" in {
+
+            val mockUserAnswersService = mock[UserAnswersService]
+
+            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+
+            val userAnswers =
+              emptyUserAnswers
+                .set(AccountHomePage, IndividualTrader)
+                .success
+                .value
+                .set(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+                .success
+                .value
+
+            val application =
+              applicationBuilderAsAgent(userAnswers = Some(userAnswers))
+                .overrides(
+                  bind[UserAnswersService].toInstance(mockUserAnswersService),
+                  bind[AuditService].to(mockAuditService)
+                )
+                .build()
+
+            val routeToTest =
+              routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, draftId).url
+
+            running(application) {
+              val request =
+                FakeRequest(POST, routeToTest)
+                  .withFormUrlEncodedBody(("value", WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustEqual controllers.routes.ChangeYourRoleImporterController
+                .onPageLoad(CheckMode, draftId)
+                .url
+            }
+          }
+        }
+      }
     }
   }
 }

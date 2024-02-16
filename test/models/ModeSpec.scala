@@ -21,16 +21,16 @@ import base.SpecBase
 class ModeSpec extends SpecBase {
 
   "Mode" - {
-    "return a normal type" in {
+    "return a Normal mode type" in {
       Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
     }
 
-    "return a check mode type" in {
+    "return a Check mode type" in {
       Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
     }
 
-    "return a read-only mode type" in {
-      Mode.jsLiteral.to(ReadOnlyMode) mustBe "ReadOnlyMode"
+    "return an Unchanged mode type" in {
+      Mode.jsLiteral.to(UnchangedMode) mustBe "UnchangedMode"
     }
   }
 

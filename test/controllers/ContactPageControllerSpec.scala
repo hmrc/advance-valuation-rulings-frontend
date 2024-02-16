@@ -18,7 +18,8 @@ package controllers
 
 import base.SpecBase
 import models.NormalMode
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest

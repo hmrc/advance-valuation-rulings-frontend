@@ -43,7 +43,6 @@ class RequiredInformationController @Inject() (
       logger.info(
         "[RequiredInformationController][onPageLoad] Redirecting to correct view based on user role answer"
       )
-
       val view = userRoleProvider
         .getUserRole(request.userAnswers)
         .selectViewForRequiredInformation(draftId)

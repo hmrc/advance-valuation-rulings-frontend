@@ -35,9 +35,10 @@ import java.time.Instant
 
 class NavigatorSpec extends SpecBase {
 
-  private val EmptyUserAnswers: UserAnswers = userAnswersAsIndividualTrader
-  private val userRoleProvider              = mock[UserRoleProvider]
-  private val navigator                     = new Navigator(userRoleProvider)
+  private val EmptyUserAnswers: UserAnswers          = userAnswersAsIndividualTrader
+  private val userRoleProvider                       = mock[UserRoleProvider]
+  val unchangedModeNavigator: UnchangedModeNavigator = new UnchangedModeNavigator
+  val navigator: Navigator                           = new Navigator(userRoleProvider, unchangedModeNavigator)
 
   private val successfulFile = UploadedFile.Success(
     reference = "reference",
@@ -209,6 +210,107 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+        }
+      }
+
+      "ChangeYourRoleImporterPage" - {
+
+        "when user answers ChangeYourRoleImporterPage == true and WhatIsYourRoleAsImporterPage has not been answered" - {
+
+          "must navigate to the WhatIsYourRoleAsImporter page" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .setFuture(AccountHomePage, IndividualTrader)
+                .futureValue
+                .setFuture(ChangeYourRoleImporterPage, true)
+                .futureValue
+
+            val actual =
+              navigator.nextPage(
+                WhatIsYourRoleAsImporterPage,
+                NormalMode,
+                userAnswers
+              )
+
+            val expected = routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+
+            actual mustBe expected
+          }
+        }
+
+        "when user answers the ChangeYourRoleImporterPage, but the WhatIsYourRoleAsImporterPage is unanswered" - {
+
+          "must navigate to the WhatIsYourRoleAsImporter page" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .setFuture(AccountHomePage, IndividualTrader)
+                .futureValue
+                .setFuture(ChangeYourRoleImporterPage, true)
+                .futureValue
+
+            val actual =
+              navigator.nextPage(
+                ChangeYourRoleImporterPage,
+                NormalMode,
+                userAnswers
+              )
+
+            val expected = routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+
+            actual mustBe expected
+          }
+        }
+
+        "when user answers the ChangeYourRoleImporterPage, the WhatIsYourRoleAsImporterPage Role is any role" - {
+
+          "must navigate to the RequiredInformation page" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .setFuture(AccountHomePage, IndividualTrader)
+                .futureValue
+                .setFuture(ChangeYourRoleImporterPage, true)
+                .futureValue
+                .setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+                .futureValue
+
+            val actual =
+              navigator.nextPage(
+                ChangeYourRoleImporterPage,
+                NormalMode,
+                userAnswers
+              )
+
+            val expected = routes.RequiredInformationController.onPageLoad(draftId)
+
+            actual mustBe expected
+          }
+        }
+
+        "when user answers ChangeYourRoleImporterPage == false, the WhatIsYourRoleAsImporterPage Role answered or unanswered" - {
+
+          "must navigate to the WhatIsYourRoleAsImporter page" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .setFuture(AccountHomePage, IndividualTrader)
+                .futureValue
+                .setFuture(ChangeYourRoleImporterPage, false)
+                .futureValue
+
+            val actual =
+              navigator.nextPage(
+                ChangeYourRoleImporterPage,
+                NormalMode,
+                userAnswers
+              )
+
+            val expected = routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+
+            actual mustBe expected
+          }
         }
       }
 
@@ -554,8 +656,10 @@ class NavigatorSpec extends SpecBase {
         }
 
         "and navigate to HaveTheGoodsBeenSubjectToLegalChallengesController when no answer for HaveTheGoodsBeenSubjectToLegalChallengesPage" in {
+
           val userAnswers =
             userAnswersWith(HasCommodityCodePage, false)
+
           navigator.nextPage(
             HaveTheGoodsBeenSubjectToLegalChallengesPage,
             NormalMode,

@@ -19,7 +19,8 @@ package controllers
 import base.SpecBase
 import forms.ImportGoodsFormProvider
 import models.{Done, NormalMode}
-import navigation.{FakeNavigator, Navigator}
+import navigation.FakeNavigators.FakeNavigator
+import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar.{mock, when}
 import pages.ImportGoodsPage

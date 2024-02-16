@@ -44,7 +44,7 @@ case class AgentSummary(rows: SummaryList) extends ApplicantSummary
 
 class AgentSummaryCreator {
   def summaryRows(userAnswers: UserAnswers)(implicit messages: Messages): AgentSummary = {
-    val roleRow            = AgentRoleSummary.row(userAnswers).orEmpty
+    val roleRow            = AgentRoleSummary.row(userAnswers, userAnswers.draftId).orEmpty
     val contactDetailsRows = BusinessContactDetailsSummary.rows(userAnswers).orEmpty
     val agentCompanyRow    = AgentCompanySummary.rows(userAnswers).orEmpty
 

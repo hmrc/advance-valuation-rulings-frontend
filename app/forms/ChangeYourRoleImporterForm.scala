@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.mvc.JavascriptLiteral
+import forms.mappings.Mappings
+import models.requests.DataRequest
+import play.api.data.Form
 
-sealed trait Mode
+class ChangeYourRoleImporterForm extends Mappings {
 
-case object CheckMode extends Mode
-case object NormalMode extends Mode
-case object UnchangedMode extends Mode
-
-object Mode {
-
-  implicit val jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
-    override def to(value: Mode): String = value match {
-      case NormalMode    => "NormalMode"
-      case CheckMode     => "CheckMode"
-      case UnchangedMode => "UnchangedMode"
-    }
-  }
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean(
+        "changeYourRoleImporter.error.required"
+      )
+    )
 }
