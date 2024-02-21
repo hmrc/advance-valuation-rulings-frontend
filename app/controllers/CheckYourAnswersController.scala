@@ -54,9 +54,7 @@ class CheckYourAnswersController @Inject() (
   private implicit val logger: Logger = Logger(this.getClass)
 
   private def renderPageWhenApplicationIsCompleted(traderDetails: TraderDetailsWithCountryCode, draftId: DraftId)(
-    implicit
-    request: DataRequest[AnyContent],
-    hc: HeaderCarrier
+    implicit request: DataRequest[AnyContent]
   ): Future[Result] =
     applicationRequestService(request.userAnswers, traderDetails) match {
       case Invalid(errors: cats.data.NonEmptyList[Page]) =>
@@ -65,7 +63,7 @@ class CheckYourAnswersController @Inject() (
             s"${errors.toList.mkString(", ")}"
         )
         Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-      case Valid(applicationRequest)                     =>
+      case Valid(_)                                      =>
         val applicationSummary = applicationSummaryService.getApplicationSummary(request.userAnswers, traderDetails)
         Future.successful(
           Ok(

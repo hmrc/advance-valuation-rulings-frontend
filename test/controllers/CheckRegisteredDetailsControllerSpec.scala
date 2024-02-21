@@ -52,8 +52,7 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with TableDrivenProp
     .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
     .get
 
-  private val consentToDisclosureOfPersonalDataScenarios =
-    Table("consentToDisclosureOfPersonalData", true, false)
+  private val consentToDisclosureOfPersonalDataScenarios = Table("consentToDisclosureOfPersonalData", true, false)
 
   private val mockBackendConnector   = mock[BackendConnector]
   private val mockUserAnswersService = mock[UserAnswersService]

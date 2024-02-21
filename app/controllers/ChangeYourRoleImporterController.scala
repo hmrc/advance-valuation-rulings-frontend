@@ -19,7 +19,7 @@ package controllers
 import connectors.BackendConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalActionProvider, IdentifierAction}
 import controllers.common.TraderDetailsHelper
-import forms.ChangeYourRoleImporterForm
+import forms.ChangeYourRoleImporterFormProvider
 import models.{DraftId, Mode, NormalMode, WhatIsYourRoleAsImporter}
 import navigation.Navigator
 import pages.{ChangeYourRoleImporterPage, DraftWhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporterPage}
@@ -39,7 +39,7 @@ class ChangeYourRoleImporterController @Inject() (
   identify: IdentifierAction,
   requireData: DataRequiredAction,
   getData: DataRetrievalActionProvider,
-  formProvider: ChangeYourRoleImporterForm,
+  formProvider: ChangeYourRoleImporterFormProvider,
   navigator: Navigator,
   deleteAllUserAnswersService: DeleteAllUserAnswersService,
   view: ChangeYourRoleImporterView,

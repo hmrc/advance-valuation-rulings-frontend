@@ -17,10 +17,11 @@
 package forms
 
 import forms.mappings.Mappings
-import models.requests.DataRequest
 import play.api.data.Form
 
-class ChangeYourRoleImporterForm extends Mappings {
+import javax.inject.Inject
+
+class ChangeYourRoleImporterFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(

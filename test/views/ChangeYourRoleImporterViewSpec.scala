@@ -16,79 +16,22 @@
 
 package views
 
-import forms.ChangeYourRoleImporterForm
-import models.DraftId
-import models.requests.DataRequest
-import play.api.test.FakeRequest
+import forms.ChangeYourRoleImporterFormProvider
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.auth.core.{AffinityGroup, User}
 import views.behaviours.ViewBehaviours
 import views.html.ChangeYourRoleImporterView
 
 class ChangeYourRoleImporterViewSpec extends ViewBehaviours {
 
-  private val messageKeyPrefix = "changeYourRoleImporter"
+  private val form: ChangeYourRoleImporterFormProvider = app.injector.instanceOf[ChangeYourRoleImporterFormProvider]
 
-  val fakeDataRequest: DataRequest[_] = DataRequest(
-    request = FakeRequest(),
-    userId = userAnswersId,
-    eoriNumber = EoriNumber,
-    affinityGroup = AffinityGroup.Individual,
-    credentialRole = Option(User),
-    userAnswers = userAnswersAsIndividualTrader
-  )
+  private val view: ChangeYourRoleImporterView = app.injector.instanceOf[ChangeYourRoleImporterView]
 
-  val form = new ChangeYourRoleImporterForm()()
-
-  private val view: ChangeYourRoleImporterView =
-    app.injector.instanceOf[ChangeYourRoleImporterView]
-
-  private val viewViaApply: HtmlFormat.Appendable  =
-    view(form, DraftId(1L), onwardRoute)(fakeRequest, messages)
-  private val viewViaRender: HtmlFormat.Appendable =
-    view.render(form, DraftId(1L), onwardRoute, fakeRequest, messages)
-  private val viewViaF: HtmlFormat.Appendable      =
-    view.f(form, DraftId(1L), onwardRoute)(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), draftId, onwardRoute)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), draftId, onwardRoute, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), draftId, onwardRoute)(fakeRequest, messages)
 
   "ChangeYourRoleImporterView" - {
-
-    def test(method: String, view: HtmlFormat.Appendable): Unit =
-      s"$method" - {
-        behave like normalPage(view, messageKeyPrefix, "")()
-      }
-
-    val input: Seq[(String, HtmlFormat.Appendable)] =
-      Seq(
-        ".apply"  -> viewViaApply,
-        ".render" -> viewViaRender,
-        ".f"      -> viewViaF
-      )
-
-    input.foreach { case (method, view) =>
-      test(method, view)
-    }
-
-    object Selectors extends BaseSelectors {
-      val yesNoRadioLabel = "#main-content > div > div > form > div > fieldset > legend"
-      val continueButton  = "#continue-button"
-    }
-
-    "should have the correct content" - {
-
-      val expectedContent =
-        Seq(
-          Selectors.h1              -> "Change your role as importer",
-          Selectors.subheading      -> "About the applicant",
-          Selectors.p(1)            ->
-            (
-              "If you change your role as an importer you will lose all " +
-                "information you have added to this application."
-            ),
-          Selectors.yesNoRadioLabel -> "Do you want to change your role as an importer?",
-          Selectors.continueButton  -> "Continue"
-        )
-
-      behave like pageWithExpectedMessages(viewViaApply, expectedContent)
-    }
+    normalPage("changeYourRoleImporter")()
   }
 }

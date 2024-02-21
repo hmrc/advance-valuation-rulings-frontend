@@ -16,5 +16,6 @@
 
 @this()
 
-@(message: String)(implicit messages: Messages)
-<h2 class="govuk-caption-xl">@message</h2>
+@(message: String, captionPrefix: String="caption.prefix")(implicit messages: Messages)
+<h2 class="govuk-caption-xl"><span class="govuk-visually-hidden">
+    @messages(captionPrefix)</span>@message</h2>

@@ -20,7 +20,6 @@ import cats.data.{Validated, ValidatedNel}
 import pages._
 import play.api.libs.json._
 import queries.{Gettable, Modifiable}
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
 import scala.concurrent.Future
@@ -124,30 +123,6 @@ final case class UserAnswers(
 }
 
 object UserAnswers {
-
-  private val mongoReads: Reads[UserAnswers] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "userId").read[String] and
-        (__ \ "draftId").read[DraftId] and
-        (__ \ "data").read[JsObject] and
-        (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
-    )(UserAnswers.apply _)
-  }
-
-  private val mongoWrites: OWrites[UserAnswers] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "userId").write[String] and
-        (__ \ "draftId").write[DraftId] and
-        (__ \ "data").write[JsObject] and
-        (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
-    )(unlift(UserAnswers.unapply))
-  }
 
   private val reads: Reads[UserAnswers] = {
 

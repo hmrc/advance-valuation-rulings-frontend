@@ -18,7 +18,6 @@ package controllers
 
 import audit.AuditService
 import base.SpecBase
-import controllers.actions.FakeIdentifierAction
 import forms.WhatIsYourRoleAsImporterFormProvider
 import models.AuthUserType.IndividualTrader
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
@@ -35,15 +34,17 @@ import play.api.test.Helpers._
 import services.UserAnswersService
 import views.html.WhatIsYourRoleAsImporterView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
-  private val mockAuditService: AuditService = mock[AuditService]
+  private val mockAuditService: AuditService             = mock[AuditService]
+  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuditService)
+    reset(mockUserAnswersService)
   }
 
   private lazy val whatIsYourRoleAsImporterRoute =
@@ -51,13 +52,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
   private val formProvider = new WhatIsYourRoleAsImporterFormProvider()
   private val form         = formProvider()
-
-  object FakeIdentifierAction extends FakeIdentifierAction(playBodyParsers)
-
-  val whatIsYourRoleAsImporterView                                       = injector.instanceOf[WhatIsYourRoleAsImporterView]
-  val whatIsYourRoleAsImporterForm: WhatIsYourRoleAsImporterFormProvider = new WhatIsYourRoleAsImporterFormProvider()
-
-  implicit lazy val ec: ExecutionContext = injector.instanceOf[ExecutionContext]
 
   "WhatIsYourRoleAsImporter Controller" - {
 
@@ -112,8 +106,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
-
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val userAnswers = userAnswersAsIndividualTrader
@@ -167,8 +159,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
           .set(AccountHomePage, AuthUserType.OrganisationUser)
           .success
           .value
-
-      val mockUserAnswersService = mock[UserAnswersService]
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
@@ -263,8 +253,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
           "redirect to the RequiredInformation page" in {
 
-            val mockUserAnswersService = mock[UserAnswersService]
-
             when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
             val userAnswers =
@@ -302,8 +290,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
         "when the user enters any role == a previously answered role stored in request.useranswers" - {
 
           "redirect to the RequiredInformation page" in {
-
-            val mockUserAnswersService = mock[UserAnswersService]
 
             when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
@@ -345,8 +331,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
         "when the user enters any role != a previously answered role stored in request.useranswers" - {
 
           "redirect to the RequiredInformation page" in {
-
-            val mockUserAnswersService = mock[UserAnswersService]
 
             when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
@@ -392,8 +376,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
           "redirect to the CheckYourAnswers page" in {
 
-            val mockUserAnswersService = mock[UserAnswersService]
-
             when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
             val userAnswers =
@@ -434,8 +416,6 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
         "when the user enters any role != a previously answered role stored in request.useranswers" - {
 
           "redirect to the RequiredInformation page" in {
-
-            val mockUserAnswersService = mock[UserAnswersService]
 
             when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
