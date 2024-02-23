@@ -656,8 +656,8 @@ isThisFileConfidential.error.required = Dewiswch ‘Iawn’ os ydych am nodi’r
 isThisFileConfidential.checkYourAnswersLabel = isThisFileConfidential
 isThisFileConfidential.change.hidden = a yw’r ffeil hon yn gyfrinachol
 
-checkYourAnswers.title = Gwiriwch eich atebion cyn anfon eich cais
-checkYourAnswers.heading = Gwiriwch eich atebion cyn anfon eich cais
+checkYourAnswers.title = Gwirio’ch atebion cyn anfon eich cais
+checkYourAnswers.heading = Gwirio’ch atebion cyn anfon eich cais
 checkYourAnswers.applicant.heading = Ynglŷn â’r ymgeisydd
 
 checkYourAnswers.eori.number.label = Rhif EORI cofrestredig
@@ -730,8 +730,8 @@ checkYourAnswersForAgents.agreement.bulletPoint.3 = cysylltu â chi drwy e-bost
 checkYourAnswersForAgents.button.continue = Derbyn a gwneud cais am ddyfarniad
 
 
-agentForTraderCheckYourAnswers.title = Gwiriwch eich atebion cyn anfon eich cais
-agentForTraderCheckYourAnswers.heading = Gwirio’ch atebion
+agentForTraderCheckYourAnswers.title = Gwirio’ch atebion cyn anfon eich cais
+agentForTraderCheckYourAnswers.heading = Gwirio’ch atebion cyn anfon eich cais
 agentForTraderCheckYourAnswers.trader.eori.number.label = Rhif EORI cofrestredig y masnachwr
 agentForTraderCheckYourAnswers.trader.name.label = Enw busnes cofrestredig y masnachwr
 agentForTraderCheckYourAnswers.trader.address.label = Cyfeiriad busnes cofrestredig y masnachwr
