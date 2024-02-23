@@ -16,40 +16,19 @@
 
 package views
 
-import models.DraftId
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.AgentForOrgEORIBeUpToDateView
 
 class AgentForOrgEORIBeUpToDateViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "eoriBeUpToDate"
-  val messageKeySuffix = "org"
+  private val view: AgentForOrgEORIBeUpToDateView = app.injector.instanceOf[AgentForOrgEORIBeUpToDateView]
 
-  val view: AgentForOrgEORIBeUpToDateView =
-    app.injector.instanceOf[AgentForOrgEORIBeUpToDateView]
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(draftId)(fakeRequest, messages)
 
-  val viewViaApply: HtmlFormat.Appendable  =
-    view(DraftId(1L))(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable =
-    view.render(DraftId(1L), fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      =
-    view.f(DraftId(1L))(fakeRequest, messages)
-
-  "AcceptItemInformationList view" - {
-    def test(method: String, view: HtmlFormat.Appendable): Unit =
-      s"$method" - {
-        behave like normalPage(view, messageKeyPrefix, messageKeySuffix)()
-      }
-
-    val input: Seq[(String, HtmlFormat.Appendable)] = Seq(
-      (".apply", viewViaApply),
-      (".render", viewViaRender),
-      (".f", viewViaF)
-    )
-
-    input.foreach { case (method, view) =>
-      test(method, view)
-    }
+  "AgentForOrgEORIBeUpToDateView" - {
+    normalPage("eoriBeUpToDate", Some("org"))()
   }
 }

@@ -30,7 +30,7 @@
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 @onSubmitAction(saveDraft: Boolean = true) = @{routes.ProvideTraderEoriController.onSubmit(mode, draftId, saveDraft)
 }
-@layout(pageTitle = title(form, messages("provideTraderEori.heading")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("provideTraderEori.title")), draftId = Some(draftId)) {
 
     @formHelper(action = onSubmitAction(saveDraft = false)) {
 

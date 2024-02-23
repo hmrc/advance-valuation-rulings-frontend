@@ -18,7 +18,6 @@ package controllers
 
 import base.SpecBase
 import controllers.common.FileUploadHelper
-import models.upscan.UpscanInitiateResponse
 import models.{NormalMode, UploadedFile, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
@@ -90,17 +89,6 @@ class UploadInProgressControllerSpec extends SpecBase with BeforeAndAfterEach wi
     failureDetails = UploadedFile.FailureDetails(
       failureReason = UploadedFile.FailureReason.Quarantine,
       failureMessage = Some("failureMessage")
-    )
-  )
-
-  private val upscanInitiateResponse = UpscanInitiateResponse(
-    reference = reference,
-    uploadRequest = UpscanInitiateResponse.UploadRequest(
-      href = "href",
-      fields = Map(
-        "field1" -> "value1",
-        "field2" -> "value2"
-      )
     )
   )
 

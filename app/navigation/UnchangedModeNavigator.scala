@@ -18,10 +18,9 @@ package navigation
 
 import controllers.routes._
 import models.ValuationMethod._
-import models.{CheckMode, _}
+import models._
 import pages._
 import play.api.mvc.Call
-import queries.AllDocuments
 
 class UnchangedModeNavigator {
 

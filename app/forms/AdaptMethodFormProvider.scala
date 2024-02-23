@@ -20,9 +20,7 @@ import forms.mappings.Mappings
 import models.AdaptMethod
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class AdaptMethodFormProvider @Inject() extends Mappings {
+class AdaptMethodFormProvider extends Mappings {
 
   def apply(): Form[AdaptMethod] =
     Form(

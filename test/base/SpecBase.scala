@@ -16,11 +16,11 @@
 
 package base
 
-import config.{FrontendAppConfig, InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
+import config.{InternalAuthTokenInitialiser, NoOpInternalAuthTokenInitialiser}
 import controllers.actions._
-import handlers.ErrorHandler
 import models.AuthUserType.{IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models._
+import models.upscan.UpscanInitiateResponse
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
@@ -33,13 +33,14 @@ import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
 import pages.{AccountHomePage, WhatIsYourRoleAsImporterPage}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.inject.{Injector, bind}
 import play.api.mvc._
 import play.api.test.FakeRequest
 import repositories.CounterRepository
 import services.UserAnswersService
-import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.summary._
 
 import scala.concurrent.Future
 
@@ -120,6 +121,25 @@ trait SpecBase
   val traderDetailsWithConfirmation: TraderDetailsWithConfirmation =
     TraderDetailsWithConfirmation(traderDetailsWithCountryCode)
 
+  val testEoriDetailsSummary: IndividualEoriDetailsSummary = IndividualEoriDetailsSummary(SummaryList())
+  val testApplicantSummary: IndividualApplicantSummary     = IndividualApplicantSummary(SummaryList())
+  val testDetailsSummary: DetailsSummary                   = DetailsSummary(SummaryList())
+  val testMethodSummary: MethodSummary                     = MethodSummary(SummaryList())
+
+  val testApplicationSummary: ApplicationSummary =
+    ApplicationSummary(testEoriDetailsSummary, testApplicantSummary, testDetailsSummary, testMethodSummary)
+
+  val upscanInitiateResponse: UpscanInitiateResponse = UpscanInitiateResponse(
+    reference = "reference",
+    uploadRequest = UpscanInitiateResponse.UploadRequest(
+      href = "href",
+      fields = Map(
+        "field1" -> "value1",
+        "field2" -> "value2"
+      )
+    )
+  )
+
   def messagesApi(app: Application): MessagesApi =
     app.injector.instanceOf[MessagesApi]
 
@@ -190,24 +210,4 @@ trait SpecBase
 
   def onwardRoute: Call = Call("GET", "/foo")
 
-  lazy val injector: Injector = applicationBuilder().injector
-
-  implicit lazy val frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
-
-  lazy val httpV2: HttpClientV2 = injector.instanceOf[HttpClientV2]
-
-  lazy val messagesControllerComponents: MessagesControllerComponents =
-    injector.instanceOf[MessagesControllerComponents]
-
-  lazy val playBodyParsers: PlayBodyParsers =
-    injector.instanceOf[MessagesControllerComponents].parsers
-
-  implicit lazy val messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
-
-  def messagesHelper(fakeRequest: FakeRequest[AnyContentAsEmpty.type]): Messages =
-    messagesApi.preferred(fakeRequest)
-
-  implicit lazy val errorHandler: ErrorHandler = injector.instanceOf[ErrorHandler]
-
-  lazy val dataRequiredAction: DataRequiredActionImpl = injector.instanceOf[DataRequiredActionImpl]
 }

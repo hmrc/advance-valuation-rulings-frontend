@@ -50,7 +50,7 @@
         @paragraph(Html(messages("traderDetails.private.p2")))
 }
 
-@layout(pageTitle = title(form, messages("traderDetails.private.heading", details.EORINo)), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("traderDetails.private.title", details.EORINo)), draftId = Some(draftId)) {
 
     @formHelper(action = controllers.routes.VerifyTraderEoriController.onSubmit(NormalMode, draftId = draftId)) {
 

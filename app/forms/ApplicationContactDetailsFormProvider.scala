@@ -24,10 +24,9 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
-import javax.inject.Inject
 import scala.util.Try
 
-class ApplicationContactDetailsFormProvider @Inject() extends Mappings {
+class ApplicationContactDetailsFormProvider extends Mappings {
 
   def apply(): Form[ApplicationContactDetails] =
     Form(

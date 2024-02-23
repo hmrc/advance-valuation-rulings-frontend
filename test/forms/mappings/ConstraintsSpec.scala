@@ -21,7 +21,7 @@ import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError, ValidationResult}
+import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 
 import java.time.LocalDate
 

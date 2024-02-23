@@ -1,5 +1,4 @@
-import uk.gov.hmrc.DefaultBuildSettings._
-import scoverage.ScoverageKeys
+import uk.gov.hmrc.DefaultBuildSettings.*
 
 lazy val appName: String = "advance-valuation-rulings-frontend"
 
@@ -35,11 +34,7 @@ lazy val root = (project in file("."))
       "viewmodels.govuk.all._"
     ),
     PlayKeys.playDefaultPort := 12600,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +
-      ".*Routes.*;.*viewmodels.govuk.*;",
-    ScoverageKeys.coverageMinimumStmtTotal := 87,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true,
+    CodeCoverageSettings.settings,
     scalacOptions ++= Seq(
       "-feature", // Emit warning and location for usages of features that should be imported explicitly.
       "-rootdir",

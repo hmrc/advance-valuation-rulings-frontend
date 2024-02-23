@@ -100,7 +100,6 @@ importGoods.checkYourAnswersLabel = importGoods
 importGoods.error.required = Dewiswch a ydych chi’n bwriadu mewnforio nwyddau i Brydain Fawr
 importGoods.change.hidden = a ydych yn mewnforio nwyddau
 
-checkRegisteredDetails.title = Gwirio’r enw a’r cyfeiriad ar gyfer y rhif EORI {0}
 checkRegisteredDetails.private.title = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.title.employeeOrg = Gwirio’ch manylion EORI
 checkRegisteredDetails.title.agentOrg = Gwirio manylion EORI y sefydliad
@@ -108,14 +107,12 @@ checkRegisteredDetails.title.agentTrader = Gwirio manylion EORI y masnachwr
 checkRegisteredDetails.heading.employeeOrg = Gwirio’ch manylion EORI
 checkRegisteredDetails.heading.agentOrg = Gwirio manylion EORI y sefydliad
 checkRegisteredDetails.heading.agentTrader = Gwirio manylion EORI y masnachwr
-checkRegisteredDetails.heading.1 = Gwirio’ch manylion EORI
 checkRegisteredDetails.heading.2 = Enw’r busnes cofrestredig
 checkRegisteredDetails.heading.3 = Cyfeiriad cofrestredig y busnes
-checkRegisteredDetails.private.heading.1 = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
+checkRegisteredDetails.private.heading = Mae’r manylion cofrestru ar gyfer rhif EORI {0} yn gyfrinachol
 checkRegisteredDetails.subheading.1 = Manylion cofrestru EORI
 checkRegisteredDetails.subheading.2 = A yw’r enw a manylion y cyfeiriad yn gywir?
 checkRegisteredDetails.caption = Ynglŷn â’r ymgeisydd
-checkRegisteredDetails.private.subheading.2 = A hoffech fynd yn eich blaen?
 checkRegisteredDetails.paragraph.1 = Gallwch ddarparu eich manylion cyswllt eich hun ar y dudalen nesaf.
 checkRegisteredDetails.private.paragraph.1 = Nid yw’r busnes y mae’r rhif hwn wedi’i gofrestru iddo wedi caniatáu i’w enw a’i gyfeiriad gael eu rhannu.
 checkRegisteredDetails.error.required.individual = Dewiswch ‘Iawn’ i gadarnhau’ch manylion EORI
@@ -125,7 +122,6 @@ checkRegisteredDetails.error.required.employee.consent = Dewiswch ‘Iawn’ os 
 checkRegisteredDetails.error.required.agentForOrg.consent = Dewiswch ‘Iawn’ os yw’r manylion ar gyfer y cyfeiriad a’r enw yn gywir
 checkRegisteredDetails.error.required.agentForTrader.consent = Dewiswch ‘Iawn’ os yw’r manylion ar gyfer y cyfeiriad a’r enw yn gywir
 checkRegisteredDetails.warning.individual = Dyma’r manylion sydd gennym ar gofnod. Dylai’r rhain fod yr un manylion a ddefnyddiwyd i gofrestru eich rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI).
-checkRegisteredDetails.warning.organisation = Dyma’r manylion sydd gennym ar gofnod ar gyfer y sefydliad rydych yn ei gynrychioli. Dylid defnyddio’r manylion a ddefnyddiwyd i gofrestru eu rhif EORI.
 checkRegisteredDetails.warning.agent = Dyma’r manylion sydd gennym ar gofnod. Dylai’r rhain fod yr un manylion a ddefnyddiwyd i gofrestru eich rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI).
 checkRegisteredDetails.name.change.hidden = enw busnes cofrestredig y sefydliad
 checkRegisteredDetails.address.change.hidden = cyfeiriad busnes cofrestredig y sefydliad
@@ -161,8 +157,9 @@ eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.private = Os oes angen rhagor o
 eoriBeUpToDate.paragraph.3.agentOnBehalfOfTrader.private = Mae’n bwysig bod manylion EORI masnachwr yn gywir ac yn gyfredol. Bydd angen iddo roi gwybod am newid mewn amgylchiadau er mwyn diweddaru ei enw neu gyfeiriad ar ein cofnodion, os yw’r manylion hyn yn anghywir. Ni allwch wneud hyn ar ei ran.
 eoriBeUpToDate.paragraph.4.agentOnBehalfOfTrader.private = Bydd ceisiadau â manylion anghywir yn cael eu gwrthod.
 eoriBeUpToDate.paragraph.5.agentOnBehalfOfTrader.private = Gallwch ganslo’r cais hwn a gwneud cais arall yn hwyrach os hoffech chi.
-
+eoriBeUpToDate.title.agentOnBehalfOfTrader.public = Mae’n rhaid i fanylion EORI y masnachwr fod yn gywir er mwyn defnyddio’r gwasanaeth hwn
 eoriBeUpToDate.heading.agentOnBehalfOfTrader.public = Mae’n rhaid i fanylion EORI y masnachwr fod yn gywir er mwyn defnyddio’r gwasanaeth hwn
+eoriBeUpToDate.title.agentOnBehalfOfTrader.private = Ni allwch fynd yn eich blaen â’r cais hwn
 eoriBeUpToDate.heading.agentOnBehalfOfTrader.private = Ni allwch fynd yn eich blaen â’r cais hwn
 eoriBeUpToDate.title.agentOnBehalfOfTrader = Mae’n rhaid i fanylion EORI y masnachwr fod yn gywir er mwyn defnyddio’r gwasanaeth hwn
 
@@ -202,7 +199,6 @@ valuationMethod.paragraph.1 = Bydd angen i chi ddewis dull i {0}.
 valuationMethod.paragraph.2 = Mae’n rhaid i chi weithio drwy’r dulliau yn eu trefn, gan ddechrau gyda Dull 1.
 valuationMethod.paragraph.3 = Efallai y byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom neu i argymell dull sy’n fwy priodol.
 valuationMethod.link.text = cyfrifo gwerth tollau eich mewnforion (yn agor tab newydd).
-valuationMethod.h2 = Pa ddull ydych am ei ddefnyddio i brisio’ch nwyddau?
 valuationMethod.hint = Dewiswch un dull.
 valuationMethod.method1 = Dull 1 (gwerth y trafodyn)
 valuationMethod.method1.hint = Mae’r dull hwn yn seiliedig ar y pris a dalwyd neu sy’n daladwy pan fydd y nwyddau’n cael eu gwerthu i’w hallforio i’r DU. Gallwch ond defnyddio Dull 1 os oes gwerthiant dan sylw.
@@ -938,11 +934,6 @@ viewApplication.yourRuling = Eich cais am Ddyfarniad Prisio Ymlaen Llaw
 viewApplication.reference = Cyfeirnod eich cais yw
 viewApplication.hmrc = Cyllid a Thollau EF
 
-viewRuling.title = Dogfennau’ch dyfarniad ar gyfer {0}
-viewRuling.heading = Dogfennau’ch dyfarniad ar gyfer {0}
-viewRuling.subHeading.1 = Eich llythyr eglurhaol ar gyfer y dyfarniad
-viewRuling.subHeading.2 = Eich tystysgrif dyfarniad
-
 cancelAreYouSure.title = A ydych yn siŵr eich bod am ganslo’ch cais?
 cancelAreYouSure.heading = A ydych yn siŵr eich bod am ganslo’ch cais?
 cancelAreYouSure.error.required = Dewiswch ‘Iawn’ os hoffech ganslo’ch cais
@@ -1005,6 +996,7 @@ deleteDraft.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’ch cais
 deleteDraft.guidance = Os byddwch yn dileu’ch cais nawr, bydd unrhyw ddata yn cael eu colli a bydd angen i chi wneud cais newydd.
 
 #PROVIDE TRADER EORI NUMBER
+provideTraderEori.title = Beth yw rhif EORI y masnachwr?
 provideTraderEori.heading = Beth yw rhif EORI y masnachwr?
 provideTraderEori.hint = Cod y wlad yw’r 2 lythyren gyntaf, megis GB. Dilynir hyn gan 12 digid, megis GB123456123456.
 provideTraderEori.error.required=Nodwch rif EORI y masnachwr
@@ -1028,6 +1020,7 @@ traderDetails.public.h2.question.yes = Iawn, dyma fanylion y masnachwr rwyf yn g
 traderDetails.public.h2.question.no=No, these details are incorrect
 
 #TRADER DETAILS - PRIVATE
+traderDetails.private.title = Mae’r manylion cofrestru ar gyfer y rhif EORI {0} yn breifat
 traderDetails.private.heading = Mae’r manylion cofrestru ar gyfer y rhif EORI {0} yn breifat
 traderDetails.private.p1 = Nid yw’r busnes y mae’r rhif hwn wedi’i gofrestru iddo wedi caniatáu i’w enw a’i gyfeiriad gael eu rhannu.
 traderDetails.private.p2 = Os oes angen rhagor o wybodaeth arnoch, cysylltwch â’r busnes yn uniongyrchol.
@@ -1036,6 +1029,7 @@ traderDetails.private.h3.proceed = A hoffech fynd yn eich blaen?
 verifyTraderDetails.error.required=Dewiswch a ydych am barhau â’r cais
 
 #INVALID EORI
+invalidTraderEori.title = Mae’r rhif EORI {0} yn annilys
 invalidTraderEori.heading = Mae’r rhif EORI {0} yn annilys
 invalidTraderEori.p1 = Nid yw’r rhif EORI rydych wedi’i roi yn cyfateb i unrhyw fusnes ar ein cofnodion.
 invalidTraderEori.p2 = Bydd angen i chi gysylltu â’r masnachwr yn uniongyrchol i gadarnhau ei rif EORI.
@@ -1062,6 +1056,7 @@ uploadInProgress.heading = Wrthi’n uwchlwytho’ch dogfen
 uploadInProgress.p1 = Dewiswch y botwm ‘Gwirio cynnydd’ i fynd yn eich blaen â’ch cais.
 uploadInProgress.button = Gwirio cynnydd
 
+haveYouReceivedADecision.title = Dyfarniadau blaenorol yn seiliedig ar ddulliau tebyg
 haveYouReceivedADecision.heading = Dyfarniadau blaenorol yn seiliedig ar ddulliau tebyg
 haveYouReceivedADecision.para.1 = Mae’n rhaid i hyn fod yn benderfyniad dyfarnu o Brydain Fawr (Cymru, Lloegr, a’r Alban). Nid oes angen iddo fod yn gysylltiedig â’ch cais presennol.
 haveYouReceivedADecision.para.2 = Bydd rhoi gwybod i ni am ddyfarniadau tebyg rydych wedi’u cael yn ein helpu ni i brosesu’ch cais presennol.
@@ -1084,20 +1079,21 @@ tellUsAboutYourRuling.change.hidden = yr wybodaeth a gyflwynwyd gennych am y dyf
 
 textCount.tooLong = Mae’n rhaid i’r disgrifiad o’r dyfarniadau fod yn 8,000 o gymeriadau neu lai
 
+aboutSimilarGoods.title = Ynghylch y dyfarniadau ar gyfer nwyddau tebyg
+aboutSimilarGoods.heading = Ynghylch y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.para.1 = Gall y rhain fod yn:
 aboutSimilarGoods.para.2 = Rhowch gymaint o wybodaeth ag y gallwch, megis:
-
 aboutSimilarGoods.bulletPoint.1 = penderfyniadau dyfarnu ar gyfer nwyddau tebyg, a gyhoeddwyd gan wledydd eraill – nid oes rhaid iddynt fod yn ddyfarniadau a gyhoeddwyd i chi
 aboutSimilarGoods.bulletPoint.2 = penderfyniadau dyfarnu ar gyfer nwyddau tebyg, a gyhoeddwyd i gwmnïau eraill o fewn eich sefydliad
 aboutSimilarGoods.bulletPoint.3 = cyfeirnod y dyfarniad
 aboutSimilarGoods.bulletPoint.4 = dyddiadau dechrau a dod i ben y dyfarniadau
 aboutSimilarGoods.bulletPoint.5 = statws presennol ar gyfer y dyfarniadau
-aboutSimilarGoods.heading = Ynghylch y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.label = Allwch chi rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg?
 aboutSimilarGoods.error.required = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.checkYourAnswersLabel = Rhowch wybod i ni am y dyfarniadau ar gyfer nwyddau tebyg
 aboutSimilarGoods.change.hidden = yr wybodaeth am ddyfarniadau gan ddefnyddio nwyddau tebyg
 
+awareOfRuling.title = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.heading = A ydych yn ymwybodol o unrhyw ddyfarniadau eraill sydd wedi defnyddio dull tebyg?
 awareOfRuling.para = Bydd rhoi gwybod i ni am ddyfarniadau eraill sydd wedi defnyddio dull tebyg yn helpu’r gweithiwr achos i brosesu’ch cais.
 awareOfRuling.error.required = Rhowch wybod i ni os ydych yn ymwybodol o unrhyw ddyfarniadau eraill a ddefnyddiodd ddull tebyg

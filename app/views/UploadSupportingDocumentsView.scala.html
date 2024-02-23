@@ -39,23 +39,6 @@
         maxSupportingDocuments: Int
 )(implicit messages: Messages, requestHeader: RequestHeader)
 
-
-@formInputClass = @{
-  if(errorMessage.isDefined) {
-    "govuk-file-upload govuk-file-upload--error"
-  } else {
-    "govuk-file-upload"
-  }
-}
-
-@formGroupClass = @{
-  if(errorMessage.isDefined) {
-    "govuk-form-group govuk-form-group--error"
-  } else {
-    "govuk-form-group"
-  }
-}
-
 @formWrapper(content: Html) = {
 
   @upscanInitiateResponse.map { upscanInitiateResponse =>

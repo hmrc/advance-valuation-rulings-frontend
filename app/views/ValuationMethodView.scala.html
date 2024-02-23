@@ -35,12 +35,6 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@overviewLink = {@link(
-            id = "overview-of-methods-link",
-            text = messages("valuationMethod.link.text"),
-            call = Call("GET", config.overviewForMethodsUrl)
-        )}
-
 @legend = {<h1 class="govuk-heading-xl">@messages("valuationMethod.heading")</h1>}
 
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {

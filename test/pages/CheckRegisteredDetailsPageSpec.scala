@@ -18,7 +18,7 @@ package pages
 
 import pages.behaviours.PageBehaviours
 
-class CheckRegisteredDetailsSpec extends PageBehaviours {
+class CheckRegisteredDetailsPageSpec extends PageBehaviours {
 
   "CheckRegisteredDetailsPage" - {
 

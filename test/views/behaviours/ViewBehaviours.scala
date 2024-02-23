@@ -21,62 +21,72 @@ import views.ViewSpecBase
 
 trait ViewBehaviours extends ViewSpecBase {
 
-  val expectTimeoutDialog: Boolean = true
+  val viewViaApply: HtmlFormat.Appendable
+  val viewViaRender: HtmlFormat.Appendable
+  val viewViaF: HtmlFormat.Appendable
 
-  protected def normalPage(
+  protected def normalPage(messageKeyPrefix: String, messageKeySuffix: Option[String] = None)(
+    messageHeadingArgs: Any*
+  ): Unit =
+    "must behave like a normal page" - {
+      Seq((".apply", viewViaApply), (".render", viewViaRender), (".f", viewViaF)).foreach { case (method, view) =>
+        renderPage(view, messageKeyPrefix, messageKeySuffix, method)(messageHeadingArgs: _*)
+      }
+
+      "and have the correct banner title" in {
+        val doc         = asDocument(viewViaApply)
+        val bannerTitle = doc.getElementsByClass("hmrc-header__service-name")
+        bannerTitle.text mustBe messages("service.name")
+      }
+    }
+
+  protected def renderPage(
     view: HtmlFormat.Appendable,
     messageKeyPrefix: String,
-    messageKeySuffix: String,
-    messageHeadingArgs: Any*
-  )(
-    expectedGuidanceKeys: String*
-  ): Unit =
-    "behave like a normal page" - {
-      val suffix = if (messageKeySuffix.isEmpty) "" else s".$messageKeySuffix"
+    messageKeySuffix: Option[String] = None,
+    method: String = "",
+    isError: Boolean = false
+  )(messageHeadingArgs: Any*): Unit = {
 
-      "rendered" - {
-        "have the correct banner title" in {
-          val doc         = asDocument(view)
-          val bannerTitle = doc.getElementsByClass("hmrc-header__service-name")
-          bannerTitle.text mustBe messages(applicationBuilder().build())("service.name")
-        }
+    val suffix = if (messageKeySuffix.isEmpty) "" else s".${messageKeySuffix.value}"
 
-        "display the correct browser title" in {
-          val doc = asDocument(view)
-          assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix")
-        }
-
-        "display the correct page title" in {
-          val doc = asDocument(view)
-          assertPageTitleEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
-        }
-
-        "display the correct guidance" in {
-          val doc = asDocument(view)
-          for (key <- expectedGuidanceKeys)
-            assertContainsText(doc, messages(applicationBuilder().build())(s"$messageKeyPrefix.$key"))
-        }
-
-        "contain a timeout dialog" in {
-          val timeoutElm = asDocument(view).select("meta[name=\"hmrc-timeout-dialog\"]")
-          if (expectTimeoutDialog) {
-            assert(timeoutElm.size == 1)
-          } else {
-            assert(timeoutElm.size == 0)
-          }
-        }
-      }
+    val renderMethod = if (method.nonEmpty) {
+      s"when rendered - using $method"
+    } else {
+      "when rendered - using .apply"
     }
 
-  def pageWithExpectedMessages(view: HtmlFormat.Appendable, checks: Seq[(String, String)]): Unit =
-    checks.foreach { case (cssSelector, message) =>
-      s"element with cssSelector '$cssSelector'" - {
+    s"$renderMethod" - {
 
-        s"have message '$message'" in {
-          val doc  = asDocument(view)
-          val elem = doc.select(cssSelector)
-          elem.first.text() mustBe message
-        }
+      "display the correct browser title" in {
+        val doc = asDocument(view)
+        assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix", messageHeadingArgs: _*)(isError)
+      }
+
+      "display the correct page heading (h1)" in {
+        val doc = asDocument(view)
+        assertPageHeadingEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
       }
     }
+  }
+
+  protected def renderPageWithAssertions(
+    view: HtmlFormat.Appendable,
+    messageKeyPrefix: String,
+    messageKeySuffix: Option[String] = None,
+    method: String = "",
+    isError: Boolean = false,
+    runGenericViewTests: Boolean = false
+  )(messageHeadingArgs: Any*)(assertions: => Unit): Unit = {
+    val additionalTests = if (runGenericViewTests) {
+      renderPage(view, messageKeyPrefix, messageKeySuffix, method, isError)(messageHeadingArgs: _*)
+      "additionally "
+    } else {
+      ""
+    }
+
+    s"${additionalTests}the rendered page must" - {
+      assertions
+    }
+  }
 }

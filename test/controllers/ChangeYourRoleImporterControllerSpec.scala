@@ -17,190 +17,152 @@
 package controllers
 
 import base.SpecBase
-import connectors.BackendConnector
-import controllers.actions.{DataRetrievalActionProvider, FakeIdentifierAction}
-import forms.ChangeYourRoleImporterForm
-import models.requests.DataRequest
+import controllers.actions._
+import forms.ChangeYourRoleImporterFormProvider
 import models.{Done, NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.stubbing.ScalaOngoingStubbing
 import pages.ChangeYourRoleImporterPage
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{DeleteAllUserAnswersService, UserAnswersService}
-import uk.gov.hmrc.auth.core.{AffinityGroup, User}
+import services.UserAnswersService
 import views.html.ChangeYourRoleImporterView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class ChangeYourRoleImporterControllerSpec extends SpecBase {
 
-  object FakeIdentifierAction extends FakeIdentifierAction(playBodyParsers)
+  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
+  private val dataRetrievalActionProvider                = new DataRetrievalActionProvider(mockUserAnswersService)
 
-  val changeYourRoleImporterView                             = injector.instanceOf[ChangeYourRoleImporterView]
-  val changeYourRoleImporterForm: ChangeYourRoleImporterForm = new ChangeYourRoleImporterForm()
-
-  implicit lazy val ec: ExecutionContext = injector.instanceOf[ExecutionContext]
-
-  val useranswers: UserAnswers =
-    userAnswersAsIndividualTrader
-
-  val fakeBackendConnector = new BackendConnector(frontendAppConfig, httpV2)
-
-  val mockUserAnswersService = mock[UserAnswersService]
-
-  val fakeDataRetrievalAction = new DataRetrievalActionProvider(mockUserAnswersService)
-
-  val deleteAllUserAnswersService = new DeleteAllUserAnswersService
-
-  def mockGetAnswers(result: Option[UserAnswers]): Unit =
-    when(mockUserAnswersService.get(any())(any()))
-      .thenReturn(Future.successful(result))
-
-  def mockSetAnswers(): Unit =
-    when(mockUserAnswersService.set(any())(any()))
-      .thenReturn(Future.successful(Done))
-
-  def mockClearAnswers(): Unit =
-    when(mockUserAnswersService.clear(any())(any()))
-      .thenReturn(Future.successful(Done))
-
-  val fakeDataRequest: DataRequest[_] = DataRequest(
-    request = FakeRequest(),
-    userId = userAnswersId,
-    eoriNumber = EoriNumber,
-    affinityGroup = AffinityGroup.Individual,
-    credentialRole = Option(User),
-    userAnswers = userAnswersAsIndividualTrader
-  )
-
-  val controller: ChangeYourRoleImporterController =
-    new ChangeYourRoleImporterController(
-      messagesApi = messagesApi,
-      controllerComponents = messagesControllerComponents,
-      navigator = new FakeNavigator(onwardRoute),
-      identify = FakeIdentifierAction,
-      requireData = dataRequiredAction,
-      getData = fakeDataRetrievalAction,
-      formProvider = changeYourRoleImporterForm,
-      deleteAllUserAnswersService = deleteAllUserAnswersService,
-      view = changeYourRoleImporterView,
-      userAnswersService = mockUserAnswersService,
-      backendConnector = fakeBackendConnector
+  private val app: Application = new GuiceApplicationBuilder()
+    .overrides(
+      bind[DataRequiredAction].to[DataRequiredActionImpl],
+      bind[IdentifierAction].to[FakeIdentifierAction],
+      bind[UserAnswersService].to(mockUserAnswersService),
+      bind[DataRetrievalActionProvider].toInstance(dataRetrievalActionProvider)
     )
+    .build()
+
+  private val changeYourRoleImporterView: ChangeYourRoleImporterView                 =
+    app.injector.instanceOf[ChangeYourRoleImporterView]
+  private val changeYourRoleImporterFormProvider: ChangeYourRoleImporterFormProvider =
+    app.injector.instanceOf[ChangeYourRoleImporterFormProvider]
+
+  private def mockGetAnswers(result: Option[UserAnswers]): ScalaOngoingStubbing[Future[Option[UserAnswers]]] =
+    when(mockUserAnswersService.get(any())(any())).thenReturn(Future.successful(result))
+
+  private def mockSetAnswers(): ScalaOngoingStubbing[Future[Done]] =
+    when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+  private def mockClearAnswers(): ScalaOngoingStubbing[Future[Done]] =
+    when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
+
+  override def beforeEach(): Unit =
+    reset(mockUserAnswersService)
 
   "ChangeYourRoleImporterController" - {
-
     ".onPageLoad" - {
-
       "must return OK and the correct view for a GET" in {
 
-        val userAnswers: UserAnswers =
-          emptyUserAnswers
+        mockGetAnswers(Some(emptyUserAnswers))
 
-        mockGetAnswers(Some(userAnswers))
+        val router: Call                                 = controllers.routes.ChangeYourRoleImporterController.onPageLoad(NormalMode, draftId)
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, router.url)
 
-        val route   = controllers.routes.ChangeYourRoleImporterController.onSubmit(NormalMode, draftId)
-        val request = FakeRequest(GET, route.url)
-        val result  = controller.onPageLoad(NormalMode, draftId)(request)
+        val result: Future[Result] = route(app, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual changeYourRoleImporterView(
-          changeYourRoleImporterForm(),
+          changeYourRoleImporterFormProvider(),
           draftId,
-          route
-        )(
-          request,
-          messagesHelper(request)
-        ).toString
+          controllers.routes.ChangeYourRoleImporterController.onSubmit(NormalMode, draftId)
+        )(request, messagesApi(app).preferred(request)).toString
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
 
-        val userAnswers: UserAnswers =
-          emptyUserAnswers
-            .set(ChangeYourRoleImporterPage, true)
-            .success
-            .value
+        val userAnswers: UserAnswers = emptyUserAnswers.set(ChangeYourRoleImporterPage, true).success.value
 
         mockGetAnswers(Some(userAnswers))
 
-        val route   = controllers.routes.ChangeYourRoleImporterController.onSubmit(NormalMode, draftId)
-        val request = FakeRequest(GET, route.url)
+        val router: Call                                 = controllers.routes.ChangeYourRoleImporterController.onSubmit(NormalMode, draftId)
+        val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, router.url)
 
-        val result = controller.onPageLoad(NormalMode, draftId)(request)
+        val result: Future[Result] = route(app, request).value
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual changeYourRoleImporterView(
-          changeYourRoleImporterForm().fill(true),
+          changeYourRoleImporterFormProvider().fill(true),
           draftId,
-          route
-        )(
-          request,
-          messagesHelper(request)
-        ).toString
+          router
+        )(request, messagesApi(app).preferred(request)).toString
       }
     }
 
     ".onSubmit" - {
-
       "in Normal Mode" - {
-
         "user answers Yes" - {
-
           "must redirect to the next page when valid data is submitted" in {
 
-            val userAnswers: UserAnswers =
-              emptyUserAnswers
-
-            mockGetAnswers(Some(userAnswers))
-            mockSetAnswers()
+            mockGetAnswers(Some(emptyUserAnswers))
             mockClearAnswers()
-
-            val request = FakeRequest("", "").withFormUrlEncodedBody(("value", "true"))
-
-            val result = controller.onSubmit(NormalMode, draftId)(request)
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustEqual Some("/foo")
-          }
-        }
-
-        "user answers No" - {
-
-          "must redirect to the next page when valid data is submitted" in {
-
-            val userAnswers: UserAnswers =
-              emptyUserAnswers
-
-            mockGetAnswers(Some(userAnswers))
             mockSetAnswers()
 
-            val request = FakeRequest("", "").withFormUrlEncodedBody(("value", "false"))
+            val router: Call                                     = controllers.routes.ChangeYourRoleImporterController.onSubmit(NormalMode, draftId)
+            val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, router.url).withFormUrlEncodedBody(("value", "true"))
 
-            val result = controller.onSubmit(NormalMode, draftId)(request)
+            val result: Future[Result] = route(app, request).value
 
             status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustEqual Some("/foo")
+            redirectLocation(result).get mustEqual controllers.routes.WhatIsYourRoleAsImporterController
+              .onPageLoad(NormalMode, draftId)
+              .url
           }
-        }
-
-        "must return a Bad Request and errors when invalid data is submitted" in {
-
-          val userAnswers: UserAnswers =
-            emptyUserAnswers
-
-          mockGetAnswers(Some(userAnswers))
-          mockSetAnswers()
-
-          val request = FakeRequest("", "").withFormUrlEncodedBody(("value", "1"))
-
-          val result = controller.onSubmit(NormalMode, draftId)(request)
-
-          status(result) mustEqual BAD_REQUEST
         }
       }
+
+      "user answers No" - {
+        "must redirect to the next page when valid data is submitted" in {
+
+          mockGetAnswers(Some(emptyUserAnswers))
+          mockSetAnswers()
+
+          val router: Call                                     = controllers.routes.ChangeYourRoleImporterController.onSubmit(NormalMode, draftId)
+          val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, router.url).withFormUrlEncodedBody(("value", "false"))
+
+          val result: Future[Result] = route(app, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).get mustEqual controllers.routes.WhatIsYourRoleAsImporterController
+            .onPageLoad(NormalMode, draftId)
+            .url
+        }
+      }
+
+      "must return a Bad Request and errors when invalid data is submitted" in {
+
+        mockGetAnswers(Some(emptyUserAnswers))
+        mockSetAnswers()
+
+        val router: Call                                     = controllers.routes.ChangeYourRoleImporterController.onSubmit(NormalMode, draftId)
+        val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+          FakeRequest(POST, router.url).withFormUrlEncodedBody(("value", "1"))
+
+        val result: Future[Result] = route(app, request).value
+
+        status(result) mustEqual BAD_REQUEST
+      }
+
     }
   }
 }

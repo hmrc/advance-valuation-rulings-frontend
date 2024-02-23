@@ -20,9 +20,7 @@ import forms.mappings.Mappings
 import models.ValuationMethod
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class ValuationMethodFormProvider @Inject() extends Mappings {
+class ValuationMethodFormProvider extends Mappings {
 
   def apply(): Form[ValuationMethod] =
     Form(

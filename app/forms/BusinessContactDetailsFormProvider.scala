@@ -24,10 +24,9 @@ import play.api.data.Forms._
 import play.api.data.validation.Constraints
 import play.api.data.{Form, Mapping}
 
-import javax.inject.Inject
 import scala.util.Try
 
-class BusinessContactDetailsFormProvider @Inject() extends Mappings {
+class BusinessContactDetailsFormProvider extends Mappings {
 
   private val util = PhoneNumberUtil.getInstance
 

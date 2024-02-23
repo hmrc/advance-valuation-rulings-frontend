@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-        layout: templates.Layout,
-        govukButton: GovukButton
-)
+package views
 
-@()(implicit request: Request[_], messages: Messages)
+import play.twirl.api.HtmlFormat
+import views.behaviours.ViewBehaviours
+import views.html.UnauthorisedView
 
-@layout(pageTitle = titleNoForm(messages("viewRuling.title"))) {
+class UnauthorisedViewSpec extends ViewBehaviours {
 
-    <h1 class="govuk-heading-xl">@messages("viewRuling.heading")</h1>
+  private val view: UnauthorisedView = app.injector.instanceOf[UnauthorisedView]
+
+  val viewViaApply: HtmlFormat.Appendable  = view.apply()(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f()(fakeRequest, messages)
+
+  "UnauthorisedView" - {
+    normalPage("unauthorised")()
+  }
 }

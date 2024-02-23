@@ -41,7 +41,7 @@ radios: YesNoRadios
     <p class="govuk-body govuk-!-margin-top-4" id="value-hint">@messages("awareOfRuling.para")</p>
 }
 
-@layout(pageTitle = title(form, messages("awareOfRuling.heading")), draftId = Some(draftId)) {
+@layout(pageTitle = title(form, messages("awareOfRuling.title")), draftId = Some(draftId)) {
 
     @formHelper(action = controllers.routes.AwareOfRulingController.onSubmit(mode, draftId)) {
 

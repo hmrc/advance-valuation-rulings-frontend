@@ -16,50 +16,23 @@
 
 package views
 
-import models.DraftId
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.summary._
 import views.behaviours.ViewBehaviours
 import views.html.AgentForOrgCheckYourAnswersView
 
 class AgentForOrgCheckYourAnswersViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "checkYourAnswersForAgents"
-
-  val testEoriDetailsSummary: IndividualEoriDetailsSummary = IndividualEoriDetailsSummary(SummaryList())
-  val testApplicantSummary: IndividualApplicantSummary     = IndividualApplicantSummary(SummaryList())
-  val testDetailsSummary: DetailsSummary                   = DetailsSummary(SummaryList())
-  val testMethodSummary: MethodSummary                     = MethodSummary(SummaryList())
-
-  // Use the instances to create an instance of ApplicationSummary
-  val testApplicationSummary: ApplicationSummary =
-    ApplicationSummary(testEoriDetailsSummary, testApplicantSummary, testDetailsSummary, testMethodSummary)
-
-  val view: AgentForOrgCheckYourAnswersView =
+  private val view: AgentForOrgCheckYourAnswersView =
     app.injector.instanceOf[AgentForOrgCheckYourAnswersView]
 
   val viewViaApply: HtmlFormat.Appendable  =
-    view(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
+    view.apply(testApplicationSummary, draftId)(fakeRequest, messages)
   val viewViaRender: HtmlFormat.Appendable =
-    view.render(testApplicationSummary, DraftId(1L), fakeRequest, messages)
+    view.render(testApplicationSummary, draftId, fakeRequest, messages)
   val viewViaF: HtmlFormat.Appendable      =
-    view.f(testApplicationSummary, DraftId(1L))(fakeRequest, messages)
+    view.f(testApplicationSummary, draftId)(fakeRequest, messages)
 
-  "AcceptItemInformationList view" - {
-    def test(method: String, view: HtmlFormat.Appendable): Unit =
-      s"$method" - {
-        behave like normalPage(view, messageKeyPrefix, "")()
-      }
-
-    val input: Seq[(String, HtmlFormat.Appendable)] = Seq(
-      (".apply", viewViaApply),
-      (".render", viewViaRender),
-      (".f", viewViaF)
-    )
-
-    input.foreach { case (method, view) =>
-      test(method, view)
-    }
+  "AgentForOrgCheckYourAnswersView" - {
+    normalPage("checkYourAnswersForAgents")()
   }
 }

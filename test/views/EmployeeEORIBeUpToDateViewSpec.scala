@@ -16,10 +16,19 @@
 
 package views
 
-trait BaseSelectors {
+import play.twirl.api.HtmlFormat
+import views.behaviours.ViewBehaviours
+import views.html.EmployeeEORIBeUpToDateView
 
-  val h1                    = "h1"
-  val subheading            = "h2"
-  val p: Int => String      = i => s"main p:nth-of-type($i)"
-  val bullet: Int => String = i => s"main ul.govuk-list.govuk-list--bullet li:nth-of-type($i)"
+class EmployeeEORIBeUpToDateViewSpec extends ViewBehaviours {
+
+  private val view: EmployeeEORIBeUpToDateView = app.injector.instanceOf[EmployeeEORIBeUpToDateView]
+
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(draftId)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(draftId, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(draftId)(fakeRequest, messages)
+
+  "EmployeeEORIBeUpToDateView" - {
+    normalPage("eoriBeUpToDate")()
+  }
 }

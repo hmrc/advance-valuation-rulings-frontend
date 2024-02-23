@@ -254,7 +254,6 @@ POST       /:draftId/change-about-similar-goods      controllers.AboutSimilarGoo
 
 
 GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
-GET        /your-application-ruling/:id               controllers.ViewRulingController.onPageLoad(id: String)
 
 GET        /:draftId/cancel                                          controllers.CancelApplicationController.onPageLoad(draftId: DraftId)
 GET        /:draftId/confirm-cancel                                  controllers.CancelApplicationController.confirmCancel(draftId: DraftId)
