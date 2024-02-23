@@ -21,9 +21,7 @@ import models.{AgentCompanyDetails, Country}
 import play.api.data.Form
 import play.api.data.Forms._
 
-import javax.inject.Inject
-
-class AgentCompanyDetailsFormProvider @Inject() extends Mappings {
+class AgentCompanyDetailsFormProvider extends Mappings {
 
   def apply(): Form[AgentCompanyDetails] = Form(
     mapping(

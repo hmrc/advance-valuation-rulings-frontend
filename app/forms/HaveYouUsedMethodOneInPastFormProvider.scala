@@ -19,9 +19,7 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class HaveYouUsedMethodOneInPastFormProvider @Inject() extends Mappings {
+class HaveYouUsedMethodOneInPastFormProvider extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(

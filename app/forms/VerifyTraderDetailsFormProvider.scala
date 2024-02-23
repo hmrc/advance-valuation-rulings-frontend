@@ -20,10 +20,7 @@ import forms.mappings.Mappings
 import models.TraderDetailsWithConfirmation
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class VerifyTraderDetailsFormProvider @Inject() (
-) extends Mappings {
+class VerifyTraderDetailsFormProvider extends Mappings {
 
   def apply(role: Option[TraderDetailsWithConfirmation]): Form[String] =
     role match {

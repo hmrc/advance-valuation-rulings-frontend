@@ -19,9 +19,7 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class ExplainYourGoodsComparingToIdenticalGoodsFormProvider @Inject() extends Mappings {
+class ExplainYourGoodsComparingToIdenticalGoodsFormProvider extends Mappings {
 
   def apply(): Form[String] =
     Form(

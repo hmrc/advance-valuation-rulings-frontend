@@ -20,9 +20,7 @@ import forms.mappings.Mappings
 import models.WhatIsYourRoleAsImporter
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class WhatIsYourRoleAsImporterFormProvider @Inject() extends Mappings {
+class WhatIsYourRoleAsImporterFormProvider extends Mappings {
 
   def apply(): Form[WhatIsYourRoleAsImporter] =
     Form(

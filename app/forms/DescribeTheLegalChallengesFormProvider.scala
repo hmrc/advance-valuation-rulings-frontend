@@ -19,9 +19,7 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class DescribeTheLegalChallengesFormProvider @Inject() extends Mappings {
+class DescribeTheLegalChallengesFormProvider extends Mappings {
 
   def apply(): Form[String] =
     Form(

@@ -19,9 +19,7 @@ package forms
 import forms.mappings.Mappings
 import play.api.data.Form
 
-import javax.inject.Inject
-
-class DescribeTheConditionsFormProvider @Inject() extends Mappings {
+class DescribeTheConditionsFormProvider extends Mappings {
 
   def apply(): Form[String] =
     Form(
