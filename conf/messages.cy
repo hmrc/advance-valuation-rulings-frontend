@@ -17,7 +17,6 @@ site.printApplication = Argraffwch eich cais
 site.saveApplication = Arbedwch eich cais
 site.page = Tudalen {0} o {1}
 site.saveAndContinue = Cadw a pharhau
-site.saveAsDraft = Cadw fel drafft
 site.warning = Rhybudd
 
 site.1 = un
@@ -891,7 +890,8 @@ importingGoods.point.6.link = Help a chefnogaeth (yn agor tab newydd)
 
 accountHome.title = Eich ceisiadau
 accountHome.heading = Eich ceisiadau
-accountHome.para = Nid ydych wedi dechrau unrhyw geisiadau.
+accountHome.para = Gallwch gadw’ch cais a dod yn ôl ato’n nes ymlaen. Ar ôl cadw’ch cais am y tro cyntaf, bydd gennych 28 diwrnod i’w gwblhau. Fel arall, bydd eich gwybodaeth yn cael ei dileu.
+accountHome.applicationNotStarted = Nid ydych wedi dechrau unrhyw geisiadau.
 accountHome.button.text = Dechrau cais newydd
 accountHome.viewApplication = Bwrw golwg dros y cais
 accountHome.continueApplication = Yn eich blaen â’r cais

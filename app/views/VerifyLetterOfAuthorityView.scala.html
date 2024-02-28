@@ -28,7 +28,7 @@
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
-    saveButtons: SaveButtons
+    saveButton: SaveButton
 )
 
 @(attachment: UploadedFile, draftId: DraftId, mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -68,7 +68,7 @@
 
 
 
-        @saveButtons(draftId)
+        @saveButton(draftId)
     }
 
     @cancelApplicationLink(draftId)

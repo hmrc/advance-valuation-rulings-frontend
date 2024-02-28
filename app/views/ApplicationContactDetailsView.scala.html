@@ -26,7 +26,7 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtonsWithDraft
+    saveButton: SaveButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -82,7 +82,7 @@
             .withWidth(ThreeQuarters)
         )
 
-        @saveButtons(draftId, onSubmitAction())
+        @saveButton(draftId)
     }
 @cancelApplicationLink(draftId)
 }

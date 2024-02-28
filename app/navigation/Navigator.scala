@@ -100,7 +100,6 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider, unchangedModeNavi
     case ChoosingMethodPage                               => ua => ValuationMethodController.onPageLoad(NormalMode, ua.draftId)
     case AgentForTraderContactDetailsPage                 => ua => ChoosingMethodController.onPageLoad(ua.draftId)
     case _                                                => _ => AccountHomeController.onPageLoad()
-
   }
 
   private def startApplicationRouting(userAnswers: UserAnswers): Call =
@@ -538,5 +537,4 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider, unchangedModeNavi
       case _             =>
         routes(page)(userAnswers)
     }
-
 }

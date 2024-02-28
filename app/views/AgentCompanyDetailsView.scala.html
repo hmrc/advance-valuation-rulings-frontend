@@ -23,7 +23,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     govukSelect: GovukSelect,
-    saveButtons: SaveButtonsWithDraft,
+    saveButton: SaveButton,
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
@@ -104,7 +104,7 @@
             .withAttribute("autocomplete", "country")
         )
 
-        @saveButtons(draftId, onSubmitAction())
+        @saveButton(draftId)
     }
 @cancelApplicationLink(draftId)
 }

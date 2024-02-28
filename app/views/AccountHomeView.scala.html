@@ -85,8 +85,10 @@
 
     <h1 class="govuk-heading-l">@messages("accountHome.heading")</h1>
 
+    @para(Html(messages("accountHome.para")))
+
     @if(applications.isEmpty) {
-        @para(Html(messages("accountHome.para")))
+        @para(Html(messages("accountHome.applicationNotStarted")))
     }
 
     @formHelper(action = routes.AccountHomeController.startApplication()) {

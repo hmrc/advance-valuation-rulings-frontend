@@ -22,10 +22,4 @@
         @govukButton(
             ButtonViewModel(messages(submitButtonMessageKey))
         )
-        @govukButton(
-            ButtonViewModel(
-                messages("site.saveAsDraft")
-            ).asSecondaryButton()
-            .asLink(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
-        )
     </div>

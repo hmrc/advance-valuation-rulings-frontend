@@ -27,7 +27,7 @@
     heading: Heading,
     paragraph: Paragraph,
     insetPara: InsetPara,
-    saveButtons: SaveButtonsWithDraft
+    saveButton: SaveButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -70,7 +70,7 @@
             .withThreshold(75)
         )
 
-        @saveButtons(draftId, onSubmitAction())
+        @saveButton(draftId)
     }
 
     @cancelApplicationLink(draftId)
