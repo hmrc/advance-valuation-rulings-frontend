@@ -24,11 +24,30 @@
   caption: Caption,
   heading: Heading,
   paragraph: Paragraph,
-  cancelApplicationLink: CancelApplicationLink,
+  link: Link,
+  bulletList: BulletList,
   config: FrontendAppConfig
 )
 
 @(draftId: DraftId)(implicit request: Request[_], messages: Messages)
+
+@tryAgainLink = {
+    @link(
+        id = "try_again",
+        text = messages("eoriBeUpToDate.agentOnBehalfOfTrader.bulletPoint.1.link.public"),
+        newTab = false,
+        call = controllers.routes.ProvideTraderEoriController.onPageLoad(CheckMode, draftId)
+    )
+}
+
+@cancelApplicationLink = {
+    @link(
+        id = "cancel_application",
+        text = messages("eoriBeUpToDate.agentOnBehalfOfTrader.bulletPoint.2.link.public"),
+        newTab = false,
+        call = routes.CancelApplicationController.onPageLoad(draftId)
+    )
+}
 
 @layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title.agentOnBehalfOfTrader.public")), draftId = Some(draftId)) {
 
@@ -36,7 +55,12 @@
 
     @heading(messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader.public"))
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader.public")))
-    @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.public")))
-
-    @cancelApplicationLink(draftId)
+    @paragraph(content = Html(messages("eoriBeUpToDate.agentOnBehalfOfTrader.youcan.public")))
+    @bulletList(
+        Seq(
+            Html(messages("eoriBeUpToDate.agentOnBehalfOfTrader.bulletPoint.1.public", tryAgainLink)),
+            Html(messages("eoriBeUpToDate.agentOnBehalfOfTrader.bulletPoint.2.public", cancelApplicationLink))
+        ),
+        "govuk-list govuk-list--bullet govuk-list--spaced",
+    )
 }

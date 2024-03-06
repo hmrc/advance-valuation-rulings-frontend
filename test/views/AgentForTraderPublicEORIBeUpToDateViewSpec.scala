@@ -31,5 +31,18 @@ class AgentForTraderPublicEORIBeUpToDateViewSpec extends ViewBehaviours {
 
   "AgentForTraderPublicEORIBeUpToDateView" - {
     normalPage("eoriBeUpToDate", Some("agentOnBehalfOfTrader.public"))()
+
+    renderPageWithAssertions(viewViaApply, "eoriBeUpToDate")() {
+      "display both try again and cancel application options" in {
+        assertContainsMessages(
+          asDocument(viewViaApply),
+          messages("eoriBeUpToDate.agentOnBehalfOfTrader.bulletPoint.1.link.public")
+        )
+        assertContainsMessages(
+          asDocument(viewViaApply),
+          messages("eoriBeUpToDate.agentOnBehalfOfTrader.bulletPoint.2.link.public")
+        )
+      }
+    }
   }
 }
