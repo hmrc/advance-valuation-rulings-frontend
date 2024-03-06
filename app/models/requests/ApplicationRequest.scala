@@ -42,18 +42,15 @@ object GoodsDetails {
       userAnswers.validated(DescriptionOfGoodsPage)
 
     val envisagedCommodityCode = for {
-      hasCode <- userAnswers.get(HasCommodityCodePage)
-      code    <- userAnswers.get(CommodityCodePage)
+      code <- userAnswers.get(CommodityCodePage)
     } yield code
 
     val knownLegalProceedings = for {
-      hasLegalProceedings <- userAnswers.get(HaveTheGoodsBeenSubjectToLegalChallengesPage)
-      legalProceedings    <- userAnswers.get(DescribeTheLegalChallengesPage)
+      legalProceedings <- userAnswers.get(DescribeTheLegalChallengesPage)
     } yield legalProceedings
 
     val confidentialInformation = for {
-      hasConfidentialInformation <- userAnswers.get(HasConfidentialInformationPage)
-      confidentialInformation    <- userAnswers.get(ConfidentialInformationPage)
+      confidentialInformation <- userAnswers.get(ConfidentialInformationPage)
     } yield confidentialInformation
 
     val similarRulingGoodsInfo = for {

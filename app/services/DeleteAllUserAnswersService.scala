@@ -21,7 +21,7 @@ import pages._
 
 class DeleteAllUserAnswersService {
 
-  def allPages: Seq[QuestionPage[_]] =
+  private def allPages: Seq[QuestionPage[_]] =
     Seq(
       AboutSimilarGoodsPage,
       AccountHomePage,

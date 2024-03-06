@@ -19,7 +19,7 @@ package pages
 import models.AdaptMethod
 import pages.behaviours.PageBehaviours
 
-class AdaptMethodSpec extends PageBehaviours {
+class AdaptMethodPageSpec extends PageBehaviours {
 
   "AdaptMethodPage" - {
 

@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import controllers.actions._
 import forms.BusinessContactDetailsFormProvider
 import models.requests.DataRequest
@@ -43,7 +42,6 @@ class BusinessContactDetailsController @Inject() (
   formProvider: BusinessContactDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: BusinessContactDetailsView,
-  appConfig: FrontendAppConfig,
   userRoleProvider: UserRoleProvider
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
