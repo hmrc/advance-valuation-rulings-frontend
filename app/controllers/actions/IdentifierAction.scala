@@ -44,7 +44,7 @@ class AuthenticatedIdentifierAction @Inject() (
     extends IdentifierAction
     with AuthorisedFunctions {
 
-  def redirectToEoriComponent: Result =
+  private def redirectToEoriComponent: Result =
     Redirect(config.arsSubscribeUrl)
 
   private def authorise(): AuthorisedFunction =

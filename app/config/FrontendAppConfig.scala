@@ -38,7 +38,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${URLEncoder.encode(host + request.uri, "UTF-8")}"
 
-  val internalAuthToken = configuration.get[String]("internal-auth.token")
+  val internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
   val internalAuthService: Service =
     configuration.get[Service]("microservice.services.internal-auth")

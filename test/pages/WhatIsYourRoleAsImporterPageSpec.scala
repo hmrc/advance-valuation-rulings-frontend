@@ -19,7 +19,7 @@ package pages
 import models.WhatIsYourRoleAsImporter
 import pages.behaviours.PageBehaviours
 
-class WhatIsYourRoleAsImporterSpec extends PageBehaviours {
+class WhatIsYourRoleAsImporterPageSpec extends PageBehaviours {
 
   "WhatIsYourRoleAsImporterPage" - {
 

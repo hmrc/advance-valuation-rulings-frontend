@@ -37,14 +37,6 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId, registeredDetails: TraderDetailsWithConfirmation)(implicit request: Request[_], messages: Messages)
 
-@searchAgainLink = {
-  @link(
-    id = "search_again",
-    text = messages("traderDetails.common.searchAgain.link"),
-    newTab = false,
-    call = controllers.routes.ProvideTraderEoriController.onPageLoad(mode, draftId))
-}
-
 @headingContent = {
                 @if(registeredDetails.consentToDisclosureOfPersonalData) {
                     @heading(messages("checkRegisteredDetails.heading.agentTrader", registeredDetails.EORINo))
@@ -98,8 +90,6 @@
         @caption(messages("checkRegisteredDetails.caption"))
         @headingContent
 
-        <br></br>
-
         @paraContent
 
         @govukRadios(
@@ -124,8 +114,6 @@
                 )
             )
         )
-
-        @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
         @saveButtons(draftId)
     }
