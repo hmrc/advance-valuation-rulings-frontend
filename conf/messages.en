@@ -566,7 +566,6 @@ verifyLetterOfAuthority.hiddenText = {0} from your list of supporting documents
 uploadSupportingDocuments.title = Upload supporting documents
 uploadSupportingDocuments.heading = Upload supporting documents
 uploadSupportingDocuments.caption = About the goods
-uploadSupportingDocuments.details.label = Uploading more than {0} files
 uploadSupportingDocuments.details.paragraph = You can currently upload up to {0} files as evidence. If you have additional documents to submit, please inform your case worker once they are assigned to your case.
 uploadSupportingDocuments.paragraph.1 = You can upload:
 uploadSupportingDocuments.paragraph.2 = An individual file must be:

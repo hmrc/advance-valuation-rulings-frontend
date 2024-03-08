@@ -48,17 +48,11 @@ trait CharacterCountFluency {
     def withMaxLength(maxLength: Int): CharacterCount =
       characterCount.copy(maxLength = Some(maxLength))
 
-    def withMaxWords(maxWords: Int): CharacterCount =
-      characterCount.copy(maxWords = Some(maxWords))
-
     def withId(id: String): CharacterCount =
       characterCount.copy(id = id)
 
     def withHint(hint: Hint): CharacterCount =
       characterCount.copy(hint = Some(hint))
-
-    def withFormGroupClasses(classes: String): CharacterCount =
-      characterCount.copy(formGroupClasses = classes)
 
     def withCssClass(newClass: String): CharacterCount =
       characterCount.copy(classes = s"${characterCount.classes} $newClass")
