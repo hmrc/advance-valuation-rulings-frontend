@@ -605,14 +605,13 @@ uploadSupportingDocuments.button.inProgress = Wrthi’n uwchlwytho’r ffeil
 uploadSupportingDocuments.checkYourAnswersLabel = Dogfennau ategol wedi’u huwchlwytho
 uploadSupportingDocuments.change.hidden = uwchlwytho dogfen
 
-uploadSupportingDocuments.error.entitytoolarge = Mae’n rhaid i’r ffeil dan sylw fod yn llai na {0}MB
 fileUpload.error.entitytoolarge = Mae’n rhaid i’r ffeil dan sylw fod yn llai na {0}MB
 fileUpload.error.entitytoosmall = Mae’r ffeil dan sylw yn wag
-fileUpload.error.invalidargument = Dewiswch ffeil
+fileUpload.error.invalidargument = Dewiswch ddogfen ategol
 fileUpload.error.duplicate = Gallwch uwchlwytho ffeiliau gwahanol yn unig
 fileUpload.error.failed = Nid oedd modd uwchlwytho’r ffeil dan sylw
 fileUpload.error.quarantine = Mae feirws yn y ffeil dan sylw
-fileUpload.error.rejected = Mae angen i’r ffeil dan sylw fod ar ffurf PDF neu JPEG
+fileUpload.error.rejected = Mae’n rhaid i’r ffeil dan sylw fod ar ffurf JPEG neu PDF
 fileUpload.error.unknown = Cafwyd problem wrth uwchlwytho’ch ffeil
 
 uploadAnotherSupportingDocument.title.one = Rydych wedi uwchlwytho 1 ddogfen ategol
