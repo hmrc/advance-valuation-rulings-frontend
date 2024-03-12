@@ -584,11 +584,11 @@ uploadSupportingDocuments.change.hidden = upload a document
 
 fileUpload.error.entitytoolarge = The selected file must be smaller than {0}MB
 fileUpload.error.entitytoosmall = The selected file is empty
-fileUpload.error.invalidargument = Select a file to upload
+fileUpload.error.invalidargument = Select a supporting document
 fileUpload.error.duplicate = You can only upload distinct files
 fileUpload.error.failed = The selected file failed to upload
 fileUpload.error.quarantine = The selected file contains a virus
-fileUpload.error.rejected = The selected file must be a PDF or JPEG
+fileUpload.error.rejected = The selected file must be a JPEG or a PDF
 fileUpload.error.unknown = There was a problem uploading your file
 
 
