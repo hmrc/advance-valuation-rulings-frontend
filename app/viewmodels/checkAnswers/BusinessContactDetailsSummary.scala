@@ -88,7 +88,6 @@ object BusinessContactDetailsSummary {
 
   private def companyNameRow(
     answer: BusinessContactDetails,
-    role: WhatIsYourRoleAsImporter,
     draftId: DraftId
   )(implicit
     messages: Messages
@@ -133,7 +132,7 @@ object BusinessContactDetailsSummary {
       name            = nameRow(contactDetails, role, userAnswer.draftId)
       email           = emailRow(contactDetails, role, userAnswer.draftId)
       contactNumber   = contactNumberRow(contactDetails, role, userAnswer.draftId)
-      companyName     = companyNameRow(contactDetails, role, userAnswer.draftId)
+      companyName     = companyNameRow(contactDetails, userAnswer.draftId)
       jobTitle        = jobTitleRow(contactDetails, role, userAnswer.draftId)
       result          = if (role == WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader) {
                           Seq(name, email, contactNumber, companyName, jobTitle)
