@@ -16,19 +16,12 @@
 
 @this(govukButton: GovukButton)
 
-@(draftId: DraftId, submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
+@(target: Call, draftId: DraftId, submitButtonMessageKey: String = "site.saveAndContinue")(implicit messages: Messages)
 
-    <div class="govuk-button-group">
-        @govukButton(
-            ButtonViewModel(messages(submitButtonMessageKey))
-        )
-
+    <div>
         @govukButton(Button(
-            classes = "govuk-button--secondary",
-            content = Text(messages("site.saveAsDraft")),
-            href = Some(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
+            content = Text(messages(submitButtonMessageKey)),
+            href = Some(target.toString)
             )
         )
-
     </div>
-

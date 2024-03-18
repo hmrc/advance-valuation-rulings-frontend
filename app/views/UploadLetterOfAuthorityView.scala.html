@@ -128,7 +128,6 @@
       attributes = Map("accept" -> ".pdf,.jpeg,.jpg")
     ))
 
-    <div class="govuk-button-group">
       @govukButton(
         ButtonViewModel(
           messages("uploadLetterOfAuthority.button")
@@ -137,17 +136,6 @@
         .withAttribute(("id" -> "submit"))
         .disableIf(shouldRefresh)
       )
-
-      @govukButton(
-        ButtonViewModel(
-          messages("site.saveAsDraft")
-        )
-        .asSecondaryButton()
-        .asLink(routes.DraftHasBeenSavedController.onPageLoad(draftId).url)
-        .preventingDoubleClick()
-        .disableIf(shouldRefresh)
-      )
-    </div>
   }
 
   @cancelApplicationLink(draftId)

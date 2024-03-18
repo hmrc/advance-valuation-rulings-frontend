@@ -29,7 +29,7 @@
     subheading: Subheading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons,
+    saveButton: SaveButton,
     warning: Warning,
     link: Link,
     legend: LegendH2
@@ -78,7 +78,7 @@
 
         @paragraph(Html(messages("traderDetails.common.searchAgain", searchAgainLink)))
 
-        @saveButtons(draftId)
+        @saveButton(draftId)
     }
 
     @cancelApplicationLink(draftId)

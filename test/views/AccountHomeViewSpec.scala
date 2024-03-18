@@ -45,7 +45,7 @@ class AccountHomeViewSpec extends ViewBehaviours {
 
       renderPageWithAssertions(viewAlternate, "accountHome")() {
         "prompt that no applications have been started" in {
-          assertContainsMessages(asDocument(viewAlternate), messages("accountHome.para"))
+          assertContainsMessages(asDocument(viewAlternate), messages("accountHome.applicationNotStarted"))
         }
       }
     }

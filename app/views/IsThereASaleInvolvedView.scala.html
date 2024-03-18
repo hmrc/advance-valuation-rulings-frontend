@@ -25,7 +25,7 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons
+    saveButton: SaveButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -50,7 +50,7 @@
             .withHint(Hint(content = HtmlContent(paraContent)))
         )
 
-        @saveButtons(draftId)
+        @saveButton(draftId)
     }
     @cancelApplicationLink(draftId)
 }

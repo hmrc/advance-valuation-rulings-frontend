@@ -25,7 +25,7 @@ import models.{CheckMode, DraftId, Mode, NormalMode, WhatIsYourRoleAsImporter}
 import navigation.{Navigator, UnchangedModeNavigator}
 import pages.{ChangeYourRoleImporterPage, DraftWhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporterPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.WhatIsYourRoleAsImporterView
@@ -56,7 +56,7 @@ class WhatIsYourRoleAsImporterController @Inject() (
     mode: Mode
   )(implicit
     request: DataRequest[AnyContent]
-  ) = {
+  ): Future[Result] = {
 
     val whatIsYourRoleAnswers = request.userAnswers.get(WhatIsYourRoleAsImporterPage)
 

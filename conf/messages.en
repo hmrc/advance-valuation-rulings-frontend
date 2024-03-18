@@ -16,7 +16,6 @@ site.printApplication = Print your application
 site.saveApplication = Save your application
 site.page = Page {0} of {1}
 site.saveAndContinue = Save and continue
-site.saveAsDraft = Save as draft
 site.warning = Warning
 
 
@@ -388,7 +387,8 @@ importingGoods.point.6.link = Help and support (opens in new tab)
 
 accountHome.title = Your applications
 accountHome.heading = Your applications
-accountHome.para = You have not started any applications.
+accountHome.para = You can save your application and come back later. You have 28 days from the first time you save to complete the application or your information will be deleted.
+accountHome.applicationNotStarted = You have not started any applications.
 accountHome.button.text = Start new application
 accountHome.viewApplication = View application
 accountHome.continueApplication = Continue application

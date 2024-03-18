@@ -23,7 +23,7 @@
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    saveButtons: SaveButtonsWithTarget,
+    saveButton: SaveButtonWithTarget,
     insetPara: InsetPara,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink
@@ -50,7 +50,7 @@
             )
         )
 
-        @saveButtons(routes.ImportGoodsController.onPageLoad(NormalMode, draftId), draftId)
+        @saveButton(routes.ImportGoodsController.onPageLoad(NormalMode, draftId), draftId)
 
         @cancelApplicationLink(draftId)
 }

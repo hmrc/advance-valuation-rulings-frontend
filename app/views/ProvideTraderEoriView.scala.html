@@ -24,7 +24,7 @@
     govukInput: GovukInput,
     caption: Caption,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtonsWithDraft
+    saveButton: SaveButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -52,7 +52,7 @@
             .withHint(Hint(content = HtmlContent(messages("provideTraderEori.hint"))))
         )
 
-        @saveButtons(draftId, onSubmitAction())
+        @saveButton(draftId)
     }
 
     @cancelApplicationLink(draftId)

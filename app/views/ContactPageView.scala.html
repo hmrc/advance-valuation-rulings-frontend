@@ -27,7 +27,7 @@
         heading: Heading,
         config: FrontendAppConfig,
         caption: Caption,
-        saveButtons: SaveButtons
+        saveButton: SaveButton
 )
 
 @(mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -40,7 +40,7 @@
         @caption(messages("contactPage.caption"))
         @heading(messages("contactPage.heading"))
         @paragraph(content = Html(messages("contactPage.paragraph.2")))
-        @saveButtons(draftId, "site.acceptContinue")
+        @saveButton(draftId, "site.acceptContinue")
     }
 
     @cancelApplicationLink(draftId)

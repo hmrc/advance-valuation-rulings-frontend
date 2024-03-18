@@ -30,7 +30,7 @@
     paragraph: Paragraph,
     link: Link,
     config: FrontendAppConfig,
-    saveButtons: SaveButtons
+    saveButton: SaveButton
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
@@ -75,7 +75,7 @@
         @h3("valuationMethod.method6")
         @paragraph(Html(messages("valuationMethod.method6.hint")))
 
-        @saveButtons(draftId, "choosingMethod.continue")
+        @saveButton(draftId, "choosingMethod.continue")
     }
     @cancelApplicationLink(draftId)
 }

@@ -47,8 +47,10 @@ class AccountHomeControllerSpec extends SpecBase {
     super.beforeEach()
   }
 
-  private val firstApplicationDate  = Instant.ofEpochMilli(1682525788) // April 2023
-  private val secondApplicationDate = Instant.ofEpochMilli(1683130564) // May 2023
+  private val april2023             = 1682525788
+  private val may2023               = 1683130564
+  private val firstApplicationDate  = Instant.ofEpochMilli(april2023)
+  private val secondApplicationDate = Instant.ofEpochMilli(may2023)
 
   "AccountHome Controller" - {
 

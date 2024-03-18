@@ -26,7 +26,7 @@
     paragraph: Paragraph,
     radios: YesNoRadios,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons,
+    saveButton: SaveButton,
     govukButton: GovukButton
 )
 
@@ -47,7 +47,7 @@
 
         @radios(messages("importGoods.heading"), radiosContent, form)
 
-        @saveButtons(draftId)
+        @saveButton(draftId)
     }
 
     @cancelApplicationLink(draftId)

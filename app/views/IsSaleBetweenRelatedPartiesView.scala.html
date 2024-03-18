@@ -25,7 +25,7 @@
     heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
-    saveButtons: SaveButtons,
+    saveButton: SaveButton,
     radios: YesNoRadios
 )
 
@@ -47,7 +47,7 @@
 
         @radios(messages("isSaleBetweenRelatedParties.heading"), radiosContent, form)
 
-        @saveButtons(draftId)
+        @saveButton(draftId)
     }
     @cancelApplicationLink(draftId)
 }
