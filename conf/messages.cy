@@ -7,7 +7,6 @@ site.no = Na
 site.yes = Iawn
 site.continue = Parhau
 site.acceptContinue = Derbyn a pharhau
-site.uploadContinue = Uwchlwytho a pharhau
 site.start = Dechreuwch nawr
 site.startAgain = Dechrau eto
 site.signIn = Mewngofnodi
@@ -599,7 +598,7 @@ uploadSupportingDocuments.bulletPoint.4 = PDF neu’n JPG
 uploadSupportingDocuments.paragraph.3 = Peidiwch ag uwchlwytho ffeiliau sydd wedi’u diogelu gan gyfrinair, gan y bydd hyn yn atal rhag prosesu’ch cais.
 
 uploadSupportingDocuments.label = Uwchlwytho ffeil
-uploadSupportingDocuments.button = Uwchlwytho a pharhau
+uploadSupportingDocuments.button = Uwchlwytho ac yn eich blaen
 uploadSupportingDocuments.button.inProgress = Wrthi’n uwchlwytho’r ffeil
 uploadSupportingDocuments.checkYourAnswersLabel = Dogfennau ategol wedi’u huwchlwytho
 uploadSupportingDocuments.change.hidden = uwchlwytho dogfen
