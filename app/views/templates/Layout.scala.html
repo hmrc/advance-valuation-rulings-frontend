@@ -87,5 +87,5 @@
     additionalScriptsBlock = Some(additionalScripts),
     additionalHeadBlock = Some(headBlock),
     mainContentLayout = mainContentLayout,
-    backLink = if (showBackLink) Option(BackLink.withDefaultText(href = "#", classes = "js-visible; hidden-print")) else None
+    backLink = Option.when(showBackLink)(BackLink.mimicsBrowserBackButtonViaJavaScript)
  )(content)
