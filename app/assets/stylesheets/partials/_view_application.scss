@@ -3,17 +3,6 @@
   background: #00703C;
   margin-top: 30px;
 }
-.print-save-application {
-  position: relative;
-  display: inline-block;
-  margin: 0 15px 15px 0;
-  border-bottom: 1px solid #0b0c0c;
-}
-.print-this__link, .print-this__link:visited, .print-this__link:link, .save-this__link, .save-this__link:visited, .save-this__link:link {
-  color: #0b0c0c;
-  font-size: 16px;
-  text-decoration: none;
-}
 
 .print-document {
   padding: 0px 0px;
@@ -263,9 +252,6 @@
   .print-only {
     display: block !important;
   }
-  .hidden-print {
-    display: none !important;
-  }
   .service-info {
     display: none !important;
   }
@@ -320,9 +306,6 @@
     visibility: visible;
     width: 50%;
     float: left;
-  }
-  #print-and-save-result {
-    display: none;
   }
   .print-header {
     position: fixed;

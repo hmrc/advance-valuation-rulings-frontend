@@ -12,8 +12,6 @@ site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
 site.cancel = Cancel application
-site.printApplication = Print your application
-site.saveApplication = Save your application
 site.page = Page {0} of {1}
 site.saveAndContinue = Save and continue
 site.warning = Warning
@@ -937,6 +935,7 @@ whatIsYourRoleAsImporter.agentOnBehalfOfTrader.hint = Imports goods into the UK 
 
 viewApplication.title = Advance Valuation Ruling application details
 viewApplication.heading = Advance Valuation Ruling application details
+viewApplication.printLink = Print or save a copy of your answers
 viewApplication.forYourRecords = About the applicant
 viewApplication.whatHappensNext.heading = What happens next
 viewApplication.whatHappensNext.paragraph = We’ll aim to review your application within 30 days, although it can take a further 90 days from the date your application was accepted to receive an Advance Valuation Ruling decision. You can sign in to Advance Valuation Rulings to check the status of your application.

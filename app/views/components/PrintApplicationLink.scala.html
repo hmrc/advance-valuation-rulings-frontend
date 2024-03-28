@@ -14,28 +14,19 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
 @import views.html.helper.CSPNonce
 
-@this(appConfig: FrontendAppConfig)
+@this()
 
 @()(implicit request: Request[_], messages: Messages)
 
-@createLink(path: String) = @{
-    s"${appConfig.host}${routes.Assets.versioned(path)}"
-}
+<p id="printWrapper" class="govuk-body govuk-!-display-none">
+ <a href="#" id="printLink" class="govuk-link govuk-link--no-visited-state" aria-hidden="true">@messages("viewApplication.printLink")</a>
+</p>
 
-<div>
-    <span class="govuk-body hidden-print">
-        <img class="print-this__icon" src='@createLink("images/icon-print.svg")' alt="Print Icon" aria-hidden="true">
-
-        <a href="#" id="printLink" class="print-this__link"
-           data-journey-click="print - click:Your application:Print your application">@messages("site.printApplication")</a>
-
-        <script @CSPNonce.attr type="text/javascript">
-            document.getElementById("printLink").addEventListener("click", function() {
-                window.print();
-            });
-        </script>
-    </span>
-</div>
+<script @CSPNonce.attr>
+ document.getElementById("printWrapper").classList.remove("govuk-!-display-none");
+ document.getElementById("printWrapper").classList.add("govuk-!-display-none-print");
+ document.getElementById("printLink").setAttribute("aria-hidden", "false");
+ document.getElementById("printLink").addEventListener("click", () => window.print());
+</script>

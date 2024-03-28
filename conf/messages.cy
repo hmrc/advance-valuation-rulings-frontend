@@ -12,8 +12,6 @@ site.startAgain = Dechrau eto
 site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.cancel = Canslo’r cais
-site.printApplication = Argraffwch eich cais
-site.saveApplication = Arbedwch eich cais
 site.page = Tudalen {0} o {1}
 site.saveAndContinue = Cadw a pharhau
 site.warning = Rhybudd
@@ -925,6 +923,7 @@ willYouCompareGoodsToIdenticalGoods.change.hidden = eich ymateb i a fyddwch yn c
 
 viewApplication.title = Manylion y cais am Ddyfarniad Prisio Ymlaen Llaw
 viewApplication.heading = Manylion y cais am Ddyfarniad Prisio Ymlaen Llaw
+viewApplication.printLink = Argraffu neu gadw copi o’ch atebion
 viewApplication.forYourRecords = Ynglŷn â’r ymgeisydd
 viewApplication.whatHappensNext.heading = Yr hyn sy’n digwydd nesaf
 viewApplication.whatHappensNext.paragraph = Rydym yn anelu at adolygu’ch cais cyn pen 30 diwrnod, er bod cael penderfyniad ar Ddyfarniad Prisio Ymlaen Llaw yn gallu cymryd 90 diwrnod arall o’r dyddiad y derbyniwyd eich cais. Gallwch fewngofnodi i’ch cyfrif Dyfarniadau Prisio Ymlaen Llaw i wirio statws eich cais.

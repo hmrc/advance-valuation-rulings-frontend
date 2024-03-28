@@ -45,15 +45,11 @@ pageTitle = titleNoForm(messages("viewApplication.title")),
 mainContentLayout = Some(fullMainContent(_))
 ) {
 
-<div class="hidden-print">
+<div class="govuk-!-display-none-print">
     @heading(messages("viewApplication.heading"), size="l")
 </div>
 
-
 @printApplicationLink()
-
-
-
 
 <div id="print-pages">
     <div class="page-break">
