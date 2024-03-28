@@ -21,3 +21,11 @@
         padding: 0.12em
     }
 }
+
+.autocomplete__wrapper {
+    max-width: 20.5em;
+}
+
+.autocomplete__input.govuk-input--error {
+    border-color: #d4351c;
+}

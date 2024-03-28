@@ -995,7 +995,7 @@ agentCompanyDetails.error.agentEori.badLength = EORI number must start with GB a
 agentCompanyDetails.error.agentCompanyName.required = Enter your organisation’s registered business name
 agentCompanyDetails.error.agentStreetAndNumber.required = Enter the first line of your address
 agentCompanyDetails.error.agentCity.required = Enter a town or city
-agentCompanyDetails.error.agentCountry.required = Select a country
+agentCompanyDetails.error.agentCountry.required = Enter a country
 agentCompanyDetails.error.agentPostalCode.required = Enter your postcode
 
 agentCompanyDetails.error.agentEori.format = Enter an EORI number in the correct format

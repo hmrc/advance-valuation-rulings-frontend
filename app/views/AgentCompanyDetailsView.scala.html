@@ -16,6 +16,8 @@
 
 @import components._
 @import viewmodels.InputWidth._
+@import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
 
 @this(
     layout: templates.Layout,
@@ -100,8 +102,13 @@
                 field = form("country"),
                 items = Country.selectItems,
                 label = LabelViewModel(messages("agentCompanyDetails.agentCountry"))
-            )
-            .withAttribute("autocomplete", "country")
+            ).asAccessibleAutocomplete(Some(
+               AccessibleAutocomplete(
+                defaultValue = Some(""),
+                showAllValues = false,
+                autoSelect = false
+                )
+            ))
         )
 
         @saveButton(draftId)

@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+ @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteCss
+ @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteJavascript
  @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
  @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
  @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
@@ -31,6 +33,8 @@
     twoThirdsMainContent: TwoThirdsMainContent,
     govukBackLink: GovukBackLink,
     hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
+    autocompleteCss: HmrcAccessibleAutocompleteCss,
+    autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
  
  @(
@@ -44,13 +48,13 @@
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
 @additionalScripts = {
-  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/accessible-autocomplete.js")'></script>
+  @autocompleteJavascript()
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
 }
 
 @headBlock = {
   <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css">
-  <link href="@routes.Assets.versioned("stylesheets/accessible-autocomplete.min.css").url" media="screen" rel="stylesheet" type="text/css" />
+    @autocompleteCss()
 
     @hmrcTimeoutDialogHelper(
         timeout             = Some(appConfig.timeout),
