@@ -16,7 +16,7 @@
 
 package utils
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import config.FrontendAppConfig
 import models.{AcknowledgementReference, EoriNumber}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
