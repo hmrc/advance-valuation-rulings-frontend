@@ -19,11 +19,10 @@ package generators
 import models.requests._
 import models.{DraftId, EoriNumber}
 import org.scalacheck._
-import wolfendale.scalacheck.regexp.RegexpGen
 
 trait ApplicationRequestGenerator extends Generators {
   private implicit lazy val arbitraryEoriNumberGen: Arbitrary[EoriNumber] = Arbitrary(
-    RegexpGen.from("^[A-Z]{2}[0-9A-Z]{12}$").map(EoriNumber)
+    eoriGenerator.map(EoriNumber)
   )
 
   implicit lazy val arbitraryContactDetails: Arbitrary[ContactDetails] = Arbitrary {

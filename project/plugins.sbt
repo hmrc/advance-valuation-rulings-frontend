@@ -9,11 +9,6 @@ resolvers += Resolver.url(
   Resolver.ivyStylePatterns
 )
 
-// To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
-// Try to remove when sbt 1.8.0+ and scoverage is 2.0.7+
-
-ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
-
 addSbtPlugin("uk.gov.hmrc"        % "sbt-auto-build"        % "3.21.0")
 addSbtPlugin("uk.gov.hmrc"        % "sbt-distributables"    % "2.5.0")
 addSbtPlugin("org.playframework"  % "sbt-plugin"            % "3.0.2")
