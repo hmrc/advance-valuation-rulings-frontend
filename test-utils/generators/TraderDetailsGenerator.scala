@@ -20,15 +20,13 @@ import models._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import play.api.http.Status
-import wolfendale.scalacheck.regexp.RegexpGen
-
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 trait TraderDetailsGenerator extends Generators {
 
   implicit lazy val arbitraryEoriNumberGen: Arbitrary[EoriNumber] = Arbitrary(
-    RegexpGen.from("^[A-Z]{2}[0-9A-Z]{12}$").map(EoriNumber)
+    eoriGenerator.map(EoriNumber)
   )
 
   def contactInformationGen: Gen[ContactInformation] = for {
