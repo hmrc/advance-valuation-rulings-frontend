@@ -93,9 +93,6 @@ trait InputFluency {
     def withHint(hint: Hint): Input =
       input.copy(hint = Some(hint))
 
-    def withFormGroupClasses(classes: String): Input =
-      input.copy(formGroupClasses = classes)
-
     def withCssClass(newClass: String): Input =
       input.copy(classes = s"${input.classes} $newClass")
 
@@ -113,9 +110,6 @@ trait InputFluency {
 
     def withPrefix(prefix: PrefixOrSuffix): Input =
       input.copy(prefix = Some(prefix))
-
-    def withSuffix(suffix: PrefixOrSuffix): Input =
-      input.copy(suffix = Some(suffix))
 
     def withWidth(inputWidth: InputWidth): Input =
       input.withCssClass(inputWidth.toString)
