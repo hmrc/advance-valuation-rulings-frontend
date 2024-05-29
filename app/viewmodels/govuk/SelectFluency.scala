@@ -52,9 +52,6 @@ trait SelectFluency {
     def describedBy(value: String): Select =
       select copy (describedBy = Some(value))
 
-    def withFormGroupClasses(classes: String): Select =
-      select copy (formGroupClasses = classes)
-
     def withCssClass(newClass: String): Select =
       select copy (classes = s"${select.classes} $newClass")
 
