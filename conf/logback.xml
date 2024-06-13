@@ -10,20 +10,7 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] rid=[%X{X-Request-ID}] user=[%X{Authorization}] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="STDOUT_IGNORE_NETTY" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] rid=[not-available] user=[not-available] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="ACCESS_LOG_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/access.log</file>
-        <encoder>
-            <pattern>%message%n</pattern>
+            <pattern>%date{ISO8601} level=[%highlight(%level)] logger=[%logger] thread=[%thread] rid=[%X{X-Request-ID}] user=[%X{Authorization}] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
         </encoder>
     </appender>
 
@@ -34,21 +21,29 @@
         </encoder>
     </appender>
 
-    <logger name="uk.gov.hmrc.play.bootstrap" level="WARN"/>
-    <logger name="uk.gov" level="INFO"/>
-    
-    <logger name="connector" level="INFO">
-        <appender-ref ref="STDOUT"/>
-    </logger>
+    <logger name="com.google.inject" level="WARN"/>
+
+    <logger name="uk.gov" level="WARN"/>
+
+    <logger name="application" level="WARN"/>
+
+    <logger name="org.mongodb.driver" level="WARN"/>
+
+    <logger name="org.apache.pekko" level="WARN"/>
+
+    <logger name="play" level="WARN"/>
+
+    <logger name="uk.gov.hmrc.play.bootstrap.audit" level="ERROR"/>
 
     <logger name="config.InternalAuthTokenInitialiserImpl" level="INFO">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="connectors" level="INFO"/>
-    <logger name="controllers" level="INFO"/>
+    <logger name="connector" level="TRACE">
+        <appender-ref ref="STDOUT"/>
+    </logger>
 
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

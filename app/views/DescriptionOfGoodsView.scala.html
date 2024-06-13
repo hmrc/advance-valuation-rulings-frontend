@@ -30,11 +30,9 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.DescriptionOfGoodsController.onSubmit(NormalMode, draftId: DraftId, saveDraft)}
-
 @layout(pageTitle = title(form, messages("descriptionOfGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.DescriptionOfGoodsController.onSubmit(NormalMode, draftId: DraftId, saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

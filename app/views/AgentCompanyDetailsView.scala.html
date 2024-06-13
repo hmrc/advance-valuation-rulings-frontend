@@ -34,11 +34,10 @@
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.AgentCompanyDetailsController.onSubmit(NormalMode, draftId, saveDraft)
-}
+
 @layout(pageTitle = title(form, messages("agentCompanyDetails.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.AgentCompanyDetailsController.onSubmit(NormalMode, draftId, saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

@@ -31,9 +31,6 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.CommodityCodeController.onSubmit(NormalMode, draftId, saveDraft)
-}
-
 @codeSpan = {
     <span class="segmented-commodity-code">
         <span>@messages("commodityCode.hint.pt.1")</span><span>@messages("commodityCode.hint.pt.2")</span><span>@messages("commodityCode.hint.pt.3")</span>
@@ -49,7 +46,7 @@
 
 @layout(pageTitle = title(form, messages("commodityCode.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.CommodityCodeController.onSubmit(NormalMode, draftId, saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

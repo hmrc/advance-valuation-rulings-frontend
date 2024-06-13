@@ -30,13 +30,12 @@
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.DescribeTheConditionsController.onSubmit(NormalMode, draftId, saveDraft)
-}
+
 @paraContent = {@paragraph(Html(messages("describeTheConditions.paragraph.1")))}
 
 @layout(pageTitle = title(form, messages("describeTheConditions.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.DescribeTheConditionsController.onSubmit(NormalMode, draftId, saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

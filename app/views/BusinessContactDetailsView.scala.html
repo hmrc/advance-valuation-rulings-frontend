@@ -30,11 +30,10 @@
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId, includeCompanyName: Boolean)(implicit request: Request[_], messages: Messages)
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.BusinessContactDetailsController.onSubmit(NormalMode, draftId, saveDraft)
-}
+
 @layout(pageTitle = title(form, messages("businessContactDetails.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.BusinessContactDetailsController.onSubmit(NormalMode, draftId, saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
