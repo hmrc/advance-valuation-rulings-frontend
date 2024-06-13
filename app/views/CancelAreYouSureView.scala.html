@@ -21,7 +21,7 @@
         formHelper: FormWithCSRF,
         layout: templates.Layout,
         govukButton: GovukButton,
-        para: InsetPara,
+        govukInsetText: GovukInsetText,
         heading: Heading,
         link: Link,
         govukBackLink: GovukBackLink
@@ -32,7 +32,10 @@
 @layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
 
     @heading(messages("cancelAreYouSure.heading"))
-    @para(Html(messages("cancelAreYouSure.inset.text")))
+
+    @govukInsetText(InsetText(
+        content = Text(messages("cancelAreYouSure.inset.text"))
+    ))
 
     @formHelper(action = routes.CancelApplicationController.confirmCancel(draftId)) {
         @govukButton(

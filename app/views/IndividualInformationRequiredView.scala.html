@@ -24,7 +24,7 @@
     heading: Heading,
     paragraph: Paragraph,
     saveButton: SaveButtonWithTarget,
-    insetPara: InsetPara,
+    govukInsetText: GovukInsetText,
     bulletList: BulletList,
     cancelApplicationLink: CancelApplicationLink
 )
@@ -37,7 +37,9 @@
 
         @heading(messages("requiredInformation.heading"))
 
-        @insetPara(Html(messages("requiredInformation.inset.para")))
+        @govukInsetText(InsetText(
+            content = Text(messages("requiredInformation.inset.para"))
+        ))
 
         @bulletList(
             Seq(

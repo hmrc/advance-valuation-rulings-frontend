@@ -26,7 +26,7 @@
     heading: Heading,
     cancelLink: CancelApplicationLink,
     bulletList: BulletList,
-    insetPara: InsetPara,
+    govukInsetText: GovukInsetText,
     subheading: Subheading,
     saveButton: SaveButton,
     legend: LegendH2
@@ -42,7 +42,9 @@
     Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.1")),
     Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.2")),
     ))
-    @insetPara(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.inset")))
+    @govukInsetText(InsetText(
+        content = Text(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.inset"))
+    ))
     @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.3")))
     @bulletList(Seq(
     Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.bulletPoint.3")),

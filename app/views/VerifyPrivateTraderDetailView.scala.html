@@ -30,7 +30,7 @@
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
     saveButton: SaveButton,
-    warning: Warning,
+    govukWarningText: GovukWarningText,
     link: Link,
     legend: LegendH2
 )
@@ -46,7 +46,10 @@
 }
 
 @paraContent = {
-        @warning(content=Html(messages("traderDetails.private.p1")))
+        @govukWarningText(WarningText(
+            iconFallbackText = Some(messages("site.warning")),
+            content = Text(messages("traderDetails.private.p1"))
+        ))
         @paragraph(Html(messages("traderDetails.private.p2")))
 }
 

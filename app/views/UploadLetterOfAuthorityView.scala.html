@@ -26,11 +26,10 @@
         caption: Caption,
         heading: Heading,
         cancelApplicationLink: CancelApplicationLink,
-        insetPara: InsetPara,
+        govukInsetText: GovukInsetText,
         paragraph: Paragraph,
         list: BulletList,
-        appConfig: FrontendAppConfig,
-        detailsDrop: DetailsDrop,
+        appConfig: FrontendAppConfig
     )
 
 @(
@@ -87,7 +86,9 @@
   @caption(messages("uploadLetterOfAuthority.caption"))
   @heading(messages("uploadLetterOfAuthority.heading"))
 
-  @insetPara(Html(messages("uploadLetterOfAuthority.insetPara")))
+  @govukInsetText(InsetText(
+    content = Text(messages("uploadLetterOfAuthority.insetPara"))
+  ))
 
   @paragraph(Html(messages("uploadLetterOfAuthority.paragraph.1")))
   @list(Seq(

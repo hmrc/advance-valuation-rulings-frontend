@@ -26,9 +26,9 @@ class LayoutSpec extends ViewBehaviours {
   private val sampleComponent: TwoThirdsMainContent = new TwoThirdsMainContent
   private val htmlComponent: Html                   = sampleComponent(Html(""))
 
-  private val sampleMessagePrefix      = "aboutSimilarGoods"
-  private val sampleTitle              = "About the rulings for similar goods - Apply for an Advance Valuation Ruling - GOV.UK"
-  private val sampleContentBlock: Html = Html("<h1>About the rulings for similar goods</h1>")
+  private val sampleMessagePrefix = "aboutSimilarGoods"
+  private val sampleTitle         = "About the rulings for similar goods - Apply for an Advance Valuation Ruling - GOV.UK"
+  private val sampleContent: Html = Html("<h1>About the rulings for similar goods</h1>")
 
   private val view: Layout = app.injector.instanceOf[Layout]
 
@@ -40,7 +40,7 @@ class LayoutSpec extends ViewBehaviours {
     showSignOut = true,
     Some(draftId),
     Some(_ => htmlComponent)
-  )(sampleContentBlock)(fakeRequest, messages)
+  )(sampleContent)(fakeRequest, messages)
 
   val viewViaRender: HtmlFormat.Appendable = view.render(
     sampleTitle,
@@ -50,14 +50,14 @@ class LayoutSpec extends ViewBehaviours {
     showSignOut = true,
     Some(draftId),
     Some(_ => htmlComponent),
-    sampleContentBlock,
+    sampleContent,
     fakeRequest,
     messages
   )
 
   val viewViaF: HtmlFormat.Appendable =
     view.f(sampleTitle, false, Some(Html("additionalHeadBlock")), true, true, Some(draftId), Some(_ => htmlComponent))(
-      sampleContentBlock
+      sampleContent
     )(fakeRequest, messages)
 
   "Layout" - {

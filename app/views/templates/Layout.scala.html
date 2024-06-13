@@ -14,25 +14,18 @@
  * limitations under the License.
  *@
 
- @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteCss
- @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcAccessibleAutocompleteJavascript
- @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
- @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
- @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
- @import views.html.helper.CSPNonce
- @import config.FrontendAppConfig
- @import controllers.routes
- @import views.html.components._
+@import views.html.helper.CSPNonce
+@import config.FrontendAppConfig
+@import views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
  
  @this(
     appConfig: FrontendAppConfig,
-    hmrcLayout: HmrcLayout, 
+    hmrcStandardPage: HmrcStandardPage,
     standardBetaBanner: StandardBetaBanner,
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     twoThirdsMainContent: TwoThirdsMainContent,
-    govukBackLink: GovukBackLink,
-    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
     autocompleteCss: HmrcAccessibleAutocompleteCss,
     autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
 )
@@ -45,21 +38,21 @@
     showSignOut: Boolean = true,
     draftId: Option[DraftId] = None,
     mainContentLayout: Option[Html => Html] = Some(twoThirdsMainContent(_))
-)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
+)(content: Html)(implicit request: RequestHeader, messages: Messages)
 
 @additionalScripts = {
   @autocompleteJavascript()
   <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
 }
 
-@headBlock = {
+@headerBlock = {
   <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css">
     @autocompleteCss()
 
     @hmrcTimeoutDialogHelper(
         timeout             = Some(appConfig.timeout),
         countdown           = Some(appConfig.countdown),
-        keepAliveUrl        = draftId.map(id => routes.KeepAliveController.keepAlive(id).url),
+        keepAliveUrl        = draftId.map(id => controllers.routes.KeepAliveController.keepAlive(id).url),
         keepAliveButtonText = Some(messages("timeout.keepAlive")),
         signOutUrl          = controllers.auth.routes.AuthController.signOut().url,
         signOutButtonText   = Some(messages("timeout.signOut")),
@@ -74,22 +67,29 @@
 
 }
 
-@content = {
-    @contentBlock
+@contentBlock = {
+    @content
 
     <div class="govuk-!-margin-top-8">
         @hmrcReportTechnicalIssueHelper()
     </div>
 }
 
- @hmrcLayout(
-    pageTitle = Some(pageTitle),
-    isWelshTranslationAvailable = true, /* false if your service has not been translated */
-    serviceUrl = Some(routes.AccountHomeController.onPageLoad().url),
-    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
-    phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
-    additionalScriptsBlock = Some(additionalScripts),
-    additionalHeadBlock = Some(headBlock),
-    mainContentLayout = mainContentLayout,
-    backLink = Option.when(showBackLink)(BackLink.mimicsBrowserBackButtonViaJavaScript)
- )(content)
+@hmrcStandardPage(
+    HmrcStandardPageParams(
+        serviceURLs = ServiceURLs(
+            serviceUrl = Some(controllers.routes.AccountHomeController.onPageLoad().url),
+            signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None
+        ),
+        banners = Banners(phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl))),
+        serviceName = Some(messages("service.name")),
+        pageTitle = Some(pageTitle),
+        isWelshTranslationAvailable = true,
+        backLink = Option.when(showBackLink)(BackLink.mimicsBrowserBackButtonViaJavaScript),
+        templateOverrides = TemplateOverrides(
+            additionalHeadBlock = Some(headerBlock),
+            additionalScriptsBlock = Some(additionalScripts),
+            mainContentLayout = mainContentLayout
+        )
+    )
+)(contentBlock)

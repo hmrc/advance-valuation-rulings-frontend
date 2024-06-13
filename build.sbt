@@ -5,7 +5,7 @@ lazy val appName: String = "advance-valuation-rulings-frontend"
 ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := "2.13.13"
 
-lazy val root = Project(appName, file("."))
+lazy val microservice = Project(appName, file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
   .disablePlugins(
     JUnitXmlReportPlugin
@@ -59,7 +59,7 @@ lazy val root = Project(appName, file("."))
 
 lazy val it = project
   .enablePlugins(PlayScala)
-  .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
   .settings(itSettings())
 
 addCommandAlias("scalafmtAll", "all scalafmtSbt scalafmt Test/scalafmt it/Test/scalafmt")
