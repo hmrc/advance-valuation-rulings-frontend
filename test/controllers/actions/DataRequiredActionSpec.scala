@@ -28,10 +28,8 @@ import play.api.test.{FakeRequest, Helpers}
 import services.UserAnswersService
 import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-@nowarn("cat=deprecation")
 class DataRequiredActionSpec extends SpecBase {
 
   private val mockUserAnswersService = mock[UserAnswersService]

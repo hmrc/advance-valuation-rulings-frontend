@@ -26,7 +26,7 @@
     heading: Heading,
     cancelLink: CancelApplicationLink,
     bulletList: BulletList,
-    insetPara: InsetPara,
+    govukInsetText: GovukInsetText,
     subheading: Subheading,
     saveButton: SaveButton,
     legend: LegendH2
@@ -50,14 +50,15 @@
     @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.2")))
 
     @bulletList(Seq(
-    Html(messages("haveYouUsedMethodOneInPast.bulletPoint.1")),
-    Html(messages("haveYouUsedMethodOneInPast.bulletPoint.2")),
-    Html(messages("haveYouUsedMethodOneInPast.bulletPoint.3")),
+        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.1")),
+        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.2")),
+        Html(messages("haveYouUsedMethodOneInPast.bulletPoint.3")),
     ))
 
     @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.1")))
-    @insetPara(Html(messages("haveYouUsedMethodOneInPast.paragraph.inset")))
-
+    @govukInsetText(InsetText(
+        content = Text(messages("haveYouUsedMethodOneInPast.paragraph.inset"))
+    ))
 
         @govukRadios(
             RadiosViewModel.yesNo(

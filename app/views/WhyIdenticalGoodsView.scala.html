@@ -33,13 +33,11 @@
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
 
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.WhyIdenticalGoodsController.onSubmit(NormalMode, draftId: DraftId, saveDraft)}
-
 @paraContent = {@paragraph(Html(messages("whyIdenticalGoods.paragraph.1")))}
 
 @layout(pageTitle = title(form, messages("whyIdenticalGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.WhyIdenticalGoodsController.onSubmit(NormalMode, draftId: DraftId, saveDraft = false)) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))

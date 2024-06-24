@@ -32,7 +32,6 @@
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-@onSubmitAction(saveDraft: Boolean = true) = @{ routes.TellUsAboutYourRulingController.onSubmit(NormalMode, draftId) }
 
 @content = {
             @paragraph(Html(messages("tellUsAboutYourRuling.para")))
@@ -49,7 +48,7 @@
 
 @layout(pageTitle = title(form, messages("tellUsAboutYourRuling.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.TellUsAboutYourRulingController.onSubmit(NormalMode, draftId)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

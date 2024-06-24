@@ -32,8 +32,7 @@
 )
 
 @(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
-@onSubmitAction(saveDraft: Boolean = true) = @{routes.DescribeTheSimilarGoodsController.onSubmit(NormalMode, draftId, saveDraft)
-}
+
 @paraContent = {@paragraph(Html(messages("describeTheSimilarGoods.paragraph.1")))
                     @list(
                         Seq(
@@ -47,7 +46,7 @@
 
 @layout(pageTitle = title(form, messages("describeTheSimilarGoods.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = onSubmitAction(saveDraft = false)) {
+    @formHelper(action = routes.DescribeTheSimilarGoodsController.onSubmit(NormalMode, draftId, saveDraft = false)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

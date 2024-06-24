@@ -57,7 +57,7 @@
                 @link(
                     id = "change",
                     text = messages("site.change"),
-                    call = controllers.routes.UploadLetterOfAuthorityController.onPageLoad(mode, draftId, None, None, true),
+                    call = controllers.routes.UploadLetterOfAuthorityController.onPageLoad(mode, draftId, None, None, redirectedFromChangeButton = true),
                     newTab = false,
                     hiddenText = true,
                     hiddenTextContent =  messages("verifyLetterOfAuthority.hiddenText", attachment.fileName.getOrElse(""))

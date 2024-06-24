@@ -25,7 +25,7 @@
     heading: Heading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
-    insetPara: InsetPara,
+    govukInsetText: GovukInsetText,
     saveButton: SaveButton,
     legend: LegendH2
 )
@@ -36,7 +36,9 @@
     <div class="govuk-!-margin-top-4">
         @paragraph(Html(messages("hasConfidentialInformation.paragraph.1")))
         @paragraph(Html(messages("hasConfidentialInformation.paragraph.2")))
-        @insetPara(Html(messages("hasConfidentialInformation.paragraph.inset")))
+        @govukInsetText(InsetText(
+            content = Text(messages("hasConfidentialInformation.paragraph.inset"))
+        ))
     </div>
 }
 

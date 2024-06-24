@@ -37,11 +37,10 @@ import services.SubmissionService
 import services.checkAnswers.ApplicationSummaryService
 import userrole.{UserRole, UserRoleProvider}
 import viewmodels.checkAnswers.summary.ApplicationSummary
-import viewmodels.govuk.SummaryListFluency
 
 import scala.concurrent.Future
 
-class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency with BeforeAndAfterEach {
+class CheckYourAnswersControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   private val mockSubmissionService = mock[SubmissionService]
 
