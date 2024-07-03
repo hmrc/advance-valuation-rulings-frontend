@@ -13,8 +13,6 @@ This service uses mongodb to persist user answers.
 ## Requirements
 This service is written in Scala using the Play framework, so needs a JRE to run.
 
-JRE/JDK 11 is recommended.
-
 ## Running the service
 Use the ARS_ALL profile to run all services using the latest tagged releases
 
