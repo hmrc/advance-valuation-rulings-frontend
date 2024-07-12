@@ -170,8 +170,7 @@ case class FileUploadHelper @Inject() (
     }
   }
 
-  /** If an un unexpected error occurs, the user will be redirected back to the corresponding upload
-    * file page.
+  /** If an un unexpected error occurs, the user will be redirected back to the corresponding upload file page.
     */
   def showFallbackPage(mode: Mode, draftId: DraftId, isLetterOfAuthority: Boolean)(implicit
     request: RequestHeader,
