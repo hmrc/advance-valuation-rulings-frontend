@@ -23,7 +23,7 @@
     para: Paragraph
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: RequestHeader, messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("yourApplicationHasBeenCancelled.heading"))

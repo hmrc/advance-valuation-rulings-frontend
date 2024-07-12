@@ -33,7 +33,7 @@
 )
 
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @radiosContent = {
     @paragraph(Html(messages("haveYouUsedMethodOneForSimilarGoodsInPast.paragraph.1")))

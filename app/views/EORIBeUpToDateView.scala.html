@@ -30,7 +30,7 @@
   config: FrontendAppConfig
 )
 
-@(draftId: DraftId, authUserType: AuthUserType)(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId, authUserType: AuthUserType)(implicit request: RequestHeader, messages: Messages)
 
 @fillInAnEnquiryLink = {
   @link(

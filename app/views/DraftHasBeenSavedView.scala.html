@@ -27,7 +27,7 @@
         link: Link
 )
 
-@(date: String)(implicit request: Request[_], messages: Messages)
+@(date: String)(implicit request: RequestHeader, messages: Messages)
 
 
 @homeLink = {

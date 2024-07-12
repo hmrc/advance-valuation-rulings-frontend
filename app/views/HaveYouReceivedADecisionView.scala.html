@@ -34,7 +34,7 @@ saveButton: SaveButton,
 link: Link
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @radioItems = @{
     Seq(

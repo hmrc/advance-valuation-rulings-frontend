@@ -34,7 +34,7 @@
     govukPanel: GovukPanel
 )
 
- @(isIndividual: Boolean, applicationId: String, email: String)(implicit request: Request[_], messages: Messages)
+ @(isIndividual: Boolean, applicationId: String, email: String)(implicit request: RequestHeader, messages: Messages)
 
 @guideLink = {
     @link(

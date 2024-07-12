@@ -25,7 +25,7 @@
         cancelLink: CancelApplicationLink
 )
 
-@(mode: Mode, draftId: DraftId, key: Option[String], isLetterOfAuthority: Boolean)(implicit messages: Messages, request: Request[_])
+@(mode: Mode, draftId: DraftId, key: Option[String], isLetterOfAuthority: Boolean)(implicit messages: Messages, request: RequestHeader)
 
 @layout(pageTitle = titleNoForm(messages("uploadInProgress.title")), showBackLink = false) {
 

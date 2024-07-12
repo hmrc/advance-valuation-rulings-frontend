@@ -30,7 +30,7 @@
         saveButton: SaveButton
 )
 
-@(mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("contactPage.title")), draftId = Some(draftId)) {
 
