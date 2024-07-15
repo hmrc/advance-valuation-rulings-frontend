@@ -18,26 +18,24 @@ package handlers
 
 import base.SpecBase
 import play.api.Application
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
-import views.html.templates.ErrorTemplateView
 
 class ErrorHandlerSpec extends SpecBase {
 
   val app: Application = applicationBuilder().build()
 
-  private val messageApi: MessagesApi          = app.injector.instanceOf[MessagesApi]
-  private val errorTemplate: ErrorTemplateView = app.injector.instanceOf[ErrorTemplateView]
-  private val errorHandler: ErrorHandler       = new ErrorHandler(messageApi, errorTemplate)
+  val errorHandler = app.injector.instanceOf[ErrorHandler]
 
   "ErrorHandler" - {
 
     "return an error page" in {
-      val result = errorHandler.standardErrorTemplate(
-        pageTitle = "pageTitle",
-        heading = "heading",
-        message = "message"
-      )(FakeRequest())
+      val result = errorHandler
+        .standardErrorTemplate(
+          pageTitle = "pageTitle",
+          heading = "heading",
+          message = "message"
+        )(FakeRequest())
+        .futureValue
 
       result.body must include("pageTitle")
       result.body must include("heading")

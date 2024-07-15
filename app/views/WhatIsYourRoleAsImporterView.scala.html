@@ -30,7 +30,7 @@
     legend: LegendH2
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @content = {
     <p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-4">

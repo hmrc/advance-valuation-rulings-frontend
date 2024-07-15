@@ -29,7 +29,7 @@
   config: FrontendAppConfig
 )
 
-@(draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @tryAgainLink = {
     @link(

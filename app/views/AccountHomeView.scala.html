@@ -29,7 +29,7 @@
         govukTag: GovukTag
 )
 
-@(applications: Seq[ApplicationForAccountHome])(implicit request: Request[_], messages: Messages)
+@(applications: Seq[ApplicationForAccountHome])(implicit request: RequestHeader, messages: Messages)
 
 @theRows = @{for(app <- applications) yield Seq(
                     TableRow(content = Text(app.id), format = Some("text")),

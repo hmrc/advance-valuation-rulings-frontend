@@ -29,7 +29,7 @@
     saveButton: SaveButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @codeSpan = {
     <span class="segmented-commodity-code">

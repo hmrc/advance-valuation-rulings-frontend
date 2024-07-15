@@ -32,7 +32,7 @@
     legend: LegendH2
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = title(form, messages("haveYouUsedMethodOneInPast.title")), draftId = Some(draftId)) {
 

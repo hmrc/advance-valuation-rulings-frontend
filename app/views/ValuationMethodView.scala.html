@@ -33,7 +33,7 @@
     saveButton: SaveButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @legend = {<h1 class="govuk-heading-xl">@messages("valuationMethod.heading")</h1>}
 

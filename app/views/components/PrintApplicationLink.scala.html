@@ -18,7 +18,7 @@
 
 @this()
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: RequestHeader, messages: Messages)
 
 <p id="printWrapper" class="govuk-body govuk-!-display-none">
  <a href="#" id="printLink" class="govuk-link govuk-link--no-visited-state" aria-hidden="true">@messages("viewApplication.printLink")</a>

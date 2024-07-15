@@ -29,7 +29,7 @@
     link: Link
 )
 
-@(mode: Mode, draftId: DraftId, eoriNo: String)(implicit request: Request[_], messages: Messages)
+@(mode: Mode, draftId: DraftId, eoriNo: String)(implicit request: RequestHeader, messages: Messages)
 
 @searchAgainLink = {
     @link(

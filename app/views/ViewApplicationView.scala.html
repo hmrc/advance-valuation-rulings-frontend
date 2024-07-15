@@ -37,7 +37,7 @@ fullMainContent: FullLayoutMainContent,
 printApplicationLink: PrintApplicationLink
 )
 
-@(appModel: ApplicationViewModel, applicationId: String, lastUpdated: String)(implicit request: Request[_], messages:
+@(appModel: ApplicationViewModel, applicationId: String, lastUpdated: String)(implicit request: RequestHeader, messages:
 Messages)
 
 @layout(

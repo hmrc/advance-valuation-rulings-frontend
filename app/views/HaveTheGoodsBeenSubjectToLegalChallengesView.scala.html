@@ -29,7 +29,7 @@
     legend: LegendH2
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @paraContent = {
     <div class="govuk-!-margin-top-4">
