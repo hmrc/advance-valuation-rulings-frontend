@@ -22,7 +22,7 @@ import forms.UploadAnotherSupportingDocumentFormProvider
 import models._
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import pages.UploadLetterOfAuthorityPage
 import play.api.inject.bind
 import play.api.mvc.Result
@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 class UploadAnotherSupportingDocumentControllerSpec extends SpecBase {
 
-  private val mockFrontendAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  private val mockFrontendAppConfig: FrontendAppConfig = mock(classOf[FrontendAppConfig])
 
   when(mockFrontendAppConfig.maxFiles)
     .thenReturn(5)

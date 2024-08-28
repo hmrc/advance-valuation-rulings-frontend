@@ -21,9 +21,8 @@ import forms.DeleteDraftFormProvider
 import models.Done
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -63,7 +62,7 @@ class DeleteDraftControllerSpec extends SpecBase {
 
     "must delete the draft redirect to the next page when the answer is yes" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       when(mockUserAnswersService.clear(any())(any())) thenReturn Future.successful(Done)
 
@@ -92,7 +91,7 @@ class DeleteDraftControllerSpec extends SpecBase {
 
     "must not delete the draft redirect to the next page when the answer is yes" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       when(mockUserAnswersService.clear(any())(any())) thenReturn Future.successful(Done)
 

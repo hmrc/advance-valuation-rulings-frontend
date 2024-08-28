@@ -73,36 +73,6 @@ final case class UserAnswers(
   ): Future[UserAnswers] =
     Future.fromTry(set(page, value))
 
-  def upsert[A](page: Modifiable[A], f: A => A, default: A)(implicit
-    format: Format[A]
-  ): Try[UserAnswers] =
-    get[A](page) match {
-      case Some(value) =>
-        set[A](page, f(value))
-      case None        =>
-        set[A](page, default)
-    }
-
-  def upsertFuture[A](page: Modifiable[A], f: A => A, default: A)(implicit
-    format: Format[A]
-  ): Future[UserAnswers] =
-    Future.fromTry(upsert(page, f, default))
-
-  private def modify[A](page: Modifiable[A], f: A => A)(implicit
-    format: Format[A]
-  ): Try[UserAnswers] =
-    get[A](page) match {
-      case Some(value) =>
-        set[A](page, f(value))
-      case None        =>
-        Failure(new Exception(s"Cannot find value at ${page.path}"))
-    }
-
-  def modifyFuture[A](page: Modifiable[A], f: A => A)(implicit
-    format: Format[A]
-  ): Future[UserAnswers] =
-    Future.fromTry(modify(page, f))
-
   def remove[A](page: Modifiable[A]): Try[UserAnswers] = {
 
     val updatedData = data.removeObject(page.path) match {

@@ -110,7 +110,7 @@ case class FileUploadHelper @Inject() (
       userAnswers.get(UploadSupportingDocumentPage)
     }
 
-  def removeFile(mode: Mode, draftId: DraftId, fileUrl: String, isLetterOfAuthority: Boolean)(implicit
+  private def removeFile(mode: Mode, draftId: DraftId, fileUrl: String, isLetterOfAuthority: Boolean)(implicit
     request: DataRequest[AnyContent],
     hc: HeaderCarrier
   ): Future[Result] = {
@@ -266,12 +266,12 @@ case class FileUploadHelper @Inject() (
         .url
     }
 
-  def errorForCode(code: String)(implicit messages: Messages): String =
+  private def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
       case "InvalidArgument" =>
-        Messages("fileUpload.error.invalidargument")
+        messages("fileUpload.error.invalidargument")
       case "EntityTooLarge"  =>
-        Messages(s"fileUpload.error.entitytoolarge", maxFileSize)
+        messages(s"fileUpload.error.entitytoolarge", maxFileSize)
       case "EntityTooSmall"  =>
         /*
          * As of writing this comment, Upscan has an issue in detecting whether a file has been selected.
@@ -280,15 +280,15 @@ case class FileUploadHelper @Inject() (
          * The fix is to set a positive minimum file size and display the expected error message via this case.
          * See the application.conf for the minimum file size.
          */
-        Messages("fileUpload.error.invalidargument")
+        messages("fileUpload.error.invalidargument")
       case "Rejected"        =>
-        Messages("fileUpload.error.rejected")
+        messages("fileUpload.error.rejected")
       case "Quarantine"      =>
-        Messages("fileUpload.error.quarantine")
+        messages("fileUpload.error.quarantine")
       case "Duplicate"       =>
-        Messages("fileUpload.error.duplicate")
+        messages("fileUpload.error.duplicate")
       case _                 =>
-        Messages(s"fileUpload.error.unknown")
+        messages("fileUpload.error.unknown")
     }
 
 }

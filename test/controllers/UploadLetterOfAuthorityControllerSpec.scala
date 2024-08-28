@@ -19,9 +19,8 @@ package controllers
 import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import pages._
@@ -37,13 +36,14 @@ class UploadLetterOfAuthorityControllerSpec extends SpecBase with BeforeAndAfter
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFileService, mockFileUploadHelper)
+    reset(mockFileService)
+    reset(mockFileUploadHelper)
   }
 
   private val isLetterOfAuthority: Boolean = true
 
-  private val mockFileService: FileService           = mock[FileService]
-  private val mockFileUploadHelper: FileUploadHelper = mock[FileUploadHelper]
+  private val mockFileService: FileService           = mock(classOf[FileService])
+  private val mockFileUploadHelper: FileUploadHelper = mock(classOf[FileUploadHelper])
 
   private val initiatedFile =
     UploadedFile.Initiated("reference")

@@ -25,7 +25,7 @@ import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import org.scalacheck.Arbitrary
 import pages.{VerifyTraderDetailsPage, WhatIsYourRoleAsImporterPage}
 import play.api.i18n.Messages
@@ -51,9 +51,9 @@ class EORIBeUpToDateControllerSpec extends SpecBase with ModelGenerators {
     .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.EmployeeOfOrg)
     .get
 
-  private val mockUserRoleProvider   = mock[UserRoleProvider]
-  private val mockUserRole           = mock[UserRole]
-  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockUserRoleProvider   = mock(classOf[UserRoleProvider])
+  private val mockUserRole           = mock(classOf[UserRole])
+  private val mockUserAnswersService = mock(classOf[UserAnswersService])
 
   private def setUpUserAnswersServiceMock(): Unit = {
     when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)

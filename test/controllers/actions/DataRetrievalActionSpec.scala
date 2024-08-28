@@ -21,7 +21,7 @@ import models.AuthUserType.{IndividualTrader, OrganisationAssistant, Organisatio
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import models.{DraftId, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.prop.TableDrivenPropertyChecks
 import pages.AccountHomePage
@@ -35,7 +35,7 @@ import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase with BeforeAndAfterEach with TableDrivenPropertyChecks {
 
-  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
+  private val mockUserAnswersService: UserAnswersService = mock(classOf[UserAnswersService])
 
   override def beforeEach(): Unit = {
     reset(mockUserAnswersService)

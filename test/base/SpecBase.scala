@@ -23,9 +23,8 @@ import models._
 import models.upscan.UpscanInitiateResponse
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -147,7 +146,7 @@ trait SpecBase
     messagesApi(app).preferred(FakeRequest())
 
   val mockDraftIdRepo: CounterRepository =
-    mock[CounterRepository]
+    mock(classOf[CounterRepository])
 
   when(mockDraftIdRepo.nextId(eqTo(CounterId.DraftId))) thenReturn Future.successful(
     DraftIdSequence
@@ -196,7 +195,7 @@ trait SpecBase
       )
 
   def setupTestBuild(userAnswers: UserAnswers): Application = {
-    val mockUserAnswersService = mock[UserAnswersService]
+    val mockUserAnswersService = mock(classOf[UserAnswersService])
 
     when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
     applicationBuilder(userAnswers = Some(userAnswers))

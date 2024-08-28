@@ -19,9 +19,8 @@ package services
 import connectors.UserAnswersConnector
 import models.requests.DraftSummaryResponse
 import models.{Done, DraftId, UserAnswers}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -40,7 +39,7 @@ class UserAnswersServiceSpec
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  private val mockUserAnswersConnector = mock[UserAnswersConnector]
+  private val mockUserAnswersConnector = mock(classOf[UserAnswersConnector])
 
   override def beforeEach(): Unit = {
     reset(mockUserAnswersConnector)

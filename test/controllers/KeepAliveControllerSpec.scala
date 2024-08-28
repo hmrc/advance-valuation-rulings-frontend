@@ -18,9 +18,8 @@ package controllers
 
 import base.SpecBase
 import models.Done
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -36,7 +35,7 @@ class KeepAliveControllerSpec extends SpecBase {
 
       "must keep the answers alive and return OK" in {
 
-        val mockUserAnswersService = mock[UserAnswersService]
+        val mockUserAnswersService = mock(classOf[UserAnswersService])
 
         when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
           Done
@@ -64,7 +63,7 @@ class KeepAliveControllerSpec extends SpecBase {
 
       "must return OK" in {
 
-        val mockUserAnswersService = mock[UserAnswersService]
+        val mockUserAnswersService = mock(classOf[UserAnswersService])
         when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
           Done
         )

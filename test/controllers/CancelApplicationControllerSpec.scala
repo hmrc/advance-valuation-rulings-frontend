@@ -18,9 +18,8 @@ package controllers
 
 import base.SpecBase
 import models.Done
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -52,7 +51,7 @@ class CancelApplicationControllerSpec extends SpecBase {
 
     "must clear answers and redirect" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       reset(mockUserAnswersService)
 

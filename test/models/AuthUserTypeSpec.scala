@@ -27,19 +27,19 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
   "AuthUserType" - {
 
     "identifies an Individual Trader" in {
-      val result = AuthUserType(AffinityGroup.Individual, None)
+      val result: Option[AuthUserType] = AuthUserType(AffinityGroup.Individual, None)
 
       result mustBe Some(AuthUserType.IndividualTrader)
     }
 
     "identifies an Organisation Assistant" in {
-      val result = AuthUserType(AffinityGroup.Organisation, Some(Assistant))
+      val result: Option[AuthUserType] = AuthUserType(AffinityGroup.Organisation, Some(Assistant))
 
       result mustBe Some(AuthUserType.OrganisationAssistant)
     }
 
     "identifies an Organisation User with the User Credential Role" in {
-      val result = AuthUserType(AffinityGroup.Organisation, Some(User))
+      val result: Option[AuthUserType] = AuthUserType(AffinityGroup.Organisation, Some(User))
 
       result mustBe Some(AuthUserType.OrganisationUser)
     }
@@ -47,14 +47,14 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
     val credentialRoles = Table("credentialRole", Assistant, User)
     "returns Agent for `Agent` Affinity Group" in {
       forAll(credentialRoles) { credentialRole =>
-        val result = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
+        val result: Option[AuthUserType] = AuthUserType(AffinityGroup.Agent, Some(credentialRole))
 
         result mustBe Some(AuthUserType.Agent)
       }
     }
 
     "returns None for an Organisation without a CredentialRole" in {
-      val result = AuthUserType(AffinityGroup.Organisation, None)
+      val result: Option[AuthUserType] = AuthUserType(AffinityGroup.Organisation, None)
 
       result mustBe None
     }
@@ -68,14 +68,22 @@ class AuthUserTypeSpec extends AnyFreeSpec with Matchers with TableDrivenPropert
 
     "serialises to Json" in {
       forAll(scenarios) { (authUserType, expectedJson) =>
-        Json.toJson(authUserType) mustEqual expectedJson
+        Json.toJson(authUserType) mustBe expectedJson
       }
     }
 
     "deserialises from Json" in {
       forAll(scenarios) { (authUserType, expectedJson) =>
-        Json.fromJson[AuthUserType](expectedJson) mustEqual JsSuccess(authUserType)
+        Json.fromJson[AuthUserType](expectedJson) mustBe JsSuccess(authUserType)
       }
+    }
+
+    "returns None for unsupported affinity group" in {
+      case object UnsupportedAffinityGroup extends AffinityGroup
+
+      val result: Option[AuthUserType] = AuthUserType(UnsupportedAffinityGroup, Some(User))
+
+      result mustBe None
     }
   }
 }

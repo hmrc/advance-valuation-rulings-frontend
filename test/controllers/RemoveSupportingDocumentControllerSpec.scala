@@ -22,8 +22,7 @@ import models.{Done, DraftAttachment, DraftId, Index, NormalMode, UploadedFile, 
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import pages._
 import play.api.inject.bind

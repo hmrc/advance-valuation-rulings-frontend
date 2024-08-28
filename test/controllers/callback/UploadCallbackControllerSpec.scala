@@ -18,9 +18,8 @@ package controllers.callback
 
 import base.SpecBase
 import models.{Done, DraftId, UploadedFile}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar.{mock, verify, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{mock, verify, when}
 import org.scalatest.freespec.AnyFreeSpec
 import play.api.Application
 import play.api.inject.bind
@@ -34,7 +33,7 @@ import scala.concurrent.Future
 
 class UploadCallbackControllerSpec extends AnyFreeSpec with SpecBase {
 
-  private val mockFileService: FileService = mock[FileService]
+  private val mockFileService: FileService = mock(classOf[FileService])
 
   private lazy val app: Application = applicationBuilder()
     .overrides(

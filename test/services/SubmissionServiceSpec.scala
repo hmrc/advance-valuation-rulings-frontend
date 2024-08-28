@@ -20,9 +20,8 @@ import base.SpecBase
 import connectors.BackendConnector
 import models.Done
 import models.requests._
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import play.api.Application
 import play.api.inject.bind
 import services.email.EmailService
@@ -32,9 +31,9 @@ import scala.concurrent.Future
 
 class SubmissionServiceSpec extends SpecBase {
 
-  private val mockBackendConnector: BackendConnector     = mock[BackendConnector]
-  private val mockEmailService: EmailService             = mock[EmailService]
-  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
+  private val mockBackendConnector: BackendConnector     = mock(classOf[BackendConnector])
+  private val mockEmailService: EmailService             = mock(classOf[EmailService])
+  private val mockUserAnswersService: UserAnswersService = mock(classOf[UserAnswersService])
 
   private val app: Application = applicationBuilder()
     .overrides(
@@ -61,7 +60,9 @@ class SubmissionServiceSpec extends SpecBase {
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
-    reset(mockBackendConnector, mockEmailService, mockUserAnswersService)
+    reset(mockBackendConnector)
+    reset(mockEmailService)
+    reset(mockUserAnswersService)
     super.beforeEach()
   }
 

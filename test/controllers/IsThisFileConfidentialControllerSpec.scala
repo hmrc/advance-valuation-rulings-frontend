@@ -22,7 +22,7 @@ import models.{Done, DraftAttachment, NormalMode, UploadedFile}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.MockitoSugar.{mock, verify, when}
+import org.mockito.Mockito.{mock, verify, when}
 import pages._
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -96,7 +96,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase {
     }
 
     "when valid data is submitted" - {
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
       val application =

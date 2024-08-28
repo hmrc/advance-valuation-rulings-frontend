@@ -19,9 +19,8 @@ package services.email
 import base.SpecBase
 import connectors.EmailConnector
 import models.requests.{Email, EmailRequest}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import play.api.test.Helpers.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -31,7 +30,7 @@ import scala.concurrent.Future
 
 class EmailServiceSpec extends SpecBase with BeforeAndAfterEach {
 
-  private val mockEmailConnector         = mock[EmailConnector]
+  private val mockEmailConnector         = mock(classOf[EmailConnector])
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {

@@ -17,16 +17,16 @@
 package userrole
 
 import models.{DraftId, UserAnswers, WhatIsYourRoleAsImporter}
-import org.mockito.MockitoSugar.mock
+import org.mockito.Mockito.mock
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import pages.WhatIsYourRoleAsImporterPage
 
 class UserRoleProviderSpec extends AnyFreeSpec with Matchers {
 
-  private val employeeRole   = mock[Employee]
-  private val agentForOrg    = mock[AgentForOrg]
-  private val agentForTrader = mock[AgentForTrader]
+  private val employeeRole   = mock(classOf[Employee])
+  private val agentForOrg    = mock(classOf[AgentForOrg])
+  private val agentForTrader = mock(classOf[AgentForTrader])
   private val userAnswers    = new UserAnswers("UserID", DraftId(1L))
 
   private val userRoleProvider: UserRoleProvider =

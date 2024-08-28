@@ -24,9 +24,8 @@ import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models._
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import pages.{AccountHomePage, AgentCompanyDetailsPage, WhatIsYourRoleAsImporterPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -38,8 +37,8 @@ import scala.concurrent.Future
 
 class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
-  private val mockAuditService: AuditService             = mock[AuditService]
-  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
+  private val mockAuditService: AuditService             = mock(classOf[AuditService])
+  private val mockUserAnswersService: UserAnswersService = mock(classOf[UserAnswersService])
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -221,7 +220,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
         ).toString
       }
 
-      verifyZeroInteractions(mockAuditService)
+      verify(mockAuditService, times(0)).sendRoleIndicatorEvent(any())(any(), any(), any())
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in {
@@ -242,7 +241,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
 
-      verifyZeroInteractions(mockAuditService)
+      verify(mockAuditService, times(0)).sendRoleIndicatorEvent(any())(any(), any(), any())
     }
 
     ".onSubmitNavigationLogic" - {

@@ -72,7 +72,7 @@ class CounterRepositorySpec extends BaseIntegrationSpec with DefaultPlayMongoRep
 
       find(
         Filters.eq("_id", CounterId.DraftId.toString)
-      ).futureValue.head.index mustEqual repository.startingIndex
+      ).futureValue.head.index mustBe repository.startingIndex
     }
 
     "must not update the draft Id index when it is equal to or greater than the intended starting index" in {
@@ -94,7 +94,23 @@ class CounterRepositorySpec extends BaseIntegrationSpec with DefaultPlayMongoRep
 
       find(
         Filters.eq("_id", CounterId.DraftId.toString)
-      ).futureValue.head.index mustEqual repository.startingIndex + 1
+      ).futureValue.head.index mustBe repository.startingIndex + 1
+    }
+
+    "must return Unit when no document with draft ID exists in the collection" in {
+
+      repository.seed.futureValue
+
+      repository.collection
+        .deleteOne(Filters.eq("_id", CounterId.DraftId.toString))
+        .toFuture()
+        .futureValue
+
+      repository.ensureDraftIdIsCorrect().futureValue mustBe (): Unit
+
+      find(
+        Filters.eq("_id", CounterId.DraftId.toString)
+      ).futureValue mustBe empty
     }
   }
 
@@ -104,9 +120,9 @@ class CounterRepositorySpec extends BaseIntegrationSpec with DefaultPlayMongoRep
 
       val startingValue = repository.seeds.find(_._id == CounterId.DraftId).head.index
 
-      repository.nextId(CounterId.DraftId).futureValue mustEqual startingValue + 1
-      repository.nextId(CounterId.DraftId).futureValue mustEqual startingValue + 2
-      repository.nextId(CounterId.DraftId).futureValue mustEqual startingValue + 3
+      repository.nextId(CounterId.DraftId).futureValue mustBe startingValue + 1
+      repository.nextId(CounterId.DraftId).futureValue mustBe startingValue + 2
+      repository.nextId(CounterId.DraftId).futureValue mustBe startingValue + 3
     }
   }
 }

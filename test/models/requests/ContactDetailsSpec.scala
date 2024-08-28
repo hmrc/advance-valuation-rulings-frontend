@@ -20,7 +20,7 @@ import base.SpecBase
 import cats.data.Validated._
 import generators._
 import models._
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 import userrole.{UserRole, UserRoleProvider}
@@ -31,8 +31,8 @@ class ContactDetailsSpec extends SpecBase with ScalaCheckPropertyChecks with App
 
   "ContactDetails" - {
 
-    val mockUserRoleProvider = mock[UserRoleProvider]
-    val userRole             = mock[UserRole]
+    val mockUserRoleProvider = mock(classOf[UserRoleProvider])
+    val userRole             = mock(classOf[UserRole])
 
     val contactDetailsService = new ContactDetailsService(mockUserRoleProvider)
 

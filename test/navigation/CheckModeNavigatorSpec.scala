@@ -19,8 +19,9 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import controllers.routes.CheckRegisteredDetailsController
+import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models._
-import org.mockito.MockitoSugar.mock
+import org.mockito.Mockito.mock
 import pages._
 import play.api.libs.json.Writes
 import play.api.mvc.Call
@@ -31,7 +32,7 @@ import java.time.Instant
 
 class CheckModeNavigatorSpec extends SpecBase {
 
-  val userRoleProvider: UserRoleProvider             = mock[UserRoleProvider]
+  val userRoleProvider: UserRoleProvider             = mock(classOf[UserRoleProvider])
   val EmptyUserAnswers: UserAnswers                  = userAnswersAsIndividualTrader
   val unchangedModeNavigator: UnchangedModeNavigator = new UnchangedModeNavigator
   val navigator: Navigator                           = new Navigator(userRoleProvider, unchangedModeNavigator)
@@ -1177,6 +1178,55 @@ class CheckModeNavigatorSpec extends SpecBase {
             ) mustBe routes.AboutSimilarGoodsController.onPageLoad(mode = CheckMode, draftId = draftId)
           }
         }
+      }
+
+      "must navigate to self when user has no data for the WhatIsYourRoleAsImporterPage" in {
+        navigator.nextPage(
+          WhatIsYourRoleAsImporterPage,
+          CheckMode,
+          EmptyUserAnswers
+        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(
+          CheckMode,
+          EmptyUserAnswers.draftId
+        )
+      }
+
+      "must navigate to ChangeYourRoleImporterPage when user has data for the WhatIsYourRoleAsImporterPage" in {
+        val userAnswers: UserAnswers = userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+        navigator.nextPage(
+          WhatIsYourRoleAsImporterPage,
+          CheckMode,
+          userAnswers
+        ) mustBe routes.ChangeYourRoleImporterController.onPageLoad(CheckMode, userAnswers.draftId)
+      }
+
+      "must navigate to self when user has no data for the ChangeYourRoleImporterPage" in {
+        navigator.nextPage(
+          ChangeYourRoleImporterPage,
+          CheckMode,
+          EmptyUserAnswers
+        ) mustBe routes.ChangeYourRoleImporterController.onPageLoad(
+          CheckMode,
+          EmptyUserAnswers.draftId
+        )
+      }
+
+      "must navigate to RequiredInformationPage when user has data set to true for the ChangeYourRoleImporterPage" in {
+        val userAnswers: UserAnswers = userAnswersWith(ChangeYourRoleImporterPage, true)
+        navigator.nextPage(
+          ChangeYourRoleImporterPage,
+          CheckMode,
+          userAnswers
+        ) mustBe routes.RequiredInformationController.onPageLoad(userAnswers.draftId)
+      }
+
+      "must navigate to WhatIsYourRoleAsImporterPage when user has data set to false for the ChangeYourRoleImporterPage" in {
+        val userAnswers: UserAnswers = userAnswersWith(ChangeYourRoleImporterPage, false)
+        navigator.nextPage(
+          ChangeYourRoleImporterPage,
+          CheckMode,
+          userAnswers
+        ) mustBe routes.WhatIsYourRoleAsImporterController.onPageLoad(CheckMode, userAnswers.draftId)
       }
     }
   }

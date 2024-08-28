@@ -24,7 +24,7 @@ import models.requests._
 import models.{ApplicationForAccountHome, Done, DraftId, NormalMode, UserAnswers}
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.MockitoSugar.{mock, reset, times, verify, when}
+import org.mockito.Mockito.{mock, reset, times, verify, when}
 import pages.AccountHomePage
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -38,12 +38,14 @@ import scala.concurrent.Future
 
 class AccountHomeControllerSpec extends SpecBase {
 
-  private val mockBackEndConnector   = mock[BackendConnector]
-  private val mockAuditService       = mock[AuditService]
-  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockBackEndConnector   = mock(classOf[BackendConnector])
+  private val mockAuditService       = mock(classOf[AuditService])
+  private val mockUserAnswersService = mock(classOf[UserAnswersService])
 
   override def beforeEach(): Unit = {
-    reset(mockBackEndConnector, mockAuditService, mockUserAnswersService)
+    reset(mockBackEndConnector)
+    reset(mockAuditService)
+    reset(mockUserAnswersService)
     super.beforeEach()
   }
 

@@ -20,9 +20,8 @@ import base.SpecBase
 import controllers.common.FileUploadHelper
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models.{DraftAttachment, NormalMode, UploadedFile}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar.{mock, reset, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.BeforeAndAfterEach
 import pages._
 import play.api.inject.bind
@@ -39,13 +38,14 @@ class UploadSupportingDocumentsControllerSpec extends SpecBase with BeforeAndAft
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFileService, mockFileUploadHelper)
+    reset(mockFileService)
+    reset(mockFileUploadHelper)
   }
 
   private val isLetterOfAuthority = false
 
-  private val mockFileService      = mock[FileService]
-  private val mockFileUploadHelper = mock[FileUploadHelper]
+  private val mockFileService      = mock(classOf[FileService])
+  private val mockFileUploadHelper = mock(classOf[FileUploadHelper])
 
   private val successfulFile: UploadedFile.Success = UploadedFile.Success(
     reference = "reference",
@@ -117,8 +117,8 @@ class UploadSupportingDocumentsControllerSpec extends SpecBase with BeforeAndAft
       .success
       .value
 
-    val mockUserRoleProvider = mock[UserRoleProvider]
-    val mockUserRole         = mock[UserRole]
+    val mockUserRoleProvider = mock(classOf[UserRoleProvider])
+    val mockUserRole         = mock(classOf[UserRole])
     when(mockUserRole.getMaxSupportingDocuments).thenReturn(5)
     when(mockUserRoleProvider.getUserRole(eqTo(userAnswers))).thenReturn(mockUserRole)
 

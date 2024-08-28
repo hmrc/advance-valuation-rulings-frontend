@@ -21,9 +21,8 @@ import controllers.common.FileUploadHelper
 import models.{NormalMode, UploadedFile, UserAnswers}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar.{mock, reset, when}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{Assertion, BeforeAndAfterEach}
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
@@ -44,22 +43,23 @@ class UploadInProgressControllerSpec extends SpecBase with BeforeAndAfterEach wi
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFileService, mockFileUploadHelper)
+    reset(mockFileService)
+    reset(mockFileUploadHelper)
   }
 
   private val parameterisedCases = Table("Is Letter of Authority", true, false)
 
-  private val mockFileService = mock[FileService]
+  private val mockFileService = mock(classOf[FileService])
 
-  private val mockFileUploadHelper = mock[FileUploadHelper]
+  private val mockFileUploadHelper = mock(classOf[FileUploadHelper])
 
   private val reference: String = "reference"
 
   private val initiatedFile = UploadedFile.Initiated(reference = reference)
 
-  private val mockUserRole           = mock[UserRole]
-  private val mockUserRoleProvider   = mock[UserRoleProvider]
-  private val mockUserAnswersService = mock[UserAnswersService]
+  private val mockUserRole           = mock(classOf[UserRole])
+  private val mockUserRoleProvider   = mock(classOf[UserRoleProvider])
+  private val mockUserAnswersService = mock(classOf[UserAnswersService])
 
   private def setMockUserRole(userAnswers: UserAnswers): Unit = {
     when(mockUserAnswersService.get(any())(any()))

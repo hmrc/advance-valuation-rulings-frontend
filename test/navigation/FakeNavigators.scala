@@ -17,14 +17,14 @@
 package navigation
 
 import models.{Mode, UserAnswers}
-import org.mockito.MockitoSugar.mock
+import org.mockito.Mockito.mock
 import pages._
 import play.api.mvc.Call
 import userrole.UserRoleProvider
 
 object FakeNavigators {
 
-  val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
+  val userRoleProvider: UserRoleProvider = mock(classOf[UserRoleProvider])
 
   val unchangedModeNavigator: UnchangedModeNavigator = new UnchangedModeNavigator
 

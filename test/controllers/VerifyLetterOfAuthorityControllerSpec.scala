@@ -24,7 +24,7 @@ import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, redirectLocation, route, status, writeableOf_AnyContentAsEmpty}
+import play.api.test.Helpers._
 import views.html.VerifyLetterOfAuthorityView
 
 import java.time.Instant
@@ -49,40 +49,91 @@ class VerifyLetterOfAuthorityControllerSpec extends SpecBase {
 
   "VerifyLetterOfAuthority Controller" - {
 
-    "must return OK and the correct view for page load" in {
+    "when .onPageLoad" - {
 
-      val ua: UserAnswers = userAnswersAsOrgUser
-        .set(UploadLetterOfAuthorityPage, uploadedFile)
-        .success
-        .value
-        .set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfTrader)
-        .success
-        .value
+      "must return OK and the correct view for page load" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(ua)).build()
+        val ua: UserAnswers = userAnswersAsOrgUser
+          .set(UploadLetterOfAuthorityPage, uploadedFile)
+          .success
+          .value
+          .set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfTrader)
+          .success
+          .value
 
-      val request                = FakeRequest(GET, verifyLetterOfAuthorityRoute)
-      val result: Future[Result] = route(application, request).value
-      val view                   = application.injector.instanceOf[VerifyLetterOfAuthorityView]
+        val application =
+          applicationBuilder(userAnswers = Some(ua)).build()
 
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(uploadedFile, draftId, NormalMode)(
-        request,
-        messages(application)
-      ).toString
+        val request                = FakeRequest(GET, verifyLetterOfAuthorityRoute)
+        val result: Future[Result] = route(application, request).value
+        val view                   = application.injector.instanceOf[VerifyLetterOfAuthorityView]
 
+        status(result) mustBe OK
+        contentAsString(result) mustBe view(uploadedFile, draftId, NormalMode)(
+          request,
+          messages(application)
+        ).toString
+
+      }
+
+      "must redirect to Upload Letter Of Authority when no fileName is present" in {
+        val ua: UserAnswers = userAnswersAsOrgUser
+          .set(UploadLetterOfAuthorityPage, UploadedFile.Initiated(reference = "reference"))
+          .success
+          .value
+          .set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfTrader)
+          .success
+          .value
+
+        val application = applicationBuilder(userAnswers = Some(ua)).build()
+        val request     =
+          FakeRequest(GET, verifyLetterOfAuthorityRoute)
+        val result      = route(application, request).value
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.UploadLetterOfAuthorityController
+          .onPageLoad(
+            mode = NormalMode,
+            draftId = draftId,
+            errorCode = None,
+            key = None,
+            redirectedFromChangeButton = false
+          )
+          .url
+      }
+
+      "must redirect to Journey Recovery if no document is found during page load" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+        val request     =
+          FakeRequest(GET, verifyLetterOfAuthorityRoute)
+        val result      = route(application, request).value
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
+      }
     }
 
-    "must redirect to Journey Recovery if no document is found during page load" in {
+    "when .onSubmit" - {
+      "must redirect to the next page 'Business Contact Details'" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
-      val request     =
-        FakeRequest(GET, verifyLetterOfAuthorityRoute)
-      val result      = route(application, request).value
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        val ua: UserAnswers = userAnswersAsOrgUser
+          .set(UploadLetterOfAuthorityPage, uploadedFile)
+          .success
+          .value
+          .set(WhatIsYourRoleAsImporterPage, AgentOnBehalfOfTrader)
+          .success
+          .value
+
+        val application =
+          applicationBuilder(userAnswers = Some(ua)).build()
+
+        val request                = FakeRequest(POST, verifyLetterOfAuthorityRoute)
+        val result: Future[Result] = route(application, request).value
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe routes.BusinessContactDetailsController
+          .onPageLoad(NormalMode, draftId)
+          .url
+      }
     }
   }
-
 }

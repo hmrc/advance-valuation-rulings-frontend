@@ -21,7 +21,7 @@ import connectors.BackendConnector
 import models.requests.DataRequest
 import models.{BackendError, DraftId, EoriNumber, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.MockitoSugar._
+import org.mockito.Mockito._
 import org.scalacheck.Arbitrary
 import play.api.Logger
 import play.api.libs.json.JsObject
@@ -41,7 +41,7 @@ class TraderDetailsHelperSpec extends SpecBase {
 
   private class Harness extends TraderDetailsHelper {}
 
-  implicit val mockConnector: BackendConnector = mock[BackendConnector]
+  implicit val mockConnector: BackendConnector = mock(classOf[BackendConnector])
   implicit val logger: Logger                  = Logger("test")
 
   private def buildRequest(): DataRequest[AnyContent] = {

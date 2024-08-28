@@ -22,12 +22,13 @@ import cats.data.Validated._
 import generators._
 import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models._
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import org.scalacheck.Arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages._
 import play.api.libs.json.{JsResult, JsSuccess, Json}
 
+import java.time.Instant
 import scala.util.Try
 
 class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with ApplicationRequestGenerator {
@@ -204,7 +205,7 @@ class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with
 
   "ApplicationRequest" - {
 
-    val contactDetailsService     = mock[ContactDetailsService]
+    val contactDetailsService     = mock(classOf[ContactDetailsService])
     val applicationRequestService = new ApplicationRequestService(contactDetailsService)
 
     "be able to deserialize successful body" - {
@@ -636,6 +637,70 @@ class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with
         )
       }
 
+    }
+
+    "when valid letter of authority is present i.e. upload successful" - {
+      "must return the expected AttachmentRequest" in {
+
+        val successfulFile: UploadedFile.Success = UploadedFile.Success(
+          reference = "reference",
+          downloadUrl = "downloadUrl",
+          uploadDetails = UploadedFile.UploadDetails(
+            fileName = "fileName",
+            fileMimeType = "fileMimeType",
+            uploadTimestamp = Instant.EPOCH,
+            checksum = "checksum",
+            size = 1337
+          )
+        )
+
+        val userAnswers: UserAnswers = userAnswersAsIndividualTrader
+          .set(UploadLetterOfAuthorityPage, successfulFile)
+          .success
+          .value
+
+        val expectedAttachmentRequest: AttachmentRequest = AttachmentRequest(
+          name = successfulFile.uploadDetails.fileName,
+          description = None,
+          url = successfulFile.downloadUrl,
+          privacy = Privacy.Public,
+          mimeType = successfulFile.uploadDetails.fileMimeType,
+          size = successfulFile.uploadDetails.size
+        )
+
+        applicationRequestService.letterOfAuthority(userAnswers) mustBe Some(expectedAttachmentRequest)
+      }
+    }
+
+    "when letter of authority is invalid i.e. upload failed" - {
+      "must return None" in {
+
+        val failureFile: UploadedFile.Failure = UploadedFile.Failure(
+          reference = "reference",
+          failureDetails = UploadedFile.FailureDetails(
+            failureReason = UploadedFile.FailureReason.Duplicate,
+            failureMessage = None
+          )
+        )
+
+        val userAnswers: UserAnswers = userAnswersAsIndividualTrader
+          .set(UploadLetterOfAuthorityPage, failureFile)
+          .success
+          .value
+
+        applicationRequestService.letterOfAuthority(userAnswers) mustBe None
+      }
+    }
+
+    "when letter of authority is absent i.e. no upload" - {
+      "must return None" in {
+
+        applicationRequestService.letterOfAuthority(userAnswersAsIndividualTrader) mustBe None
+      }
+    }
+
+    "must correctly transform type names using JsonNaming" in {
+      ApplicationRequest.jsonConfig.typeNaming.apply("models.requests.ApplicationRequest") mustBe "ApplicationRequest"
     }
   }
 }

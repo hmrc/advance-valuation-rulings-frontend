@@ -19,9 +19,8 @@ package controllers
 import base.SpecBase
 import connectors.BackendConnector
 import generators.ApplicationGenerator
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.inject.bind
@@ -34,7 +33,7 @@ import scala.concurrent.Future
 
 class ApplicationCompleteControllerSpec extends SpecBase with ApplicationGenerator with TableDrivenPropertyChecks {
 
-  private val mockBackendConnector = mock[BackendConnector]
+  private val mockBackendConnector = mock(classOf[BackendConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()

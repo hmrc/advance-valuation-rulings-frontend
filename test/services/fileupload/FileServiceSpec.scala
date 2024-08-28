@@ -21,9 +21,8 @@ import connectors.UpscanConnector
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import models.{Done, DraftAttachment, DraftId, NormalMode, UploadedFile, UserAnswers}
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.freespec.AnyFreeSpec
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
@@ -42,12 +41,14 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockUpscanConnector, mockUserAnswersService, mockObjectStoreClient)
+    reset(mockUpscanConnector)
+    reset(mockUserAnswersService)
+    reset(mockObjectStoreClient)
   }
 
-  private val mockUpscanConnector: UpscanConnector         = mock[UpscanConnector]
-  private val mockUserAnswersService: UserAnswersService   = mock[UserAnswersService]
-  private val mockObjectStoreClient: PlayObjectStoreClient = mock[PlayObjectStoreClient]
+  private val mockUpscanConnector: UpscanConnector         = mock(classOf[UpscanConnector])
+  private val mockUserAnswersService: UserAnswersService   = mock(classOf[UserAnswersService])
+  private val mockObjectStoreClient: PlayObjectStoreClient = mock(classOf[PlayObjectStoreClient])
 
   private lazy val app: GuiceApplicationBuilder = applicationBuilder()
     .configure(

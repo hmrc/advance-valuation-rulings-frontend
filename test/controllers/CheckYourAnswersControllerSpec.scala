@@ -23,7 +23,7 @@ import models.AuthUserType.IndividualTrader
 import models._
 import models.requests._
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterEach, TryValues}
 import pages._
@@ -42,7 +42,7 @@ import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends SpecBase with BeforeAndAfterEach {
 
-  private val mockSubmissionService = mock[SubmissionService]
+  private val mockSubmissionService = mock(classOf[SubmissionService])
 
   override def beforeEach(): Unit = {
     reset(mockSubmissionService)
@@ -53,8 +53,8 @@ class CheckYourAnswersControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     "must return OK and the correct view for a GET for a UserRole with the agent creds flag on" in new CheckYourAnswersControllerSpecSetup {
 
-      private val mockUserRoleProvider = mock[UserRoleProvider]
-      private val mockUserRole         = mock[UserRole]
+      private val mockUserRoleProvider = mock(classOf[UserRoleProvider])
+      private val mockUserRole         = mock(classOf[UserRole])
 
       private val expectedText = "Expected"
       private val expectedView = HtmlFormat.raw(expectedText)
@@ -183,10 +183,10 @@ trait CheckYourAnswersControllerSpecSetup extends TryValues with ScalaFutures {
     .setFuture(AccountHomePage, IndividualTrader)
     .futureValue
 
-  val mockSubmissionService: SubmissionService                 = mock[SubmissionService]
-  val mockBackendConnector: BackendConnector                   = mock[BackendConnector]
-  val mockApplicationSummaryService: ApplicationSummaryService = mock[ApplicationSummaryService]
-  val mockApplicationRequestService: ApplicationRequestService = mock[ApplicationRequestService]
+  val mockSubmissionService: SubmissionService                 = mock(classOf[SubmissionService])
+  val mockBackendConnector: BackendConnector                   = mock(classOf[BackendConnector])
+  val mockApplicationSummaryService: ApplicationSummaryService = mock(classOf[ApplicationSummaryService])
+  val mockApplicationRequestService: ApplicationRequestService = mock(classOf[ApplicationRequestService])
 
   val contactInformation: ContactInformation = ContactInformation(
     personOfContact = Some("Test Person"),
@@ -214,8 +214,8 @@ trait CheckYourAnswersControllerSpecSetup extends TryValues with ScalaFutures {
     contactInformation = Some(contactInformation)
   )
 
-  val appSummary: ApplicationSummary            = mock[ApplicationSummary]
-  val appApplicationRequest: ApplicationRequest = mock[ApplicationRequest]
+  val appSummary: ApplicationSummary            = mock(classOf[ApplicationSummary])
+  val appApplicationRequest: ApplicationRequest = mock(classOf[ApplicationRequest])
 
   when(
     mockApplicationSummaryService.getApplicationSummary(

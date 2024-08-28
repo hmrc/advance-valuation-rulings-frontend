@@ -17,9 +17,9 @@
 package models.requests
 
 import base.SpecBase
-import cats.data.NonEmptyList
+import cats.data.{NonEmptyList, ValidatedNel}
 import cats.data.Validated.{Invalid, Valid}
-import models.{DraftAttachment, Index, UploadedFile}
+import models.{DraftAttachment, Index, UploadedFile, UserAnswers}
 import pages._
 import queries.{AllDocuments, DraftAttachmentAt}
 
@@ -47,30 +47,32 @@ class AttachmentRequestSpec extends SpecBase {
     )
   )
 
+  private val initiatedFile: UploadedFile.Initiated = UploadedFile.Initiated(reference = "reference")
+
   ".apply" - {
 
-    "return an empty sequence when the user doesn't want to add any attachments" in {
+    "must return an empty sequence when the user doesn't want to add any attachments" in {
 
-      val answers = (for {
+      val answers: UserAnswers = (for {
         ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, false)
         ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(false)))
       } yield ua).success.value
 
-      val result = AttachmentRequest(answers)
+      val result: ValidatedNel[Page, Seq[AttachmentRequest]] = AttachmentRequest(answers)
 
       result mustBe Valid(Nil)
     }
 
-    "return attachment requests when the user wants to add attachments" in {
-      val answers = (for {
+    "must return attachment requests when the user wants to add attachments" in {
+      val answers: UserAnswers = (for {
         ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true)
         ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, Some(false)))
         ua <- ua.set(DraftAttachmentAt(Index(1)), DraftAttachment(successfulFile, Some(true)))
       } yield ua).success.value
 
-      val result = AttachmentRequest(answers)
+      val result: ValidatedNel[Page, Seq[AttachmentRequest]] = AttachmentRequest(answers)
 
-      result mustEqual Valid(
+      result mustBe Valid(
         Seq(
           AttachmentRequest(
             name = "fileName",
@@ -92,30 +94,40 @@ class AttachmentRequestSpec extends SpecBase {
       )
     }
 
-    "fail when the user says they want to upload files but none are present" in {
+    "must fail when the user says they want to upload files but none are present" in {
 
-      val answers = emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true).success.value
-      val result  = AttachmentRequest(answers)
+      val answers: UserAnswers                               = emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true).success.value
+      val result: ValidatedNel[Page, Seq[AttachmentRequest]] = AttachmentRequest(answers)
       result mustBe Invalid(NonEmptyList.one(AllDocuments))
     }
 
-    "fail when there are non-successful files" in {
-      val answers = (for {
+    "must fail when there are initiated files" in {
+      val answers: UserAnswers = (for {
+        ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true)
+        ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(initiatedFile, Some(true)))
+      } yield ua).success.value
+
+      val result: ValidatedNel[Page, Seq[AttachmentRequest]] = AttachmentRequest(answers)
+      result mustBe Invalid(NonEmptyList.one(DraftAttachmentAt(Index(0))))
+    }
+
+    "must fail when there are non-successful files" in {
+      val answers: UserAnswers = (for {
         ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true)
         ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(failedFile, Some(true)))
       } yield ua).success.value
 
-      val result = AttachmentRequest(answers)
+      val result: ValidatedNel[Page, Seq[AttachmentRequest]] = AttachmentRequest(answers)
       result mustBe Invalid(NonEmptyList.one(DraftAttachmentAt(Index(0))))
     }
 
-    "fail when privacy setting is missing from files" in {
-      val answers = (for {
+    "must fail when privacy setting is missing from files" in {
+      val answers: UserAnswers = (for {
         ua <- emptyUserAnswers.set(DoYouWantToUploadDocumentsPage, true)
         ua <- ua.set(DraftAttachmentAt(Index(0)), DraftAttachment(successfulFile, None))
       } yield ua).success.value
 
-      val result = AttachmentRequest(answers)
+      val result: ValidatedNel[Page, Seq[AttachmentRequest]] = AttachmentRequest(answers)
       result mustBe Invalid(NonEmptyList.one(DraftAttachmentAt(Index(0))))
     }
   }
