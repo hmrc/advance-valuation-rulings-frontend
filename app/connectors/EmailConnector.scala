@@ -19,6 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import models.requests.EmailRequest
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
@@ -36,5 +37,5 @@ class EmailConnector @Inject() (
     httpClient
       .post(url"${appConfig.emailBaseUrl}/hmrc/email")
       .withBody(Json.toJson(emailRequest))
-      .execute[HttpResponse]
+      .execute[HttpResponse](throwOnFailure(readEitherOf(readRaw)), ec)
 }

@@ -23,7 +23,7 @@ import models.{BackendError, Done, NormalMode}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import pages.ProvideTraderEoriPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -40,7 +40,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase {
   private lazy val provideTraderEoriPagePostRoute =
     routes.ProvideTraderEoriController.onSubmit(NormalMode, draftId, saveDraft = false).url
 
-  private val mockBackendConnector = mock[BackendConnector]
+  private val mockBackendConnector = mock(classOf[BackendConnector])
   private val formProvider         = new TraderEoriNumberFormProvider()
   private val form                 = formProvider()
 
@@ -95,7 +95,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())) thenReturn Future
@@ -273,7 +273,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase {
 
     "must return invalidEoriView for a POST if provided EORI is not found" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())) thenReturn Future
@@ -310,7 +310,7 @@ class ProvideTraderEoriControllerSpec extends SpecBase {
 
     "must redirect to Journey Recovery for a POST if some other exception is returned by the backend connector" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
       when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())) thenReturn Future

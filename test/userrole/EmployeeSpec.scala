@@ -19,8 +19,8 @@ package userrole
 import base.SpecBase
 import forms.EmployeeCheckRegisteredDetailsFormProvider
 import models.requests.DataRequest
-import models.{ApplicationContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode}
-import org.mockito.MockitoSugar.{mock, when}
+import models._
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.matchers.must.Matchers
 import pages.{ApplicationContactDetailsPage, CheckRegisteredDetailsPage}
 import play.api.data.Form
@@ -28,17 +28,17 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
 import viewmodels.checkAnswers.summary._
-import views.html.{CheckYourAnswersView, EmployeeCheckRegisteredDetailsView, EmployeeEORIBeUpToDateView, IndividualInformationRequiredView}
+import views.html._
 
 class EmployeeSpec extends SpecBase with Matchers {
 
-  private val employeeCheckRegisteredDetailsView  = mock[EmployeeCheckRegisteredDetailsView]
-  private val formProvider                        = mock[EmployeeCheckRegisteredDetailsFormProvider]
-  private val employeeEORIBeUpToDateView          = mock[EmployeeEORIBeUpToDateView]
-  private val requiredInformationView             = mock[IndividualInformationRequiredView]
-  private val checkYourAnswersView                = mock[CheckYourAnswersView]
-  private val individualApplicantSummaryCreator   = mock[IndividualApplicantSummaryCreator]
-  private val individualEoriDetailsSummaryCreator = mock[IndividualEoriDetailsSummaryCreator]
+  private val employeeCheckRegisteredDetailsView  = mock(classOf[EmployeeCheckRegisteredDetailsView])
+  private val formProvider                        = mock(classOf[EmployeeCheckRegisteredDetailsFormProvider])
+  private val employeeEORIBeUpToDateView          = mock(classOf[EmployeeEORIBeUpToDateView])
+  private val requiredInformationView             = mock(classOf[IndividualInformationRequiredView])
+  private val checkYourAnswersView                = mock(classOf[CheckYourAnswersView])
+  private val individualApplicantSummaryCreator   = mock(classOf[IndividualApplicantSummaryCreator])
+  private val individualEoriDetailsSummaryCreator = mock(classOf[IndividualEoriDetailsSummaryCreator])
 
   private val employee = Employee(
     employeeCheckRegisteredDetailsView,
@@ -50,15 +50,15 @@ class EmployeeSpec extends SpecBase with Matchers {
     individualEoriDetailsSummaryCreator
   )
 
-  private val mockMessages    = mock[Messages]
-  private val mockDataRequest = mock[DataRequest[AnyContent]]
+  private val mockMessages    = mock(classOf[Messages])
+  private val mockDataRequest = mock(classOf[DataRequest[AnyContent]])
 
   "Employee" - {
 
     "should return the correct ApplicationSummary" in {
 
-      val individualApplicantSummary   = mock[IndividualApplicantSummary]
-      val individualEoriDetailsSummary = mock[IndividualEoriDetailsSummary]
+      val individualApplicantSummary   = mock(classOf[IndividualApplicantSummary])
+      val individualEoriDetailsSummary = mock(classOf[IndividualEoriDetailsSummary])
 
       when(individualApplicantSummaryCreator.summaryRows(emptyUserAnswers)(mockMessages))
         .thenReturn(individualApplicantSummary)
@@ -93,9 +93,9 @@ class EmployeeSpec extends SpecBase with Matchers {
     }
 
     "should return the correct view for CheckYourAnswers" in {
-      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+      val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
 
-      val appSummary = mock[ApplicationSummary]
+      val appSummary = mock(classOf[ApplicationSummary])
 
       when(
         checkYourAnswersView.apply(
@@ -118,11 +118,11 @@ class EmployeeSpec extends SpecBase with Matchers {
         None
       )
 
-      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
-      val form                                = mock[Form[Boolean]]
-      val request                             = mock[DataRequest[AnyContent]]
+      val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
+      val form                                = mock(classOf[Form[Boolean]])
+      val request                             = mock(classOf[DataRequest[AnyContent]])
       val draftId                             = DraftId(1L)
-      val messages                            = mock[Messages]
+      val messages                            = mock(classOf[Messages])
 
       val traderDetailsWithCountryCode =
         TraderDetailsWithCountryCode(
@@ -164,11 +164,11 @@ class EmployeeSpec extends SpecBase with Matchers {
 
   "should return the correct view for EORIBeUpToDate" in {
 
-    val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+    val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
 
-    val request  = mock[DataRequest[AnyContent]]
+    val request  = mock(classOf[DataRequest[AnyContent]])
     val draftId  = DraftId(1L)
-    val messages = mock[Messages]
+    val messages = mock(classOf[Messages])
 
     when(
       employeeEORIBeUpToDateView.apply(
@@ -185,11 +185,11 @@ class EmployeeSpec extends SpecBase with Matchers {
 
   "should return the correct view for selectViewForRequiredInformation" in {
 
-    val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+    val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
 
-    val request  = mock[DataRequest[AnyContent]]
+    val request  = mock(classOf[DataRequest[AnyContent]])
     val draftId  = DraftId(1L)
-    val messages = mock[Messages]
+    val messages = mock(classOf[Messages])
 
     when(
       requiredInformationView.apply(

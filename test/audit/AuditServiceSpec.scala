@@ -17,12 +17,11 @@
 package audit
 
 import base.SpecBase
-import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, AgentOnBehalfOfTrader, EmployeeOfOrg}
+import models.WhatIsYourRoleAsImporter._
 import models.events.{RoleIndicatorEvent, UserTypeEvent}
 import models.requests.{DataRequest, IdentifierRequest}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.mockito.MockitoSugar.{mock, reset, times, verify}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito._
 import org.scalatest.prop.TableDrivenPropertyChecks
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.{AffinityGroup, User}
@@ -33,7 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks {
 
-  private val mockAuditConnector = mock[AuditConnector]
+  private val mockAuditConnector = mock(classOf[AuditConnector])
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuditConnector)

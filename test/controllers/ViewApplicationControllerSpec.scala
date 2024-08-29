@@ -22,7 +22,7 @@ import generators.Generators
 import models._
 import models.requests._
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -41,7 +41,7 @@ class ViewApplicationControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET" in {
 
-      val mockBackendConnector = mock[BackendConnector]
+      val mockBackendConnector = mock(classOf[BackendConnector])
 
       val application = applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
         .overrides(

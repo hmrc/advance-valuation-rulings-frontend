@@ -22,9 +22,14 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.i18n.Messages
 import play.api.libs.json.{JsError, JsString, Json}
+import play.api.test.Helpers.stubMessages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
 class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
+
+  private implicit val m: Messages = stubMessages()
 
   "RequiredInformation" - {
 
@@ -36,16 +41,14 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
         JsString(requiredInformation.toString)
           .validate[RequiredInformation]
           .asOpt
-          .value mustEqual requiredInformation
+          .value mustBe requiredInformation
       }
     }
 
     "must display individual checkbox items" in {
 
-      implicit val m: Messages = play.api.test.Helpers.stubMessages()
-
-      val result  = RequiredInformation.checkboxItems(AuthUserType.IndividualTrader)(m)
-      val content = result.map(_.content)
+      val result: Seq[CheckboxItem] = RequiredInformation.checkboxItems(AuthUserType.IndividualTrader)
+      val content: Seq[Content]     = result.map(_.content)
       content must contain(Text("requiredInformation.option1.individual"))
       content must contain(Text("requiredInformation.option2.individual"))
       content must contain(Text("requiredInformation.option3.individual"))
@@ -54,12 +57,22 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
       content must contain(Text("requiredInformation.option6.individual"))
     }
 
-    "must display organisation checkbox items" in {
+    "must display organisation user checkbox items" in {
 
-      implicit val m: Messages = play.api.test.Helpers.stubMessages()
+      val result: Seq[CheckboxItem] = RequiredInformation.checkboxItems(AuthUserType.OrganisationUser)
+      val content: Seq[Content]     = result.map(_.content)
+      content must contain(Text("requiredInformation.option1.organisation"))
+      content must contain(Text("requiredInformation.option2.organisation"))
+      content must contain(Text("requiredInformation.option3.organisation"))
+      content must contain(Text("requiredInformation.option4.organisation"))
+      content must contain(Text("requiredInformation.option5.organisation"))
+      content must contain(Text("requiredInformation.option6.organisation"))
+    }
 
-      val result  = RequiredInformation.checkboxItems(AuthUserType.OrganisationUser)(m)
-      val content = result.map(_.content)
+    "must display organisation assistant checkbox items" in {
+
+      val result: Seq[CheckboxItem] = RequiredInformation.checkboxItems(AuthUserType.OrganisationAssistant)
+      val content: Seq[Content]     = result.map(_.content)
       content must contain(Text("requiredInformation.option1.organisation"))
       content must contain(Text("requiredInformation.option2.organisation"))
       content must contain(Text("requiredInformation.option3.organisation"))
@@ -70,10 +83,8 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
 
     "must display agent checkbox items" in {
 
-      implicit val m: Messages = play.api.test.Helpers.stubMessages()
-
-      val result  = RequiredInformation.checkboxItems(AuthUserType.Agent)(m)
-      val content = result.map(_.content)
+      val result: Seq[CheckboxItem] = RequiredInformation.checkboxItems(AuthUserType.Agent)
+      val content: Seq[Content]     = result.map(_.content)
       content must contain(Text("requiredInformation.option1.organisation"))
       content must contain(Text("requiredInformation.option2.organisation"))
       content must contain(Text("requiredInformation.option3.organisation"))
@@ -87,7 +98,7 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
       val gen = arbitrary[String] suchThat (!RequiredInformation.values.map(_.toString).contains(_))
 
       forAll(gen) { invalidValue =>
-        JsString(invalidValue).validate[RequiredInformation] mustEqual JsError("error.invalid")
+        JsString(invalidValue).validate[RequiredInformation] mustBe JsError("error.invalid")
       }
     }
 
@@ -96,7 +107,7 @@ class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks wit
       val gen = arbitrary[RequiredInformation]
 
       forAll(gen) { requiredInformation =>
-        Json.toJson(requiredInformation) mustEqual JsString(requiredInformation.toString)
+        Json.toJson(requiredInformation) mustBe JsString(requiredInformation.toString)
       }
     }
   }

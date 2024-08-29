@@ -73,14 +73,6 @@ trait Constraints {
         Invalid(errorKey, maximum)
     }
 
-  protected def minLength(minimum: Int, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.length >= minimum =>
-        Valid
-      case _                            =>
-        Invalid(errorKey, minimum)
-    }
-
   protected def numericAndCorrectLength(minimum: Int, maximum: Int): Constraint[String] =
     Constraint { str =>
       if (isNumeric(str)) {
@@ -114,14 +106,6 @@ trait Constraints {
         Invalid(errorKey, args: _*)
       case _                              =>
         Valid
-    }
-
-  protected def numericString(errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.filterNot(_.isWhitespace).forall(_.isDigit) =>
-        Valid
-      case _                                                      =>
-        Invalid(errorKey)
     }
 
   protected def length[A](expected: Int, errorKey: String): Constraint[Set[_]] =

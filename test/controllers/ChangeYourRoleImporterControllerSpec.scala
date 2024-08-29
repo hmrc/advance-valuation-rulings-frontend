@@ -21,9 +21,8 @@ import controllers.actions._
 import forms.ChangeYourRoleImporterFormProvider
 import models.{Done, NormalMode, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.reset
-import org.mockito.MockitoSugar.{mock, when}
-import org.mockito.stubbing.ScalaOngoingStubbing
+import org.mockito.Mockito.{mock, reset, when}
+import org.mockito.stubbing.OngoingStubbing
 import pages.ChangeYourRoleImporterPage
 import play.api.Application
 import play.api.inject.bind
@@ -39,7 +38,7 @@ import scala.concurrent.Future
 
 class ChangeYourRoleImporterControllerSpec extends SpecBase {
 
-  private val mockUserAnswersService: UserAnswersService = mock[UserAnswersService]
+  private val mockUserAnswersService: UserAnswersService = mock(classOf[UserAnswersService])
   private val dataRetrievalActionProvider                = new DataRetrievalActionProvider(mockUserAnswersService)
 
   private val app: Application = new GuiceApplicationBuilder()
@@ -56,13 +55,13 @@ class ChangeYourRoleImporterControllerSpec extends SpecBase {
   private val changeYourRoleImporterFormProvider: ChangeYourRoleImporterFormProvider =
     app.injector.instanceOf[ChangeYourRoleImporterFormProvider]
 
-  private def mockGetAnswers(result: Option[UserAnswers]): ScalaOngoingStubbing[Future[Option[UserAnswers]]] =
+  private def mockGetAnswers(result: Option[UserAnswers]): OngoingStubbing[Future[Option[UserAnswers]]] =
     when(mockUserAnswersService.get(any())(any())).thenReturn(Future.successful(result))
 
-  private def mockSetAnswers(): ScalaOngoingStubbing[Future[Done]] =
+  private def mockSetAnswers(): OngoingStubbing[Future[Done]] =
     when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
-  private def mockClearAnswers(): ScalaOngoingStubbing[Future[Done]] =
+  private def mockClearAnswers(): OngoingStubbing[Future[Done]] =
     when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
 
   override def beforeEach(): Unit =

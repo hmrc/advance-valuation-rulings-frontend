@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.TellUsAboutYourRulingFormProvider
 import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import pages.TellUsAboutYourRulingPage
 import play.api.http.Status.OK
 import play.api.inject.bind
@@ -89,7 +89,7 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase {
     "onSubmit" - {
       "must redirect to onPageLoad if no data submitted" in {
 
-        val mockUserAnswersService = mock[UserAnswersService]
+        val mockUserAnswersService = mock(classOf[UserAnswersService])
         when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
         val application = applicationBuilder(Some(userAnswersAsIndividualTrader))
@@ -118,7 +118,7 @@ class TellUsAboutYourRulingControllerSpec extends SpecBase {
       }
 
       "must redirect to HasCommodityCodeController when data submitted" in {
-        val mockUserAnswersService = mock[UserAnswersService]
+        val mockUserAnswersService = mock(classOf[UserAnswersService])
         when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
         val application = applicationBuilder(Some(userAnswersAsIndividualTrader))

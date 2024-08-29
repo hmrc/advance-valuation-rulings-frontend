@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.VerifyTraderDetailsFormProvider
 import models.{Done, NormalMode, TraderDetailsWithConfirmation}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import pages.{CheckRegisteredDetailsPage, VerifyTraderDetailsPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -172,7 +172,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase {
 
     "must redirect to upload letter of authority when private and approved" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val userAnswers = userAnswersAsIndividualTrader
@@ -205,7 +205,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase {
     }
 
     "must redirect to upload letter of authority when public and approved" in {
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val userAnswers = userAnswersAsIndividualTrader
@@ -238,7 +238,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase {
     }
 
     "must redirect to Kickout Page when public and unapproved" in {
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val userAnswers = userAnswersAsIndividualTrader
@@ -269,7 +269,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase {
     }
 
     "must redirect to Kickout Page when private and unapproved" in {
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
       when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val userAnswers = userAnswersAsIndividualTrader
@@ -301,7 +301,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase {
 
     "must display an error on the page when no selection is made - public" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       val userAnswers = userAnswersAsIndividualTrader
         .setFuture[TraderDetailsWithConfirmation](
@@ -344,7 +344,7 @@ class VerifyTraderEoriControllerSpec extends SpecBase {
 
     "must display an error on the page when no selection is made - private" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       val details     = traderDetailsWithConfirmation.copy(consentToDisclosureOfPersonalData = false)
       val userAnswers = userAnswersAsIndividualTrader

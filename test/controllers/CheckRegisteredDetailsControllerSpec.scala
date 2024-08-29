@@ -25,7 +25,7 @@ import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, same}
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.prop.TableDrivenPropertyChecks
 import pages.{AgentForTraderCheckRegisteredDetailsPage, CheckRegisteredDetailsPage, WhatIsYourRoleAsImporterPage}
 import play.api.data.Form
@@ -54,10 +54,10 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with TableDrivenProp
 
   private val consentToDisclosureOfPersonalDataScenarios = Table("consentToDisclosureOfPersonalData", true, false)
 
-  private val mockBackendConnector   = mock[BackendConnector]
-  private val mockUserAnswersService = mock[UserAnswersService]
-  private val mockUserRoleProvider   = mock[UserRoleProvider]
-  private val mockUserRole           = mock[UserRole]
+  private val mockBackendConnector   = mock(classOf[BackendConnector])
+  private val mockUserAnswersService = mock(classOf[UserAnswersService])
+  private val mockUserRoleProvider   = mock(classOf[UserRoleProvider])
+  private val mockUserRole           = mock(classOf[UserRole])
 
   private def setUpBackendConnectorMock(isInternalServerError: Boolean = false) =
     if (isInternalServerError) {

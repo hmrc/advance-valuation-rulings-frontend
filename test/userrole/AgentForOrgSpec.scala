@@ -20,26 +20,26 @@ import base.SpecBase
 import controllers.routes.CheckRegisteredDetailsController
 import forms.AgentForOrgCheckRegisteredDetailsFormProvider
 import models.requests.DataRequest
-import models.{BusinessContactDetails, CDSEstablishmentAddress, DraftId, NormalMode, TraderDetailsWithCountryCode, WhatIsYourRoleAsImporter}
-import org.mockito.MockitoSugar.{mock, when}
+import models._
+import org.mockito.Mockito.{mock, when}
 import org.scalatest.matchers.must.Matchers
-import pages.{AgentForOrgApplicationContactDetailsPage, AgentForOrgCheckRegisteredDetailsPage, BusinessContactDetailsPage, WhatIsYourRoleAsImporterPage}
+import pages._
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.HtmlFormat
 import viewmodels.checkAnswers.summary._
-import views.html.{AgentForOrgCheckRegisteredDetailsView, AgentForOrgCheckYourAnswersView, AgentForOrgEORIBeUpToDateView, AgentForOrgRequiredInformationView}
+import views.html._
 
 class AgentForOrgSpec extends SpecBase with Matchers {
 
-  private val agentForOrgCheckRegisteredDetailsView = mock[AgentForOrgCheckRegisteredDetailsView]
-  private val formProvider                          = mock[AgentForOrgCheckRegisteredDetailsFormProvider]
-  private val agentForOrgEORIBeUpToDateView         = mock[AgentForOrgEORIBeUpToDateView]
-  private val requiredInformationView               = mock[AgentForOrgRequiredInformationView]
-  private val checkYourAnswersView                  = mock[AgentForOrgCheckYourAnswersView]
-  private val agentSummaryCreator                   = mock[AgentSummaryCreator]
-  private val businessEoriDetailsSummaryCreator     = mock[BusinessEoriDetailsSummaryCreator]
+  private val agentForOrgCheckRegisteredDetailsView = mock(classOf[AgentForOrgCheckRegisteredDetailsView])
+  private val formProvider                          = mock(classOf[AgentForOrgCheckRegisteredDetailsFormProvider])
+  private val agentForOrgEORIBeUpToDateView         = mock(classOf[AgentForOrgEORIBeUpToDateView])
+  private val requiredInformationView               = mock(classOf[AgentForOrgRequiredInformationView])
+  private val checkYourAnswersView                  = mock(classOf[AgentForOrgCheckYourAnswersView])
+  private val agentSummaryCreator                   = mock(classOf[AgentSummaryCreator])
+  private val businessEoriDetailsSummaryCreator     = mock(classOf[BusinessEoriDetailsSummaryCreator])
 
   private val agentForOrg = AgentForOrg(
     agentForOrgCheckRegisteredDetailsView,
@@ -51,8 +51,8 @@ class AgentForOrgSpec extends SpecBase with Matchers {
     businessEoriDetailsSummaryCreator
   )
 
-  private val mockMessages    = mock[Messages]
-  private val mockDataRequest = mock[DataRequest[AnyContent]]
+  private val mockMessages    = mock(classOf[Messages])
+  private val mockDataRequest = mock(classOf[DataRequest[AnyContent]])
 
   "AgentForOrg" - {
 
@@ -62,8 +62,8 @@ class AgentForOrgSpec extends SpecBase with Matchers {
         .set(WhatIsYourRoleAsImporterPage, WhatIsYourRoleAsImporter.AgentOnBehalfOfOrg)
         .get
 
-      val populatedAgentSummary       = mock[AgentSummary]
-      val populatedEoriDetailsSummary = mock[BusinessEoriDetailsSummary]
+      val populatedAgentSummary       = mock(classOf[AgentSummary])
+      val populatedEoriDetailsSummary = mock(classOf[BusinessEoriDetailsSummary])
 
       when(agentSummaryCreator.summaryRows(userAnswers)(mockMessages))
         .thenReturn(populatedAgentSummary)
@@ -99,9 +99,9 @@ class AgentForOrgSpec extends SpecBase with Matchers {
     }
 
     "should return the correct view for CheckYourAnswers" in {
-      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+      val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
 
-      val appSummary = mock[ApplicationSummary]
+      val appSummary = mock(classOf[ApplicationSummary])
 
       when(
         checkYourAnswersView.apply(
@@ -127,11 +127,11 @@ class AgentForOrgSpec extends SpecBase with Matchers {
         None
       )
 
-      val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
-      val form                                = mock[Form[Boolean]]
-      val request                             = mock[DataRequest[AnyContent]]
+      val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
+      val form                                = mock(classOf[Form[Boolean]])
+      val request                             = mock(classOf[DataRequest[AnyContent]])
       val draftId                             = DraftId(1L)
-      val messages                            = mock[Messages]
+      val messages                            = mock(classOf[Messages])
 
       val traderDetailsWithCountryCode =
         TraderDetailsWithCountryCode(
@@ -173,11 +173,11 @@ class AgentForOrgSpec extends SpecBase with Matchers {
 
   "should return the correct view for EORIBeUpToDate" in {
 
-    val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+    val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
 
-    val request  = mock[DataRequest[AnyContent]]
+    val request  = mock(classOf[DataRequest[AnyContent]])
     val draftId  = DraftId(1L)
-    val messages = mock[Messages]
+    val messages = mock(classOf[Messages])
 
     when(
       agentForOrgEORIBeUpToDateView.apply(
@@ -194,11 +194,11 @@ class AgentForOrgSpec extends SpecBase with Matchers {
 
   "should return the correct view for selectViewForRequiredInformation" in {
 
-    val expectedView: HtmlFormat.Appendable = mock[HtmlFormat.Appendable]
+    val expectedView: HtmlFormat.Appendable = mock(classOf[HtmlFormat.Appendable])
 
-    val request  = mock[DataRequest[AnyContent]]
+    val request  = mock(classOf[DataRequest[AnyContent]])
     val draftId  = DraftId(1L)
-    val messages = mock[Messages]
+    val messages = mock(classOf[Messages])
 
     when(
       requiredInformationView.apply(

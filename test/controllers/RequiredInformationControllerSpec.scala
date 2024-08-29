@@ -21,7 +21,7 @@ import models.WhatIsYourRoleAsImporter.{AgentOnBehalfOfOrg, EmployeeOfOrg}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import pages.WhatIsYourRoleAsImporterPage
 import play.api.i18n.Messages
 import play.api.inject.bind
@@ -83,9 +83,9 @@ class RequiredInformationControllerSpec extends SpecBase {
 
     "must return OK and the correct view for userRole where agentcreds flag is set" in {
 
-      val userRoleProvider: UserRoleProvider = mock[UserRoleProvider]
+      val userRoleProvider: UserRoleProvider = mock(classOf[UserRoleProvider])
 
-      val userRole: UserRole = mock[UserRole]
+      val userRole: UserRole = mock(classOf[UserRole])
       val expectedView       = HtmlFormat.raw("expected View")
       when(
         userRole.selectViewForRequiredInformation(ArgumentMatchers.eq(draftId))(

@@ -22,7 +22,7 @@ import controllers.routes.ApplicationContactDetailsController
 import models.AuthUserType.{Agent, IndividualTrader, OrganisationAssistant, OrganisationUser}
 import models.WhatIsYourRoleAsImporter.EmployeeOfOrg
 import models._
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import pages._
 import play.api.libs.json.Writes
 import play.api.mvc.Call
@@ -36,7 +36,7 @@ import java.time.Instant
 class NavigatorSpec extends SpecBase {
 
   private val EmptyUserAnswers: UserAnswers          = userAnswersAsIndividualTrader
-  private val userRoleProvider                       = mock[UserRoleProvider]
+  private val userRoleProvider                       = mock(classOf[UserRoleProvider])
   val unchangedModeNavigator: UnchangedModeNavigator = new UnchangedModeNavigator
   val navigator: Navigator                           = new Navigator(userRoleProvider, unchangedModeNavigator)
 
@@ -68,7 +68,7 @@ class NavigatorSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustEqual SEE_OTHER
+      status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe redirectRoute.url
 
     }
@@ -154,7 +154,7 @@ class NavigatorSpec extends SpecBase {
         "must receive next page from userRoleProvider" in {
 
           val userAnswers  = emptyUserAnswers // usage is mocked in this test
-          val mockUserRole = mock[UserRole]
+          val mockUserRole = mock(classOf[UserRole])
 
           when(userRoleProvider.getUserRole(userAnswers)) thenReturn mockUserRole
           when(
@@ -217,7 +217,7 @@ class NavigatorSpec extends SpecBase {
 
         "when user answers ChangeYourRoleImporterPage == true and WhatIsYourRoleAsImporterPage has not been answered" - {
 
-          "must navigate to the WhatIsYourRoleAsImporter page" in {
+          "must navigate to the WhatIsYourRoleAsImporterPage" in {
 
             val userAnswers =
               emptyUserAnswers
@@ -241,7 +241,7 @@ class NavigatorSpec extends SpecBase {
 
         "when user answers the ChangeYourRoleImporterPage, but the WhatIsYourRoleAsImporterPage is unanswered" - {
 
-          "must navigate to the WhatIsYourRoleAsImporter page" in {
+          "must navigate to the WhatIsYourRoleAsImporterPage" in {
 
             val userAnswers =
               emptyUserAnswers
@@ -265,7 +265,7 @@ class NavigatorSpec extends SpecBase {
 
         "when user answers the ChangeYourRoleImporterPage, the WhatIsYourRoleAsImporterPage Role is any role" - {
 
-          "must navigate to the RequiredInformation page" in {
+          "must navigate to the RequiredInformationPage" in {
 
             val userAnswers =
               emptyUserAnswers
@@ -289,15 +289,63 @@ class NavigatorSpec extends SpecBase {
           }
         }
 
-        "when user answers ChangeYourRoleImporterPage == false, the WhatIsYourRoleAsImporterPage Role answered or unanswered" - {
+        "when user answers ChangeYourRoleImporterPage == false, the WhatIsYourRoleAsImporterPage Role unanswered" - {
 
-          "must navigate to the WhatIsYourRoleAsImporter page" in {
+          "must navigate to the WhatIsYourRoleAsImporterPage" in {
 
             val userAnswers =
               emptyUserAnswers
                 .setFuture(AccountHomePage, IndividualTrader)
                 .futureValue
                 .setFuture(ChangeYourRoleImporterPage, false)
+                .futureValue
+
+            val actual =
+              navigator.nextPage(
+                ChangeYourRoleImporterPage,
+                NormalMode,
+                userAnswers
+              )
+
+            val expected = routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+
+            actual mustBe expected
+          }
+        }
+
+        "when user answers ChangeYourRoleImporterPage == false and the WhatIsYourRoleAsImporterPage Role is answered" - {
+
+          "must navigate to the WhatIsYourRoleAsImporterPage" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .setFuture(AccountHomePage, IndividualTrader)
+                .futureValue
+                .setFuture(ChangeYourRoleImporterPage, false)
+                .futureValue
+                .setFuture(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+                .futureValue
+
+            val actual =
+              navigator.nextPage(
+                ChangeYourRoleImporterPage,
+                NormalMode,
+                userAnswers
+              )
+
+            val expected = routes.WhatIsYourRoleAsImporterController.onPageLoad(NormalMode, draftId)
+
+            actual mustBe expected
+          }
+        }
+
+        "when ChangeYourRoleImporterPage and  WhatIsYourRoleAsImporterPage questions are unanswered" - {
+
+          "must navigate to the WhatIsYourRoleAsImporterPage" in {
+
+            val userAnswers =
+              emptyUserAnswers
+                .setFuture(AccountHomePage, IndividualTrader)
                 .futureValue
 
             val actual =
@@ -782,7 +830,7 @@ class NavigatorSpec extends SpecBase {
             .setFuture(CheckRegisteredDetailsPage, value = true)
             .futureValue
 
-          val userRole = mock[UserRole]
+          val userRole = mock(classOf[UserRole])
           when(userRoleProvider.getUserRole(userAnswers)).thenReturn(userRole)
           when(userRole.getContactDetailsJourney(draftId))
             .thenReturn(ApplicationContactDetailsController.onPageLoad(NormalMode, draftId))
@@ -1514,6 +1562,39 @@ class NavigatorSpec extends SpecBase {
             NormalMode,
             userAnswers
           ) mustBe routes.DescriptionOfGoodsController.onPageLoad(NormalMode, draftId)
+        }
+      }
+    }
+
+    "in Unchanged mode" - {
+      "WhatIsYourRoleAsImporterPage must" - {
+        "navigate to CheckYourAnswersPage when user has answered" in {
+          val userAnswers: UserAnswers = userAnswersWith(WhatIsYourRoleAsImporterPage, EmployeeOfOrg)
+          navigator.nextPage(
+            WhatIsYourRoleAsImporterPage,
+            UnchangedMode,
+            userAnswers
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(userAnswers.draftId)
+        }
+      }
+
+      "ChangeYourRoleImporterPage must" - {
+        "navigate to RequiredInformationPage when user has answered true" in {
+          val userAnswers: UserAnswers = userAnswersWith(ChangeYourRoleImporterPage, true)
+          navigator.nextPage(
+            ChangeYourRoleImporterPage,
+            UnchangedMode,
+            userAnswers
+          ) mustBe routes.RequiredInformationController.onPageLoad(userAnswers.draftId)
+        }
+
+        "navigate to CheckYourAnswersPage when user has answered false" in {
+          val userAnswers: UserAnswers = userAnswersWith(ChangeYourRoleImporterPage, false)
+          navigator.nextPage(
+            ChangeYourRoleImporterPage,
+            UnchangedMode,
+            userAnswers
+          ) mustBe routes.CheckYourAnswersController.onPageLoad(userAnswers.draftId)
         }
       }
     }

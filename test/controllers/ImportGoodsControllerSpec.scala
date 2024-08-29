@@ -22,7 +22,7 @@ import models.{Done, NormalMode}
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{mock, when}
+import org.mockito.Mockito.{mock, when}
 import pages.ImportGoodsPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -85,7 +85,7 @@ class ImportGoodsControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockUserAnswersService = mock[UserAnswersService]
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
 
       when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
 
