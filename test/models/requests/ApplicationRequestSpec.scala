@@ -379,13 +379,13 @@ class ApplicationRequestSpec extends SpecBase with ScalaCheckPropertyChecks with
 
       "return invalid for an Individual when built from empty userAnswers" in {
 
-        val anwsersWithLogin: Try[UserAnswers] =
+        val answersWithLogin: Try[UserAnswers] =
           emptyUserAnswers.set(AccountHomePage, AuthUserType.IndividualTrader)
-        when(contactDetailsService.apply(anwsersWithLogin.get))
+        when(contactDetailsService.apply(answersWithLogin.get))
           .thenReturn(Invalid(NonEmptyList.of(ApplicationContactDetailsPage)))
 
         val result = applicationRequestService(
-          anwsersWithLogin.success.get,
+          answersWithLogin.success.get,
           traderDetailsWithCountryCode
         )
 
