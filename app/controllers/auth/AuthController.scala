@@ -27,7 +27,7 @@ import javax.inject.Inject
 import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 
-@nowarn("cat=unused")
+@nowarn("msg=unused")
 class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   config: FrontendAppConfig,

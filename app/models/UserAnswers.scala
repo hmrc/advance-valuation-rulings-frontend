@@ -115,7 +115,7 @@ object UserAnswers {
         (__ \ "draftId").write[DraftId] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write[Instant]
-    )(unlift(UserAnswers.unapply))
+    )(o => Tuple.fromProductTyped(o))
   }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)

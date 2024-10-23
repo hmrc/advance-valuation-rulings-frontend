@@ -798,11 +798,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
 
     "Parameterised: A redirect with an error code renders the error message" in {
       forAll(parameterisedCases) {
-        (
-          errCode: String,
-          _: UploadedFile.FailureReason,
-          errMessage: MessagesProvider
-        ) =>
+        (errCode: String, _: UploadedFile.FailureReason, errMessage: (MessagesProvider => String)) =>
           val initiatedFile = UploadedFile.Initiated(
             reference = "reference"
           )

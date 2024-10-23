@@ -22,7 +22,7 @@ import org.scalacheck._
 
 trait ApplicationRequestGenerator extends Generators {
   private implicit lazy val arbitraryEoriNumberGen: Arbitrary[EoriNumber] = Arbitrary(
-    eoriGenerator.map(EoriNumber)
+    eoriGenerator.map(models.EoriNumber.apply)
   )
 
   implicit lazy val arbitraryContactDetails: Arbitrary[ContactDetails] = Arbitrary {

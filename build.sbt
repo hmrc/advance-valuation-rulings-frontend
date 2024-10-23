@@ -36,7 +36,7 @@ lazy val microservice = Project(appName, file("."))
     scalacOptions ++= Seq(
       "-feature",
       "-Wconf:src=routes/.*:s",
-      "-Wconf:cat=unused-imports&src=views/.*:s"
+      "-Wconf:msg=unused-imports&src=views/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
     // concatenate js

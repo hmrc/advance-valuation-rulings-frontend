@@ -43,7 +43,7 @@ object ApplicationContactDetails {
         (__ \ "email").write[String] and
         (__ \ "phone").write[String] and
         (__ \ "jobTitle").write[String]
-    )(unlift(ApplicationContactDetails.unapply))
+    )(o => Tuple.fromProductTyped(o))
   }
 
   implicit val format: OFormat[ApplicationContactDetails] = OFormat(reads, writes)

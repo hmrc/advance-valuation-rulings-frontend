@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
 trait TraderDetailsGenerator extends Generators {
 
   implicit lazy val arbitraryEoriNumberGen: Arbitrary[EoriNumber] = Arbitrary(
-    eoriGenerator.map(EoriNumber)
+    eoriGenerator.map(models.EoriNumber.apply)
   )
 
   def contactInformationGen: Gen[ContactInformation] = for {
