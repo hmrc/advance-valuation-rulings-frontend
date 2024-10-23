@@ -18,6 +18,7 @@ package connectors
 
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import scala.concurrent.{ExecutionContext, Future}
 

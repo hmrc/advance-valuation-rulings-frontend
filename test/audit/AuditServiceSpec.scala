@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks {
 
-  private val mockAuditConnector = mock(classOf[AuditConnector])
+  private val mockAuditConnector  = mock(classOf[AuditConnector])
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuditConnector)

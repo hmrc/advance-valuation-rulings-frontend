@@ -801,7 +801,7 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
         (
           errCode: String,
           _: UploadedFile.FailureReason,
-          errMessage: MessagesProvider => String
+          errMessage: MessagesProvider
         ) =>
           val initiatedFile = UploadedFile.Initiated(
             reference = "reference"

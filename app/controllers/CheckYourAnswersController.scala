@@ -115,7 +115,7 @@ class CheckYourAnswersController @Inject() (
       case Invalid(errors: cats.data.NonEmptyList[Page]) =>
         logger.warn(
           s"[CheckYourAnswersController][redirectJourney] Failed to create application request: ${errors.toList
-            .mkString(", ")}}"
+              .mkString(", ")}}"
         )
         Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       case Valid(applicationRequest)                     =>

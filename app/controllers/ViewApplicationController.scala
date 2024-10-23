@@ -43,7 +43,7 @@ class ViewApplicationController @Inject() (
 
   def onPageLoad(applicationId: String): Action[AnyContent] =
     identify.async { implicit request =>
-      backendConnector.getApplication(applicationId).map { application: Application =>
+      backendConnector.getApplication(applicationId).map { (application: Application) =>
         val viewModel   = ApplicationViewModel(application)
         val lastUpdated = formatter.format(application.lastUpdated)
         Ok(view(viewModel, applicationId, lastUpdated))

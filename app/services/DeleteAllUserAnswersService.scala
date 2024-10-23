@@ -72,7 +72,7 @@ class DeleteAllUserAnswersService {
       UploadAnotherSupportingDocumentPage,
       UploadLetterOfAuthorityPage,
       UploadSupportingDocumentPage,
-      ValuationMethodPage, //Note: if the user answers for ValuationMethodPage are removed it will remove AdaptMethodPage
+      ValuationMethodPage, // Note: if the user answers for ValuationMethodPage are removed it will remove AdaptMethodPage
       VerifyLetterOfAuthorityPage,
       VerifyTraderDetailsPage,
       WhatIsYourRoleAsImporterPage,

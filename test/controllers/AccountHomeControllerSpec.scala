@@ -211,7 +211,7 @@ class AccountHomeControllerSpec extends SpecBase {
         val appsForAccountHome: Seq[ApplicationForAccountHome] =
           for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
 
-        val draftsForAccountHome                               = draftSummaries.map { draftSummary =>
+        val draftsForAccountHome = draftSummaries.map { draftSummary =>
           val userAnswers =
             userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
           ApplicationForAccountHome(
@@ -283,7 +283,7 @@ class AccountHomeControllerSpec extends SpecBase {
         val appsForAccountHome: Seq[ApplicationForAccountHome] =
           for (app <- appsSummary) yield ApplicationForAccountHome(app)(messages(application))
 
-        val draftsForAccountHome                               = draftSummaries.map { draftSummary =>
+        val draftsForAccountHome = draftSummaries.map { draftSummary =>
           val userAnswers =
             userAnswersAsIndividualTrader.setFuture(AccountHomePage, IndividualTrader).futureValue
           ApplicationForAccountHome(

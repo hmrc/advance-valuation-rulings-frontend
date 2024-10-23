@@ -59,7 +59,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
+    // <p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(elements.first().html().replace("\n", "") == expectedValue)
   }
 
@@ -83,7 +83,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
   def assertNotContainsText(doc: Document, text: String): Assertion =
     assert(!doc.toString.contains(text), "\n\ntext " + text + " was rendered on the page.\n")
 
-  def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit      =
+  def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit =
     for (key <- expectedMessageKeys) assertContainsText(doc, messages(key))
 
   def assertNotContainingMessages(doc: Document, expectedMessageKeys: String*): Unit =
