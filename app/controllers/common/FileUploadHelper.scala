@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import navigation.Navigator
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.Results.{BadRequest, Ok, Redirect}
 import play.api.mvc.{AnyContent, RequestHeader, Result}
@@ -49,9 +49,8 @@ case class FileUploadHelper @Inject() (
   userRoleProvider: UserRoleProvider,
   appConfig: FrontendAppConfig
 )(implicit ec: ExecutionContext)
-    extends I18nSupport {
-
-  private given logger: Logger = Logger(this.getClass)
+    extends I18nSupport
+    with Logging {
 
   private val maxFileSize: Long = appConfig.maxFileSize / 1000000L
 
