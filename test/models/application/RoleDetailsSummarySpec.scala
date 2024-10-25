@@ -24,7 +24,7 @@ import viewmodels.application.RoleDetailsSummary
 
 class RoleDetailsSummarySpec extends SpecBase {
 
-  implicit val messages: Messages = messages(applicationBuilder().build())
+  given messages: Messages = messages(applicationBuilder().build())
 
   "RoleDetailsSummary object" - {
 

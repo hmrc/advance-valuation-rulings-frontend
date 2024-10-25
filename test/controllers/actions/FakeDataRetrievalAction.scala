@@ -49,6 +49,4 @@ class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers])
       )
     )(executionContext)
 
-  override implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
 }

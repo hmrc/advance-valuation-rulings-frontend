@@ -27,8 +27,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, Value}
 
 class GoodsDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
-  private implicit val m: Messages = stubMessages()
-  private val goods                =
+  private given m: Messages = stubMessages()
+  private val goods         =
     GoodsDetails(
       "description",
       Some("commodity code"),

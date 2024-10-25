@@ -47,7 +47,7 @@ trait BaseIntegrationSpec
     with ScalaCheckPropertyChecks
     with BeforeAndAfterEach {
 
-  implicit val system: ActorSystem               = ActorSystem()
+  given system: ActorSystem                      = ActorSystem()
   implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   val traderDetailsEndpoint = "/advance-valuation-rulings/trader-details"

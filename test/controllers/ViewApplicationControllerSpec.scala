@@ -52,7 +52,7 @@ class ViewApplicationControllerSpec extends SpecBase {
       when(mockBackendConnector.getApplication(any())(any()))
         .thenReturn(Future.successful(ruling))
 
-      implicit val msgs: Messages = messages(application)
+      given msgs: Messages = messages(application)
 
       running(application) {
         val request = FakeRequest(
@@ -80,7 +80,7 @@ class ViewApplicationControllerSpec extends SpecBase {
 
 object ViewApplicationControllerSpec extends Generators {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given hc: HeaderCarrier = HeaderCarrier()
 
   val randomString: String = stringsWithMaxLength(8).sample.get
 

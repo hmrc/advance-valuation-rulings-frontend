@@ -24,7 +24,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.auth.core.User
 
 class RoleIndicatorEventSpec extends AnyFreeSpec with Matchers {
-  
+
   val roleIndicatorEvent: RoleIndicatorEvent = RoleIndicatorEvent(
     internalId = "internalId",
     eori = "eori",

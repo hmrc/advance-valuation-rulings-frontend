@@ -25,8 +25,8 @@ class UpscanInitiateRequestSpec extends AnyFreeSpec with Matchers {
   val upscanInitiateRequest: UpscanInitiateRequest = UpscanInitiateRequest(
     callbackUrl = "s3://bucket/callbackUrl",
     successRedirect = "s3://bucket/successRedirect",
-    errorRedirect = "s3://bucket/errorRedirect", 
-    minimumFileSize = 123, 
+    errorRedirect = "s3://bucket/errorRedirect",
+    minimumFileSize = 123,
     maximumFileSize = 321
   )
 

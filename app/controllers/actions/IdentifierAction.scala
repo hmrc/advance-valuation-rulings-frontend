@@ -55,7 +55,7 @@ class AuthenticatedIdentifierAction @Inject() (
     block: IdentifierRequest[A] => Future[Result]
   ): Future[Result] = {
 
-    implicit val hc: HeaderCarrier =
+    given hc: HeaderCarrier =
       HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorise()

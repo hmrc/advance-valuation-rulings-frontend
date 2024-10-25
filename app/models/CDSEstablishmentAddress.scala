@@ -26,5 +26,5 @@ final case class CDSEstablishmentAddress(
 )
 
 object CDSEstablishmentAddress {
-  implicit val format: OFormat[CDSEstablishmentAddress] = Json.format[CDSEstablishmentAddress]
+  given format: OFormat[CDSEstablishmentAddress] = Json.format[CDSEstablishmentAddress]
 }

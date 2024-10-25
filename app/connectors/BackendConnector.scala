@@ -44,7 +44,7 @@ class BackendConnector @Inject() (
 
   type Result = Either[BackendError, TraderDetailsWithCountryCode]
 
-  private implicit val logger: Logger = Logger(this.getClass)
+  private given logger: Logger = Logger(this.getClass)
 
   private val backendUrl: String = config.advanceValuationRulingsBackendURL
 

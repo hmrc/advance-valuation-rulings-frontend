@@ -27,7 +27,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListR
 
 class RegisteredDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
-  private implicit val m: Messages = stubMessages()
+  private given m: Messages = stubMessages()
 
   private val trader = TraderDetail(
     eori = "eori",

@@ -53,6 +53,6 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
       )
     }
 
-  implicit val enumerable: Enumerable[WhatIsYourRoleAsImporter] =
+  given enumerable: Enumerable[WhatIsYourRoleAsImporter] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

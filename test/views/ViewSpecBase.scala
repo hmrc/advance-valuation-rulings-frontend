@@ -35,7 +35,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit val messages: Messages = app.injector.instanceOf[play.api.i18n.MessagesApi].preferred(fakeRequest)
+  given messages: Messages = app.injector.instanceOf[play.api.i18n.MessagesApi].preferred(fakeRequest)
 
   def asDocument(html: Html): Document = Jsoup.parse(html.toString())
 

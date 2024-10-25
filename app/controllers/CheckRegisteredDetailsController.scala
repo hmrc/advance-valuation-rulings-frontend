@@ -47,7 +47,7 @@ class CheckRegisteredDetailsController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  private implicit val logger: Logger = Logger(this.getClass)
+  private given logger: Logger = Logger(this.getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async { implicit request =>

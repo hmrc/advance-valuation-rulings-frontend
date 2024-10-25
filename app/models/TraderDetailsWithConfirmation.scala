@@ -47,6 +47,6 @@ object TraderDetailsWithConfirmation {
       None
     )
 
-  implicit val format: OFormat[TraderDetailsWithConfirmation] =
+  given format: OFormat[TraderDetailsWithConfirmation] =
     Json.format[TraderDetailsWithConfirmation]
 }

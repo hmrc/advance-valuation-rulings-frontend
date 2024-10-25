@@ -56,7 +56,7 @@ class ProvideTraderEoriController @Inject() (
 
   private val form: Form[String] = formProvider()
 
-  private implicit val logger: Logger = Logger(this.getClass)
+  private given logger: Logger = Logger(this.getClass)
 
   def onPageLoad(mode: Mode, draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) { implicit request =>

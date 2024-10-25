@@ -21,7 +21,6 @@ import forms.IsThisFileConfidentialFormProvider
 import models._
 import navigation.Navigator
 import pages._
-import play.api.Configuration
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.AllDocuments
@@ -41,8 +40,7 @@ class IsThisFileConfidentialController @Inject() (
   requireData: DataRequiredAction,
   formProvider: IsThisFileConfidentialFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: IsThisFileConfidentialView,
-  configuration: Configuration
+  view: IsThisFileConfidentialView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {

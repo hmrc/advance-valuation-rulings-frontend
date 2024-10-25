@@ -29,7 +29,7 @@ case class CompanyContactDetails(
   phone: Option[String]
 )
 object CompanyContactDetails {
-  implicit val format: OFormat[CompanyContactDetails] = Json.format[CompanyContactDetails]
+  given format: OFormat[CompanyContactDetails] = Json.format[CompanyContactDetails]
 }
 
 case class ContactDetails(
@@ -41,14 +41,14 @@ case class ContactDetails(
 )
 
 object ContactDetails {
-  implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
+  given format: OFormat[ContactDetails] = Json.format[ContactDetails]
 }
 
 class ContactDetailsService @Inject() (
   userRoleProvider: UserRoleProvider
 ) {
 
-  implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
+  given format: OFormat[ContactDetails] = Json.format[ContactDetails]
 
   def apply(answers: UserAnswers): ValidatedNel[Page, ContactDetails] =
     userRoleProvider

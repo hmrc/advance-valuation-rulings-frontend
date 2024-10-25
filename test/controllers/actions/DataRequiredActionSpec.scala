@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DataRequiredActionSpec extends SpecBase {
 
-  private implicit val ec: ExecutionContext = stubControllerComponents().executionContext
+  private given ec: ExecutionContext = stubControllerComponents().executionContext
 
   private class Harness extends DataRequiredActionImpl {
     def callRefine[A](req: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =

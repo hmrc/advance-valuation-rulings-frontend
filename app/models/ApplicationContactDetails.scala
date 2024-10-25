@@ -46,5 +46,5 @@ object ApplicationContactDetails {
     )(o => Tuple.fromProductTyped(o))
   }
 
-  implicit val format: OFormat[ApplicationContactDetails] = OFormat(reads, writes)
+  given format: OFormat[ApplicationContactDetails] = OFormat(reads, writes)
 }

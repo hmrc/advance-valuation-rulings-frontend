@@ -23,13 +23,13 @@ import play.api.libs.json.{JsObject, Json}
 
 class BackendErrorSpec extends AnyFreeSpec with Matchers {
 
-private val backendError: BackendError = BackendError(
-  code = 200,
-  message = "Error"
-)
+  private val backendError: BackendError = BackendError(
+    code = 200,
+    message = "Error"
+  )
 
   private val json = Json.obj(
-    "code" -> 200,
+    "code"    -> 200,
     "message" -> "Error"
   )
 
@@ -53,8 +53,8 @@ private val backendError: BackendError = BackendError(
     }
 
     "must have a working toString" in {
-          backendError.toString must include("BackendError")
+      backendError.toString must include("BackendError")
     }
-   }
+  }
 
 }

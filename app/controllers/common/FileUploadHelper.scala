@@ -51,7 +51,7 @@ case class FileUploadHelper @Inject() (
 )(implicit ec: ExecutionContext)
     extends I18nSupport {
 
-  private implicit val logger: Logger = Logger(this.getClass)
+  private given logger: Logger = Logger(this.getClass)
 
   private val maxFileSize: Long = appConfig.maxFileSize / 1000000L
 

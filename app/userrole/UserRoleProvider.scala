@@ -31,7 +31,7 @@ class UserRoleProvider @Inject() (
   agentForTrader: AgentForTrader
 ) {
 
-  private implicit val logger: Logger = Logger(this.getClass)
+  private given logger: Logger = Logger(this.getClass)
 
   def getUserRole(userAnswers: UserAnswers): UserRole =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {

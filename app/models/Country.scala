@@ -25,7 +25,7 @@ case class Country(code: String, name: String)
 
 object Country {
 
-  implicit val format: OFormat[Country] = Json.format[Country]
+  given format: OFormat[Country] = Json.format[Country]
 
   val allCountries: Seq[Country] = Seq(
     Country("AF", "Afghanistan"),

@@ -118,6 +118,6 @@ object UserAnswers {
     )(o => Tuple.fromProductTyped(o))
   }
 
-  implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
+  given format: OFormat[UserAnswers] = OFormat(reads, writes)
 
 }

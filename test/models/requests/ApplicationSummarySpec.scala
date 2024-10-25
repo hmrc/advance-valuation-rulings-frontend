@@ -34,11 +34,11 @@ class ApplicationSummarySpec extends AnyFreeSpec with Matchers {
   val applicationSummaryRequest: ApplicationSummaryRequest = ApplicationSummaryRequest(
     eoriNumber = "eori"
   )
-  
+
   val applicationSummaryResponse: ApplicationSummaryResponse = ApplicationSummaryResponse(
     summaries = Seq(ApplicationSummary(ApplicationId(1), "Goods Description", Instant.now, "eori"))
   )
-  
+
   "An ApplicationSummary" - {
 
     "must serialize and deserialize to/from JSON" in {

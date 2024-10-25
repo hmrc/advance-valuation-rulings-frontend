@@ -31,7 +31,7 @@ object EnumerableSpec {
 
     val values: Set[Foo] = Set(Bar, Baz)
 
-    implicit val fooEnumerable: Enumerable[Foo] =
+    given fooEnumerable: Enumerable[Foo] =
       Enumerable(values.toSeq.map(v => v.toString -> v): _*)
   }
 }

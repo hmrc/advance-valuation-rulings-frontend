@@ -6,7 +6,8 @@ object CodeCoverageSettings {
     "<empty>",
     ".*components.*",
     ".*Routes.*",
-    ".*viewmodels.govuk.*"
+    ".*viewmodels.govuk.*",
+    ".*\\$anon.*"
   )
 
   val settings: Seq[Setting[?]] = Seq(

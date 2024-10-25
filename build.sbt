@@ -33,10 +33,12 @@ lazy val microservice = Project(appName, file("."))
     ),
     PlayKeys.playDefaultPort := 12600,
     CodeCoverageSettings.settings,
-    scalacOptions ++= Seq(
+    scalacOptions ++= List(
       "-feature",
-      "-Wconf:src=routes/.*:s",
-      "-Wconf:msg=unused-imports&src=views/.*:s"
+      "-Wconf:msg=unused import&src=conf/.*:s",
+      "-Wconf:msg=unused import&src=views/.*:s",
+      "-Wconf:msg=unused explicit parameter&src=views/.*:s",
+      "-Wconf:src=routes/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
     // concatenate js

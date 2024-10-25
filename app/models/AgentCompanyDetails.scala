@@ -28,5 +28,5 @@ case class AgentCompanyDetails(
 )
 
 object AgentCompanyDetails {
-  implicit val format: OFormat[AgentCompanyDetails] = Json.format[AgentCompanyDetails]
+  given format: OFormat[AgentCompanyDetails] = Json.format[AgentCompanyDetails]
 }

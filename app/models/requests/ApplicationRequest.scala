@@ -35,7 +35,7 @@ case class GoodsDetails(
 )
 
 object GoodsDetails {
-  implicit val format: OFormat[GoodsDetails] = Json.format[GoodsDetails]
+  given format: OFormat[GoodsDetails] = Json.format[GoodsDetails]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[QuestionPage[_], GoodsDetails] = {
     val goodsDescription: ValidatedNel[QuestionPage[_], String] =
@@ -89,7 +89,7 @@ final case class TraderDetail(
 )
 
 object TraderDetail {
-  implicit val format: OFormat[TraderDetail] = Json.format[TraderDetail]
+  given format: OFormat[TraderDetail] = Json.format[TraderDetail]
 
   def agent(userAnswers: UserAnswers): ValidatedNel[QuestionPage[_], Option[TraderDetail]] =
     userAnswers.get(WhatIsYourRoleAsImporterPage) match {
@@ -158,7 +158,7 @@ object ApplicationRequest {
     typeNaming = JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
   )
 
-  implicit val format: OFormat[ApplicationRequest] =
+  given format: OFormat[ApplicationRequest] =
     Json.configured(jsonConfig).format[ApplicationRequest]
 }
 

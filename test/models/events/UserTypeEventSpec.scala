@@ -23,12 +23,12 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.auth.core.User
 
 class UserTypeEventSpec extends AnyFreeSpec with Matchers {
-  
+
   val userTypeEvent: UserTypeEvent = UserTypeEvent(
-    internalId = "internalId", 
-    eori = "eori", 
-    affinityGroup = Individual, 
-    credentialRole = Some(User), 
+    internalId = "internalId",
+    eori = "eori",
+    affinityGroup = Individual,
+    credentialRole = Some(User),
     referrer = Some("String")
   )
 

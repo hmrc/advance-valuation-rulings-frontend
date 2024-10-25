@@ -51,7 +51,7 @@ class CheckYourAnswersController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  private implicit val logger: Logger = Logger(this.getClass)
+  private given logger: Logger = Logger(this.getClass)
 
   private def renderPageWhenApplicationIsCompleted(traderDetails: TraderDetailsWithCountryCode, draftId: DraftId)(
     implicit request: DataRequest[AnyContent]
