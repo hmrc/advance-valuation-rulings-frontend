@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.http.Status
 import play.api.http.Status.OK
 import play.api.libs.json.Json

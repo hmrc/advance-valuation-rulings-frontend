@@ -23,7 +23,7 @@ import models.requests.DataRequest
 import models.{DraftId, Mode, NormalMode, UploadedFile, UserAnswers}
 import navigation.Navigator
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.Results.{BadRequest, Ok, Redirect}
 import play.api.mvc.{AnyContent, RequestHeader, Result}
