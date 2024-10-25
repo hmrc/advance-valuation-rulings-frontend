@@ -22,7 +22,6 @@ import models.AuthUserType.IndividualTrader
 import models.{DraftId, UserAnswers}
 import models.requests.{DataRequest, OptionalDataRequest}
 import pages.AccountHomePage
-import play.api.http.Status.SEE_OTHER
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.Helpers._
 import play.api.test.FakeRequest

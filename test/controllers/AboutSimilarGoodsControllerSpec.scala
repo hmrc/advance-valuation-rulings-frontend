@@ -22,7 +22,6 @@ import models.{Done, NormalMode}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{mock, when}
 import pages.AboutSimilarGoodsPage
-import play.api.http.Status.OK
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

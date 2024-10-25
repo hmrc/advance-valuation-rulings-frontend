@@ -21,8 +21,8 @@ import connectors.UpscanConnector
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import models.{Done, DraftAttachment, DraftId, NormalMode, UploadedFile, UserAnswers}
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.freespec.AnyFreeSpec
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
@@ -30,6 +30,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import queries.AllDocuments
 import services.UserAnswersService
+import services.fileupload.FileService.NoUserAnswersFoundException
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
