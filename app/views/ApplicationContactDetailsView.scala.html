@@ -29,7 +29,7 @@
     saveButton: SaveButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = title(form, messages("applicationContactDetails.title")), draftId = Some(draftId)) {
 

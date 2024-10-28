@@ -42,7 +42,7 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks {
 
   "sendUserTypeEvent" - {
 
-    given identifierRequest: IdentifierRequest[_] = IdentifierRequest(
+    given identifierRequest: IdentifierRequest[?] = IdentifierRequest(
       request = FakeRequest().withHeaders("Referer" -> "some referer"),
       userId = userAnswersId,
       eoriNumber = EoriNumber,
@@ -68,7 +68,7 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks {
 
   "sendAgentIndicatorEvent" - {
 
-    given dataRequest: DataRequest[_] = DataRequest(
+    given dataRequest: DataRequest[?] = DataRequest(
       request = FakeRequest(),
       userId = userAnswersId,
       eoriNumber = EoriNumber,

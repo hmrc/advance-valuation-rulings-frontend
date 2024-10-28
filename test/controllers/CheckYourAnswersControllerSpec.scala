@@ -79,7 +79,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       when(
         mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future
+      ) `thenReturn` Future
         .successful(
           Right(
             traderDetailsWithCountryCode

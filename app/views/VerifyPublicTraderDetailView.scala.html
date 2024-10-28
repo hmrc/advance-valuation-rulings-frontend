@@ -35,7 +35,7 @@
     legend: LegendH2
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId, registeredDetails: TraderDetailsWithConfirmation)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId, registeredDetails: TraderDetailsWithConfirmation)(implicit request: RequestHeader, messages: Messages)
 
 @headingContent = {
                 @if(registeredDetails.consentToDisclosureOfPersonalData) {

@@ -156,10 +156,10 @@ class NavigatorSpec extends SpecBase {
           val userAnswers  = emptyUserAnswers // usage is mocked in this test
           val mockUserRole = mock(classOf[UserRole])
 
-          when(userRoleProvider.getUserRole(userAnswers)) thenReturn mockUserRole
+          when(userRoleProvider.getUserRole(userAnswers)) `thenReturn` mockUserRole
           when(
             mockUserRole.getEORIDetailsJourney(NormalMode, draftId)
-          ) thenReturn onwardRoute
+          ) `thenReturn` onwardRoute
 
           navigator.nextPage(
             ContactPagePage,

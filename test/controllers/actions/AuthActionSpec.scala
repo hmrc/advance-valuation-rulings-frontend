@@ -68,8 +68,8 @@ class AuthActionSpec extends SpecBase {
     when(mockAuthConnector.authorise[RetrievalType](any(), any())(any(), any()))
       .thenReturn(
         Future.successful(
-          internalId composeRetrievals enrolments(enrolmentKey) composeRetrievals
-            Some(affinityGroup) composeRetrievals Some(credentialRole)
+          internalId `composeRetrievals` enrolments(enrolmentKey) `composeRetrievals`
+            Some(affinityGroup) `composeRetrievals` Some(credentialRole)
         )
       )
   }

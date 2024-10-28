@@ -16,7 +16,7 @@
 
 @this()
 
-@(heading: String, content: Html, form: Form[_])(implicit messages: Messages)
+@(heading: String, content: Html, form: Form[?])(implicit messages: Messages)
 
 @valueToCheck(valueToCheck: String) = @{
  if (form("value").value.isDefined && form("value").value.get == valueToCheck) {

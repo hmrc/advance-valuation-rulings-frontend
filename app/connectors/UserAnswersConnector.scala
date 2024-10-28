@@ -31,20 +31,20 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserAnswersConnector @Inject() (
   config: FrontendAppConfig,
   httpClient: HttpClientV2
-)(implicit
+)(using
   ec: ExecutionContext
 ) {
 
   private val backendUrl = config.advanceValuationRulingsBackendURL
 
-  def set(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
+  def set(answers: UserAnswers)(using hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(url"$backendUrl/user-answers")
       .withBody(Json.toJson(answers))
       .execute[HttpResponse](throwOnFailure(readEitherOf(readRaw)), ec)
       .map(_ => Done)
 
-  def setInternal(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Done] =
+  def setInternal(answers: UserAnswers)(using hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(url"$backendUrl/internal/user-answers")
       .setHeader("Authorization" -> config.internalAuthToken)
@@ -52,30 +52,30 @@ class UserAnswersConnector @Inject() (
       .execute[HttpResponse](throwOnFailure(readEitherOf(readRaw)), ec)
       .map(_ => Done)
 
-  def get(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
+  def get(draftId: DraftId)(using hc: HeaderCarrier): Future[Option[UserAnswers]] =
     httpClient
       .get(url"$backendUrl/user-answers/${draftId.toString}")
       .execute[Option[UserAnswers]]
 
-  def getInternal(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] =
+  def getInternal(draftId: DraftId)(using hc: HeaderCarrier): Future[Option[UserAnswers]] =
     httpClient
       .get(url"$backendUrl/internal/user-answers/${draftId.toString}")
       .setHeader("Authorization" -> config.internalAuthToken)
       .execute[Option[UserAnswers]]
 
-  def clear(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
+  def clear(draftId: DraftId)(using hc: HeaderCarrier): Future[Done] =
     httpClient
       .delete(url"$backendUrl/user-answers/${draftId.toString}")
       .execute[HttpResponse](throwOnFailure(readEitherOf(readRaw)), ec)
       .map(_ => Done)
 
-  def keepAlive(draftId: DraftId)(implicit hc: HeaderCarrier): Future[Done] =
+  def keepAlive(draftId: DraftId)(using hc: HeaderCarrier): Future[Done] =
     httpClient
       .post(url"$backendUrl/user-answers/${draftId.toString}/keep-alive")
       .execute[HttpResponse](throwOnFailure(readEitherOf(readRaw)), ec)
       .map(_ => Done)
 
-  def summaries()(implicit headerCarrier: HeaderCarrier): Future[DraftSummaryResponse] =
+  def summaries()(using headerCarrier: HeaderCarrier): Future[DraftSummaryResponse] =
     httpClient
       .get(url"$backendUrl/user-answers")
       .execute[DraftSummaryResponse]

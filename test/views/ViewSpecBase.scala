@@ -47,7 +47,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
     } else {
       ""
     }
-    val title       = errorPrefix + messages(expectedMessageKey, args: _*)
+    val title       = errorPrefix + messages(expectedMessageKey, args*)
     val serviceName = messages("service.name")
     val suffix      = "GOV.UK"
     val fullTitle   = s"$title - $serviceName - $suffix"
@@ -68,10 +68,10 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
     headers.size() match {
       case 0                                    => ()
       case 1 if headers.select("label").isEmpty =>
-        headers.first.ownText().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args: _*)
+        headers.first.ownText().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args*)
           .replaceAll("&nbsp;", " ")
       case 1                                    =>
-        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args: _*)
+        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args*)
           .replaceAll("&nbsp;", " ")
       case _                                    => throw new RuntimeException(s"Pages should only have (at most) one h1 element. Found ${headers.size}")
     }

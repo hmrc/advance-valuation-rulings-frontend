@@ -3,7 +3,7 @@ import uk.gov.hmrc.DefaultBuildSettings.*
 lazy val appName: String = "advance-valuation-rulings-frontend"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "3.3.4"
+ThisBuild / scalaVersion := "3.5.1"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
@@ -37,7 +37,6 @@ lazy val microservice = Project(appName, file("."))
       "-feature",
       "-Wconf:msg=unused import&src=conf/.*:s",
       "-Wconf:msg=unused import&src=views/.*:s",
-      "-Wconf:msg=unused explicit parameter&src=views/.*:s",
       "-Wconf:src=routes/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),

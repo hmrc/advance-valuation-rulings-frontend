@@ -30,7 +30,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @radiosContent = {
     <p class="govuk-body" id="value-hint">@messages("importGoods.paragraph")</p>

@@ -29,7 +29,7 @@
     button: SubmitButton
 )
 
-@(form: Form[_], draftId: DraftId, submitAction: Call )(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], draftId: DraftId, submitAction: Call )(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = title(form,messages("changeYourRoleImporter.title")), draftId = Some(draftId)) {
 

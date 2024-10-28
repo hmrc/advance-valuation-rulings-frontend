@@ -17,7 +17,7 @@
 @this(govukRadios: GovukRadios)
 
 @(
-    form: Form[_],
+    form: Form[?],
     headingKey: String,
     hint: Option[Html] = None,
     headingMessageArgs: Seq[String] = Seq(),
@@ -34,7 +34,7 @@
     name = "value",
     fieldset = Some(Fieldset(
         legend = Some(Legend(
-            content = Text(messages(headingKey, headingMessageArgs:_*)),
+            content = Text(messages(headingKey, headingMessageArgs*)),
             isPageHeading = isPageHeading,
             classes = classes
         ))
@@ -54,5 +54,5 @@
                   checked = form("value").value.contains("false")
         )
     ),
-    errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+    errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args*))))
 ))

@@ -24,19 +24,19 @@ import scala.concurrent.Future
 package object controllers {
   implicit class ModifiableOps[A: Format](page: queries.Modifiable[A]) {
 
-    def set(value: A)(implicit request: DataRequest[_]): Future[UserAnswers] =
+    def set(value: A)(implicit request: DataRequest[?]): Future[UserAnswers] =
       request.userAnswers.setFuture(page, value)
 
-    def get()(implicit request: DataRequest[_]): Option[A] =
+    def get()(implicit request: DataRequest[?]): Option[A] =
       request.userAnswers.get(page)
 
-    def fill(form: Form[A])(implicit request: DataRequest[_]): Form[A] =
+    def fill(form: Form[A])(implicit request: DataRequest[?]): Form[A] =
       request.userAnswers.get(page) match {
         case Some(data) => form.fill(data)
         case None       => form
       }
 
-    def remove()(implicit request: DataRequest[_]): Future[UserAnswers] =
+    def remove()(implicit request: DataRequest[?]): Future[UserAnswers] =
       request.userAnswers.removeFuture(page)
   }
 }

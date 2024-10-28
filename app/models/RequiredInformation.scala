@@ -58,5 +58,5 @@ object RequiredInformation extends Enumerable.Implicits {
     }
 
   given enumerable: Enumerable[RequiredInformation] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 }

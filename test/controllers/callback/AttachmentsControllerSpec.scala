@@ -77,7 +77,7 @@ class AttachmentsControllerSpec extends AnyFreeSpec with SpecBase {
 
     "must return NOT_FOUND when the object does not exist in object-store" in {
 
-      when(mockObjectStoreClient.getObject[Source[ByteString, _]](any(), any())(any(), any()))
+      when(mockObjectStoreClient.getObject[Source[ByteString, ?]](any(), any())(any(), any()))
         .thenReturn(Future.successful(None))
 
       val request = FakeRequest(routes.AttachmentsController.get("some/location"))
@@ -88,7 +88,7 @@ class AttachmentsControllerSpec extends AnyFreeSpec with SpecBase {
 
     "must fail when object-store fails" in {
 
-      when(mockObjectStoreClient.getObject[Source[ByteString, _]](any(), any())(any(), any()))
+      when(mockObjectStoreClient.getObject[Source[ByteString, ?]](any(), any())(any(), any()))
         .thenReturn(Future.failed(new RuntimeException()))
 
       val request = FakeRequest(routes.AttachmentsController.get("some/location"))

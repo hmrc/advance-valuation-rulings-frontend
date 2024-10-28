@@ -31,7 +31,7 @@ object ApplicationContactDetails {
         (__ \ "email").read[String] and
         (__ \ "phone").read[String] and
         (__ \ "jobTitle").read[String]
-    )(ApplicationContactDetails.apply _)
+    )(ApplicationContactDetails.apply)
   }
 
   val writes: OWrites[ApplicationContactDetails] = {

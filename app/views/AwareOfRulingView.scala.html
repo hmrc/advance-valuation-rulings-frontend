@@ -35,7 +35,7 @@ link: Link,
 radios: YesNoRadios
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @radiosContent = {
     <p class="govuk-body govuk-!-margin-top-4" id="value-hint">@messages("awareOfRuling.para")</p>

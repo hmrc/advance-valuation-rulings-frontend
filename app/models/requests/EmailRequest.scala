@@ -47,7 +47,7 @@ object EmailRequest {
       (__ \ "eventUrl").readNullable[String] and
       (__ \ "onSendUrl").readNullable[String] and
       (__ \ "tags").readNullable[Map[String, String]].map(_.getOrElse(Map.empty)))(
-      EmailRequest.apply _
+      EmailRequest.apply
     ).reads(json).flatMap { sendEmailRequest =>
       if (sendEmailRequest.to.isEmpty) {
         JsError(__ \ "to", "recipients list is empty")

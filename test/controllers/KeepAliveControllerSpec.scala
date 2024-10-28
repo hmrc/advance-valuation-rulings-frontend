@@ -37,7 +37,7 @@ class KeepAliveControllerSpec extends SpecBase {
 
         val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-        when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
+        when(mockUserAnswersService.keepAlive(any())(any())) `thenReturn` Future.successful(
           Done
         )
 
@@ -64,7 +64,7 @@ class KeepAliveControllerSpec extends SpecBase {
       "must return OK" in {
 
         val mockUserAnswersService = mock(classOf[UserAnswersService])
-        when(mockUserAnswersService.keepAlive(any())(any())) thenReturn Future.successful(
+        when(mockUserAnswersService.keepAlive(any())(any())) `thenReturn` Future.successful(
           Done
         )
 

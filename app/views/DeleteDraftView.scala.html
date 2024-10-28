@@ -25,7 +25,7 @@
         govukInsetText: GovukInsetText
 )
 
-@(form: Form[_], draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = title(form, messages("deleteDraft.title")), draftId = Some(draftId)) {
 

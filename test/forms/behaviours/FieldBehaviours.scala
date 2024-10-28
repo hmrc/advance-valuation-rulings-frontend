@@ -25,7 +25,7 @@ import play.api.data.{Form, FormError}
 trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
 
   def fieldThatBindsValidData(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     validDataGenerator: Gen[String]
   ): Unit =
@@ -39,7 +39,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
     }
 
   def fieldThatDoesNotBindInvalidData(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     invalidDataGenerator: Gen[String],
     invalidError: FormError
@@ -52,7 +52,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
       }
     }
 
-  def mandatoryField(form: Form[_], fieldName: String, requiredError: FormError): Unit = {
+  def mandatoryField(form: Form[?], fieldName: String, requiredError: FormError): Unit = {
 
     "not bind when key is not present at all" in {
 
@@ -67,7 +67,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
     }
   }
 
-  def commodityCodeField(form: Form[_], fieldName: String, maxLengthKey: Seq[FormError]): Unit = {
+  def commodityCodeField(form: Form[?], fieldName: String, maxLengthKey: Seq[FormError]): Unit = {
 
     "binds numeric string with spaces" in {
       val result = form.bind(Map(fieldName -> "8528 711")).apply(fieldName)
@@ -86,7 +86,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
   }
 
   def postcodeField(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     emptyPostcodeErrorKey: Seq[FormError],
     notValidPostcodeErrorKey: Seq[FormError],
@@ -132,7 +132,7 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
   }
 
   def eoriField(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     emptyEoriErrorKey: Seq[FormError],
     badLengthEoriErrorKey: Seq[FormError],

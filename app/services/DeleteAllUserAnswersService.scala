@@ -21,7 +21,7 @@ import pages._
 
 class DeleteAllUserAnswersService {
 
-  private def allPages: Seq[QuestionPage[_]] =
+  private def allPages: Seq[QuestionPage[?]] =
     Seq(
       AboutSimilarGoodsPage,
       AccountHomePage,
@@ -86,7 +86,7 @@ class DeleteAllUserAnswersService {
       userAnswers.flatMap(_.remove(pageToRemove).toOption)
     }
 
-  def deleteAllUserAnswersExcept(userAnswers: UserAnswers, excludedPages: Seq[QuestionPage[_]]): Option[UserAnswers] =
+  def deleteAllUserAnswersExcept(userAnswers: UserAnswers, excludedPages: Seq[QuestionPage[?]]): Option[UserAnswers] =
     allPages.diff(excludedPages).foldLeft[Option[UserAnswers]](Some(userAnswers)) { (userAnswers, pageToRemove) =>
       userAnswers.flatMap(_.remove(pageToRemove).toOption)
     }

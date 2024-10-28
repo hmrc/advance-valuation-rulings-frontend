@@ -105,7 +105,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val userAnswers = userAnswersAsIndividualTrader
         .set(
@@ -159,7 +159,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
           .success
           .value
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val userAnswers = emptyAnswers
         .set(
@@ -252,7 +252,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
           "redirect to the RequiredInformation page" in {
 
-            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+            when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
             val userAnswers =
               emptyUserAnswers
@@ -290,7 +290,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
           "redirect to the RequiredInformation page" in {
 
-            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+            when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
             val userAnswers =
               emptyUserAnswers
@@ -331,7 +331,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
           "redirect to the RequiredInformation page" in {
 
-            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+            when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
             val userAnswers =
               emptyUserAnswers
@@ -375,7 +375,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
           "redirect to the CheckYourAnswers page" in {
 
-            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+            when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
             val userAnswers =
               emptyUserAnswers
@@ -416,7 +416,7 @@ class WhatIsYourRoleAsImporterControllerSpec extends SpecBase {
 
           "redirect to the RequiredInformation page" in {
 
-            when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+            when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
             val userAnswers =
               emptyUserAnswers

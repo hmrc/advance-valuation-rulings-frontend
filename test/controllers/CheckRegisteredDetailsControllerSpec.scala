@@ -63,13 +63,13 @@ class CheckRegisteredDetailsControllerSpec extends SpecBase with TableDrivenProp
     if (isInternalServerError) {
       when(
         mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future.successful(
+      ) `thenReturn` Future.successful(
         Left(BackendError(code = 500, message = "some backed error"))
       )
     } else {
       when(
         mockBackendConnector.getTraderDetails(any(), any())(any(), any())
-      ) thenReturn Future
+      ) `thenReturn` Future
         .successful(
           Right(
             traderDetailsWithCountryCode

@@ -24,9 +24,10 @@ import navigation.Navigator
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{mock, when}
 import pages.ImportGoodsPage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.UserAnswersService
 import views.html.ImportGoodsView
 
@@ -34,10 +35,10 @@ import scala.concurrent.Future
 
 class ImportGoodsControllerSpec extends SpecBase {
 
-  val formProvider = new ImportGoodsFormProvider()
-  val form         = formProvider()
+  val formProvider        = new ImportGoodsFormProvider()
+  val form: Form[Boolean] = formProvider()
 
-  lazy val importGoodsRoute = routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url
+  lazy val importGoodsRoute: String = routes.ImportGoodsController.onPageLoad(NormalMode, draftId).url
 
   "ImportGoods Controller" - {
 
@@ -87,7 +88,7 @@ class ImportGoodsControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
