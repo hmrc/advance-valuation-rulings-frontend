@@ -34,9 +34,9 @@ class EmailConnector @Inject() (
 
   def sendEmail(
     emailRequest: EmailRequest
-  )(using hc: HeaderCarrier): Future[HttpResponse] =
+  )(implicit hc: HeaderCarrier): Future[HttpResponse] =
     httpClient
       .post(url"${appConfig.emailBaseUrl}/hmrc/email")
       .withBody(Json.toJson(emailRequest))
-      .execute[HttpResponse](throwOnFailure(readEitherOf(readRaw)), ec)
+      .execute[HttpResponse](using throwOnFailure(readEitherOf(using readRaw)), ec)
 }

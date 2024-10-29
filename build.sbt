@@ -37,6 +37,7 @@ lazy val microservice = Project(appName, file("."))
       "-feature",
       "-Wconf:msg=unused import&src=conf/.*:s",
       "-Wconf:msg=unused import&src=views/.*:s",
+      "-Wconf:msg=unused explicit parameter&src=views/.*:s",
       "-Wconf:src=routes/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
