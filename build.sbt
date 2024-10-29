@@ -11,7 +11,6 @@ lazy val microservice = Project(appName, file("."))
     JUnitXmlReportPlugin
   ) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    Test / fork := true,
     Test / unmanagedSourceDirectories += baseDirectory.value / "test-utils"
   )
   .settings(
