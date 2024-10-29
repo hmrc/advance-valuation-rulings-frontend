@@ -164,7 +164,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase {
           .get
 
       val application = applicationBuilderAsAgent(userAnswers = Some(userAnswers))
-        .configure("features.agent-on-behalf-of-trader" -> true)
+        .configure(configurationBuilder ++ Map("features.agent-on-behalf-of-trader" -> true))
         .build()
 
       running(application) {
@@ -196,7 +196,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase {
 
       val application =
         applicationBuilderAsAgent(userAnswers = Some(userAnswers))
-          .configure("features.agent-on-behalf-of-trader" -> true)
+          .configure(configurationBuilder ++ Map("features.agent-on-behalf-of-trader" -> true))
           .build()
 
       running(application) {

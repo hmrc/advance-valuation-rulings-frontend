@@ -21,7 +21,7 @@ import models.{CounterId, CounterWrapper}
 import org.mongodb.scala.model.{Filters, FindOneAndUpdateOptions, Updates}
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 import utils.BaseIntegrationSpec
-import org.mongodb.scala.{ObservableFuture, SingleObservableFuture}
+import org.mongodb.scala.SingleObservableFuture
 
 class CounterRepositorySpec extends BaseIntegrationSpec with DefaultPlayMongoRepositorySupport[CounterWrapper] {
 

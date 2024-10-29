@@ -48,6 +48,7 @@ class ChangeYourRoleImporterControllerSpec extends SpecBase {
       bind[UserAnswersService].to(mockUserAnswersService),
       bind[DataRetrievalActionProvider].toInstance(dataRetrievalActionProvider)
     )
+    .configure(configurationBuilder)
     .build()
 
   private val changeYourRoleImporterView: ChangeYourRoleImporterView                 =

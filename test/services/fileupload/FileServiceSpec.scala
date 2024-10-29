@@ -53,12 +53,14 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
   private lazy val app: GuiceApplicationBuilder = applicationBuilder()
     .configure(
-      "host"                                                              -> "host",
-      "microservice.services.advance-valuation-rulings-frontend.protocol" -> "http",
-      "microservice.services.advance-valuation-rulings-frontend.host"     -> "localhost",
-      "microservice.services.advance-valuation-rulings-frontend.port"     -> "12600",
-      "upscan.minFileSize"                                                -> "123b",
-      "upscan.maxFileSize"                                                -> "321b"
+      configurationBuilder ++ Map(
+        "host"                                                              -> "host",
+        "microservice.services.advance-valuation-rulings-frontend.protocol" -> "http",
+        "microservice.services.advance-valuation-rulings-frontend.host"     -> "localhost",
+        "microservice.services.advance-valuation-rulings-frontend.port"     -> "12600",
+        "upscan.minFileSize"                                                -> "123b",
+        "upscan.maxFileSize"                                                -> "321b"
+      )
     )
     .overrides(
       bind[UpscanConnector].toInstance(mockUpscanConnector),

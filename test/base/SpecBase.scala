@@ -148,6 +148,14 @@ trait SpecBase
   val mockDraftIdRepo: CounterRepository =
     mock(classOf[CounterRepository])
 
+  val configurationBuilder: Map[String, Any] = Map(
+    "play.filters.disabled"               -> List("play.filters.csrf.CSRFFilter", "play.filters.csp.CSPFilter"),
+    "create-internal-auth-token-on-start" -> false,
+    "auditing.enabled"                    -> false,
+    "metrics.enabled"                     -> false,
+    "metrics.jvm"                         -> false
+  )
+
   when(mockDraftIdRepo.nextId(eqTo(CounterId.DraftId))) `thenReturn` Future.successful(
     DraftIdSequence
   )
@@ -165,6 +173,7 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+      .configure(configurationBuilder)
 
   protected def applicationBuilderAsAgent(
     userAnswers: Option[UserAnswers] = None
@@ -179,6 +188,7 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+      .configure(configurationBuilder)
 
   protected def applicationBuilderAsOrg(
     userAnswers: Option[UserAnswers] = None
@@ -193,6 +203,7 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+      .configure(configurationBuilder)
 
   def setupTestBuild(userAnswers: UserAnswers): Application = {
     val mockUserAnswersService = mock(classOf[UserAnswersService])
