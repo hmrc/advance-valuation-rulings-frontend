@@ -102,8 +102,10 @@ class AccountHomeControllerSpec extends SpecBase {
 
       when(
         mockBackEndConnector.applicationSummaries(any())
-      ) `thenReturn` Future
-        .successful(ApplicationSummaryResponse(appsSummary))
+      ).thenReturn(
+        Future
+          .successful(ApplicationSummaryResponse(appsSummary))
+      )
 
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(Nil)))
@@ -142,8 +144,10 @@ class AccountHomeControllerSpec extends SpecBase {
 
       when(
         mockBackEndConnector.applicationSummaries(any())
-      ) `thenReturn` Future
-        .successful(ApplicationSummaryResponse(Nil))
+      ).thenReturn(
+        Future
+          .successful(ApplicationSummaryResponse(Nil))
+      )
 
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))
@@ -194,8 +198,10 @@ class AccountHomeControllerSpec extends SpecBase {
 
       when(
         mockBackEndConnector.applicationSummaries(any())
-      ) `thenReturn` Future
-        .successful(ApplicationSummaryResponse(appsSummary))
+      ).thenReturn(
+        Future
+          .successful(ApplicationSummaryResponse(appsSummary))
+      )
 
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))
@@ -258,8 +264,10 @@ class AccountHomeControllerSpec extends SpecBase {
 
       when(
         mockBackEndConnector.applicationSummaries(any())
-      ) `thenReturn` Future
-        .successful(ApplicationSummaryResponse(appsSummary))
+      ).thenReturn(
+        Future
+          .successful(ApplicationSummaryResponse(appsSummary))
+      )
 
       when(mockUserAnswersService.summaries()(any()))
         .thenReturn(Future.successful(DraftSummaryResponse(draftSummaries)))

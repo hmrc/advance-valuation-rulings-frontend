@@ -56,9 +56,11 @@ class EORIBeUpToDateControllerSpec extends SpecBase with ModelGenerators {
   private val mockUserAnswersService = mock(classOf[UserAnswersService])
 
   private def setUpUserAnswersServiceMock(): Unit = {
-    when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
-    when(mockUserAnswersService.get(any())(any())) `thenReturn` Future.successful(
-      Some(userAnswersAsIndividualTrader)
+    when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+    when(mockUserAnswersService.get(any())(any())).thenReturn(
+      Future.successful(
+        Some(userAnswersAsIndividualTrader)
+      )
     )
     ()
   }

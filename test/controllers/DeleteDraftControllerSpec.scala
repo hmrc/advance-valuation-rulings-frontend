@@ -64,7 +64,7 @@ class DeleteDraftControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.clear(any())(any())) `thenReturn` Future.successful(Done)
+      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
@@ -93,7 +93,7 @@ class DeleteDraftControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.clear(any())(any())) `thenReturn` Future.successful(Done)
+      when(mockUserAnswersService.clear(any())(any())).thenReturn(Future.successful(Done))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))

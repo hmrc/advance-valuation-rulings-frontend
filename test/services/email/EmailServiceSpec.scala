@@ -44,7 +44,7 @@ class EmailServiceSpec extends SpecBase with BeforeAndAfterEach {
 
     "must send a confirmation email" in {
 
-      when(mockEmailConnector.sendEmail(any())(any()))
+      when(mockEmailConnector.sendEmail(any()))
         .thenReturn(Future.successful(HttpResponse(OK, "foo")))
 
       val name  = "name"
@@ -54,12 +54,12 @@ class EmailServiceSpec extends SpecBase with BeforeAndAfterEach {
         EmailRequest(to = List(Email(email)), parameters = Map("name" -> name))
 
       service.sendConfirmationEmail(email, name).futureValue
-      verify(mockEmailConnector, times(1)).sendEmail(eqTo(expectedEmailRequest))(any())
+      verify(mockEmailConnector, times(1)).sendEmail(eqTo(expectedEmailRequest))
     }
 
     "must fail when the connector call fails" in {
 
-      when(mockEmailConnector.sendEmail(any())(any()))
+      when(mockEmailConnector.sendEmail(any()))
         .thenReturn(Future.failed(new RuntimeException("foo")))
 
       val name  = "name"

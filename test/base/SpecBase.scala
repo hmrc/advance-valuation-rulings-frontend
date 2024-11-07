@@ -156,8 +156,10 @@ trait SpecBase
     "metrics.jvm"                         -> false
   )
 
-  when(mockDraftIdRepo.nextId(eqTo(CounterId.DraftId))) `thenReturn` Future.successful(
-    DraftIdSequence
+  when(mockDraftIdRepo.nextId(eqTo(CounterId.DraftId))).thenReturn(
+    Future.successful(
+      DraftIdSequence
+    )
   )
 
   protected def applicationBuilder(
@@ -208,7 +210,7 @@ trait SpecBase
   def setupTestBuild(userAnswers: UserAnswers): Application = {
     val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-    when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
+    when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
     applicationBuilder(userAnswers = Some(userAnswers))
       .overrides(
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),

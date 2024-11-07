@@ -223,7 +223,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.set(any())(any())) `thenReturn` Future.successful(Done)
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val application =
         applicationBuilderAsAgent(userAnswers = Some(userAnswersForTest))

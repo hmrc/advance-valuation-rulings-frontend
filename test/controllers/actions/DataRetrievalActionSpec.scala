@@ -54,7 +54,7 @@ class DataRetrievalActionSpec extends SpecBase with BeforeAndAfterEach with Tabl
 
       "must set userAnswers to 'None' in the request" in {
 
-        when(mockUserAnswersService.get(any())(any())) `thenReturn` Future(None)
+        when(mockUserAnswersService.get(any())(any())).thenReturn(Future(None))
         val action = new Harness(draftId)
 
         val result =
@@ -77,8 +77,10 @@ class DataRetrievalActionSpec extends SpecBase with BeforeAndAfterEach with Tabl
 
       forAll(scenarios) { (affinityGroup, credentialRole, expectedAuthUserType) =>
         s"must add the AuthUserType $expectedAuthUserType to UserAnswers for $affinityGroup and $credentialRole" in {
-          when(mockUserAnswersService.get(any())(any())) `thenReturn` Future(
-            Option(UserAnswers(userAnswersId, draftId))
+          when(mockUserAnswersService.get(any())(any())).thenReturn(
+            Future(
+              Option(UserAnswers(userAnswersId, draftId))
+            )
           )
 
           val action = new Harness(draftId)
