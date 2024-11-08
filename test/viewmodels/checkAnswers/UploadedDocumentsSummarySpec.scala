@@ -24,8 +24,8 @@ import play.api.test.Helpers.stubMessages
 import play.twirl.api.{Html, HtmlFormat}
 import queries.AllDocuments
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
 
 import java.time.Instant
 

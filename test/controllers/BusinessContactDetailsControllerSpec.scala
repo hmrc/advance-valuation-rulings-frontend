@@ -164,7 +164,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase {
           .get
 
       val application = applicationBuilderAsAgent(userAnswers = Some(userAnswers))
-        .configure("features.agent-on-behalf-of-trader" -> true)
+        .configure(configurationBuilder ++ Map("features.agent-on-behalf-of-trader" -> true))
         .build()
 
       running(application) {
@@ -196,7 +196,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase {
 
       val application =
         applicationBuilderAsAgent(userAnswers = Some(userAnswers))
-          .configure("features.agent-on-behalf-of-trader" -> true)
+          .configure(configurationBuilder ++ Map("features.agent-on-behalf-of-trader" -> true))
           .build()
 
       running(application) {
@@ -223,7 +223,7 @@ class BusinessContactDetailsControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val application =
         applicationBuilderAsAgent(userAnswers = Some(userAnswersForTest))

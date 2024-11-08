@@ -30,8 +30,8 @@ import scala.concurrent.Future
 
 class EmailServiceSpec extends SpecBase with BeforeAndAfterEach {
 
-  private val mockEmailConnector         = mock(classOf[EmailConnector])
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private val mockEmailConnector  = mock(classOf[EmailConnector])
+  private given hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
     reset(mockEmailConnector)

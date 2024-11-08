@@ -51,7 +51,7 @@ class CheckYourAnswersController @Inject() (
     with I18nSupport
     with TraderDetailsHelper {
 
-  private implicit val logger: Logger = Logger(this.getClass)
+  private given logger: Logger = Logger(this.getClass)
 
   private def renderPageWhenApplicationIsCompleted(traderDetails: TraderDetailsWithCountryCode, draftId: DraftId)(
     implicit request: DataRequest[AnyContent]
@@ -115,7 +115,7 @@ class CheckYourAnswersController @Inject() (
       case Invalid(errors: cats.data.NonEmptyList[Page]) =>
         logger.warn(
           s"[CheckYourAnswersController][redirectJourney] Failed to create application request: ${errors.toList
-            .mkString(", ")}}"
+              .mkString(", ")}}"
         )
         Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       case Valid(applicationRequest)                     =>

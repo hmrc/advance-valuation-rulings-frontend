@@ -21,7 +21,7 @@ import play.api.i18n.Messages
 
 object ViewUtils {
 
-  def title(form: Form[_], title: String, section: Option[String] = None)(implicit
+  def title(form: Form[?], title: String, section: Option[String] = None)(implicit
     messages: Messages
   ): String =
     titleNoForm(
@@ -34,6 +34,6 @@ object ViewUtils {
   ): String =
     s"$title - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
 
-  private def errorPrefix(form: Form[_])(implicit messages: Messages): String =
+  private def errorPrefix(form: Form[?])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
 }

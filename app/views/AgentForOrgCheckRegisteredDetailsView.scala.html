@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import components._
+@import components.*
 
 @this(
     layout: templates.Layout,
@@ -31,7 +31,7 @@
     legend: LegendH2
 )
 
-@(form: Form[_], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], registeredDetails: TraderDetailsWithCountryCode, mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @headingContent = {
                 @if(registeredDetails.consentToDisclosureOfPersonalData) {

@@ -40,7 +40,7 @@ class BusinessEoriDetailsSummarySpec extends SpecBase with Generators {
     )
 
   "IndividualEoriDetailsSummary" - {
-    implicit val m: Messages = play.api.test.Helpers.stubMessages()
+    given m: Messages = play.api.test.Helpers.stubMessages()
 
     "when the user has answers for all relevant pages" - {
       val summary =

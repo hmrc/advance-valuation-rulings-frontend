@@ -30,7 +30,7 @@ trait ViewBehaviours extends ViewSpecBase {
   ): Unit =
     "must behave like a normal page" - {
       Seq((".apply", viewViaApply), (".render", viewViaRender), (".f", viewViaF)).foreach { case (method, view) =>
-        renderPage(view, messageKeyPrefix, messageKeySuffix, method)(messageHeadingArgs: _*)
+        renderPage(view, messageKeyPrefix, messageKeySuffix, method)(messageHeadingArgs*)
       }
 
       "and have the correct banner title" in {
@@ -60,12 +60,12 @@ trait ViewBehaviours extends ViewSpecBase {
 
       "display the correct browser title" in {
         val doc = asDocument(view)
-        assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix", messageHeadingArgs: _*)(isError)
+        assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title$suffix", messageHeadingArgs*)(isError)
       }
 
       "display the correct page heading (h1)" in {
         val doc = asDocument(view)
-        assertPageHeadingEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs: _*)
+        assertPageHeadingEqualsMessage(doc, s"$messageKeyPrefix.heading$suffix", messageHeadingArgs*)
       }
     }
   }
@@ -79,7 +79,7 @@ trait ViewBehaviours extends ViewSpecBase {
     runGenericViewTests: Boolean = false
   )(messageHeadingArgs: Any*)(assertions: => Unit): Unit = {
     val additionalTests = if (runGenericViewTests) {
-      renderPage(view, messageKeyPrefix, messageKeySuffix, method, isError)(messageHeadingArgs: _*)
+      renderPage(view, messageKeyPrefix, messageKeySuffix, method, isError)(messageHeadingArgs*)
       "additionally "
     } else {
       ""

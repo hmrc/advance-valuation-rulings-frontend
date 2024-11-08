@@ -40,7 +40,7 @@ final case class UserAnswers(
 
   def validated[A](
     page: QuestionPage[A]
-  )(implicit rds: Reads[A]): ValidatedNel[QuestionPage[_], A] =
+  )(implicit rds: Reads[A]): ValidatedNel[QuestionPage[?], A] =
     Validated
       .fromOption(get(page), page)
       .toValidatedNel
@@ -48,7 +48,7 @@ final case class UserAnswers(
   def validatedF[A, B](
     page: QuestionPage[A],
     f: A => B
-  )(implicit rds: Reads[A]): ValidatedNel[QuestionPage[_], B] =
+  )(implicit rds: Reads[A]): ValidatedNel[QuestionPage[?], B] =
     Validated
       .fromOption(get(page).map(f), page)
       .toValidatedNel
@@ -103,7 +103,7 @@ object UserAnswers {
         (__ \ "draftId").read[DraftId] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read[Instant]
-    )(UserAnswers.apply _)
+    )(UserAnswers.apply)
   }
 
   private val writes: OWrites[UserAnswers] = {
@@ -115,9 +115,9 @@ object UserAnswers {
         (__ \ "draftId").write[DraftId] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write[Instant]
-    )(unlift(UserAnswers.unapply))
+    )(o => Tuple.fromProductTyped(o))
   }
 
-  implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
+  given format: OFormat[UserAnswers] = OFormat(reads, writes)
 
 }

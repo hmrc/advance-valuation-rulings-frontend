@@ -28,5 +28,5 @@ final case class UserTypeEvent(
 )
 
 object UserTypeEvent {
-  implicit val format: OFormat[UserTypeEvent] = Json.format[UserTypeEvent]
+  given format: OFormat[UserTypeEvent] = Json.format[UserTypeEvent]
 }

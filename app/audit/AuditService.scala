@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext
 class AuditService @Inject() (auditConnector: AuditConnector) {
 
   def sendUserTypeEvent()(implicit
-    identifierRequest: IdentifierRequest[_],
+    identifierRequest: IdentifierRequest[?],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Unit = {
@@ -42,7 +42,7 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
 
   def sendRoleIndicatorEvent(
     role: WhatIsYourRoleAsImporter
-  )(implicit dataRequest: DataRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Unit = {
+  )(implicit dataRequest: DataRequest[?], hc: HeaderCarrier, ec: ExecutionContext): Unit = {
     import dataRequest._
 
     val detail =

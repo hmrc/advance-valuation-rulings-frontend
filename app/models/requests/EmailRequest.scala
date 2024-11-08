@@ -21,7 +21,7 @@ import play.api.libs.json._
 
 case class Email(value: String) extends AnyVal
 object Email {
-  implicit val format: Format[Email] = Json.valueFormat[Email]
+  given format: Format[Email] = Json.valueFormat[Email]
 }
 
 case class EmailRequest(
@@ -36,7 +36,7 @@ case class EmailRequest(
 
 object EmailRequest {
 
-  implicit val format: Format[EmailRequest] = new Format[EmailRequest] {
+  given format: Format[EmailRequest] = new Format[EmailRequest] {
 
     def reads(json: JsValue): JsResult[EmailRequest] = ((__ \ "to").read[List[Email]] and
       (__ \ "templateId").read[String] and
@@ -47,7 +47,7 @@ object EmailRequest {
       (__ \ "eventUrl").readNullable[String] and
       (__ \ "onSendUrl").readNullable[String] and
       (__ \ "tags").readNullable[Map[String, String]].map(_.getOrElse(Map.empty)))(
-      EmailRequest.apply _
+      EmailRequest.apply
     ).reads(json).flatMap { sendEmailRequest =>
       if (sendEmailRequest.to.isEmpty) {
         JsError(__ \ "to", "recipients list is empty")

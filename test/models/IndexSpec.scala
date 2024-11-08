@@ -38,7 +38,7 @@ class IndexSpec extends SpecBase with EitherValues with ScalaCheckPropertyChecks
     "must not bind from negative numbers or 0" in {
 
       forAll(Gen.choose(Int.MinValue, 0)) { number =>
-        pathBindable.bind("key", number.toString) mustBe a[Left[_, Index]]
+        pathBindable.bind("key", number.toString) mustBe a[Left[?, Index]]
       }
     }
 

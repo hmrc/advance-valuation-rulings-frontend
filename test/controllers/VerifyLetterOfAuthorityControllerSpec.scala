@@ -20,7 +20,6 @@ import base.SpecBase
 import models.WhatIsYourRoleAsImporter.AgentOnBehalfOfTrader
 import models.{NormalMode, UploadedFile, UserAnswers}
 import pages.{UploadLetterOfAuthorityPage, WhatIsYourRoleAsImporterPage}
-import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.mvc.Result
 import play.api.test.FakeRequest

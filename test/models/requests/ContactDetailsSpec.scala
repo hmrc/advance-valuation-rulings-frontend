@@ -17,17 +17,45 @@
 package models.requests
 
 import base.SpecBase
-import cats.data.Validated._
-import generators._
-import models._
+import cats.data.Validated.*
+import generators.*
+import models.*
 import org.mockito.Mockito.{mock, when}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages._
+import pages.*
 import userrole.{UserRole, UserRoleProvider}
+import ContactDetailsSpec.*
+import play.api.libs.json.{JsSuccess, Json}
 
 class ContactDetailsSpec extends SpecBase with ScalaCheckPropertyChecks with ApplicationRequestGenerator {
 
-  import ContactDetailsSpec._
+  val companyContactDetails: CompanyContactDetails = CompanyContactDetails(
+    name = "name",
+    email = "mail@email.com",
+    phone = Some("0123456789")
+  )
+
+  "CompanyContactDetails" - {
+
+    "must serialize and deserialize to/from JSON" in {
+      val json = Json.toJson(companyContactDetails)
+      json.validate[CompanyContactDetails] mustEqual JsSuccess(companyContactDetails)
+    }
+
+    "must fail to deserialize invalid JSON" in {
+      val invalidJson = Json.obj("invalid" -> "data")
+      invalidJson.validate[CompanyContactDetails].isError mustBe true
+    }
+
+    "must have a working equals and hashCode" in {
+      companyContactDetails mustEqual companyContactDetails
+      companyContactDetails.hashCode mustEqual companyContactDetails.hashCode
+    }
+
+    "must have a working toString" in {
+      companyContactDetails.toString must include("CompanyContactDetails")
+    }
+  }
 
   "ContactDetails" - {
 

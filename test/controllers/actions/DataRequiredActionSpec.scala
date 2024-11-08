@@ -22,7 +22,6 @@ import models.AuthUserType.IndividualTrader
 import models.{DraftId, UserAnswers}
 import models.requests.{DataRequest, OptionalDataRequest}
 import pages.AccountHomePage
-import play.api.http.Status.SEE_OTHER
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.Helpers._
 import play.api.test.FakeRequest
@@ -32,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DataRequiredActionSpec extends SpecBase {
 
-  private implicit val ec: ExecutionContext = stubControllerComponents().executionContext
+  private given ec: ExecutionContext = stubControllerComponents().executionContext
 
   private class Harness extends DataRequiredActionImpl {
     def callRefine[A](req: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =

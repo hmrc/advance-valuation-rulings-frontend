@@ -31,7 +31,7 @@
     saveButton: SaveButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @content = {
             @paragraph(Html(messages("tellUsAboutYourRuling.para")))

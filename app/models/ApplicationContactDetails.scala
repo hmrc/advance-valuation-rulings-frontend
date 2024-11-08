@@ -31,7 +31,7 @@ object ApplicationContactDetails {
         (__ \ "email").read[String] and
         (__ \ "phone").read[String] and
         (__ \ "jobTitle").read[String]
-    )(ApplicationContactDetails.apply _)
+    )(ApplicationContactDetails.apply)
   }
 
   val writes: OWrites[ApplicationContactDetails] = {
@@ -43,8 +43,8 @@ object ApplicationContactDetails {
         (__ \ "email").write[String] and
         (__ \ "phone").write[String] and
         (__ \ "jobTitle").write[String]
-    )(unlift(ApplicationContactDetails.unapply))
+    )(o => Tuple.fromProductTyped(o))
   }
 
-  implicit val format: OFormat[ApplicationContactDetails] = OFormat(reads, writes)
+  given format: OFormat[ApplicationContactDetails] = OFormat(reads, writes)
 }

@@ -35,7 +35,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit val messages: Messages = app.injector.instanceOf[play.api.i18n.MessagesApi].preferred(fakeRequest)
+  given messages: Messages = app.injector.instanceOf[play.api.i18n.MessagesApi].preferred(fakeRequest)
 
   def asDocument(html: Html): Document = Jsoup.parse(html.toString())
 
@@ -47,7 +47,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
     } else {
       ""
     }
-    val title       = errorPrefix + messages(expectedMessageKey, args: _*)
+    val title       = errorPrefix + messages(expectedMessageKey, args*)
     val serviceName = messages("service.name")
     val suffix      = "GOV.UK"
     val fullTitle   = s"$title - $serviceName - $suffix"
@@ -59,7 +59,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
 
     if (elements.isEmpty) throw new IllegalArgumentException(s"CSS Selector $cssSelector wasn't rendered.")
 
-    //<p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
+    // <p> HTML elements are rendered out with a carriage return on some pages, so discount for comparison
     assert(elements.first().html().replace("\n", "") == expectedValue)
   }
 
@@ -68,10 +68,10 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
     headers.size() match {
       case 0                                    => ()
       case 1 if headers.select("label").isEmpty =>
-        headers.first.ownText().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args: _*)
+        headers.first.ownText().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args*)
           .replaceAll("&nbsp;", " ")
       case 1                                    =>
-        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args: _*)
+        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args*)
           .replaceAll("&nbsp;", " ")
       case _                                    => throw new RuntimeException(s"Pages should only have (at most) one h1 element. Found ${headers.size}")
     }
@@ -83,7 +83,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
   def assertNotContainsText(doc: Document, text: String): Assertion =
     assert(!doc.toString.contains(text), "\n\ntext " + text + " was rendered on the page.\n")
 
-  def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit      =
+  def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit =
     for (key <- expectedMessageKeys) assertContainsText(doc, messages(key))
 
   def assertNotContainingMessages(doc: Document, expectedMessageKeys: String*): Unit =

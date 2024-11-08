@@ -26,7 +26,7 @@ class BusinessContactDetailsPageSpec extends PageBehaviours {
     def arbitraryString(gen: Gen[Char], maxSize: Int = 100): Gen[String] =
       Gen.listOfN(maxSize, gen).map(_.mkString)
 
-    implicit val businessContactDetailsGen: Arbitrary[BusinessContactDetails] = Arbitrary(for {
+    given businessContactDetailsGen: Arbitrary[BusinessContactDetails] = Arbitrary(for {
 
       name       <- arbitraryString(Gen.alphaChar)
       phone      <- arbitraryString(Gen.numChar, maxSize = 24)

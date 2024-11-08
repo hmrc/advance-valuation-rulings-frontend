@@ -97,7 +97,7 @@ class IsThisFileConfidentialControllerSpec extends SpecBase {
 
     "when valid data is submitted" - {
       val mockUserAnswersService = mock(classOf[UserAnswersService])
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))

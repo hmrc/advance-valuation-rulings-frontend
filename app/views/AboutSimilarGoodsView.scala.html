@@ -16,8 +16,8 @@
 
 @import components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.{CharacterCount => CharCount}
-@import uk.gov.hmrc.hmrcfrontend.views.html.components._
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.*
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.*
 
 @this(
     layout: templates.Layout,
@@ -34,7 +34,7 @@
     saveButton: SaveButton
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @content = {
             @paragraph(Html(messages("aboutSimilarGoods.para.1")))
@@ -79,7 +79,7 @@
             rows = 10,
             label = LabelViewModel(messages("aboutSimilarGoods.label")).asLegendHeading(),
             value = form("value").value,
-            errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*))))
+            errorMessage = form("value").error.map(err => ErrorMessage(content = Text(messages(err.message, err.args*))))
         ))
 
 

@@ -52,7 +52,7 @@ class AgentSummarySpec extends SpecBase {
 
   "AgentSummary" - {
 
-    implicit val m: Messages = play.api.test.Helpers.stubMessages()
+    given m: Messages = play.api.test.Helpers.stubMessages()
 
     "when given empty user answers" - {
       val summary = new AgentSummaryCreator().summaryRows(userAnswersAsIndividualTrader)

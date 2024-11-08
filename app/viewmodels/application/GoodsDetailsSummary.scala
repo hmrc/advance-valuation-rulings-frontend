@@ -141,11 +141,13 @@ object GoodsDetailsSummary {
 
     val attachmentRowContent = attachments
       .map(file =>
-        s"${file.name} ${if (file.privacy == Confidential) {
-          s"<strong>- ${messages("uploadAnotherSupportingDocument.keepConfidential")}</strong>"
-        } else {
-          ""
-        }}"
+        s"${file.name} ${
+            if (file.privacy == Confidential) {
+              s"<strong>- ${messages("uploadAnotherSupportingDocument.keepConfidential")}</strong>"
+            } else {
+              ""
+            }
+          }"
       )
       .mkString("<br/>")
 

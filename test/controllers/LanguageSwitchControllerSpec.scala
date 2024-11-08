@@ -18,9 +18,8 @@ package controllers
 
 import base.SpecBase
 import play.api.Application
-import play.api.http.Status.SEE_OTHER
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 
 import scala.concurrent.Future

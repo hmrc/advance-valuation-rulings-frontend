@@ -27,7 +27,7 @@ final case class TraderDetailsWithCountryCode(
 )
 
 object TraderDetailsWithCountryCode {
-  implicit val format: OFormat[TraderDetailsWithCountryCode] =
+  given format: OFormat[TraderDetailsWithCountryCode] =
     Json.format[TraderDetailsWithCountryCode]
 }
 
@@ -44,5 +44,5 @@ case class ContactInformation(
   emailVerificationTimestamp: Option[String]
 )
 object ContactInformation {
-  implicit val format: OFormat[ContactInformation] = Json.format[ContactInformation]
+  given format: OFormat[ContactInformation] = Json.format[ContactInformation]
 }

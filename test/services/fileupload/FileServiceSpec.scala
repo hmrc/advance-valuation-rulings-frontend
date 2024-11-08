@@ -21,8 +21,8 @@ import connectors.UpscanConnector
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import models.{Done, DraftAttachment, DraftId, NormalMode, UploadedFile, UserAnswers}
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.freespec.AnyFreeSpec
 import pages.{UploadLetterOfAuthorityPage, UploadSupportingDocumentPage}
@@ -30,6 +30,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import queries.AllDocuments
 import services.UserAnswersService
+import services.fileupload.FileService.NoUserAnswersFoundException
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
 import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
@@ -52,12 +53,14 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
   private lazy val app: GuiceApplicationBuilder = applicationBuilder()
     .configure(
-      "host"                                                              -> "host",
-      "microservice.services.advance-valuation-rulings-frontend.protocol" -> "http",
-      "microservice.services.advance-valuation-rulings-frontend.host"     -> "localhost",
-      "microservice.services.advance-valuation-rulings-frontend.port"     -> "12600",
-      "upscan.minFileSize"                                                -> "123b",
-      "upscan.maxFileSize"                                                -> "321b"
+      configurationBuilder ++ Map(
+        "host"                                                              -> "host",
+        "microservice.services.advance-valuation-rulings-frontend.protocol" -> "http",
+        "microservice.services.advance-valuation-rulings-frontend.host"     -> "localhost",
+        "microservice.services.advance-valuation-rulings-frontend.port"     -> "12600",
+        "upscan.minFileSize"                                                -> "123b",
+        "upscan.maxFileSize"                                                -> "321b"
+      )
     )
     .overrides(
       bind[UpscanConnector].toInstance(mockUpscanConnector),
@@ -100,7 +103,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-          .callback(DraftId(0), isLetterOfAuthority = false)}",
+            .callback(DraftId(0), isLetterOfAuthority = false)}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,
@@ -136,7 +139,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
       val expectedRequest = UpscanInitiateRequest(
         callbackUrl = s"http://localhost:12600${controllers.callback.routes.UploadCallbackController
-          .callback(DraftId(0), isLetterOfAuthority = false)}",
+            .callback(DraftId(0), isLetterOfAuthority = false)}",
         successRedirect = expectedUrl,
         errorRedirect = expectedUrl,
         minimumFileSize = 123,

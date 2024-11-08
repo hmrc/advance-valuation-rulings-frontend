@@ -18,32 +18,30 @@ package connectors
 
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import scala.concurrent.{ExecutionContext, Future}
-
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpException, HttpResponse, StringContextOps, UpstreamErrorResponse}
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
-
 import config.FrontendAppConfig
-import models._
-import models.requests._
+import models.*
+import models.requests.*
 
 @Singleton
 class BackendConnector @Inject() (
   config: FrontendAppConfig,
   httpClient: HttpClientV2
 )(implicit ec: ExecutionContext)
-    extends FrontendHeaderCarrierProvider {
+    extends FrontendHeaderCarrierProvider
+    with Logging {
 
   type Result = Either[BackendError, TraderDetailsWithCountryCode]
-
-  private implicit val logger: Logger = Logger(this.getClass)
 
   private val backendUrl: String = config.advanceValuationRulingsBackendURL
 

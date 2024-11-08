@@ -49,6 +49,6 @@ object AuthUserType extends Enum[AuthUserType] with PlayJsonEnum[AuthUserType] {
       case _               => None
     }
 
-  def apply(request: IdentifierRequest[_]): Option[AuthUserType] =
+  def apply(request: IdentifierRequest[?]): Option[AuthUserType] =
     AuthUserType(request.affinityGroup, request.credentialRole)
 }

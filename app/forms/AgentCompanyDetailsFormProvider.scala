@@ -40,6 +40,6 @@ class AgentCompanyDetailsFormProvider extends Mappings {
         "agentCompanyDetails.error.agentPostalCode.required",
         "agentCompanyDetails.error.agentPostalCode.gb"
       )
-    )(AgentCompanyDetails.apply)(AgentCompanyDetails.unapply)
+    )(AgentCompanyDetails.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

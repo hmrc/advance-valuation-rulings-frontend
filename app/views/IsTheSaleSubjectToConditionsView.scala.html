@@ -26,12 +26,11 @@
     caption: Caption,
     heading: Heading,
     paragraph: Paragraph,
-    subheading: Subheading,
     saveButton: SaveButton,
     legend: LegendH2
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = title(form, messages("isTheSaleSubjectToConditions.title")), draftId = Some(draftId)) {
 

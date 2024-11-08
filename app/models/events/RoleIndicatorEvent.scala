@@ -29,5 +29,5 @@ final case class RoleIndicatorEvent(
 )
 
 object RoleIndicatorEvent {
-  implicit val format: OFormat[RoleIndicatorEvent] = Json.format[RoleIndicatorEvent]
+  given format: OFormat[RoleIndicatorEvent] = Json.format[RoleIndicatorEvent]
 }

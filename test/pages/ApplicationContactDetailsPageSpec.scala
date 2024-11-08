@@ -26,7 +26,7 @@ class ApplicationContactDetailsPageSpec extends PageBehaviours {
     def arbitraryString(gen: Gen[Char], maxSize: Int = 100): Gen[String] =
       Gen.listOfN(maxSize, gen).map(_.mkString)
 
-    implicit val applicationContactDetailsGen: Arbitrary[ApplicationContactDetails] =
+    given applicationContactDetailsGen: Arbitrary[ApplicationContactDetails] =
       Arbitrary(for {
 
         name     <- arbitraryString(Gen.alphaChar)

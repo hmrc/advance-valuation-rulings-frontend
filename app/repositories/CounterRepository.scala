@@ -22,6 +22,7 @@ import org.mongodb.scala.MongoBulkWriteException
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model._
 import uk.gov.hmrc.mongo.MongoComponent
+import org.mongodb.scala.SingleObservableFuture
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
 import javax.inject.{Inject, Singleton}

@@ -57,6 +57,6 @@ object RequiredInformation extends Enumerable.Implicits {
       )
     }
 
-  implicit val enumerable: Enumerable[RequiredInformation] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+  given enumerable: Enumerable[RequiredInformation] =
+    Enumerable(values.map(v => v.toString -> v)*)
 }

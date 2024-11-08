@@ -21,7 +21,7 @@ import play.api.data.{Form, FormError}
 trait StringFieldBehaviours extends FieldBehaviours {
 
   def fieldWithMaxLength(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     maxLength: Int,
     lengthError: FormError
@@ -35,7 +35,7 @@ trait StringFieldBehaviours extends FieldBehaviours {
     }
 
   def numericStringWithMaxLength(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     maxLength: Int,
     lengthError: FormError
@@ -49,7 +49,7 @@ trait StringFieldBehaviours extends FieldBehaviours {
     }
 
   def numericStringWithMinLength(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     minLength: Int,
     lengthError: FormError
@@ -63,7 +63,7 @@ trait StringFieldBehaviours extends FieldBehaviours {
     }
 
   def onlyNumericField(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     lengthError: FormError
   ): Unit =
@@ -76,7 +76,7 @@ trait StringFieldBehaviours extends FieldBehaviours {
     }
 
   def alphaStringWithMaxLength(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     maxLength: Int,
     lengthError: FormError
@@ -90,7 +90,7 @@ trait StringFieldBehaviours extends FieldBehaviours {
     }
 
   def fieldWithRange(
-    form: Form[_],
+    form: Form[?],
     fieldName: String,
     minLength: Int,
     maxLength: Int

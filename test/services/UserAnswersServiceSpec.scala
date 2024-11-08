@@ -37,7 +37,7 @@ class UserAnswersServiceSpec
     with ScalaFutures
     with OptionValues {
 
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private given hc: HeaderCarrier = HeaderCarrier()
 
   private val mockUserAnswersConnector = mock(classOf[UserAnswersConnector])
 

@@ -57,7 +57,7 @@ class SubmissionServiceSpec extends SpecBase {
     letterOfAuthority = None
   )
 
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private given hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach(): Unit = {
     reset(mockBackendConnector)

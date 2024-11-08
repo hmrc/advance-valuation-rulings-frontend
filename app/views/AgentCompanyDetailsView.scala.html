@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import components._
-@import viewmodels.InputWidth._
+@import components.*
+@import viewmodels.InputWidth.*
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
 
@@ -33,7 +33,7 @@
 
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = title(form, messages("agentCompanyDetails.title")), draftId = Some(draftId)) {
 

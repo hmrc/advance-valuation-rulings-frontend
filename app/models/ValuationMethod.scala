@@ -56,6 +56,6 @@ object ValuationMethod extends Enumerable.Implicits {
     )
   }
 
-  implicit val enumerable: Enumerable[ValuationMethod] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+  given enumerable: Enumerable[ValuationMethod] =
+    Enumerable(values.map(v => v.toString -> v)*)
 }

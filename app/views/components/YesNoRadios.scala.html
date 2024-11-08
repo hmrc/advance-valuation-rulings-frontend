@@ -16,7 +16,7 @@
 
 @this()
 
-@(heading: String, content: Html, form: Form[_])(implicit messages: Messages)
+@(heading: String, content: Html, form: Form[?])(implicit messages: Messages)
 
 @valueToCheck(valueToCheck: String) = @{
  if (form("value").value.isDefined && form("value").value.get == valueToCheck) {
@@ -50,7 +50,7 @@ if(form.errors.nonEmpty) {
   <p id="value-error" class="govuk-error-message">
    <span class="govuk-visually-hidden">{messages("error.message.prefix")}</span>
     {form.errors.map {
-       error: FormError =>
+       error =>
         messages(error.message)
     }}
   </p>

@@ -47,7 +47,7 @@ trait BaseIntegrationSpec
     with ScalaCheckPropertyChecks
     with BeforeAndAfterEach {
 
-  implicit val system: ActorSystem               = ActorSystem()
+  given system: ActorSystem                      = ActorSystem()
   implicit lazy val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   val traderDetailsEndpoint = "/advance-valuation-rulings/trader-details"
@@ -77,7 +77,7 @@ trait BaseIntegrationSpec
     eoriNumber: EoriNumber
   ): String =
     s"$traderDetailsEndpoint/${URLEncoder.encode(acknowledgementReference.value, StandardCharsets.UTF_8.displayName())}/${URLEncoder
-      .encode(eoriNumber.value, StandardCharsets.UTF_8.displayName())}"
+        .encode(eoriNumber.value, StandardCharsets.UTF_8.displayName())}"
 
   def getApplicationRequestUrl(
     id: String

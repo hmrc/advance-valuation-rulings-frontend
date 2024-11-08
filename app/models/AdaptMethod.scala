@@ -48,6 +48,6 @@ object AdaptMethod extends Enumerable.Implicits {
     )
   }
 
-  implicit val enumerable: Enumerable[AdaptMethod] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+  given enumerable: Enumerable[AdaptMethod] =
+    Enumerable(values.map(v => v.toString -> v)*)
 }

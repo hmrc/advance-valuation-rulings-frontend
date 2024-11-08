@@ -95,7 +95,7 @@ trait Constraints {
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
     Constraint {
       case date if date.isAfter(maximum) =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
       case _                             =>
         Valid
     }
@@ -103,15 +103,15 @@ trait Constraints {
   protected def minDate(minimum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
     Constraint {
       case date if date.isBefore(minimum) =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
       case _                              =>
         Valid
     }
 
-  protected def length[A](expected: Int, errorKey: String): Constraint[Set[_]] =
+  protected def length[A](expected: Int, errorKey: String): Constraint[Set[?]] =
     Constraint(set => if (set.size == expected) Valid else Invalid(errorKey))
 
-  protected def setEquals[A](expected: Set[_], errorKey: String): Constraint[Set[_]] =
+  protected def setEquals[A](expected: Set[?], errorKey: String): Constraint[Set[?]] =
     Constraint(set => if (set == expected) Valid else Invalid(errorKey))
 
   private val eoriCodeRegex: Regex = new Regex("^(?i)GB[0-9]{12}$")

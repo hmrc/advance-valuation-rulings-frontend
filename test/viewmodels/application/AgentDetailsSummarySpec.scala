@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListR
 
 class AgentDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
-  private implicit val m: Messages = stubMessages()
+  private given m: Messages = stubMessages()
 
   ".rows" - {
 

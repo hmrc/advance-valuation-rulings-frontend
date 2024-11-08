@@ -148,8 +148,18 @@ trait SpecBase
   val mockDraftIdRepo: CounterRepository =
     mock(classOf[CounterRepository])
 
-  when(mockDraftIdRepo.nextId(eqTo(CounterId.DraftId))) thenReturn Future.successful(
-    DraftIdSequence
+  val configurationBuilder: Map[String, Any] = Map(
+    "play.filters.disabled"               -> List("play.filters.csrf.CSRFFilter", "play.filters.csp.CSPFilter"),
+    "create-internal-auth-token-on-start" -> false,
+    "auditing.enabled"                    -> false,
+    "metrics.enabled"                     -> false,
+    "metrics.jvm"                         -> false
+  )
+
+  when(mockDraftIdRepo.nextId(eqTo(CounterId.DraftId))).thenReturn(
+    Future.successful(
+      DraftIdSequence
+    )
   )
 
   protected def applicationBuilder(
@@ -165,6 +175,7 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+      .configure(configurationBuilder)
 
   protected def applicationBuilderAsAgent(
     userAnswers: Option[UserAnswers] = None
@@ -179,6 +190,7 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+      .configure(configurationBuilder)
 
   protected def applicationBuilderAsOrg(
     userAnswers: Option[UserAnswers] = None
@@ -193,11 +205,12 @@ trait SpecBase
         bind[CounterRepository].to(mockDraftIdRepo),
         bind[InternalAuthTokenInitialiser].to[NoOpInternalAuthTokenInitialiser]
       )
+      .configure(configurationBuilder)
 
   def setupTestBuild(userAnswers: UserAnswers): Application = {
     val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-    when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
+    when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
     applicationBuilder(userAnswers = Some(userAnswers))
       .overrides(
         bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),

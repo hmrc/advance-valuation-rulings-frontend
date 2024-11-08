@@ -35,7 +35,7 @@
     legend: LegendH2
 )
 
-@(form: Form[_], mode: Mode, draftId: DraftId, details: TraderDetailsWithConfirmation)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, draftId: DraftId, details: TraderDetailsWithConfirmation)(implicit request: RequestHeader, messages: Messages)
 
 @searchAgainLink = {
   @link(

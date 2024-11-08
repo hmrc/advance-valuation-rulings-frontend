@@ -32,17 +32,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks {
 
-  private val mockAuditConnector = mock(classOf[AuditConnector])
+  private val mockAuditConnector  = mock(classOf[AuditConnector])
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockAuditConnector)
   }
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given hc: HeaderCarrier = HeaderCarrier()
 
   "sendUserTypeEvent" - {
 
-    implicit val identifierRequest: IdentifierRequest[_] = IdentifierRequest(
+    given identifierRequest: IdentifierRequest[?] = IdentifierRequest(
       request = FakeRequest().withHeaders("Referer" -> "some referer"),
       userId = userAnswersId,
       eoriNumber = EoriNumber,
@@ -68,7 +68,7 @@ class AuditServiceSpec extends SpecBase with TableDrivenPropertyChecks {
 
   "sendAgentIndicatorEvent" - {
 
-    implicit val dataRequest: DataRequest[_] = DataRequest(
+    given dataRequest: DataRequest[?] = DataRequest(
       request = FakeRequest(),
       userId = userAnswersId,
       eoriNumber = EoriNumber,

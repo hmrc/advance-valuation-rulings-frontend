@@ -97,9 +97,11 @@ class ProvideTraderEoriControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())) thenReturn Future
-        .successful(Right(traderDetailsWithCountryCode))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())).thenReturn(
+        Future
+          .successful(Right(traderDetailsWithCountryCode))
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
@@ -275,9 +277,11 @@ class ProvideTraderEoriControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())) thenReturn Future
-        .successful(Left(BackendError(404, "eori not found")))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())).thenReturn(
+        Future
+          .successful(Left(BackendError(404, "eori not found")))
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
@@ -312,9 +316,11 @@ class ProvideTraderEoriControllerSpec extends SpecBase {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
-      when(mockUserAnswersService.set(any())(any())) thenReturn Future.successful(Done)
-      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())) thenReturn Future
-        .successful(Left(BackendError(code = 500, message = "some backend error")))
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+      when(mockBackendConnector.getTraderDetails(any(), any())(any(), any())).thenReturn(
+        Future
+          .successful(Left(BackendError(code = 500, message = "some backend error")))
+      )
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))

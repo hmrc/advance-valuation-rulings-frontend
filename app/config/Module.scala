@@ -23,8 +23,8 @@ import java.time.{Clock, ZoneOffset}
 
 class Module extends play.api.inject.Module {
 
-  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
-    val authTokenInitialiserBindings: Seq[Binding[_]] =
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[?]] = {
+    val authTokenInitialiserBindings: Seq[Binding[?]] =
       if (configuration.get[Boolean]("create-internal-auth-token-on-start")) {
         Seq(binding[InternalAuthTokenInitialiser].to[InternalAuthTokenInitialiserImpl].eagerly())
       } else {

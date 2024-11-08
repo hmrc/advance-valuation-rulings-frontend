@@ -82,7 +82,7 @@ class ChangeYourRoleImporterController @Inject() (
             ),
           success = {
             case true  =>
-              val updateUserAnswersAndRedirect = {
+              val updateUserAnswersAndRedirect =
                 for {
                   getAnswersOpt: Option[WhatIsYourRoleAsImporter] <-
                     Future(request.userAnswers.get(DraftWhatIsYourRoleAsImporterPage))
@@ -103,7 +103,6 @@ class ChangeYourRoleImporterController @Inject() (
                 } yield Redirect(
                   navigator.nextPage(ChangeYourRoleImporterPage, NormalMode, deletedUaFromData)
                 )
-              }
               updateUserAnswersAndRedirect
             case false =>
               for {

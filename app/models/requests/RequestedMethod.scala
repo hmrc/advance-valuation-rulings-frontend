@@ -17,11 +17,11 @@
 package models.requests
 
 import cats.data.{NonEmptyList, ValidatedNel}
-import cats.implicits._
+import cats.implicits.*
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import models.{AdaptMethod, UserAnswers, ValuationMethod}
-import pages._
-import play.api.libs.json._
+import pages.*
+import play.api.libs.json.*
 
 sealed trait RequestedMethod
 
@@ -31,7 +31,7 @@ case class MethodOne(
   saleConditions: Option[String]
 ) extends RequestedMethod
 object MethodOne {
-  implicit val format: OFormat[MethodOne] = Json.format[MethodOne]
+  given format: OFormat[MethodOne] = Json.format[MethodOne]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodOne] = {
     val saleInvolved = userAnswers
@@ -74,7 +74,7 @@ object MethodOne {
 
 case class PreviousIdenticalGoods(value: String) extends AnyVal
 object PreviousIdenticalGoods {
-  implicit val format: Format[PreviousIdenticalGoods] = Json.valueFormat[PreviousIdenticalGoods]
+  given format: Format[PreviousIdenticalGoods] = Json.valueFormat[PreviousIdenticalGoods]
 }
 
 case class MethodTwo(
@@ -82,7 +82,7 @@ case class MethodTwo(
   previousIdenticalGoods: PreviousIdenticalGoods
 ) extends RequestedMethod
 object MethodTwo {
-  implicit val format: OFormat[MethodTwo] = Json.format[MethodTwo]
+  given format: OFormat[MethodTwo] = Json.format[MethodTwo]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodTwo] = {
     val whyTransactionValue       = userAnswers.validated(WhyIdenticalGoodsPage)
@@ -103,7 +103,7 @@ object MethodTwo {
 
 case class PreviousSimilarGoods(value: String) extends AnyVal
 object PreviousSimilarGoods {
-  implicit val format: Format[PreviousSimilarGoods] = Json.valueFormat[PreviousSimilarGoods]
+  given format: Format[PreviousSimilarGoods] = Json.valueFormat[PreviousSimilarGoods]
 }
 
 case class MethodThree(
@@ -111,7 +111,7 @@ case class MethodThree(
   previousSimilarGoods: PreviousSimilarGoods
 ) extends RequestedMethod
 object MethodThree {
-  implicit val format: Format[MethodThree] =
+  given format: Format[MethodThree] =
     Json.format[MethodThree]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodThree] = {
@@ -131,7 +131,7 @@ case class MethodFour(
   deductiveMethod: String
 ) extends RequestedMethod
 object MethodFour {
-  implicit val format: OFormat[MethodFour] = Json.format[MethodFour]
+  given format: OFormat[MethodFour] = Json.format[MethodFour]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodFour] = {
     val whyNotOtherMethods = userAnswers.validated(ExplainWhyYouHaveNotSelectedMethodOneToThreePage)
@@ -146,7 +146,7 @@ case class MethodFive(
   computedValue: String
 ) extends RequestedMethod
 object MethodFive {
-  implicit val format: OFormat[MethodFive] = Json.format[MethodFive]
+  given format: OFormat[MethodFive] = Json.format[MethodFive]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodFive] = {
     val whyNotOtherMethods = userAnswers.validated(WhyComputedValuePage)
@@ -184,7 +184,7 @@ case class MethodSix(
   valuationDescription: String
 ) extends RequestedMethod
 object MethodSix {
-  implicit val format: OFormat[MethodSix] = Json.format[MethodSix]
+  given format: OFormat[MethodSix] = Json.format[MethodSix]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, MethodSix] = {
     val whyNotOtherMethods   =
@@ -198,11 +198,12 @@ object MethodSix {
 }
 
 object RequestedMethod {
-  private[models] val jsonConfig                = JsonConfiguration(
+  private[models] val jsonConfig = JsonConfiguration(
     discriminator = "type",
     typeNaming = JsonNaming(fullName => fullName.slice(1 + fullName.lastIndexOf("."), fullName.length))
   )
-  implicit val format: OFormat[RequestedMethod] =
+
+  given format: OFormat[RequestedMethod] =
     Json.configured(jsonConfig).format[RequestedMethod]
 
   def apply(userAnswers: UserAnswers): ValidatedNel[Page, RequestedMethod] = {

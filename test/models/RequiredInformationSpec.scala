@@ -29,7 +29,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
 class RequiredInformationSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators {
 
-  private implicit val m: Messages = stubMessages()
+  private given m: Messages = stubMessages()
 
   "RequiredInformation" - {
 
