@@ -17,10 +17,12 @@
 package models
 
 import play.api.mvc.PathBindable
+import scala.annotation.targetName
 
 case class Index(position: Int) {
   val display: Int = position + 1
 
+  @targetName("addToPosition")
   def +(that: Int): Index =
     Index(this.position + that)
 }
