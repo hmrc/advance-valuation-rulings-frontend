@@ -20,11 +20,13 @@ import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
 import controllers.routes
 import models.{CheckMode, Country, DraftId, EoriNumber, TraderDetailsWithCountryCode}
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ActionItem, HtmlContent}
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
+
+import scala.collection
 
 object CheckRegisteredDetailsSummary {
 
@@ -33,14 +35,7 @@ object CheckRegisteredDetailsSummary {
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswers.eori.name.label",
-      value = ValueViewModel(HtmlFormat.escape(details.CDSFullName).body),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
-        )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.name.change.hidden"))
-      )
+      value = ValueViewModel(HtmlFormat.escape(details.CDSFullName).body)
     )
 
   private def registeredAddressRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
@@ -61,13 +56,6 @@ object CheckRegisteredDetailsSummary {
               )
           )
         )
-      ),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
-        )
-          .withVisuallyHiddenText(messages("checkRegisteredDetails.address.change.hidden"))
       )
     )
 
