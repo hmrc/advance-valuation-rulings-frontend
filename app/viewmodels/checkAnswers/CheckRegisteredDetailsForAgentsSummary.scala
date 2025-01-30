@@ -33,14 +33,7 @@ object CheckRegisteredDetailsForAgentsSummary {
   ): SummaryListRow =
     SummaryListRowViewModel(
       key = "checkYourAnswersForAgents.business.name.label",
-      value = ValueViewModel(HtmlFormat.escape(details.CDSFullName).body),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
-        )
-          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.business.name.hidden"))
-      )
+      value = ValueViewModel(HtmlFormat.escape(details.CDSFullName).body)
     )
 
   private def registeredAddressRow(details: TraderDetailsWithCountryCode, draftId: DraftId)(implicit
@@ -61,13 +54,6 @@ object CheckRegisteredDetailsForAgentsSummary {
               )
           )
         )
-      ),
-      actions = Seq(
-        ActionItemViewModel(
-          "site.change",
-          routes.CheckRegisteredDetailsController.onPageLoad(CheckMode, draftId).url
-        )
-          .withVisuallyHiddenText(messages("checkYourAnswersForAgents.business.address.hidden"))
       )
     )
 
