@@ -21,6 +21,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
+import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait WhatIsYourRoleAsImporter
@@ -45,10 +46,11 @@ object WhatIsYourRoleAsImporter extends Enumerable.Implicits {
     values.zipWithIndex.map { case (value, index) =>
       RadioItem(
         content = HtmlContent(
-          Html(s"<b>${messages(s"$MessagePrefix.${value.toString}")}</b>")
+          Html(s"${messages(s"$MessagePrefix.${value.toString}")}")
         ),
         value = Some(value.toString),
         id = Some(s"value_$index"),
+        label = Some(Label(classes = "govuk-!-font-weight-bold")),
         hint = Some(Hint(content = Text(messages(s"$MessagePrefix.${value.toString}.hint"))))
       )
     }
