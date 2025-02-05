@@ -33,15 +33,15 @@
 
 @codeSpan = {
     <span class="segmented-commodity-code">
-        <span>@messages("commodityCode.hint.pt.1")</span><span>@messages("commodityCode.hint.pt.2")</span><span>@messages("commodityCode.hint.pt.3")</span>
+        <span>@messages("commodityCode.hint.pt.1")</span>
+        <span>@messages("commodityCode.hint.pt.2")</span>
+        <span>@messages("commodityCode.hint.pt.3")</span>
     </span>
     }
 
 @hintContent = {
-<div id="value-hint" class="govuk-hint">
-    @messages("commodityCode.hint")
+    <span>@messages("commodityCode.hint")</span>
     @codeSpan
-</div>
 }
 
 @layout(pageTitle = title(form, messages("commodityCode.title")), draftId = Some(draftId)) {
