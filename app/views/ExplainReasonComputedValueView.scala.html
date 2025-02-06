@@ -32,7 +32,7 @@
 
 @(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
-@paraContent = {@paragraph(Html(messages("explainReasonComputedValue.paragraph")))}
+@paraContent = {@paragraph(Html(messages("explainReasonComputedValue.paragraph")),"govuk-hint")}
 
 @layout(pageTitle = title(form, messages("explainReasonComputedValue.title")), draftId = Some(draftId)) {
 

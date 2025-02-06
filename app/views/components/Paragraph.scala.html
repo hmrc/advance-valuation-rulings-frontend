@@ -17,5 +17,10 @@
 @this()
 
 @(content: Html, classes: String = "govuk-body", id: Option[String] = None)
-
+@if(classes.contains("govuk-hint")) {
+<p class="@classes"
+   @id.map{id=> id="@id"}>@content</p>
+}else{
 <p class="@classes wrappable" @id.map{id => id="@id"}>@content</p>
+}
+

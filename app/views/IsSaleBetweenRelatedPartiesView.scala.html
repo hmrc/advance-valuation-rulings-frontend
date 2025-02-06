@@ -32,7 +32,7 @@
 @(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
 @radiosContent = {
-    <p class="govuk-body" id="value-hint">@messages("isSaleBetweenRelatedParties.para")</p>
+    <p class="govuk-hint" id="value-hint">@messages("isSaleBetweenRelatedParties.para")</p>
 }
 
 @layout(pageTitle = title(form, messages("isSaleBetweenRelatedParties.title")), draftId = Some(draftId)) {

@@ -45,7 +45,7 @@
         @if(includeCompanyName){
             @paragraph(content = Html(messages("businessContactDetails.paragraph.agentTrader")))
         } else {
-            @paragraph(content = Html(messages("businessContactDetails.paragraph.agentOrg")))
+            @paragraph(content = Html(messages("businessContactDetails.paragraph.agentOrg")),"govuk-hint")
         }
 
         @govukInput(
