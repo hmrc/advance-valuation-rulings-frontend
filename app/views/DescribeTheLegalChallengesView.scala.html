@@ -31,7 +31,7 @@
 
 @(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
-@paraContent = {@paragraph(Html(messages("describeTheLegalChallenges.para")))}
+@paraContent = {@paragraph(Html(messages("describeTheLegalChallenges.para")),"govuk-hint")}
 
 @layout(pageTitle = title(form, messages("describeTheLegalChallenges.title")), draftId = Some(draftId)) {
 
