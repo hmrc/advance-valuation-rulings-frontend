@@ -298,7 +298,6 @@ invalidTraderEori.p2 = You will need to contact the trader directly to clarify t
 
 contactPage.title = If we need more information about your application we will contact you
 contactPage.heading = If we need more information about your application we will contact you
-contactPage.caption = About the applicant
 contactPage.paragraph.2 = Please note that email communication may not always be secure, as emails can be read or changed by someone else. If you choose to continue your application, you accept the risks involved.
 
 importGoods.title = Are you planning to import goods into Great Britain?
@@ -314,7 +313,6 @@ requiredInformation.heading = Before you start your application
 requiredInformation.inset.para = You need to be able to accept the following preconditions to continue. If you do not, it could delay your application for an Advance Valuation Ruling decision.
 requiredInformation.checkYourAnswersLabel = Before you start your application
 requiredInformation.change.hidden = required information
-requiredInformation.caption = Starter checklist
 
 requiredInformation.option1.individual = I am aware that I will need to propose a method to value the goods
 requiredInformation.option2.individual = I will supply HMRC with my contact email and phone number as part of this application

@@ -37,7 +37,6 @@
 
     @formHelper(action = routes.ContactPageController.onSubmit(mode, draftId)) {
 
-        @caption(messages("contactPage.caption"))
         @heading(messages("contactPage.heading"))
         @paragraph(content = Html(messages("contactPage.paragraph.2")))
         @saveButton(draftId, "site.acceptContinue")

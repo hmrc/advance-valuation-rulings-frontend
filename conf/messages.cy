@@ -58,7 +58,6 @@ caption.prefix = Yr adran hon yw
 caption.applicant = Ynglŷn â’r ymgeisydd
 caption.goods = Ynglŷn â’r nwyddau
 
-requiredInformation.caption = Rhestr wirio
 requiredInformation.title = Cyn i chi ddechrau’ch cais
 requiredInformation.heading = Cyn i chi ddechrau’ch cais
 requiredInformation.checkYourAnswersLabel = Cyn i chi ddechrau’ch cais
@@ -482,7 +481,6 @@ hasCommodityCode.linkText = chwilio am y cod nwyddau ar gyfer eich nwyddau (yn a
 hasCommodityCode.change.hidden = p’un a oes gennych god nwyddau ar gyfer y nwyddau
 hasCommodityCode.question = A oes gennych chi god nwyddau ar gyfer y nwyddau?
 
-contactPage.caption = Ynglŷn â’r ymgeisydd
 contactPage.title = Os bydd angen rhagor o wybodaeth arnom am eich cais, byddwn yn cysylltu â chi
 contactPage.heading = Os bydd angen rhagor o wybodaeth arnom am eich cais, byddwn yn cysylltu â chi
 contactPage.paragraph.2 = Sylwer – efallai na fydd cyfathrebu drwy e-bost bob amser yn ddiogel, gan ei bod hi’n bosib y gall e-byst gael eu darllen neu eu newid gan rywun arall. Os ydych yn dewis i barhau â’ch cais, rydych yn derbyn y risgiau cysylltiedig.
