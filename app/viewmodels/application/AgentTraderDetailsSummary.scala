@@ -41,11 +41,19 @@ object AgentTraderDetailsSummary extends ApplicationSummaryHelper {
       case _           => None
     }
 
-  def rowTraderEori(eori: String)(implicit messages: Messages): SummaryListRow =
-    SummaryListRowViewModel(
-      key = "agentForTraderCheckYourAnswers.trader.eori.number.label",
-      value = ValueViewModel(eori)
-    )
+  def rowTraderDetailsWithEori (traderDetail: TraderDetail)(implicit messages: Messages): Seq[SummaryListRow] =
+    {
+       Seq(
+          SummaryListRowViewModel(
+            key = "agentForTraderCheckYourAnswers.trader.eori.number.label",
+            value = ValueViewModel(traderDetail.eori)
+          )
+       ) ++
+        rowsTraderDetails(traderDetail)
+
+    }
+
+
 
   def rowsTraderDetails(traderDetail: TraderDetail)(implicit
     messages: Messages

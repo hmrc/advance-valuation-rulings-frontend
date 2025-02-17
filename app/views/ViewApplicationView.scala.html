@@ -32,6 +32,7 @@ paragraph: Paragraph,
 bulletList: BulletList,
 aboutTheGoods: AboutTheGoods,
 forYourRecords: ForYourRecords,
+agentDetails: AgentDetails,
 appConfig: FrontendAppConfig,
 fullMainContent: FullLayoutMainContent,
 printApplicationLink: PrintApplicationLink
@@ -64,10 +65,8 @@ mainContentLayout = Some(fullMainContent(_))
                         @messages("viewApplication.hmrc")
                     </p>
                 </div>
-                <div class="grid-row print-header">
-
-                </div>
                 @forYourRecords(appModel, applicationId, lastUpdated)
+                @agentDetails(appModel, applicationId, lastUpdated)
             </div>
         </div>
     </div>
