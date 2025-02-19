@@ -44,10 +44,10 @@ paragraph: Paragraph
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        @if(appModel.agent && appModel.applicant){
-        <h2 class="govuk-heading-m">@messages("viewApplication.trader")</h2>
+        @if(appModel.trader){
+            <h2 class="govuk-heading-m">@messages("viewApplication.trader")</h2>
         } else if (appModel.agent){
-        <h2 class="govuk-heading-m">@messages("viewApplication.organisation")</h2>
+            <h2 class="govuk-heading-m">@messages("viewApplication.organisation")</h2>
         } else {
         <h2 class="govuk-heading-m">@messages("viewApplication.employee")</h2>
         }
@@ -55,9 +55,6 @@ paragraph: Paragraph
 
     <div class="govuk-grid-column-full">
         @govukSummaryList(appModel.eori)
-        @if(appModel.applicant && !appModel.agent) {
-        @govukSummaryList(appModel.applicant.get)
-        }
     </div>
 </div>
 

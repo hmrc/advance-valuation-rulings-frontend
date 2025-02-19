@@ -21,7 +21,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
-import models.requests.{Attachment, ContactDetails, TraderDetail}
+import models.requests.{Attachment, ContactDetails,  TraderDetail}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -41,18 +41,11 @@ object AgentTraderDetailsSummary extends ApplicationSummaryHelper {
       case _           => None
     }
 
-  def rowTraderDetailsWithEori (traderDetail: TraderDetail)(implicit messages: Messages): Seq[SummaryListRow] =
-    {
-       Seq(
-          SummaryListRowViewModel(
-            key = "agentForTraderCheckYourAnswers.trader.eori.number.label",
-            value = ValueViewModel(traderDetail.eori)
-          )
-       ) ++
-        rowsTraderDetails(traderDetail)
-
-    }
-
+  def rowTraderEori(eori: String)(implicit messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "agentForTraderCheckYourAnswers.trader.eori.number.label",
+      value = ValueViewModel(eori)
+    )
 
 
   def rowsTraderDetails(traderDetail: TraderDetail)(implicit

@@ -17,15 +17,16 @@
 package viewmodels
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList, SummaryListRow}
 import models.requests.*
+import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import viewmodels.application.*
 import viewmodels.checkAnswers.*
-import viewmodels.govuk.summarylist._
+import viewmodels.govuk.summarylist.*
 
 case class ApplicationViewModel(
   eori: SummaryList,
-  applicant: Option[SummaryList],
+  trader: Option[SummaryList],
   agent: Option[SummaryList],
   details: SummaryList,
   method: SummaryList
@@ -35,66 +36,71 @@ object ApplicationViewModel {
   def apply(application: Application)(implicit
                                       messages: Messages
   ): ApplicationViewModel = {
-    val eoriRow         = getEoriRow(application)
+    val eori =   getEoriRow(application)
     val dateSubmitted   = DateSubmittedSummary.row(application)
-    val roleDescription = RoleDetailsSummary.rowRoleDescription(application.whatIsYourRoleResponse)
-    val agentCompanyRows= application.agent.map(agent => AgentDetailsSummary.rows(agent)).getOrElse(Nil)
-    val agentDetails    = roleDescription.get +: AgentTraderDetailsSummary.rowsAgentDetails(application.contact)
+    val roleDescription = RoleDetailsSummary.rowRoleDescription(application.whatIsYourRoleResponse).getOrElse(SummaryListRowViewModel(Key(), Value()))
+    val agentTraderDetails = AgentTraderDetailsSummary.rowsAgentDetails(application.contact)
+    val agentCompanyRows = application.agent.map(agent => AgentDetailsSummary.rows(agent)).getOrElse(Nil)
     val goodsDetails    = GoodsDetailsSummary.rows(application.goodsDetails, application.attachments)
     val methodDetails   = RequestedMethodSummary.rows(application.requestedMethod)
-    val applicant       = ContactDetailsSummary.rows(application.contact) :+ dateSubmitted
-    val letterOfAuthorityOption =
-      AgentTraderDetailsSummary.rowLetterOfAuthority(application.letterOfAuthority)
+    val applicant       = ContactDetailsSummary.rows(application.contact)
+    val letterOfAuthorityOption = AgentTraderDetailsSummary.rowLetterOfAuthority(application.letterOfAuthority).getOrElse(SummaryListRowViewModel(Key(), Value()))
 
-    val agent: Seq[SummaryListRow] =
-      if (applicationRole(application).equals("trader")) {
-        val traderDetails           = application.trader.isPrivate
-          .filter(isPrivate => !isPrivate)
-          .map(_ => AgentTraderDetailsSummary.rowsTraderDetails(application.trader))
-          .toList
-          .flatten
+    val eoriRow         =
+      val traderDetails           = application.trader.isPrivate
+        .filter(isPrivate => !isPrivate)
+        .map(_ => AgentTraderDetailsSummary.rowsTraderDetails(application.trader))
+        .toList
+        .flatten
 
-        traderDetails ++ letterOfAuthorityOption
-      } else {
-        agentDetails ++ agentCompanyRows :+ dateSubmitted
+      applicationRole(application) match {
+        case "applicant" => eori ++ applicant :+ dateSubmitted
+        case "trader" =>  eori ++ traderDetails :+ letterOfAuthorityOption
+        case _ =>  eori
       }
+
+    val agentDetails: Seq[SummaryListRow] =
+      if(applicationRole(application).equals("trader")) {
+        agentTraderDetails :+ dateSubmitted
+      } else {
+        agentTraderDetails ++ agentCompanyRows :+ dateSubmitted
+      }
+
 
     applicationRole(application) match {
       case "trader" =>
       ApplicationViewModel(
-        eori = SummaryList(eoriRow ++ letterOfAuthorityOption),
-        applicant = Some(SummaryList(agent)),
-        agent = Some(SummaryList(agentDetails :+ dateSubmitted)),
+        eori = SummaryList(eoriRow),
+        trader = Some(SummaryList(roleDescription +: agentDetails)),
+        agent = None,
         details = SummaryList(goodsDetails),
         method = SummaryList(methodDetails)
       )
       case "organisation" =>   ApplicationViewModel(
         eori = SummaryList(eoriRow),
-        applicant = None,
-        agent = Some(SummaryList(agent)),
+        trader = None,
+        agent = Some(SummaryList(roleDescription +: agentDetails)),
         details = SummaryList(goodsDetails),
         method = SummaryList(methodDetails)
       )
       case _ =>   ApplicationViewModel(
-        eori = SummaryList(roleDescription.get +: eoriRow),
-        applicant = Some(SummaryList(applicant)),
+        eori = SummaryList(roleDescription +: eoriRow),
+        trader = None,
         agent = None,
         details = SummaryList(goodsDetails),
         method = SummaryList(methodDetails)
       )
     }
-
   }
 
   private def getEoriRow(application: Application)(implicit
                                                    messages: Messages
   ): Seq[SummaryListRow] =
     if (applicationRole(application).equals("trader")) {
-      AgentTraderDetailsSummary.rowTraderDetailsWithEori(application.trader)
+      Seq(AgentTraderDetailsSummary.rowTraderEori(application.trader.eori))
     } else {
       RegisteredDetailsSummary.rows(application.trader)
     }
-
 
   private def applicationRole(application: Application) = {
     application.whatIsYourRoleResponse match {

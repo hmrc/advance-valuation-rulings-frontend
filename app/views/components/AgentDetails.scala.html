@@ -19,27 +19,27 @@
 @import viewmodels.ApplicationViewModel
 
 @this(
-layout: templates.Layout,
-govukSummaryList: GovukSummaryList,
-applicationSummaryList: ApplicationSummaryList,
-heading: Heading,
-headingH3: headingH3,
-paragraph: Paragraph
+    layout: templates.Layout,
+    govukSummaryList: GovukSummaryList,
+    applicationSummaryList: ApplicationSummaryList,
+    heading: Heading,
+    headingH3: headingH3,
+    paragraph: Paragraph
 )
 
 @(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String)(implicit messages: Messages)
 
-@if(appModel.agent){
+@if(appModel.agent || appModel.trader){
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h2 class="govuk-heading-m">@messages("viewApplication.agent")</h2>
     </div>
 
     <div class="govuk-grid-column-full">
-        @if(appModel.applicant){
-        @govukSummaryList(appModel.agent.get)
+        @if(appModel.trader){
+            @govukSummaryList(appModel.trader.getOrElse(SummaryList(Seq.empty)))
         } else {
-        @govukSummaryList(appModel.agent.get)
+            @govukSummaryList(appModel.agent.getOrElse(SummaryList(Seq.empty)))
         }
     </div>
 </div>
