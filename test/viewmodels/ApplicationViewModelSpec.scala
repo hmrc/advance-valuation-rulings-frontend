@@ -34,68 +34,94 @@ class ApplicationViewModelSpec extends SpecBase {
 
     implicit val m: Messages = play.api.test.Helpers.stubMessages()
 
-    "when given a valid application for a trader" - {
+    "when given a valid application for an employee" - {
 
       val result = ApplicationViewModel(application)
 
-      "must create rows for the eori details" in {
-        result.eori.rows must be(
-          Seq(
-            SummaryListRow(
-              Key(Text("checkYourAnswers.eori.number.label")),
-              Value(Text(eoriDetails.eori))
-            )
-          )
-        )
-      }
+      "must create rows for the employee" - {
 
-      "must create rows for the applicant" - {
+        "must create 9 rows" in {
+          result.eori.rows.length must be(9)
+        }
 
-        "must create 6 rows" in {
-          result.applicant.rows.length must be(6)
-        }
-        "must create row for the applicant name" in {
-          result.applicant.rows must contain(
-            SummaryListRow(
-              Key(Text("checkYourAnswers.applicant.name.label")),
-              Value(Text(contact.name))
-            )
-          )
-        }
-        "must create row for the applicant email" in {
-          result.applicant.rows must contain(
-            SummaryListRow(
-              Key(Text("checkYourAnswers.applicant.email.label")),
-              Value(Text(contact.email))
-            )
-          )
-        }
-        "must create row for the applicant phone" in {
-          result.applicant.rows must contain(
-            SummaryListRow(
-              Key(Text("checkYourAnswers.applicant.phone.label")),
-              Value(Text(contact.phone.get))
-            )
-          )
-        }
-        "must create row for the applicant job title" in {
-          result.applicant.rows must contain(
-            SummaryListRow(
-              Key(Text("checkYourAnswers.applicant.jobTitle.label")),
-              Value(Text(contact.jobTitle.get))
-            )
-          )
-        }
-        "must create row for the applicant description of role" in {
-          result.applicant.rows must contain(
+        "must create row for the role description" in {
+          result.eori.rows must contain(
             SummaryListRow(
               Key(Text("checkYourAnswersForAgents.applicant.role.label")),
               Value(Text("whatIsYourRoleAsImporter.employeeOfOrg"))
             )
           )
         }
+
+        "must create row for the organisation's eori" in {
+          result.eori.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.eori.number.label")),
+              Value(Text(eoriDetails.eori))
+            )
+          )
+        }
+
+        "must create row for the organisation's business name" in {
+          result.eori.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.eori.name.label")),
+              Value(Text(eoriDetails.businessName))
+            )
+          )
+        }
+
+        "must create row for the organisation's business address" in {
+          result.eori.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.eori.address.label")),
+              Value(
+                HtmlContent(
+                  eoriDetails.addressLine1 + "<br/>" + eoriDetails.addressLine2.get + "<br/>" + eoriDetails.postcode + "<br/>" + eoriDetails.countryCode
+                )
+              )
+            )
+          )
+        }
+
+        "must create row for the applicant name" in {
+          result.eori.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.applicant.name.label")),
+              Value(Text(contact.name))
+            )
+          )
+        }
+
+        "must create row for the applicant email" in {
+          result.eori.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.applicant.email.label")),
+              Value(Text(contact.email))
+            )
+          )
+        }
+
+        "must create row for the applicant phone" in {
+          result.eori.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.applicant.phone.label")),
+              Value(Text(contact.phone.get))
+            )
+          )
+        }
+
+        "must create row for the agent job title" in {
+          result.eori.rows must contain(
+            SummaryListRow(
+              Key(Text("checkYourAnswers.applicant.jobTitle.label")),
+              Value(Text(contact.jobTitle.get))
+            )
+          )
+        }
+
         "must create row for date submitted" in {
-          result.applicant.rows must contain(
+          result.eori.rows must contain(
             SummaryListRow(
               Key(Text("viewApplication.dateSubmitted")),
               Value(Text("22 August 2018"))
@@ -192,70 +218,79 @@ class ApplicationViewModelSpec extends SpecBase {
         phoneNumber = None,
         isPrivate = None
       )
-      val agentApplication = application.copy(agent = Some(agent))
+      val agentApplication =
+        application.copy(agent = Some(agent), whatIsYourRoleResponse = Some(WhatIsYourRole.AgentOrg))
       val result           = ApplicationViewModel(agentApplication)
 
-      "must create 9 rows" in {
-        result.applicant.rows.length must be(9)
+      "must create 10 rows" in {
+        result.agent.get.rows.length must be(10)
       }
-      "must create row for the applicant name" in {
-        result.applicant.rows must contain(
+
+      "must create row for the applicant description of role" in {
+        result.agent.get.rows must contain(
           SummaryListRow(
-            Key(Text("checkYourAnswers.applicant.name.label")),
+            Key(Text("checkYourAnswersForAgents.applicant.role.label")),
+            Value(Text("whatIsYourRoleAsImporter.agentOnBehalfOfOrg"))
+          )
+        )
+      }
+
+      "must create row for the applicant name" in {
+        result.agent.get.rows must contain(
+          SummaryListRow(
+            Key(Text("agentForTraderCheckYourAnswers.applicant.name.label")),
             Value(Text(contact.name))
           )
         )
       }
+
       "must create row for the applicant email" in {
-        result.applicant.rows must contain(
+        result.agent.get.rows must contain(
           SummaryListRow(
-            Key(Text("checkYourAnswers.applicant.email.label")),
+            Key(Text("agentForTraderCheckYourAnswers.applicant.email.label")),
             Value(Text(contact.email))
           )
         )
       }
+
       "must create row for the applicant phone" in {
-        result.applicant.rows must contain(
+        result.agent.get.rows must contain(
           SummaryListRow(
-            Key(Text("checkYourAnswers.applicant.phone.label")),
+            Key(Text("agentForTraderCheckYourAnswers.applicant.phone.label")),
             Value(Text(contact.phone.get))
           )
         )
       }
+
       "must create row for the applicant job title" in {
-        result.applicant.rows must contain(
+        result.agent.get.rows must contain(
           SummaryListRow(
-            Key(Text("checkYourAnswers.applicant.jobTitle.label")),
+            Key(Text("agentForTraderCheckYourAnswers.applicant.jobTitle.label")),
             Value(Text(contact.jobTitle.get))
           )
         )
       }
-      "must create row for the applicant description of role" in {
-        result.applicant.rows must contain(
-          SummaryListRow(
-            Key(Text("checkYourAnswersForAgents.applicant.role.label")),
-            Value(Text("whatIsYourRoleAsImporter.employeeOfOrg"))
-          )
-        )
-      }
+
       "must create row for the agent eori" in {
-        result.applicant.rows must contain(
+        result.agent.get.rows must contain(
           SummaryListRow(
             Key(Text("checkYourAnswersForAgents.agent.eori.number.label")),
             Value(Text(agent.eori))
           )
         )
       }
+
       "must create row for the agent business name" in {
-        result.applicant.rows must contain(
+        result.agent.get.rows must contain(
           SummaryListRow(
             Key(Text("checkYourAnswersForAgents.agent.name.label")),
             Value(Text(agent.businessName))
           )
         )
       }
+
       "must create row for the agent address" in {
-        result.applicant.rows must contain(
+        result.agent.get.rows must contain(
           SummaryListRow(
             Key(Text("checkYourAnswersForAgents.agent.address.label")),
             Value(
@@ -266,8 +301,9 @@ class ApplicationViewModelSpec extends SpecBase {
           )
         )
       }
+
       "must create row for date submitted" in {
-        result.applicant.rows must contain(
+        result.agent.get.rows must contain(
           SummaryListRow(
             Key(Text("viewApplication.dateSubmitted")),
             Value(Text("22 August 2018"))
@@ -304,7 +340,7 @@ class ApplicationViewModelSpec extends SpecBase {
       val resultUndefinedPrivacy                       =
         ApplicationViewModel(agentTraderApplicationTraderPrivacyUndefined)
       "must contain trader business name for a public trader" in {
-        resultPublic.applicant.rows must contain(
+        resultPublic.eori.rows must contain(
           SummaryListRow(
             Key(Text("agentForTraderCheckYourAnswers.trader.name.label")),
             Value(Text(publicTrader.businessName))
@@ -312,7 +348,7 @@ class ApplicationViewModelSpec extends SpecBase {
         )
       }
       "must contain trader address for a public trader" in {
-        resultPublic.applicant.rows must contain(
+        resultPublic.eori.rows must contain(
           SummaryListRow(
             Key(Text("agentForTraderCheckYourAnswers.trader.address.label")),
             Value(
@@ -324,14 +360,14 @@ class ApplicationViewModelSpec extends SpecBase {
         )
       }
       "must not contain trader business name for a private trader" in {
-        resultPrivate.applicant.rows must not contain SummaryListRow(
+        resultPrivate.eori.rows must not contain SummaryListRow(
           Key(Text("agentForTraderCheckYourAnswers.trader.name.label")),
           Value(Text(privateTrader.businessName))
         )
 
       }
       "must not contain trader address for a private trader" in {
-        resultPrivate.applicant.rows must not contain
+        resultPrivate.eori.rows must not contain
           SummaryListRow(
             Key(Text("agentForTraderCheckYourAnswers.trader.address.label")),
             Value(
@@ -343,14 +379,14 @@ class ApplicationViewModelSpec extends SpecBase {
       }
 
       "must not contain trader business name for an undefined privacy trader" in {
-        resultUndefinedPrivacy.applicant.rows must not contain SummaryListRow(
+        resultUndefinedPrivacy.trader.get.rows must not contain SummaryListRow(
           Key(Text("agentForTraderCheckYourAnswers.trader.name.label")),
           Value(Text(undefinedPrivacyTrader.businessName))
         )
 
       }
       "must not contain trader address for an undefined privacy trader" in {
-        resultUndefinedPrivacy.applicant.rows must not contain
+        resultUndefinedPrivacy.trader.get.rows must not contain
           SummaryListRow(
             Key(Text("agentForTraderCheckYourAnswers.trader.address.label")),
             Value(
@@ -386,6 +422,18 @@ object ApplicationViewModelSpec extends Generators {
     phone = Some("phone"),
     companyName = Some("company name"),
     jobTitle = Some("job title")
+  )
+
+  val letterOfAuthorityRequest: Option[Attachment] = Some(
+    Attachment(
+      45L,
+      "letter of authority",
+      None,
+      "",
+      Privacy.Public,
+      "",
+      3L
+    )
   )
 
   val requestedMethod: MethodThree = MethodThree(

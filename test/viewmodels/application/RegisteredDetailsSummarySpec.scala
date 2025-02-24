@@ -21,7 +21,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, Value}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 
@@ -45,9 +45,24 @@ class RegisteredDetailsSummarySpec extends AnyFreeSpec with Matchers {
 
     "must contain a row for the trader's EORI" in {
 
-      RegisteredDetailsSummary.rows(trader) must contain only SummaryListRow(
-        Key(Text(m("checkYourAnswers.eori.number.label"))),
-        Value(Text(trader.eori))
+      RegisteredDetailsSummary.rows(trader) must contain
+      Seq(
+        SummaryListRow(
+          Key(Text(m("checkYourAnswers.eori.number.label"))),
+          Value(Text(trader.eori))
+        ),
+        SummaryListRow(
+          Key(Text(m("checkYourAnswers.eori.name.label"))),
+          Value(Text(trader.businessName))
+        ),
+        SummaryListRow(
+          Key(Text(m("checkYourAnswers.eori.address.label"))),
+          Value(
+            HtmlContent(
+              trader.addressLine1 + "<br/>" + trader.addressLine2.get + "<br/>" + trader.postcode + "<br/>" + trader.countryCode
+            )
+          )
+        )
       )
     }
   }

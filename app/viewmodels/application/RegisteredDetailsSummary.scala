@@ -18,17 +18,37 @@ package viewmodels.application
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-
 import models.requests.TraderDetail
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
 
 object RegisteredDetailsSummary {
 
-  def rows(trader: TraderDetail)(implicit messages: Messages): Seq[SummaryListRow] = Seq(
-    SummaryListRowViewModel(
-      key = "checkYourAnswers.eori.number.label",
-      value = ValueViewModel(trader.eori)
+  def rows(trader: TraderDetail)(implicit messages: Messages): Seq[SummaryListRow] = {
+    val addressLines = Seq(
+      Some(trader.addressLine1),
+      trader.addressLine2,
+      trader.addressLine3,
+      Some(trader.postcode),
+      Some(trader.countryCode)
+    ).flatten.mkString("<br/>")
+
+    Seq(
+      SummaryListRowViewModel(
+        key = "checkYourAnswers.eori.number.label",
+        value = ValueViewModel(trader.eori)
+      ),
+      SummaryListRowViewModel(
+        key = "checkYourAnswers.eori.name.label",
+        value = ValueViewModel(trader.businessName)
+      ),
+      SummaryListRowViewModel(
+        key = "checkYourAnswers.eori.address.label",
+        value = ValueViewModel(HtmlContent(Html(addressLines)))
+      )
     )
-  )
+  }
+
 }
