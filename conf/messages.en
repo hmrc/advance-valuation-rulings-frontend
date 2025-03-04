@@ -972,12 +972,14 @@ businessContactDetails.companyName.label = Registered business name
 businessContactDetails.companyName.error.required = Enter your registered business name
 businessContactDetails.jobTitle.error.required = Enter your job title
 
-cancelAreYouSure.title = Are you sure you want to cancel your application?
-cancelAreYouSure.heading = Are you sure you want to cancel your application?
+cancelAreYouSure.title = Are you sure you want to cancel this application?
+cancelAreYouSure.heading = Are you sure you want to cancel this application?
 cancelAreYouSure.error.required = Select yes if you want to cancel your application
 cancelAreYouSure.return = Return to application
-cancelAreYouSure.button = Confirm
-cancelAreYouSure.inset.text = If you cancel now any data will be lost and you will need to make a new application.
+cancelAreYouSure.button = Continue
+cancelAreYouSure.inset.text = If you cancel, your information will be deleted and you will have to start the application again
+cancelAreYouSure.radio.yes = Yes, I want to cancel this application
+cancelAreYouSure.radio.no = No, I want to continue with this application
 
 agentCompanyDetails.title = Your organisation’s contact details
 agentCompanyDetails.heading = Your organisation’s contact details
