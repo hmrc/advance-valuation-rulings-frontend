@@ -23,6 +23,6 @@ class CancelApplicationFormProvider extends Mappings {
 
   def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean("cancelAreYouSure.error.required") // need to change
+      "value" -> boolean("cancelAreYouSure.error.required")
     )
 }
