@@ -43,6 +43,7 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider, unchangedModeNavi
     case HasConfidentialInformationPage                   => hasConfidentialInformationPage
     case ConfidentialInformationPage                      => confidentialInformationPage
     case ImportGoodsPage                                  => importGoodsPage
+    case CancelApplicationPage                            => cancelApplicationPage
     case WhatIsYourRoleAsImporterPage                     => whatIsYourRoleAsImporterPage
     case ChangeYourRoleImporterPage                       => changeYourRoleImporterPageRoute
     case TellUsAboutYourRulingPage                        => tellUsAboutYourRuling
@@ -444,6 +445,12 @@ class Navigator @Inject() (userRoleProvider: UserRoleProvider, unchangedModeNavi
       case None        => ImportGoodsController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(true)  => ContactPageController.onPageLoad(NormalMode, userAnswers.draftId)
       case Some(false) => ImportingGoodsController.onPageLoad(userAnswers.draftId)
+    }
+
+  private def cancelApplicationPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(CancelApplicationPage) match {
+      case None    => CancelApplicationController.onPageLoad(userAnswers.draftId)
+      case Some(_) => CancelApplicationController.confirmCancel(userAnswers.draftId)
     }
 
   private def whatIsYourRoleAsImporterPage(userAnswers: UserAnswers): Call =
