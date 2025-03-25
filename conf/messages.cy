@@ -920,7 +920,7 @@ willYouCompareGoodsToIdenticalGoods.error.required = Dewiswch ‘Iawn’ os bydd
 willYouCompareGoodsToIdenticalGoods.change.hidden = eich ymateb i a fyddwch yn cymharu’ch nwyddau â nwyddau unfath a fewnforiwyd gan brynwr neu werthwr arall yn ystod y 90 diwrnod diwethaf
 
 viewApplication.title = Manylion y cais am Ddyfarniad Prisio Ymlaen Llaw
-viewApplication.heading = Manylion y cais am Ddyfarniad Prisio Ymlaen Llaw
+viewApplication.heading = Cyfeirnod eich cais yw
 viewApplication.printLink = Argraffu neu gadw copi o’ch atebion
 viewApplication.employee = Ynglŷn â’r ymgeisydd
 viewApplication.organisation = Ynglŷn â’r sefydliad

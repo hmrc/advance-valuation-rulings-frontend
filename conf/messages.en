@@ -932,7 +932,7 @@ whatIsYourRoleAsImporter.agentOnBehalfOfTrader = Agent acting on behalf of a tra
 whatIsYourRoleAsImporter.agentOnBehalfOfTrader.hint = Imports goods into the UK on behalf of an individual trader.
 
 viewApplication.title = Advance Valuation Ruling application details
-viewApplication.heading = Advance Valuation Ruling application details
+viewApplication.heading = Your application reference number is
 viewApplication.printLink = Print or save a copy of your answers
 viewApplication.employee = About the applicant
 viewApplication.organisation = About the organisation
