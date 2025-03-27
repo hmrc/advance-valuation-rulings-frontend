@@ -46,12 +46,6 @@ pageTitle = titleNoForm(messages("viewApplication.title")),
 mainContentLayout = Some(fullMainContent(_))
 ) {
 
-<div class="govuk-!-display-none-print">
-    @heading(messages("viewApplication.heading"), size="l")
-</div>
-
-@printApplicationLink()
-
 <div id="print-pages">
     <div class="page-break">
         <div class="break-after">
@@ -64,6 +58,13 @@ mainContentLayout = Some(fullMainContent(_))
                         @messages("viewApplication.hmrc")
                     </p>
                 </div>
+                <div class="information-box">
+                    <h1 class="govuk-body hero-text">@messages("viewApplication.reference")</h1>
+                    <p class="govuk-body hero-text">
+                        <span class="reference-number">@applicationId</span>
+                    </p>
+                </div>
+                @printApplicationLink()
                 @forYourRecords(appModel, applicationId, lastUpdated)
                 @agentDetails(appModel, applicationId, lastUpdated)
             </div>

@@ -29,12 +29,6 @@ paragraph: Paragraph
 
 @(appModel: ApplicationViewModel, referenceNumber: String, lastUpdated: String)(implicit messages: Messages)
 
-<div class="information-box">
-    <p class="govuk-body hero-text">@messages("viewApplication.reference")<br>
-        <span class="reference-number">@referenceNumber</span>
-    </p>
-</div>
-
 <div class="govuk-grid-row main-content">
         <div class="govuk-grid-column-full">
             <h2 class="govuk-heading-m">@messages("viewApplication.whatHappensNext.heading")</h2>

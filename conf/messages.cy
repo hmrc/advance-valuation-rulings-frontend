@@ -920,7 +920,7 @@ willYouCompareGoodsToIdenticalGoods.error.required = Dewiswch ‘Iawn’ os bydd
 willYouCompareGoodsToIdenticalGoods.change.hidden = eich ymateb i a fyddwch yn cymharu’ch nwyddau â nwyddau unfath a fewnforiwyd gan brynwr neu werthwr arall yn ystod y 90 diwrnod diwethaf
 
 viewApplication.title = Manylion y cais am Ddyfarniad Prisio Ymlaen Llaw
-viewApplication.heading = Manylion y cais am Ddyfarniad Prisio Ymlaen Llaw
+viewApplication.heading = Cyfeirnod eich cais yw
 viewApplication.printLink = Argraffu neu gadw copi o’ch atebion
 viewApplication.employee = Ynglŷn â’r ymgeisydd
 viewApplication.organisation = Ynglŷn â’r sefydliad
@@ -936,12 +936,14 @@ viewApplication.yourRuling = Eich cais am Ddyfarniad Prisio Ymlaen Llaw
 viewApplication.reference = Cyfeirnod eich cais yw
 viewApplication.hmrc = Cyllid a Thollau EF
 
-cancelAreYouSure.title = A ydych yn siŵr eich bod am ganslo’ch cais?
-cancelAreYouSure.heading = A ydych yn siŵr eich bod am ganslo’ch cais?
+cancelAreYouSure.title = A ydych yn siŵr eich bod am ganslo’r cais hwn?
+cancelAreYouSure.heading = A ydych yn siŵr eich bod am ganslo’r cais hwn?
 cancelAreYouSure.error.required = Dewiswch ‘Iawn’ os hoffech ganslo’ch cais
 cancelAreYouSure.return = Yn ôl i’r cais
-cancelAreYouSure.button = Cadarnhau
-cancelAreYouSure.inset.text = Os byddwch yn canslo nawr, bydd unrhyw ddata yn cael eu colli a bydd angen i chi wneud cais newydd.
+cancelAreYouSure.button = Parhau
+cancelAreYouSure.inset.text = Os byddwch yn canslo, bydd eich gwybodaeth yn cael ei dileu a bydd yn rhaid i chi ddechrau’r cais eto
+cancelAreYouSure.radio.yes = Iawn, rwyf am ganslo’r cais hwn
+cancelAreYouSure.radio.no = Na, rwyf am barhau â’r cais hwn
 
 agentCompanyDetails.title = Manylion cyswllt eich sefydliad
 agentCompanyDetails.heading = Manylion cyswllt eich sefydliad
