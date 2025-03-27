@@ -32,6 +32,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
+  private val basGatewayBaseUrl: String    = configuration.get[Service]("microservice.services.bas-gateway")
 
   lazy val emailBaseUrl: String = servicesConfig.baseUrl("email")
 
@@ -49,7 +50,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val loginUrl: String             = configuration.get[String]("urls.login")
   val loginContinueUrl: String     = configuration.get[String]("urls.loginContinue")
-  val signOutUrl: String           = configuration.get[String]("urls.signOut")
+  val signOutUrl: String           = s"$basGatewayBaseUrl/bas-gateway/sign-out-without-state"
   val findCommodityCodeUrl: String = configuration.get[String]("urls.findCommodityCode")
   val contactEmail: String         = configuration.get[String]("urls.contactAddress")
 
