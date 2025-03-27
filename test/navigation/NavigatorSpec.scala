@@ -1607,5 +1607,24 @@ class NavigatorSpec extends SpecBase {
         userAnswersAsIndividualTrader
       ) mustBe routes.AccountHomeController.onPageLoad()
     }
+
+    "CancelApplicationPage must" - {
+
+      "navigate to YourApplication page when True" in {
+        val userAnswers = userAnswersWith(CancelApplicationPage, true)
+        navigator.nextPage(
+          CancelApplicationPage,
+          NormalMode,
+          userAnswers
+        ) mustBe routes.CancelApplicationController.confirmCancel(draftId)
+      }
+      "navigate to CancelApplicationPage when no value is set" in {
+        navigator.nextPage(
+          CancelApplicationPage,
+          NormalMode,
+          EmptyUserAnswers
+        ) mustBe routes.CancelApplicationController.onPageLoad(draftId)
+      }
+    }
   }
 }

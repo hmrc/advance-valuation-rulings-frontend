@@ -21,35 +21,63 @@
         formHelper: FormWithCSRF,
         layout: templates.Layout,
         govukButton: GovukButton,
-        govukInsetText: GovukInsetText,
-        heading: Heading,
-        link: Link,
-        govukBackLink: GovukBackLink
+        govukRadios: GovukRadios,
+        paragraph: Paragraph,
+        govukErrorSummary: GovukErrorSummary,
 )
 
-@(draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("cancelAreYouSure.title")), showBackLink = false, draftId = Some(draftId)) {
+@(form: Form[?], draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
-    @heading(messages("cancelAreYouSure.heading"))
+@paraContent = {@paragraph(Html(messages("cancelAreYouSure.inset.text")),"govuk-hint")}
 
-    @govukInsetText(InsetText(
-        content = Text(messages("cancelAreYouSure.inset.text"))
-    ))
+@radioItems = @{
+    Seq(
+        RadioItem(
+            value = Some("true"),
+            id = Some("cancelYes"),
+            checked = form.value.fold(false)(_ == "true"),
+            content = Text(messages("cancelAreYouSure.radio.yes"))),
+        RadioItem(
+            value = Some("false"),
+            id = Some("cancelNo"),
+            checked = form.value.fold(false)(_ == "false"),
+            content = Text(messages("cancelAreYouSure.radio.no")))
+    )
+}
 
-    @formHelper(action = routes.CancelApplicationController.confirmCancel(draftId)) {
-        @govukButton(
-             ButtonViewModel(messages("cancelAreYouSure.button"))
+@layout(pageTitle = title(form, messages("cancelAreYouSure.title")), draftId = Some(draftId)) {
+
+    @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @govukRadios(
+            RadiosViewModel(
+                field = form("value"),
+                legend = LegendViewModel(messages("cancelAreYouSure.heading")).asPageHeading(),
+                items = radioItems
+            ).withHint(Hint(content = HtmlContent(paraContent)))
         )
+
+
+        @govukButton(Button(
+            content = Text(messages("cancelAreYouSure.button")),
+            href = Some("#"),
+            id = Some("submitCancelForm")
+        ))
     }
-
-    <a href="#" class="govuk-link js-visible" id = "return_to_application">
-        @messages("cancelAreYouSure.return")
-    </a>
-
-    <script @CSPNonce.attr type="text/javascript">
-        document.getElementById("return_to_application").addEventListener("click", function() {
-            history.back();
-        });
-    </script>
+<script @CSPNonce.attr type="text/javascript">
+    document.getElementById("submitCancelForm").addEventListener("click", function() {
+        if (document.getElementById('cancelNo').checked) {
+           history.back();
+        }
+        else{
+           var form = document.querySelector("form");
+           form.submit();
+        }
+    });
+</script>
 }
