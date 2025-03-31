@@ -17,29 +17,24 @@
 package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.IdentifierAction
-import models.requests.IdentifierRequest
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import javax.inject.Inject
-import scala.annotation.nowarn
-import scala.concurrent.ExecutionContext
+import javax.inject.{Inject, Singleton}
 
-@nowarn("msg=unused")
+@Singleton
 class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  config: FrontendAppConfig,
-  identify: IdentifierAction
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+  config: FrontendAppConfig
+) extends FrontendBaseController
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] =
-    identify(implicit request => Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl))))
+  def signOut(): Action[AnyContent] = Action {
+    Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
+  }
 
-  def signOutNoSurvey(): Action[AnyContent] = identify { implicit request: IdentifierRequest[AnyContent] =>
+  def signOutNoSurvey(): Action[AnyContent] = Action {
     Redirect(
       config.signOutUrl,
       Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url))

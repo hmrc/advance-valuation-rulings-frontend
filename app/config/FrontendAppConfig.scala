@@ -32,7 +32,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
-  private val basGatewayBaseUrl: String    = configuration.get[Service]("microservice.services.bas-gateway")
+  private val basGatewayBaseUrl: String    = servicesConfig.baseUrl("bas-gateway")
 
   lazy val emailBaseUrl: String = servicesConfig.baseUrl("email")
 
@@ -41,12 +41,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
-  val internalAuthService: Service =
-    configuration.get[Service]("microservice.services.internal-auth")
+  val internalAuthService: String = servicesConfig.baseUrl("internal-auth")
 
-  val upscanInitiateService: Service = configuration.get[Service]("microservice.services.upscan-initiate")
+  val upscanInitiateService: String = servicesConfig.baseUrl("upscan-initiate")
 
-  val callbackBaseUrl: String = configuration.get[Service]("microservice.services.advance-valuation-rulings-frontend")
+  val callbackBaseUrl: String = servicesConfig.baseUrl("advance-valuation-rulings-frontend")
 
   val loginUrl: String             = configuration.get[String]("urls.login")
   val loginContinueUrl: String     = configuration.get[String]("urls.loginContinue")
@@ -76,7 +75,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val advanceValuationRulingServiceEmailUrl: String =
     configuration.get[String]("urls.advanceValuationRulingServiceEmail")
 
-  private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
+  private val exitSurveyBaseUrl: String = servicesConfig.baseUrl("feedback-frontend")
 
   val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
 
