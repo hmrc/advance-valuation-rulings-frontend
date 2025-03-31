@@ -32,7 +32,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
-  private val basGatewayBaseUrl: String    = servicesConfig.baseUrl("bas-gateway")
+  private val basGatewayBaseUrl: String    = configuration.get[String]("bas-gateway.host")
 
   lazy val emailBaseUrl: String = servicesConfig.baseUrl("email")
 
@@ -75,8 +75,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val advanceValuationRulingServiceEmailUrl: String =
     configuration.get[String]("urls.advanceValuationRulingServiceEmail")
 
-  private val exitSurveyBaseUrl: String = servicesConfig.baseUrl("feedback-frontend")
-
+  private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
   val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
 
   def languageMap: Map[String, Lang] =
