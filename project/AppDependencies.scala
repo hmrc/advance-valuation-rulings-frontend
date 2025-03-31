@@ -9,12 +9,12 @@ object AppDependencies {
     "uk.gov.hmrc"                  %% "play-frontend-hmrc-play-30"            % "12.0.0",
     "uk.gov.hmrc"                  %% "play-conditional-form-mapping-play-30" % "3.2.0",
     "uk.gov.hmrc"                  %% "bootstrap-frontend-play-30"            % bootstrapVersion,
-    "uk.gov.hmrc"                  %% "internal-auth-client-play-30"          % "3.1.0",
+    "uk.gov.hmrc"                  %% "internal-auth-client-play-30"          % "4.0.0",
     "uk.gov.hmrc.objectstore"      %% "object-store-client-play-30"           % "2.1.0",
     "uk.gov.hmrc.mongo"            %% "hmrc-mongo-play-30"                    % hmrcMongoVersion,
     "org.typelevel"                %% "cats-core"                             % "2.13.0",
     "com.beachape"                 %% "enumeratum-play-json"                  % "1.8.2",
-    "com.googlecode.libphonenumber" % "libphonenumber"                        % "9.0.1"
+    "com.googlecode.libphonenumber" % "libphonenumber"                        % "9.0.2"
   )
 
   private val test: Seq[ModuleID] = Seq(

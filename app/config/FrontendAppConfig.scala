@@ -32,6 +32,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "advance-valuation-ruling"
+  private val basGatewayBaseUrl: String    = configuration.get[String]("bas-gateway.host")
 
   lazy val emailBaseUrl: String = servicesConfig.baseUrl("email")
 
@@ -40,16 +41,15 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
-  val internalAuthService: Service =
-    configuration.get[Service]("microservice.services.internal-auth")
+  val internalAuthService: String = servicesConfig.baseUrl("internal-auth")
 
-  val upscanInitiateService: Service = configuration.get[Service]("microservice.services.upscan-initiate")
+  val upscanInitiateService: String = servicesConfig.baseUrl("upscan-initiate")
 
-  val callbackBaseUrl: String = configuration.get[Service]("microservice.services.advance-valuation-rulings-frontend")
+  val callbackBaseUrl: String = servicesConfig.baseUrl("advance-valuation-rulings-frontend")
 
   val loginUrl: String             = configuration.get[String]("urls.login")
   val loginContinueUrl: String     = configuration.get[String]("urls.loginContinue")
-  val signOutUrl: String           = configuration.get[String]("urls.signOut")
+  val signOutUrl: String           = s"$basGatewayBaseUrl/bas-gateway/sign-out-without-state"
   val findCommodityCodeUrl: String = configuration.get[String]("urls.findCommodityCode")
   val contactEmail: String         = configuration.get[String]("urls.contactAddress")
 
@@ -76,8 +76,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[String]("urls.advanceValuationRulingServiceEmail")
 
   private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
-
-  val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
+  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
 
   def languageMap: Map[String, Lang] =
     Map(

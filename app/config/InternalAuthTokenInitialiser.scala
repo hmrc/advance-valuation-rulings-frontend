@@ -64,7 +64,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private def createClientAuthToken(): Future[Done] = {
     logger.info("[InternalAuthTokenInitialiser][createClientAuthToken] Initialising auth token")
     httpClient
-      .post(url"${config.internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
+      .post(url"${config.internalAuthService}/test-only/token")(HeaderCarrier())
       .withBody(
         Json.obj(
           "token"       -> config.internalAuthToken,
@@ -102,7 +102,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private def authTokenIsValid: Future[Boolean] = {
     logger.info("[InternalAuthTokenInitialiser][authTokenIsValid] Checking auth token")
     httpClient
-      .get(url"${config.internalAuthService.baseUrl}/test-only/token")(HeaderCarrier())
+      .get(url"${config.internalAuthService}/test-only/token")(HeaderCarrier())
       .setHeader("Authorization" -> config.internalAuthToken)
       .execute
       .map(_.status == OK)
