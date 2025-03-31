@@ -76,7 +76,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[String]("urls.advanceValuationRulingServiceEmail")
 
   private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
-  val exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
+  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/advance-valuation-ruling"
 
   def languageMap: Map[String, Lang] =
     Map(
