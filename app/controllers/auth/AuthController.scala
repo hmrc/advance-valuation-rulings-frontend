@@ -35,9 +35,10 @@ class AuthController @Inject() (
   }
 
   def signOutNoSurvey(): Action[AnyContent] = Action { implicit request =>
+    val signOutServiceUrl = config.host + routes.SignedOutController.onPageLoad.url
     Redirect(
       config.signOutUrl,
-      Map("continue" -> Seq(routes.SignedOutController.onPageLoad.absoluteURL()))
+      Map("continue" -> Seq(signOutServiceUrl))
     )
   }
 }
