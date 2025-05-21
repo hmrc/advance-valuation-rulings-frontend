@@ -1,4 +1,8 @@
+digital-service: Advanced Valuation Rulings (AVR)
+description: Service providing the public frontend to ARS.
 repoVisibility: public_0C3F0CE3E6E6448FAD341E7BFA50FCD333E06A20CFF05FCACE61154DDBBADF71
+type: Service
+service-type: Frontend
 test-repositories:
-  - advance-valuation-rulings-performance-tests
   - advance-valuation-rulings-ui-tests
+  - advance-valuation-rulings-performance-tests
