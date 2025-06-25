@@ -31,7 +31,7 @@ Comments are not rendered in browser.
             additionalSynonyms: [
                 { name: 'NI', code: 'country:GB' }
             ],
-            selectElement: document.getElementById('countryId'),
+            selectElement: document.getElementById('countryId').asAccessibleAutocomplete(),
             name: 'countryId',
             defaultValue: '',
             url: '@controllers.routes.Assets.versioned("/json/location-autocomplete-graph.json")',
