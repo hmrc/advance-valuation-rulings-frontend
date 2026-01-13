@@ -27,9 +27,9 @@ import services.fileupload.FileService.NoUserAnswersFoundException
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.config.ObjectStoreClientConfig
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-import uk.gov.hmrc.objectstore.client.{Md5Hash, Path}
+import uk.gov.hmrc.objectstore.client.{Path, Sha256Checksum}
 
-import java.net.URL
+import java.net.{URI, URL}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NoStackTrace
@@ -115,11 +115,11 @@ class FileService @Inject() (
           val path = Path.File(s"drafts/${answers.draftId}/${file.uploadDetails.fileName}")
           objectStoreClient
             .uploadFromUrl(
-              from = new URL(file.downloadUrl),
+              from = URI.create(file.downloadUrl).toURL,
               to = path,
               retentionPeriod = objectStoreConfig.defaultRetentionPeriod,
               contentType = Some(file.uploadDetails.fileMimeType),
-              contentMd5 = Some(Md5Hash(file.uploadDetails.checksum)),
+              contentSha256 = Some(Sha256Checksum.fromHex(file.uploadDetails.checksum)),
               owner = objectStoreConfig.owner
             )
             .map(_ => file.copy(downloadUrl = path.asUri))
