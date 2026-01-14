@@ -47,6 +47,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
     reset(mockObjectStoreClient)
   }
 
+  private val dummySha256Hex                               = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   private val mockUpscanConnector: UpscanConnector         = mock(classOf[UpscanConnector])
   private val mockUserAnswersService: UserAnswersService   = mock(classOf[UserAnswersService])
   private val mockObjectStoreClient: PlayObjectStoreClient = mock(classOf[PlayObjectStoreClient])
@@ -185,7 +186,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
           fileName = "foobar",
           fileMimeType = "text/plain",
           uploadTimestamp = instant,
-          checksum = "checksum",
+          checksum = dummySha256Hex,
           size = 1337
         )
       )
@@ -314,7 +315,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
             fileName = "foobar",
             fileMimeType = "text/plain",
             uploadTimestamp = instant,
-            checksum = "checksum",
+            checksum = dummySha256Hex,
             size = 1337
           )
         )
@@ -360,7 +361,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
           fileName = "foobar",
           fileMimeType = "text/plain",
           uploadTimestamp = instant,
-          checksum = "checksum",
+          checksum = dummySha256Hex,
           size = 1337
         )
       )
