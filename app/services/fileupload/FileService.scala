@@ -110,8 +110,17 @@ class FileService @Inject() (
               )
             )
           }
+        } else if (file.uploadDetails.fileName.exists(ch => !ch.isLetterOrDigit)) {
+          Future.successful {
+            UploadedFile.Failure(
+              reference = file.reference,
+              failureDetails = UploadedFile.FailureDetails(
+                failureReason = UploadedFile.FailureReason.InvalidCharacters,
+                failureMessage = None
+              )
+            )
+          }
         } else {
-
           val path = Path.File(s"drafts/${answers.draftId}/${file.uploadDetails.fileName}")
           objectStoreClient
             .uploadFromUrl(

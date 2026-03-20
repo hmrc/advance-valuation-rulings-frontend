@@ -606,6 +606,7 @@ fileUpload.error.failed = Nid oedd modd uwchlwytho’r ffeil dan sylw
 fileUpload.error.quarantine = Mae feirws yn y ffeil dan sylw
 fileUpload.error.rejected = Mae’n rhaid i’r ffeil dan sylw fod ar ffurf JPEG neu PDF
 fileUpload.error.unknown = Cafwyd problem wrth uwchlwytho’ch ffeil
+fileUpload.error.invalidcharacters = You cannot upload files with special characters
 
 uploadAnotherSupportingDocument.title.one = Rydych wedi uwchlwytho 1 ddogfen ategol
 uploadAnotherSupportingDocument.heading.one = Rydych wedi uwchlwytho 1 ddogfen ategol

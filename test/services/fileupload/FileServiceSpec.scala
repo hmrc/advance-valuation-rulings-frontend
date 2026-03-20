@@ -198,7 +198,6 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
           .set(UploadLetterOfAuthorityPage, updatedFile)
           .success
           .value
-
         when(mockUserAnswersService.getInternal(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
         when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
