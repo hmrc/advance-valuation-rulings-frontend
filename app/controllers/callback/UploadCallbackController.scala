@@ -37,6 +37,7 @@ class UploadCallbackController @Inject() (
     isLetterOfAuthority: Boolean
   ): Action[UploadedFile] =
     Action.async(parse.json[UploadedFile]) { implicit request =>
+      println("Fileurl:" + request.body.fileUrl)
       fileService.update(draftId, request.body, isLetterOfAuthority).as(Ok)
     }
 }

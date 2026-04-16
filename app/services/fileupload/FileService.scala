@@ -98,9 +98,10 @@ class FileService @Inject() (
     file match {
       case file: UploadedFile.Success =>
         val otherDocuments = answers.get(AllDocuments).getOrElse(Seq.empty)
+        val filename       =
+          file.uploadDetails.fileName.slice(0, file.uploadDetails.fileName.lastIndexOf('.'))
 
         if (otherDocuments.flatMap(_.file.fileName).contains(file.uploadDetails.fileName)) {
-
           Future.successful {
             UploadedFile.Failure(
               reference = file.reference,
@@ -110,10 +111,19 @@ class FileService @Inject() (
               )
             )
           }
+        } else if (filename.matches(".*[^ a-zA-Z0-9].*")) {
+          Future.successful {
+            UploadedFile.Failure(
+              reference = file.reference,
+              failureDetails = UploadedFile.FailureDetails(
+                failureReason = UploadedFile.FailureReason.InvalidCharacters,
+                failureMessage = None
+              )
+            )
+          }
         } else {
-
           val path = Path.File(s"drafts/${answers.draftId}/${file.uploadDetails.fileName}")
-          objectStoreClient
+          val ol   = objectStoreClient
             .uploadFromUrl(
               from = new URL(file.downloadUrl),
               to = path,
@@ -122,7 +132,7 @@ class FileService @Inject() (
               contentMd5 = Some(Md5Hash(file.uploadDetails.checksum)),
               owner = objectStoreConfig.owner
             )
-            .map(_ => file.copy(downloadUrl = path.asUri))
+          ol.map(_ => file.copy(downloadUrl = path.asUri))
         }
       case _                          =>
         Future.successful(file)
