@@ -201,14 +201,14 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
         when(mockUserAnswersService.getInternal(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
-        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
+        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), uploadedFile, isLetterOfAuthority = true).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
-        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
+        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
       }
     }
@@ -238,6 +238,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
+          any(),
           any(),
           any(),
           any(),
@@ -298,6 +299,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
           any(),
           any(),
           any(),
+          any(),
           any()
         )(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
@@ -337,14 +339,14 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
         when(mockUserAnswersService.getInternal(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
-        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
+        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), file2, isLetterOfAuthority = false).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
-        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
+        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
       }
     }
@@ -364,12 +366,13 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
       )
 
       when(mockUserAnswersService.getInternal(any())(any())).thenReturn(Future.successful(None))
-      when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
+      when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any()))
         .thenReturn(Future.successful(objectSummary))
 
       service.update(DraftId(0), uploadedFile, isLetterOfAuthority = false).failed.futureValue
 
       verify(mockObjectStoreClient, never).uploadFromUrl(
+        any(),
         any(),
         any(),
         any(),
