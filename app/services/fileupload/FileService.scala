@@ -123,7 +123,7 @@ class FileService @Inject() (
           }
         } else {
           val path = Path.File(s"drafts/${answers.draftId}/${file.uploadDetails.fileName}")
-          val ol   = objectStoreClient
+          objectStoreClient
             .uploadFromUrl(
               from = new URL(file.downloadUrl),
               to = path,
@@ -132,7 +132,7 @@ class FileService @Inject() (
               contentMd5 = Some(Md5Hash(file.uploadDetails.checksum)),
               owner = objectStoreConfig.owner
             )
-          ol.map(_ => file.copy(downloadUrl = path.asUri))
+            .map(_ => file.copy(downloadUrl = path.asUri))
         }
       case _                          =>
         Future.successful(file)
