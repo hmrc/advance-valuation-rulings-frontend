@@ -267,11 +267,11 @@ case class FileUploadHelper @Inject() (
 
   private def errorForCode(code: String)(implicit messages: Messages): String =
     code match {
-      case "InvalidArgument"   =>
+      case "InvalidArgument" =>
         messages("fileUpload.error.invalidargument")
-      case "EntityTooLarge"    =>
+      case "EntityTooLarge"  =>
         messages(s"fileUpload.error.entitytoolarge", maxFileSize)
-      case "EntityTooSmall"    =>
+      case "EntityTooSmall"  =>
         /*
          * As of writing this comment, Upscan has an issue in detecting whether a file has been selected.
          * If the minimum file size is 0, the user will see the error message associated with the "Rejected" case
@@ -280,15 +280,13 @@ case class FileUploadHelper @Inject() (
          * See the application.conf for the minimum file size.
          */
         messages("fileUpload.error.invalidargument")
-      case "Rejected"          =>
+      case "Rejected"        =>
         messages("fileUpload.error.rejected")
-      case "Quarantine"        =>
+      case "Quarantine"      =>
         messages("fileUpload.error.quarantine")
-      case "Duplicate"         =>
+      case "Duplicate"       =>
         messages("fileUpload.error.duplicate")
-      case "InvalidCharacters" =>
-        messages("fileUpload.error.invalidcharacters")
-      case _                   =>
+      case _                 =>
         messages("fileUpload.error.unknown")
     }
 

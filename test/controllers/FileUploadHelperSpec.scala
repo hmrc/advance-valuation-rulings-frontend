@@ -793,11 +793,6 @@ class FileUploadHelperSpec extends SpecBase with BeforeAndAfterEach {
           Messages.apply(s"fileUpload.error.entitytoolarge", maximumFileSizeMB)(
             messagesProvider
           )
-      ),
-      (
-        "InvalidCharacters",
-        UploadedFile.FailureReason.InvalidCharacters,
-        (messagesProvider: MessagesProvider) => Messages.apply("fileUpload.error.invalidcharacters")(messagesProvider)
       )
     )
 

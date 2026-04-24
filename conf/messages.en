@@ -584,7 +584,8 @@ fileUpload.error.failed = The selected file failed to upload
 fileUpload.error.quarantine = The selected file contains a virus
 fileUpload.error.rejected = The selected file must be a JPEG or a PDF
 fileUpload.error.unknown = There was a problem uploading your file
-fileUpload.error.invalidcharacters = Filename must only include letters a to z, and digits 0 to 9
+
+
 
 explainReasonComputedValue.title = Explain why you have selected Method 5 to value your goods
 explainReasonComputedValue.caption = About the goods
