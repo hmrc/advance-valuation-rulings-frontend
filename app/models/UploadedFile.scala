@@ -112,6 +112,7 @@ object UploadedFile {
     case object InvalidArgument extends FailureReason
     case object EntityTooLarge extends FailureReason
     case object EntityTooSmall extends FailureReason
+    case object InvalidCharacters extends FailureReason
   }
 
   implicit lazy val reads: Reads[UploadedFile] =
