@@ -249,6 +249,42 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
       }
     }
 
+    "when the file name has special characters" - {
+
+      "must not transfer the file to object-store and update the user answers with a failed status" in {
+
+        val file1 = UploadedFile.Failure(
+          reference = "reference2",
+          failureDetails = UploadedFile.FailureDetails(
+            failureReason = UploadedFile.FailureReason.InvalidCharacters,
+            failureMessage = None
+          )
+        )
+
+        val expectedAnswers = userAnswers
+          .set(UploadSupportingDocumentPage, file1)
+          .success
+          .value
+
+        when(mockUserAnswersService.getInternal(any())(any()))
+          .thenReturn(Future.successful(Some(userAnswers)))
+        when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
+
+        service.update(DraftId(0), file1, isLetterOfAuthority = false).futureValue
+
+        verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
+        verify(mockObjectStoreClient, never).uploadFromUrl(
+          any(),
+          any(),
+          any(),
+          any(),
+          any(),
+          any()
+        )(any())
+        verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
+      }
+    }
+
     "when the file name is the same as an existing file for this draft" - {
 
       "must not transfer the file to object-store and update the user answers with a failed status" in {
