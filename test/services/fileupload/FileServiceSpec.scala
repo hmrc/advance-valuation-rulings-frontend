@@ -33,8 +33,9 @@ import services.UserAnswersService
 import services.fileupload.FileService.NoUserAnswersFoundException
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.objectstore.client.play.PlayObjectStoreClient
-import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path}
+import uk.gov.hmrc.objectstore.client.{Md5Hash, ObjectSummaryWithMd5, Path, RetentionPeriod, Sha256Checksum}
 
+import java.net.URL
 import java.time.{LocalDateTime, ZoneOffset}
 import scala.concurrent.Future
 
@@ -185,7 +186,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
           fileName = "foobar",
           fileMimeType = "text/plain",
           uploadTimestamp = instant,
-          checksum = "checksum",
+          checksum = "a142ed16d596494528e264ffdd5bfbd1188243e0ed1afc8768bcd5d76eb9c4f1",
           size = 1337
         )
       )
@@ -201,14 +202,23 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
         when(mockUserAnswersService.getInternal(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
-        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
-          .thenReturn(Future.successful(objectSummary))
+        when(
+          mockObjectStoreClient.uploadFromUrl(
+            from = any[URL],
+            to = any[Path.File],
+            retentionPeriod = any[RetentionPeriod],
+            contentType = any[Option[String]],
+            contentMd5 = any[Option[Md5Hash]],
+            contentSha256 = any[Option[Sha256Checksum]],
+            owner = any[String]
+          )(using any[HeaderCarrier])
+        ).thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), uploadedFile, isLetterOfAuthority = true).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
-        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
+        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
       }
     }
@@ -238,6 +248,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
+          any(),
           any(),
           any(),
           any(),
@@ -274,6 +285,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
         verify(mockObjectStoreClient, never).uploadFromUrl(
+          any(),
           any(),
           any(),
           any(),
@@ -334,6 +346,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
           any(),
           any(),
           any(),
+          any(),
           any()
         )(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
@@ -348,7 +361,7 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
             fileName = "foobar",
             fileMimeType = "text/plain",
             uploadTimestamp = instant,
-            checksum = "checksum",
+            checksum = "a142ed16d596494528e264ffdd5bfbd1188243e0ed1afc8768bcd5d76eb9c4f1",
             size = 1337
           )
         )
@@ -373,14 +386,14 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
 
         when(mockUserAnswersService.getInternal(any())(any()))
           .thenReturn(Future.successful(Some(userAnswers)))
-        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
+        when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any()))
           .thenReturn(Future.successful(objectSummary))
         when(mockUserAnswersService.setInternal(any())(any())).thenReturn(Future.successful(Done))
 
         service.update(DraftId(0), file2, isLetterOfAuthority = false).futureValue
 
         verify(mockUserAnswersService).getInternal(eqTo(DraftId(0)))(any())
-        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any())(any())
+        verify(mockObjectStoreClient).uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any())
         verify(mockUserAnswersService).setInternal(eqTo(expectedAnswers))(any())
       }
     }
@@ -400,12 +413,13 @@ class FileServiceSpec extends AnyFreeSpec with SpecBase with BeforeAndAfterEach 
       )
 
       when(mockUserAnswersService.getInternal(any())(any())).thenReturn(Future.successful(None))
-      when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any())(any()))
+      when(mockObjectStoreClient.uploadFromUrl(any(), any(), any(), any(), any(), any(), any())(any()))
         .thenReturn(Future.successful(objectSummary))
 
       service.update(DraftId(0), uploadedFile, isLetterOfAuthority = false).failed.futureValue
 
       verify(mockObjectStoreClient, never).uploadFromUrl(
+        any(),
         any(),
         any(),
         any(),
