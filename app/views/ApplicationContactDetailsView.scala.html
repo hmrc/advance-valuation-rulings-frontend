@@ -22,8 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    caption: Caption,
-    heading: Heading,
+    captionedHeading: CaptionedHeading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
     saveButton: SaveButton
@@ -39,8 +38,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("applicationContactDetails.caption"))
-        @heading(messages("applicationContactDetails.heading"))
+        @captionedHeading(
+            caption = messages("applicationContactDetails.caption"),
+            heading = messages("applicationContactDetails.heading")
+        )
         @paragraph(content = Html(messages("applicationContactDetails.paragraph")),"govuk-hint")
 
         @govukInput(

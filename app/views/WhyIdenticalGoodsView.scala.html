@@ -27,6 +27,7 @@
     bulletList: BulletList,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     saveButton: SaveButton
 )
@@ -43,9 +44,10 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @caption(messages("whyIdenticalGoods.caption"))
-
-    @heading(messages("whyIdenticalGoods.heading"))
+    @captionedHeading(
+        caption = messages("whyIdenticalGoods.caption"),
+        heading = messages("whyIdenticalGoods.heading")
+    )
 
     @paraContent
 

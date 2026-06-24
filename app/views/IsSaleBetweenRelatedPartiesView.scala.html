@@ -21,8 +21,6 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    caption: Caption,
-    heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
     saveButton: SaveButton,
@@ -43,9 +41,12 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("isSaleBetweenRelatedParties.caption"))
-
-        @radios(messages("isSaleBetweenRelatedParties.heading"), radiosContent, form)
+        @radios(
+            messages("isSaleBetweenRelatedParties.heading"),
+            radiosContent,
+            form,
+            caption = Some(messages("isSaleBetweenRelatedParties.caption"))
+        )
 
         @saveButton(draftId)
     }

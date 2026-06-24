@@ -20,6 +20,7 @@
         layout: templates.Layout,
         govukButton: GovukButton,
         heading: Heading,
+    captionedHeading: CaptionedHeading,
         caption: Caption,
         formHelper: FormWithCSRF,
         cancelLink: CancelApplicationLink
@@ -31,8 +32,10 @@
 
     @formHelper(action = routes.UploadInProgressController.checkProgress(draftId, key, isLetterOfAuthority)) {
 
-        @caption(messages("caption.goods"))
-        @heading(messages("uploadInProgress.heading"))
+        @captionedHeading(
+            caption = messages("caption.goods"),
+            heading = messages("uploadInProgress.heading")
+        )
 
         <p class="govuk-body">@messages("uploadInProgress.p1")</p>
 

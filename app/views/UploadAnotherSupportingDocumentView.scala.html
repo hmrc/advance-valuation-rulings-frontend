@@ -24,6 +24,7 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
@@ -86,9 +87,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
     
-        @caption(messages("uploadAnotherSupportingDocument.caption"))
-
-        @heading(pageHeading)
+        @captionedHeading(
+            caption = messages("uploadAnotherSupportingDocument.caption"),
+            heading = pageHeading
+        )
 
         @if(letterOfAuthorityFileName.isDefined) {
             @if(numOfDocs == 3) {

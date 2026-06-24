@@ -23,8 +23,7 @@
     govukRadios: GovukRadios,
     bulletList: BulletList,
     cancelLink: CancelApplicationLink,
-    caption: Caption,
-    heading: Heading,
+    captionedHeading: CaptionedHeading,
     paragraph: Paragraph,
     subheading: Subheading,
     saveButton: SaveButton,
@@ -41,8 +40,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("areThereRestrictionsOnTheGoods.caption"))
-        @heading(messages("areThereRestrictionsOnTheGoods.heading"))
+        @captionedHeading(
+            caption = messages("areThereRestrictionsOnTheGoods.caption"),
+            heading = messages("areThereRestrictionsOnTheGoods.heading")
+        )
 
         @paragraph(content = Html(messages("areThereRestrictionsOnTheGoods.paragraph.1")))
         @bulletList(Seq(

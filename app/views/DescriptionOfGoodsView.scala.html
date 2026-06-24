@@ -23,8 +23,6 @@
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
     cancelLink: CancelApplicationLink,
-    caption: Caption,
-    heading: Heading,
     saveButton: SaveButton
 )
 
@@ -38,12 +36,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("descriptionOfGoods.caption"))
-
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("descriptionOfGoods.heading")).asPageHeading()
+                label = LabelViewModel(
+                    HtmlContent(
+                        s"""<span class="govuk-caption-xl"><span class="govuk-visually-hidden">${messages("caption.prefix")} </span>${messages("descriptionOfGoods.caption")}</span>${messages("descriptionOfGoods.heading")}"""
+                    )
+                ).asPageHeading()
             )
             .withWidth(Full)
             .withHint(Hint(

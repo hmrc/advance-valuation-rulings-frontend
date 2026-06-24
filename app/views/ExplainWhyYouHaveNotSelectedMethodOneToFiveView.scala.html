@@ -26,6 +26,7 @@
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     saveButton: SaveButton
 )
@@ -40,9 +41,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("explainWhyYouHaveNotSelectedMethodOneToFive.caption"))
-
-        @heading(messages("explainWhyYouHaveNotSelectedMethodOneToFive.heading"))
+        @captionedHeading(
+            caption = messages("explainWhyYouHaveNotSelectedMethodOneToFive.caption"),
+            heading = messages("explainWhyYouHaveNotSelectedMethodOneToFive.heading")
+        )
 
         @paragraph(Html(messages("explainWhyYouHaveNotSelectedMethodOneToFive.paragraph.1")))
 

@@ -25,6 +25,7 @@
     list: BulletList,
     para: Paragraph,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     subheading: Subheading,
     saveButton: SaveButton,
@@ -40,8 +41,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("doYouWantToUploadDocuments.caption"))
-        @heading(messages("doYouWantToUploadDocuments.heading"))
+        @captionedHeading(
+            caption = messages("doYouWantToUploadDocuments.caption"),
+            heading = messages("doYouWantToUploadDocuments.heading")
+        )
 
         @para(Html(messages("doYouWantToUploadDocuments.para")))
         @list(

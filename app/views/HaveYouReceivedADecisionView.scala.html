@@ -24,8 +24,7 @@ layout: templates.Layout,
 formHelper: FormWithCSRF,
 govukErrorSummary: GovukErrorSummary,
 govukRadios: GovukRadios,
-caption: Caption,
-heading: Heading,
+captionedHeading: CaptionedHeading,
 headingH3: headingH3,
 subheading: Subheading,
 paragraph: Paragraph,
@@ -57,8 +56,10 @@ link: Link
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("caption.goods"))
-        @heading(messages("haveYouReceivedADecision.heading"))
+        @captionedHeading(
+            caption = messages("caption.goods"),
+            heading = messages("haveYouReceivedADecision.heading")
+        )
 
         @paragraph(Html(messages("haveYouReceivedADecision.para.1")))
         @paragraph(Html(messages("haveYouReceivedADecision.para.2")))

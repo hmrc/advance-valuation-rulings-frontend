@@ -23,6 +23,7 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
     govukInsetText: GovukInsetText,
@@ -50,9 +51,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("hasConfidentialInformation.caption"))
-
-        @heading(messages("hasConfidentialInformation.heading"))
+        @captionedHeading(
+            caption = messages("hasConfidentialInformation.caption"),
+            heading = messages("hasConfidentialInformation.heading")
+        )
 
         @content
 
