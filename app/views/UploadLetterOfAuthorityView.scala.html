@@ -25,6 +25,7 @@
         govukFileUpload: GovukFileUpload,
         caption: Caption,
         heading: Heading,
+    captionedHeading: CaptionedHeading,
         cancelApplicationLink: CancelApplicationLink,
         govukInsetText: GovukInsetText,
         paragraph: Paragraph,
@@ -83,8 +84,10 @@
     @govukErrorSummary(ErrorSummaryViewModel.withoutForm(Map("file-input" -> messages(errorMessage))))
   }
 
-  @caption(messages("uploadLetterOfAuthority.caption"))
-  @heading(messages("uploadLetterOfAuthority.heading"))
+  @captionedHeading(
+      caption = messages("uploadLetterOfAuthority.caption"),
+      heading = messages("uploadLetterOfAuthority.heading")
+  )
 
   @govukInsetText(InsetText(
     content = Text(messages("uploadLetterOfAuthority.insetPara"))

@@ -24,6 +24,7 @@
     govukInput: GovukInput,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
     saveButton: SaveButton
@@ -39,8 +40,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("businessContactDetails.caption"))
-        @heading(messages("businessContactDetails.heading"))
+        @captionedHeading(
+            caption = messages("businessContactDetails.caption"),
+            heading = messages("businessContactDetails.heading")
+        )
 
         @if(includeCompanyName){
             @paragraph(content = Html(messages("businessContactDetails.paragraph.agentTrader")))

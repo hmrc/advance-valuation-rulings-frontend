@@ -22,8 +22,6 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    caption: Caption,
-    heading: Heading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
     saveButton: SaveButton
@@ -52,12 +50,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("commodityCode.caption"))
-
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("commodityCode.heading")).asPageHeading(),
+                label = LabelViewModel(
+                    HtmlContent(
+                        s"""<span class="govuk-caption-xl"><span class="govuk-visually-hidden">${messages("caption.prefix")} </span>${messages("commodityCode.caption")}</span>${messages("commodityCode.heading")}"""
+                    )
+                ).asPageHeading(),
                 )
                 .withWidth(Full)
                 .withHint(
@@ -70,4 +70,3 @@
 
     @cancelApplicationLink(draftId)
 }
-

@@ -28,6 +28,7 @@
     saveButton: SaveButton,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink
 
@@ -43,8 +44,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("agentCompanyDetails.caption"))
-        @heading(messages("agentCompanyDetails.heading"))
+        @captionedHeading(
+            caption = messages("agentCompanyDetails.caption"),
+            heading = messages("agentCompanyDetails.heading")
+        )
         @paragraph(content = Html(messages("agentCompanyDetails.paragraph")),"govuk-hint")
 
         @govukInput(

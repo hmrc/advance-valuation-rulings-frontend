@@ -24,6 +24,7 @@
     caption: Caption,
     paragraph: Paragraph,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     bulletList: BulletList,
     govukInsetText: GovukInsetText,
@@ -42,8 +43,10 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @caption(messages("haveYouUsedMethodOneInPast.caption"))
-    @heading(messages("haveYouUsedMethodOneInPast.heading"))
+    @captionedHeading(
+        caption = messages("haveYouUsedMethodOneInPast.caption"),
+        heading = messages("haveYouUsedMethodOneInPast.heading")
+    )
 
     @paragraph(Html(messages("haveYouUsedMethodOneInPast.paragraph.2")))
 

@@ -23,6 +23,7 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     headingH3: headingH3,
     paragraph: Paragraph,
     subheading: Subheading,
@@ -35,9 +36,15 @@
 
 @headingContent = {
                 @if(registeredDetails.consentToDisclosureOfPersonalData) {
-                    @heading(messages("checkRegisteredDetails.heading.agentOrg", registeredDetails.EORINo))
+                    @captionedHeading(
+                        caption = messages("checkRegisteredDetails.caption"),
+                        heading = messages("checkRegisteredDetails.heading.agentOrg", registeredDetails.EORINo)
+                    )
                 } else {
-                    @heading(messages("checkRegisteredDetails.private.heading", registeredDetails.EORINo))
+                    @captionedHeading(
+                        caption = messages("checkRegisteredDetails.caption"),
+                        heading = messages("checkRegisteredDetails.private.heading", registeredDetails.EORINo)
+                    )
                 }
 }
 
@@ -85,7 +92,6 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value")))
         }
 
-        @caption(messages("checkRegisteredDetails.caption"))
         @headingContent
 
         @paraContent

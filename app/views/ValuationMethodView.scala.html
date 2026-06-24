@@ -24,8 +24,6 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     cancelApplicationLink: CancelApplicationLink,
-    caption: Caption,
-    heading: Heading,
     subheading: Subheading,
     paragraph: Paragraph,
     link: Link,
@@ -35,14 +33,19 @@
 
 @(form: Form[?], mode: Mode, draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
 
-@legend = {<h1 class="govuk-heading-xl">@messages("valuationMethod.heading")</h1>}
+@legend = {
+    <h1 class="govuk-heading-xl">
+        <span class="govuk-caption-xl">
+            <span class="govuk-visually-hidden">@messages("caption.prefix") </span>@messages("valuationMethod.caption")
+        </span>
+        @messages("valuationMethod.heading")
+    </h1>
+}
 
 @layout(pageTitle = title(form, messages("valuationMethod.title")), draftId = Some(draftId)) {
 
 
     @formHelper(action = routes.ValuationMethodController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
-
-        @caption(messages("valuationMethod.caption"))
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
