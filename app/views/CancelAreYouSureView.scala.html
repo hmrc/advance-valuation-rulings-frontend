@@ -51,7 +51,7 @@
     @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "cancelYes")))
         }
 
         @govukRadios(
