@@ -26,6 +26,7 @@
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     bulletList: BulletList,
     saveButton: SaveButton
 )
@@ -40,9 +41,10 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @caption(messages("whyTransactionValueOfSimilarGoods.caption"))
-
-    @heading(messages("whyTransactionValueOfSimilarGoods.heading"))
+    @captionedHeading(
+        caption = messages("whyTransactionValueOfSimilarGoods.caption"),
+        heading = messages("whyTransactionValueOfSimilarGoods.heading")
+    )
 
     @paragraph(Html(messages("whyTransactionValueOfSimilarGoods.paragraph.1")))
 

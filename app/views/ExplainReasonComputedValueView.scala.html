@@ -26,6 +26,7 @@
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     saveButton: SaveButton
 )
@@ -42,9 +43,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-    @caption(messages("explainReasonComputedValue.caption"))
-
-    @heading(messages("explainReasonComputedValue.heading"))
+    @captionedHeading(
+        caption = messages("explainReasonComputedValue.caption"),
+        heading = messages("explainReasonComputedValue.heading")
+    )
 
     @hmrcCharacterCount(
         CharacterCountViewModel(

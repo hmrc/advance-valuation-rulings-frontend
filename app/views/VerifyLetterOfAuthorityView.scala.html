@@ -25,6 +25,7 @@
     link: Link,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     subheading: Subheading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
@@ -41,9 +42,10 @@
 
     @formHelper(action = routes.VerifyLetterOfAuthorityController.onSubmit(mode, draftId), Symbol("autoComplete") -> "off") {
 
-        @caption(messages("verifyLetterOfAuthority.caption"))
-
-        @heading(pageHeading)
+        @captionedHeading(
+            caption = messages("verifyLetterOfAuthority.caption"),
+            heading = pageHeading
+        )
 
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">

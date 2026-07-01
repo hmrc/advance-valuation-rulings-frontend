@@ -23,6 +23,7 @@
   formHelper: FormWithCSRF,
   caption: Caption,
   heading: Heading,
+    captionedHeading: CaptionedHeading,
   paragraph: Paragraph,
   cancelApplicationLink: CancelApplicationLink,
   config: FrontendAppConfig
@@ -32,9 +33,10 @@
 
 @layout(pageTitle = titleNoForm(messages("eoriBeUpToDate.title.agentOnBehalfOfTrader.private")), draftId = Some(draftId)) {
 
-    @caption(messages("eoriBeUpToDate.caption"))
-
-    @heading(messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader.private"))
+    @captionedHeading(
+        caption = messages("eoriBeUpToDate.caption"),
+        heading = messages("eoriBeUpToDate.heading.agentOnBehalfOfTrader.private")
+    )
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.agentOnBehalfOfTrader.private")))
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.agentOnBehalfOfTrader.private")))
     @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.3.agentOnBehalfOfTrader.private")))

@@ -25,6 +25,7 @@
         govukFileUpload: GovukFileUpload,
         caption: Caption,
         heading: Heading,
+    captionedHeading: CaptionedHeading,
         cancelApplicationLink: CancelApplicationLink,
         paragraph: Paragraph,
         list: BulletList,
@@ -73,8 +74,10 @@
     @govukErrorSummary(ErrorSummaryViewModel.withoutForm(Map("file-input" -> messages(errorMessage))))
   }
 
-  @caption(messages("uploadSupportingDocuments.caption"))
-  @heading(messages("uploadSupportingDocuments.heading"))
+  @captionedHeading(
+      caption = messages("uploadSupportingDocuments.caption"),
+      heading = messages("uploadSupportingDocuments.heading")
+  )
 
   @paragraph(Html(messages("uploadSupportingDocuments.details.paragraph", maxSupportingDocuments)))
 

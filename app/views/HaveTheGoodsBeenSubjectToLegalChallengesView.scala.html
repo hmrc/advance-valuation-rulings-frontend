@@ -21,8 +21,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    caption: Caption,
-    heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
     saveButton: SaveButton,
@@ -46,9 +45,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("haveTheGoodsBeenSubjectToLegalChallenges.caption"))
-
-        @heading(messages("haveTheGoodsBeenSubjectToLegalChallenges.heading"))
+        @captionedHeading(
+            caption = messages("haveTheGoodsBeenSubjectToLegalChallenges.caption"),
+            heading = messages("haveTheGoodsBeenSubjectToLegalChallenges.heading")
+        )
 
         @paraContent
 

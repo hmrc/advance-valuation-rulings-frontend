@@ -23,6 +23,7 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     headingH3: headingH3,
     paragraph: Paragraph,
     subheading: Subheading,
@@ -35,9 +36,15 @@
 
 @headingContent = {
                 @if(registeredDetails.consentToDisclosureOfPersonalData) {
-                    @heading(messages("checkRegisteredDetails.heading.agentOrg", registeredDetails.EORINo))
+                    @captionedHeading(
+                        caption = messages("checkRegisteredDetails.caption"),
+                        heading = messages("checkRegisteredDetails.heading.agentOrg", registeredDetails.EORINo)
+                    )
                 } else {
-                    @heading(messages("checkRegisteredDetails.private.heading", registeredDetails.EORINo))
+                    @captionedHeading(
+                        caption = messages("checkRegisteredDetails.caption"),
+                        heading = messages("checkRegisteredDetails.private.heading", registeredDetails.EORINo)
+                    )
                 }
 }
 
@@ -56,12 +63,20 @@
             }
 
             @headingH3(messages("checkRegisteredDetails.heading.3"), "s")
-            @paragraph(content=Html(
-                    registeredDetails.CDSEstablishmentAddress.streetAndNumber + "<br>" +
-                    registeredDetails.CDSEstablishmentAddress.city + "<br>" +
-                    registeredDetails.CDSEstablishmentAddress.postalCode.map(_ + "<br>").getOrElse("") +
-                    Country.fromCountryCode(registeredDetails.CDSEstablishmentAddress.countryCode).name
-            ))
+            <p class="govuk-body govuk-!-margin-bottom-0">
+                @registeredDetails.CDSEstablishmentAddress.streetAndNumber
+            </p>
+            <p class="govuk-body govuk-!-margin-bottom-0">
+                @registeredDetails.CDSEstablishmentAddress.city
+            </p>
+            @registeredDetails.CDSEstablishmentAddress.postalCode.map { postcode =>
+                <p class="govuk-body govuk-!-margin-bottom-0">
+                    @postcode
+                </p>
+            }
+            <p class="govuk-body govuk-!-margin-bottom-0">
+                @Country.fromCountryCode(registeredDetails.CDSEstablishmentAddress.countryCode).name
+            </p>
         } else {
             @paragraph(Html(messages("checkRegisteredDetails.private.paragraph.1")))
         }
@@ -85,7 +100,6 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value")))
         }
 
-        @caption(messages("checkRegisteredDetails.caption"))
         @headingContent
 
         @paraContent

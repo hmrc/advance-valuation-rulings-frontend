@@ -22,8 +22,7 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    caption: Caption,
-    heading: Heading,
+    captionedHeading: CaptionedHeading,
     link: Link,
     paragraph: Paragraph,
     config: FrontendAppConfig,
@@ -61,8 +60,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("hasCommodityCode.caption"))
-        @heading(messages("hasCommodityCode.heading"))
+        @captionedHeading(
+            caption = messages("hasCommodityCode.caption"),
+            heading = messages("hasCommodityCode.heading")
+        )
         @radiosContent
 
         @govukRadios(

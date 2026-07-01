@@ -23,6 +23,7 @@
   formHelper: FormWithCSRF,
   caption: Caption,
   heading: Heading,
+  captionedHeading: CaptionedHeading,
   paragraph: Paragraph,
   link: Link,
   bulletList: BulletList,
@@ -53,14 +54,18 @@
         if (Set(OrganisationUser, OrganisationAssistant, Agent).exists(_ == authUserType)) "eoriBeUpToDate.title.org" else "eoriBeUpToDate.title"
     )),
     draftId = Some(draftId)) {
-
-        @caption(messages("eoriBeUpToDate.caption"))
         @if(Set(OrganisationUser, OrganisationAssistant, Agent).exists(_ == authUserType)) {
-            @heading(messages("eoriBeUpToDate.heading.org"))
+            @captionedHeading(
+                caption = messages("eoriBeUpToDate.caption"),
+                heading = messages("eoriBeUpToDate.heading.org")
+            )
             @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1.org")))
             @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2.org")))
         } else {
-            @heading(messages("eoriBeUpToDate.heading"))
+            @captionedHeading(
+                caption = messages("eoriBeUpToDate.caption"),
+                heading = messages("eoriBeUpToDate.heading")
+            )
             @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.1")))
             @paragraph(content = Html(messages("eoriBeUpToDate.paragraph.2")))
         }

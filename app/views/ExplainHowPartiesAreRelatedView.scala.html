@@ -24,8 +24,7 @@
     govukInput: GovukInput,
     hmrcCharacterCount: HmrcCharacterCount,
     paragraph: Paragraph,
-    caption: Caption,
-    heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     subheading: Subheading,
     saveButton: SaveButton
@@ -46,9 +45,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("explainHowPartiesAreRelated.caption"))
-
-        @heading(messages("explainHowPartiesAreRelated.heading"))
+        @captionedHeading(
+            caption = messages("explainHowPartiesAreRelated.caption"),
+            heading = messages("explainHowPartiesAreRelated.heading")
+        )
 
         @paraContent
 
@@ -68,4 +68,3 @@
     }
     @cancelLink(draftId)
 }
-
