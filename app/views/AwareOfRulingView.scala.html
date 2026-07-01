@@ -24,8 +24,6 @@ layout: templates.Layout,
 formHelper: FormWithCSRF,
 govukErrorSummary: GovukErrorSummary,
 govukRadios: GovukRadios,
-caption: Caption,
-heading: Heading,
 headingH3: headingH3,
 subheading: Subheading,
 paragraph: Paragraph,
@@ -49,9 +47,12 @@ radios: YesNoRadios
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("caption.goods"))
-
-        @radios(messages("awareOfRuling.heading"), radiosContent, form)
+        @radios(
+            messages("awareOfRuling.heading"),
+            radiosContent,
+            form,
+            caption = Some(messages("caption.goods"))
+        )
 
         @saveButton(draftId)
     }

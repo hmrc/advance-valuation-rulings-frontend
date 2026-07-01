@@ -23,8 +23,6 @@
     govukErrorSummary: GovukErrorSummary,
     hmrcCharacterCount: HmrcCharacterCount,
     cancelLink: CancelApplicationLink,
-    caption: Caption,
-    heading: Heading,
     paragraph: Paragraph,
     saveButton: SaveButton
 )
@@ -41,12 +39,14 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("describeTheLegalChallenges.caption"))
-
         @hmrcCharacterCount(
             CharacterCountViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("describeTheLegalChallenges.heading")).asPageHeading()
+                label = LabelViewModel(
+                    HtmlContent(
+                        s"""<span class="govuk-caption-xl"><span class="govuk-visually-hidden">${messages("caption.prefix")} </span>${messages("describeTheLegalChallenges.caption")}</span>${messages("describeTheLegalChallenges.heading")}"""
+                    )
+                ).asPageHeading()
             )
             .withRows(15)
             .withMaxLength(8167)

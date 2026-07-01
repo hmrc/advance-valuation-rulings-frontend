@@ -28,8 +28,7 @@
     hmrcCharacterCount: HmrcCharacterCount,
     list: BulletList,
     paragraph: Paragraph,
-    caption: Caption,
-    heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     saveButton: SaveButton
 )
@@ -63,8 +62,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("caption.goods"))
-        @heading(messages("aboutSimilarGoods.heading"))
+        @captionedHeading(
+            caption = messages("caption.goods"),
+            heading = messages("aboutSimilarGoods.heading")
+        )
 
         @content
 

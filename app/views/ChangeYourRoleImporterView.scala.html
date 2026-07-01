@@ -23,6 +23,7 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     legend: LegendH2,
     yesNoRadio: yesNoRadio,
     paragraph: Paragraph,
@@ -39,9 +40,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value")))
         }
 
-        @caption(messages("caption.applicant"))
-
-        @heading(messages("changeYourRoleImporter.heading"))
+        @captionedHeading(
+            caption = messages("caption.applicant"),
+            heading = messages("changeYourRoleImporter.heading")
+        )
 
         @paragraph(Html(messages("changeYourRoleImporter.p1")))
 

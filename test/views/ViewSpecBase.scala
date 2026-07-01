@@ -71,7 +71,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
         headers.first.ownText().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args*)
           .replaceAll("&nbsp;", " ")
       case 1                                    =>
-        headers.select("label").text().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args*)
+        headers.select("label").first.ownText().replaceAll("\u00a0", " ") mustBe messages(expectedMessageKey, args*)
           .replaceAll("&nbsp;", " ")
       case _                                    => throw new RuntimeException(s"Pages should only have (at most) one h1 element. Found ${headers.size}")
     }

@@ -27,6 +27,7 @@
         caption: Caption,
         config: FrontendAppConfig,
         heading: Heading,
+    captionedHeading: CaptionedHeading,
         subheading: Subheading
 )
 
@@ -82,8 +83,10 @@
 
 @layout(pageTitle = titleNoForm(messages("importingGoods.title")), draftId = Some(draftId)) {
 
-    @caption(messages("importingGoods.caption"))
-    @heading(messages("importingGoods.heading"))
+    @captionedHeading(
+        caption = messages("importingGoods.caption"),
+        heading = messages("importingGoods.heading")
+    )
     @subheading(messages("importingGoods.h2"))
 
     @bulletList(

@@ -24,6 +24,7 @@
     paragraph: Paragraph,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelLink: CancelApplicationLink,
     saveButton: SaveButton
 )
@@ -38,8 +39,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @caption(messages("adaptMethod.caption"))
-        @heading(messages("adaptMethod.heading"))
+        @captionedHeading(
+            caption = messages("adaptMethod.caption"),
+            heading = messages("adaptMethod.heading")
+        )
 
         @govukRadios(
             RadiosViewModel(

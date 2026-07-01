@@ -43,9 +43,13 @@
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
-        @caption(messages("importGoods.caption"))
 
-        @radios(messages("importGoods.heading"), radiosContent, form)
+        @radios(
+            messages("importGoods.heading"),
+            radiosContent,
+            form,
+            caption = Some(messages("importGoods.caption"))
+        )
 
         @saveButton(draftId)
     }

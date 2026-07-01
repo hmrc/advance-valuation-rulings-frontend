@@ -24,6 +24,7 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     cancelApplicationLink: CancelApplicationLink,
     paragraph: Paragraph,
     govukButton: GovukButton,
@@ -40,8 +41,10 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @caption(messages("isThisFileConfidential.caption"))
-    @heading(messages("isThisFileConfidential.heading"))
+    @captionedHeading(
+        caption = messages("isThisFileConfidential.caption"),
+        heading = messages("isThisFileConfidential.heading")
+    )
 
     @subheading(messages("isThisFileConfidential.uploadedFile"))
     @govukInset(InsetText(content = Text(fileName)))

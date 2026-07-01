@@ -24,8 +24,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     cancelApplicationLink: CancelApplicationLink,
-    caption: Caption,
-    heading: Heading,
+    captionedHeading: CaptionedHeading,
     subheading: Subheading,
     paragraph: Paragraph,
     link: Link,
@@ -49,8 +48,10 @@
 
     @formHelper(action = routes.ChoosingMethodController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
 
-        @caption(messages("choosingMethod.caption"))
-        @heading(messages("choosingMethod.heading"))
+        @captionedHeading(
+            caption = messages("choosingMethod.caption"),
+            heading = messages("choosingMethod.heading")
+        )
         @paragraph(Html(messages("choosingMethod.paragraph.1", overviewLink)))
         @paragraph(Html(messages("choosingMethod.para")))
 

@@ -26,6 +26,7 @@
     govukRadios: GovukRadios,
     caption: Caption,
     heading: Heading,
+    captionedHeading: CaptionedHeading,
     subheading: Subheading,
     paragraph: Paragraph,
     cancelApplicationLink: CancelApplicationLink,
@@ -61,8 +62,10 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("caption.applicant"))
-        @heading(messages("traderDetails.private.heading", details.EORINo))
+        @captionedHeading(
+            caption = messages("caption.applicant"),
+            heading = messages("traderDetails.private.heading", details.EORINo)
+        )
 
         @paraContent
 

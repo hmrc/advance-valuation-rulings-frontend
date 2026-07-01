@@ -22,7 +22,6 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    caption: Caption,
     cancelApplicationLink: CancelApplicationLink,
     saveButton: SaveButton
 )
@@ -37,13 +36,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @caption(messages("caption.applicant"))
-
         @govukInput(
             InputViewModel(
                 field = form("value"),
                 label = Label(
-                    content = Text(messages("provideTraderEori.heading"))
+                    content = HtmlContent(
+                        s"""<span class="govuk-caption-xl"><span class="govuk-visually-hidden">${messages("caption.prefix")} </span>${messages("caption.applicant")}</span>${messages("provideTraderEori.heading")}"""
+                    )
                 )
                 .asPageHeading()
             )
@@ -56,4 +55,3 @@
 
     @cancelApplicationLink(draftId)
 }
-
