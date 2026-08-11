@@ -17,6 +17,7 @@
 @import components._
 @import config.FrontendAppConfig
 @import AuthUserType._
+@import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 @this(
   layout: templates.Layout,
@@ -45,7 +46,7 @@
         id = "cancel_application",
         text = messages("eoriBeUpToDate.agentOnBehalfOfTrader.bulletPoint.2.link.public"),
         newTab = false,
-        call = routes.CancelApplicationController.onPageLoad(draftId)
+        call = routes.CancelApplicationController.onPageLoad(draftId, Some(RedirectUrl(request.uri)))
     )
 }
 

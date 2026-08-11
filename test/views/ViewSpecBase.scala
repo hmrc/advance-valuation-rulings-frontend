@@ -33,7 +33,7 @@ trait ViewSpecBase extends SpecBase with GuiceOneAppPerSuite {
 
   override lazy val app: Application = applicationBuilder().build()
 
-  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/test-url")
 
   given messages: Messages = app.injector.instanceOf[play.api.i18n.MessagesApi].preferred(fakeRequest)
 

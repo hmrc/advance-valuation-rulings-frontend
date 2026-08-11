@@ -16,6 +16,7 @@
 
 @import components._
 @import views.html.helper.CSPNonce
+@import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 @this(
         formHelper: FormWithCSRF,
@@ -26,8 +27,7 @@
         govukErrorSummary: GovukErrorSummary,
 )
 
-
-@(form: Form[?], draftId: DraftId)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], draftId: DraftId, refererUrl: Option[RedirectUrl])(implicit request: RequestHeader, messages: Messages)
 
 @paraContent = {@paragraph(Html(messages("cancelAreYouSure.inset.text")),"govuk-hint")}
 
@@ -48,7 +48,7 @@
 
 @layout(pageTitle = title(form, messages("cancelAreYouSure.title")), draftId = Some(draftId)) {
 
-    @formHelper(action = routes.CancelApplicationController.onSubmit(draftId), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.CancelApplicationController.onSubmit(draftId, refererUrl), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "cancelYes")))
@@ -65,19 +65,7 @@
 
         @govukButton(Button(
             content = Text(messages("cancelAreYouSure.button")),
-            href = Some("#"),
             id = Some("submitCancelForm")
         ))
     }
-<script @CSPNonce.attr type="text/javascript">
-    document.getElementById("submitCancelForm").addEventListener("click", function() {
-        if (document.getElementById('cancelNo').checked) {
-           history.back();
-        }
-        else{
-           var form = document.querySelector("form");
-           form.submit();
-        }
-    });
-</script>
 }

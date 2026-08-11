@@ -15,15 +15,16 @@
  *@
 
 @import components._
+@import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 @this(link: Link)
 
-@(draftId: DraftId)(implicit messages: Messages)
+@(draftId: DraftId)(implicit messages: Messages, request: RequestHeader)
 
     @link(
         id = "cancel_application",
         text = messages("site.cancel"),
         newTab = false,
-        call = routes.CancelApplicationController.onPageLoad(draftId),
+        call = routes.CancelApplicationController.onPageLoad(draftId, Some(RedirectUrl(request.uri))),
         classes = "govuk-link govuk-!-font-size-19 govuk-link--no-visited-state wrappable"
     )
