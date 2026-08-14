@@ -28,7 +28,7 @@ import services.UserAnswersService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CancelAreYouSureView
 import play.api.data.Form
-
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import scala.concurrent.{ExecutionContext, Future}
 
 class CancelApplicationController @Inject() (
@@ -44,11 +44,14 @@ class CancelApplicationController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
-  val form: Form[Boolean]                              = formProvider()
+  val form: Form[Boolean] = formProvider()
+
+  private val defaultBackUrl = RedirectUrl(controllers.routes.AccountHomeController.onPageLoad().url)
+
   // @nowarn("cat=unused")
-  def onPageLoad(draftId: DraftId): Action[AnyContent] =
+  def onPageLoad(draftId: DraftId, refererUrl: Option[RedirectUrl] = None): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) { implicit request =>
-      Ok(view(form, draftId))
+      Ok(view(form, draftId, refererUrl.orElse(Some(defaultBackUrl))))
     }
 
   def confirmCancel(draftId: DraftId): Action[AnyContent] =
@@ -58,23 +61,28 @@ class CancelApplicationController @Inject() (
       } yield Redirect(controllers.routes.AccountHomeController.onPageLoad())
     }
 
-  def onSubmit(draftId: DraftId): Action[AnyContent] =
+  def onSubmit(draftId: DraftId, refererUrl: Option[RedirectUrl] = None): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, draftId))),
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, draftId, refererUrl.orElse(Some(defaultBackUrl))))),
           value =>
-            for {
-              updatedAnswers <-
-                Future.fromTry(
-                  request.userAnswers
-                    .set(CancelApplicationPage, value)
-                )
-              _              <- userAnswersService.set(updatedAnswers)
-            } yield Redirect(
-              navigator.nextPage(CancelApplicationPage, NormalMode, updatedAnswers)
-            )
+            if (!value) {
+              Future.successful(Redirect(refererUrl.getOrElse(defaultBackUrl).unsafeValue))
+            } else {
+              for {
+                updatedAnswers <-
+                  Future.fromTry(
+                    request.userAnswers
+                      .set(CancelApplicationPage, value)
+                  )
+                _              <- userAnswersService.set(updatedAnswers)
+              } yield Redirect(
+                navigator.nextPage(CancelApplicationPage, NormalMode, updatedAnswers)
+              )
+            }
         )
     }
 }

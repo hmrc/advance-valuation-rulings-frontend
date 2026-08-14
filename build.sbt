@@ -1,3 +1,4 @@
+import play.sbt.routes.RoutesKeys
 import uk.gov.hmrc.DefaultBuildSettings.*
 
 lazy val appName: String = "advance-valuation-rulings-frontend"
@@ -52,6 +53,9 @@ lazy val microservice = Project(appName, file("."))
     pipelineStages := Seq(digest),
     // below line required to force asset pipeline to operate in dev rather than only prod
     Assets / pipelineStages := Seq(concat)
+  )
+  .settings(
+    RoutesKeys.routesImport += "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
   )
 
 lazy val it = project

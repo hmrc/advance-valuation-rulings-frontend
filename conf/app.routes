@@ -255,9 +255,9 @@ POST       /:draftId/change-about-similar-goods      controllers.AboutSimilarGoo
 
 GET        /application/:id                            controllers.ViewApplicationController.onPageLoad(id: String)
 
-GET        /:draftId/cancel                                          controllers.CancelApplicationController.onPageLoad(draftId: DraftId)
+GET        /:draftId/cancel                                         controllers.CancelApplicationController.onPageLoad(draftId: DraftId, refererUrl: Option[RedirectUrl] ?= None)
 GET        /:draftId/confirm-cancel                                  controllers.CancelApplicationController.confirmCancel(draftId: DraftId)
-POST       /:draftId/cancel                                          controllers.CancelApplicationController.onSubmit(draftId: DraftId)
+POST       /:draftId/cancel                                          controllers.CancelApplicationController.onSubmit(draftId: DraftId, refererUrl: Option[RedirectUrl] ?= None)
 
 GET        /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onPageLoad(mode: Mode = NormalMode, draftId: DraftId)
 POST       /:draftId/business-contact-details                        controllers.BusinessContactDetailsController.onSubmit(mode: Mode = NormalMode, draftId: DraftId, saveDraft: Boolean)

@@ -29,14 +29,17 @@ import services.UserAnswersService
 import views.html.CancelAreYouSureView
 import navigation.FakeNavigators.FakeNavigator
 import navigation.Navigator
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import scala.concurrent.Future
 
 class CancelApplicationControllerSpec extends SpecBase {
 
-  val formProvider                        = new CancelApplicationFormProvider()
-  val form: Form[Boolean]                 = formProvider()
-  lazy val cancelApplicationRoute: String = routes.CancelApplicationController.onPageLoad(draftId).url
+  val formProvider        = new CancelApplicationFormProvider()
+  val form: Form[Boolean] = formProvider()
+  private val refererUrl  = Some(RedirectUrl("/SomeReferalUrl"))
+
+  lazy val cancelApplicationRoute: String = routes.CancelApplicationController.onPageLoad(draftId, refererUrl).url
 
   "CancelApplication Controller" - {
 
@@ -46,14 +49,14 @@ class CancelApplicationControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad(draftId).url)
+        val request = FakeRequest(GET, routes.CancelApplicationController.onPageLoad(draftId, refererUrl).url)
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CancelAreYouSureView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, draftId)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, draftId, refererUrl)(request, messages(application)).toString
       }
     }
 
@@ -104,7 +107,7 @@ class CancelApplicationControllerSpec extends SpecBase {
       }
     }
 
-    "must redirect to the next page when no is submitted" in {
+    "must redirect to the previous page when no is submitted" in {
 
       val mockUserAnswersService = mock(classOf[UserAnswersService])
 
@@ -126,7 +129,35 @@ class CancelApplicationControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual refererUrl.value.unsafeValue
+      }
+    }
+
+    "must redirect to the home page when no is submitted but no there is no referer url" in {
+
+      val mockUserAnswersService = mock(classOf[UserAnswersService])
+
+      when(mockUserAnswersService.set(any())(any())).thenReturn(Future.successful(Done))
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswersAsIndividualTrader))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[UserAnswersService].toInstance(mockUserAnswersService)
+          )
+          .build()
+
+      val pageWithNoRefererUrl = routes.CancelApplicationController.onPageLoad(draftId).url
+
+      running(application) {
+        val request =
+          FakeRequest(POST, pageWithNoRefererUrl)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.AccountHomeController.onPageLoad().url
       }
     }
 
@@ -147,7 +178,7 @@ class CancelApplicationControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, draftId)(
+        contentAsString(result) mustEqual view(boundForm, draftId, refererUrl)(
           request,
           messages(application)
         ).toString

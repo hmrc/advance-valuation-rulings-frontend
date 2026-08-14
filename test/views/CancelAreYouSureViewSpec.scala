@@ -18,6 +18,7 @@ package views
 
 import forms.CancelApplicationFormProvider
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import views.behaviours.ViewBehaviours
 import views.html.CancelAreYouSureView
 
@@ -25,10 +26,11 @@ class CancelAreYouSureViewSpec extends ViewBehaviours {
 
   private val view: CancelAreYouSureView          = app.injector.instanceOf[CancelAreYouSureView]
   private val form: CancelApplicationFormProvider = app.injector.instanceOf[CancelApplicationFormProvider]
+  private val refererUrl                          = Some(RedirectUrl("/SomeReferalUrl"))
 
-  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), draftId)(fakeRequest, messages)
-  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), draftId, fakeRequest, messages)
-  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), draftId)(fakeRequest, messages)
+  val viewViaApply: HtmlFormat.Appendable  = view.apply(form.apply(), draftId, refererUrl)(fakeRequest, messages)
+  val viewViaRender: HtmlFormat.Appendable = view.render(form.apply(), draftId, refererUrl, fakeRequest, messages)
+  val viewViaF: HtmlFormat.Appendable      = view.f(form.apply(), draftId, refererUrl)(fakeRequest, messages)
 
   "CancelAreYouSureView" - {
     normalPage("cancelAreYouSure")()
