@@ -41,7 +41,7 @@ class RequiredInformationController @Inject() (
   def onPageLoad(draftId: DraftId): Action[AnyContent] =
     (identify andThen getData(draftId) andThen requireData) { implicit request =>
       logger.info(
-        "[RequiredInformationController][onPageLoad] Redirecting to correct view based on user role answer"
+        "Redirecting to correct required information view based on user role answer"
       )
       val view = userRoleProvider
         .getUserRole(request.userAnswers)

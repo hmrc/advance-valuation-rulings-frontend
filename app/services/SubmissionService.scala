@@ -51,6 +51,6 @@ class SubmissionService @Inject() (
     } yield submissionResponse
 
   private def logError(applicationId: ApplicationId, message: String): Throwable => Done = (err: Throwable) =>
-    logger.error(s"[SubmissionService][logError] $message for application $applicationId, ${err.getMessage}")
+    logger.error(s"$message for application $applicationId, ${err.getMessage}")
     Done
 }

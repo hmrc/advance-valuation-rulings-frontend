@@ -59,7 +59,7 @@ class CheckYourAnswersController @Inject() (
     applicationRequestService(request.userAnswers, traderDetails) match {
       case Invalid(errors: cats.data.NonEmptyList[Page]) =>
         logger.warn(
-          s"[CheckYourAnswersController][redirectJourney] Failed to create application request: " +
+          s"Failed to create application request when loading check your answers page: " +
             s"${errors.toList.mkString(", ")}"
         )
         Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
@@ -91,7 +91,7 @@ class CheckYourAnswersController @Inject() (
           case Some(td) => redirectJourney(request, td.withoutConfirmation)
           case None     =>
             logger.error(
-              "[CheckYourAnswersController][onSubmit] VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
+              "VerifyTraderDetailsPage needs to be answered before submitting the application"
             )
             throw new Exception(
               "VerifyTraderDetailsPage needs to be answered(CheckYourAnswersController)"
@@ -114,8 +114,7 @@ class CheckYourAnswersController @Inject() (
     ) match {
       case Invalid(errors: cats.data.NonEmptyList[Page]) =>
         logger.warn(
-          s"[CheckYourAnswersController][redirectJourney] Failed to create application request: ${errors.toList
-              .mkString(", ")}}"
+          s"Failed to create application request on submission: ${errors.toList.mkString(", ")}"
         )
         Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       case Valid(applicationRequest)                     =>

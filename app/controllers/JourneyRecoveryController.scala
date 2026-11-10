@@ -42,7 +42,7 @@ class JourneyRecoveryController @Inject() (
         case Right(safeUrl) =>
           Some(safeUrl.url)
         case Left(message)  =>
-          logger.info(s"[JourneyRecoveryController][onPageLoad] $message")
+          logger.info(s"Journey recovery continue URL rejected: $message")
           None
       }
     }

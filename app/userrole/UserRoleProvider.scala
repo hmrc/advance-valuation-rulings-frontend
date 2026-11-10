@@ -43,7 +43,7 @@ class UserRoleProvider @Inject() (
         agentForTrader
       case _                                                    =>
         logger.error(
-          "[UserRoleProvider][getUserRole] WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole"
+          "WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole"
         )
         throw new UnsupportedOperationException(
           "WhatIsYourRoleAsImporterPage should have been answered before calling UserRoleProvider.getUserRole"
