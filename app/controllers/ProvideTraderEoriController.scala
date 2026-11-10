@@ -92,7 +92,7 @@ class ProvideTraderEoriController @Inject() (
 
               case Failure(error) =>
                 logger.warn(
-                  s"[ProvideTraderEoriController][onSubmit] Unable to store ProvideTraderEoriPage. Error: $error"
+                  s"Unable to store ProvideTraderEoriPage. Error: $error"
                 )
                 Future
                   .successful(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
@@ -123,7 +123,7 @@ class ProvideTraderEoriController @Inject() (
               }
             case Failure(error)         =>
               logger.warn(
-                s"[ProvideTraderEoriController][proceed] Unable to store VerifyTraderDetailsPage. Error: $error"
+                s"Unable to store VerifyTraderDetailsPage. Error: $error"
               )
               Future.successful(
                 Redirect(

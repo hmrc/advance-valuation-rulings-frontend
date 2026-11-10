@@ -72,7 +72,7 @@ class VerifyTraderEoriController @Inject() (
 
   private def traderDetailsNotFoundInSession(mode: Mode, draftId: DraftId) = {
     logger.warn(
-      "[VerifyTraderEoriController][traderDetailsNotFoundInSession] No trader details found in session"
+      "No trader details found in session when verifying trader EORI"
     )
     Redirect(
       controllers.routes.JourneyRecoveryController.onPageLoad(

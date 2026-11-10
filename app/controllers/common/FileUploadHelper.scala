@@ -87,7 +87,7 @@ case class FileUploadHelper @Inject() (
           removeFile(mode, draftId, file.fileUrl.get, isLetterOfAuthority)
         case _: Failure                   =>
           logger.error(
-            "[FileUploadHelper][onPageLoadWithFileStatus] Unexpected Error: Failure received when uploading file"
+            "Unexpected Error: Failure status received from upscan when loading file upload page"
           )
           Future.failed(
             new RuntimeException(

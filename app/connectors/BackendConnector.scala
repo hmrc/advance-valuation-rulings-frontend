@@ -94,7 +94,7 @@ class BackendConnector @Inject() (
       case e: UpstreamErrorResponse => (e.reportAs, e.getMessage)
       case e: Throwable             => (Status.INTERNAL_SERVER_ERROR, e.getMessage)
     }
-    logger.error(s"[BackendConnector][onError] $code: $message")
+    logger.error(s"Backend request failed with status $code: $message")
     Left(BackendError(code, message))
   }
 }
